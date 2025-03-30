@@ -55,7 +55,7 @@ const Index = () => {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12">
         <div className="container">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Featured Products</h2>
@@ -114,7 +114,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">Ready to Start Saving?</h2>
