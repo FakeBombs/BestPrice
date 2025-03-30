@@ -21,17 +21,15 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <MainLayout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/categories/:categoryId" element={<Categories />} />
-            <Route path="/product/:productId" element={<ProductDetail />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/deals" element={<Deals />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </MainLayout>
+        <Routes>
+          <Route path="/" element={<MainLayout><Index /></MainLayout>} />
+          <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
+          <Route path="/categories/:categoryId" element={<MainLayout><Categories /></MainLayout>} />
+          <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />
+          <Route path="/search" element={<MainLayout><SearchResults /></MainLayout>} />
+          <Route path="/deals" element={<MainLayout><Deals /></MainLayout>} />
+          <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
