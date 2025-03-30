@@ -8,10 +8,8 @@ import { searchProducts } from '@/data/mockData';
 
 export const SearchBar = ({ className }: { className?: string }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,63 +37,54 @@ export const SearchBar = ({ className }: { className?: string }) => {
     };
   }, []);
 
-  // Handle search typing with debounce
+  // Navigate to search results immediately when typing
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchQuery.trim().length > 2) {
-        const results = searchProducts(searchQuery);
-        setSearchResults(results.slice(0, 5));
-        setIsTyping(false);
-      } else if (searchQuery.trim().length === 0) {
-        setIsTyping(false);
-        setSearchResults([]);
+      if (searchQuery.trim().length > 0) {
+        navigateToSearchResults(searchQuery);
       }
     }, 300);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
+  const navigateToSearchResults = (query: string) => {
+    if (query.trim()) {
       // Save to recent searches
       const updatedSearches = [
-        searchQuery.trim(),
-        ...recentSearches.filter(search => search !== searchQuery.trim())
+        query.trim(),
+        ...recentSearches.filter(search => search !== query.trim())
       ].slice(0, 5);
       
       setRecentSearches(updatedSearches);
       localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
       
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
-      setShowDropdown(false);
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigateToSearchResults(searchQuery);
     }
   };
 
   const handleRecentSearchClick = (term: string) => {
-    navigate(`/search?q=${encodeURIComponent(term)}`);
-    setShowDropdown(false);
-  };
-
-  const handleResultClick = (productId: string) => {
-    navigate(`/product/${productId}`);
+    setSearchQuery(term);
+    navigateToSearchResults(term);
     setShowDropdown(false);
   };
 
   const handleFocus = () => {
     if (searchQuery.trim().length === 0) {
       setShowDropdown(true);
-      setIsTyping(false);
-    } else if (searchQuery.trim().length > 2) {
-      setShowDropdown(true);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setIsTyping(true);
-    setShowDropdown(true);
+    setShowDropdown(e.target.value.trim().length === 0);
   };
 
   return (
@@ -115,52 +104,22 @@ export const SearchBar = ({ className }: { className?: string }) => {
         </Button>
       </form>
 
-      {showDropdown && (
+      {showDropdown && searchQuery.trim().length === 0 && recentSearches.length > 0 && (
         <div 
           ref={dropdownRef}
           className="absolute z-50 mt-1 w-full bg-background rounded-md border shadow-lg"
         >
-          {isTyping ? (
-            <div className="p-2 text-sm text-muted-foreground">Searching...</div>
-          ) : searchQuery.trim().length > 2 && searchResults.length > 0 ? (
-            <div>
-              <div className="p-2 text-xs font-medium text-muted-foreground">Search Results</div>
-              {searchResults.map(product => (
-                <div 
-                  key={product.id}
-                  className="p-2 hover:bg-accent cursor-pointer"
-                  onClick={() => handleResultClick(product.id)}
-                >
-                  <div className="font-medium">{product.name}</div>
-                  <div className="text-sm text-muted-foreground">${Math.min(...product.prices.map((p: any) => p.price)).toFixed(2)}</div>
-                </div>
-              ))}
-              <div 
-                className="p-2 text-center text-primary hover:bg-accent cursor-pointer border-t"
-                onClick={() => handleSearch({ preventDefault: () => {} } as React.FormEvent)}
-              >
-                See all results
-              </div>
+          <div className="p-2 text-xs font-medium text-muted-foreground">Recent Searches</div>
+          {recentSearches.map((term, index) => (
+            <div 
+              key={index}
+              className="p-2 hover:bg-accent cursor-pointer flex items-center"
+              onClick={() => handleRecentSearchClick(term)}
+            >
+              <Search className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span>{term}</span>
             </div>
-          ) : searchQuery.trim().length > 0 && searchQuery.trim().length <= 2 ? (
-            <div className="p-2 text-sm text-muted-foreground">Type at least 3 characters to search</div>
-          ) : searchQuery.trim().length === 0 && recentSearches.length > 0 ? (
-            <div>
-              <div className="p-2 text-xs font-medium text-muted-foreground">Recent Searches</div>
-              {recentSearches.map((term, index) => (
-                <div 
-                  key={index}
-                  className="p-2 hover:bg-accent cursor-pointer flex items-center"
-                  onClick={() => handleRecentSearchClick(term)}
-                >
-                  <Search className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span>{term}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-2 text-sm text-muted-foreground">No recent searches</div>
-          )}
+          ))}
         </div>
       )}
     </div>

@@ -83,7 +83,7 @@ const SearchResults = () => {
           <p className="text-lg text-muted-foreground">No products found matching your search.</p>
         </div>
       ) : (
-        <div className="product-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredResults.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
