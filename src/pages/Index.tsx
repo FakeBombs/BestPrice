@@ -22,17 +22,9 @@ const Index = () => {
       <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">
-              Find the Best Prices Across Multiple Stores
-            </h1>
-            <p className="text-xl mb-6">
-              Compare prices from trusted retailers and find the best deals
-            </p>
-            <Link to="/categories">
-              <Button size="lg" variant="default" className="bg-white text-primary hover:bg-gray-100">
-                Start Shopping
-              </Button>
-            </Link>
+            <h1 className="text-4xl font-bold mb-4">Find the Best Prices Across Multiple Stores</h1>
+            <p className="text-xl mb-6">Compare prices from trusted retailers and find the best deals</p>
+            <Link to="/categories"><Button size="lg" variant="default" className="bg-white text-primary hover:bg-gray-100">Start Shopping</Button></Link>
           </div>
         </div>
       </section>
@@ -42,9 +34,7 @@ const Index = () => {
         <div className="container">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Δημοφιλείς κατηγορίες</h2>
-            <Link to="/categories" className="text-primary flex items-center">
-              Όλες οι κατηγορίες <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
+            <Link to="/categories" className="text-primary flex items-center">Όλες οι κατηγορίες<ArrowRight className="ml-1 h-4 w-4" /></Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {popularCategories.map((category) => (
@@ -59,9 +49,7 @@ const Index = () => {
         <div className="container">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Featured Products</h2>
-            <Link to="/products" className="text-primary flex items-center">
-              View All <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
+            <Link to="/products" className="text-primary flex items-center">View All<ArrowRight className="ml-1 h-4 w-4" /></Link>
           </div>
           <div className="product-grid">
             {featuredProducts.map((product) => (
@@ -83,9 +71,7 @@ const Index = () => {
                 </div>
               </div>
               <h3 className="text-xl font-medium mb-2">Compare Prices Instantly</h3>
-              <p className="text-muted-foreground">
-                Find the best deals across multiple retailers in seconds
-              </p>
+              <p className="text-muted-foreground">Find the best deals across multiple retailers in seconds</p>
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-4">
@@ -94,9 +80,7 @@ const Index = () => {
                 </div>
               </div>
               <h3 className="text-xl font-medium mb-2">Price History Tracking</h3>
-              <p className="text-muted-foreground">
-                Monitor price changes to buy at the perfect time
-              </p>
+              <p className="text-muted-foreground">Monitor price changes to buy at the perfect time</p>
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-4">
@@ -105,9 +89,7 @@ const Index = () => {
                 </div>
               </div>
               <h3 className="text-xl font-medium mb-2">Verified User Reviews</h3>
-              <p className="text-muted-foreground">
-                Make informed decisions with authentic product reviews
-              </p>
+              <p className="text-muted-foreground">Make informed decisions with authentic product reviews</p>
             </div>
           </div>
         </div>
@@ -118,14 +100,8 @@ const Index = () => {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">Ready to Start Saving?</h2>
-            <p className="text-xl text-muted-foreground mb-6">
-              Join thousands of smart shoppers who save money every day
-            </p>
-            <Link to="/categories">
-              <Button size="lg" variant="default">
-                Explore Products
-              </Button>
-            </Link>
+            <p className="text-xl text-muted-foreground mb-6">Join thousands of smart shoppers who save money every day</p>
+            <Link to="/categories"><Button size="lg" variant="default">Explore Products</Button></Link>
           </div>
         </div>
       </section>
