@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
 
 export const SearchBar = ({ className }: { className?: string }) => {
@@ -11,6 +11,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,16 +38,19 @@ export const SearchBar = ({ className }: { className?: string }) => {
     };
   }, []);
 
-  // Navigate to search results immediately when typing
+  // Navigate to search results or home based on search query
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery.trim().length > 0) {
         navigateToSearchResults(searchQuery);
+      } else if (searchQuery === '' && location.pathname === '/search') {
+        // Redirect to homepage if search is cleared and we're on the search page
+        navigate('/');
       }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, location.pathname]);
 
   const navigateToSearchResults = (query: string) => {
     if (query.trim()) {
