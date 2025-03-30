@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
   Star, 
@@ -8,14 +8,24 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { getProductById, getBestPrice, getVendorById } from '@/data/mockData';
+import { 
+  getProductById, 
+  getBestPrice, 
+  getVendorById, 
+  getProductsByCategory,
+  getProductsByCategoryWithDiscount
+} from '@/data/mockData';
 import ProductVendors from '@/components/ProductVendors';
+import ProductCarousel from '@/components/ProductCarousel';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useToast } from '@/hooks/use-toast';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const { toast } = useToast();
   const [mainImage, setMainImage] = useState<string | null>(null);
+  const { recentlyViewed, addToRecentlyViewed } = useRecentlyViewed();
   
   if (!productId) {
     return <div className="container py-8">Product not found</div>;
@@ -29,6 +39,21 @@ const ProductDetail = () => {
   
   const bestPrice = getBestPrice(product);
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
+  
+  // Get similar products (products in the same category)
+  const similarProducts = getProductsByCategory(product.category)
+    .filter(p => p.id !== product.id)
+    .slice(0, 8);
+  
+  // Get deals for this category
+  const categoryDeals = getProductsByCategoryWithDiscount(product.category)
+    .filter(p => p.id !== product.id)
+    .slice(0, 8);
+  
+  // Add product to recently viewed
+  useEffect(() => {
+    addToRecentlyViewed(productId);
+  }, [productId]);
   
   const handleNotifyMe = () => {
     toast({
@@ -104,6 +129,14 @@ const ProductDetail = () => {
         </div>
       </div>
       
+      {/* Price History Chart */}
+      <div className="mt-8">
+        <PriceHistoryChart 
+          productId={product.id} 
+          basePrice={bestPrice ? bestPrice.price : 0}
+        />
+      </div>
+      
       {/* Product Information Tabs */}
       <div className="mt-12">
         <Tabs defaultValue="specifications">
@@ -151,6 +184,27 @@ const ProductDetail = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Similar Products */}
+      <ProductCarousel 
+        title="Similar Products" 
+        products={similarProducts} 
+        emptyMessage="No similar products found"
+      />
+      
+      {/* Deals in this Category */}
+      <ProductCarousel 
+        title={`Deals in ${product.category}`} 
+        products={categoryDeals} 
+        emptyMessage="No deals found in this category"
+      />
+      
+      {/* Recently Viewed Products */}
+      <ProductCarousel 
+        title="Recently Viewed" 
+        products={recentlyViewed.filter(p => p.id !== product.id)} 
+        emptyMessage="No recently viewed products"
+      />
     </div>
   );
 };

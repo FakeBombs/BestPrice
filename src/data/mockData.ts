@@ -218,8 +218,41 @@ export const products: Product[] = [
 ];
 
 // Function to get products by category
-export const getProductsByCategory = (categoryId: string): Product[] => {
-  return products.filter((product) => product.category === categoryId);
+export const getProductsByCategory = (category: string) => {
+  return products.filter(product => product.category === category);
+};
+
+export const getProductsByCategoryWithDiscount = (category: string) => {
+  // In a real app, you'd have a discount flag or calculate it from price history
+  // Here we'll just simulate a random selection of products with "discounts"
+  return getProductsByCategory(category)
+    .filter((_, index) => index % 2 === 0); // Every other product as a "deal"
+};
+
+export const getVendors = () => {
+  // Get unique vendors from product prices
+  const vendorIds = new Set(products.flatMap(product => 
+    product.prices.map(price => price.vendorId)
+  ));
+  
+  // Add product count to each vendor
+  return vendors.map(vendor => {
+    const productCount = products.filter(product => 
+      product.prices.some(price => price.vendorId === vendor.id)
+    ).length;
+    
+    const categories = Array.from(new Set(
+      products
+        .filter(product => product.prices.some(price => price.vendorId === vendor.id))
+        .map(product => product.category)
+    ));
+    
+    return {
+      ...vendor,
+      productCount,
+      categories
+    };
+  });
 };
 
 // Function to get a product by ID
