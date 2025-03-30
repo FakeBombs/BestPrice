@@ -41,9 +41,9 @@ const Index = () => {
       <section className="py-12">
         <div className="container">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Popular Categories</h2>
+            <h2 className="text-2xl font-bold">Δημοφιλείς κατηγορίες</h2>
             <Link to="/categories" className="text-primary flex items-center">
-              View All <ArrowRight className="ml-1 h-4 w-4" />
+              Όλες οι κατηγορίες <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
