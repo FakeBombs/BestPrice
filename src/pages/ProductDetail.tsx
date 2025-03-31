@@ -99,10 +99,10 @@ const ProductDetail = () => {
       </div>
       <div class="root__wrapper item-wrapper">
         <div class="root">
+          {/* Breadcrumb */}
+          <ProductBreadcrumb product={product} />
           <div class="item-layout__wrapper">
             <div className="item-layout">
-      {/* Breadcrumb */}
-      <ProductBreadcrumb product={product} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
