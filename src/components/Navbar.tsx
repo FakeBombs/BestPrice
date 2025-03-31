@@ -26,16 +26,6 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Link to="/account" className="text-sm font-medium">
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/cart" className="text-sm font-medium">
-              <Button variant="ghost" size="icon">
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
