@@ -8,9 +8,9 @@ import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  return <header className="w-full border-b bg-background">
-      <div className="container flex h-16 items-center py-[1.05rem] bg-[#161616]">
-        <div className="flex items-center justify-between w-full">
+  return <header className="w-full border-b bg-background bg-[#161616]">
+      <div className="container flex items-center py-[1.05rem]">
+        <div className="flex items-center justify-between w-full h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary">BestPrice</span>
