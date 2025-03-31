@@ -28,6 +28,17 @@ export interface Category {
   id: string;
   name: string;
   icon: string;
+  parentId?: string;
+  slug?: string;
+  description?: string;
+}
+
+export interface RootCategory {
+  id: string;
+  name: string;
+  icon: string;
+  slug: string;
+  description: string;
 }
 
 // Mock vendors
@@ -64,16 +75,48 @@ export const vendors: Vendor[] = [
   },
 ];
 
-// Mock categories
+// Mock root categories
+export const rootCategories: RootCategory[] = [
+  { 
+    id: "rc1", 
+    name: "Technology", 
+    icon: "smartphone", 
+    slug: "technology", 
+    description: "The latest technology products, gadgets, and electronic devices."
+  },
+  { 
+    id: "rc2", 
+    name: "Home & Garden", 
+    icon: "home", 
+    slug: "home-garden", 
+    description: "Everything for your home, garden, and interior decoration."
+  },
+  { 
+    id: "rc3", 
+    name: "Sports & Leisure", 
+    icon: "dumbbell", 
+    slug: "sports-leisure", 
+    description: "Sports equipment, outdoor activities, and leisure products."
+  },
+  { 
+    id: "rc4", 
+    name: "Fashion", 
+    icon: "shirt", 
+    slug: "fashion", 
+    description: "Clothes, accessories, shoes, and jewelry for all styles."
+  }
+];
+
+// Mock categories - now with parent categories
 export const categories: Category[] = [
-  { id: "c1", name: "Smartphones", icon: "smartphone" },
-  { id: "c2", name: "Laptops", icon: "laptop" },
-  { id: "c3", name: "Tablets", icon: "tablet" },
-  { id: "c4", name: "Headphones", icon: "headphones" },
-  { id: "c5", name: "Cameras", icon: "camera" },
-  { id: "c6", name: "Monitors", icon: "monitor" },
-  { id: "c7", name: "Smart Home", icon: "home" },
-  { id: "c8", name: "Gaming", icon: "gamepad" },
+  { id: "c1", name: "Smartphones", icon: "smartphone", parentId: "rc1", slug: "smartphones" },
+  { id: "c2", name: "Laptops", icon: "laptop", parentId: "rc1", slug: "laptops" },
+  { id: "c3", name: "Tablets", icon: "tablet", parentId: "rc1", slug: "tablets" },
+  { id: "c4", name: "Headphones", icon: "headphones", parentId: "rc1", slug: "headphones" },
+  { id: "c5", name: "Cameras", icon: "camera", parentId: "rc1", slug: "cameras" },
+  { id: "c6", name: "Monitors", icon: "monitor", parentId: "rc1", slug: "monitors" },
+  { id: "c7", name: "Smart Home", icon: "home", parentId: "rc2", slug: "smart-home" },
+  { id: "c8", name: "Gaming", icon: "gamepad", parentId: "rc1", slug: "gaming" },
 ];
 
 // Mock products
@@ -285,4 +328,25 @@ export const searchProducts = (query: string): Product[] => {
       product.title.toLowerCase().includes(lowerQuery) ||
       product.description.toLowerCase().includes(lowerQuery)
   );
+};
+
+// Function to get categories by root category
+export const getCategoriesByRoot = (rootCategoryId: string): Category[] => {
+  return categories.filter(category => category.parentId === rootCategoryId);
+};
+
+// Function to get a root category by slug
+export const getRootCategoryBySlug = (slug: string): RootCategory | undefined => {
+  return rootCategories.find(category => category.slug === slug);
+};
+
+// Function to get a root category by ID
+export const getRootCategoryById = (id: string): RootCategory | undefined => {
+  return rootCategories.find(category => category.id === id);
+};
+
+// Function to get products by root category
+export const getProductsByRootCategory = (rootCategoryId: string): Product[] => {
+  const categoryIds = getCategoriesByRoot(rootCategoryId).map(category => category.id);
+  return products.filter(product => categoryIds.includes(product.category));
 };
