@@ -14,29 +14,38 @@ import Deals from "@/pages/Deals";
 import Stores from "@/pages/Stores";
 import Brands from "@/pages/Brands";
 import NotFound from "@/pages/NotFound";
+import AccountPage from "@/pages/AccountPage";
+import { AuthProvider } from "@/hooks/useAuth";
+import { NotificationProvider } from "@/hooks/useNotifications";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout><Index /></MainLayout>} />
-          <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
-          <Route path="/categories/:categoryId" element={<MainLayout><Categories /></MainLayout>} />
-          <Route path="/categories/root/:rootSlug" element={<MainLayout><Categories /></MainLayout>} />
-          <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />
-          <Route path="/search" element={<MainLayout><SearchResults /></MainLayout>} />
-          <Route path="/deals" element={<MainLayout><Deals /></MainLayout>} />
-          <Route path="/stores" element={<MainLayout><Stores /></MainLayout>} />
-          <Route path="/brands" element={<MainLayout><Brands /></MainLayout>} />
-          <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <NotificationProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<MainLayout><Index /></MainLayout>} />
+              <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
+              <Route path="/categories/:categoryId" element={<MainLayout><Categories /></MainLayout>} />
+              <Route path="/categories/root/:rootSlug" element={<MainLayout><Categories /></MainLayout>} />
+              <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />
+              <Route path="/search" element={<MainLayout><SearchResults /></MainLayout>} />
+              <Route path="/deals" element={<MainLayout><Deals /></MainLayout>} />
+              <Route path="/stores" element={<MainLayout><Stores /></MainLayout>} />
+              <Route path="/brands" element={<MainLayout><Brands /></MainLayout>} />
+              <Route path="/account" element={<MainLayout><AccountPage /></MainLayout>} />
+              <Route path="/account/:section" element={<MainLayout><AccountPage /></MainLayout>} />
+              <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </NotificationProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
