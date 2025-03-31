@@ -11,7 +11,7 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices.filter(p => p.inStock).length;
-  return <Card className="overflow-hidden h-full transition-all hover:shadow-md bg-[#26282c]">
+  return <Card className="overflow-hidden h-full transition-all hover:shadow-md">
       <Link to={`/product/${product.id}`}>
         <div className="aspect-square overflow-hidden">
           <img src={product.image} alt={product.title} className="h-full w-full object-cover transition-transform hover:scale-105" />
