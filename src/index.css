@@ -317,6 +317,15 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
+  body header.bp-header {
+    background: var(--header-bg);
+    box-shadow: 0 1px 6px 0 var(--header-shadow);
+    color: #fff;
+    padding-bottom: .6rem;
+    padding-top: .6rem;
+    transition: transform .2s ease-in-out
+}
+  
   .helpful p {
     display: block;
     font-size: .95rem;
