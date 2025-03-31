@@ -105,6 +105,10 @@ const ProductDetail = () => {
           
           <div class="item-layout__wrapper">
             <div className="item-layout">
+              <aside class="item-aside stick-to-bottom">
+              </aside>
+              <main class="item-main">
+              </main>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
