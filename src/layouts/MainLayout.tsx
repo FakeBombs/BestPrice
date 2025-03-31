@@ -11,7 +11,13 @@ interface MainLayoutProps {
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-
+       <div className="flex flex-col min-h-screen">
+         <Navbar />
+         <main className="flex-1">
+           {children}
+         </main>
+         <Footer />
+       </div>
     </ThemeProvider>
   );
 };
