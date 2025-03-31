@@ -99,9 +99,14 @@ const ProductDetail = () => {
       </div>
       <div class="root__wrapper item-wrapper">
         <div class="root">
+          <div id="trail" style="position: relative;">
+            <nav class="breadcrumb">
+              {/* Breadcrumb */}
+             <ProductBreadcrumb product={product} />
+            </nav>
+            <div class="comparison__placeholder">
+          </div>
           <div className="container py-8">
-      {/* Breadcrumb */}
-      <ProductBreadcrumb product={product} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
