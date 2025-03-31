@@ -130,6 +130,9 @@ const ProductDetail = () => {
         </div>
       </div>
       
+      {/* Product Information Tabs */}
+      <ProductTabsSection product={product} />
+      
       {/* Price History Chart */}
       <div className="mt-8">
         <PriceHistoryChart 
@@ -137,9 +140,6 @@ const ProductDetail = () => {
           basePrice={bestPrice ? bestPrice.price : 0}
         />
       </div>
-      
-      {/* Product Information Tabs */}
-      <ProductTabsSection product={product} />
       
       {/* Related Products Sections */}
       <ProductRelatedSections
