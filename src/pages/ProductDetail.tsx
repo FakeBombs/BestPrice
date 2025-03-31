@@ -99,20 +99,24 @@ const ProductDetail = () => {
       </div>
       <div class="root__wrapper item-wrapper">
         <div class="root">
+          
           {/* Breadcrumb */}
           <ProductBreadcrumb product={product} />
+          
           <div class="item-layout__wrapper">
             <div className="item-layout">
-
-              <aside class="item-aside stick-to-bottom">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Product Images */}
-              <div>
-                  <ProductImageGallery mainImage={product.image} images={[product.image]} title={product.title} onImageChange={setMainImage} />
-              </div>
-              </aside>
-
-              <main class="item-main">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Product Images */}
+        <div>
+          <ProductImageGallery 
+            mainImage={product.image} 
+            images={[product.image]} 
+            title={product.title}
+            onImageChange={setMainImage}
+          />
+        </div>
+        
         {/* Product Details */}
         <div>
           <ProductHeader
@@ -145,7 +149,6 @@ const ProductDetail = () => {
           basePrice={bestPrice ? bestPrice.price : 0}
         />
       </div>
-              </main>
       
       {/* Related Products Sections */}
       <ProductRelatedSections
