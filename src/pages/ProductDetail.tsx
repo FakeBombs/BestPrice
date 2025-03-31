@@ -99,13 +99,8 @@ const ProductDetail = () => {
       </div>
       <div class="root__wrapper item-wrapper">
         <div class="root">
-          
-          <div id="trail" style="position: relative;">
-            
-          </div>
-
-          
-          <div className="container py-8">
+          <div class="item-layout__wrapper">
+            <div className="item-layout">
       {/* Breadcrumb */}
       <ProductBreadcrumb product={product} />
       
@@ -168,6 +163,7 @@ const ProductDetail = () => {
         product={product}
         currentPrice={bestPrice ? bestPrice.price : 0}
       />
+      </div>
       </div>
      </div>
     </div>
