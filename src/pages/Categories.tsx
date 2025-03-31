@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { 
   categories, products, getProductsByCategory, 
   rootCategories, getCategoriesByRoot, 
@@ -11,7 +10,6 @@ import CategoryCard from '@/components/CategoryCard';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import ProductFilter from '@/components/ProductFilter';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Link } from 'react-router-dom';
 
 const Categories = () => {
   const { categoryId, rootSlug } = useParams<{ categoryId?: string; rootSlug?: string }>();
@@ -88,11 +86,15 @@ const Categories = () => {
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/">Home</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/categories">Categories</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/categories">Categories</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           
           {rootCategory && (
@@ -102,8 +104,10 @@ const Categories = () => {
                 {!categoryId ? (
                   <span className="font-medium">{rootCategory.name}</span>
                 ) : (
-                  <BreadcrumbLink as={Link} to={`/categories/root/${rootCategory.slug}`}>
-                    {rootCategory.name}
+                  <BreadcrumbLink asChild>
+                    <Link to={`/categories/root/${rootCategory.slug}`}>
+                      {rootCategory.name}
+                    </Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
