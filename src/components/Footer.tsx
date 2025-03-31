@@ -9,7 +9,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">BestPrice</h3>
-            <p className="text-sm text-gray-600 mb-4">Find the best deals from multiple vendors in one place.</p>
+            <p className="text-sm text-gray-600 mb-4">Το BestPrice είναι η πρώτη και μεγαλύτερη υπηρεσία σύγκρισης τιμών στην Ελλάδα.</p>
+            <p className="text-sm text-gray-600 mb-4">Στο BestPrice θα βρεις γρήγορα και εύκολα πραγματικές προσφορές και την καλύτερη τιμή από τα μεγαλύτερα καταστήματα.</p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-500 hover:text-primary"><Facebook size={20} /></a>
               <a href="#" className="text-gray-500 hover:text-primary"><Twitter size={20} /></a>
