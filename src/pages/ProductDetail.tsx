@@ -107,6 +107,7 @@ const ProductDetail = () => {
               <aside class="item-aside stick-to-bottom">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Product Images */}
+              <div>
                   <ProductImageGallery mainImage={product.image} images={[product.image]} title={product.title} onImageChange={setMainImage} />
               </div>
               </aside>
