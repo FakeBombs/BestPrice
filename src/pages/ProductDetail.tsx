@@ -104,7 +104,7 @@ const ProductDetail = () => {
               {/* Breadcrumb */}
               <ProductBreadcrumb product={product} />
             </nav>
-            <div class="comparison__placeholder">
+            <div class="comparison__placeholder"></div>
           </div>
           <div className="container py-8">
             
@@ -172,5 +172,6 @@ const ProductDetail = () => {
     </div>
   </div>
   );
+);
 
 export default ProductDetail;
