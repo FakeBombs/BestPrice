@@ -5,6 +5,8 @@ import { Menu, X, User, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SearchBar } from '@/components/SearchBar';
+import UserButton from '@/components/UserButton';
+import NotificationButton from '@/components/NotificationButton';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +28,8 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
+            <NotificationButton />
+            <UserButton />
           </nav>
 
           {/* Mobile Menu Button */}
