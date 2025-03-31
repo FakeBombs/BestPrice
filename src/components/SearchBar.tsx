@@ -97,7 +97,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Search products..."
+          placeholder="Η καλύτερη τιμή για..."
           className="w-full"
           value={searchQuery}
           onChange={handleChange}
