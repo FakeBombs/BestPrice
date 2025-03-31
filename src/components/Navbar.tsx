@@ -8,7 +8,7 @@ import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  return <header id="bp-header" className="bp-header root__wrapper w-full bg-[#161616]">
+  return <header id="bp-header" className="bp-header root__wrapper w-full">
       <div className="container flex items-center py-[1.05rem]">
         <div className="flex items-center justify-between w-full h-16">
           {/* Logo */}
