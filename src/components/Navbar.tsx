@@ -17,12 +17,12 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Search */}
-          <div className="hidden md:flex flex-1 mx-8">
+          <div className="md:flex flex-1 mx-8">
             <SearchBar className="flex-1" />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4">
+          <nav className="md:flex items-center space-x-4">
             <ThemeToggle />
             <NotificationButton />
             <UserButton />
