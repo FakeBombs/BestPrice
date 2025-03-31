@@ -99,6 +99,10 @@ const ProductDetail = () => {
       </div>
       <div class="root__wrapper item-wrapper">
         <div class="root">
+          
+          <div id="trail" style="position: relative;">
+            
+          </div>
 
           
           <div className="container py-8">
