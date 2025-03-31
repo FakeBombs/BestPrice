@@ -1,27 +1,20 @@
-
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import { Product, getBestPrice, getVendorById } from '@/data/mockData';
-
 interface ProductCardProps {
   product: Product;
 }
-
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({
+  product
+}: ProductCardProps) => {
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices.filter(p => p.inStock).length;
-
-  return (
-    <Card className="overflow-hidden h-full transition-all hover:shadow-md">
+  return <Card className="overflow-hidden h-full transition-all hover:shadow-md bg-[#26282c]">
       <Link to={`/product/${product.id}`}>
         <div className="aspect-square overflow-hidden">
-          <img 
-            src={product.image} 
-            alt={product.title} 
-            className="h-full w-full object-cover transition-transform hover:scale-105"
-          />
+          <img src={product.image} alt={product.title} className="h-full w-full object-cover transition-transform hover:scale-105" />
         </div>
         <CardContent className="p-4">
           <div className="flex items-center space-x-1 mb-2">
@@ -31,18 +24,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
           <h3 className="font-medium line-clamp-2 mb-2">{product.title}</h3>
           
-          {bestPrice && (
-            <div className="mt-2">
+          {bestPrice && <div className="mt-2">
               <div className="price-tag">${bestPrice.price.toFixed(2)}</div>
               <div className="text-sm text-muted-foreground mt-1">
                 from {vendorCount} {vendorCount === 1 ? 'vendor' : 'vendors'}
               </div>
-            </div>
-          )}
+            </div>}
         </CardContent>
       </Link>
-    </Card>
-  );
+    </Card>;
 };
-
 export default ProductCard;

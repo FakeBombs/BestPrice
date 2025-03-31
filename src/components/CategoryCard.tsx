@@ -1,16 +1,13 @@
-
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Smartphone, Laptop, Tablet, Headphones, Camera, Monitor, Home, Gamepad, LucideIcon 
-} from 'lucide-react';
+import { Smartphone, Laptop, Tablet, Headphones, Camera, Monitor, Home, Gamepad, LucideIcon } from 'lucide-react';
 import { Category } from '@/data/mockData';
-
 interface CategoryCardProps {
   category: Category;
 }
-
-const CategoryCard = ({ category }: CategoryCardProps) => {
+const CategoryCard = ({
+  category
+}: CategoryCardProps) => {
   const getIcon = (): JSX.Element => {
     switch (category.icon) {
       case 'smartphone':
@@ -33,19 +30,15 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
         return <Smartphone className="h-8 w-8" />;
     }
   };
-
-  return (
-    <Link to={`/categories/${category.id}`}>
+  return <Link to={`/categories/${category.id}`}>
       <Card className="overflow-hidden transition-all hover:shadow-md text-center h-full">
-        <CardContent className="p-6 flex flex-col items-center justify-center">
+        <CardContent className="p-6 flex flex-col items-center justify-center bg-[#26282c]">
           <div className="rounded-full bg-primary/10 p-3 mb-3">
             {getIcon()}
           </div>
           <h3 className="font-medium">{category.name}</h3>
         </CardContent>
       </Card>
-    </Link>
-  );
+    </Link>;
 };
-
 export default CategoryCard;
