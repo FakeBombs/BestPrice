@@ -32,7 +32,7 @@ const CategoryCard = ({
   };
   return <Link to={`/categories/${category.id}`}>
       <Card className="overflow-hidden transition-all hover:shadow-md text-center h-full">
-        <CardContent className="p-6 flex flex-col items-center justify-center bg-[#26282c]">
+        <CardContent className="p-6 flex flex-col items-center justify-center h-categories__cover">
           <div className="rounded-full bg-primary/10 p-3 mb-3">
             {getIcon()}
           </div>
