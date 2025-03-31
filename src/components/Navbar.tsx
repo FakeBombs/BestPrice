@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, User, ShoppingCart } from 'lucide-react';
@@ -7,13 +6,10 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { SearchBar } from '@/components/SearchBar';
 import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
-
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <header className="w-full border-b bg-background">
-      <div className="container flex h-16 items-center">
+  return <header className="w-full border-b bg-background">
+      <div className="container flex h-16 items-center py-[1.05rem] bg-[#161616]">
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link to="/" className="flex items-center">
@@ -33,20 +29,14 @@ const Navbar = () => {
           </nav>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden border-t p-4">
+      {isMenuOpen && <div className="md:hidden border-t p-4">
           <SearchBar className="mb-4" />
           <nav className="flex flex-col space-y-4">
             <div className="flex items-center justify-between">
@@ -56,10 +46,7 @@ const Navbar = () => {
               <ThemeToggle />
             </div>
           </nav>
-        </div>
-      )}
-    </header>
-  );
+        </div>}
+    </header>;
 };
-
 export default Navbar;
