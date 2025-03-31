@@ -1,42 +1,26 @@
 
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { 
-  Star, 
-  ChevronRight, 
-  ShoppingCart, 
-  Heart,
-  Share2,
-  Bell,
-  Clock,
-  ThumbsUp,
-  ThumbsDown,
-  ArrowDown,
-  ArrowUp
-} from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useParams } from 'react-router-dom';
 import { 
   getProductById, 
   getBestPrice, 
-  getVendorById, 
   getProductsByCategory,
   getProductsByCategoryWithDiscount
 } from '@/data/mockData';
-import ProductVendors from '@/components/ProductVendors';
-import ProductCarousel from '@/components/ProductCarousel';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
+import { Separator } from "@/components/ui/separator";
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import ProductImageGallery from '@/components/ProductImageGallery';
-import UserReviews from '@/components/UserReviews';
-import ProductSpecTable from '@/components/ProductSpecTable';
-import SimilarProductsSlider from '@/components/SimilarProductsSlider';
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import ProductVendors from '@/components/ProductVendors';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import PriceAlertModal from '@/components/PriceAlertModal';
+import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
+import ProductHeader from '@/components/product/ProductHeader';
+import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
+import ProductHighlights from '@/components/product/ProductHighlights';
+import ProductTabsSection from '@/components/product/ProductTabsSection';
+import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -57,7 +41,6 @@ const ProductDetail = () => {
   }
   
   const bestPrice = getBestPrice(product);
-  const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
   
   // Get similar products (products in the same category)
   const similarProducts = getProductsByCategory(product.category)
@@ -112,20 +95,7 @@ const ProductDetail = () => {
   return (
     <div className="container py-8">
       {/* Breadcrumb */}
-      <div className="flex items-center text-sm mb-6">
-        <Link to="/" className="text-muted-foreground hover:text-primary">Home</Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        <Link to="/categories" className="text-muted-foreground hover:text-primary">Categories</Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        <Link 
-          to={`/categories/${product.categoryId}`} 
-          className="text-muted-foreground hover:text-primary"
-        >
-          {product.category}
-        </Link>
-        <ChevronRight className="h-4 w-4 mx-1" />
-        <span className="text-foreground truncate max-w-[200px]">{product.title}</span>
-      </div>
+      <ProductBreadcrumb product={product} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
@@ -140,91 +110,19 @@ const ProductDetail = () => {
         
         {/* Product Details */}
         <div>
-          <div className="flex justify-between items-start">
-            <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-            <div className="flex space-x-2">
-              <Button 
-                onClick={handleAddToFavorites} 
-                variant="outline" 
-                size="icon"
-              >
-                <Heart className="h-5 w-5" />
-              </Button>
-              <Button 
-                onClick={handleShareProduct} 
-                variant="outline" 
-                size="icon"
-              >
-                <Share2 className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
+          <ProductHeader
+            product={product}
+            onAddToFavorites={handleAddToFavorites}
+            onShareProduct={handleShareProduct}
+          />
           
-          <div className="flex items-center mb-4">
-            <div className="flex items-center text-yellow-400 mr-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`h-5 w-5 ${i < Math.round(product.rating) ? 'fill-current' : ''}`} 
-                />
-              ))}
-            </div>
-            <span className="text-sm text-muted-foreground">
-              {product.rating.toFixed(1)} ({product.reviews} reviews)
-            </span>
-          </div>
+          <ProductEssentialInfo
+            product={product}
+            bestPrice={bestPrice}
+            onNotifyMe={handleNotifyMe}
+          />
           
-          {/* Essential Info Card */}
-          <div className="bg-muted/30 p-4 rounded-lg mb-6">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-              <div>
-                <Badge className="mb-2 bg-green-500">Best Price</Badge>
-                {bestPrice && (
-                  <div className="text-3xl font-bold text-primary">${bestPrice.price.toFixed(2)}</div>
-                )}
-              </div>
-              
-              <div className="mt-4 lg:mt-0 flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={handleNotifyMe}
-                  variant="outline"
-                  className="flex items-center"
-                >
-                  <Bell className="h-4 w-4 mr-2" />
-                  Price Alert
-                </Button>
-                <Button className="flex items-center">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Compare Prices
-                </Button>
-              </div>
-            </div>
-            
-            {bestVendor && (
-              <div className="text-sm">
-                Best price from <span className="font-medium">{bestVendor.name}</span>
-                {bestPrice.shippingCost > 0 
-                  ? ` + $${bestPrice.shippingCost.toFixed(2)} shipping` 
-                  : ' with free shipping'}
-              </div>
-            )}
-            
-            <div className="mt-4 text-sm text-muted-foreground flex items-center">
-              <Clock className="h-4 w-4 mr-1" />
-              Last price update: {new Date().toLocaleDateString()}
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-2">Highlights</h3>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              {Object.entries(product.specifications).slice(0, 4).map(([key, value]) => (
-                <li key={key}>
-                  <span className="font-medium">{key}:</span> {value}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ProductHighlights specifications={product.specifications} />
           
           <Separator className="my-6" />
           
@@ -241,47 +139,14 @@ const ProductDetail = () => {
       </div>
       
       {/* Product Information Tabs */}
-      <div className="mt-12">
-        <Tabs defaultValue="specifications">
-          <TabsList className="w-full justify-start">
-            <TabsTrigger value="specifications">Specifications</TabsTrigger>
-            <TabsTrigger value="description">Description</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          </TabsList>
-          <TabsContent value="specifications" className="p-4 border rounded-lg mt-4">
-            <ProductSpecTable specifications={product.specifications} />
-          </TabsContent>
-          <TabsContent value="description" className="p-4 border rounded-lg mt-4">
-            <h3 className="text-xl font-medium mb-4">Product Description</h3>
-            <div className="prose max-w-none">
-              <p className="mb-4">{product.description}</p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu 
-                pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
-              </p>
-            </div>
-          </TabsContent>
-          <TabsContent value="reviews" className="p-4 border rounded-lg mt-4">
-            <UserReviews productId={product.id} rating={product.rating} reviewCount={product.reviews} />
-          </TabsContent>
-        </Tabs>
-      </div>
+      <ProductTabsSection product={product} />
       
-      {/* Similar Products */}
-      <SimilarProductsSlider title="Similar Products" products={similarProducts} />
-      
-      {/* Deals in this Category */}
-      <ProductCarousel 
-        title={`Deals in ${product.category}`} 
-        products={categoryDeals} 
-        emptyMessage="No deals found in this category"
-      />
-      
-      {/* Recently Viewed Products */}
-      <ProductCarousel 
-        title="Recently Viewed" 
-        products={recentlyViewed.filter(p => p.id !== product.id)} 
-        emptyMessage="No recently viewed products"
+      {/* Related Products Sections */}
+      <ProductRelatedSections
+        similarProducts={similarProducts}
+        categoryDeals={categoryDeals}
+        recentlyViewed={recentlyViewed}
+        productId={product.id}
       />
       
       {/* Price Alert Modal */}
