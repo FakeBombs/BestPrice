@@ -124,7 +124,7 @@ export const products: Product[] = [
   {
     id: "p1",
     title: "iPhone 14 Pro Max 256GB",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp",
     category: "c1",
     description:
       "Apple's flagship smartphone featuring the A16 Bionic chip, 48MP main camera, and Dynamic Island.",
@@ -147,7 +147,7 @@ export const products: Product[] = [
   {
     id: "p2",
     title: "Samsung Galaxy S23 Ultra 512GB",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg49/9ox2x/1SYzV1_SX660/1728492731/samsung-galaxy-s23-ultra-512gb.webp",
     category: "c1",
     description:
       "Samsung's premium smartphone with S Pen support, 200MP main camera, and Snapdragon 8 Gen 2 processor.",
@@ -170,7 +170,7 @@ export const products: Product[] = [
   {
     id: "p3",
     title: "MacBook Pro M2 14-inch",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg1/7Cvx7/1TmbHl_SX660/1734119499/apple-macbook-pro-14-2023.webp",
     category: "c2",
     description:
       "The latest MacBook Pro featuring the powerful M2 chip, stunning display, and all-day battery life.",
@@ -193,7 +193,7 @@ export const products: Product[] = [
   {
     id: "p4",
     title: "Dell XPS 15",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg38/2maDNs/1SIRFo_SX660/1724747706/dell-xps-13-9345.webp",
     category: "c2",
     description:
       "Premium Windows laptop with InfinityEdge display, powerful Intel Core i7 processor, and NVIDIA graphics.",
@@ -216,7 +216,7 @@ export const products: Product[] = [
   {
     id: "p5",
     title: "Sony WH-1000XM5",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg18/7Tj7s/1SYzV1_SX537/1728492731/sony-wh-1000xm5-asyrmata-bluetooth-akoystika-over-ear-me-noise-cancelling-ashmi.webp",
     category: "c4",
     description:
       "Industry-leading noise canceling headphones with exceptional sound quality and long battery life.",
@@ -238,7 +238,7 @@ export const products: Product[] = [
   {
     id: "p6",
     title: "iPad Pro 12.9-inch M2",
-    image: "https://via.placeholder.com/300",
+    image: "https://bbpcdn.pstatic.gr/bpimg33/bgrND/1TgAfK_SX660/1732783920/apple-ipad-pro-129-2022-wifi-cellular-256gb.webp",
     category: "c3",
     description:
       "Apple's most advanced iPad featuring the M2 chip, Liquid Retina XDR display, and Apple Pencil support.",
