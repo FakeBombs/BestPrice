@@ -10,7 +10,7 @@ interface ProductBreadcrumbProps {
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   return (
     <div className="flex items-center text-sm mb-6">
-      <Link to="/" className="text-muted-foreground hover:text-primary">Home</Link>
+      <Link to="/" className="text-muted-foreground hover:text-primary">BestPrice</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
       <Link to="/categories" className="text-muted-foreground hover:text-primary">Categories</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
