@@ -18,8 +18,8 @@ const Index = () => {
 
   return (
     <div className="flex-1">
-      <div className=""h-promos__wrapper root__wrapper">
-        <div className=""h-promos__slides" data-count="2">
+      <div class="root__wrapper">
+        <div class="root">
         </div>
       </div>
 
