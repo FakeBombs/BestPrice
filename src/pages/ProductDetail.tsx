@@ -118,13 +118,14 @@ const ProductDetail = () => {
                     {/* Product Details */}
                     <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                     <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
-                    <ProductHighlights specifications={product.specifications} />
+                    
+                    {/* Product Information Tabs */}
+                    <ProductTabsSection product={product} />
 
                     {/* Price History Chart */}
                     <PriceHistoryChart productId={product.id} basePrice={bestPrice ? bestPrice.price : 0} />
                     
-                    {/* Product Information Tabs */}
-                    <ProductTabsSection product={product} />
+                    <ProductHighlights specifications={product.specifications} />
                   </div>
                   
                   <div class="product-overview">
