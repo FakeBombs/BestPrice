@@ -68,23 +68,42 @@ const SearchResults = () => {
     <div id="root" class="clr">
       <div class="root__wrapper">
         <div class="root">
+
+          <div class="page-products">
+            <aside class="page-products__filters">
+              <div id="filters">
+                <div class="filters__categories" data-filter-name="categories">
+                  <div class="filters__header">
+                    <div class="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+                  </div>
+                  <ol>
+                    <li><a data-c="2" href="/cat/3446/tablets.html?q=ipad+pro+12.9-inch+m2"><span>Tablets</span></a></li>
+                    <li><a data-c="2" href="/cat/5951/screen-protectors-tablets.html?q=ipad+pro+12.9-inch+m2"><span>Προστασία Οθόνης Tablet</span></a></li>
+                    <li><a data-c="3" href="/cat/5943/thikes-tablet.html?q=ipad+pro+12.9-inch+m2"><span>Θήκες Tablet</span></a></li>
+                    <li><a data-c="1" href="/cat/815/grafides-afis.html?q=ipad+pro+12.9-inch+m2"><span>Γραφίδες Αφής</span></a></li>
+                  </ol>
+                </div>
+              </div>
+            </aside>
+          </div>
+          
           <div className="container py-8">
             <p className="text-muted-foreground mb-6">
               {filteredResults.length} results for "{query}"
-              </p>
+            </p>
             
             <ProductFilter onSortChange={setSortOrder} onVendorFilter={setFilteredVendors} onPriceRangeFilter={(min, max) => console.log(min, max)} onInStockOnly={setInStockOnly} />
             
             {filteredResults.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">No products found matching your search.</p>
-                </div>
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredResults.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
-                </div>
+              </div>
             )}
             </div>
           </div>
