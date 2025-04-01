@@ -201,28 +201,28 @@ const Index = () => {
                         <div class="h-content__posts scroll__child">
                           <a target="_blank" class="h-content__post" href="/blog/292/protaseis-pasxalines-lampades-paidikes?bpref=home-content">
                             <div class="h-content__badge">Νέο</div>
-                            <div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/blog2902_SX640/1709715959/image.webp"}}></div>
+                            <div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/blog2902_SX640/1709715959/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">Πάσχα 2025: Προτάσεις για αγορά λαμπάδας</h4></div>
                           </a>
                           <a target="_blank" class="h-content__post" href="/blog/762/kalytera-android-kinhta?bpref=home-content">
                             <div class="h-content__badge">Νέο</div>
-                            <div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/blog2800_SX640/1687262926/image.webp"}}></div>
+                            <div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/blog2800_SX640/1687262926/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">Τα καλύτερα Android κινητά της αγοράς για το 2025</h4></div>
                           </a>
                           <a target="_blank" class="h-content__post" href="/blog/673/kalytera-kinita-mexri-150-eyrw?bpref=home-content">
-                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/blog2629_SX640/1667219758/image.webp"}}></div>
+                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/blog2629_SX640/1667219758/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">Τα καλύτερα κινητά μέχρι 150 ευρώ για το 2025</h4></div>
                           </a>
                           <a target="_blank" class="h-content__post" href="/blog/286/gynaikeia-gyalia-hliou-2025-oi-koryfaies-taseis-pou-tha-kanoun-ti-diafora?bpref=home-content">
-                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/blog3142_SX640/1742386383/image.webp"}}></div>
+                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/blog3142_SX640/1742386383/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">Γυναικεία Γυαλιά Ηλίου 2025: Οι Κορυφαίες Τάσεις!</h4></div>
                           </a>
                           <a target="_blank" class="h-content__post" href="/blog/903/bestprice-ta-credits-s-esena?bpref=home-content">
-                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/blog3123_SX640/1740149356/image.webp"}}></div>
+                            <div class="h-content__badge">Νέο</div><div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/blog3123_SX640/1740149356/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">BestPrice Credits Club και... τα credits σʼεσένα!</h4></div>
                           </a>
                           <a target="_blank" class="h-content__post" href="/guide/104/odhgos-agoras-gia-xortokoptika?bpref=home-content">
-                            <div class="h-content__badge">Οδηγός αγοράς</div><div class="h-content__cover" style={{backgroundImage: "//bbpcdn.pstatic.gr/bpimg130/guide919_SX640/1647011143/image.webp"}}></div>
+                            <div class="h-content__badge">Οδηγός αγοράς</div><div class="h-content__cover" style={{background-image: "//bbpcdn.pstatic.gr/bpimg130/guide919_SX640/1647011143/image.webp"}}></div>
                             <div class="h-content__meta"><h4 class="h-content__title">Οδηγός αγοράς για χορτοκοπτικά</h4></div>
                           </a>
                         </div>
