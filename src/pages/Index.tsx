@@ -194,7 +194,7 @@ const Index = () => {
               <div class="h-content__placeholder" data-intersected="">
                 <div class="scroll scroll--no-scrolling">
                   <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{left: "0"}}><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-                  <button aria-label="Scroll arrow next" disabled="" class="scroll__arrow scroll__arrow--next scroll__arrow--disabled" style={{right: "0"}} as React.CSSProperties}><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
+                  <button aria-label="Scroll arrow next" disabled="" class="scroll__arrow scroll__arrow--next scroll__arrow--disabled" style={{right: "0"}}><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
                   <div class="scroll__clip" style={{overflow: "hidden"}}>
                     <div class="scroll__scroller">
                       <div class="scroll__content">
