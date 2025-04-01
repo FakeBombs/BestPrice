@@ -121,9 +121,23 @@ const Index = () => {
                   <div class="h-categories__cover">
                     <img width="125" height="125" alt="Σκούπες Stick στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6846-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/6846-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Σκούπες Stick</h2></a><a href="/cat/3446/tablets.html?bpref=home-categories" class="h-categories__category" title="Tablets"><div class="h-categories__cover"><img width="125" height="125" alt="Tablets στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/3446-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/3446-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Tablets</h2></a><a href="/cat/7124/antiiliaka.html?bpref=home-categories" class="h-categories__category" title="Αντηλιακά"><div class="h-categories__cover"><img width="125" height="125" alt="Αντηλιακά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/7124-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/7124-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Αντηλιακά</h2></a><a href="/cat/6670/andrika-sneakers.html?bpref=home-categories" class="h-categories__category" title="Ανδρικά Sneakers"><div class="h-categories__cover"><img width="125" height="125" alt="Ανδρικά Sneakers στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6670-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/6670-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Ανδρικά Sneakers</h2></a><a href="/cat/6843/skoupes-robot.html?bpref=home-categories" class="h-categories__category" title="Σκούπες Ρομπότ"><div class="h-categories__cover"><img width="125" height="125" alt="Σκούπες Ρομπότ στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6843-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/6843-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Σκούπες Ρομπότ</h2></a><a href="/cat/2421/xortokoptika.html?bpref=home-categories" class="h-categories__category" title="Χορτοκοπτικά"><div class="h-categories__cover"><img width="125" height="125" alt="Χορτοκοπτικά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2421-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/2421-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Χορτοκοπτικά</h2></a><a href="/cat/848/andrika-rologia.html?bpref=home-categories" class="h-categories__category" title="Ανδρικά Ρολόγια"><div class="h-categories__cover"><img width="125" height="125" alt="Ανδρικά Ρολόγια στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/848-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/848-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Ανδρικά Ρολόγια</h2></a><a href="/cat/5925/pasxalines-lampades.html?bpref=home-categories" class="h-categories__category" title="Λαμπάδες"><div class="h-categories__cover"><img width="125" height="125" alt="Λαμπάδες στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/5925-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/5925-1@2x.webp 2x" class="h-categories__image"/></div><h2 class="h-categories__label">Λαμπάδες</h2></a>
               </div>
-
-              
             </div>
+            <div class="giveaway__wrapper">
+              <div class="giveaway-optOut-section february" id="giveawayPromo" role="button">
+                <div class="information-section">
+                  <img loading="lazy" src="plugins/giveaway/April/calendar.svg" alt="calendar"/>
+                  <div class="information-optout">
+                    <div class="information-title">Κλήρωση Απριλίου</div>
+                    <div class="text">Αξιολόγησε και κέρδισε 500€!</div>
+                    </div>
+                  </div>
+                <div class="actions">
+                  <div class="hint">1 αξιολόγηση = 1 συμμετοχή</div>
+                  <div class="cta" id="enterGiveaway">MΠΕΣ ΣΤΗΝ ΚΛΗΡΩΣΗ!</div>
+                  </div>
+                </div>
+            </div>
+            
           </div>
         </div>
       </div>
