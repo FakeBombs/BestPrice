@@ -21,9 +21,7 @@ const Index = () => {
       <div className="h-promos__slides" data-count="2">
         <div className="h-promos__slide-wrapper" data-id="bp-credits-club">
           <div className="h-promos__slide">
-            <div className="promo promo-credits-club" data-listener-added="true">
-              
-            </div>
+
           </div>
         </div>
       </div>
