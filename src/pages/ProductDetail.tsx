@@ -144,6 +144,7 @@ const ProductDetail = () => {
                   
                 <div class="sections item-sections">
                   <ProductVendors product={product} />
+                  <ProductRelatedSections categoryDeals={categoryDeals} productId={product.id} />
                   
                   {/* Price History Chart */}
                   <PriceHistoryChart productId={product.id} basePrice={bestPrice ? bestPrice.price : 0} />
@@ -166,7 +167,7 @@ const ProductDetail = () => {
 
                       <div class="scroll">
                         {/* Related Products Sections */}
-                        <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+                        <ProductRelatedSections recentlyViewed={recentlyViewed} similarProducts={similarProducts} productId={product.id} />
                       </div>
                     </section>
                   </div>
