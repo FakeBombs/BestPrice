@@ -201,6 +201,58 @@ const Index = () => {
                             </div>
                           </div>
                         </div>
+
+                        <div data-id="2159912975" data-cid="876" data-price="43970" class="p p--deal p--top-padding">
+                          <div class="p__actions" data-js="">
+                            <div class="p__action" role="button" aria-label="All product actions">
+                              <svg aria-hidden="true" class="icon" width="100%" height="100%"><use xlink:href="/public/dist/images/icons/actions.svg#icon-more-vertical"></use></svg>
+                            </div>
+                          </div>
+                          <a class="p__cover" href="/item/2159912975/sony-playstation-5-slim-astro-bot.html?bpref=home-deals">
+                            <img width="160" height="160" alt="Sony PlayStation 5 Slim &amp; Astro Bot" src="//bbpcdn.pstatic.gr/bpimg35/ccaob/1TUs7T_SX160Y160/1742285801/sony-playstation-5-slim-astro-bot.webp" srcset="//bbpcdn.pstatic.gr/bpimg35/ccaob/1TUs7T_SX320Y320/1742285801/sony-playstation-5-slim-astro-bot.webp 2x"/>
+                          </a>
+                          <div class="p__main">
+                            <div class="p__meta">
+                              <div class="p__category">
+                                <a href="/cat/876/video-game-consoles.html?deals=11">Κονσόλες</a>
+                              </div>
+                              <h3 class="p__title p__title--lines p__title--lines-2">
+                                <a href="/item/2159912975/sony-playstation-5-slim-astro-bot.html?bpref=home-deals" title="Sony PlayStation 5 Slim &amp; Astro Bot">Sony PlayStation 5 Slim &amp; Astro Bot</a>
+                              </h3>
+                            </div>
+                            <div class="p__badges">
+                              <div class="p__badges-drop">
+                                <div class="p__badge p__badge--drop drop drop--20">-26%</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="p__footer">
+                            <div class="p__rating" data-breakdown="">
+                              <a href="/item/2159912975/sony-playstation-5-slim-astro-bot.html?bpref=home-deals" class="p__rating-link">
+                                <div class="simple-rating"><div class="simple-rating__inner">
+                                  <div class="simple-rating__stars">
+                                    <svg aria-hidden="true" class="icon" width="80" height="16"><use xlink:href="/public/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                                  </div>
+                                  <div class="simple-rating__rated" style="width: 96.216216216216%;">
+                                    <div class="simple-rating__stars">
+                                      <svg aria-hidden="true" class="icon" width="80" height="16"><use xlink:href="/public/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                  <div class="simple-rating__total">(37)</div>
+                                </div>
+                                <svg aria-hidden="true" class="icon p__rating-arrow" width="10" height="10"><use xlink:href="/public/dist/images/icons/arrows.svg#icon-more-12"></use></svg>
+                              </a>
+                            </div>
+                            <div class="p__price-merchants">
+                              <a class="p__price" href="/item/2159912975/sony-playstation-5-slim-astro-bot.html?bpref=home-deals">
+                                <div class="p__price--current">439,70€</div>
+                                <del class="p__price--before">594,18€</del>
+                              </a>
+                              <div class="p__merchants">18 καταστήματα</div>
+                            </div>
+                          </div>
+                        </div>
                         
 
 
