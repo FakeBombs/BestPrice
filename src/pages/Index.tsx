@@ -190,7 +190,7 @@ const Index = () => {
                   <div class="section__title">Συλλογές προϊόντων</div>
                 </div>
               </div>
-              <div class="h-collections__placeholder" data-intersected="">
+              <div class="h-collections__placeholder">
                 <div class="DoZFzTt6KaqcW2C3gw2t">
                   <a class="Y4NLSAY5tJd6NM7ZZnoK" href="/c/1803778568/aneta-monterna-sneakers?bpref=home-collections">
                     <div class="eJJfcJGMERkC8cUwtBAQ" style="background-image: url(&quot;//bbpcdn.pstatic.gr/bpnr/col-cover-1803778568_SX1500/1742568970000/image.webp&quot;);">
