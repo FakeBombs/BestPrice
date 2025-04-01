@@ -112,6 +112,7 @@ const ProductDetail = () => {
                 </div>
               </aside>
               <main class="item-main">
+                
                 <div class="item-header__wrapper">
                   <div class="item-header">
                     {/* Product Details */}
@@ -119,10 +120,32 @@ const ProductDetail = () => {
                     <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
                     <ProductHighlights specifications={product.specifications} />
                   </div>
+                  
+                  <div class="product-overview">
+                    <div class="product-overview__section">
+                      <div class="product-overview__section-title">Η καλύτερη τιμή</div>
+                      <div class="product-overview__price">1.291,95€</div>
+                      <div class="product-overview__link" data-type="notify">Ειδοποίηση για πτώση τιμής</div>
+                    </div>
+                    
+                    <div class="product-overview__section">
+                      <div class="product-overview__section-title">Διατίθεται από</div>
+                      <div class="product-overview__merchants">Electroholic και 3 ακόμα καταστήματα</div>
+                    </div>
+                    
+                    <div class="product-overview__button">
+                      <button class="item-actions__button">
+                        <svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="//bestprice.gr/public/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
+                        <span class="item-actions__label">Λίστα Αγορών</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                  
                 <div class="sections item-sections">
                   <ProductVendors product={product} />
                 </div>
+                  
               </main>
       
         
