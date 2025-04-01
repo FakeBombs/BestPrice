@@ -51,6 +51,13 @@ const Index = () => {
               </div>
 
               <div class="h-categories__list">
+                <a href="/deals?bpref=home-categories" class="h-categories__category h-categories__category--deals" title="Προσφορές">
+                  <div class="h-categories__cover">
+                    <div class="h-categories__badge drop drop--40">233 Νέες</div>
+                    <img width="34" height="42" alt="Deals icon" class="h-categories__image" src="//bp.pstatic.gr/images/flame.svg">
+                    </div>
+                    <h2 class="h-categories__label">Προσφορές</h2>
+                  </a>
               </div>
 
               
