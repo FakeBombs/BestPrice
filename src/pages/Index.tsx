@@ -18,8 +18,21 @@ const Index = () => {
 
   return (
     <div className="flex-1">
-      <div class="root__wrapper">
-        <div class="root">
+      <div className="root__wrapper">
+        <div className="root">
+          <div class="sections">
+            <div class="h-categories">
+              <div class="h-header">
+                
+                <div class="h-header__hgroup">
+                  <div class="section__title">Δημοφιλείς κατηγορίες</div>
+                </div>
+
+                <div class="h-header__more-wrapper"><div class="h-categories__verticals"><a data-id="deals" href="/deals?bpref=home-verticals"><svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Προσφορές</a><a href="/cat/6989/technology.html?bpref=home-verticals">Τεχνολογία</a><a href="/cat/2185/home-garden.html?bpref=home-verticals">Σπίτι &amp; Κήπος</a><a href="/cat/2068/fashion.html?bpref=home-verticals">Μόδα</a><a href="/cat/583/health-beauty.html?bpref=home-verticals">Υγεία &amp; Ομορφιά</a><a href="/cat/2175/paidika-brefika.html?bpref=home-verticals">Παιδικά - Βρεφικά</a><a href="/cat/3058/sports-hobbies.html?bpref=home-verticals">Hobby, Αθλητισμός</a><a href="/cat/3204/auto-moto.html?bpref=home-verticals">Μηχανοκίνηση</a></div><div class="h-header__more pressable"><svg aria-hidden="true" class="icon" width="12" height="12"><use xlink:href="/public/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg><span class="h-header__more-label">Όλες</span><svg aria-hidden="true" class="icon" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-right-20"></use></svg></div></div>
+                
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
