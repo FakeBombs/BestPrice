@@ -153,17 +153,26 @@ const ProductDetail = () => {
                 </div>
                   
               </main>
+
+              <div class="history__placeholder" data-intersected="">
+                <div class="root__wrapper">
+                  <div class="root">
+                    <section class="section history__products">
+                      {/* Related Products Sections */}
+                      <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+                    </section>
+                  </div>
+                </div>
+              </div>
               
-              {/* Related Products Sections */}
-              <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
               {/* Price Alert Modal */}
               <PriceAlertModal isOpen={isAlertModalOpen} onClose={() => setIsAlertModalOpen(false)} product={product} currentPrice={bestPrice ? bestPrice.price : 0} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      </div>
-     </div>
-    </div>
-  </div>
-  );
+    );
 };
 
 export default ProductDetail;
