@@ -17,7 +17,7 @@ const Index = () => {
   const popularCategories = categories.slice(0, 8);
 
   return (
-
+    <div className="flex-1">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16">
         <div className="container">
@@ -105,7 +105,7 @@ const Index = () => {
           </div>
         </div>
       </section>
-
+    </div>
   );
 };
 
