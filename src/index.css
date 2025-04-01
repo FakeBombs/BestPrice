@@ -16572,6 +16572,132 @@ section.section--center .section__hgroup * {
     text-align: center
 }
 
+.kuy1g9IZ7hrtBd1FQ_Xz {
+    background: linear-gradient(180deg,#faf2e0 26.95%,hsla(42,72%,93%,0));
+    margin-left: -1.05rem!important;
+    margin-right: -1.05rem!important;
+    padding: 2rem 1.05rem
+}
+
+[data-theme=dark] .kuy1g9IZ7hrtBd1FQ_Xz {
+    background: linear-gradient(180deg,#0a0a0a,transparent 100%)
+}
+
+[data-theme=dark] .kuy1g9IZ7hrtBd1FQ_Xz>header hgroup * {
+    color: #c3c4c7!important
+}
+
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC {
+    background: linear-gradient(180deg,#21282b 26.95%,hsla(42,72%,93%,0))!important
+}
+
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC hgroup * {
+    color: #fff!important
+}
+
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC hgroup .section__subtitle {
+    opacity: .5
+}
+
+@media only screen and (min-width: 48em) {
+    .kuy1g9IZ7hrtBd1FQ_Xz {
+        border-radius:6px;
+        margin: 0!important;
+        padding: 1.5rem
+    }
+}
+
+@media only screen and (min-width: 64em) {
+    .kuy1g9IZ7hrtBd1FQ_Xz {
+        padding:2rem
+    }
+}
+
+@media only screen and (min-width: 80em) {
+    .kuy1g9IZ7hrtBd1FQ_Xz {
+        padding:2.5rem
+    }
+}
+
+@media only screen and (min-width: 120em) {
+    .kuy1g9IZ7hrtBd1FQ_Xz {
+        padding:3rem
+    }
+}
+
+@media only screen and (min-width: 150em) {
+    .kuy1g9IZ7hrtBd1FQ_Xz {
+        padding:3.2rem
+    }
+}
+
+.kuy1g9IZ7hrtBd1FQ_Xz hgroup * {
+    color: #111!important
+}
+
+.kuy1g9IZ7hrtBd1FQ_Xz .p {
+    cursor: pointer
+}
+
+.otVkgH1Tus7h_aaccPIA {
+    cusror: pointer;
+    display: grid;
+    gap: 1.25rem
+}
+
+.otVkgH1Tus7h_aaccPIA .fza04vrCJj9rfeBY29b4 {
+    background: #fff;
+    border-radius: 4px;
+    justify-self: start;
+    padding: .2rem .5rem
+}
+
+.otVkgH1Tus7h_aaccPIA .button {
+    border-radius: 8px;
+    display: none;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+@media only screen and (min-width: 23em) {
+    .otVkgH1Tus7h_aaccPIA .button {
+        display:grid
+    }
+}
+
+.otVkgH1Tus7h_aaccPIA .button:first-child {
+    color: #fff
+}
+
+.H5kO4t1qABiJBBYvNKE3 {
+    display: grid;
+    gap: .5rem
+}
+
+.QkspaEQsTHQvpauTgiMf .p__price--before {
+    display: none
+}
+
+.AHd5FKXYvqc_5LIrFo_Q .button {
+    align-items: center;
+    display: grid;
+    gap: .25rem;
+    grid-auto-flow: column;
+    justify-content: center
+}
+
+.AHd5FKXYvqc_5LIrFo_Q .button svg {
+    display: none
+}
+
+@media only screen and (min-width: 23em) {
+    .AHd5FKXYvqc_5LIrFo_Q .button svg {
+        display:block
+    }
+}
+
 .sections {
     display: grid;
     row-gap: 2rem
