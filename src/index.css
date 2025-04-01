@@ -16572,6 +16572,45 @@ section.section--center .section__hgroup * {
     text-align: center
 }
 
+.kuy1g9IZ7hrtBd1FQ_Xz { background: linear-gradient(rgb(250, 242, 224) 26.95%, rgba(250, 242, 224, 0)); padding: 2rem 1.05rem; margin-left: -1.05rem !important; margin-right: -1.05rem !important; }
+[data-theme="dark"] .kuy1g9IZ7hrtBd1FQ_Xz { background: linear-gradient(rgb(10, 10, 10), transparent 100%); }
+[data-theme="dark"] .kuy1g9IZ7hrtBd1FQ_Xz > header hgroup * { color: rgb(195, 196, 199) !important; }
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC { background: linear-gradient(rgb(33, 40, 43) 26.95%, rgba(250, 242, 224, 0)) !important; }
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC hgroup * { color: rgb(255, 255, 255) !important; }
+.kuy1g9IZ7hrtBd1FQ_Xz.VZZW0I_1336ckr6GBoLC hgroup .section__subtitle { opacity: 0.5; }
+@media only screen and (min-width: 48em) {
+  .kuy1g9IZ7hrtBd1FQ_Xz { border-radius: 6px; padding: 1.5rem; margin: 0px !important; }
+}
+@media only screen and (min-width: 64em) {
+  .kuy1g9IZ7hrtBd1FQ_Xz { padding: 2rem; }
+}
+@media only screen and (min-width: 80em) {
+  .kuy1g9IZ7hrtBd1FQ_Xz { padding: 2.5rem; }
+}
+@media only screen and (min-width: 120em) {
+  .kuy1g9IZ7hrtBd1FQ_Xz { padding: 3rem; }
+}
+@media only screen and (min-width: 150em) {
+  .kuy1g9IZ7hrtBd1FQ_Xz { padding: 3.2rem; }
+}
+.kuy1g9IZ7hrtBd1FQ_Xz hgroup * { color: rgb(17, 17, 17) !important; }
+.kuy1g9IZ7hrtBd1FQ_Xz .p { cursor: pointer; }
+.otVkgH1Tus7h_aaccPIA { display: grid; gap: 1.25rem; }
+.otVkgH1Tus7h_aaccPIA .fza04vrCJj9rfeBY29b4 { background: rgb(255, 255, 255); border-radius: 4px; justify-self: start; padding: 0.2rem 0.5rem; }
+.otVkgH1Tus7h_aaccPIA .button { border-radius: 8px; display: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media only screen and (min-width: 23em) {
+  .otVkgH1Tus7h_aaccPIA .button { display: grid; }
+}
+.otVkgH1Tus7h_aaccPIA .button:first-child { color: rgb(255, 255, 255); }
+.H5kO4t1qABiJBBYvNKE3 { display: grid; gap: 0.5rem; }
+.QkspaEQsTHQvpauTgiMf .p__price--before { display: none; }
+.AHd5FKXYvqc_5LIrFo_Q .button { align-items: center; display: grid; gap: 0.25rem; grid-auto-flow: column; justify-content: center; }
+.AHd5FKXYvqc_5LIrFo_Q .button svg { display: none; }
+@media only screen and (min-width: 23em) {
+  .AHd5FKXYvqc_5LIrFo_Q .button svg { display: block; }
+}
+
+
 .kuy1g9IZ7hrtBd1FQ_Xz {
     background: linear-gradient(180deg,#faf2e0 26.95%,hsla(42,72%,93%,0));
     margin-left: -1.05rem!important;
