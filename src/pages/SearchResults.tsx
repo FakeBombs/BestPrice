@@ -7,64 +7,29 @@ import Sidebar from '@/components/search/Sidebar';
 import SearchHeader from '@/components/search/SearchHeader';
 import ProductResults from '@/components/search/ProductResults';
 import NotificationButton from '@/components/search/NotificationButton';
+import { useProductFilters } from '@/hooks/useProductFilters';
 
 const SearchResults = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search).get('q') || '';
   const [results, setResults] = useState<Product[]>([]);
-  const [filteredResults, setFilteredResults] = useState<Product[]>([]);
-  const [sortOrder, setSortOrder] = useState('price-asc');
-  const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
   
+  // Fetch search results
   useEffect(() => {
     if (query) {
       const searchResults = searchProducts(query);
       setResults(searchResults);
-      setFilteredResults(searchResults);
     }
   }, [query]);
   
-  useEffect(() => {
-    let filtered = [...results];
-    
-    // Apply vendor filter
-    if (filteredVendors.length > 0) {
-      filtered = filtered.filter(product => 
-        product.prices.some(price => 
-          filteredVendors.includes(price.vendorId)
-        )
-      );
-    }
-    
-    // Apply in-stock filter
-    if (inStockOnly) {
-      filtered = filtered.filter(product => 
-        product.prices.some(price => price.inStock)
-      );
-    }
-    
-    // Apply sorting
-    filtered = filtered.sort((a, b) => {
-      const aPrice = Math.min(...a.prices.map(p => p.price));
-      const bPrice = Math.min(...b.prices.map(p => p.price));
-      
-      switch (sortOrder) {
-        case 'price-asc':
-          return aPrice - bPrice;
-        case 'price-desc':
-          return bPrice - aPrice;
-        case 'rating-desc':
-          return b.rating - a.rating;
-        case 'reviews-desc':
-          return b.reviews - a.reviews;
-        default:
-          return 0;
-      }
-    });
-    
-    setFilteredResults(filtered);
-  }, [results, sortOrder, filteredVendors, inStockOnly]);
+  // Use our custom hook for filtering
+  const {
+    filteredResults,
+    setSortOrder,
+    setFilteredVendors,
+    setInStockOnly,
+    handlePriceRangeFilter
+  } = useProductFilters({ initialProducts: results });
   
   return (
     <div id="root" className="clr">
@@ -81,7 +46,7 @@ const SearchResults = () => {
                   filteredResults={filteredResults}
                   onSortChange={setSortOrder}
                   onVendorFilter={setFilteredVendors}
-                  onPriceRangeFilter={(min, max) => console.log(min, max)}
+                  onPriceRangeFilter={handlePriceRangeFilter}
                   onInStockOnly={setInStockOnly}
                 />
               </div>
