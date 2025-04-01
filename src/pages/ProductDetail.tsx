@@ -124,7 +124,7 @@ const ProductDetail = () => {
                   <div class="product-overview">
                     <div class="product-overview__section">
                       <div class="product-overview__section-title">Η καλύτερη τιμή</div>
-                      <div class="product-overview__price">{bestPrice ? bestPrice}</div>
+                      <div class="product-overview__price">{bestPrice ? bestPrice.price : 0}</div>
                       <div class="product-overview__link" data-type="notify">Ειδοποίηση για πτώση τιμής</div>
                     </div>
                     
