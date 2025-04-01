@@ -17,19 +17,19 @@ const Index = () => {
   const popularCategories = categories.slice(0, 8);
 
   return (
-    <div class="h-promos__wrapper root__wrapper">
-      <div class="h-promos__slides" data-count="2">
-        <div class="h-promos__slide-wrapper" data-id="bp-credits-club">
-          <div class="h-promos__slide">
-            <div class="promo promo-credits-club" data-listener-added="true">
-              <div class="promo-credits-club__info">
+    <div className="h-promos__wrapper root__wrapper">
+      <div className="h-promos__slides" data-count="2">
+        <div className="h-promos__slide-wrapper" data-id="bp-credits-club">
+          <div className="h-promos__slide">
+            <div className="promo promo-credits-club" data-listener-added="true">
+              <div className="promo-credits-club__info">
                 <img src="//bp.pstatic.gr/promosHome/bp-credits-club/./bpcc-logo-bw.svg" width="125" height="55" alt="BP Credits Club" loading="eager">
-                  <div class="promo-credits-club__cta">
+                  <div className="promo-credits-club__cta">
                     Γίνε μέλος ›
                   </div>
               </div>
                 
-              <div class="promo-credits-club__illustration">
+              <div className="promo-credits-club__illustration">
                 <img src="//bp.pstatic.gr/promosHome/bp-credits-club/./illustration.svg" width="300" height="158" alt="BP Credits Club illustration" loading="eager">
               </div>
             </div>
