@@ -26068,6 +26068,9 @@ html.touch .h-categories .h-categories__list::-webkit-scrollbar-thumb {
         justify-content: center;
         width: 100%
     }
+    .h-deals__icon {
+        height: 42px
+    }
 }
 
 .h-deals__links {
