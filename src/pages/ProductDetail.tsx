@@ -93,105 +93,105 @@ const ProductDetail = () => {
   };
 
   return (
-    <div id="root" class="clr">
-      <div data-trackga4="event|link_click|position: topStripe, title: bp-credits-club-generic-25, type: promo, id: bp-credits-club-generic-25" data-trackga4onload="event|promo_viewed|position: topStripe, title: bp-credits-club-generic-25" class="bp-credits-club-generic-25">
+    <div id="root" className="clr">
+      <div data-trackga4="event|link_click|position: topStripe, title: bp-credits-club-generic-25, type: promo, id: bp-credits-club-generic-25" data-trackga4onload="event|promo_viewed|position: topStripe, title: bp-credits-club-generic-25" className="bp-credits-club-generic-25">
         <a rel="nofollow noopener" target="_blank" href="/credits-club" data-adman="69521"></a>
       </div>
-      <div class="root__wrapper item-wrapper">
-        <div class="root">
+      <div className="root__wrapper item-wrapper">
+        <div className="root">
           
           {/* Breadcrumb */}
           <ProductBreadcrumb product={product} />
           
-          <div class="item-layout__wrapper">
+          <div className="item-layout__wrapper">
             <div className="item-layout">
-              <aside class="item-aside stick-to-bottom">
-                <div class="item__image-wrapper">
+              <aside className="item-aside stick-to-bottom">
+                <div className="item__image-wrapper">
                   {/* Product Images */}
                   <ProductImageGallery mainImage={product.image} images={[product.image]} title={product.title} onImageChange={setMainImage} />
                 </div>
 
                 <div id="item-image-gallery">
-                  <div class="scroll scroll--center scroll--small">
-                    <div class="scroll__clip">
-                      <div class="scroll__scroller"></div>
+                  <div className="scroll scroll--center scroll--small">
+                    <div className="scroll__clip">
+                      <div className="scroll__scroller"></div>
                     </div>
                   </div>
                 </div>
 
-                <div class="item-actions-buttons">
-                  <button class="item-actions__button">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-shortlist-16"></use>
+                <div className="item-actions-buttons">
+                  <button className="item-actions__button">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-shortlist-16"></use>
                     </svg>
-                    <span class="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
+                    <span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
                   </button>
-                  <button class="item-actions__button" data-id="compare">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-compare-16"></use>
+                  <button className="item-actions__button" data-id="compare">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-compare-16"></use>
                     </svg>
-                    <span class="item-actions__label">Προσθήκη στη σύγκριση</span>
+                    <span className="item-actions__label">Προσθήκη στη σύγκριση</span>
                   </button>
-                  <button class="item-actions__button" data-id="want">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-want-16"></use>
+                  <button className="item-actions__button" data-id="want">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-want-16"></use>
                     </svg>
-                    <span class="item-actions__label">Το θέλω</span>
-                    <span class="item-actions__count">8</span>
+                    <span className="item-actions__label">Το θέλω</span>
+                    <span className="item-actions__count">8</span>
                   </button>
-                  <button class="item-actions__button" data-id="have">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-have-16"></use>
+                  <button className="item-actions__button" data-id="have">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-have-16"></use>
                     </svg>
-                    <span class="item-actions__label">Το έχω</span>
-                    <span class="item-actions__count"></span>
+                    <span className="item-actions__label">Το έχω</span>
+                    <span className="item-actions__count"></span>
                   </button>
-                  <button class="item-actions__button">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-alert-16"></use>
+                  <button className="item-actions__button">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-alert-16"></use>
                     </svg>
-                    <span class="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
+                    <span className="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
                   </button>
-                  <button class="item-actions__button">
-                    <svg aria-hidden="true" class="icon" width="16" height="16">
-                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-collection-16"></use>
+                  <button className="item-actions__button">
+                    <svg aria-hidden="true" className="icon" width="16" height="16">
+                      <use xlinkHref="/public/dist/images/icons/actions.svg#icon-collection-16"></use>
                     </svg>
-                    <span class="item-actions__label">Προσθήκη σε συλλογή</span>
+                    <span className="item-actions__label">Προσθήκη σε συλλογή</span>
                   </button>
                 </div>
               </aside>
-              <main class="item-main">
+              <main className="item-main">
                 
-                <div class="item-header__wrapper">
-                  <div class="item-header">
+                <div className="item-header__wrapper">
+                  <div className="item-header">
                     {/* Product Details */}
                     <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                     <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
                     <ProductHighlights specifications={product.specifications} />
                   </div>
                   
-                  <div class="product-overview">
-                    <div class="product-overview__section">
-                      <div class="product-overview__section-title">Η καλύτερη τιμή</div>
-                      <div class="product-overview__price">{bestPrice ? bestPrice.price : 0}</div>
-                      <div class="product-overview__link" data-type="notify">Ειδοποίηση για πτώση τιμής</div>
+                  <div className="product-overview">
+                    <div className="product-overview__section">
+                      <div className="product-overview__section-title">Η καλύτερη τιμή</div>
+                      <div className="product-overview__price">{bestPrice ? bestPrice.price : 0}</div>
+                      <div className="product-overview__link" data-type="notify">Ειδοποίηση για πτώση τιμής</div>
                     </div>
                     
-                    <div class="product-overview__section">
-                      <div class="product-overview__section-title">Διατίθεται από</div>
-                      <div class="product-overview__merchants">Electroholic και 3 ακόμα καταστήματα</div>
+                    <div className="product-overview__section">
+                      <div className="product-overview__section-title">Διατίθεται από</div>
+                      <div className="product-overview__merchants">Electroholic και 3 ακόμα καταστήματα</div>
                     </div>
                     
-                    <div class="product-overview__button">
-                      <button class="item-actions__button">
-                        <svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="//bestprice.gr/public/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
-                        <span class="item-actions__label">Λίστα Αγορών</span>
+                    <div className="product-overview__button">
+                      <button className="item-actions__button">
+                        <svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="//bestprice.gr/public/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
+                        <span className="item-actions__label">Λίστα Αγορών</span>
                       </button>
                     </div>
                   </div>
                 </div>
                   
-                <div class="sections item-sections">
+                <div className="sections item-sections">
                   <ProductVendors product={product} />
                   
                   {/* Price History Chart */}
@@ -203,17 +203,17 @@ const ProductDetail = () => {
                   
               </main>
 
-              <div class="history__placeholder" data-intersected="">
-                <div class="root__wrapper">
-                  <div class="root">
-                    <section class="section history__products">
-                      <header class="section__header">
-                        <hgroup class="section__hgroup">
-                          <h3 class="section__title">Είδες πρόσφατα</h3>
+              <div className="history__placeholder" data-intersected="">
+                <div className="root__wrapper">
+                  <div className="root">
+                    <section className="section history__products">
+                      <header className="section__header">
+                        <hgroup className="section__hgroup">
+                          <h3 className="section__title">Είδες πρόσφατα</h3>
                         </hgroup>
                       </header>
 
-                      <div class="scroll">
+                      <div className="scroll">
                         {/* Related Products Sections */}
                         <ProductRelatedSections recentlyViewed={recentlyViewed} categoryDeals={categoryDeals} similarProducts={similarProducts} productId={product.id} />
                       </div>
