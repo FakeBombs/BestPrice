@@ -183,19 +183,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-
-            <div class="h-direct-deals__placeholder">
-              <section class="section">
-                <header class="section__header">
-                  <hgroup class="section__hgroup">
-                    <h2 class="section__title">Επιλεγμένες Hot προσφορές!</h2>
-                    <p class="section__subtitle">Μοναδικές προσφορές από επιλεγμένα καταστήματα που δεν πρέπει να χάσεις</p>
-                  </hgroup>
-                </header>
-                <div class="p__products"></div>
-                <div class="expand"><button class="button">Περισσότερες Hot προσφορές<svg class="icon" aria-hidden="true" width="8" height="8"><use xlink:href="/public/dist/images/icons/icons.svg#icon-down-8"></use></svg></button></div>
-              </section>
-            </div>
             
             <div class="h-collections">
               <div class="h-header">
