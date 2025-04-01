@@ -119,6 +119,12 @@ const ProductDetail = () => {
                     <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                     <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
                     <ProductHighlights specifications={product.specifications} />
+
+                    {/* Price History Chart */}
+                    <PriceHistoryChart productId={product.id} basePrice={bestPrice ? bestPrice.price : 0} />
+                    
+                    {/* Product Information Tabs */}
+                    <ProductTabsSection product={product} />
                   </div>
                   
                   <div class="product-overview">
@@ -147,37 +153,11 @@ const ProductDetail = () => {
                 </div>
                   
               </main>
-      
-        
-        
-          
-      
-      {/* Product Information Tabs */}
-      <ProductTabsSection product={product} />
-      
-      {/* Price History Chart */}
-      <div className="mt-8">
-        <PriceHistoryChart 
-          productId={product.id} 
-          basePrice={bestPrice ? bestPrice.price : 0}
-        />
-      </div>
-      
-      {/* Related Products Sections */}
-      <ProductRelatedSections
-        similarProducts={similarProducts}
-        categoryDeals={categoryDeals}
-        recentlyViewed={recentlyViewed}
-        productId={product.id}
-      />
-      
-      {/* Price Alert Modal */}
-      <PriceAlertModal 
-        isOpen={isAlertModalOpen} 
-        onClose={() => setIsAlertModalOpen(false)}
-        product={product}
-        currentPrice={bestPrice ? bestPrice.price : 0}
-      />
+              
+              {/* Related Products Sections */}
+              <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+              {/* Price Alert Modal */}
+              <PriceAlertModal isOpen={isAlertModalOpen} onClose={() => setIsAlertModalOpen(false)} product={product} currentPrice={bestPrice ? bestPrice.price : 0} />
       </div>
       </div>
      </div>
