@@ -227,7 +227,7 @@ const Index = () => {
                             </div>
                           </div>
                           <div class="p__footer">
-                            <div class="p__rating" data-breakdown="">
+                            <div class="p__rating">
                               <a href="/item/2159912975/sony-playstation-5-slim-astro-bot.html?bpref=home-deals" class="p__rating-link">
                                 <div class="simple-rating"><div class="simple-rating__inner">
                                   <div class="simple-rating__stars">
