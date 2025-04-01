@@ -173,9 +173,11 @@ const SearchResults = () => {
                       <p className="text-lg text-muted-foreground">No products found matching your search.</p>
                     </div>
                   ) : (
+                    <div>
                       {filteredResults.map((product) => (
                         <ProductCard key={product.id} product={product} />
-                      ))};
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
