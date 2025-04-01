@@ -234,7 +234,7 @@ const Index = () => {
               <a class="h-button--more-mobile button button--outline" href="/blog?bpref=home-content-more">Περισσότερα άρθρα <svg aria-hidden="true" class="icon" width="8" height="8"><use xlink:href="/public/dist/images/icons/icons.svg#icon-right-8"></use></svg></a>
             </div>
 
-            <div class="h-direct-deals__placeholder">
+            <div class="h-direct-deals__placeholder" data-intersected style={{display: "contents"}}>
               <section class="section kuy1g9IZ7hrtBd1FQ_Xz">
                 <header class="section__header">
                   <hgroup class="section__hgroup">
@@ -248,7 +248,7 @@ const Index = () => {
             </div>
             
             <div class="h-collections">
-              <div class="h-header">
+              <div class="h-header" style={{display: "grid"}}>
                 <div class="h-header__hgroup">
                   <div class="section__title">Συλλογές προϊόντων</div>
                 </div>
