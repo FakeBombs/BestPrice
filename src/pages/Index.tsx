@@ -165,16 +165,12 @@ const Index = () => {
                   <div class="scroll__clip">
                     <div class="scroll__scroller">
                       <div class="p__products--scroll scroll__content">
-
-
-                        
-
-                        
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
             
 
 
