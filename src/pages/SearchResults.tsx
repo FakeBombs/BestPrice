@@ -97,27 +97,25 @@ const SearchResults = () => {
                   </div>
                 </div>
               </div>
+
+              <div class="page-products__main-wrapper">
+                <div class="p__products" data-pagination="">
+                  <ProductFilter onSortChange={setSortOrder} onVendorFilter={setFilteredVendors} onPriceRangeFilter={(min, max) => console.log(min, max)} onInStockOnly={setInStockOnly} />
+                  
+                  {filteredResults.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-lg text-muted-foreground">No products found matching your search.</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filteredResults.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </main>
-          </div>
-          
-          <div className="container py-8">
-            <p className="text-muted-foreground mb-6">
-              {filteredResults.length} results for "{query}"
-            </p>
-            
-            <ProductFilter onSortChange={setSortOrder} onVendorFilter={setFilteredVendors} onPriceRangeFilter={(min, max) => console.log(min, max)} onInStockOnly={setInStockOnly} />
-            
-            {filteredResults.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-lg text-muted-foreground">No products found matching your search.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredResults.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            )}
             </div>
           </div>
         </div>
