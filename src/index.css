@@ -16579,11 +16579,11 @@ section.section--center .section__hgroup * {
     padding: 2rem 1.05rem
 }
 
-[data-theme=dark] .kuy1g9IZ7hrtBd1FQ_Xz {
+.dark .kuy1g9IZ7hrtBd1FQ_Xz {
     background: linear-gradient(180deg,#0a0a0a,transparent 100%)
 }
 
-[data-theme=dark] .kuy1g9IZ7hrtBd1FQ_Xz>header hgroup * {
+.dark .kuy1g9IZ7hrtBd1FQ_Xz>header hgroup * {
     color: #c3c4c7!important
 }
 
