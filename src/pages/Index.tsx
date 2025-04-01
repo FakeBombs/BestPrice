@@ -54,10 +54,40 @@ const Index = () => {
                 <a href="/deals?bpref=home-categories" class="h-categories__category h-categories__category--deals" title="Προσφορές">
                   <div class="h-categories__cover">
                     <div class="h-categories__badge drop drop--40">233 Νέες</div>
-                    <img width="34" height="42" alt="Deals icon" class="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
+                      <img width="34" height="42" alt="Deals icon" class="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
                     </div>
                     <h2 class="h-categories__label">Προσφορές</h2>
-                  </a>
+                </a>
+                <a href="/cat/806/mobile-phones.html?bpref=home-categories" class="h-categories__category" title="Κινητά">
+                  <div class="h-categories__cover">
+                    <img width="125" height="125" alt="Κινητά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/806-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/806-1@2x.webp 2x" class="h-categories__image"/>
+                  </div>
+                  <h2 class="h-categories__label">Κινητά</h2>
+                </a>
+                <a href="/hub/25/iphone.html?bpref=home-categories" class="h-categories__category" title="iPhone">
+                  <div class="h-categories__cover">
+                    <img width="125" height="125" alt="iPhone στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/misc/hub25-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/misc/hub25-1@2x.webp 2x" class="h-categories__image"/>
+                  </div>
+                  <h2 class="h-categories__label">iPhone</h2>
+                </a>
+                <a href="/cat/3048/thleoraseis.html?bpref=home-categories" class="h-categories__category" title="Τηλεοράσεις">
+                  <div class="h-categories__cover">
+                    <img width="125" height="125" alt="Τηλεοράσεις στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/3048-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/3048-1@2x.webp 2x" class="h-categories__image"/>
+                  </div>
+                  <h2 class="h-categories__label">Τηλεοράσεις</h2>
+                </a>
+                <a href="/cat/2442/air-condition.html?bpref=home-categories" class="h-categories__category" title="Κλιματιστικά">
+                  <div class="h-categories__cover">
+                    <img width="125" height="125" alt="Κλιματιστικά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2442-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/2442-1@2x.webp 2x" class="h-categories__image"/>
+                  </div>
+                  <h2 class="h-categories__label">Κλιματιστικά</h2>
+                </a>
+                <a href="/cat/6280/smartwatches.html?bpref=home-categories" class="h-categories__category" title="Smartwatches">
+                  <div class="h-categories__cover">
+                    <img width="125" height="125" alt="Smartwatches στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6280-1.webp" srcset="//bp.pstatic.gr/pages/home/assets/cats/6280-1@2x.webp 2x" class="h-categories__image"/>
+                  </div>
+                  <h2 class="h-categories__label">Smartwatches</h2>
+                </a>
               </div>
 
               
