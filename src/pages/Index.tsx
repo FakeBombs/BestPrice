@@ -180,7 +180,6 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <div><button aria-label="Scroll arrow previous" class="scroll__arrow scroll__arrow--previous" style="left: -23px;"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button><button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next" style="right: -23px;"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button></div>
                 </div>
               </div>
             </div>
