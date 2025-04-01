@@ -18,13 +18,7 @@ const Index = () => {
 
   return (
     <div className="h-promos__wrapper root__wrapper">
-      <div className="h-promos__slides" data-count="2">
-        <div className="h-promos__slide-wrapper" data-id="bp-credits-club">
-          <div className="h-promos__slide">
-
-          </div>
-        </div>
-      </div>
+      
     </div>
     
       {/* Hero Section */}
