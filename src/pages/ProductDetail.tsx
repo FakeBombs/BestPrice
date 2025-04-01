@@ -93,7 +93,6 @@ const ProductDetail = () => {
   };
 
   return (
-    <div id="root" className="clr">
       <div data-trackga4="event|link_click|position: topStripe, title: bp-credits-club-generic-25, type: promo, id: bp-credits-club-generic-25" data-trackga4onload="event|promo_viewed|position: topStripe, title: bp-credits-club-generic-25" className="bp-credits-club-generic-25">
         <a rel="nofollow noopener" target="_blank" href="/credits-club" data-adman="69521"></a>
       </div>
@@ -228,7 +227,6 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-      </div>
     );
 };
 
