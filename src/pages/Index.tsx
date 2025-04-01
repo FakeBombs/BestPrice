@@ -394,7 +394,7 @@ const Index = () => {
                             </div>
                           </div>
                           <a class="p__cover" href="/item/2159643999/huawei-watch-4-pro-grey.html?bpref=home-deals">
-                            <img width="160" height="160" alt="Huawei Watch 4 Pro Grey" src="//bbpcdn.pstatic.gr/bpimg31/2m9E3J/1Se5Ey_SX160Y160/1717413302/huawei-watch-4-pro-grey.webp" srcset="//bbpcdn.pstatic.gr/bpimg31/2m9E3J/1Se5Ey_SX320Y320/1717413302/huawei-watch-4-pro-grey.webp 2x" loading="lazy"//>
+                            <img width="160" height="160" alt="Huawei Watch 4 Pro Grey" src="//bbpcdn.pstatic.gr/bpimg31/2m9E3J/1Se5Ey_SX160Y160/1717413302/huawei-watch-4-pro-grey.webp" srcset="//bbpcdn.pstatic.gr/bpimg31/2m9E3J/1Se5Ey_SX320Y320/1717413302/huawei-watch-4-pro-grey.webp 2x" loading="lazy"/>
                           </a>
                           <div class="p__main">
                             <div class="p__meta">
