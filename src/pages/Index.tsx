@@ -185,7 +185,7 @@ const Index = () => {
             </div>
 
             <div class="h-direct-deals__placeholder">
-              <section class="section">
+              <section class="section kuy1g9IZ7hrtBd1FQ_Xz">
                 <header class="section__header">
                   <hgroup class="section__hgroup">
                     <h2 class="section__title">Επιλεγμένες Hot προσφορές!</h2>
