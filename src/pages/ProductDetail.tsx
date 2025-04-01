@@ -119,12 +119,6 @@ const ProductDetail = () => {
                     <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                     <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
                     <ProductHighlights specifications={product.specifications} />
-
-                    {/* Price History Chart */}
-                    <PriceHistoryChart productId={product.id} basePrice={bestPrice ? bestPrice.price : 0} />
-                    
-                    {/* Product Information Tabs */}
-                    <ProductTabsSection product={product} />
                   </div>
                   
                   <div class="product-overview">
@@ -150,6 +144,12 @@ const ProductDetail = () => {
                   
                 <div class="sections item-sections">
                   <ProductVendors product={product} />
+                  
+                  {/* Price History Chart */}
+                  <PriceHistoryChart productId={product.id} basePrice={bestPrice ? bestPrice.price : 0} />
+                    
+                  {/* Product Information Tabs */}
+                  <ProductTabsSection product={product} />
                 </div>
                   
               </main>
