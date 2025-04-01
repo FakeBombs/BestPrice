@@ -158,8 +158,16 @@ const ProductDetail = () => {
                 <div class="root__wrapper">
                   <div class="root">
                     <section class="section history__products">
-                      {/* Related Products Sections */}
-                      <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+                      <header class="section__header">
+                        <hgroup class="section__hgroup">
+                          <h3 class="section__title">Είδες πρόσφατα</h3>
+                        </hgroup>
+                      </header>
+
+                      <div class="scroll">
+                        {/* Related Products Sections */}
+                        <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+                      </div>
                     </section>
                   </div>
                 </div>
