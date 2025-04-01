@@ -19,9 +19,9 @@ const ProductCard = ({
   return (
     <div className={className}>
       <Link to={`/product/${product.id}`}>
-        <div className="aspect-square overflow-hidden">
-          <img src={product.image} alt={product.title} className="h-full w-full object-cover transition-transform hover:scale-105" />
-        </div>
+        <picture>
+          <img src={product.image} alt={product.title} />
+        </picture>
         <div className="p-4">
           <div className="flex items-center space-x-1 mb-2">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
