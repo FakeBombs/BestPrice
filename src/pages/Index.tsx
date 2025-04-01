@@ -185,7 +185,7 @@ const Index = () => {
             </div>
             
             <div className="h-collections">
-              <div className="h-header" style="display: grid">
+              <div className="h-header">
                 <div className="h-header__hgroup">
                   <div className="section__title">Συλλογές προϊόντων</div>
                 </div>
