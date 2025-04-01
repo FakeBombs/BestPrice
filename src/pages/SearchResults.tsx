@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
@@ -65,16 +64,15 @@ const SearchResults = () => {
   }, [results, sortOrder, filteredVendors, inStockOnly]);
   
   return (
-    <div id="root" class="clr">
-      <div class="root__wrapper">
-        <div class="root">
-
-          <div class="page-products">
-            <aside class="page-products__filters">
+    <div id="root" className="clr">
+      <div className="root__wrapper">
+        <div className="root">
+          <div className="page-products">
+            <aside className="page-products__filters">
               <div id="filters">
-                <div class="filters__categories" data-filter-name="categories">
-                  <div class="filters__header">
-                    <div class="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+                <div className="filters__categories" data-filter-name="categories">
+                  <div className="filters__header">
+                    <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                   </div>
                   <ol>
                     <li><a data-c="2" href="/cat/3446/tablets.html?q={query}"><span>Tablets</span></a></li>
@@ -84,15 +82,15 @@ const SearchResults = () => {
                   </ol>
                 </div>
 
-                <div class="filters__header">
-                  <div class="filters__header-title filters__header-title--filters">Φίλτρα</div>
+                <div className="filters__header">
+                  <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
                 </div>
 
-                <div class="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
-                  <div class="filter__header">
+                <div className="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+                  <div className="filter__header">
                     <h4>Εμφάνιση μόνο</h4>
                   </div>
-                  <div class="filter-container">
+                  <div className="filter-container">
                     <ol>
                       <li data-filter="certified">
                         <a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/search?q={query}&amp;certified=1">
@@ -104,7 +102,7 @@ const SearchResults = () => {
                       </li>
                       <li id="filter-nearby" class="nearby-location is-set">
                         <a title="Κοντά μου" rel="nofollow" href="/search?q={query}&amp;nearby=1">Κοντά μου (20 χλμ)</a>
-                        <div class="filter-nearby__options">Επιλογές</div>
+                        <div className="filter-nearby__options">Επιλογές</div>
                       </li>
                       <li data-filter="in-stock">
                         <a title="Άμεσα διαθέσιμα" rel="nofollow" href="/search?q={query}&amp;instock=1"><span>Άμεσα διαθέσιμα</span></a>
@@ -125,38 +123,38 @@ const SearchResults = () => {
                   </div>
                 </div>
                 
-                <div class="filter-brand filter-collapsed default-list" data-filter-name="Κατασκευαστής" data-filter-id="1" data-type="brand" data-key="brand"><div class="filter__header"><h4>Κατασκευαστής</h4></div><div class="filter-container"><ol data-total="4" data-hidden="-1"><li><a data-c="4" data-id="9" rel="nofollow" href="/search?q={query}&amp;f1=9">Apple</a></li><li><a data-c="2" data-id="20028" rel="nofollow" href="/search?q={query}&amp;f1=20028">Spigen</a></li><li><a data-c="1" data-id="128" rel="nofollow" href="/search?q={query}&amp;f1=128">Targus</a></li><li><a data-c="1" data-id="39080" rel="nofollow" href="/search?q={query}&amp;f1=39080">Techsuit</a></li></ol></div></div>
-                <div class="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store"><div class="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div><div class="filter-container"><ol data-total="15" data-hidden="10"><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=plaisio.gr"><span>Plaisio</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=germanos.gr"><span>Germanos</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=you.gr"><span>You</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=e-gateway.gr"><span>e-Gateway</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=websupplies.gr"><span>Websupplies</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=adaptoras.gr"><span>Adaptoras</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=madhawk.gr"><span>Madhawk</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=plusmobi.net"><span>Plusmobi</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=metrostore.gr"><span>Metrostore</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=twiinshop.gr"><span>Twiinshop</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=electroholic.gr"><span>Electroholic</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=3dmall.gr"><span>3dMall</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=mobicell.gr"><span>MobiCell</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=gadgetmart.gr"><span>GadgetMart</span></a></li><li class="hidden"><a data-l="1" rel="nofollow" href="/search?q={query}&amp;store=techstores.gr"><span>Techstores</span></a></li></ol><div id="filter-store-prompt" class="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων"><svg aria-hidden="true" class="icon" width="100%" height="100%"><use xlink:href="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> Εμφάνιση όλων</div></div></div>
-                <div class="filters__buttons"><button class="button" data-filters-close="">Εμφάνιση  των  προϊόντων</button></div>
-                <div class="filters__md-toggler" hidden="" role="button"><h5><svg aria-hidden="true" class="icon" width="18" height="18"><use xlink:href="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-filters-18"></use></svg>ΦΙΛΤΡΑ</h5></div>
+                <div className="filter-brand filter-collapsed default-list" data-filter-name="Κατασκευαστής" data-filter-id="1" data-type="brand" data-key="brand"><div className="filter__header"><h4>Κατασκευαστής</h4></div><div className="filter-container"><ol data-total="4" data-hidden="-1"><li><a data-c="4" data-id="9" rel="nofollow" href="/search?q={query}&amp;f1=9">Apple</a></li><li><a data-c="2" data-id="20028" rel="nofollow" href="/search?q={query}&amp;f1=20028">Spigen</a></li><li><a data-c="1" data-id="128" rel="nofollow" href="/search?q={query}&amp;f1=128">Targus</a></li><li><a data-c="1" data-id="39080" rel="nofollow" href="/search?q={query}&amp;f1=39080">Techsuit</a></li></ol></div></div>
+                <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store"><div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div><div className="filter-container"><ol data-total="15" data-hidden="10"><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=plaisio.gr"><span>Plaisio</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=germanos.gr"><span>Germanos</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=you.gr"><span>You</span></a></li><li><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=e-gateway.gr"><span>e-Gateway</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=websupplies.gr"><span>Websupplies</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=adaptoras.gr"><span>Adaptoras</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=madhawk.gr"><span>Madhawk</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=plusmobi.net"><span>Plusmobi</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=metrostore.gr"><span>Metrostore</span></a></li><li class="hidden"><a data-l="3" rel="nofollow" href="/search?q={query}&amp;store=twiinshop.gr"><span>Twiinshop</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=electroholic.gr"><span>Electroholic</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=3dmall.gr"><span>3dMall</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=mobicell.gr"><span>MobiCell</span></a></li><li class="hidden"><a data-l="2" rel="nofollow" href="/search?q={query}&amp;store=gadgetmart.gr"><span>GadgetMart</span></a></li><li class="hidden"><a data-l="1" rel="nofollow" href="/search?q={query}&amp;store=techstores.gr"><span>Techstores</span></a></li></ol><div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων"><svg aria-hidden="true" class="icon" width="100%" height="100%"><use xlink:href="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> Εμφάνιση όλων</div></div></div>
+                <div className="filters__buttons"><button className="button" data-filters-close="">Εμφάνιση  των  προϊόντων</button></div>
+                <div className="filters__md-toggler" hidden="" role="button"><h5><svg aria-hidden="true" class="icon" width="18" height="18"><use xlink:href="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-filters-18"></use></svg>ΦΙΛΤΡΑ</h5></div>
           
                 
               </div>
             </aside>
 
-            <main class="page-products__main">
-              <div class="page-header">
-                <div class="page-header__title-wrapper">
-                  <div class="page-header__title-main">
+            <main className="page-products__main">
+              <div className="page-header">
+                <div className="page-header__title-wrapper">
+                  <div className="page-header__title-main">
                     <h1>{query}</h1>
-                    <div class="page-header__count-wrapper">
-                      <div class="page-header__count">{filteredResults.length} προϊόντα</div>
+                    <div className="page-header__count-wrapper">
+                      <div className="page-header__count">{filteredResults.length} προϊόντα</div>
                     </div>
                   </div>
                 </div>
 
-                <div class="page-header__sorting">
-                  <div class="tabs">
-                    <div class="tabs-wrapper">
+                <div className="page-header__sorting">
+                  <div className="tabs">
+                    <div className="tabs-wrapper">
                       <nav>
                         <a href="/search?q={query}" rel="nofollow" class="current">
-                          <div class="tabs__content">Σχετικότερα</div>
+                          <div className="tabs__content">Σχετικότερα</div>
                         </a>
                         <a href="/search?q={query}&amp;o=2" rel="nofollow">
-                          <div class="tabs__content">Φθηνότερα</div>
+                          <div className="tabs__content">Φθηνότερα</div>
                         </a>
                         <a href="/search?q={query}&amp;o=1" rel="nofollow">
-                          <div class="tabs__content">Ακριβότερα</div>
+                          <div className="tabs__content">Ακριβότερα</div>
                         </a>
                       </nav>
                     </div>
@@ -164,40 +162,43 @@ const SearchResults = () => {
                 </div>
               </div>
 
-              <div class="page-products__main-wrapper">
-                <div class="p__products" data-pagination="">
-                  <ProductFilter onSortChange={setSortOrder} onVendorFilter={setFilteredVendors} onPriceRangeFilter={(min, max) => console.log(min, max)} onInStockOnly={setInStockOnly} />
+              <div className="page-products__main-wrapper">
+                <div className="p__products" data-pagination="">
+                  <ProductFilter 
+                    onSortChange={setSortOrder} 
+                    onVendorFilter={setFilteredVendors} 
+                    onPriceRangeFilter={(min, max) => console.log(min, max)} 
+                    onInStockOnly={setInStockOnly} 
+                  />
                   
                   {filteredResults.length === 0 ? (
                     <div className="text-center py-12">
                       <p className="text-lg text-muted-foreground">No products found matching your search.</p>
                     </div>
                   ) : (
-                    <div>
-                      {filteredResults.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                      ))}
-                    </div>
+                    filteredResults.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))
                   )}
                 </div>
               </div>
 
-              <div class="alerts">
+              <div className="alerts">
                 <button data-url="/search?q={query}" data-title="{query}" data-max-price="0" class="alerts__button pressable">
                   <svg aria-hidden="true" class="icon" width="20" height="20">
                     <use xlink:href="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use>
                   </svg>
-                  <span class="alerts__label">Ειδοποίηση</span>
+                  <span className="alerts__label">Ειδοποίηση</span>
                 </button>
-                <div class="alerts__prompt"> σε 
-                  <span class="alerts__title"> {query}</span>
+                <div className="alerts__prompt"> σε 
+                  <span className="alerts__title"> {query}</span>
                 </div>
               </div>
             </main>
-            </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
