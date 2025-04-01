@@ -44,7 +44,10 @@ const SearchResults = () => {
               <div className="page-products__main-wrapper">
                 <ProductResults
                   filteredResults={filteredResults}
+                  onSortChange={setSortOrder}
+                  onVendorFilter={setFilteredVendors}
                   onPriceRangeFilter={handlePriceRangeFilter}
+                  onInStockOnly={setInStockOnly}
                 />
               </div>
 
