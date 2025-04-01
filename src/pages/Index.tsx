@@ -184,10 +184,46 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="h-collections">
-              <div className="h-header">
-                <div className="h-header__hgroup">
-                  <div className="section__title">Συλλογές προϊόντων</div>
+            <div class="h-collections">
+              <div class="h-header">
+                <div class="h-header__hgroup">
+                  <div class="section__title">Συλλογές προϊόντων</div>
+                </div>
+              </div>
+              <div class="h-collections__placeholder" data-intersected="">
+                <div class="DoZFzTt6KaqcW2C3gw2t">
+                  <a class="Y4NLSAY5tJd6NM7ZZnoK" href="/c/1803778568/aneta-monterna-sneakers?bpref=home-collections">
+                    <div class="eJJfcJGMERkC8cUwtBAQ" style="background-image: url(&quot;//bbpcdn.pstatic.gr/bpnr/col-cover-1803778568_SX1500/1742568970000/image.webp&quot;);">
+                    </div>
+                    <div class="vY_GAVOV_4RJVMS2Jnwa" style="background-color: rgb(83, 121, 89);">
+                      <div class="KPsLBbDojFvSNOuoGGgZ">
+                        <div class="mu8Mka6gDRf3IQi7hjZl">Άνετα &amp; μοντέρνα sneakers</div>
+                        <div class="_fFxn4UZX01WynYoh8dR">Για βαφτιστήρια 3-6 ετών.</div>
+                      </div>
+                      <div class="p9jwLTCU71n4bBVTVAMW" style="color: rgb(83, 121, 89);">Δες την</div>
+                    </div>
+                  </a>
+                  <a class="Y4NLSAY5tJd6NM7ZZnoK" href="/c/1803778474/teleia-pasxalina-glyka?bpref=home-collections">
+                    <div class="eJJfcJGMERkC8cUwtBAQ" style="background-image: url(&quot;//bbpcdn.pstatic.gr/bpnr/col-cover-1803778474_SX1500/1742470531000/image.webp&quot;);">
+                    </div>
+                    <div class="vY_GAVOV_4RJVMS2Jnwa" style="background-color: rgb(120, 6, 70);">
+                      <div class="KPsLBbDojFvSNOuoGGgZ"><div class="mu8Mka6gDRf3IQi7hjZl">Τέλεια πασχαλινά γλυκά</div>
+                        <div class="_fFxn4UZX01WynYoh8dR">Με τον σωστό εξοπλισμό.</div>
+                      </div>
+                      <div class="p9jwLTCU71n4bBVTVAMW" style="color: rgb(120, 6, 70);">Δες την</div>
+                    </div>
+                  </a>
+                  <a class="Y4NLSAY5tJd6NM7ZZnoK" href="/c/1803778460/lampades-gia-kalo-skopo?bpref=home-collections">
+                    <div class="eJJfcJGMERkC8cUwtBAQ" style="background-image: url(&quot;//bbpcdn.pstatic.gr/bpnr/col-cover-1803778460_SX1500/1741952654000/image.webp&quot;);">
+                    </div>
+                    <div class="vY_GAVOV_4RJVMS2Jnwa" style="background-color: rgb(15, 98, 132);">
+                      <div class="KPsLBbDojFvSNOuoGGgZ">
+                        <div class="mu8Mka6gDRf3IQi7hjZl">Λαμπάδες για καλό σκοπό</div>
+                        <div class="_fFxn4UZX01WynYoh8dR">Στήριξε ΜΚΟ με αγορές σου.</div>
+                      </div>
+                      <div class="p9jwLTCU71n4bBVTVAMW" style="color: rgb(15, 98, 132);">Δες την</div>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
