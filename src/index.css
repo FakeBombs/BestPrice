@@ -24347,7 +24347,9 @@ html.adult .item__image {
     min-height: 250px;
     padding: 0 1.05rem;
     position: relative;
-    width: 100%
+    width: 100%;
+    border-radius: 8px;
+    padding: 1.92rem
 }
 
 @media only screen and (max-width: 47.99em) {
@@ -24359,8 +24361,6 @@ html.adult .item__image {
 @media only screen and (min-width: 48em) {
     .dark .item__image-wrapper {
         background-color:#fff;
-        border-radius: 8px;
-        padding: 1.92rem
     }
 }
 
