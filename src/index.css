@@ -25481,6 +25481,10 @@ div[itemprop=aggregateRating] {
     transition: background .35s ease-in-out
 }
 
+.dark body .h-categories__cover {
+    background: #26282c
+}
+
 @media only screen and (min-width: 23em) {
     .h-categories__cover {
         padding:.5rem
