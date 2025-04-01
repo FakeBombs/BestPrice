@@ -12,9 +12,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
          <Navbar />
-         <main className="flex-1">
+         <div id="root" class="clr">
            {children}
-         </main>
+         </div>
          <Footer />
     </ThemeProvider>
   );
