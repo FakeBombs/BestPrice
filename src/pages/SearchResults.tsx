@@ -96,6 +96,24 @@ const SearchResults = () => {
                     </div>
                   </div>
                 </div>
+
+                <div class="page-header__sorting">
+                  <div class="tabs">
+                    <div class="tabs-wrapper">
+                      <nav>
+                        <a href="/search?q={query}" rel="nofollow" class="current">
+                          <div class="tabs__content">Σχετικότερα</div>
+                        </a>
+                        <a href="/search?q={query}&amp;o=2" rel="nofollow">
+                          <div class="tabs__content">Φθηνότερα</div>
+                        </a>
+                        <a href="/search?q={query}&amp;o=1" rel="nofollow">
+                          <div class="tabs__content">Ακριβότερα</div>
+                        </a>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="page-products__main-wrapper">
@@ -124,7 +142,7 @@ const SearchResults = () => {
                   <span class="alerts__label">Ειδοποίηση</span>
                 </button>
                 <div class="alerts__prompt"> σε 
-                  <span class="alerts__title">{query}</span>
+                  <span class="alerts__title"> {query}</span>
                 </div>
               </div>
             </main>
