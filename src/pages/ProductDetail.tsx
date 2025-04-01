@@ -107,44 +107,27 @@ const ProductDetail = () => {
             <div className="item-layout">
               <aside class="item-aside stick-to-bottom">
                 <div class="item__image-wrapper">
+                  {/* Product Images */}
                   <ProductImageGallery mainImage={product.image} images={[product.image]} title={product.title} onImageChange={setMainImage} />
                 </div>
               </aside>
               <main class="item-main">
+                <div class="item-header__wrapper">
+                  <div class="item-header">
+                    {/* Product Details */}
+                    <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
+                    <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handleNotifyMe} />
+                    <ProductHighlights specifications={product.specifications} />
+                  </div>
+                </div>
+                <div class="sections item-sections">
+                  <ProductVendors product={product} />
+                </div>
               </main>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Product Images */}
-        <div>
-          <ProductImageGallery 
-            mainImage={product.image} 
-            images={[product.image]} 
-            title={product.title}
-            onImageChange={setMainImage}
-          />
-        </div>
         
-        {/* Product Details */}
-        <div>
-          <ProductHeader
-            product={product}
-            onAddToFavorites={handleAddToFavorites}
-            onShareProduct={handleShareProduct}
-          />
+        
           
-          <ProductEssentialInfo
-            product={product}
-            bestPrice={bestPrice}
-            onNotifyMe={handleNotifyMe}
-          />
-          
-          <ProductHighlights specifications={product.specifications} />
-          
-          <Separator className="my-6" />
-          
-          <ProductVendors product={product} />
-        </div>
-      </div>
       
       {/* Product Information Tabs */}
       <ProductTabsSection product={product} />
