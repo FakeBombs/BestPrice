@@ -110,6 +110,55 @@ const ProductDetail = () => {
                   {/* Product Images */}
                   <ProductImageGallery mainImage={product.image} images={[product.image]} title={product.title} onImageChange={setMainImage} />
                 </div>
+
+                <div id="item-image-gallery">
+                  <div class="scroll scroll--center scroll--small">
+                    <div class="scroll__clip">
+                      <div class="scroll__scroller"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="item-actions-buttons">
+                  <button class="item-actions__button">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-shortlist-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
+                  </button>
+                  <button class="item-actions__button" data-id="compare">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-compare-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Προσθήκη στη σύγκριση</span>
+                  </button>
+                  <button class="item-actions__button" data-id="want">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-want-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Το θέλω</span>
+                    <span class="item-actions__count">8</span>
+                  </button>
+                  <button class="item-actions__button" data-id="have">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-have-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Το έχω</span>
+                    <span class="item-actions__count"></span>
+                  </button>
+                  <button class="item-actions__button">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-alert-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
+                  </button>
+                  <button class="item-actions__button">
+                    <svg aria-hidden="true" class="icon" width="16" height="16">
+                      <use xlink:href="/public/dist/images/icons/actions.svg#icon-collection-16"></use>
+                    </svg>
+                    <span class="item-actions__label">Προσθήκη σε συλλογή</span>
+                  </button>
+                </div>
               </aside>
               <main class="item-main">
                 
