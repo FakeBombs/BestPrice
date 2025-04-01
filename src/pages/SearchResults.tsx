@@ -85,6 +85,19 @@ const SearchResults = () => {
                 </div>
               </div>
             </aside>
+
+            <main class="page-products__main">
+              <div class="page-header">
+                <div class="page-header__title-wrapper">
+                  <div class="page-header__title-main">
+                    <h1>{query}</h1>
+                    <div class="page-header__count-wrapper">
+                      <div class="page-header__count">{filteredResults.length} προϊόντα</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
           </div>
           
           <div className="container py-8">
