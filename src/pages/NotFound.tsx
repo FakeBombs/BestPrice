@@ -14,10 +14,7 @@ const NotFound = () => {
     
     <div className="actions__404">
     <Link to="/" className="button button--outline">Επιστροφή στην αρχική σελίδα</Link>
-    <Link to="/categories" data-sitemap="" className="button button--outline hide-mobile">
-      <svg aria-hidden="true" className="icon" width="16" height="16"><use xLink:href="/public/dist/images/icons/actions.svg#icon-collection-rows-16"></use></svg>
-      Κατηγορίες προϊόντων
-    </Link>
+    <button data-sitemap="" class="button button--outline hide-mobile"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/actions.svg#icon-collection-rows-16"></use></svg> Κατηγορίες προϊόντων</button>
     </div>
     
     <div className="top-deals__placeholder">
