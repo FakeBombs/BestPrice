@@ -137,6 +137,7 @@ export function ChartTooltipContent({
   active?: boolean;
   payload?: PayloadItem[];
   label?: React.ReactNode;
+  formattedValue?: string;
 }) {
   const { config } = React.useContext(useChartContext)
 
