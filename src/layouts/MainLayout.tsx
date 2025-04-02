@@ -9,11 +9,13 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
+    <div>
       <Navbar />
-      <div id="root" class="clr">
+      <div id="root" className="clr">
         {children}
       </div>
       <Footer />
+    </div>
   );
 };
 
