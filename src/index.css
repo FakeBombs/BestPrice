@@ -26126,8 +26126,7 @@ html.touch .h-categories .h-categories__list::-webkit-scrollbar-thumb {
 }
 
 .h-deals__icon {
- width: 34px;
- height: 42
+ height: 42px
 }
 
 @media only screen and (min-width: 64em) {
