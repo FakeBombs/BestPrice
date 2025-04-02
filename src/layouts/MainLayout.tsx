@@ -9,13 +9,11 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1 container my-8">
+      <div id="root" class="clr">
         {children}
-      </main>
+      </div>
       <Footer />
-    </div>
   );
 };
 
