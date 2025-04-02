@@ -35099,6 +35099,11 @@ html.supports-grid .top-brands__brands .box-wrapper {
     height: 8.5rem
 }
 
+.eJJfcJGMERkC8cUwtBAQ img {
+    height: 13rem;
+    object-fit: cover;
+}
+
 @media only screen and (min-width: 48em) {
     .eJJfcJGMERkC8cUwtBAQ {
         height:10rem
