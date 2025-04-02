@@ -1,61 +1,118 @@
 
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
-import { Product } from '@/data/mockData';
-import Sidebar from '@/components/search/Sidebar';
-import SearchHeader from '@/components/search/SearchHeader';
-import ProductResults from '@/components/search/ProductResults';
-import NotificationButton from '@/components/search/NotificationButton';
-import { useProductFilters } from '@/hooks/useProductFilters';
+import ProductCard from '@/components/ProductCard';
+import ProductFilter from '@/components/ProductFilter';
 
 const SearchResults = () => {
-  const location = useLocation();
-  const query = new URLSearchParams(location.search).get('q') || '';
-  const [results, setResults] = useState<Product[]>([]);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   
-  // Fetch search results
   useEffect(() => {
-    if (query) {
-      const searchResults = searchProducts(query);
-      setResults(searchResults);
+    if (searchQuery) {
+      const results = searchProducts(searchQuery);
+      setProducts(results);
+      setFilteredProducts(results);
     }
-  }, [query]);
+  }, [searchQuery]);
   
-  // Use our custom hook for filtering
-  const {
-    filteredResults,
-    setSortOrder,
-    setFilteredVendors,
-    setInStockOnly,
-    handlePriceRangeFilter
-  } = useProductFilters({ initialProducts: results });
+  // Filter and sort functions
+  const handleSortChange = (value: string) => {
+    const sorted = [...filteredProducts];
+    
+    switch (value) {
+      case 'price-asc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return aPrice - bPrice;
+        });
+        break;
+      case 'price-desc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return bPrice - aPrice;
+        });
+        break;
+      case 'rating-desc':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'reviews-desc':
+        sorted.sort((a, b) => b.reviews - a.reviews);
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredProducts(sorted);
+  };
+  
+  const handleVendorFilter = (vendors: string[]) => {
+    if (vendors.length === 0) {
+      setFilteredProducts(products);
+      return;
+    }
+    
+    const filtered = products.filter(product => 
+      product.prices.some(price => vendors.includes(price.vendorId))
+    );
+    
+    setFilteredProducts(filtered);
+  };
+  
+  const handlePriceRangeFilter = (min: number, max: number) => {
+    const filtered = products.filter(product => {
+      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
+      return minPrice >= min && minPrice <= max;
+    });
+    
+    setFilteredProducts(filtered);
+  };
+  
+  const handleInStockOnly = (inStockOnly: boolean) => {
+    if (!inStockOnly) {
+      setFilteredProducts(products);
+      return;
+    }
+    
+    const filtered = products.filter(product => 
+      product.prices.some(price => price.inStock)
+    );
+    
+    setFilteredProducts(filtered);
+  };
   
   return (
-    <div id="root" className="clr">
-      <div className="root__wrapper">
-        <div className="root">
-          <div className="page-products">
-            <Sidebar query={query} />
-
-            <main className="page-products__main">
-              <SearchHeader query={query} resultsCount={filteredResults.length} />
-
-              <div className="page-products__main-wrapper">
-                <ProductResults
-                  filteredResults={filteredResults}
-                  onSortChange={setSortOrder}
-                  onVendorFilter={setFilteredVendors}
-                  onPriceRangeFilter={handlePriceRangeFilter}
-                  onInStockOnly={setInStockOnly}
-                />
-              </div>
-
-              <NotificationButton query={query} />
-            </main>
-          </div>
+    <div>
+      <h1 className="text-3xl font-bold mb-2">Αποτελέσματα Αναζήτησης</h1>
+      <p className="text-muted-foreground mb-6">
+        {filteredProducts.length} αποτελέσματα για "{searchQuery}"
+      </p>
+      
+      <ProductFilter
+        onSortChange={handleSortChange}
+        onVendorFilter={handleVendorFilter}
+        onPriceRangeFilter={handlePriceRangeFilter}
+        onInStockOnly={handleInStockOnly}
+      />
+      
+      {filteredProducts.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-lg text-muted-foreground">
+            Δεν βρέθηκαν προϊόντα που να ταιριάζουν με την αναζήτησή σας.
+          </p>
         </div>
-      </div>
+      ) : (
+        <div className="product-grid mt-6">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

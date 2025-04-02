@@ -1,36 +1,85 @@
 
 import { Review } from './types';
 
-// Mock reviews data
 export const mockReviews: Review[] = [
   {
-    id: '1',
-    userName: 'John Smith',
-    date: '2023-10-15',
+    id: 'r1',
+    userId: 'u1',
+    userName: 'Γιώργος Παπαδόπουλος',
+    userAvatar: 'https://placehold.co/100x100?text=GP',
+    productId: 'p1',
+    title: 'Εξαιρετικό προϊόν με εντυπωσιακή απόδοση',
+    content: 'Αγόρασα αυτό το προϊόν πριν από 2 μήνες και είμαι απόλυτα ικανοποιημένος. Εξαιρετική ποιότητα κατασκευής και πολύ καλή απόδοση. Η μπαταρία διαρκεί περισσότερο από όσο περίμενα, και το σύστημα λειτουργεί γρήγορα χωρίς καθυστερήσεις.',
     rating: 5,
-    title: 'Excellent product, highly recommended!',
-    comment: 'This is an amazing product. The quality is outstanding and it works perfectly. I would definitely recommend it to anyone looking for a reliable device.',
-    helpful: 24,
-    notHelpful: 2
+    pros: ['Εξαιρετική οθόνη', 'Μεγάλη διάρκεια μπαταρίας', 'Γρήγορη απόδοση'],
+    cons: ['Ακριβό', 'Βαρύ για μακροχρόνια χρήση'],
+    helpfulCount: 12,
+    unhelpfulCount: 2,
+    verifiedPurchase: true,
+    createdAt: '2023-08-15T10:30:00Z'
   },
   {
-    id: '2',
-    userName: 'Emily Johnson',
-    date: '2023-09-28',
-    rating: 4,
-    title: 'Good value for money',
-    comment: 'Overall a solid product. There are a few minor issues but nothing that would prevent me from recommending it. Good battery life and performance.',
-    helpful: 18,
-    notHelpful: 3
-  },
-  {
-    id: '3',
-    userName: 'Michael Chen',
-    date: '2023-08-12',
+    id: 'r2',
+    userId: 'u2',
+    userName: 'Μαρία Κωνσταντίνου',
+    userAvatar: 'https://placehold.co/100x100?text=MK',
+    productId: 'p1',
+    title: 'Καλό αλλά με κάποια προβλήματα',
+    content: 'Το προϊόν είναι γενικά καλό, αλλά έχω παρατηρήσει κάποια προβλήματα στη λειτουργία του. Μερικές φορές παγώνει χωρίς λόγο και χρειάζεται επανεκκίνηση. Η κάμερα είναι εξαιρετική, αλλά η διάρκεια ζωής της μπαταρίας θα μπορούσε να είναι καλύτερη.',
     rating: 3,
-    title: 'Decent but has room for improvement',
-    comment: 'The product is okay but there are some areas that could be improved. The interface is a bit confusing and the setup took longer than expected.',
-    helpful: 12,
-    notHelpful: 5
+    pros: ['Εξαιρετική κάμερα', 'Όμορφη σχεδίαση'],
+    cons: ['Περιστασιακά προβλήματα απόδοσης', 'Μέτρια διάρκεια μπαταρίας'],
+    helpfulCount: 8,
+    unhelpfulCount: 1,
+    verifiedPurchase: true,
+    createdAt: '2023-07-20T14:15:00Z'
+  },
+  {
+    id: 'r3',
+    userId: 'u3',
+    userName: 'Νίκος Ανδρέου',
+    userAvatar: 'https://placehold.co/100x100?text=NA',
+    productId: 'p1',
+    title: 'Δεν αξίζει τα χρήματά του',
+    content: 'Περίμενα πολύ περισσότερα από αυτό το προϊόν, δεδομένης της τιμής του. Η απόδοση είναι μέτρια και έχω αντιμετωπίσει αρκετά προβλήματα με το λογισμικό. Δεν θα το συνιστούσα σε κανέναν.',
+    rating: 2,
+    pros: ['Καλή οθόνη'],
+    cons: ['Προβλήματα λογισμικού', 'Κακή υποστήριξη πελατών', 'Υπερτιμημένο'],
+    helpfulCount: 15,
+    unhelpfulCount: 5,
+    verifiedPurchase: false,
+    createdAt: '2023-09-05T09:45:00Z'
+  },
+  {
+    id: 'r4',
+    userId: 'u4',
+    userName: 'Ελένη Παπαδάκη',
+    userAvatar: 'https://placehold.co/100x100?text=EP',
+    productId: 'p1',
+    title: 'Απλά καταπληκτικό!',
+    content: 'Ένα από τα καλύτερα προϊόντα που έχω αγοράσει ποτέ! Εξαιρετική ποιότητα κατασκευής, απίστευτη απόδοση και η μπαταρία διαρκεί μια ολόκληρη μέρα με βαριά χρήση. Αξίζει κάθε ευρώ!',
+    rating: 5,
+    pros: ['Κορυφαία απόδοση', 'Εξαιρετικός ήχος', 'Μεγάλη διάρκεια μπαταρίας', 'Εντυπωσιακή κάμερα'],
+    cons: [],
+    helpfulCount: 22,
+    unhelpfulCount: 0,
+    verifiedPurchase: true,
+    createdAt: '2023-08-28T16:20:00Z'
+  },
+  {
+    id: 'r5',
+    userId: 'u5',
+    userName: 'Αντώνης Δημητρίου',
+    userAvatar: 'https://placehold.co/100x100?text=AD',
+    productId: 'p1',
+    title: 'Καλή αγορά, αλλά όχι τέλεια',
+    content: 'Γενικά, είμαι ικανοποιημένος με την αγορά μου. Το προϊόν λειτουργεί όπως διαφημίζεται, αλλά υπάρχουν μερικά μικρά ζητήματα που θα μπορούσαν να βελτιωθούν. Η ποιότητα κατασκευής είναι καλή, αλλά το λογισμικό χρειάζεται βελτιώσεις.',
+    rating: 4,
+    pros: ['Καλή κατασκευή', 'Αξιόπιστο', 'Καλή τιμή'],
+    cons: ['Το λογισμικό χρειάζεται βελτιώσεις', 'Μέτρια κάμερα'],
+    helpfulCount: 7,
+    unhelpfulCount: 2,
+    verifiedPurchase: true,
+    createdAt: '2023-07-10T11:30:00Z'
   }
 ];

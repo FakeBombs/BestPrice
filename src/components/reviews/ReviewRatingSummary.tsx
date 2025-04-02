@@ -1,9 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Star } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
 
 interface ReviewRatingSummaryProps {
   rating: number;
@@ -12,54 +9,60 @@ interface ReviewRatingSummaryProps {
   onWriteReview: () => void;
 }
 
-const ReviewRatingSummary = ({ 
-  rating, 
-  reviewCount, 
-  ratingCounts, 
-  onWriteReview 
+const ReviewRatingSummary = ({
+  rating,
+  reviewCount,
+  ratingCounts,
+  onWriteReview
 }: ReviewRatingSummaryProps) => {
+  const totalRatings = ratingCounts.reduce((a, b) => a + b, 0);
+  
+  const getRatingPercentage = (count: number) => {
+    if (totalRatings === 0) return 0;
+    return (count / totalRatings) * 100;
+  };
+  
   return (
-    <div className="w-full lg:w-1/3">
-      <div className="bg-muted/30 p-4 rounded-lg">
-        <div className="flex items-center mb-4">
-          <div className="text-4xl font-bold mr-4">{rating.toFixed(1)}</div>
-          <div>
-            <div className="flex items-center text-yellow-400">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`h-5 w-5 ${i < Math.round(rating) ? 'fill-current' : ''}`} 
-                />
-              ))}
-            </div>
-            <div className="text-sm text-muted-foreground">Based on {reviewCount} reviews</div>
-          </div>
+    <div className="w-full lg:w-1/3 p-4 border rounded-lg">
+      <div className="text-center mb-4">
+        <div className="text-4xl font-bold mb-1">{rating.toFixed(1)}</div>
+        <div className="flex justify-center mb-2">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star 
+              key={star}
+              className={`h-5 w-5 ${
+                star <= Math.round(rating) 
+                  ? 'text-yellow-400 fill-yellow-400' 
+                  : 'text-gray-300'
+              }`}
+            />
+          ))}
         </div>
-        
-        <div className="space-y-2">
-          {[5, 4, 3, 2, 1].map((stars) => {
-            const count = ratingCounts[stars - 1];
-            const percentage = reviewCount > 0 ? (count / reviewCount) * 100 : 0;
-            
-            return (
-              <div key={stars} className="flex items-center gap-2">
-                <div className="text-sm w-12">
-                  {stars} {stars === 1 ? 'star' : 'stars'}
-                </div>
-                <Progress value={percentage} className="h-2" />
-                <div className="text-sm w-10 text-right">{count}</div>
-              </div>
-            );
-          })}
+        <div className="text-sm text-muted-foreground">
+          Βασισμένο σε {reviewCount} κριτικές
         </div>
-        
-        <Button 
-          className="w-full mt-4"
-          onClick={onWriteReview}
-        >
-          Write a Review
-        </Button>
       </div>
+      
+      <div className="space-y-2 mb-6">
+        {[5, 4, 3, 2, 1].map((starRating) => (
+          <div key={starRating} className="flex items-center">
+            <div className="w-10 text-sm">{starRating} ★</div>
+            <div className="flex-1 h-2 mx-2 bg-gray-200 rounded">
+              <div 
+                className="h-2 bg-yellow-400 rounded"
+                style={{ width: `${getRatingPercentage(ratingCounts[starRating - 1])}%` }}
+              />
+            </div>
+            <div className="w-10 text-right text-sm text-muted-foreground">
+              {ratingCounts[starRating - 1]}
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <Button onClick={onWriteReview} className="w-full">
+        Γράψτε μια κριτική
+      </Button>
     </div>
   );
 };

@@ -1,43 +1,103 @@
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tag, Percent, ArrowDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { fetchDeals } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/data/mockData';
+import ProductFilter from '@/components/ProductFilter';
 
 const Deals = () => {
-  // We'll just show a random selection of products as "deals" for this demo
-  const dealsProducts = [...products].sort(() => 0.5 - Math.random()).slice(0, 8);
+  const [deals, setDeals] = useState([]);
+  const [filteredDeals, setFilteredDeals] = useState([]);
+  
+  useEffect(() => {
+    const dealsData = fetchDeals();
+    setDeals(dealsData);
+    setFilteredDeals(dealsData);
+  }, []);
+  
+  // Filter and sort functions
+  const handleSortChange = (value: string) => {
+    const sorted = [...filteredDeals];
+    
+    switch (value) {
+      case 'price-asc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return aPrice - bPrice;
+        });
+        break;
+      case 'price-desc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return bPrice - aPrice;
+        });
+        break;
+      case 'rating-desc':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'reviews-desc':
+        sorted.sort((a, b) => b.reviews - a.reviews);
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredDeals(sorted);
+  };
+  
+  const handleVendorFilter = (vendors: string[]) => {
+    if (vendors.length === 0) {
+      setFilteredDeals(deals);
+      return;
+    }
+    
+    const filtered = deals.filter(product => 
+      product.prices.some(price => vendors.includes(price.vendorId))
+    );
+    
+    setFilteredDeals(filtered);
+  };
+  
+  const handlePriceRangeFilter = (min: number, max: number) => {
+    const filtered = deals.filter(product => {
+      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
+      return minPrice >= min && minPrice <= max;
+    });
+    
+    setFilteredDeals(filtered);
+  };
+  
+  const handleInStockOnly = (inStockOnly: boolean) => {
+    if (!inStockOnly) {
+      setFilteredDeals(deals);
+      return;
+    }
+    
+    const filtered = deals.filter(product => 
+      product.prices.some(price => price.inStock)
+    );
+    
+    setFilteredDeals(filtered);
+  };
   
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">Today's Best Deals</h1>
+    <div>
+      <h1 className="text-3xl font-bold mb-2">Προσφορές</h1>
+      <p className="text-muted-foreground mb-6">
+        Ανακάλυψε τις καλύτερες προσφορές της αγοράς
+      </p>
       
-      <div className="flex flex-wrap gap-4 mb-8">
-        <Button variant="outline" className="flex items-center">
-          <Tag className="mr-2 h-4 w-4" />
-          All Deals
-        </Button>
-        <Button variant="outline" className="flex items-center">
-          <Percent className="mr-2 h-4 w-4" />
-          Discounts over 20%
-        </Button>
-        <Button variant="outline" className="flex items-center">
-          <ArrowDown className="mr-2 h-4 w-4" />
-          Price Drops
-        </Button>
-      </div>
+      <ProductFilter
+        onSortChange={handleSortChange}
+        onVendorFilter={handleVendorFilter}
+        onPriceRangeFilter={handlePriceRangeFilter}
+        onInStockOnly={handleInStockOnly}
+      />
       
-      <div className="product-grid">
-        {dealsProducts.map((product) => (
-          <div key={product.id} className="relative">
-            <div className="absolute top-3 left-3 z-10">
-              <span className="bg-red-500 text-white px-2 py-1 rounded-md text-sm font-medium">
-                Deal
-              </span>
-            </div>
-            <ProductCard product={product} />
-          </div>
+      <div className="product-grid mt-6">
+        {filteredDeals.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

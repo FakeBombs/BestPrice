@@ -1,11 +1,17 @@
 
 export interface Review {
   id: string;
+  userId: string;
   userName: string;
-  date: string;
-  rating: number;
+  userAvatar?: string;
+  productId: string;
   title: string;
-  comment: string;
-  helpful: number;
-  notHelpful: number;
+  content: string;
+  rating: number;
+  pros?: string[];
+  cons?: string[];
+  helpfulCount: number;
+  unhelpfulCount: number;
+  verifiedPurchase: boolean;
+  createdAt: string;
 }

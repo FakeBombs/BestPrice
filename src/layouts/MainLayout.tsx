@@ -2,7 +2,6 @@
 import { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { ThemeProvider } from '@/components/theme-provider';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -10,13 +9,13 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-         <Navbar />
-         <div id="root" class="clr">
-           {children}
-         </div>
-         <Footer />
-    </ThemeProvider>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-1 container my-8">
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 };
 

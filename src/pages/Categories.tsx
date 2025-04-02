@@ -1,10 +1,15 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { 
-  categories, products, getProductsByCategory, 
-  rootCategories, getCategoriesByRoot, 
-  getRootCategoryBySlug, getProductsByRootCategory 
+  getCategories, 
+  getRootCategories, 
+  getProductsByCategory, 
+  getProductsByRootCategory,
+  getCategoryById,
+  getRootCategoryById,
+  getRootCategoryBySlug,
+  getCategoriesByRootCategory
 } from '@/data/mockData';
 import AllCategoriesView from '@/components/category/AllCategoriesView';
 import RootCategoryView from '@/components/category/RootCategoryView';
@@ -12,127 +17,136 @@ import SingleCategoryView from '@/components/category/SingleCategoryView';
 
 const Categories = () => {
   const { categoryId, rootSlug } = useParams<{ categoryId?: string; rootSlug?: string }>();
-  const [sortOrder, setSortOrder] = useState('price-asc');
-  const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   
-  // Handle regular category view
-  const category = categoryId 
-    ? categories.find(c => c.id === categoryId) 
-    : undefined;
+  // If categoryId is provided, we're viewing a specific category
+  // If rootSlug is provided, we're viewing a root category
+  // If neither is provided, we're viewing all categories
+  const category = categoryId ? getCategoryById(categoryId) : null;
+  const rootCategoryFromSlug = rootSlug ? getRootCategoryBySlug(rootSlug) : null;
+  const rootCategory = category ? getRootCategoryById(category.rootCategoryId) : rootCategoryFromSlug;
   
-  // Handle root category view
-  const rootCategory = rootSlug
-    ? rootCategories.find(rc => rc.slug === rootSlug)
-    : undefined;
-  
-  // Determine which products to display
-  let displayProducts = [];
-  if (categoryId) {
-    // Regular category view
-    displayProducts = getProductsByCategory(categoryId);
-  } else if (rootCategory) {
-    // Root category view - get all products from all subcategories
-    displayProducts = getProductsByRootCategory(rootCategory.id);
-  } else {
-    // Homepage view - show all products
-    displayProducts = products;
-  }
-  
-  // Get subcategories for a root category
-  const subcategories = rootCategory 
-    ? getCategoriesByRoot(rootCategory.id)
-    : [];
-  
-  // Apply vendor filter
-  if (filteredVendors.length > 0) {
-    displayProducts = displayProducts.filter(product => 
-      product.prices.some(price => 
-        filteredVendors.includes(price.vendorId)
-      )
-    );
-  }
-  
-  // Apply in-stock filter
-  if (inStockOnly) {
-    displayProducts = displayProducts.filter(product => 
-      product.prices.some(price => price.inStock)
-    );
-  }
-  
-  // Apply sorting
-  displayProducts = [...displayProducts].sort((a, b) => {
-    const aPrice = Math.min(...a.prices.map(p => p.price));
-    const bPrice = Math.min(...b.prices.map(p => p.price));
-    
-    switch (sortOrder) {
-      case 'price-asc':
-        return aPrice - bPrice;
-      case 'price-desc':
-        return bPrice - aPrice;
-      case 'rating-desc':
-        return b.rating - a.rating;
-      case 'reviews-desc':
-        return b.reviews - a.reviews;
-      default:
-        return 0;
+  useEffect(() => {
+    if (category) {
+      // Fetch products for a specific category
+      const categoryProducts = getProductsByCategory(category.id);
+      setProducts(categoryProducts);
+      setFilteredProducts(categoryProducts);
+    } else if (rootCategory) {
+      // Fetch products for a root category
+      const rootCategoryProducts = getProductsByRootCategory(rootCategory.id);
+      setProducts(rootCategoryProducts);
+      setFilteredProducts(rootCategoryProducts);
+    } else {
+      // No need to fetch products for all categories view
+      setProducts([]);
+      setFilteredProducts([]);
     }
-  });
+  }, [category, rootCategory]);
   
-  // Handle filter changes
+  // Filter and sort functions
   const handleSortChange = (value: string) => {
-    setSortOrder(value);
+    const sorted = [...filteredProducts];
+    
+    switch (value) {
+      case 'price-asc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return aPrice - bPrice;
+        });
+        break;
+      case 'price-desc':
+        sorted.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return bPrice - aPrice;
+        });
+        break;
+      case 'rating-desc':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'reviews-desc':
+        sorted.sort((a, b) => b.reviews - a.reviews);
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredProducts(sorted);
   };
   
   const handleVendorFilter = (vendors: string[]) => {
-    setFilteredVendors(vendors);
+    if (vendors.length === 0) {
+      setFilteredProducts(products);
+      return;
+    }
+    
+    const filtered = products.filter(product => 
+      product.prices.some(price => vendors.includes(price.vendorId))
+    );
+    
+    setFilteredProducts(filtered);
   };
   
   const handlePriceRangeFilter = (min: number, max: number) => {
-    console.log(min, max);
+    const filtered = products.filter(product => {
+      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
+      return minPrice >= min && minPrice <= max;
+    });
+    
+    setFilteredProducts(filtered);
   };
   
-  const handleInStockOnly = (inStock: boolean) => {
-    setInStockOnly(inStock);
+  const handleInStockOnly = (inStockOnly: boolean) => {
+    if (!inStockOnly) {
+      setFilteredProducts(products);
+      return;
+    }
+    
+    const filtered = products.filter(product => 
+      product.prices.some(price => price.inStock)
+    );
+    
+    setFilteredProducts(filtered);
   };
   
-  return (
-    <div className="container py-8">
-      {/* Show All Root Categories */}
-      {!categoryId && !rootCategory && (
-        <AllCategoriesView 
-          rootCategories={rootCategories} 
-          categories={categories} 
-        />
-      )}
-      
-      {/* Show Root Category with its Subcategories */}
-      {rootCategory && !categoryId && (
-        <RootCategoryView 
-          rootCategory={rootCategory}
-          subcategories={subcategories}
-          products={displayProducts}
-          onSortChange={handleSortChange}
-          onVendorFilter={handleVendorFilter}
-          onPriceRangeFilter={handlePriceRangeFilter}
-          onInStockOnly={handleInStockOnly}
-        />
-      )}
-      
-      {/* Show Category with Products */}
-      {category && (
-        <SingleCategoryView 
-          category={category}
-          products={displayProducts}
-          rootCategory={rootCategory}
-          onSortChange={handleSortChange}
-          onVendorFilter={handleVendorFilter}
-          onPriceRangeFilter={handlePriceRangeFilter}
-          onInStockOnly={handleInStockOnly}
-        />
-      )}
-    </div>
-  );
+  // Determine which view to render
+  if (category) {
+    return (
+      <SingleCategoryView 
+        category={category} 
+        products={filteredProducts}
+        rootCategory={rootCategory}
+        onSortChange={handleSortChange}
+        onVendorFilter={handleVendorFilter}
+        onPriceRangeFilter={handlePriceRangeFilter}
+        onInStockOnly={handleInStockOnly}
+      />
+    );
+  } else if (rootCategory) {
+    const subcategories = getCategoriesByRootCategory(rootCategory.id);
+    
+    return (
+      <RootCategoryView 
+        rootCategory={rootCategory} 
+        subcategories={subcategories}
+        products={filteredProducts}
+        onSortChange={handleSortChange}
+        onVendorFilter={handleVendorFilter}
+        onPriceRangeFilter={handlePriceRangeFilter}
+        onInStockOnly={handleInStockOnly}
+      />
+    );
+  } else {
+    return (
+      <AllCategoriesView 
+        rootCategories={getRootCategories()} 
+        categories={getCategories()} 
+      />
+    );
+  }
 };
 
 export default Categories;
