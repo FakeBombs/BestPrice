@@ -26125,6 +26125,11 @@ html.touch .h-categories .h-categories__list::-webkit-scrollbar-thumb {
     display: none
 }
 
+.h-deals__icon {
+ width: 34px;
+ height: 42
+}
+
 @media only screen and (min-width: 64em) {
     .h-deals__button,.h-deals__icon {
         align-content:center;
