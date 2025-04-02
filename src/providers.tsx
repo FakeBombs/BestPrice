@@ -1,6 +1,6 @@
 
 import { ReactNode } from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { ThemeProvider } from '@/components/theme-provider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -8,13 +8,13 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <NextThemesProvider
-      attribute="class"
+    <ThemeProvider
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
+      themes={["light", "dark", "default"]}
     >
       {children}
-    </NextThemesProvider>
+    </ThemeProvider>
   );
 }
