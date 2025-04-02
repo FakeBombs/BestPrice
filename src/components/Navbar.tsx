@@ -9,7 +9,32 @@ import NotificationButton from '@/components/NotificationButton';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return 
+  <div class="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
+
+
+
+      <div class="root" id="header-root">
+        <div id="nav">
+          <div aria-label="Sitemap button" role="button" class="sitemap-button sitemap-button--mobile pressable">
+            <div class="sitemap-button__lines">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <div class="logo__wrapper">
+            <Link id="back-to-home" to="/" class="pressable" tabindex="-1">
+              <svg aria-hidden="true" class="icon logo" width="100%" height="100%"><use xlink:href="/public/dist/images/icons/logo.svg#icon-logo"></use></svg>
+              <span>BestPrice.gr</span>
+            </Link>
+            </div>
+          </div>
+      </div>
+
+        
+
+      
       <div className="container flex items-center py-[1.05rem]">
         <div className="flex items-center justify-between w-full h-16">
           {/* Logo */}
@@ -49,6 +74,7 @@ const Navbar = () => {
           </nav>
         </div>}
     </header>
+  </div>
       ;
 };
 export default Navbar;
