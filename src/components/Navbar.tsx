@@ -12,7 +12,7 @@ const Navbar = () => {
     <header id="bp-header" className="bp-header root__wrapper">
       <div className="root" id="header-root">
         <div id="nav">
-          <h1 class="logo__wrapper">
+          <h1 className="logo__wrapper">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary">BestPrice</span>
@@ -35,6 +35,16 @@ const Navbar = () => {
         </div>
 
         <div class="search__wrapper">
+
+          <div aria-label="Sitemap button" role="button" className="sitemap-button sitemap-button--desktop pressable">
+            <div class="sitemap-button__lines">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+
+          
           {/* Desktop Search */}
           <div className="md:flex flex-1 mx-8">
             <SearchBar className="flex-1" />
