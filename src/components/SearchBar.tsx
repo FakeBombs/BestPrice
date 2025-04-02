@@ -14,6 +14,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
   const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
   // Load recent searches from localStorage on mount
   useEffect(() => {
@@ -23,12 +24,18 @@ export const SearchBar = ({ className }: { className?: string }) => {
     }
   }, []);
 
-  // Handle click outside to close dropdown
+  // Handle click outside to close dropdown and clear search when clicking elsewhere
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Close dropdown when clicking outside
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && 
           inputRef.current && !inputRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
+      }
+      
+      // Clear search when clicking outside the search bar completely
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
+        setSearchQuery('');
       }
     };
 
@@ -38,19 +45,21 @@ export const SearchBar = ({ className }: { className?: string }) => {
     };
   }, []);
 
-  // Navigate to search results or home based on search query
+  // Navigate based on URL query param changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchQuery.trim().length > 0) {
-        navigateToSearchResults(searchQuery);
-      } else if (searchQuery === '' && location.pathname === '/search') {
-        // Redirect to homepage if search is cleared and we're on the search page
-        navigate('/');
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, location.pathname]);
+    const searchParams = new URLSearchParams(location.search);
+    const urlQuery = searchParams.get('q');
+    
+    // Update search query if URL changes
+    if (urlQuery && urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery);
+    }
+    
+    // Clear search query when navigating away from search page
+    if (!location.pathname.includes('/search') && !urlQuery) {
+      setSearchQuery('');
+    }
+  }, [location.search, location.pathname]);
 
   const navigateToSearchResults = (query: string) => {
     if (query.trim()) {
@@ -92,7 +101,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={searchBarRef}>
       <form onSubmit={handleSearch} className="flex">
         <Input
           ref={inputRef}
