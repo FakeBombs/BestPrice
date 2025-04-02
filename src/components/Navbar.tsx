@@ -9,8 +9,7 @@ import NotificationButton from '@/components/NotificationButton';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return 
-  <div class="bp-header__outer-wrapper">
-    <header id="bp-header" className="bp-header root__wrapper">
+  <header id="bp-header" className="bp-header root__wrapper">
       <div className="container flex items-center py-[1.05rem]">
         <div className="flex items-center justify-between w-full h-16">
           {/* Logo */}
@@ -49,8 +48,6 @@ const Navbar = () => {
             </div>
           </nav>
         </div>}
-    </header>
-  </div>
-    ;
+  </header>;
 };
 export default Navbar;
