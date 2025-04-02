@@ -8,20 +8,19 @@ import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  return <div class="bp-header__outer-wrapper">
+  return <div className="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
-      <div className="container flex items-center py-[1.05rem]">
-        <div className="flex items-center justify-between w-full h-16">
+      <div className="root" id="header-root">
+        <div id="nav">
+          <h1 class="logo__wrapper">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary">BestPrice</span>
           </Link>
+          </h1>
+        </div>
 
-          {/* Desktop Search */}
-          <div className="md:flex flex-1 mx-8">
-            <SearchBar className="flex-1" />
-          </div>
-
+        <div id="user">
           {/* Desktop Navigation */}
           <nav className="md:flex items-center space-x-4">
             <ThemeToggle />
@@ -34,6 +33,14 @@ const Navbar = () => {
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
+
+        <div class="search__wrapper">
+          {/* Desktop Search */}
+          <div className="md:flex flex-1 mx-8">
+            <SearchBar className="flex-1" />
+          </div>
+        </div>
+        
       </div>
 
       {/* Mobile Menu */}
