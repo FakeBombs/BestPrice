@@ -25605,7 +25605,7 @@ div[itemprop=aggregateRating] {
     }
 }
 
-[data-theme=dark] body.local-cat-images .h-categories__cover {
+[data-theme=dark] body .h-categories__cover {
     background: #26282c
 }
 
