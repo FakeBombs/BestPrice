@@ -86,11 +86,6 @@
     @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
   }
   
-  /* Categories grid */ 
-  .h-categories__cover {
-    @apply h-32;
-  }
-  
   /* Custom "clearfix" for Bootstrap-style grid layouts */
   .clearfix:after {
     @apply content-[''] table clear-both;
