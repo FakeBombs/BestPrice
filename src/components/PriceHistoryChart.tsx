@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 
 // Mock price history data - in a real app, this would come from your backend
 const generatePriceData = (basePrice: number, days: number) => {
@@ -39,6 +39,34 @@ interface PriceHistoryChartProps {
   productId: string;
   basePrice: number;
 }
+
+// Create a custom tooltip component that correctly passes React elements
+const CustomTooltipContent = (props: any) => {
+  if (!props.active || !props.payload?.length) return null;
+  
+  const date = new Date(props.label);
+  const formattedDate = `${date.getMonth() + 1}/${date.getDate()}`;
+  const price = props.payload[0]?.value;
+  
+  return (
+    <div className="p-2">
+      <div className="font-medium">{formattedDate}</div>
+      <div className="py-1">
+        <div className="flex items-center justify-between gap-8">
+          <div className="flex items-center gap-1">
+            <div className="h-1 w-4 rounded-sm bg-sky-500" />
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Price
+            </span>
+          </div>
+          <span className="text-xs text-slate-900 dark:text-slate-100">
+            ${price}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => {
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
@@ -138,11 +166,7 @@ const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => 
                   domain={[minPrice * 0.95, maxPrice * 1.05]} 
                   tickFormatter={(value) => `$${value}`}
                 />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent labelKey="date" nameKey="name" />
-                  }
-                />
+                <Tooltip content={<CustomTooltipContent />} />
                 <Line 
                   type="monotone" 
                   dataKey="price" 

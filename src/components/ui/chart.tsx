@@ -27,7 +27,14 @@ export function ChartContainer({
   )
 }
 
-type ChartTooltipProps<TData extends object> = React.HTMLAttributes<HTMLDivElement> & {
+interface PayloadItem {
+  [key: string]: any;
+  payload?: {
+    [key: string]: any;
+  };
+}
+
+type ChartTooltipProps<TData extends PayloadItem> = React.HTMLAttributes<HTMLDivElement> & {
   content: React.ReactNode
   labelKey?: string
   nameKey?: string
@@ -38,7 +45,7 @@ type ChartTooltipProps<TData extends object> = React.HTMLAttributes<HTMLDivEleme
   label?: string
 }
 
-export function ChartTooltip<TData extends object>({
+export function ChartTooltip<TData extends PayloadItem>({
   className,
   content,
   labelKey = "name",
@@ -126,10 +133,13 @@ export function ChartTooltipContent({
   nameKey = "name",
   format = (value) => value.toString(),
   ...props
-}: ChartTooltipContentProps) {
+}: ChartTooltipContentProps & {
+  active?: boolean;
+  payload?: PayloadItem[];
+  label?: React.ReactNode;
+}) {
   const { config } = React.useContext(useChartContext)
 
-  // @ts-ignore
   if (!props.active || !props.payload?.length) {
     return null
   }
@@ -142,29 +152,22 @@ export function ChartTooltipContent({
       )}
     >
       <div className="p-2">
-        {/* @ts-ignore */}
         {props.label ? (
           <div className="flex flex-1 items-center justify-between gap-8">
-            {/* @ts-ignore */}
             <span className="font-medium">{props.label}</span>
           </div>
         ) : null}
         <div className="py-1">
-          {/* @ts-ignore */}
           {props.payload.map((data, i) => {
-            // @ts-ignore
             const name = data[nameKey]
             const dataKey = Object.keys(data?.payload || {}).find(
               (key) => key !== labelKey
             )
             const value = dataKey
-              ? // @ts-ignore
-                data?.payload[dataKey]
-              : // @ts-ignore
-                data.value
+              ? data?.payload?.[dataKey]
+              : data.value
 
-            // @ts-ignore
-            const color = config?.[name]?.theme.light
+            const color = config?.[name]?.theme?.light
 
             return (
               <div
@@ -177,12 +180,10 @@ export function ChartTooltipContent({
                     style={{ background: color }}
                   />
                   <span className="text-xs text-slate-500 dark:text-slate-400">
-                    {/* @ts-ignore */}
                     {data[nameKey]}
                   </span>
                 </div>
                 <span className="text-xs text-slate-900 dark:text-slate-100">
-                  {/* @ts-ignore */}
                   {props.formattedValue || format(value)}
                 </span>
               </div>
