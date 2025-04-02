@@ -74,7 +74,7 @@ const Index = () => {
                 <Link to="/deals?bpref=home-categories" className="h-categories__category h-categories__category--deals" title="Προσφορές">
                   <div className="h-categories__cover">
                     <div className="h-categories__badge drop drop--40">233 Νέες</div>
-                      <img style={{width: "34px", height: "42px"}} alt="Deals icon" className="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
+                      <img alt="Deals icon" className="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
                     </div><h2 className="h-categories__label">Προσφορές</h2>
                 </Link>
                 <Link to="/cat/806/mobile-phones.html?bpref=home-categories" className="h-categories__category" title="Κινητά">
