@@ -4,17 +4,35 @@ import { Button } from '@/components/ui/button';
 
 const NotFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <h1 className="text-6xl font-bold mb-4">404</h1>
-      <h2 className="text-2xl font-medium mb-8">Η σελίδα δεν βρέθηκε</h2>
-      <p className="text-muted-foreground text-center max-w-md mb-8">
-        Η σελίδα που αναζητάτε δεν υπάρχει ή έχει μετακινηθεί. 
-        Παρακαλώ ελέγξτε τη διεύθυνση ή επιστρέψτε στην αρχική σελίδα.
-      </p>
-      <Button asChild>
-        <Link to="/">Επιστροφή στην αρχική</Link>
-      </Button>
+    <div class="root__wrapper" id="root-404">
+      <div class="root">
+      <h1 class="heading">Η σελίδα που ψάχνεις δεν είναι πλέον διαθέσιμη...</h1>
+      <p>Αλλά μην ανησυχείς, είσαι στο πιο κατάλληλο μέρος για γρήγορη, ασφαλή και εύχρηστη έρευνα αγοράς!</p>
+      </div>
     </div>
+    
+    <div class="actions__404">
+    <Link to="/" class="button button--outline">Επιστροφή στην αρχική σελίδα</Link>
+    <button data-sitemap="" class="button button--outline hide-mobile"><svg aria-hidden="true" class="icon" width="16" height="16"><use xLink:href="/public/dist/images/icons/actions.svg#icon-collection-rows-16"></use></svg> Κατηγορίες προϊόντων</button>
+    </div>
+    
+    <div class="top-deals__placeholder">
+    <div class="top-deals">
+      <div class="top-deals__header root">
+        <h3 class="top-deals__title">Σημερινές προσφορές</h3>
+        <div class="top-deals__more">
+          <Link href="/deals" class="dotted">Όλες οι προσφορές</Link>
+        </div>
+      </div>
+      <div class="scroll scroll--center scroll--no-scrolling">
+        <div class="scroll__clip" style="{{overflow: "hidden"}}>
+          <div class="scroll__scroller">
+            <div class="top-deals__products scroll__content">
+              <div class="top-deals__product-wrapper"></div>
+            </div>
+          </div>
+        </div>
+      </div>
   );
 };
 
