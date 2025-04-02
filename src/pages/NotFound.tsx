@@ -25,7 +25,7 @@ const NotFound = () => {
         </div>
       </div>
       <div className="scroll scroll--center scroll--no-scrolling">
-        <div className="scroll__clip" style="{{overflow: "hidden"}}>
+        <div className="scroll__clip" style={{overflow: "hidden"}}>
           <div className="scroll__scroller">
             <div className="top-deals__products scroll__content">
               <div className="top-deals__product-wrapper"></div>
