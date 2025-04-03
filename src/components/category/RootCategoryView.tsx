@@ -31,11 +31,11 @@ const RootCategoryView = ({
         <h1 className="text-3xl font-bold mb-6">{rootCategory.name}</h1>
         <p className="text-muted-foreground mb-8">{rootCategory.description}</p>
 
-        <div class="root-category__categories">
+        <div className="root-category__categories">
           {/* Subcategories for this root category */}
           {subcategories.length > 0 && (
             {subcategories.map((subCategory) => (
-              <div class="root-category__category">
+              <div className="root-category__category">
                 <CategoryCard key={subCategory.id} category={subCategory} />
               </div>
             ))}
