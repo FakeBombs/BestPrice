@@ -32,41 +32,40 @@ const RootCategoryView = ({
         <p className="text-muted-foreground mb-8">{rootCategory.description}</p>
 
         <div className="root-category__categories">
-          {/* Subcategories for this root category */}
           {subcategories.length > 0 && (
-            <div>
+            <>
               {subcategories.map((subCategory) => (
                 <div className="root-category__category" key={subCategory.id}>
                   <CategoryCard category={subCategory} />
                 </div>
               ))}
-            </div>
+            </>
           )}
         </div>
       
-      {/* Products for this root category */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Products</h2>
-        <ProductFilter 
-          onSortChange={onSortChange}
-          onVendorFilter={onVendorFilter}
-          onPriceRangeFilter={onPriceRangeFilter}
-          onInStockOnly={onInStockOnly}
-        />
-        
-        {products.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
-          </div>
-        ) : (
-          <div className="product-grid mt-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
+        {/* Products for this root category */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Products</h2>
+          <ProductFilter 
+            onSortChange={onSortChange}
+            onVendorFilter={onVendorFilter}
+            onPriceRangeFilter={onPriceRangeFilter}
+            onInStockOnly={onInStockOnly}
+          />
+          
+          {products.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-muted-foreground">No products found matching your criteria.</p>
+            </div>
+          ) : (
+            <div className="product-grid mt-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
