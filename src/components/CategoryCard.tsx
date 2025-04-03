@@ -9,7 +9,7 @@ interface CategoryCardProps {
 }
 
 import { rootCategories } from '@/data/mockData';
-interface RootCategoryCardProps {
+interface RootCategoriesCardProps {
   RootCategory: rootCategoryId;
 }
 
