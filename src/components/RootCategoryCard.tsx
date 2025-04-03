@@ -44,5 +44,6 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
     <h2 className="root-category__category-title"><Link to={`/categories/root/${category.slug}?bpref=root-category__title`}>{category.name}</Link></h2>
     <p className="text-muted-foreground text-sm line-clamp-2">{category.description}</p>
   );
+};
 
 export default RootCategoryCard;
