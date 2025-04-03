@@ -80,7 +80,7 @@ export interface Category {
 export const categories: Category[] = [
   { id: 'mobile', name: 'Κινητή Τηλεφωνία', rootCategoryId: 'rc1', icon: 'smartphone' },
   { id: 'ypologistes', name: 'Υπολογιστές', rootCategoryId: 'rc2', icon: 'pc' },
-  { id: 'laptops-accessories', name: 'Laptops, Αξεσουάρ', rootCategoryId: 'rc3', icon: 'laptop' },
+  { id: 'Laptops, Αξεσουάρ', name: 'laptops-accessories', rootCategoryId: 'rc3', icon: 'laptop' },
   { id: 'eikona', name: 'Εικόνα', rootCategoryId: 'rc4', icon: 'Picture' },
   { id: 'c5', name: 'Cameras', rootCategoryId: 'rc5', icon: 'camera' },
   { id: 'c6', name: 'Monitors', rootCategoryId: 'rc6', icon: 'monitor' },
