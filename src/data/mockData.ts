@@ -20,27 +20,48 @@ export const rootCategories: RootCategory[] = [
   },
   {
     id: 'rc2',
+    name: 'Σπίτι & Κήπος',
+    slug: 'home-garden',
+    description: 'Έπιπλα, εργαλεία, είδη σπιτιού και άλλες οικιακές συσκευές',
+    icon: 'home-garden'
+  },
+  {
+    id: 'rc3',
+    name: 'Οικιακές Συσκευές',
+    slug: 'home-appliances',
+    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
+    icon: 'home-appliances'
+  },
+  {
+    id: 'rc4',
     name: 'Οικιακές Συσκευές',
     slug: 'home-appliances',
     description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
     icon: 'home'
   },
   {
-    id: 'rc3',
+    id: 'rc5',
+    name: 'Οικιακές Συσκευές',
+    slug: 'home-appliances',
+    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
+    icon: 'home'
+  },
+  {
+    id: 'rc6',
     name: 'Gaming',
     slug: 'gaming',
     description: 'Κονσόλες, παιχνίδια, αξεσουάρ gaming και περιφερειακά',
     icon: 'gamepad'
   },
   {
-    id: 'rc4',
+    id: 'rc7',
     name: 'Αθλητικά',
     slug: 'sports',
     description: 'Αθλητικά είδη, εξοπλισμός fitness και ρούχα',
     icon: 'dumbbell'
   },
   {
-    id: 'rc5',
+    id: 'rc8',
     name: 'Ένδυση',
     slug: 'clothing',
     description: 'Ρούχα, παπούτσια και αξεσουάρ',
