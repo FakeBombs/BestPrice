@@ -15,10 +15,10 @@ const CategoryCard = ({
     switch (category.icon) {
       case 'smartphone':
         return <img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Κινητή Τηλεφωνία" title="Κινητή Τηλεφωνία"/>;
-      case 'laptop':
-        return <Laptop className="h-8 w-8" />;
-      case 'tablet':
-        return <Tablet className="h-8 w-8" />;
+      case 'pc':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/2544_SX200Y200/1476345319/ypologistes.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2544_SX400Y400/1476345319/ypologistes.webp 2x" alt="Υπολογιστές" title="Υπολογιστές"/>;
+      case 'laptops-accessories':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/2590_SX200Y200/1475756993/laptops-accessories.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2590_SX400Y400/1475756993/laptops-accessories.webp 2x" alt="Laptops, Αξεσουάρ" title="Laptops, Αξεσουάρ"/>;
       case 'headphones':
         return <Headphones className="h-8 w-8" />;
       case 'camera':
