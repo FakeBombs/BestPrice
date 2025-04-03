@@ -101,8 +101,8 @@ export const SearchBar = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div className={`relative ${className}`} ref={searchBarRef}>
-      <form onSubmit={handleSearch} className="search">
+    <div>
+      <form onSubmit={handleSearch} className="search" ref={searchBarRef}>
         <div className="search__field">
           <Input ref={inputRef} type="text" placeholder="Η καλύτερη τιμή για..." className="" value={searchQuery} onChange={handleChange} onFocus={handleFocus} />
         </div>
