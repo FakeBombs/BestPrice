@@ -14,7 +14,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
   const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchBarRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLFormElement>(null);
 
   // Load recent searches from localStorage on mount
   useEffect(() => {
@@ -104,9 +104,9 @@ export const SearchBar = ({ className }: { className?: string }) => {
     <div>
       <form onSubmit={handleSearch} className="search" ref={searchBarRef}>
         <div className="search__field">
-          <div role="button" className="search__icon" aria-label="Search"><svg className="icon" aria-hidden="true" width="20" height="20"><use xLink:href="/images/icons/search.svg#icon-search-20"></use></svg></div>
+          <div role="button" className="search__icon" aria-label="Search"><svg className="icon" aria-hidden="true" width="20" height="20"><use xlinkHref="/images/icons/search.svg#icon-search-20"></use></svg></div>
           <Input ref={inputRef} type="text" placeholder="Η καλύτερη τιμή για..." value={searchQuery} onChange={handleChange} onFocus={handleFocus} />
-          <div role="button" className="search__icon tooltip__anchor search__clear search__icon--actionable" aria-label="Καθαρισμός"><svg className="icon" aria-hidden="true" width="20" height="20"><use xLink:href="/images/icons/search.svg#icon-x-20"></use></svg></div>
+          <div role="button" className="search__icon tooltip__anchor search__clear search__icon--actionable" aria-label="Καθαρισμός"><svg className="icon" aria-hidden="true" width="20" height="20"><use xlinkHref="/images/icons/search.svg#icon-x-20"></use></svg></div>
         </div>
         <Button type="submit" className="search__icon search__button search__icon--actionable">
           <Search className="h-4 w-4" />

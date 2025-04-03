@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, User, ShoppingCart } from 'lucide-react';
@@ -14,7 +15,7 @@ const Navbar = () => {
         <div id="nav">
           <h1 className="logo__wrapper">
           {/* Logo */}
-          <Link to="/" id="back-to-home" class="pressable" tabindex="-1">
+          <Link to="/" id="back-to-home" className="pressable" tabIndex="-1">
             <span>BestPrice</span>
           </Link>
           </h1>
@@ -34,10 +35,10 @@ const Navbar = () => {
           </Button>
         </div>
 
-        <div class="search__wrapper">
+        <div className="search__wrapper">
 
           <div aria-label="Sitemap button" role="button" className="sitemap-button sitemap-button--desktop pressable">
-            <div class="sitemap-button__lines">
+            <div className="sitemap-button__lines">
               <div></div>
               <div></div>
               <div></div>
