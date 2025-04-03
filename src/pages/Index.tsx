@@ -213,8 +213,6 @@ const Index = () => {
               </div>
               <div className="h-content__placeholder" data-intersected="">
                 <div className="scroll scroll--no-scrolling">
-                  <button aria-label="Scroll arrow previous" disabled="" className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{left: "0"}}><svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-                  <button aria-label="Scroll arrow next" disabled="" className="scroll__arrow scroll__arrow--next scroll__arrow--disabled" style={{right: "0"}}><svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
                   <div className="scroll__clip" style={{overflow: "hidden"}}>
                     <div className="scroll__scroller">
                       <div className="scroll__content">
