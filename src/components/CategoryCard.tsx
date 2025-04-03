@@ -33,12 +33,19 @@ const CategoryCard = ({
         return <Smartphone className="h-8 w-8" />;
     }
   };
-  return <div><Link to={`/categories/${category.id}`} className="root-category__cover">
+  return <><Link to={`/categories/${category.id}`} className="root-category__cover">
       <Card>
         <CardContent>
             {getIcon()}
         </CardContent>
       </Card>
-    </Link></div>;
+    </Link>
+    <h2 className="root-category__category-title">{category.name}</h2>
+    <div className="root-category__footer">
+      <div className="root-category__links">
+        <Link to="/">Κινητά</Link>
+      </div>
+    </div>
+  </>;
 };
 export default CategoryCard;
