@@ -10,7 +10,7 @@ interface CategoryCardProps {
 
 import { RootCategory } from '@/data/mockData';
 interface RootCategoryCardProps {
-  category: rootCategoryId;
+  rootCategories: rootCategoryId;
 }
 
 const CategoryCard = ({
