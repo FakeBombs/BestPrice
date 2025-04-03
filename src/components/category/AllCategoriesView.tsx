@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { RootCategory, Category } from '@/data/mockData';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import CategoryCard from '@/components/CategoryCard';
+import CategoryBreadcrumb from './CategoryBreadcrumb';
 
 interface AllCategoriesViewProps {
   rootCategories: RootCategory[];
