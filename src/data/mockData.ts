@@ -27,10 +27,10 @@ export const rootCategories: RootCategory[] = [
   },
   {
     id: 'rc3',
-    name: 'Οικιακές Συσκευές',
-    slug: 'home-appliances',
-    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
-    icon: 'home-appliances'
+    name: 'Μόδα',
+    slug: 'fashion',
+    description: 'Ρούχα, παπούτσια, ρολόγια και αξεσουάρ',
+    icon: 'fashion'
   },
   {
     id: 'rc4',
@@ -64,7 +64,7 @@ export const rootCategories: RootCategory[] = [
     id: 'rc8',
     name: 'Ένδυση',
     slug: 'clothing',
-    description: 'Ρούχα, παπούτσια και αξεσουάρ',
+    description: 'Ρούχα, παπούτσια, ρολόγια και αξεσουάρ',
     icon: 'shirt'
   }
 ];
