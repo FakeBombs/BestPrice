@@ -2,10 +2,17 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Smartphone, Laptop, Tablet, Headphones, Camera, Monitor, Home, Gamepad, LucideIcon } from 'lucide-react';
+
 import { Category } from '@/data/mockData';
 interface CategoryCardProps {
   category: Category;
 }
+
+import { RootCategory } from '@/data/mockData';
+interface RootCategoryCardProps {
+  category: RootCategory;
+}
+
 const CategoryCard = ({
   category
 }: CategoryCardProps) => {
