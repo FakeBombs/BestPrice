@@ -44,11 +44,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          
           {/* Desktop Search */}
-          <div className="md:flex flex-1 mx-8">
-            <SearchBar className="flex-1" />
-          </div>
+            <SearchBar />
         </div>
         
       </div>
