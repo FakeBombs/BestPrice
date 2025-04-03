@@ -14,7 +14,7 @@ const AllCategoriesView = ({ rootCategories, categories }: AllCategoriesViewProp
     <div className="root__wrapper root-category__root">
       <div className="root">
         <div id="trail"></div>
-        <h1 className="text-3xl font-bold mb-6">{rootCat.name}</h1>
+        <h1 className="text-3xl font-bold mb-6">{AllCategoriesView.name}</h1>
         <div className="root-category__categories">
               {rootCategories.map((rootCat) => (
                 <div className="root-category__category" key={rootCat.id}>
