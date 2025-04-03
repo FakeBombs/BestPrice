@@ -10,7 +10,7 @@ interface CategoryCardProps {
 
 import { RootCategory } from '@/data/mockData';
 interface RootCategoryCardProps {
-  rootcategory: RootCategory;
+  category: rootCategoryId;
 }
 
 const CategoryCard = ({
@@ -45,7 +45,7 @@ const CategoryCard = ({
           <h2 className="root-category__category-title">{category.name}</h2>
           <div className="root-category__footer">
             <div className="root-category__links">
-              <Link to={`/categories/root/${rootcategory.slug}`}></Link>
+              <Link to={`/categories/root/${rootCategory.id}`}></Link>
             </div>
           </div>
         </CardContent>
