@@ -58,21 +58,21 @@ export interface Category {
 
 export const categories: Category[] = [
   { id: 'mobile', name: 'Κινητή Τηλεφωνία', rootCategoryId: 'rc1', icon: 'smartphone' },
-  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', icon: 'laptop' },
-  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', icon: 'tablet' },
-  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', icon: 'headphones' },
-  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', icon: 'camera' },
-  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', icon: 'monitor' },
-  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', icon: 'dumbbell' },
-  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', icon: 'dumbbell' },
-  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' },
-  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' }
+  { id: 'ypologistes', name: 'Υπολογιστές', rootCategoryId: 'rc2', icon: 'pc' },
+  { id: 'laptops-accessories', name: 'Laptops, Αξεσουάρ', rootCategoryId: 'rc3', icon: 'laptop' },
+  { id: 'eikona', name: 'Εικόνα', rootCategoryId: 'rc4', icon: 'Picture' },
+  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc5', icon: 'camera' },
+  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc6', icon: 'monitor' },
+  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc7', icon: 'home' },
+  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc8', icon: 'home' },
+  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc9', icon: 'home' },
+  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc10', icon: 'gamepad' },
+  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc11', icon: 'gamepad' },
+  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc12', icon: 'gamepad' },
+  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc13', icon: 'dumbbell' },
+  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc14', icon: 'dumbbell' },
+  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc15', icon: 'shirt' },
+  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc16', icon: 'shirt' }
 ];
 
 // Vendors
