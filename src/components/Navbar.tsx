@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, User, ShoppingCart } from 'lucide-react';
@@ -7,6 +6,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { SearchBar } from '@/components/SearchBar';
 import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return <div className="bp-header__outer-wrapper">
@@ -15,7 +15,7 @@ const Navbar = () => {
         <div id="nav">
           <h1 className="logo__wrapper">
           {/* Logo */}
-          <Link to="/" id="back-to-home" className="pressable" tabIndex="-1">
+          <Link to="/" id="back-to-home" className="pressable" tabIndex={-1}>
             <span>BestPrice</span>
           </Link>
           </h1>
