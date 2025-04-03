@@ -11,11 +11,35 @@ interface AllCategoriesViewProps {
 
 const AllCategoriesView = ({ rootCategories, categories }: AllCategoriesViewProps) => {
   return (
-    <>
-      <h1 className="text-3xl font-bold mb-8">All Categories</h1>
+    <div className="root__wrapper root-category__root">
+      <div className="root">
+        <div id="trail"><CategoryBreadcrumb rootCategory={rootCategory} /></div>
+        <div className="root-category__categories">
+          {rootCategories.length > 0 && (
+            <>
+              {rootCategories.map((rootCat) => (
+                <div className="root-category__category" key={rootCat.id}>
+                  <RootCategoryCard key={rootCat.id} category={rootCat} />
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+<>
       
       {/* Root Categories */}
-      <h2 className="text-2xl font-semibold mb-6">Main Categories</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {rootCategories.map((rootCat) => (
           <RootCategoryCard key={rootCat.id} category={rootCat} />
@@ -29,7 +53,7 @@ const AllCategoriesView = ({ rootCategories, categories }: AllCategoriesViewProp
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>
-    </>
+  </>
   );
 };
 
