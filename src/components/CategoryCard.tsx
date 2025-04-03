@@ -39,12 +39,6 @@ const CategoryCard = ({
             {getIcon()}
         </CardContent>
       </Card>
-    </Link>
-    <h2 className="root-category__category-title">{category.name}</h2>
-      <div className="root-category__footer">
-        <div className="root-category__links">
-            <Link to="/">Κινητά</Link>
-        </div>
-      </div>;
+    </Link>;
 };
 export default CategoryCard;
