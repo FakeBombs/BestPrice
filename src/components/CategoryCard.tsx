@@ -33,7 +33,7 @@ const CategoryCard = ({
         return <Smartphone className="h-8 w-8" />;
     }
   };
-  return <div></><Link to={`/categories/${category.id}`} className="root-category__cover">
+  return <div><Link to={`/categories/${category.id}`} className="root-category__cover">
       <Card>
         <CardContent>
             {getIcon()}
