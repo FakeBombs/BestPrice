@@ -41,12 +41,10 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
 
   return (
     <Link to={`/categories/root/${category.slug}`} className="root-category__cover">
-      <>
             {getIcon()}
-            <h2 class="root-category__category-title">>{category.name}</h2>
+            <h2 className="root-category__category-title">>{category.name}</h2>
             <p className="text-muted-foreground text-sm line-clamp-2">{category.description}</p>
-            <div class="root-category__footer"><div class="root-category__links"></div>></div>
-      </>
+            <div className="root-category__footer"><div class="root-category__links"></div>></div>
     </Link>
   );
 };
