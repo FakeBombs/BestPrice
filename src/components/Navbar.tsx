@@ -14,8 +14,8 @@ const Navbar = () => {
         <div id="nav">
           <h1 className="logo__wrapper">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-primary">BestPrice</span>
+          <Link to="/" id="back-to-home" class="pressable" tabindex="-1">
+            <span>BestPrice</span>
           </Link>
           </h1>
         </div>
