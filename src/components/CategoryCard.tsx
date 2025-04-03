@@ -33,7 +33,9 @@ const CategoryCard = ({
         return <Smartphone className="h-8 w-8" />;
     }
   };
-  return <><Link to={`/categories/${category.id}?bpref=root-category`} className="root-category__cover">
+  
+  return { 
+    <Link to={`/categories/${category.id}?bpref=root-category`} className="root-category__cover">
             {getIcon()}
     </Link>
     <h2 className="root-category__category-title"><Link to={`/categories/${category.id}?bpref=root-category__title`}>{category.name}</Link></h2>
@@ -42,6 +44,5 @@ const CategoryCard = ({
         <Link to="/">Κινητά</Link>
       </div>
     </div>
-  </>;
 };
 export default CategoryCard;
