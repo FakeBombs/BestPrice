@@ -44,5 +44,6 @@ const CategoryCard = ({
         <Link to="/">Κινητά</Link>
       </div>
     </div>
-);
+  );
+};
 export default CategoryCard;
