@@ -48,7 +48,7 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
            </div>
            <h2 className="root-category__category-title">{category.name}</h2>
            <p className="text-muted-foreground text-sm line-clamp-2">{category.description}</p>
-           <div className="root-category__footer"><div class="root-category__links"></div></div>
+           <div className="root-category__footer"><div className="root-category__links"></div></div>
          </CardContent>
        </Card>
      </Link>
