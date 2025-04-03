@@ -57,7 +57,7 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', icon: 'smartphone' },
+  { id: 'mobile', name: 'Κινητή Τηλεφωνία', rootCategoryId: 'rc1', icon: 'smartphone' },
   { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', icon: 'laptop' },
   { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', icon: 'tablet' },
   { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', icon: 'headphones' },
