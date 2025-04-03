@@ -13,17 +13,13 @@ const AllCategoriesView = ({ rootCategories, categories }: AllCategoriesViewProp
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
-        <div id="trail"><CategoryBreadcrumb rootCategory={rootCategory} /></div>
+        <div id="trail"><CategoryBreadcrumb rootCategories={rootCategory} /></div>
         <div className="root-category__categories">
-          {rootCategories.length > 0 && (
-            <>
               {rootCategories.map((rootCat) => (
                 <div className="root-category__category" key={rootCat.id}>
                   <RootCategoryCard key={rootCat.id} category={rootCat} />
                 </div>
               ))}
-            </>
-          )}
         </div>
       </div>
     </div>
