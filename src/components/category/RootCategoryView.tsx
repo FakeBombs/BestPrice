@@ -34,15 +34,12 @@ const RootCategoryView = ({
         <div class="root-category__categories">
           {/* Subcategories for this root category */}
           {subcategories.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-xl font-semibold mb-4">Subcategories</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {subcategories.map((subCategory) => (
-              <CategoryCard key={subCategory.id} category={subCategory} />
-              ))}
-                </div>
-            </div>
-      )}
+            {subcategories.map((subCategory) => (
+              <div class="root-category__category">
+                <CategoryCard key={subCategory.id} category={subCategory} />
+              </div>
+            ))}
+          )}
         </div>
       
       {/* Products for this root category */}
