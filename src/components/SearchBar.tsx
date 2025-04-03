@@ -102,17 +102,11 @@ export const SearchBar = ({ className }: { className?: string }) => {
 
   return (
     <div className={`relative ${className}`} ref={searchBarRef}>
-      <form onSubmit={handleSearch} className="flex">
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="Η καλύτερη τιμή για..."
-          className="w-full"
-          value={searchQuery}
-          onChange={handleChange}
-          onFocus={handleFocus}
-        />
-        <Button type="submit" className="ml-2">
+      <form onSubmit={handleSearch} className="search">
+        <div class="search__field">
+          <Input ref={inputRef} type="text" placeholder="Η καλύτερη τιμή για..." className="" value={searchQuery} onChange={handleChange} onFocus={handleFocus} />
+        </div>
+        <Button type="submit" className="search__icon search__button search__icon--actionable">
           <Search className="h-4 w-4" />
         </Button>
       </form>
