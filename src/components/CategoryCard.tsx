@@ -8,9 +8,9 @@ interface CategoryCardProps {
   category: Category;
 }
 
-import { RootCategory } from '@/data/mockData';
+import { rootCategories } from '@/data/mockData';
 interface RootCategoryCardProps {
-  rootCategories: rootCategoryId;
+  RootCategory: rootCategoryId;
 }
 
 const CategoryCard = ({
