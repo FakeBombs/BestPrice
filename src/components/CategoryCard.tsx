@@ -34,7 +34,7 @@ const CategoryCard = ({
     }
   };
   
-  return { 
+  return ( 
     <Link to={`/categories/${category.id}?bpref=root-category`} className="root-category__cover">
             {getIcon()}
     </Link>
@@ -44,5 +44,5 @@ const CategoryCard = ({
         <Link to="/">Κινητά</Link>
       </div>
     </div>
-};
+);
 export default CategoryCard;
