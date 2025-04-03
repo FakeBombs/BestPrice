@@ -14,7 +14,7 @@ const CategoryCard = ({
   const getIcon = (): JSX.Element => {
     switch (category.icon) {
       case 'smartphone':
-        return <Smartphone className="h-8 w-8" />;
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Κινητή Τηλεφωνία" title="Κινητή Τηλεφωνία"/>;
       case 'laptop':
         return <Laptop className="h-8 w-8" />;
       case 'tablet':
@@ -37,14 +37,14 @@ const CategoryCard = ({
       <Card>
         <CardContent>
             {getIcon()}
-          <h2 className="root-category__category-title">{category.name}</h2>
-          <div className="root-category__footer">
-            <div className="root-category__links">
-              <Link to="/">Κινητά</Link>
-            </div>
-          </div>
         </CardContent>
       </Card>
-    </Link>;
+    </Link>
+    <h2 className="root-category__category-title">{category.name}</h2>
+      <div className="root-category__footer">
+        <div className="root-category__links">
+            <Link to="/">Κινητά</Link>
+        </div>
+      </div>;
 };
 export default CategoryCard;
