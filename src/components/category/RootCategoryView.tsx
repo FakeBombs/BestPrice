@@ -25,22 +25,25 @@ const RootCategoryView = ({
   onInStockOnly 
 }: RootCategoryViewProps) => {
   return (
-    <>
-      <CategoryBreadcrumb rootCategory={rootCategory} />
-      <h1 className="text-3xl font-bold mb-6">{rootCategory.name}</h1>
-      <p className="text-muted-foreground mb-8">{rootCategory.description}</p>
-      
-      {/* Subcategories for this root category */}
-      {subcategories.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">Subcategories</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {subcategories.map((subCategory) => (
+    <div className="root__wrapper root-category__root">
+      <div className="root">
+        <div id="trail"><CategoryBreadcrumb rootCategory={rootCategory} /></div>
+        <h1 className="text-3xl font-bold mb-6">{rootCategory.name}</h1>
+        <p className="text-muted-foreground mb-8">{rootCategory.description}</p>
+
+        <div class="root-category__categories">
+          {/* Subcategories for this root category */}
+          {subcategories.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-xl font-semibold mb-4">Subcategories</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {subcategories.map((subCategory) => (
               <CategoryCard key={subCategory.id} category={subCategory} />
-            ))}
-          </div>
-        </div>
+              ))}
+                </div>
+            </div>
       )}
+        </div>
       
       {/* Products for this root category */}
       <div className="mb-8">
@@ -64,7 +67,8 @@ const RootCategoryView = ({
           </div>
         )}
       </div>
-    </>
+    </div>
+    </div>
   );
 };
 
