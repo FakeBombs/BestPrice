@@ -43,7 +43,7 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
   <>
     <Link to={`/categories/root/${category.slug}?bpref=root-category`} className="root-category__cover">{getIcon()}</Link>
     <h2 className="root-category__category-title"><Link to={`/categories/root/${category.slug}?bpref=root-category__title`}>{category.name}</Link></h2>
-    <p className="text-muted-foreground text-sm line-clamp-2" title="{category.description}">{category.description}</p>
+    <p className="text-muted-foreground text-sm line-clamp-2" title="{{category.description}}">{category.description}</p>
   </>
   );
 };
