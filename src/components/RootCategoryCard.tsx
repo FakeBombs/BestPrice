@@ -15,7 +15,7 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
   const getIcon = (): JSX.Element => {
     switch (category.icon) {
       case 'smartphone':
-        return <Smartphone className="h-10 w-10" />;
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Κινητή Τηλεφωνία" title="Κινητή Τηλεφωνία"/>;
       case 'laptop':
         return <Laptop className="h-10 w-10" />;
       case 'tablet':
