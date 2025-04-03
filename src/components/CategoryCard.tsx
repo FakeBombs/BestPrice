@@ -2,9 +2,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Smartphone, Laptop, Tablet, Headphones, Camera, Monitor, Home, Gamepad, LucideIcon } from 'lucide-react';
 import { Category } from '@/data/mockData';
-interface CategoryCardProps {
-  category: Category;
-}
+
 const CategoryCard = ({
   category
 }: CategoryCardProps) => {
@@ -31,11 +29,9 @@ const CategoryCard = ({
     }
   };
   return <Link to={`/categories/${category.id}`} className="root-category__cover">
-      <Card className="overflow-hidden transition-all hover:shadow-md text-center h-full">
-        <CardContent className="p-6 flex flex-col items-center justify-center h-categories__cover">
-          <div className="rounded-full bg-primary/10 p-3 mb-3">
+      <Card>
+        <CardContent>
             {getIcon()}
-          </div>
           <h2 className="root-category__category-title">{category.name}</h2>
           <div className="root-category__footer"><div class="root-category__links"></div></div>
         </CardContent>
