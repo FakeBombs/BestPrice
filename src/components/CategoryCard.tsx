@@ -35,7 +35,7 @@ const CategoryCard = ({
         <CardContent>
             {getIcon()}
           <h2 className="root-category__category-title">{category.name}</h2>
-          <div className="root-category__footer"><div class="root-category__links"></div></div>
+          <div className="root-category__footer"><div className="root-category__links"></div></div>
         </CardContent>
       </Card>
     </Link>;
