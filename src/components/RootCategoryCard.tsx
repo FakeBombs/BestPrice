@@ -40,16 +40,11 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
   };
 
   return (
-    <Link to={`/categories/root/${category.slug}`}>
-      <Card className="overflow-hidden transition-all hover:shadow-md text-center h-full">
-        <CardContent className="p-6 flex flex-col items-center justify-center">
-          <div className="rounded-full bg-primary/10 p-4 mb-4">
+    <Link to={`/categories/root/${category.slug}`} className="root-category__cover">
             {getIcon()}
-          </div>
-          <h3 className="font-medium text-lg mb-2">{category.name}</h3>
-          <p className="text-muted-foreground text-sm line-clamp-2">{category.description}</p>
-        </CardContent>
-      </Card>
+            <h2 class="root-category__category-title">>{category.name}</h2>
+            <p className="text-muted-foreground text-sm line-clamp-2">{category.description}</p>
+            <div class="root-category__footer"><div class="root-category__links"></div>></div>
     </Link>
   );
 };
