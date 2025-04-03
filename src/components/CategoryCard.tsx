@@ -30,13 +30,14 @@ const CategoryCard = ({
         return <Smartphone className="h-8 w-8" />;
     }
   };
-  return <Link to={`/categories/${category.id}`}>
+  return <Link to={`/categories/${category.id}`} className="root-category__cover">
       <Card className="overflow-hidden transition-all hover:shadow-md text-center h-full">
         <CardContent className="p-6 flex flex-col items-center justify-center h-categories__cover">
           <div className="rounded-full bg-primary/10 p-3 mb-3">
             {getIcon()}
           </div>
-          <h3 className="font-medium">{category.name}</h3>
+          <h2 className="root-category__category-title">{category.name}</h2>
+          <div className="root-category__footer"><div class="root-category__links"></div></div>
         </CardContent>
       </Card>
     </Link>;
