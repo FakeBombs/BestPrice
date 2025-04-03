@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -15,12 +14,12 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
   const getIcon = (): JSX.Element => {
     switch (category.icon) {
       case 'smartphone':
-        return <img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Κινητή Τηλεφωνία" title="Κινητή Τηλεφωνία"/>;
-      case 'laptop':
-        return <Laptop className="h-10 w-10" />;
-      case 'tablet':
-        return <Tablet className="h-10 w-10" />;
-      case 'headphones':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Τεχνολογία" title="Τεχνολογία"/>;
+      case 'home-garden':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/2483_SX200Y200/1473176668/home-appliances.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2483_SX400Y400/1473176668/home-appliances.webp 2x" alt="Σπίτι & Κήπος" title="Σπίτι & Κήπος"/>
+      case 'home-appliances':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/2069_SX200Y200/1503657549/woman.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2069_SX400Y400/1503657549/woman.webp 2x" alt="Μόδα" title="Μόδα"/>
+      case 'fashion':
         return <Headphones className="h-10 w-10" />;
       case 'camera':
         return <Camera className="h-10 w-10" />;
