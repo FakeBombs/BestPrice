@@ -152,6 +152,8 @@ export interface Product {
   brand: string;
   model: string;
   category: string;
+  categorySlug: string;
+  categoryName: string;
   description: string;
   image: string;
   images: string[];
