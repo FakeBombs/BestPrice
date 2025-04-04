@@ -5,9 +5,9 @@ import ProductCard from '@/components/ProductCard';
 import CategoryBreadcrumb from './CategoryBreadcrumb';
 
 interface SingleCategoryViewProps {
-  category: categoryName;
+  category: Category;
   products: Product[];
-  rootCategory?: categoryName; // Optional if the category belongs to a root category
+  rootCategory?: any; // Optional if the category belongs to a root category
   onSortChange: (value: string) => void;
   onVendorFilter: (vendors: string[]) => void;
   onPriceRangeFilter: (min: number, max: number) => void;
@@ -44,7 +44,7 @@ const SingleCategoryView = ({
       ) : (
         <div className="product-grid">
           {products.map((product) => (
-            <ProductCard key={product.category} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
