@@ -30,7 +30,7 @@ const Categories = () => {
   useEffect(() => {
     if (category) {
       // Fetch products for a specific category
-      const categoryProducts = getProductsByCategory(category.id);
+      const categoryProducts = getProductsByCategory(category.Name);
       setProducts(categoryProducts);
       setFilteredProducts(categoryProducts);
     } else if (rootCategory) {
