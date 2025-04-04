@@ -18,7 +18,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         to={`/categories/${product.category}`} 
         className="text-muted-foreground hover:text-primary"
       >
-        {product.category}
+        {product.categoryName}
       </Link>
       <ChevronRight className="h-4 w-4 mx-1" />
       <span className="text-foreground truncate max-w-[200px]">{product.title}</span>
