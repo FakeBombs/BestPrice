@@ -12,10 +12,10 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     <div className="flex items-center text-sm mb-6">
       <Link to="/" className="text-muted-foreground hover:text-primary">BestPrice</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
-      <Link to="/categories" className="text-muted-foreground hover:text-primary">Categories</Link>
+      <Link to="{`/categories/${product.category}`} " className="text-muted-foreground hover:text-primary">{product.category}</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
       <Link 
-        to={`/categories/${product.category}`} 
+        to={`/categories/${product.id}`} 
         className="text-muted-foreground hover:text-primary"
       >
         {product.categoryName}
