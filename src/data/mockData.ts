@@ -1,4 +1,3 @@
-
 // Mock data for the BestPrice application
 
 // Root Categories with icons
@@ -141,7 +140,7 @@ export interface Product {
 }
 
 // Generate a bunch of products
-const products: Product[] = [
+export const products: Product[] = [
   {
     id: 'p1',
     title: 'Apple iPhone 14 Pro Max 256GB',
