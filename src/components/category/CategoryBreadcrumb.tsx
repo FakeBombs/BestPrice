@@ -24,10 +24,8 @@ const CategoryBreadcrumb = ({ category, rootCategory }: CategoryBreadcrumbProps)
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        
         {rootCategory && (
           <>
-            <BreadcrumbSeparator />
             <BreadcrumbItem>
               {!category ? (
                 <span className="font-medium">{rootCategory.name}</span>
