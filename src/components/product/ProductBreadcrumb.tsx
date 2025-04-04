@@ -22,3 +22,5 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     </div>
   );
 };
+
+export default ProductBreadcrumb;
