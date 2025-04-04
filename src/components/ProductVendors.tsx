@@ -1,8 +1,8 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check, X, ExternalLink } from 'lucide-react';
 import { Product, ProductPrice, getVendorById } from '@/data/mockData';
+import TopVendorAd from './ads/TopVendorAd';
 
 interface ProductVendorsProps {
   product: Product;
@@ -15,6 +15,10 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
   return (
     <div className="mt-6">
       <h3 className="text-xl font-medium mb-4">Available from {product.prices.length} vendors</h3>
+      
+      {/* Insert the sponsored ad at the top */}
+      <TopVendorAd productId={product.id} />
+      
       <div className="space-y-4">
         {sortedPrices.map((priceInfo) => (
           <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} />

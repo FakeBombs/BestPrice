@@ -8,7 +8,9 @@ import {
   ShoppingBag, 
   Settings, 
   Store, 
-  LogOut 
+  LogOut,
+  DollarSign,
+  CreditCard 
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,8 @@ const AdminSidebar = () => {
     { icon: LayoutGrid, label: "Κατηγορίες", path: "/admin/categories" },
     { icon: Package, label: "Προϊόντα", path: "/admin/products" },
     { icon: Store, label: "Καταστήματα", path: "/admin/stores" },
+    { icon: DollarSign, label: "Διαφημίσεις", path: "/admin/ads" },
+    { icon: CreditCard, label: "Πορτοφόλια", path: "/admin/wallets" },
     { icon: ShoppingBag, label: "Παραγγελίες", path: "/admin/orders" },
     { icon: Users, label: "Χρήστες", path: "/admin/users" },
     { icon: Settings, label: "Ρυθμίσεις", path: "/admin/settings" },

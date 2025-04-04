@@ -1,224 +1,309 @@
 
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { AlertCircle } from 'lucide-react';
-import NotificationSettings from '@/components/NotificationSettings';
-import AuthModal from '@/components/AuthModal';
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from "@/components/ui/tabs";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NotificationSettings from "@/components/NotificationSettings";
+import { 
+  User, 
+  Settings, 
+  Bell, 
+  Heart, 
+  Clock, 
+  CircleDollarSign, 
+  ShoppingBag,
+  LayoutDashboard,
+  Wallet,
+  Store
+} from "lucide-react";
 
 const AccountPage = () => {
-  const { section } = useParams<{ section?: string }>();
-  const [activeTab, setActiveTab] = useState<string>('profile');
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("profile");
   
-  // Set the active tab based on URL params
+  // Redirect to login if not logged in
   useEffect(() => {
-    if (section) {
-      const validSections = ['profile', 'favorites', 'notifications', 'settings'];
-      if (validSections.includes(section)) {
-        setActiveTab(section);
-      }
+    if (!user) {
+      navigate("/");
     }
-  }, [section]);
+  }, [user, navigate]);
   
-  // Redirect if user is not logged in
-  useEffect(() => {
-    if (!user && !authModalOpen) {
-      setAuthModalOpen(true);
-    }
-  }, [user]);
-  
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    navigate(`/account/${value}`);
-  };
-  
-  if (!user) {
-    return (
-      <>
-        <div className="flex flex-col items-center justify-center py-20">
-          <h1 className="text-2xl font-bold mb-4">Απαιτείται Σύνδεση</h1>
-          <p className="text-muted-foreground text-center max-w-md mb-8">
-            Συνδεθείτε ή δημιουργήστε λογαριασμό για να αποκτήσετε πρόσβαση στο προφίλ σας.
-          </p>
-          <Button onClick={() => setAuthModalOpen(true)}>
-            Σύνδεση / Εγγραφή
-          </Button>
-        </div>
-        <AuthModal isOpen={authModalOpen} onClose={() => navigate('/')} />
-      </>
-    );
-  }
+  if (!user) return null;
   
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Ο Λογαριασμός μου</h1>
+    <div className="container max-w-4xl py-8">
+      <h1 className="text-3xl font-bold mb-6">My Account</h1>
       
-      {user.isAdmin && (
-        <Card className="mb-6 border-primary/40 bg-primary/5">
-          <CardContent className="flex items-center justify-between p-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Διαχείριση Συστήματος</h3>
-              <p className="text-muted-foreground">
-                Έχετε δικαιώματα διαχειριστή. Αποκτήστε πρόσβαση στον πίνακα διαχείρισης του συστήματος.
-              </p>
-            </div>
-            <Button asChild>
-              <Link to="/admin">Πίνακας Διαχείρισης</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-      
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="mb-6">
-          <TabsTrigger value="profile">Προφίλ</TabsTrigger>
-          <TabsTrigger value="favorites">Αγαπημένα</TabsTrigger>
-          <TabsTrigger value="notifications">Ειδοποιήσεις</TabsTrigger>
-          <TabsTrigger value="settings">Ρυθμίσεις</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Το Προφίλ μου</CardTitle>
-              <CardDescription>
-                Διαχειριστείτε τις πληροφορίες του λογαριασμού σας
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="md:w-1/3 flex flex-col items-center">
-                  <Avatar className="w-32 h-32 mb-4">
-                    <AvatarImage src={user.avatar} alt={user.name} />
+      <div className="flex flex-col md:flex-row gap-6">
+        <aside className="md:w-1/4">
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex flex-col items-center gap-4">
+                  <Avatar className="h-20 w-20">
+                    <AvatarImage src={user.avatar} />
                     <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
-                  <Button variant="outline" className="mt-2 w-full">
-                    Αλλαγή Φωτογραφίας
+                  <div className="text-center">
+                    <p className="text-lg font-medium">{user.name}</p>
+                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <nav className="space-y-1">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setActiveTab("profile")}
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setActiveTab("favorites")}
+              >
+                <Heart className="mr-2 h-4 w-4" />
+                <span>Favorites</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setActiveTab("history")}
+              >
+                <Clock className="mr-2 h-4 w-4" />
+                <span>Recently Viewed</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setActiveTab("alerts")}
+              >
+                <Bell className="mr-2 h-4 w-4" />
+                <span>Price Alerts</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start" 
+                onClick={() => setActiveTab("settings")}
+              >
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Button>
+              <Link to="/wallet">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start"
+                >
+                  <Wallet className="mr-2 h-4 w-4" />
+                  <span>Wallet</span>
+                </Button>
+              </Link>
+              <Link to="/wallet/ads">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start"
+                >
+                  <Store className="mr-2 h-4 w-4" />
+                  <span>Advertisements</span>
+                </Button>
+              </Link>
+              
+              {user.isAdmin && (
+                <Link to="/admin">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-primary"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <span>Admin Dashboard</span>
                   </Button>
-                </div>
-                
-                <div className="md:w-2/3 space-y-4">
+                </Link>
+              )}
+              
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
+                onClick={logout}
+              >
+                <span>Logout</span>
+              </Button>
+            </nav>
+          </div>
+        </aside>
+        
+        <div className="flex-1">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="hidden">
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="favorites">Favorites</TabsTrigger>
+              <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="alerts">Alerts</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="profile">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Profile</CardTitle>
+                  <CardDescription>
+                    Manage your personal information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-3 gap-4">
+                      <p className="text-sm font-medium">Name:</p>
+                      <p className="text-sm col-span-2">{user.name}</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <p className="text-sm font-medium">Email:</p>
+                      <p className="text-sm col-span-2">{user.email}</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <p className="text-sm font-medium">Member since:</p>
+                      <p className="text-sm col-span-2">April 2023</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <p className="text-sm font-medium">Role:</p>
+                      <p className="text-sm col-span-2">
+                        {user.isAdmin ? 'Administrator' : 'Regular User'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" className="w-full">Edit Profile</Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Account Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Ονοματεπώνυμο</Label>
-                      <Input id="name" defaultValue={user.name} />
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <Heart className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Favorites</p>
+                        <p className="text-xl font-bold">12</p>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" defaultValue={user.email} readOnly />
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <Bell className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Price Alerts</p>
+                        <p className="text-xl font-bold">5</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <CircleDollarSign className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Wallet Balance</p>
+                        <p className="text-xl font-bold">${(25.50).toFixed(2)}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <ShoppingBag className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Active Ads</p>
+                        <p className="text-xl font-bold">2</p>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Τηλέφωνο</Label>
-                    <Input id="phone" placeholder="Προσθέστε τηλέφωνο" />
-                  </div>
-                  
-                  <div className="pt-4">
-                    <Button>Αποθήκευση Αλλαγών</Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="favorites">
-          <Card>
-            <CardHeader>
-              <CardTitle>Τα Αγαπημένα μου</CardTitle>
-              <CardDescription>
-                Προϊόντα που έχετε αποθηκεύσει στα αγαπημένα σας
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-10">
-                <p className="text-muted-foreground">
-                  Δεν έχετε προσθέσει ακόμα προϊόντα στα αγαπημένα σας.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications">
-          <NotificationSettings />
-        </TabsContent>
-        
-        <TabsContent value="settings">
-          <Card>
-            <CardHeader>
-              <CardTitle>Ρυθμίσεις Λογαριασμού</CardTitle>
-              <CardDescription>
-                Διαχειριστείτε τις ρυθμίσεις του λογαριασμού σας
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Αλλαγή Κωδικού</h3>
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="current-password">Τρέχων Κωδικός</Label>
-                    <Input id="current-password" type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-password">Νέος Κωδικός</Label>
-                    <Input id="new-password" type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Επιβεβαίωση Κωδικού</Label>
-                    <Input id="confirm-password" type="password" />
-                  </div>
-                  <Button className="mt-2">Αλλαγή Κωδικού</Button>
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Γλώσσα & Τοποθεσία</h3>
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="language">Γλώσσα</Label>
-                    <select id="language" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                      <option value="el">Ελληνικά</option>
-                      <option value="en">English</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="country">Χώρα</Label>
-                    <select id="country" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                      <option value="gr">Ελλάδα</option>
-                      <option value="cy">Κύπρος</option>
-                    </select>
-                  </div>
-                  <Button className="mt-2">Αποθήκευση</Button>
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-destructive">Διαγραφή Λογαριασμού</h3>
-                <p className="text-sm text-muted-foreground">
-                  Η διαγραφή του λογαριασμού σας είναι μόνιμη και θα αφαιρέσει όλα τα δεδομένα σας.
-                </p>
-                <Button variant="destructive">Διαγραφή Λογαριασμού</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="favorites">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Favorites</CardTitle>
+                  <CardDescription>
+                    Manage your saved products
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">You haven't saved any products yet.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="history">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recently Viewed</CardTitle>
+                  <CardDescription>
+                    Products you've recently viewed
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">No recently viewed products.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="alerts">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Price Alerts</CardTitle>
+                  <CardDescription>
+                    Get notified when prices drop
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">You don't have any price alerts set up yet.</p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" className="w-full">Set Up a Price Alert</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="settings">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notification Settings</CardTitle>
+                  <CardDescription>
+                    Manage how you receive notifications
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <NotificationSettings />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 };
