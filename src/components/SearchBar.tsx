@@ -28,8 +28,12 @@ export const SearchBar = ({ className }: { className?: string }) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Close dropdown when clicking outside
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && 
-          inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target as Node) && 
+        inputRef.current && 
+        !inputRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
       
@@ -61,16 +65,25 @@ export const SearchBar = ({ className }: { className?: string }) => {
     }
   }, [location.search, location.pathname]);
 
+  // Validate that the search term returns actual results
+  const validateSearchTerm = (term: string): boolean => {
+    const results = searchProducts(term.trim());
+    return results.length > 0;
+  };
+
   const navigateToSearchResults = (query: string) => {
     if (query.trim()) {
-      // Save to recent searches
-      const updatedSearches = [
-        query.trim(),
-        ...recentSearches.filter(search => search !== query.trim())
-      ].slice(0, 5);
-      
-      setRecentSearches(updatedSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+      // Only save searches that return valid results
+      if (validateSearchTerm(query)) {
+        // Save to recent searches
+        const updatedSearches = [
+          query.trim(),
+          ...recentSearches.filter(search => search !== query.trim())
+        ].slice(0, 5);
+        
+        setRecentSearches(updatedSearches);
+        localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+      }
       
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
     }
@@ -90,30 +103,78 @@ export const SearchBar = ({ className }: { className?: string }) => {
   };
 
   const handleFocus = () => {
+    // Only show dropdown when focusing and there's no search query
     if (searchQuery.trim().length === 0) {
       setShowDropdown(true);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setShowDropdown(e.target.value.trim().length === 0);
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // Hide dropdown when typing
+    if (value.trim().length > 0) {
+      setShowDropdown(false);
+    } else {
+      setShowDropdown(true);
+    }
+    
+    // If there's a meaningful search query, search while typing
+    if (value.trim().length > 2) {
+      // Use a small delay to avoid too frequent searches
+      const timer = setTimeout(() => {
+        navigateToSearchResults(value);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setShowDropdown(true);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
     <div>
       <form onSubmit={handleSearch} className="search" ref={searchBarRef}>
         <div className="search__field">
-          <div role="button" className="search__icon" aria-label="Search"><svg className="icon" aria-hidden="true" width="20" height="20"><use xlinkHref="/images/icons/search.svg#icon-search-20"></use></svg></div>
-          <Input ref={inputRef} type="text" placeholder="Η καλύτερη τιμή για..." value={searchQuery} onChange={handleChange} onFocus={handleFocus} />
-          <div role="button" className="search__icon tooltip__anchor search__clear search__icon--actionable" aria-label="Καθαρισμός"><svg className="icon" aria-hidden="true" width="20" height="20"><use xlinkHref="/images/icons/search.svg#icon-x-20"></use></svg></div>
+          <div role="button" className="search__icon" aria-label="Search">
+            <svg className="icon" aria-hidden="true" width="20" height="20">
+              <use xlinkHref="/images/icons/search.svg#icon-search-20"></use>
+            </svg>
+          </div>
+          <Input 
+            ref={inputRef} 
+            type="text" 
+            placeholder="Η καλύτερη τιμή για..." 
+            value={searchQuery} 
+            onChange={handleChange} 
+            onFocus={handleFocus} 
+          />
+          {searchQuery && (
+            <div 
+              role="button" 
+              className="search__icon tooltip__anchor search__clear search__icon--actionable" 
+              aria-label="Καθαρισμός"
+              onClick={handleClearSearch}
+            >
+              <svg className="icon" aria-hidden="true" width="20" height="20">
+                <use xlinkHref="/images/icons/search.svg#icon-x-20"></use>
+              </svg>
+            </div>
+          )}
         </div>
         <Button type="submit" className="search__icon search__button search__icon--actionable">
           <Search className="h-4 w-4" />
         </Button>
       </form>
 
-      {showDropdown && searchQuery.trim().length === 0 && recentSearches.length > 0 && (
+      {showDropdown && recentSearches.length > 0 && (
         <div 
           ref={dropdownRef}
           className="absolute z-50 mt-1 w-full bg-background rounded-md border shadow-lg"
