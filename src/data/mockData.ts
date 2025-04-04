@@ -20,51 +20,30 @@ export const rootCategories: RootCategory[] = [
   },
   {
     id: 'rc2',
-    name: 'Σπίτι & Κήπος',
-    slug: 'home-garden',
-    description: 'Έπιπλα, εργαλεία, είδη σπιτιού και άλλες οικιακές συσκευές',
-    icon: 'home-garden'
+    name: 'Οικιακές Συσκευές',
+    slug: 'home-appliances',
+    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
+    icon: 'home'
   },
   {
     id: 'rc3',
-    name: 'Μόδα',
-    slug: 'fashion',
-    description: 'Ρούχα, παπούτσια, ρολόγια και αξεσουάρ',
-    icon: 'fashion'
-  },
-  {
-    id: 'rc4',
-    name: 'Οικιακές Συσκευές',
-    slug: 'home-appliances',
-    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
-    icon: 'home'
-  },
-  {
-    id: 'rc5',
-    name: 'Οικιακές Συσκευές',
-    slug: 'home-appliances',
-    description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
-    icon: 'home'
-  },
-  {
-    id: 'rc6',
     name: 'Gaming',
     slug: 'gaming',
     description: 'Κονσόλες, παιχνίδια, αξεσουάρ gaming και περιφερειακά',
     icon: 'gamepad'
   },
   {
-    id: 'rc7',
+    id: 'rc4',
     name: 'Αθλητικά',
     slug: 'sports',
     description: 'Αθλητικά είδη, εξοπλισμός fitness και ρούχα',
     icon: 'dumbbell'
   },
   {
-    id: 'rc8',
+    id: 'rc5',
     name: 'Ένδυση',
     slug: 'clothing',
-    description: 'Ρούχα, παπούτσια, ρολόγια και αξεσουάρ',
+    description: 'Ρούχα, παπούτσια και αξεσουάρ',
     icon: 'shirt'
   }
 ];
@@ -73,28 +52,27 @@ export const rootCategories: RootCategory[] = [
 export interface Category {
   id: string;
   name: string;
-  categorySlug: string;
   rootCategoryId: string;
   icon: string;
 }
 
 export const categories: Category[] = [
-  { id: 'c1', categorySlug: 'mobile', name: 'Κινητή Τηλεφωνία', rootCategoryId: 'rc1', icon: 'smartphone' },
-  { id: 'ypologistes', name: 'Υπολογιστές', rootCategoryId: 'rc2', icon: 'pc' },
-  { id: 'laptops-accessories', name: 'Laptops, Αξεσουάρ', rootCategoryId: 'rc3', icon: 'laptop' },
-  { id: 'eikona', name: 'Εικόνα', rootCategoryId: 'rc4', icon: 'Picture' },
-  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc5', icon: 'camera' },
-  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc6', icon: 'monitor' },
-  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc7', icon: 'home' },
-  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc8', icon: 'home' },
-  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc9', icon: 'home' },
-  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc10', icon: 'gamepad' },
-  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc11', icon: 'gamepad' },
-  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc12', icon: 'gamepad' },
-  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc13', icon: 'dumbbell' },
-  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc14', icon: 'dumbbell' },
-  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc15', icon: 'shirt' },
-  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc16', icon: 'shirt' }
+  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', icon: 'smartphone' },
+  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', icon: 'laptop' },
+  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', icon: 'tablet' },
+  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', icon: 'headphones' },
+  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', icon: 'camera' },
+  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', icon: 'monitor' },
+  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', icon: 'home' },
+  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', icon: 'home' },
+  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', icon: 'home' },
+  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', icon: 'gamepad' },
+  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', icon: 'gamepad' },
+  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', icon: 'gamepad' },
+  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', icon: 'dumbbell' },
+  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', icon: 'dumbbell' },
+  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' },
+  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' }
 ];
 
 // Vendors
@@ -153,8 +131,6 @@ export interface Product {
   brand: string;
   model: string;
   category: string;
-  categorySlug: string;
-  categoryName: string;
   description: string;
   image: string;
   images: string[];
@@ -167,13 +143,11 @@ export interface Product {
 // Generate a bunch of products
 const products: Product[] = [
   {
-    id: 'item/1',
+    id: 'p1',
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    category: 'Mobile',
-    categorySlug: 'mobile',
-    categoryName: 'Κινητή Τηλεφωνία',
+    category: 'Smartphones',
     description: 'The latest iPhone with a stunning design and powerful performance.',
     image: 'https://placehold.co/400x400?text=iPhone+14',
     images: [
@@ -238,8 +212,7 @@ const products: Product[] = [
     title: 'MacBook Pro 14" M2 Pro',
     brand: 'Apple',
     model: 'MacBook Pro',
-    category: 'laptops-accessories',
-    categoryName: 'Laptops, Αξεσουάρ',
+    category: 'Laptops',
     description: 'Powerful MacBook Pro with the latest M2 Pro chip.',
     image: 'https://placehold.co/400x400?text=MacBook+Pro',
     images: [
