@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { Product } from '@/data/mockData';
+import { Product, categories } from '@/data/mockData';
 
 interface ProductBreadcrumbProps {
   product: Product;
@@ -27,13 +27,17 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   const productSlug = formatProductSlug(product.title);
   const categorySlug = formatCategorySlug(product.category);
   
+  // Find the category object that matches the product's category name
+  const categoryObj = categories.find(cat => cat.name === product.category);
+  const categoryId = categoryObj ? categoryObj.id : '';
+  
   return (
     <div className="flex items-center text-sm mb-6">
       <Link to="/" className="text-muted-foreground hover:text-primary">BestPrice</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
-      <Link to={`/cat/${product.categoryId}/${categorySlug}`} className="text-muted-foreground hover:text-primary">{product.category}</Link>
+      <Link to={`/cat/${categoryId}/${categorySlug}`} className="text-muted-foreground hover:text-primary">{product.category}</Link>
       <ChevronRight className="h-4 w-4 mx-1" />
-      <Link to={`/cat/${product.categoryId}/${categorySlug}`} className="text-muted-foreground hover:text-primary">
+      <Link to={`/cat/${categoryId}/${categorySlug}`} className="text-muted-foreground hover:text-primary">
         {product.category}
       </Link>
       <ChevronRight className="h-4 w-4 mx-1" />
