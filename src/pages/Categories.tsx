@@ -16,21 +16,21 @@ import RootCategoryView from '@/components/category/RootCategoryView';
 import SingleCategoryView from '@/components/category/SingleCategoryView';
 
 const Categories = () => {
-  const { categoryName, rootSlug } = useParams<{ categoryName?: string; rootSlug?: string }>();
+  const { categoryId, rootSlug } = useParams<{ categoryId?: string; rootSlug?: string }>();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   
   // If categoryId is provided, we're viewing a specific category
   // If rootSlug is provided, we're viewing a root category
   // If neither is provided, we're viewing all categories
-  const category = categoryName ? getCategoryByName(categoryName) : null;
+  const category = categoryId ? getCategoryById(categoryId) : null;
   const rootCategoryFromSlug = rootSlug ? getRootCategoryBySlug(rootSlug) : null;
   const rootCategory = category ? getRootCategoryById(category.rootCategoryId) : rootCategoryFromSlug;
   
   useEffect(() => {
     if (category) {
       // Fetch products for a specific category
-      const categoryProducts = getProductsByCategory(category.Name);
+      const categoryProducts = getProductsByCategory(category.id);
       setProducts(categoryProducts);
       setFilteredProducts(categoryProducts);
     } else if (rootCategory) {
