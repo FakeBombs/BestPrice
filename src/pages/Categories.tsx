@@ -30,7 +30,7 @@ const Categories = () => {
   useEffect(() => {
     if (category) {
       // Fetch products for a specific category
-      const categoryProducts = getProductsByCategory(category.Name);
+      const categoryProducts = getProductsByCategory(category.id);
       setProducts(categoryProducts);
       setFilteredProducts(categoryProducts);
     } else if (rootCategory) {
@@ -126,7 +126,7 @@ const Categories = () => {
       />
     );
   } else if (rootCategory) {
-    const subcategories = getCategoriesByRootCategory(rootCategory.id);
+    const subcategories = getCategoriesByRootCategory(rootCategory.Name);
     
     return (
       <RootCategoryView 
