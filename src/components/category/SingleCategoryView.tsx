@@ -5,9 +5,9 @@ import ProductCard from '@/components/ProductCard';
 import CategoryBreadcrumb from './CategoryBreadcrumb';
 
 interface SingleCategoryViewProps {
-  category: Category;
+  category: categoryName;
   products: Product[];
-  rootCategory?: any; // Optional if the category belongs to a root category
+  rootCategory?: categoryName; // Optional if the category belongs to a root category
   onSortChange: (value: string) => void;
   onVendorFilter: (vendors: string[]) => void;
   onPriceRangeFilter: (min: number, max: number) => void;
