@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Table,
@@ -39,7 +38,7 @@ const mockAds: Advertisement[] = [
     id: 'ad1',
     title: 'iPhone 14 Pro Max - Top Deal',
     description: 'Best price on the latest iPhone',
-    targetUrl: '',
+    targetUrl: 'https://example.com/iphone-14-pro-max',
     type: 'product',
     status: 'active',
     budget: 10,
@@ -70,6 +69,7 @@ const mockAds: Advertisement[] = [
     id: 'ad3',
     title: 'Dell Laptop Sale',
     description: 'Big discounts on all Dell laptops',
+    targetUrl: 'https://example.com/dell-laptops',
     type: 'brand',
     status: 'active',
     budget: 8,
