@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { AlertCircle } from 'lucide-react';
 import NotificationSettings from '@/components/NotificationSettings';
 import AuthModal from '@/components/AuthModal';
 
@@ -61,6 +62,22 @@ const AccountPage = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Ο Λογαριασμός μου</h1>
+      
+      {user.isAdmin && (
+        <Card className="mb-6 border-primary/40 bg-primary/5">
+          <CardContent className="flex items-center justify-between p-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Διαχείριση Συστήματος</h3>
+              <p className="text-muted-foreground">
+                Έχετε δικαιώματα διαχειριστή. Αποκτήστε πρόσβαση στον πίνακα διαχείρισης του συστήματος.
+              </p>
+            </div>
+            <Button asChild>
+              <Link to="/admin">Πίνακας Διαχείρισης</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
       
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="mb-6">

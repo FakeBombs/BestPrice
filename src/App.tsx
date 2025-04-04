@@ -18,6 +18,12 @@ import AccountPage from "@/pages/AccountPage";
 import { AuthProvider } from "@/hooks/useAuth";
 import { NotificationProvider } from "@/hooks/useNotifications";
 
+// Admin Pages
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
+import AdminProductsPage from "@/pages/admin/AdminProductsPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -40,6 +46,17 @@ const App = () => (
               <Route path="/brands" element={<MainLayout><Brands /></MainLayout>} />
               <Route path="/account" element={<MainLayout><AccountPage /></MainLayout>} />
               <Route path="/account/:section" element={<MainLayout><AccountPage /></MainLayout>} />
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="categories" element={<AdminCategoriesPage />} />
+                <Route path="products" element={<AdminProductsPage />} />
+                <Route path="stores" element={<MainLayout><NotFound /></MainLayout>} />
+                <Route path="orders" element={<MainLayout><NotFound /></MainLayout>} />
+                <Route path="users" element={<MainLayout><NotFound /></MainLayout>} />
+                <Route path="settings" element={<MainLayout><NotFound /></MainLayout>} />
+              </Route>
               
               {/* Legacy URL support - redirects will be handled in the component */}
               <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />

@@ -8,6 +8,7 @@ interface User {
   name: string;
   email: string;
   avatar?: string;
+  isAdmin?: boolean; // Add this property for admin privileges
 }
 
 interface AuthContextType {
@@ -34,11 +35,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // For demo purposes, we'll accept any email/password
+      // Special case: admin@bestprice.gr is admin
+      const isAdmin = email.toLowerCase() === 'admin@bestprice.gr' || email.toLowerCase() === 'user@example.com';
+      
       const user: User = {
         id: 'user1',
         name: email.split('@')[0],
         email,
-        avatar: `https://placehold.co/100x100?text=${email.charAt(0).toUpperCase()}`
+        avatar: `https://placehold.co/100x100?text=${email.charAt(0).toUpperCase()}`,
+        isAdmin
       };
       
       setUser(user);
@@ -69,11 +74,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // For demo purposes, make new user admin if email contains admin
+      const isAdmin = email.toLowerCase().includes('admin');
+      
       const user: User = {
         id: 'user1',
         name,
         email,
-        avatar: `https://placehold.co/100x100?text=${name.charAt(0).toUpperCase()}`
+        avatar: `https://placehold.co/100x100?text=${name.charAt(0).toUpperCase()}`,
+        isAdmin
       };
       
       setUser(user);
@@ -104,11 +113,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // For demo purposes, we'll make this admin as well
       const user: User = {
         id: 'user1',
         name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
         email: `user@${provider}.com`,
-        avatar: `https://placehold.co/100x100?text=${provider.charAt(0).toUpperCase()}`
+        avatar: `https://placehold.co/100x100?text=${provider.charAt(0).toUpperCase()}`,
+        isAdmin: true
       };
       
       setUser(user);
