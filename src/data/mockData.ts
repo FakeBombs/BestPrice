@@ -233,7 +233,8 @@ const products: Product[] = [
     title: 'MacBook Pro 14" M2 Pro',
     brand: 'Apple',
     model: 'MacBook Pro',
-    category: 'Laptops, Αξεσουάρ',
+    category: 'laptops-accessories',
+    categoryName: 'Laptops, Αξεσουάρ',
     description: 'Powerful MacBook Pro with the latest M2 Pro chip.',
     image: 'https://placehold.co/400x400?text=MacBook+Pro',
     images: [
