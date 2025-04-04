@@ -73,6 +73,7 @@ export const rootCategories: RootCategory[] = [
 export interface Category {
   id: string;
   name: string;
+  categorySlug: string;
   rootCategoryId: string;
   icon: string;
 }
