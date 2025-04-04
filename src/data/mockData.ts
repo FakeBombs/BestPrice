@@ -168,7 +168,7 @@ const products: Product[] = [
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    category: 'mobile',
+    category: 'technology',
     categoryName: 'Κινητή Τηλεφωνία',
     description: 'The latest iPhone with a stunning design and powerful performance.',
     image: 'https://placehold.co/400x400?text=iPhone+14',
