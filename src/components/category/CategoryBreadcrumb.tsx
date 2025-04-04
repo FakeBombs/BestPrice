@@ -16,19 +16,14 @@ interface CategoryBreadcrumbProps {
 
 const CategoryBreadcrumb = ({ category, rootCategory }: CategoryBreadcrumbProps) => {
   return (
-    <Breadcrumb className="mb-6">
+    <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link to="/">Home</Link>
+            <Link to="/">BestPrice</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/categories">Categories</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
         
         {rootCategory && (
           <>
