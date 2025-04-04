@@ -1,5 +1,5 @@
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./pages/admin/AdminLayout";
 import { AuthProvider } from "./hooks/useAuth";
@@ -23,7 +23,7 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<MainLayout />}>
+        <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="item/:productId/:productSlug?.html" element={<ProductDetail />} />

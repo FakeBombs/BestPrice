@@ -46,6 +46,7 @@ const mockAds: Advertisement[] = [
     id: 'ad3',
     title: 'Dell Laptop Sale',
     description: 'Big discounts on all Dell laptops',
+    targetUrl: '',
     type: 'brand',
     status: 'active',
     budget: 8,
