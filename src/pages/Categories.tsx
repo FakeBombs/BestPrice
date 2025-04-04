@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   getCategories, 
   getRootCategories, 
@@ -15,8 +15,21 @@ import AllCategoriesView from '@/components/category/AllCategoriesView';
 import RootCategoryView from '@/components/category/RootCategoryView';
 import SingleCategoryView from '@/components/category/SingleCategoryView';
 
+const formatCategorySlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
+
 const Categories = () => {
-  const { categoryId, rootSlug } = useParams<{ categoryId?: string; rootSlug?: string }>();
+  const { categoryId, categorySlug, rootSlug } = useParams<{ 
+    categoryId?: string; 
+    categorySlug?: string;
+    rootSlug?: string 
+  }>();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   
@@ -26,6 +39,14 @@ const Categories = () => {
   const category = categoryId ? getCategoryById(categoryId) : null;
   const rootCategoryFromSlug = rootSlug ? getRootCategoryBySlug(rootSlug) : null;
   const rootCategory = category ? getRootCategoryById(category.rootCategoryId) : rootCategoryFromSlug;
+  
+  // Redirect legacy URLs to new format
+  useEffect(() => {
+    if (category && !categorySlug) {
+      const correctSlug = formatCategorySlug(category.name);
+      navigate(`/cat/${categoryId}/${correctSlug}`, { replace: true });
+    }
+  }, [categoryId, category, categorySlug, navigate]);
   
   useEffect(() => {
     if (category) {

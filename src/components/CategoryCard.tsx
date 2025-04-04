@@ -8,9 +8,19 @@ interface CategoryCardProps {
   category: Category;
 }
 
+const formatCategorySlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
+
 const CategoryCard = ({
   category
 }: CategoryCardProps) => {
+  const categorySlug = formatCategorySlug(category.name);
+  
   const getIcon = (): JSX.Element => {
     switch (category.icon) {
       case 'smartphone':
@@ -36,10 +46,10 @@ const CategoryCard = ({
   
   return (
   <>
-    <Link to={`/categories/${category.id}?bpref=root-category`} className="root-category__cover">
+    <Link to={`/cat/${category.id}/${categorySlug}`} className="root-category__cover">
             {getIcon()}
     </Link>
-    <h2 className="root-category__category-title"><Link to={`/categories/${category.id}?bpref=root-category__title`}>{category.name}</Link></h2>
+    <h2 className="root-category__category-title"><Link to={`/cat/${category.id}/${categorySlug}`}>{category.name}</Link></h2>
     <div className="root-category__footer">
       <div className="root-category__links">
         <Link to="/">Κινητά</Link>
@@ -49,4 +59,3 @@ const CategoryCard = ({
   );
 };
 export default CategoryCard;
-

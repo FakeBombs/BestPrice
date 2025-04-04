@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { 
   getProductById, 
@@ -20,8 +20,17 @@ import PriceHistoryChart from '@/components/PriceHistoryChart';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 
+const formatProductSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
+
 const ProductDetail = () => {
-  const { productId } = useParams<{ productId: string }>();
+  const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
@@ -30,6 +39,14 @@ const ProductDetail = () => {
   const [categoryDeals, setCategoryDeals] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
+
+  // Redirect legacy URLs to new format
+  useEffect(() => {
+    if (productId && product && !productSlug) {
+      const correctSlug = formatProductSlug(product.title);
+      navigate(`/item/${productId}/${correctSlug}.html`, { replace: true });
+    }
+  }, [productId, product, productSlug, navigate]);
   
   useEffect(() => {
     if (productId) {

@@ -31,15 +31,20 @@ const App = () => (
             <Routes>
               <Route path="/" element={<MainLayout><Index /></MainLayout>} />
               <Route path="/categories" element={<MainLayout><Categories /></MainLayout>} />
-              <Route path="/categories/:categoryId" element={<MainLayout><Categories /></MainLayout>} />
+              <Route path="/cat/:categoryId/:categorySlug" element={<MainLayout><Categories /></MainLayout>} />
               <Route path="/categories/root/:rootSlug" element={<MainLayout><Categories /></MainLayout>} />
-              <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />
+              <Route path="/item/:productId/:productSlug" element={<MainLayout><ProductDetail /></MainLayout>} />
               <Route path="/search" element={<MainLayout><SearchResults /></MainLayout>} />
               <Route path="/deals" element={<MainLayout><Deals /></MainLayout>} />
               <Route path="/stores" element={<MainLayout><Stores /></MainLayout>} />
               <Route path="/brands" element={<MainLayout><Brands /></MainLayout>} />
               <Route path="/account" element={<MainLayout><AccountPage /></MainLayout>} />
               <Route path="/account/:section" element={<MainLayout><AccountPage /></MainLayout>} />
+              
+              {/* Legacy URL support - redirects will be handled in the component */}
+              <Route path="/product/:productId" element={<MainLayout><ProductDetail /></MainLayout>} />
+              <Route path="/categories/:categoryId" element={<MainLayout><Categories /></MainLayout>} />
+              
               <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
             </Routes>
           </BrowserRouter>

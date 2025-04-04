@@ -14,6 +14,14 @@ interface CategoryBreadcrumbProps {
   rootCategory?: RootCategory;
 }
 
+const formatCategorySlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
+
 const CategoryBreadcrumb = ({ category, rootCategory }: CategoryBreadcrumbProps) => {
   return (
     <Breadcrumb>

@@ -9,16 +9,25 @@ interface ProductCardProps {
   className?: string; // Adding this to allow custom classes
 }
 
+const formatProductSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
+
 const ProductCard = ({
   product,
   className = "p p--row p--force-ratio" // Default class as requested
 }: ProductCardProps) => {
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices.filter(p => p.inStock).length;
+  const productSlug = formatProductSlug(product.title);
   
   return (
     <div className={className}>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/item/${product.id}/${productSlug}.html`}>
         <picture>
           <img src={product.image} alt={product.title} />
         </picture>
