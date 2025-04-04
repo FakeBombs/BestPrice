@@ -44,7 +44,7 @@ const SingleCategoryView = ({
       ) : (
         <div className="product-grid">
           {products.map((product) => (
-            <ProductCard key={product.categoryName} product={product} />
+            <ProductCard key={product.category} product={product} />
           ))}
         </div>
       )}
