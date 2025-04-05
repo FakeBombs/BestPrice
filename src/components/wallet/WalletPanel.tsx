@@ -1,34 +1,16 @@
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wallet, CreditCard, CircleDollarSign, Plus, Coins, History, ExternalLink, Bitcoin } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import WalletConnectButton from "./WalletConnectButton";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
-
-export interface WalletData {
-  balance: number;
-  pendingBalance: number;
-  transactions: {
-    id: string;
-    date: Date;
-    amount: number;
-    description: string;
-    status: 'completed' | 'pending' | 'failed';
-    type: 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings';
-  }[];
-}
-
-// Helper function to format currency
-const formatCurrency = (amount: number | string): string => {
-  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-  return `$${numAmount.toFixed(2)}`;
-};
+import { WalletData } from "./types";
+import WalletBalanceCards from './WalletBalanceCards';
+import WalletDeposit from './WalletDeposit';
+import WalletTransactions from './WalletTransactions';
+import WalletConnectSection from './WalletConnectSection';
 
 const WalletPanel = () => {
   const { user } = useAuth();
@@ -37,10 +19,7 @@ const WalletPanel = () => {
     pendingBalance: 0,
     transactions: []
   });
-  const [depositAmount, setDepositAmount] = useState<string>('');
-  const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
   const [loading, setLoading] = useState(true);
-  const [showDepositModal, setShowDepositModal] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -154,80 +133,8 @@ const WalletPanel = () => {
     };
   }, [user]);
   
-  const handleDeposit = async () => {
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to deposit funds.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const depositNumAmount = parseFloat(depositAmount);
-    if (isNaN(depositNumAmount) || depositNumAmount <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid amount to deposit.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setLoading(true);
-    try {
-      const transactionData: Database['public']['Tables']['transactions']['Insert'] = {
-        user_id: user.id,
-        amount: depositNumAmount,
-        description: `Deposit via ${
-          paymentMethod === 'credit-card' ? 'Credit Card' :
-          paymentMethod === 'paypal' ? 'PayPal' :
-          paymentMethod === 'bank' ? 'Bank Transfer' : 'Other method'
-        }`,
-        type: 'deposit',
-        status: 'completed'
-      };
-      
-      const { error } = await supabase
-        .from('transactions')
-        .insert(transactionData);
-        
-      if (error) throw error;
-      
-      // Define the correct type for RPC parameters
-      interface AddToWalletParams {
-        user_id: string;
-        amount_to_add: number;
-      }
-      
-      // Fix: Remove the generic type parameters completely as they're causing type issues
-      const { error: walletError } = await supabase.rpc(
-        'add_to_wallet', 
-        {
-          user_id: user.id,
-          amount_to_add: depositNumAmount
-        }
-      );
-      
-      if (walletError) throw walletError;
-      
-      toast({
-        title: "Success!",
-        description: `Deposited ${formatCurrency(depositNumAmount)} to your wallet.`
-      });
-      
-      setShowDepositModal(false);
-      setDepositAmount('');
-      
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to deposit funds. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleDepositComplete = () => {
+    // Nothing to do here as the realtime subscription will update the UI
   };
 
   if (!user) {
@@ -256,31 +163,7 @@ const WalletPanel = () => {
       </CardHeader>
       
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Available Balance</p>
-                  <h3 className="text-2xl font-bold">${walletData.balance.toFixed(2)}</h3>
-                </div>
-                <CircleDollarSign className="h-8 w-8 text-primary opacity-80" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Pending Balance</p>
-                  <h3 className="text-2xl font-bold">${walletData.pendingBalance.toFixed(2)}</h3>
-                </div>
-                <History className="h-8 w-8 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <WalletBalanceCards walletData={walletData} />
         
         <Tabs defaultValue="deposit">
           <TabsList className="grid grid-cols-3 mb-4">
@@ -290,175 +173,15 @@ const WalletPanel = () => {
           </TabsList>
           
           <TabsContent value="deposit">
-            <Card>
-              <CardHeader>
-                <CardTitle>Add Funds</CardTitle>
-                <CardDescription>
-                  Deposit money to your account to pay for advertising
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="amount" className="text-sm font-medium">Amount ($)</label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      placeholder="Enter amount"
-                      min="1"
-                      step="0.01"
-                      value={depositAmount}
-                      onChange={(e) => setDepositAmount(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Payment Method</label>
-                    <div className="grid grid-cols-1 gap-2">
-                      <h4 className="text-sm font-medium text-muted-foreground mt-2">Traditional Methods</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <Button 
-                          variant={paymentMethod === 'credit-card' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('credit-card')}
-                        >
-                          <CreditCard className="mr-2 h-4 w-4" />
-                          Credit Card
-                        </Button>
-                        <Button 
-                          variant={paymentMethod === 'paypal' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('paypal')}
-                        >
-                          <Coins className="mr-2 h-4 w-4" />
-                          PayPal
-                        </Button>
-                      </div>
-                      
-                      <h4 className="text-sm font-medium text-muted-foreground mt-4">Cryptocurrency</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <Button 
-                          variant={paymentMethod === 'bitpay' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('bitpay')}
-                        >
-                          <Bitcoin className="mr-2 h-4 w-4" />
-                          BitPay
-                        </Button>
-                        <Button 
-                          variant={paymentMethod === 'coinbase' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('coinbase')}
-                        >
-                          <Bitcoin className="mr-2 h-4 w-4" />
-                          Coinbase
-                        </Button>
-                        <Button 
-                          variant={paymentMethod === 'coinpayments' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('coinpayments')}
-                        >
-                          <Bitcoin className="mr-2 h-4 w-4" />
-                          CoinPayments
-                        </Button>
-                        <Button 
-                          variant={paymentMethod === 'faucetpay' ? 'default' : 'outline'} 
-                          className="justify-start"
-                          onClick={() => setPaymentMethod('faucetpay')}
-                        >
-                          <Bitcoin className="mr-2 h-4 w-4" />
-                          FaucetPay
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button 
-                  onClick={handleDeposit} 
-                  disabled={!depositAmount || parseFloat(depositAmount) <= 0 || loading}
-                  className="w-full"
-                >
-                  {loading ? 'Processing...' : (
-                    <>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Funds
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
+            <WalletDeposit userId={user.id} onDepositComplete={handleDepositComplete} />
           </TabsContent>
           
           <TabsContent value="transactions">
-            <Card>
-              <CardHeader>
-                <CardTitle>Transaction History</CardTitle>
-                <CardDescription>
-                  View your recent transactions and payments
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {walletData.transactions.length === 0 ? (
-                    <p className="text-center py-4 text-muted-foreground">No transactions yet</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {walletData.transactions.map((transaction) => (
-                        <div key={transaction.id} className="flex items-center justify-between border-b pb-3">
-                          <div>
-                            <p className="font-medium">{transaction.description}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {transaction.date.toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className={`font-medium ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                              {transaction.amount >= 0 ? '+' : ''}{transaction.amount.toFixed(2)} $
-                            </p>
-                            <p className="text-xs">
-                              {transaction.status === 'completed' && <span className="text-green-600">Completed</span>}
-                              {transaction.status === 'pending' && <span className="text-amber-500">Pending</span>}
-                              {transaction.status === 'failed' && <span className="text-red-500">Failed</span>}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <WalletTransactions transactions={walletData.transactions} />
           </TabsContent>
           
           <TabsContent value="connect">
-            <Card>
-              <CardHeader>
-                <CardTitle>Connect External Wallet</CardTitle>
-                <CardDescription>
-                  Connect your Web3 wallet to deposit or withdraw funds
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <WalletConnectButton walletType="metamask" />
-                  <WalletConnectButton walletType="binance" />
-                  <WalletConnectButton walletType="walletconnect" />
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col items-start">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Connecting a wallet allows you to pay for ads and receive earnings directly through your preferred Web3 wallet.
-                </p>
-                <div className="flex items-center">
-                  <Button variant="link" className="h-auto p-0">
-                    Learn more about Web3 wallets
-                    <ExternalLink className="ml-1 h-3 w-3" />
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
+            <WalletConnectSection />
           </TabsContent>
         </Tabs>
       </CardContent>
