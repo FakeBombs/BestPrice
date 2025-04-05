@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Wallet, CreditCard, CircleDollarSign, Plus, Coins, History, ExternalLin
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import WalletConnectButton from "./WalletConnectButton";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface WalletData {
   balance: number;
@@ -23,45 +24,133 @@ export interface WalletData {
   }[];
 }
 
-// Mock wallet data - in a real app, this would come from the backend
-const mockWalletData: WalletData = {
-  balance: 25.50,
-  pendingBalance: 5.75,
-  transactions: [
-    {
-      id: 't1',
-      date: new Date(2025, 3, 2),
-      amount: 10.00,
-      description: 'Deposit via Credit Card',
-      status: 'completed',
-      type: 'deposit'
-    },
-    {
-      id: 't2',
-      date: new Date(2025, 3, 1),
-      amount: 5.75,
-      description: 'PTC Ad earnings',
-      status: 'pending',
-      type: 'ad-earnings'
-    },
-    {
-      id: 't3',
-      date: new Date(2025, 2, 30),
-      amount: -2.50,
-      description: 'Product Ad payment',
-      status: 'completed',
-      type: 'ad-payment'
-    },
-  ]
-};
-
 export default function WalletPanel() {
   const { user } = useAuth();
-  const [walletData] = useState<WalletData>(mockWalletData);
+  const [walletData, setWalletData] = useState<WalletData>({
+    balance: 0,
+    pendingBalance: 0,
+    transactions: []
+  });
   const [depositAmount, setDepositAmount] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
+  const [loading, setLoading] = useState(true);
   
-  const handleDeposit = () => {
+  // Fetch wallet data when user changes
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    
+    const fetchWalletData = async () => {
+      setLoading(true);
+      try {
+        // Get wallet
+        const { data: wallet, error: walletError } = await supabase
+          .from('wallets')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+          
+        if (walletError) throw walletError;
+        
+        // Get transactions
+        const { data: transactionsData, error: txError } = await supabase
+          .from('transactions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+          
+        if (txError) throw txError;
+        
+        setWalletData({
+          balance: wallet.balance,
+          pendingBalance: wallet.pending_balance,
+          transactions: transactionsData.map(tx => ({
+            id: tx.id,
+            date: new Date(tx.created_at),
+            amount: tx.amount,
+            description: tx.description,
+            status: tx.status as 'completed' | 'pending' | 'failed',
+            type: tx.type as 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings'
+          }))
+        });
+      } catch (error) {
+        console.error("Error fetching wallet data:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch wallet data"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchWalletData();
+    
+    // Subscribe to wallet changes
+    const walletChannel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'wallets',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.new) {
+            setWalletData(prev => ({
+              ...prev,
+              balance: payload.new.balance,
+              pendingBalance: payload.new.pending_balance
+            }));
+          }
+        }
+      )
+      .subscribe();
+      
+    // Subscribe to transaction changes
+    const transactionChannel = supabase
+      .channel('transaction-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'transactions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.new) {
+            const newTx = {
+              id: payload.new.id,
+              date: new Date(payload.new.created_at),
+              amount: payload.new.amount,
+              description: payload.new.description,
+              status: payload.new.status,
+              type: payload.new.type
+            };
+            
+            setWalletData(prev => ({
+              ...prev,
+              transactions: [newTx, ...prev.transactions]
+            }));
+          }
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(walletChannel);
+      supabase.removeChannel(transactionChannel);
+    };
+  }, [user]);
+  
+  const handleDeposit = async () => {
+    if (!user) return;
+    
     const amount = parseFloat(depositAmount);
     if (isNaN(amount) || amount <= 0) {
       toast({
@@ -72,21 +161,53 @@ export default function WalletPanel() {
       return;
     }
     
-    // In a real app, this would call a backend API
-    toast({
-      title: "Deposit initiated",
-      description: `A deposit of $${amount.toFixed(2)} is being processed via ${
-        paymentMethod === 'credit-card' ? 'Credit Card' : 
-        paymentMethod === 'paypal' ? 'PayPal' : 
-        paymentMethod === 'bitpay' ? 'BitPay' : 
-        paymentMethod === 'coinbase' ? 'Coinbase' : 
-        paymentMethod === 'coinpayments' ? 'CoinPayments' :
-        paymentMethod === 'faucetpay' ? 'FaucetPay' :
-        'selected payment method'
-      }.`
-    });
-    
-    setDepositAmount('');
+    setLoading(true);
+    try {
+      // Create a transaction record
+      const { error } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          amount: amount,
+          description: `Deposit via ${
+            paymentMethod === 'credit-card' ? 'Credit Card' : 
+            paymentMethod === 'paypal' ? 'PayPal' : 
+            paymentMethod === 'bitpay' ? 'BitPay' : 
+            paymentMethod === 'coinbase' ? 'Coinbase' : 
+            paymentMethod === 'coinpayments' ? 'CoinPayments' :
+            paymentMethod === 'faucetpay' ? 'FaucetPay' :
+            'selected payment method'
+          }`,
+          status: 'completed',
+          type: 'deposit'
+        });
+        
+      if (error) throw error;
+      
+      // Update wallet balance
+      const { error: walletError } = await supabase.rpc('add_to_wallet', {
+        user_id: user.id,
+        amount_to_add: amount
+      });
+      
+      if (walletError) throw walletError;
+      
+      toast({
+        title: "Deposit successful",
+        description: `$${amount.toFixed(2)} has been added to your wallet.`
+      });
+      
+      setDepositAmount('');
+    } catch (error) {
+      console.error("Error processing deposit:", error);
+      toast({
+        variant: "destructive",
+        title: "Deposit failed",
+        description: "There was an error processing your deposit"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!user) {
@@ -236,11 +357,15 @@ export default function WalletPanel() {
               <CardFooter>
                 <Button 
                   onClick={handleDeposit} 
-                  disabled={!depositAmount || parseFloat(depositAmount) <= 0}
+                  disabled={!depositAmount || parseFloat(depositAmount) <= 0 || loading}
                   className="w-full"
                 >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Funds
+                  {loading ? 'Processing...' : (
+                    <>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Funds
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>

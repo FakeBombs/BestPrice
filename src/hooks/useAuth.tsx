@@ -1,63 +1,132 @@
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Session, User } from '@supabase/supabase-js';
 
-// Mock user data
-interface User {
+interface UserProfile {
   id: string;
   name: string;
   email: string;
   avatar?: string;
-  isAdmin?: boolean; // Add this property for admin privileges
+  username?: string;
+  isAdmin?: boolean;
+  bio?: string;
+  location?: string;
+  website?: string;
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfile | null;
+  session: Session | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   socialLogin: (provider: 'google' | 'facebook' | 'twitter') => Promise<boolean>;
   logout: () => void;
+  updateProfile: (data: Partial<UserProfile>) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   
-  // Mock login function
+  // Set up auth state listener
+  useEffect(() => {
+    // First establish the listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        setSession(currentSession);
+        
+        if (currentSession?.user) {
+          // Get the user's profile data
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentSession.user.id)
+            .single();
+            
+          setUser({
+            id: currentSession.user.id,
+            name: profile?.display_name || currentSession.user.email?.split('@')[0] || '',
+            email: currentSession.user.email || '',
+            avatar: profile?.profile_image_url,
+            username: profile?.username,
+            bio: profile?.bio,
+            location: profile?.location,
+            website: profile?.website,
+            isAdmin: currentSession.user.email?.toLowerCase().includes('admin')
+          });
+        } else {
+          setUser(null);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+    
+    // Then check the current session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      
+      if (currentSession?.user) {
+        // Get the user's profile in a setTimeout to avoid deadlocks
+        setTimeout(async () => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentSession.user!.id)
+            .single();
+            
+          setUser({
+            id: currentSession.user!.id,
+            name: profile?.display_name || currentSession.user!.email?.split('@')[0] || '',
+            email: currentSession.user!.email || '',
+            avatar: profile?.profile_image_url,
+            username: profile?.username,
+            bio: profile?.bio,
+            location: profile?.location,
+            website: profile?.website,
+            isAdmin: currentSession.user!.email?.toLowerCase().includes('admin')
+          });
+          setIsLoading(false);
+        }, 0);
+      } else {
+        setIsLoading(false);
+      }
+    });
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+  
+  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, we'll accept any email/password
-      // Special case: admin@bestprice.gr is admin
-      const isAdmin = email.toLowerCase() === 'admin@bestprice.gr' || email.toLowerCase() === 'user@example.com';
-      
-      const user: User = {
-        id: 'user1',
-        name: email.split('@')[0],
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        avatar: `https://placehold.co/100x100?text=${email.charAt(0).toUpperCase()}`,
-        isAdmin
-      };
+        password
+      });
       
-      setUser(user);
+      if (error) throw error;
+      
       toast({
         title: "Επιτυχής σύνδεση",
         description: "Καλώς ήρθατε στο BestPrice!"
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Σφάλμα Σύνδεσης",
-        description: "Λάθος email ή κωδικός."
+        description: error.message || "Λάθος email ή κωδικός."
       });
       
       return false;
@@ -66,37 +135,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   
-  // Mock register function
+  // Register function
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, make new user admin if email contains admin
-      const isAdmin = email.toLowerCase().includes('admin');
-      
-      const user: User = {
-        id: 'user1',
-        name,
+      const { error } = await supabase.auth.signUp({
         email,
-        avatar: `https://placehold.co/100x100?text=${name.charAt(0).toUpperCase()}`,
-        isAdmin
-      };
+        password,
+        options: {
+          data: {
+            display_name: name,
+          },
+        }
+      });
       
-      setUser(user);
+      if (error) throw error;
+      
       toast({
         title: "Επιτυχής εγγραφή",
         description: "Ο λογαριασμός σας δημιουργήθηκε επιτυχώς."
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Σφάλμα Εγγραφής",
-        description: "Το email που χρησιμοποιήσατε υπάρχει ήδη."
+        description: error.message || "Το email που χρησιμοποιήσατε υπάρχει ήδη."
       });
       
       return false;
@@ -105,31 +171,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   
-  // Mock social login function
+  // Social login function
   const socialLogin = async (provider: 'google' | 'facebook' | 'twitter'): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, we'll make this admin as well
-      const user: User = {
-        id: 'user1',
-        name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
-        email: `user@${provider}.com`,
-        avatar: `https://placehold.co/100x100?text=${provider.charAt(0).toUpperCase()}`,
-        isAdmin: true
-      };
-      
-      setUser(user);
-      toast({
-        title: "Επιτυχής σύνδεση",
-        description: `Συνδεθήκατε με επιτυχία μέσω ${provider}.`
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider
       });
       
+      if (error) throw error;
+      
       return true;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Σφάλμα Σύνδεσης",
@@ -143,23 +197,66 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
   
   // Logout function
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    await supabase.auth.signOut();
     toast({
       title: "Αποσύνδεση",
       description: "Αποσυνδεθήκατε επιτυχώς."
     });
   };
   
+  // Update profile function
+  const updateProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
+    if (!user) return false;
+    
+    try {
+      const updates = {
+        display_name: data.name,
+        bio: data.bio,
+        profile_image_url: data.avatar,
+        location: data.location,
+        website: data.website,
+        updated_at: new Date().toISOString()
+      };
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setUser(prev => prev ? { ...prev, ...data } : null);
+      
+      toast({
+        title: "Επιτυχής ενημέρωση",
+        description: "Το προφίλ σας ενημερώθηκε με επιτυχία."
+      });
+      
+      return true;
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Σφάλμα Ενημέρωσης",
+        description: error.message || "Δεν ήταν δυνατή η ενημέρωση του προφίλ σας."
+      });
+      
+      return false;
+    }
+  };
+  
   return (
     <AuthContext.Provider 
       value={{ 
         user, 
+        session,
         isLoading, 
         login, 
         register, 
         socialLogin, 
-        logout 
+        logout,
+        updateProfile
       }}
     >
       {children}

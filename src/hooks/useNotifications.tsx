@@ -1,5 +1,8 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
 
 interface Notification {
   id: string;
@@ -10,45 +13,6 @@ interface Notification {
   link?: string;
   createdAt: string;
 }
-
-// Mock notifications data
-const mockNotifications: Notification[] = [
-  {
-    id: 'n1',
-    title: 'Πτώση τιμής!',
-    message: 'Το iPhone 14 Pro Max μειώθηκε κατά 50€',
-    type: 'price_alert',
-    read: false,
-    link: '/product/p1',
-    createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString() // 30 minutes ago
-  },
-  {
-    id: 'n2',
-    title: 'Νέο προϊόν διαθέσιμο',
-    message: 'Το Samsung S23 Ultra είναι τώρα διαθέσιμο',
-    type: 'product',
-    read: false,
-    link: '/product/p2',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() // 2 hours ago
-  },
-  {
-    id: 'n3',
-    title: 'Καλώς ήρθατε στο BestPrice!',
-    message: 'Ευχαριστούμε που εγγραφήκατε στην υπηρεσία μας.',
-    type: 'system',
-    read: true,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() // 1 day ago
-  },
-  {
-    id: 'n4',
-    title: 'Black Friday Προσφορές',
-    message: 'Μην χάσετε τις προσφορές Black Friday που ξεκινούν σύντομα!',
-    type: 'system',
-    read: true,
-    link: '/deals',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString() // 3 days ago
-  }
-];
 
 interface NotificationContextType {
   notifications: Notification[];
@@ -62,17 +26,94 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { user } = useAuth();
   
-  // Initialize with mock data
+  // Fetch notifications when user changes
   useEffect(() => {
-    setNotifications(mockNotifications);
-  }, []);
+    if (!user) {
+      setNotifications([]);
+      return;
+    }
+    
+    const fetchNotifications = async () => {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching notifications:', error);
+        return;
+      }
+      
+      setNotifications(data.map(item => ({
+        id: item.id,
+        title: item.title,
+        message: item.message,
+        type: item.type as 'price_alert' | 'system' | 'product',
+        read: item.read,
+        link: item.link,
+        createdAt: item.created_at
+      })));
+    };
+    
+    fetchNotifications();
+    
+    // Set up a realtime subscription for new notifications
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          const newNotification = {
+            id: payload.new.id,
+            title: payload.new.title,
+            message: payload.new.message,
+            type: payload.new.type as 'price_alert' | 'system' | 'product',
+            read: payload.new.read,
+            link: payload.new.link,
+            createdAt: payload.new.created_at
+          };
+          
+          setNotifications(prev => [newNotification, ...prev]);
+          
+          toast({
+            title: newNotification.title,
+            description: newNotification.message,
+          });
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
   
   const unreadCount = notifications.filter(notification => !notification.read).length;
   
-  const markAsRead = (id: string) => {
-    setNotifications(prevNotifications => 
-      prevNotifications.map(notification => 
+  const markAsRead = async (id: string) => {
+    if (!user) return;
+    
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id);
+      
+    if (error) {
+      console.error('Error marking notification as read:', error);
+      return;
+    }
+    
+    setNotifications(prev => 
+      prev.map(notification => 
         notification.id === id 
           ? { ...notification, read: true } 
           : notification
@@ -80,13 +121,37 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     );
   };
   
-  const markAllAsRead = () => {
-    setNotifications(prevNotifications => 
-      prevNotifications.map(notification => ({ ...notification, read: true }))
+  const markAllAsRead = async () => {
+    if (!user) return;
+    
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('user_id', user.id);
+      
+    if (error) {
+      console.error('Error marking all notifications as read:', error);
+      return;
+    }
+    
+    setNotifications(prev => 
+      prev.map(notification => ({ ...notification, read: true }))
     );
   };
   
-  const clearAll = () => {
+  const clearAll = async () => {
+    if (!user) return;
+    
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('user_id', user.id);
+      
+    if (error) {
+      console.error('Error clearing notifications:', error);
+      return;
+    }
+    
     setNotifications([]);
   };
   
