@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, LogOut, Heart, Bell, Settings } from 'lucide-react';
+import { User, LogOut, Heart, Bell, Settings, Wallet, Store, UserCircle, Users, MessageSquare, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -54,11 +54,36 @@ const UserButton = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link to="/account/profile" className="cursor-pointer">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+              <Link to="/profile" className="cursor-pointer">
+                <UserCircle className="mr-2 h-4 w-4" />
+                <span>Social Profile</span>
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/account/profile" className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>Account</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/messages" className="cursor-pointer">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                <span>Messages</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/friends" className="cursor-pointer">
+                <Users className="mr-2 h-4 w-4" />
+                <span>Friends</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/photos" className="cursor-pointer">
+                <ImageIcon className="mr-2 h-4 w-4" />
+                <span>Photos</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to="/account/favorites" className="cursor-pointer">
                 <Heart className="mr-2 h-4 w-4" />
@@ -69,6 +94,18 @@ const UserButton = () => {
               <Link to="/account/notifications" className="cursor-pointer">
                 <Bell className="mr-2 h-4 w-4" />
                 <span>Notifications</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/wallet" className="cursor-pointer">
+                <Wallet className="mr-2 h-4 w-4" />
+                <span>Wallet</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/wallet/ads" className="cursor-pointer">
+                <Store className="mr-2 h-4 w-4" />
+                <span>Advertisements</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

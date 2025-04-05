@@ -5,6 +5,7 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import { AuthProvider } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import AccountPage from "./pages/AccountPage";
+import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import Categories from "./pages/Categories";
@@ -35,6 +36,10 @@ function App() {
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
           <Route path="account" element={<AccountPage />} />
+          <Route path="profile" element={<SocialProfilePage />} />
+          <Route path="friends" element={<SocialProfilePage />} />
+          <Route path="photos" element={<SocialProfilePage />} />
+          <Route path="messages" element={<SocialProfilePage />} />
           <Route path="wallet" element={<WalletPage />} />
           <Route path="wallet/:tab" element={<WalletPage />} />
           <Route path="*" element={<NotFound />} />

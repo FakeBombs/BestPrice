@@ -80,7 +80,9 @@ export default function WalletPanel() {
         paymentMethod === 'paypal' ? 'PayPal' : 
         paymentMethod === 'bitpay' ? 'BitPay' : 
         paymentMethod === 'coinbase' ? 'Coinbase' : 
-        paymentMethod === 'coinpayments' ? 'CoinPayments' : 'selected payment method'
+        paymentMethod === 'coinpayments' ? 'CoinPayments' :
+        paymentMethod === 'faucetpay' ? 'FaucetPay' :
+        'selected payment method'
       }.`
     });
     
@@ -217,6 +219,14 @@ export default function WalletPanel() {
                         >
                           <Bitcoin className="mr-2 h-4 w-4" />
                           CoinPayments
+                        </Button>
+                        <Button 
+                          variant={paymentMethod === 'faucetpay' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('faucetpay')}
+                        >
+                          <Bitcoin className="mr-2 h-4 w-4" />
+                          FaucetPay
                         </Button>
                       </div>
                     </div>
