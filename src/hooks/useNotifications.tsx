@@ -47,15 +47,17 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      setNotifications(data.map(item => ({
-        id: item.id,
-        title: item.title,
-        message: item.message,
-        type: item.type as 'price_alert' | 'system' | 'product',
-        read: item.read,
-        link: item.link,
-        createdAt: item.created_at
-      })));
+      if (data) {
+        setNotifications(data.map(item => ({
+          id: item.id,
+          title: item.title,
+          message: item.message,
+          type: item.type as 'price_alert' | 'system' | 'product',
+          read: item.read,
+          link: item.link,
+          createdAt: item.created_at
+        })));
+      }
     };
     
     fetchNotifications();
@@ -72,22 +74,24 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          const newNotification = {
-            id: payload.new.id,
-            title: payload.new.title,
-            message: payload.new.message,
-            type: payload.new.type as 'price_alert' | 'system' | 'product',
-            read: payload.new.read,
-            link: payload.new.link,
-            createdAt: payload.new.created_at
-          };
-          
-          setNotifications(prev => [newNotification, ...prev]);
-          
-          toast({
-            title: newNotification.title,
-            description: newNotification.message,
-          });
+          if (payload.new) {
+            const newNotification = {
+              id: (payload.new as any).id,
+              title: (payload.new as any).title,
+              message: (payload.new as any).message,
+              type: (payload.new as any).type as 'price_alert' | 'system' | 'product',
+              read: (payload.new as any).read,
+              link: (payload.new as any).link,
+              createdAt: (payload.new as any).created_at
+            };
+            
+            setNotifications(prev => [newNotification, ...prev]);
+            
+            toast({
+              title: newNotification.title,
+              description: newNotification.message,
+            });
+          }
         }
       )
       .subscribe();
@@ -105,7 +109,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase
       .from('notifications')
       .update({ read: true })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
       
     if (error) {
       console.error('Error marking notification as read:', error);

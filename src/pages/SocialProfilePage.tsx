@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,8 +12,7 @@ import {
   MoreHorizontal,
   MapPin,
   Briefcase,
-  GraduationCap,
-  Heart
+  GraduationCap
 } from "lucide-react";
 import { 
   Card, 
@@ -129,19 +129,21 @@ export default function SocialProfilePage() {
         
       if (error) throw error;
       
-      const formattedPosts = data.map(post => ({
-        id: post.id,
-        content: post.content,
-        timestamp: new Date(post.created_at),
-        likes: post.likes ? post.likes.length : 0,
-        comments: post.comments ? post.comments.length : 0,
-        authorId: post.user_id,
-        authorName: post.profiles.display_name,
-        authorAvatar: post.profiles.profile_image_url,
-        image: post.image_url
-      }));
-      
-      setPosts(formattedPosts);
+      if (data) {
+        const formattedPosts = data.map(post => ({
+          id: post.id,
+          content: post.content,
+          timestamp: new Date(post.created_at),
+          likes: Array.isArray(post.likes) ? post.likes.length : 0,
+          comments: Array.isArray(post.comments) ? post.comments.length : 0,
+          authorId: post.user_id,
+          authorName: post.profiles?.display_name || 'Unknown User',
+          authorAvatar: post.profiles?.profile_image_url,
+          image: post.image_url
+        }));
+        
+        setPosts(formattedPosts);
+      }
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -257,24 +259,26 @@ export default function SocialProfilePage() {
         
       if (error) throw error;
       
-      const newPost: Post = {
-        id: data.id,
-        content: data.content,
-        timestamp: new Date(data.created_at),
-        likes: 0,
-        comments: 0,
-        authorId: data.user_id,
-        authorName: data.profiles.display_name,
-        authorAvatar: data.profiles.profile_image_url
-      };
-      
-      setPosts([newPost, ...posts]);
-      setNewPostContent("");
-      
-      toast({
-        title: "Post created",
-        description: "Your post has been published to your timeline."
-      });
+      if (data) {
+        const newPost: Post = {
+          id: data.id,
+          content: data.content,
+          timestamp: new Date(data.created_at),
+          likes: 0,
+          comments: 0,
+          authorId: data.user_id,
+          authorName: data.profiles?.display_name || user.name,
+          authorAvatar: data.profiles?.profile_image_url
+        };
+        
+        setPosts([newPost, ...posts]);
+        setNewPostContent("");
+        
+        toast({
+          title: "Post created",
+          description: "Your post has been published to your timeline."
+        });
+      }
     } catch (error) {
       console.error('Error creating post:', error);
       toast({

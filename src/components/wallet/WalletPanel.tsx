@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { Wallet, CreditCard, CircleDollarSign, Plus, Coins, History, ExternalLink, Bitcoin } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
@@ -62,18 +61,20 @@ export default function WalletPanel() {
           
         if (txError) throw txError;
         
-        setWalletData({
-          balance: wallet.balance,
-          pendingBalance: wallet.pending_balance,
-          transactions: transactionsData.map(tx => ({
-            id: tx.id,
-            date: new Date(tx.created_at),
-            amount: tx.amount,
-            description: tx.description,
-            status: tx.status as 'completed' | 'pending' | 'failed',
-            type: tx.type as 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings'
-          }))
-        });
+        if (wallet && transactionsData) {
+          setWalletData({
+            balance: wallet.balance || 0,
+            pendingBalance: wallet.pending_balance || 0,
+            transactions: transactionsData.map(tx => ({
+              id: tx.id,
+              date: new Date(tx.created_at),
+              amount: tx.amount,
+              description: tx.description,
+              status: tx.status as 'completed' | 'pending' | 'failed',
+              type: tx.type as 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings'
+            }))
+          });
+        }
       } catch (error) {
         console.error("Error fetching wallet data:", error);
         toast({
@@ -103,8 +104,8 @@ export default function WalletPanel() {
           if (payload.new) {
             setWalletData(prev => ({
               ...prev,
-              balance: payload.new.balance,
-              pendingBalance: payload.new.pending_balance
+              balance: (payload.new as any).balance || 0,
+              pendingBalance: (payload.new as any).pending_balance || 0
             }));
           }
         }
@@ -125,12 +126,12 @@ export default function WalletPanel() {
         (payload) => {
           if (payload.new) {
             const newTx = {
-              id: payload.new.id,
-              date: new Date(payload.new.created_at),
-              amount: payload.new.amount,
-              description: payload.new.description,
-              status: payload.new.status,
-              type: payload.new.type
+              id: (payload.new as any).id,
+              date: new Date((payload.new as any).created_at),
+              amount: (payload.new as any).amount,
+              description: (payload.new as any).description,
+              status: (payload.new as any).status,
+              type: (payload.new as any).type
             };
             
             setWalletData(prev => ({
@@ -184,7 +185,7 @@ export default function WalletPanel() {
         
       if (error) throw error;
       
-      // Update wallet balance
+      // Update wallet balance using RPC
       const { error: walletError } = await supabase.rpc('add_to_wallet', {
         user_id: user.id,
         amount_to_add: amount
