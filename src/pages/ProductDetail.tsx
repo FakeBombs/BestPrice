@@ -142,12 +142,6 @@ const ProductDetail = () => {
                 <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
                 <ProductHighlights specifications={product.specifications} />
               </div>
-              
-              <div className="sections item-sections">
-                <section id="item-prices" className="section">
-                  <ProductVendors product={product} />
-                </section>
-              </div>
             </main>
           </div>
         </div>
