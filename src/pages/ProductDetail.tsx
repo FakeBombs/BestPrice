@@ -151,17 +151,9 @@ const ProductDetail = () => {
             </main>
           </div>
         </div>
+        <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
       </div>
     </div>
-    <>
-    <div className="history__placeholder">
-      <div className="root__wrapper">
-        <div className="root">
-          <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
-        </div>
-      </div>
-    </div>
-    </>
   );
 };
 
