@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -194,10 +193,19 @@ const WalletPanel = () => {
         
       if (error) throw error;
       
-      const { error: walletError } = await supabase.rpc('add_to_wallet', {
-        user_id: user.id,
-        amount_to_add: depositNumAmount
-      });
+      // Define the correct type for RPC parameters
+      interface AddToWalletParams {
+        user_id: string;
+        amount_to_add: number;
+      }
+      
+      const { error: walletError } = await supabase.rpc<null, AddToWalletParams>(
+        'add_to_wallet', 
+        {
+          user_id: user.id,
+          amount_to_add: depositNumAmount
+        }
+      );
       
       if (walletError) throw walletError;
       
