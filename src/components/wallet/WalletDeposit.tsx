@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -58,7 +57,6 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         
       if (error) throw error;
       
-      // Fix the RPC call by removing the generic type parameter
       const { error: walletError } = await supabase.rpc(
         'add_to_wallet', 
         {
