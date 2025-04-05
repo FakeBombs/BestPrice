@@ -2,12 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import {
-  getProductById,
-  getSimilarProducts,
-  getProductsByCategory,
-  getBestPrice
-} from '@/data/mockData';
+import {getProductById, getSimilarProducts, getProductsByCategory, getBestPrice} from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -152,10 +147,6 @@ const ProductDetail = () => {
                 <section id="item-prices" className="section">
                   <ProductVendors product={product} />
                 </section>
-                <div className="certified-promo">
-                  <div className="certified-promo__icon"><div className="certified-promo__main"><div className="certified-promo__prompt"></div></div></div>
-                  <div className="certified-promo__actions"><button className="button button--outline">Ενεργοποίηση</button><Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link></div>
-                </div>
               </div>
             </main>
           </div>
