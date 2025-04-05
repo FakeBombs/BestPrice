@@ -119,7 +119,7 @@ const ProductDetail = () => {
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
-        
+        <div id="trail" style={{ position: "relative" }}><nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav></div>
       </div>
     </div>
   );
