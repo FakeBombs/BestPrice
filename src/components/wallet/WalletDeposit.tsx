@@ -13,6 +13,12 @@ interface WalletDepositProps {
   onDepositComplete: () => void;
 }
 
+// Define a type for the RPC parameters
+type AddToWalletParams = {
+  user_id: string; 
+  amount_to_add: number;
+};
+
 const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
   const [depositAmount, setDepositAmount] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
@@ -58,13 +64,16 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         
       if (error) throw error;
       
-      // Cast to any to bypass TypeScript's type checking completely
-      const { error: walletError } = await supabase.rpc(
+      // Create a properly typed parameter object for the RPC call
+      const params: AddToWalletParams = {
+        user_id: userId,
+        amount_to_add: depositNumAmount
+      };
+      
+      // Use type assertion to handle the RPC call
+      const { error: walletError } = await supabase.rpc<any>(
         'add_to_wallet',
-        { 
-          user_id: userId, 
-          amount_to_add: depositNumAmount 
-        } as any
+        params
       );
       
       if (walletError) throw walletError;
