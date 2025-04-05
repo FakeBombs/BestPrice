@@ -152,9 +152,7 @@ const ProductDetail = () => {
                 <div className="certified-promo">
                   <div className="certified-promo__icon">
                     <div className="certified-promo__main">
-                      <div className="certified-promo__prompt">
-                        Απόκτησε <span style={{font- weight: 'bold'}}>ΔΩΡΕΑΝ ασφαλιστική κάλυψη</span> σε παραγγελίες από <span style={{font- weight: 'bold'}}>Πιστοποιημένα καταστήματα</span>!
-                      </div>
+                      <div className="certified-promo__prompt"></div>
                     </div>
                   </div>
                   <div className="certified-promo__actions">
