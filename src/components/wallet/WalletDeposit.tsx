@@ -70,8 +70,8 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         amount_to_add: depositNumAmount
       };
       
-      // Use type assertion to work around the constraint issue
-      const { error: walletError } = await supabase.rpc(
+      // Use any type assertion to bypass TypeScript constraints for the RPC call
+      const { error: walletError } = await (supabase.rpc as any)(
         'add_to_wallet',
         params
       );
