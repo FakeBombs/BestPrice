@@ -128,7 +128,6 @@ const ProductDetail = () => {
 
         <div className="item-layout__wrapper">
           <div className="item-layout">
-            <>
             <aside className="item-aside stick-to-bottom">
               <div className="item__image-wrapper">
                 <div style={{aspect-ratio: "100 / 129.45"}} class="item__image">
@@ -136,24 +135,8 @@ const ProductDetail = () => {
                 </div>
               </div>
             </aside>
-              </>
 
             <main className="item-main">
-              <div className="item-header__wrapper">
-                <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
-                <ProductHighlights specifications={product.specifications} />
-              </div>
-              
-              <div className="sections item-sections">
-                <section id="item-prices" className="section">
-                  <ProductVendors product={product} />
-                </section>
-                <div className="certified-promo">
-                  <div className="certified-promo__icon"><div className="certified-promo__main"><div className="certified-promo__prompt"></div></div></div>
-                  <div className="certified-promo__actions"><button className="button button--outline">Ενεργοποίηση</button><Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link></div>
-                </div>
-              </div>
             </main>
           </div>
         </div>
