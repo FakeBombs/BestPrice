@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
@@ -42,7 +43,7 @@ interface Post {
   image?: string;
 }
 
-// Helper types for the data we'll receive from Supabase
+// Define a type for profile data
 interface ProfileData {
   display_name?: string;
   profile_image_url?: string;
@@ -55,10 +56,7 @@ interface SupabasePostData {
   created_at: string;
   user_id: string;
   image_url: string | null;
-  profiles?: {
-    display_name?: string;
-    profile_image_url?: string;
-  } | null;
+  profiles?: ProfileData | null;
   likes?: { user_id: string }[] | null;
   comments?: { id: string }[] | null;
 }
@@ -137,6 +135,7 @@ export default function SocialProfilePage() {
   
   const fetchPosts = async (userId: string) => {
     try {
+      // Update the query to use a different approach for the join
       const { data, error } = await supabase
         .from('posts')
         .select(`
@@ -145,9 +144,9 @@ export default function SocialProfilePage() {
           created_at,
           user_id,
           image_url,
-          profiles:user_id (display_name, profile_image_url),
-          likes:likes (user_id),
-          comments:comments (id)
+          profiles:user_id(display_name, profile_image_url),
+          likes:likes(user_id),
+          comments:comments(id)
         `)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
@@ -155,7 +154,9 @@ export default function SocialProfilePage() {
       if (error) throw error;
       
       if (data) {
-        const formattedPosts = data.map((post: SupabasePostData) => {
+        // Type assertion to handle the data returned from Supabase
+        const formattedPosts = (data as unknown as SupabasePostData[]).map((post) => {
+          // Handle potential null or undefined profiles
           const profileData = post.profiles || { display_name: 'Unknown User' }; 
           return {
             id: post.id,

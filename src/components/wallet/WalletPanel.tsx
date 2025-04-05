@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,6 @@ export default function WalletPanel() {
   const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
   const [loading, setLoading] = useState(true);
   
-  // Fetch wallet data when user changes
   useEffect(() => {
     if (!user) {
       return;
@@ -44,7 +42,6 @@ export default function WalletPanel() {
     const fetchWalletData = async () => {
       setLoading(true);
       try {
-        // Get wallet
         const { data: wallet, error: walletError } = await supabase
           .from('wallets')
           .select('*')
@@ -53,7 +50,6 @@ export default function WalletPanel() {
           
         if (walletError) throw walletError;
         
-        // Get transactions
         const { data: transactionsData, error: txError } = await supabase
           .from('transactions')
           .select('*')
@@ -90,7 +86,6 @@ export default function WalletPanel() {
     
     fetchWalletData();
     
-    // Subscribe to wallet changes
     const walletChannel = supabase
       .channel('schema-db-changes')
       .on(
@@ -114,7 +109,6 @@ export default function WalletPanel() {
       )
       .subscribe();
       
-    // Subscribe to transaction changes
     const transactionChannel = supabase
       .channel('transaction-changes')
       .on(
@@ -167,8 +161,7 @@ export default function WalletPanel() {
     
     setLoading(true);
     try {
-      // Create a transaction record
-      const transactionData = {
+      const transactionData: Database['public']['Tables']['transactions']['Insert'] = {
         user_id: user.id,
         amount: amount,
         description: `Deposit via ${
@@ -190,7 +183,6 @@ export default function WalletPanel() {
         
       if (error) throw error;
       
-      // Update wallet balance using RPC
       const { error: walletError } = await supabase.rpc('add_to_wallet', {
         user_id: user.id,
         amount_to_add: amount
