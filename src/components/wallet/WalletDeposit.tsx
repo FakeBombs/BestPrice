@@ -58,14 +58,14 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         
       if (error) throw error;
       
-      // Fix the RPC call by properly typing the parameters
+      // Define the parameters for add_to_wallet function
       interface AddToWalletParams {
         user_id: string;
         amount_to_add: number;
       }
       
-      // Use null as the return type since our RPC function returns void
-      const { error: walletError } = await supabase.rpc<null, AddToWalletParams>(
+      // Call the RPC without specifying generic type parameters
+      const { error: walletError } = await supabase.rpc(
         'add_to_wallet',
         {
           user_id: userId,
