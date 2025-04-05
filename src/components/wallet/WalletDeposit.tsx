@@ -64,7 +64,8 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         amount_to_add: number;
       }
       
-      const { error: walletError } = await supabase.rpc<void, AddToWalletParams>(
+      // Use null as the return type since our RPC function returns void
+      const { error: walletError } = await supabase.rpc<null, AddToWalletParams>(
         'add_to_wallet',
         {
           user_id: userId,
