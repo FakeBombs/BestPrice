@@ -124,6 +124,9 @@ const ProductDetail = () => {
           <div className="item-layout">
             <aside className="item-aside stick-to-bottom">
               <div className="item__image-wrapper">
+                <div class="item__image">
+                  <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
+                </div>
               </div>
             </aside>
           </div>
