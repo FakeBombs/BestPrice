@@ -58,19 +58,13 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         
       if (error) throw error;
       
-      // Define the parameters for add_to_wallet function
-      interface AddToWalletParams {
-        user_id: string;
-        amount_to_add: number;
-      }
-      
-      // Call the RPC without specifying generic type parameters
+      // Use any type for the RPC function since TypeScript is having trouble inferring the correct types
       const { error: walletError } = await supabase.rpc(
         'add_to_wallet',
         {
           user_id: userId,
           amount_to_add: depositNumAmount
-        }
+        } as any
       );
       
       if (walletError) throw walletError;
