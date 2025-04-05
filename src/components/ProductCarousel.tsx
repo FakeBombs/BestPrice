@@ -33,7 +33,7 @@ const ProductCarousel = ({ title, products, emptyMessage = "No products to displ
         <Carousel className="w-full">
           <CarouselContent>
             {products.map((product) => (
-              <CarouselItem key={product.id} className="md:basis-1/3 lg:basis-1/4">
+              <CarouselItem key={product.id} className="md:basis-1/5 lg:basis-1/7">
                 <ProductCard product={product} />
               </CarouselItem>
             ))}
