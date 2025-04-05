@@ -152,29 +152,30 @@ const ProductDetail = () => {
                   <div className="certified-promo__actions"><button className="button button--outline">Ενεργοποίηση</button><Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link></div>
                 </div>
               </div>
+              
+              
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                <div className="lg:col-span-2">
+                  <ProductTabsSection product={product} />
+                </div>
+                <div>
+                  <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
+                </div>
+              </div>
+              
+              <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+              {isPriceAlertModalOpen && bestPrice && (
+                  <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
+                )
+              }
+
+              
             </main>
+            </div>
           </div>
-        </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-        <div className="lg:col-span-2">
-          <ProductTabsSection product={product} />
-        </div>
-        <div>
-          <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
-        </div>
-      </div>
-
-      <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
-
-      {isPriceAlertModalOpen && bestPrice && (
-          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
-        )
-      }
-    </div >
         </div >
       </div >
-    </div >
   );
 };
 
