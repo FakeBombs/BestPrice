@@ -124,43 +124,47 @@ const ProductDetail = () => {
   
   return (
     <div className="root__wrapper item-wrapper">
-      <div class="root">
+      <div className="root">
         <div id="trail"  style={{position: "relative"}}>
-          <nav class="breadcrumb">
+          <nav className="breadcrumb">
             <ProductBreadcrumb product={product} />
           </nav>
         </div>
 
-      <div class="item-layout__wrapper">
-        <div class="item-layout">
-          <aside class="item-aside stick-to-bottom">
+      <div className="item-layout__wrapper">
+        <div className="item-layout">
+          <aside className="item-aside stick-to-bottom">
         <div>
-          <ProductImageGallery 
-            mainImage={product.image} 
-            images={product.images} 
-            title={product.title}
-            onImageChange={handleImageChange}
-          />
+          <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
         </div>
         
-        <div>
-          <ProductHeader 
-            product={product} 
-            onAddToFavorites={handleAddToFavorites}
-            onShareProduct={handleShareProduct}
-          />
-          
-          <ProductEssentialInfo 
-            product={product} 
-            bestPrice={bestPrice}
-            onNotifyMe={handlePriceAlert}
-          />
-          
-          <ProductHighlights specifications={product.specifications} />
-          
-          <ProductVendors product={product} />
-        </div>
           </aside>
+
+          <main className="item-main">
+            <div className="item-header__wrapper">
+              <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
+              <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
+              <ProductHighlights specifications={product.specifications} />
+            </div>
+            <div className="sections item-sections">
+              <section id="item-prices" className="section">
+                <ProductVendors product={product} />
+              </section>
+              <div className="certified-promo">
+                <div className="certified-promo__icon">
+                  <div className="certified-promo__main">
+                    <div className="certified-promo__prompt">
+                      Απόκτησε <span style={{font-weight: 'bold'}}>ΔΩΡΕΑΝ ασφαλιστική κάλυψη</span> σε παραγγελίες από <span style={{font-weight: 'bold'}}>Πιστοποιημένα καταστήματα</span>!
+                    </div>
+                    <div className="certified-promo__actions">
+                      <button className="button button--outline">Ενεργοποίηση</button>
+                      <Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </main>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         <div className="lg:col-span-2">
@@ -171,20 +175,10 @@ const ProductDetail = () => {
         </div>
       </div>
       
-      <ProductRelatedSections 
-        similarProducts={similarProducts}
-        categoryDeals={categoryDeals}
-        recentlyViewed={recentlyViewed}
-        productId={product.id}
-      />
+      <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
       
       {isPriceAlertModalOpen && bestPrice && (
-        <PriceAlertModal 
-          isOpen={isPriceAlertModalOpen}
-          onClose={() => setIsPriceAlertModalOpen(false)}
-          product={product}
-          currentPrice={bestPrice.price}
-        />
+        <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
       )}
           </div>
         </div>
