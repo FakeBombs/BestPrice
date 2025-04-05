@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 interface Post {
   id: string;
@@ -41,6 +42,14 @@ interface Post {
   authorAvatar?: string;
   image?: string;
 }
+
+// Helper type for profile data
+type Profile = Database['public']['Tables']['profiles']['Row'];
+type PostWithRelations = Database['public']['Tables']['posts']['Row'] & {
+  profiles?: Profile | null;
+  likes?: { user_id: string }[] | null;
+  comments?: { id: string }[] | null;
+};
 
 export default function SocialProfilePage() {
   const { user } = useAuth();
@@ -119,8 +128,12 @@ export default function SocialProfilePage() {
       const { data, error } = await supabase
         .from('posts')
         .select(`
-          *,
-          profiles:user_id (username, display_name, profile_image_url),
+          id,
+          content,
+          created_at,
+          user_id,
+          image_url,
+          profiles:user_id (display_name, profile_image_url),
           likes:likes (user_id),
           comments:comments (id)
         `)
@@ -130,17 +143,20 @@ export default function SocialProfilePage() {
       if (error) throw error;
       
       if (data) {
-        const formattedPosts = data.map(post => ({
-          id: post.id,
-          content: post.content,
-          timestamp: new Date(post.created_at),
-          likes: Array.isArray(post.likes) ? post.likes.length : 0,
-          comments: Array.isArray(post.comments) ? post.comments.length : 0,
-          authorId: post.user_id,
-          authorName: post.profiles?.display_name || 'Unknown User',
-          authorAvatar: post.profiles?.profile_image_url,
-          image: post.image_url
-        }));
+        const formattedPosts = data.map((post: PostWithRelations) => {
+          const profileData = post.profiles || { display_name: 'Unknown User' }; 
+          return {
+            id: post.id,
+            content: post.content,
+            timestamp: new Date(post.created_at),
+            likes: Array.isArray(post.likes) ? post.likes.length : 0,
+            comments: Array.isArray(post.comments) ? post.comments.length : 0,
+            authorId: post.user_id,
+            authorName: profileData.display_name || 'Unknown User',
+            authorAvatar: profileData.profile_image_url,
+            image: post.image_url
+          };
+        });
         
         setPosts(formattedPosts);
       }
@@ -248,18 +264,24 @@ export default function SocialProfilePage() {
     if (!newPostContent.trim() || !user) return;
     
     try {
+      type PostInsert = Database['public']['Tables']['posts']['Insert'];
+      const postData: PostInsert = {
+        user_id: user.id,
+        content: newPostContent
+      };
+      
       const { data, error } = await supabase
         .from('posts')
-        .insert({
-          user_id: user.id,
-          content: newPostContent
-        })
-        .select('*, profiles:user_id (username, display_name, profile_image_url)')
+        .insert(postData)
+        .select('*, profiles:user_id (display_name, profile_image_url)')
         .single();
         
       if (error) throw error;
       
       if (data) {
+        // Handle potential null values from the response
+        const profileData = (data as any).profiles || {};
+        
         const newPost: Post = {
           id: data.id,
           content: data.content,
@@ -267,8 +289,8 @@ export default function SocialProfilePage() {
           likes: 0,
           comments: 0,
           authorId: data.user_id,
-          authorName: data.profiles?.display_name || user.name,
-          authorAvatar: data.profiles?.profile_image_url
+          authorName: profileData.display_name || user.name,
+          authorAvatar: profileData.profile_image_url
         };
         
         setPosts([newPost, ...posts]);
@@ -318,12 +340,15 @@ export default function SocialProfilePage() {
           )
         );
       } else {
+        type LikeInsert = Database['public']['Tables']['likes']['Insert'];
+        const likeData: LikeInsert = {
+          post_id: postId,
+          user_id: user.id
+        };
+        
         await supabase
           .from('likes')
-          .insert({
-            post_id: postId,
-            user_id: user.id
-          });
+          .insert(likeData);
           
         setPosts(
           posts.map(post => 

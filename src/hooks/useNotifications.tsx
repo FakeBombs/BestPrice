@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
 
 interface Notification {
   id: string;
@@ -21,6 +22,9 @@ interface NotificationContextType {
   markAllAsRead: () => void;
   clearAll: () => void;
 }
+
+// Helper type for notifications
+type NotificationRow = Database['public']['Tables']['notifications']['Row'];
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
@@ -54,7 +58,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
           message: item.message,
           type: item.type as 'price_alert' | 'system' | 'product',
           read: item.read,
-          link: item.link,
+          link: item.link || undefined,
           createdAt: item.created_at
         })));
       }
@@ -75,14 +79,15 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         },
         (payload) => {
           if (payload.new) {
+            const newData = payload.new as NotificationRow;
             const newNotification = {
-              id: (payload.new as any).id,
-              title: (payload.new as any).title,
-              message: (payload.new as any).message,
-              type: (payload.new as any).type as 'price_alert' | 'system' | 'product',
-              read: (payload.new as any).read,
-              link: (payload.new as any).link,
-              createdAt: (payload.new as any).created_at
+              id: newData.id,
+              title: newData.title,
+              message: newData.message,
+              type: newData.type as 'price_alert' | 'system' | 'product',
+              read: newData.read,
+              link: newData.link || undefined,
+              createdAt: newData.created_at
             };
             
             setNotifications(prev => [newNotification, ...prev]);
@@ -106,9 +111,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const markAsRead = async (id: string) => {
     if (!user) return;
     
+    type NotificationUpdate = Database['public']['Tables']['notifications']['Update'];
+    const update: NotificationUpdate = { read: true };
+    
     const { error } = await supabase
       .from('notifications')
-      .update({ read: true })
+      .update(update)
       .eq('id', id)
       .eq('user_id', user.id);
       
@@ -129,9 +137,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const markAllAsRead = async () => {
     if (!user) return;
     
+    type NotificationUpdate = Database['public']['Tables']['notifications']['Update'];
+    const update: NotificationUpdate = { read: true };
+    
     const { error } = await supabase
       .from('notifications')
-      .update({ read: true })
+      .update(update)
       .eq('user_id', user.id);
       
     if (error) {

@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import WalletConnectButton from "./WalletConnectButton";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 export interface WalletData {
   balance: number;
@@ -102,10 +103,11 @@ export default function WalletPanel() {
         },
         (payload) => {
           if (payload.new) {
+            const newData = payload.new as any;
             setWalletData(prev => ({
               ...prev,
-              balance: (payload.new as any).balance || 0,
-              pendingBalance: (payload.new as any).pending_balance || 0
+              balance: newData.balance || 0,
+              pendingBalance: newData.pending_balance || 0
             }));
           }
         }
@@ -125,13 +127,14 @@ export default function WalletPanel() {
         },
         (payload) => {
           if (payload.new) {
+            const newData = payload.new as any;
             const newTx = {
-              id: (payload.new as any).id,
-              date: new Date((payload.new as any).created_at),
-              amount: (payload.new as any).amount,
-              description: (payload.new as any).description,
-              status: (payload.new as any).status,
-              type: (payload.new as any).type
+              id: newData.id,
+              date: new Date(newData.created_at),
+              amount: newData.amount,
+              description: newData.description,
+              status: newData.status as 'completed' | 'pending' | 'failed',
+              type: newData.type as 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings'
             };
             
             setWalletData(prev => ({
@@ -165,23 +168,26 @@ export default function WalletPanel() {
     setLoading(true);
     try {
       // Create a transaction record
+      type TransactionInsert = Database['public']['Tables']['transactions']['Insert'];
+      const transactionData: TransactionInsert = {
+        user_id: user.id,
+        amount: amount,
+        description: `Deposit via ${
+          paymentMethod === 'credit-card' ? 'Credit Card' : 
+          paymentMethod === 'paypal' ? 'PayPal' : 
+          paymentMethod === 'bitpay' ? 'BitPay' : 
+          paymentMethod === 'coinbase' ? 'Coinbase' : 
+          paymentMethod === 'coinpayments' ? 'CoinPayments' :
+          paymentMethod === 'faucetpay' ? 'FaucetPay' :
+          'selected payment method'
+        }`,
+        status: 'completed',
+        type: 'deposit'
+      };
+      
       const { error } = await supabase
         .from('transactions')
-        .insert({
-          user_id: user.id,
-          amount: amount,
-          description: `Deposit via ${
-            paymentMethod === 'credit-card' ? 'Credit Card' : 
-            paymentMethod === 'paypal' ? 'PayPal' : 
-            paymentMethod === 'bitpay' ? 'BitPay' : 
-            paymentMethod === 'coinbase' ? 'Coinbase' : 
-            paymentMethod === 'coinpayments' ? 'CoinPayments' :
-            paymentMethod === 'faucetpay' ? 'FaucetPay' :
-            'selected payment method'
-          }`,
-          status: 'completed',
-          type: 'deposit'
-        });
+        .insert(transactionData);
         
       if (error) throw error;
       

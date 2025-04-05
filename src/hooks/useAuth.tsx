@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
+import { Database } from '@/integrations/supabase/types';
 
 interface UserProfile {
   id: string;
@@ -29,6 +30,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper type for profile data
+type Profile = Database['public']['Tables']['profiles']['Row'];
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -43,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         if (currentSession?.user) {
           // Get the user's profile data
-          const { data: profile } = await supabase
+          const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', currentSession.user.id)
@@ -75,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (currentSession?.user) {
         // Get the user's profile in a setTimeout to avoid deadlocks
         setTimeout(async () => {
-          const { data: profile } = await supabase
+          const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', currentSession.user!.id)
@@ -210,7 +214,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return false;
     
     try {
-      const updates = {
+      type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
+      
+      const updates: ProfileUpdate = {
         display_name: data.name,
         bio: data.bio,
         profile_image_url: data.avatar,
