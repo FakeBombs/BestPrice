@@ -123,10 +123,17 @@ const ProductDetail = () => {
   };
   
   return (
-    <div>
-      <ProductBreadcrumb product={product} />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+    <div className="root__wrapper item-wrapper">
+      <div class="root">
+        <div id="trail"  style={{position: "relative"}}>
+          <nav class="breadcrumb">
+            <ProductBreadcrumb product={product} />
+          </nav>
+        </div>
+
+      <div class="item-layout__wrapper">
+        <div class="item-layout">
+          <aside class="item-aside stick-to-bottom">
         <div>
           <ProductImageGallery 
             mainImage={product.image} 
@@ -153,7 +160,7 @@ const ProductDetail = () => {
           
           <ProductVendors product={product} />
         </div>
-      </div>
+          </aside>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         <div className="lg:col-span-2">
@@ -179,6 +186,9 @@ const ProductDetail = () => {
           currentPrice={bestPrice.price}
         />
       )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
