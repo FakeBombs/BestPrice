@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
 
 interface Post {
   id: string;
@@ -48,13 +48,17 @@ interface ProfileData {
   profile_image_url?: string;
 }
 
-interface PostData {
+// Define a type that matches what Supabase actually returns
+interface SupabasePostData {
   id: string;
   content: string;
   created_at: string;
   user_id: string;
   image_url: string | null;
-  profiles?: ProfileData;
+  profiles?: {
+    display_name?: string;
+    profile_image_url?: string;
+  } | null;
   likes?: { user_id: string }[] | null;
   comments?: { id: string }[] | null;
 }
@@ -151,7 +155,7 @@ export default function SocialProfilePage() {
       if (error) throw error;
       
       if (data) {
-        const formattedPosts = data.map((post: PostData) => {
+        const formattedPosts = data.map((post: SupabasePostData) => {
           const profileData = post.profiles || { display_name: 'Unknown User' }; 
           return {
             id: post.id,

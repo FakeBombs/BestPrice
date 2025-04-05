@@ -1,25 +1,20 @@
 
-import { ReactNode } from 'react';
-import { ThemeProvider } from '@/components/theme-provider';
-import { NotificationProvider } from '@/hooks/useNotifications';
-import { Toaster } from '@/components/ui/toaster';
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "./components/ui/toaster";
+import { Toaster as Sonner } from "./components/ui/sonner";
+import { AuthProvider } from "./hooks/useAuth";
 
-interface ProvidersProps {
-  children: ReactNode;
-}
-
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-      themes={["light", "dark", "default"]}
-    >
-      <NotificationProvider>
-        {children}
-        <Toaster />
-      </NotificationProvider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+        <AuthProvider>
+          {children}
+          <Toaster />
+          <Sonner />
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }

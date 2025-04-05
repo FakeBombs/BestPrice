@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import WalletConnectButton from "./WalletConnectButton";
 import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
 
 export interface WalletData {
   balance: number;
@@ -181,7 +182,7 @@ export default function WalletPanel() {
         }`,
         status: 'completed',
         type: 'deposit'
-      } as const;
+      };
       
       const { error } = await supabase
         .from('transactions')
