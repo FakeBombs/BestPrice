@@ -142,6 +142,12 @@ const ProductDetail = () => {
                 <section id="item-prices" className="section">
                   <ProductVendors product={product} />
                 </section>
+                <section id="item-graph" className="section">
+                  <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
+                </section>
+                <section id="item-content" className="section">
+                  <ProductTabsSection product={product} />
+                </section>
               </div>
 
               {isPriceAlertModalOpen && bestPrice && (
