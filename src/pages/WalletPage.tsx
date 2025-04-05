@@ -1,6 +1,7 @@
 
 import WalletPanel from "../components/wallet/WalletPanel";
 import AdManager from "../components/ads/AdManager";
+import ReferralPanel from "../components/referral/ReferralPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,9 +32,10 @@ export default function WalletPage() {
       <h1 className="text-3xl font-bold mb-6">My Account</h1>
       
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="w-full grid grid-cols-2">
+        <TabsList className="w-full grid grid-cols-3">
           <TabsTrigger value="wallet">Wallet</TabsTrigger>
           <TabsTrigger value="ads">Advertisements</TabsTrigger>
+          <TabsTrigger value="referrals">Referrals</TabsTrigger>
         </TabsList>
         
         <TabsContent value="wallet" className="space-y-6">
@@ -42,6 +44,10 @@ export default function WalletPage() {
         
         <TabsContent value="ads" className="space-y-6">
           <AdManager />
+        </TabsContent>
+
+        <TabsContent value="referrals" className="space-y-6">
+          <ReferralPanel />
         </TabsContent>
       </Tabs>
     </div>

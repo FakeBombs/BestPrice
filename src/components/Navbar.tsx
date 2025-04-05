@@ -1,6 +1,7 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, User, ShoppingCart } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SearchBar } from '@/components/SearchBar';
@@ -36,7 +37,6 @@ const Navbar = () => {
         </div>
 
         <div className="search__wrapper">
-
           <div aria-label="Sitemap button" role="button" className="sitemap-button sitemap-button--desktop pressable">
             <div className="sitemap-button__lines">
               <div></div>
@@ -46,7 +46,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Search */}
-            <SearchBar />
+          <SearchBar />
         </div>
         
       </div>

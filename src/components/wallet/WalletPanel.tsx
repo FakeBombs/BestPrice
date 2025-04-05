@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Wallet, CreditCard, CircleDollarSign, Plus, Coins, History, ExternalLink } from "lucide-react";
+import { Wallet, CreditCard, CircleDollarSign, Plus, Coins, History, ExternalLink, Bitcoin } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import WalletConnectButton from "./WalletConnectButton";
@@ -59,6 +59,7 @@ export default function WalletPanel() {
   const { user } = useAuth();
   const [walletData] = useState<WalletData>(mockWalletData);
   const [depositAmount, setDepositAmount] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
   
   const handleDeposit = () => {
     const amount = parseFloat(depositAmount);
@@ -74,7 +75,13 @@ export default function WalletPanel() {
     // In a real app, this would call a backend API
     toast({
       title: "Deposit initiated",
-      description: `A deposit of $${amount.toFixed(2)} is being processed.`
+      description: `A deposit of $${amount.toFixed(2)} is being processed via ${
+        paymentMethod === 'credit-card' ? 'Credit Card' : 
+        paymentMethod === 'paypal' ? 'PayPal' : 
+        paymentMethod === 'bitpay' ? 'BitPay' : 
+        paymentMethod === 'coinbase' ? 'Coinbase' : 
+        paymentMethod === 'coinpayments' ? 'CoinPayments' : 'selected payment method'
+      }.`
     });
     
     setDepositAmount('');
@@ -164,15 +171,54 @@ export default function WalletPanel() {
                   
                   <div>
                     <label className="text-sm font-medium mb-2 block">Payment Method</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      <Button variant="outline" className="justify-start">
-                        <CreditCard className="mr-2 h-4 w-4" />
-                        Credit Card
-                      </Button>
-                      <Button variant="outline" className="justify-start">
-                        <Coins className="mr-2 h-4 w-4" />
-                        PayPal
-                      </Button>
+                    <div className="grid grid-cols-1 gap-2">
+                      <h4 className="text-sm font-medium text-muted-foreground mt-2">Traditional Methods</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <Button 
+                          variant={paymentMethod === 'credit-card' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('credit-card')}
+                        >
+                          <CreditCard className="mr-2 h-4 w-4" />
+                          Credit Card
+                        </Button>
+                        <Button 
+                          variant={paymentMethod === 'paypal' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('paypal')}
+                        >
+                          <Coins className="mr-2 h-4 w-4" />
+                          PayPal
+                        </Button>
+                      </div>
+                      
+                      <h4 className="text-sm font-medium text-muted-foreground mt-4">Cryptocurrency</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <Button 
+                          variant={paymentMethod === 'bitpay' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('bitpay')}
+                        >
+                          <Bitcoin className="mr-2 h-4 w-4" />
+                          BitPay
+                        </Button>
+                        <Button 
+                          variant={paymentMethod === 'coinbase' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('coinbase')}
+                        >
+                          <Bitcoin className="mr-2 h-4 w-4" />
+                          Coinbase
+                        </Button>
+                        <Button 
+                          variant={paymentMethod === 'coinpayments' ? 'default' : 'outline'} 
+                          className="justify-start"
+                          onClick={() => setPaymentMethod('coinpayments')}
+                        >
+                          <Bitcoin className="mr-2 h-4 w-4" />
+                          CoinPayments
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
