@@ -8,7 +8,7 @@ import { MyAdsPanel } from './MyAdsPanel';
 import { PtcAdsPanel } from './PtcAdsPanel';
 import { useAuth } from "@/hooks/useAuth";
 import { ArrowRight, AlertTriangle } from "lucide-react";
-import { WalletData } from '../wallet/WalletPanel';
+import { WalletData } from '../wallet/types';
 
 // Mock wallet data for demonstration
 const mockWalletData: WalletData = {
