@@ -138,7 +138,7 @@ const ProductDetail = () => {
               
             
               
-              <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
+              
               {isPriceAlertModalOpen && bestPrice && (
                   <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
                 )
@@ -146,6 +146,7 @@ const ProductDetail = () => {
 
               
             </main>
+            <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
           </div>
         </div>
       </div>
