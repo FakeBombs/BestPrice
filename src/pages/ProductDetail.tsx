@@ -136,15 +136,20 @@ const ProductDetail = () => {
                 <ProductHighlights specifications={product.specifications} />
               </div>
               
-            
-              
-              
+              <div className="sections item-sections">
+                <section id="item-prices" className="section">
+                  <ProductVendors product={product} />
+                </section>
+                <div className="certified-promo">
+                  <div className="certified-promo__icon"><div className="certified-promo__main"><div className="certified-promo__prompt"></div></div></div>
+                  <div className="certified-promo__actions"><button className="button button--outline">Ενεργοποίηση</button><Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link></div>
+                </div>
+              </div>
+
               {isPriceAlertModalOpen && bestPrice && (
                   <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
                 )
               }
-
-              
             </main>
             <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
           </div>
