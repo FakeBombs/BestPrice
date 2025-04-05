@@ -1,6 +1,8 @@
 
 import { ReactNode } from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
+import { NotificationProvider } from '@/hooks/useNotifications';
+import { Toaster } from '@/components/ui/toaster';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -14,7 +16,10 @@ export function Providers({ children }: ProvidersProps) {
       disableTransitionOnChange
       themes={["light", "dark", "default"]}
     >
-      {children}
+      <NotificationProvider>
+        {children}
+        <Toaster />
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
