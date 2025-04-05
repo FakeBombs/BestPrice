@@ -200,8 +200,8 @@ const WalletPanel = () => {
         amount_to_add: number;
       }
       
-      // Fix: specify void as the return type instead of null
-      const { error: walletError } = await supabase.rpc<void, AddToWalletParams>(
+      // Fix: Remove the generic type parameters completely as they're causing type issues
+      const { error: walletError } = await supabase.rpc(
         'add_to_wallet', 
         {
           user_id: user.id,
