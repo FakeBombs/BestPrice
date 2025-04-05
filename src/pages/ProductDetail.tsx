@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  getProductById, 
-  getSimilarProducts, 
+import {
+  getProductById,
+  getSimilarProducts,
   getProductsByCategory,
   getBestPrice
 } from '@/data/mockData';
@@ -29,7 +29,7 @@ const formatProductSlug = (title: string): string => {
 };
 
 const ProductDetail = () => {
-  const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -47,27 +47,27 @@ const ProductDetail = () => {
       navigate(`/item/${productId}/${correctSlug}.html`, { replace: true });
     }
   }, [productId, product, productSlug, navigate]);
-  
+
   useEffect(() => {
     if (productId) {
       const productData = getProductById(productId);
       if (productData) {
         setProduct(productData);
         setCurrentImage(productData.image);
-        
+
         // Get similar products
         setSimilarProducts(getSimilarProducts(productId));
-        
+
         // Get category deals - in a real app, this would filter for actual deals
         setCategoryDeals(getProductsByCategory(productData.category).slice(0, 5));
-        
+
         // Get recently viewed from localStorage
         const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
         const recentlyViewedProducts = recentlyViewedIds
           .map(id => getProductById(id))
           .filter(p => p); // Remove any nulls
         setRecentlyViewed(recentlyViewedProducts);
-        
+
         // Update recently viewed in localStorage
         if (!recentlyViewedIds.includes(productId)) {
           const updatedRecentlyViewed = [productId, ...recentlyViewedIds].slice(0, 10);
@@ -76,17 +76,17 @@ const ProductDetail = () => {
       }
     }
   }, [productId]);
-  
+
   if (!product) {
     return <div className="flex justify-center items-center h-96">Loading...</div>;
   }
-  
+
   const bestPrice = getBestPrice(product);
-  
+
   const handleImageChange = (image: string) => {
     setCurrentImage(image);
   };
-  
+
   const handleAddToFavorites = () => {
     if (!user) {
       toast({
@@ -95,13 +95,13 @@ const ProductDetail = () => {
       });
       return;
     }
-    
+
     toast({
       title: "Added to Favorites",
       description: `${product.title} has been added to your favorites`,
     });
   };
-  
+
   const handleShareProduct = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({
@@ -109,7 +109,7 @@ const ProductDetail = () => {
       description: "Product link has been copied to clipboard",
     });
   };
-  
+
   const handlePriceAlert = () => {
     if (!user) {
       toast({
@@ -118,54 +118,55 @@ const ProductDetail = () => {
       });
       return;
     }
-    
+
     setIsPriceAlertModalOpen(true);
   };
-  
+
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
-        <div id="trail"  style={{position: "relative"}}>
+        <div id="trail" style={{ position: "relative" }}>
           <nav className="breadcrumb">
             <ProductBreadcrumb product={product} />
           </nav>
         </div>
 
-      <div className="item-layout__wrapper">
-        <div className="item-layout">
-          <aside className="item-aside stick-to-bottom">
-        <div>
-          <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
-        </div>
-        
-          </aside>
+        <div className="item-layout__wrapper">
+          <div className="item-layout">
+            <aside className="item-aside stick-to-bottom">
+              <div>
+                <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
+              </div>
+            </aside>
 
-          <main className="item-main">
-            <div className="item-header__wrapper">
-              <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-              <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
-              <ProductHighlights specifications={product.specifications} />
-            </div>
-            <div className="sections item-sections">
-              <section id="item-prices" className="section">
-                <ProductVendors product={product} />
-              </section>
-              <div className="certified-promo">
-                <div className="certified-promo__icon">
-                  <div className="certified-promo__main">
-                    <div className="certified-promo__prompt">
-                      Απόκτησε <span style={{font-weight: 'bold'}}>ΔΩΡΕΑΝ ασφαλιστική κάλυψη</span> σε παραγγελίες από <span style={{font-weight: 'bold'}}>Πιστοποιημένα καταστήματα</span>!
-                    </div>
-                    <div className="certified-promo__actions">
-                      <button className="button button--outline">Ενεργοποίηση</button>
-                      <Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link>
+            <main className="item-main">
+              <div className="item-header__wrapper">
+                <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
+                <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
+                <ProductHighlights specifications={product.specifications} />
+              </div>
+              <div className="sections item-sections">
+                <section id="item-prices" className="section">
+                  <ProductVendors product={product} />
+                </section>
+                <div className="certified-promo">
+                  <div className="certified-promo__icon">
+                    <div className="certified-promo__main">
+                      <div className="certified-promo__prompt">
+                        Απόκτησε <span style={{font- weight: 'bold'}}>ΔΩΡΕΑΝ ασφαλιστική κάλυψη</span> σε παραγγελίες από <span style={{font- weight: 'bold'}}>Πιστοποιημένα καταστήματα</span>!
                       </div>
                     </div>
+                  </div>
+                  <div className="certified-promo__actions">
+                    <button className="button button--outline">Ενεργοποίηση</button>
+                    <Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          </main>
-      
+          </div>
+        </div>
+      </main>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         <div className="lg:col-span-2">
           <ProductTabsSection product={product} />
@@ -174,16 +175,18 @@ const ProductDetail = () => {
           <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
         </div>
       </div>
-      
+
       <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
-      
-      {isPriceAlertModalOpen && bestPrice && (
-        <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
-      )}
-          </div>
-        </div>
-      </div>
-    </div>
+
+      {
+    isPriceAlertModalOpen && bestPrice && (
+      <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} product={product} currentPrice={bestPrice.price} />
+    )
+  }
+    </div >
+        </div >
+      </div >
+    </div >
   );
 };
 
