@@ -132,9 +132,10 @@ const ProductDetail = () => {
             <main className="item-main">
               <div className="item-header__wrapper">
                 <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                <ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} />
                 <ProductHighlights specifications={product.specifications} />
               </div>
+
+              <div class="product-overview product-overview--deal"><div class="product-overview__section"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div></div>
               
               <div className="sections item-sections">
                 <section id="item-prices" className="section">
