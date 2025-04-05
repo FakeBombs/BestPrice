@@ -122,7 +122,10 @@ const ProductDetail = () => {
         <div id="trail" style={{ position: "relative" }}><nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav></div>
         <div className="item-layout__wrapper">
           <div className="item-layout">
-            <aside className="item-aside stick-to-bottom"><div className="item__image-wrapper"><div style={{aspect-ratio: "100 / 129.45"}} class="item__image"><ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} /></div></div></aside>
+            <aside className="item-aside stick-to-bottom">
+              <div className="item__image-wrapper">
+              </div>
+            </aside>
           </div>
         </div>
       </div>
