@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,12 @@ export interface WalletData {
     type: 'deposit' | 'withdrawal' | 'ad-payment' | 'ad-earnings';
   }[];
 }
+
+// Helper function to format currency
+const formatCurrency = (amount: number | string): string => {
+  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  return `$${numAmount.toFixed(2)}`;
+};
 
 const WalletPanel = () => {
   const { user } = useAuth();
@@ -157,7 +164,8 @@ const WalletPanel = () => {
       return;
     }
     
-    if (depositAmount <= 0) {
+    const depositNumAmount = parseFloat(depositAmount);
+    if (isNaN(depositNumAmount) || depositNumAmount <= 0) {
       toast({
         title: "Invalid Amount",
         description: "Please enter a valid amount to deposit.",
@@ -170,7 +178,7 @@ const WalletPanel = () => {
     try {
       const transactionData: Database['public']['Tables']['transactions']['Insert'] = {
         user_id: user.id,
-        amount: depositAmount,
+        amount: depositNumAmount,
         description: `Deposit via ${
           paymentMethod === 'credit-card' ? 'Credit Card' :
           paymentMethod === 'paypal' ? 'PayPal' :
@@ -188,18 +196,18 @@ const WalletPanel = () => {
       
       const { error: walletError } = await supabase.rpc('add_to_wallet', {
         user_id: user.id,
-        amount_to_add: depositAmount
+        amount_to_add: depositNumAmount
       });
       
       if (walletError) throw walletError;
       
       toast({
         title: "Success!",
-        description: `Deposited ${formatCurrency(depositAmount)} to your wallet.`
+        description: `Deposited ${formatCurrency(depositNumAmount)} to your wallet.`
       });
       
       setShowDepositModal(false);
-      setDepositAmount(0);
+      setDepositAmount('');
       
     } catch (error: any) {
       toast({
