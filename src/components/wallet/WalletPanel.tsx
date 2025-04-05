@@ -23,7 +23,7 @@ export interface WalletData {
   }[];
 }
 
-export default function WalletPanel() {
+const WalletPanel = () => {
   const { user } = useAuth();
   const [walletData, setWalletData] = useState<WalletData>({
     balance: 0,
@@ -33,7 +33,8 @@ export default function WalletPanel() {
   const [depositAmount, setDepositAmount] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('credit-card');
   const [loading, setLoading] = useState(true);
-  
+  const [showDepositModal, setShowDepositModal] = useState(false);
+
   useEffect(() => {
     if (!user) {
       return;
@@ -147,13 +148,19 @@ export default function WalletPanel() {
   }, [user]);
   
   const handleDeposit = async () => {
-    if (!user) return;
-    
-    const amount = parseFloat(depositAmount);
-    if (isNaN(amount) || amount <= 0) {
+    if (!user) {
       toast({
-        title: "Invalid amount",
-        description: "Please enter a valid amount to deposit",
+        title: "Error",
+        description: "You must be logged in to deposit funds.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (depositAmount <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid amount to deposit.",
         variant: "destructive"
       });
       return;
@@ -163,18 +170,14 @@ export default function WalletPanel() {
     try {
       const transactionData: Database['public']['Tables']['transactions']['Insert'] = {
         user_id: user.id,
-        amount: amount,
+        amount: depositAmount,
         description: `Deposit via ${
-          paymentMethod === 'credit-card' ? 'Credit Card' : 
-          paymentMethod === 'paypal' ? 'PayPal' : 
-          paymentMethod === 'bitpay' ? 'BitPay' : 
-          paymentMethod === 'coinbase' ? 'Coinbase' : 
-          paymentMethod === 'coinpayments' ? 'CoinPayments' :
-          paymentMethod === 'faucetpay' ? 'FaucetPay' :
-          'selected payment method'
+          paymentMethod === 'credit-card' ? 'Credit Card' :
+          paymentMethod === 'paypal' ? 'PayPal' :
+          paymentMethod === 'bank' ? 'Bank Transfer' : 'Other method'
         }`,
-        status: 'completed',
-        type: 'deposit'
+        type: 'deposit',
+        status: 'completed'
       };
       
       const { error } = await supabase
@@ -185,23 +188,24 @@ export default function WalletPanel() {
       
       const { error: walletError } = await supabase.rpc('add_to_wallet', {
         user_id: user.id,
-        amount_to_add: amount
+        amount_to_add: depositAmount
       });
       
       if (walletError) throw walletError;
       
       toast({
-        title: "Deposit successful",
-        description: `$${amount.toFixed(2)} has been added to your wallet.`
+        title: "Success!",
+        description: `Deposited ${formatCurrency(depositAmount)} to your wallet.`
       });
       
-      setDepositAmount('');
-    } catch (error) {
-      console.error("Error processing deposit:", error);
+      setShowDepositModal(false);
+      setDepositAmount(0);
+      
+    } catch (error: any) {
       toast({
-        variant: "destructive",
-        title: "Deposit failed",
-        description: "There was an error processing your deposit"
+        title: "Error",
+        description: error.message || "Failed to deposit funds. Please try again.",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
@@ -442,4 +446,6 @@ export default function WalletPanel() {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default WalletPanel;
