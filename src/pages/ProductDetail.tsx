@@ -120,6 +120,9 @@ const ProductDetail = () => {
     <div className="root__wrapper item-wrapper">
       <div className="root">
         <div id="trail" style={{ position: "relative" }}><nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav></div>
+        <div className="item-layout__wrapper">
+          <div className="item-layout"></div>
+        </div>
       </div>
     </div>
   );
