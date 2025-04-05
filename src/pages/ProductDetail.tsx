@@ -136,25 +136,7 @@ const ProductDetail = () => {
                 <ProductHighlights specifications={product.specifications} />
               </div>
               
-              <div className="sections item-sections">
-                <section id="item-prices" className="section">
-                  <ProductVendors product={product} />
-                </section>
-                <div className="certified-promo">
-                  <div className="certified-promo__icon"><div className="certified-promo__main"><div className="certified-promo__prompt"></div></div></div>
-                  <div className="certified-promo__actions"><button className="button button--outline">Ενεργοποίηση</button><Link to="/orders-protection?bpref=certified-promo" className="dotted-link">Περισσότερα</Link></div>
-                </div>
-              </div>
-              
-              
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-                <div className="lg:col-span-2">
-                  <ProductTabsSection product={product} />
-                </div>
-                <div>
-                  <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
-                </div>
-              </div>
+            
               
               <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={product.id} />
               {isPriceAlertModalOpen && bestPrice && (
