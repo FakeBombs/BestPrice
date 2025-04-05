@@ -58,16 +58,13 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
         
       if (error) throw error;
       
-      // Explicitly cast the parameters object to unknown first, then to any
-      // This avoids TypeScript's strict type checking for the RPC call
-      const params = {
-        user_id: userId,
-        amount_to_add: depositNumAmount
-      };
-      
+      // Cast to any to bypass TypeScript's type checking completely
       const { error: walletError } = await supabase.rpc(
         'add_to_wallet',
-        params as unknown as Record<string, any>
+        { 
+          user_id: userId, 
+          amount_to_add: depositNumAmount 
+        } as any
       );
       
       if (walletError) throw walletError;
