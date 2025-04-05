@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -168,8 +167,7 @@ export default function WalletPanel() {
     setLoading(true);
     try {
       // Create a transaction record
-      type TransactionInsert = Database['public']['Tables']['transactions']['Insert'];
-      const transactionData: TransactionInsert = {
+      const transactionData = {
         user_id: user.id,
         amount: amount,
         description: `Deposit via ${
@@ -183,7 +181,7 @@ export default function WalletPanel() {
         }`,
         status: 'completed',
         type: 'deposit'
-      };
+      } as const;
       
       const { error } = await supabase
         .from('transactions')

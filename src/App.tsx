@@ -2,7 +2,6 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./pages/admin/AdminLayout";
-import { AuthProvider } from "./hooks/useAuth";
 import Index from "./pages/Index";
 import AccountPage from "./pages/AccountPage";
 import SocialProfilePage from "./pages/SocialProfilePage";
@@ -22,7 +21,7 @@ import WalletPage from "./pages/WalletPage";
 
 function App() {
   return (
-    <AuthProvider>
+    <>
       <Routes>
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
@@ -54,7 +53,7 @@ function App() {
           <Route path="wallets" element={<AdminWalletsPage />} />
         </Route>
       </Routes>
-    </AuthProvider>
+    </>
   );
 }
 

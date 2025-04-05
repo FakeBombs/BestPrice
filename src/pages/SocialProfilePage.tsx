@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
@@ -43,13 +42,22 @@ interface Post {
   image?: string;
 }
 
-// Helper type for profile data
-type Profile = Database['public']['Tables']['profiles']['Row'];
-type PostWithRelations = Database['public']['Tables']['posts']['Row'] & {
-  profiles?: Profile | null;
+// Helper types for the data we'll receive from Supabase
+interface ProfileData {
+  display_name?: string;
+  profile_image_url?: string;
+}
+
+interface PostData {
+  id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+  image_url: string | null;
+  profiles?: ProfileData;
   likes?: { user_id: string }[] | null;
   comments?: { id: string }[] | null;
-};
+}
 
 export default function SocialProfilePage() {
   const { user } = useAuth();
@@ -143,7 +151,7 @@ export default function SocialProfilePage() {
       if (error) throw error;
       
       if (data) {
-        const formattedPosts = data.map((post: PostWithRelations) => {
+        const formattedPosts = data.map((post: PostData) => {
           const profileData = post.profiles || { display_name: 'Unknown User' }; 
           return {
             id: post.id,
@@ -154,7 +162,7 @@ export default function SocialProfilePage() {
             authorId: post.user_id,
             authorName: profileData.display_name || 'Unknown User',
             authorAvatar: profileData.profile_image_url,
-            image: post.image_url
+            image: post.image_url || undefined
           };
         });
         
@@ -364,7 +372,9 @@ export default function SocialProfilePage() {
   };
   
   return (
+    
     <div className="container max-w-4xl py-8">
+      
       <div className="relative rounded-xl overflow-hidden mb-16 h-64">
         <img 
           src={coverImage} 
@@ -393,7 +403,7 @@ export default function SocialProfilePage() {
           <div className="relative">
             <Avatar className="h-32 w-32 border-4 border-background">
               <AvatarImage src={profileImage} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{user?.name.charAt(0) || '?'}</AvatarFallback>
             </Avatar>
             {isOwnProfile && (
               <Button 
@@ -418,8 +428,8 @@ export default function SocialProfilePage() {
       
       <div className="flex justify-between items-start mb-8">
         <div className="ml-32">
-          <h1 className="text-3xl font-bold">{user.name}</h1>
-          <p className="text-muted-foreground">{user.email}</p>
+          <h1 className="text-3xl font-bold">{user?.name || 'User Profile'}</h1>
+          <p className="text-muted-foreground">{user?.email || ''}</p>
           <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
             <div className="flex items-center">
               <MapPin className="h-3 w-3 mr-1" /> {profile.location}
