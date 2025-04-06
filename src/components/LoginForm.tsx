@@ -18,19 +18,34 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(email, password);
-    if (success) {
-      onSuccess();
+    setError(null);
+    
+    try {
+      const success = await login(email, password);
+      if (success) {
+        onSuccess();
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Login failed. Please check your credentials and try again.");
     }
   };
   
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter') => {
-    const success = await socialLogin(provider);
-    if (success) {
-      onSuccess();
+    setError(null);
+    
+    try {
+      const success = await socialLogin(provider);
+      if (success) {
+        onSuccess();
+      }
+    } catch (err) {
+      console.error(`${provider} login error:`, err);
+      setError(`${provider} login failed. Please try again.`);
     }
   };
   
@@ -45,6 +60,12 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
   
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
+          {error}
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t('email')}</Label>

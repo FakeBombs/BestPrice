@@ -26,16 +26,28 @@ export function useAuthState() {
             .eq('id', currentSession.user.id)
             .single();
             
+          const email = currentSession.user.email || '';
+          const isAdmin = email.toLowerCase() === 'chrissfreezers@gmail.com' || 
+                          (profile && profile.role === 'admin');
+          
+          // If this is our super admin email but role isn't set in the profile yet
+          if (email.toLowerCase() === 'chrissfreezers@gmail.com' && (!profile || profile.role !== 'admin')) {
+            await supabase
+              .from('profiles')
+              .update({ role: 'admin' })
+              .eq('id', currentSession.user.id);
+          }
+            
           setUser({
             id: currentSession.user.id,
             name: profile?.display_name || currentSession.user.email?.split('@')[0] || '',
-            email: currentSession.user.email || '',
+            email: email,
             avatar: profile?.profile_image_url,
             username: profile?.username,
             bio: profile?.bio,
             location: profile?.location,
             website: profile?.website,
-            isAdmin: currentSession.user.email?.toLowerCase().includes('admin')
+            isAdmin: isAdmin
           });
         } else {
           setUser(null);
@@ -57,17 +69,29 @@ export function useAuthState() {
             .select('*')
             .eq('id', currentSession.user!.id)
             .single();
+          
+          const email = currentSession.user!.email || '';
+          const isAdmin = email.toLowerCase() === 'chrissfreezers@gmail.com' || 
+                          (profile && profile.role === 'admin');
+          
+          // If this is our super admin email but role isn't set in the profile yet
+          if (email.toLowerCase() === 'chrissfreezers@gmail.com' && (!profile || profile.role !== 'admin')) {
+            await supabase
+              .from('profiles')
+              .update({ role: 'admin' })
+              .eq('id', currentSession.user!.id);
+          }
             
           setUser({
             id: currentSession.user!.id,
             name: profile?.display_name || currentSession.user!.email?.split('@')[0] || '',
-            email: currentSession.user!.email || '',
+            email: email,
             avatar: profile?.profile_image_url,
             username: profile?.username,
             bio: profile?.bio,
             location: profile?.location,
             website: profile?.website,
-            isAdmin: currentSession.user!.email?.toLowerCase().includes('admin')
+            isAdmin: isAdmin
           });
           setIsLoading(false);
         }, 0);

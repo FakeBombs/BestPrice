@@ -31,6 +31,10 @@ export function useAuthActions(
         .eq('id', data.user.id)
         .single();
 
+      // Check if the email is the specified super admin email
+      const isAdmin = email.toLowerCase() === 'chrissfreezers@gmail.com' || 
+                      (profileData && profileData.role === 'admin');
+
       if (profileData) {
         setUser({
           id: data.user.id,
@@ -41,8 +45,17 @@ export function useAuthActions(
           bio: profileData.bio,
           location: profileData.location,
           website: profileData.website,
-          isAdmin: profileData.role === 'admin',
+          isAdmin: isAdmin,
         });
+        
+        // If the email is the super admin but the role is not set in the database,
+        // update the profile to set them as an admin
+        if (email.toLowerCase() === 'chrissfreezers@gmail.com' && profileData.role !== 'admin') {
+          await supabase
+            .from('profiles')
+            .update({ role: 'admin' })
+            .eq('id', data.user.id);
+        }
       }
 
       return true;
