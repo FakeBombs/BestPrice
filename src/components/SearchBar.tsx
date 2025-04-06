@@ -155,21 +155,9 @@ export const SearchBar = ({ className }: { className?: string }) => {
                 <use xlinkHref="/images/icons/search.svg#icon-search-20"></use>
               </svg>
             </div>
-            <Input 
-              ref={inputRef} 
-              type="text" 
-              placeholder="Η καλύτερη τιμή για..." 
-              value={searchQuery} 
-              onChange={handleChange} 
-              onFocus={handleFocus} 
-            />
+            <Input ref={inputRef} type="text" placeholder="Η καλύτερη τιμή για..." value={searchQuery} onChange={handleChange} onFocus={handleFocus} />
             {searchQuery && (
-              <div 
-                role="button" 
-                className="search__icon tooltip__anchor search__clear search__icon--actionable" 
-                aria-label="Καθαρισμός"
-                onClick={handleClearSearch}
-              >
+              <div role="button" className="search__icon tooltip__anchor search__clear search__icon--actionable" aria-label="Καθαρισμός"onClick={handleClearSearch} >
                 <svg className="icon" aria-hidden="true" width="20" height="20">
                   <use xlinkHref="/images/icons/search.svg#icon-x-20"></use>
                 </svg>
@@ -187,17 +175,10 @@ export const SearchBar = ({ className }: { className?: string }) => {
       </div>
 
       {showDropdown && recentSearches.length > 0 && (
-        <div 
-          ref={dropdownRef}
-          className="absolute z-50 mt-1 w-full bg-background rounded-md border shadow-lg"
-        >
+        <div ref={dropdownRef} className="absolute z-50 mt-1 w-full bg-background rounded-md border shadow-lg" >
           <div className="p-2 text-xs font-medium text-muted-foreground">Recent Searches</div>
           {recentSearches.map((term, index) => (
-            <div 
-              key={index}
-              className="p-2 hover:bg-accent cursor-pointer flex items-center"
-              onClick={() => handleRecentSearchClick(term)}
-            >
+            <div key={index} className="p-2 hover:bg-accent cursor-pointer flex items-center" onClick={() => handleRecentSearchClick(term)} >
               <Search className="h-4 w-4 mr-2 text-muted-foreground" />
               <span>{term}</span>
             </div>
