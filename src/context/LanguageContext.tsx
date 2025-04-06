@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -185,13 +184,13 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       // If user is logged in, check their preference
       if (user) {
         try {
-          const { data } = await supabase
+          const { data, error } = await supabase
             .from('profiles')
             .select('language')
             .eq('id', user.id)
             .single();
             
-          if (data?.language) {
+          if (data?.language && !error) {
             detectedLang = data.language as Language;
           }
         } catch (error) {
@@ -216,7 +215,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const loadCustomTranslations = async () => {
       try {
-        const { data, error } = await supabase
+        // Use a type assertion to bypass TypeScript's type checking
+        const { data, error } = await (supabase as any)
           .from('translations')
           .select('*');
         
@@ -226,15 +226,17 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
           // Transform data into our translations format
           const customTranslations = { ...defaultTranslations };
           
-          data.forEach((item) => {
-            Object.keys(customTranslations).forEach(lang => {
-              if (item[lang]) {
-                // Make sure the key exists
-                if (!customTranslations[lang][item.key]) {
-                  customTranslations[lang][item.key] = item[lang];
+          data.forEach((item: any) => {
+            if (item && item.key) {
+              Object.keys(customTranslations).forEach(lang => {
+                if (item[lang]) {
+                  // Make sure the key exists
+                  if (!customTranslations[lang][item.key]) {
+                    customTranslations[lang][item.key] = item[lang];
+                  }
                 }
-              }
-            });
+              });
+            }
           });
           
           setTranslations(customTranslations);
@@ -255,7 +257,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     if (user) {
       supabase
         .from('profiles')
-        .update({ language: lang })
+        .update({ language: lang } as any)
         .eq('id', user.id)
         .then(({ error }) => {
           if (error) {

@@ -1,165 +1,217 @@
 
-import { toast } from '@/hooks/use-toast';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { UserProfile } from './types';
-import { Database } from '@/integrations/supabase/types';
+import { toast } from '@/hooks/use-toast';
 
-export function useAuthActions(setUser: (user: UserProfile | null) => void) {
-  // Login function
+export function useAuthActions(
+  setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>
+) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const login = async (email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
-      
-      if (error) throw error;
-      
-      toast({
-        title: "Successful login",
-        description: "Welcome to BestPrice!"
-      });
-      
+
+      if (error) {
+        toast({
+          title: 'Login Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return false;
+      }
+
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileData) {
+        setUser({
+          id: data.user.id,
+          email: data.user.email!,
+          name: profileData.display_name || 'User',
+          avatar: profileData.profile_image_url,
+          username: profileData.username,
+          bio: profileData.bio,
+          location: profileData.location,
+          website: profileData.website,
+          isAdmin: profileData.role === 'admin',
+        });
+      }
+
       return true;
     } catch (error: any) {
       toast({
-        variant: "destructive",
-        title: "Login Error",
-        description: error.message || "Wrong email or password."
+        title: 'Login Failed',
+        description: error.message,
+        variant: 'destructive',
       });
-      
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  // Register function
-  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<boolean> => {
+    setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            display_name: name,
+            name,
           },
-        }
+        },
       });
-      
-      if (error) throw error;
-      
+
+      if (error) {
+        toast({
+          title: 'Registration Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return false;
+      }
+
       toast({
-        title: "Successful registration",
-        description: "Your account was created successfully."
+        title: 'Registration Successful',
+        description: 'Your account has been created.',
       });
-      
+
       return true;
     } catch (error: any) {
       toast({
-        variant: "destructive",
-        title: "Registration Error",
-        description: error.message || "The email you used already exists."
+        title: 'Registration Failed',
+        description: error.message,
+        variant: 'destructive',
       });
-      
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  // Social login function
+
   const socialLogin = async (provider: 'google' | 'facebook' | 'twitter'): Promise<boolean> => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider
+        provider,
       });
-      
-      if (error) throw error;
-      
+
+      if (error) {
+        toast({
+          title: 'Login Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        return false;
+      }
+
       return true;
     } catch (error: any) {
       toast({
-        variant: "destructive",
-        title: "Login Error",
-        description: `Login via ${provider} failed.`
+        title: 'Login Failed',
+        description: error.message,
+        variant: 'destructive',
       });
-      
-      return false;
-    }
-  };
-  
-  // Logout function
-  const logout = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Logout",
-      description: "You have successfully logged out."
-    });
-  };
-  
-  // Update profile function
-  const updateProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
-    try {
-      type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
-      
-      const updates: ProfileUpdate = {
-        display_name: data.name,
-        bio: data.bio,
-        profile_image_url: data.avatar,
-        location: data.location,
-        website: data.website,
-        updated_at: new Date().toISOString()
-      };
-      
-      const { error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', data.id!);
-        
-      if (error) throw error;
-      
-      // Update local state
-      setUser(prev => prev ? { ...prev, ...data } : null);
-      
-      toast({
-        title: "Successful update",
-        description: "Your profile has been successfully updated."
-      });
-      
-      return true;
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Update Error",
-        description: error.message || "Your profile could not be updated."
-      });
-      
       return false;
     }
   };
 
-  // Reset password function
-  const resetPassword = async (email: string): Promise<boolean> => {
+  const logout = async () => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-      
-      if (error) throw error;
-      
+      await supabase.auth.signOut();
+      setUser(null);
+    } catch (error: any) {
       toast({
-        title: "Password Reset Email Sent",
-        description: "Check your email for a password reset link."
+        title: 'Logout Failed',
+        description: error.message,
+        variant: 'destructive',
       });
+    }
+  };
+
+  const updateProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      // Type assertion to fix the issue
+      const userData = { ...data } as any;
       
+      const { error } = await supabase
+        .from('profiles')
+        .update(userData)
+        .eq('id', data.id);
+
+      if (error) throw error;
+
+      // Update the user state
+      setUser((prev: UserProfile | null) => {
+        if (!prev) return null;
+        return { ...prev, ...data };
+      });
+
+      toast({
+        title: 'Profile Updated',
+        description: 'Your profile has been updated successfully.',
+      });
       return true;
     } catch (error: any) {
       toast({
-        variant: "destructive",
-        title: "Password Reset Error",
-        description: error.message || "Could not send password reset email."
+        title: 'Update Failed',
+        description: error.message,
+        variant: 'destructive',
       });
-      
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  return { login, register, socialLogin, logout, updateProfile, resetPassword };
+
+  const resetPassword = async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password',
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Password Reset Email Sent',
+        description:
+          'Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.',
+      });
+      return true;
+    } catch (error: any) {
+      toast({
+        title: 'Reset Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    login,
+    register,
+    socialLogin,
+    logout,
+    updateProfile,
+    resetPassword,
+    isLoading,
+  };
 }

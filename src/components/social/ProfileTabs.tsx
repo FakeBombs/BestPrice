@@ -12,8 +12,8 @@ interface ProfileTabsProps {
   isOwnProfile: boolean;
   profileImage: string;
   profile: any;
-  handleNewPost: (content: string, image?: File | null) => void;
-  handleLikePost: (postId: string) => void;
+  handleNewPost: (content: string, image?: File | null) => Promise<void>;
+  handleLikePost: (postId: string) => Promise<void>;
 }
 
 const ProfileTabs = ({

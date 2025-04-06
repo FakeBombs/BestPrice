@@ -8,7 +8,7 @@ import { ImagePlus } from "lucide-react";
 interface CreatePostFormProps {
   user: any;
   profileImage: string;
-  onPost: (content: string) => Promise<void>;
+  onPost: (content: string, image?: File | null) => Promise<void>;
 }
 
 const CreatePostForm = ({ user, profileImage, onPost }: CreatePostFormProps) => {

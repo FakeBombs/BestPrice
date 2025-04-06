@@ -11,6 +11,7 @@ export interface UserProfile {
   bio?: string;
   location?: string;
   website?: string;
+  language?: string;
 }
 
 export interface AuthContextType {

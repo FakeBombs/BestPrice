@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -124,18 +125,18 @@ const ProductDetail = () => {
           <div className="item-layout">
             <aside className="item-aside stick-to-bottom">
               <div className="item__image-wrapper">
-                <div class="item__image">
+                <div className="item__image">
                   <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
                 </div>
               </div>
             </aside>
             <main className="item-main">
               <div className="item-header__wrapper">
-                <div class="item-header">
+                <div className="item-header">
                   <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                   <ProductHighlights specifications={product.specifications} />
                 </div>
-                <div class="product-overview product-overview--deal"><div class="product-overview__section"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div></div>
+                <div className="product-overview product-overview--deal"><div className="product-overview__section"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div></div>
               </div>
 
               <div className="sections item-sections">

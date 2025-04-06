@@ -2,235 +2,263 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
-export const useProfile = (username?: string) => {
-  const { user } = useAuth();
+export function useProfile(username?: string) {
   const navigate = useNavigate();
-  
+  const { user: currentUser } = useAuth();
+  const { toast } = useToast();
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
-  const [profileImage, setProfileImage] = useState(user?.avatar || "");
-  const [coverImage, setCoverImage] = useState("https://placehold.co/1200x400?text=Cover+Photo");
-  const [isOwnProfile, setIsOwnProfile] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState({
-    bio: "",
-    location: "Athens, Greece",
-    work: "BestPrice",
-    education: "University of Athens"
-  });
-
-  useEffect(() => {
-    if (username && user?.username !== username) {
-      setIsOwnProfile(false);
-      fetchUserProfile(username);
-    } else if (user) {
-      setIsOwnProfile(true);
-      fetchPosts(user.id);
-      if (user.bio) setProfile(prev => ({ ...prev, bio: user.bio }));
-      if (user.location) setProfile(prev => ({ ...prev, location: user.location }));
-      if (user.avatar) setProfileImage(user.avatar);
-    }
-  }, [user, username]);
+  const [profileImage, setProfileImage] = useState<string>("");
+  const [coverImage, setCoverImage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
   
-  const fetchUserProfile = async (username: string) => {
-    setLoading(true);
-    
+  useEffect(() => {
+    // If no username provided, check if current user is logged in
+    if (!username) {
+      if (!currentUser) {
+        navigate('/login');
+        return;
+      }
+      
+      // Viewing own profile
+      setIsOwnProfile(true);
+      setUser(currentUser);
+      
+      // Fetch additional profile data
+      fetchProfileData(currentUser.id);
+    } else {
+      // Try to find user by username
+      fetchUserByUsername(username);
+    }
+  }, [username, currentUser, navigate]);
+  
+  // Fetch user by username
+  const fetchUserByUsername = async (username: string) => {
     try {
-      const { data: profileData, error } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('username', username)
         .single();
       
-      if (error) throw error;
-      
-      if (profileData) {
-        setProfileImage(profileData.profile_image_url || "");
-        setCoverImage(profileData.cover_image_url || "https://placehold.co/1200x400?text=Cover+Photo");
-        setProfile({
-          bio: profileData.bio || "",
-          location: profileData.location || "Athens, Greece",
-          work: "BestPrice",
-          education: "University of Athens"
-        });
-        
-        fetchPosts(profileData.id);
+      if (error || !data) {
+        console.error("Error fetching user:", error);
+        navigate('/not-found');
+        return;
       }
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load user profile."
+      
+      const isOwn = currentUser && data.id === currentUser.id;
+      setIsOwnProfile(isOwn);
+      setUser({
+        id: data.id,
+        name: data.display_name || 'Anonymous',
       });
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  const fetchPosts = async (userId: string) => {
-    try {
-      // Update the query to use a different approach for the join
-      const { data, error } = await supabase
-        .from('posts')
-        .select(`
-          id,
-          content,
-          created_at,
-          user_id,
-          image_url,
-          profiles:user_id(display_name, profile_image_url),
-          likes:likes(user_id),
-          comments:comments(id)
-        `)
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
       
-      if (data) {
-        // Type assertion to handle the data returned from Supabase
-        const formattedPosts = (data as any).map((post: any) => {
-          // Handle potential null or undefined profiles
-          const profileData = post.profiles || { display_name: 'Unknown User' }; 
-          return {
-            id: post.id,
-            content: post.content,
-            timestamp: new Date(post.created_at),
-            likes: Array.isArray(post.likes) ? post.likes.length : 0,
-            comments: Array.isArray(post.comments) ? post.comments.length : 0,
-            authorId: post.user_id,
-            authorName: profileData.display_name || 'Unknown User',
-            authorAvatar: profileData.profile_image_url,
-            image: post.image_url || undefined
-          };
-        });
-        
-        setPosts(formattedPosts);
-      }
+      fetchProfileData(data.id);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error:", error);
+      navigate('/not-found');
     }
   };
   
-  const handleNewPost = async (content: string) => {
-    if (!content.trim() || !user) return;
+  // Fetch profile data
+  const fetchProfileData = async (userId: string) => {
+    setIsLoading(true);
     
     try {
-      const postData = {
-        user_id: user.id,
-        content: content
-      };
-      
-      const { data, error } = await supabase
-        .from('posts')
-        .insert(postData)
-        .select('*, profiles:user_id (display_name, profile_image_url)')
+      // Get user profile details
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
         .single();
-        
-      if (error) throw error;
       
-      if (data) {
-        // Handle potential null values from the response
-        const profileData = (data as any).profiles || {};
-        
-        const newPost = {
-          id: data.id,
-          content: data.content,
-          timestamp: new Date(data.created_at),
-          likes: 0,
-          comments: 0,
-          authorId: data.user_id,
-          authorName: profileData.display_name || user.name,
-          authorAvatar: profileData.profile_image_url
-        };
-        
-        setPosts([newPost, ...posts]);
-        
-        toast({
-          title: "Post created",
-          description: "Your post has been published to your timeline."
-        });
-      }
-    } catch (error) {
-      console.error('Error creating post:', error);
+      if (profileError) throw profileError;
+      
+      setProfile(profileData);
+      setProfileImage(profileData.profile_image_url || "");
+      setCoverImage(profileData.cover_image_url || "");
+      
+      // Get user posts
+      const { data: postsData, error: postsError } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      
+      if (postsError) throw postsError;
+      
+      // Transform posts for display
+      const transformedPosts = postsData.map(post => ({
+        id: post.id,
+        content: post.content,
+        timestamp: new Date(post.created_at),
+        likes: 0, // We'll fetch this separately
+        comments: 0, // We'll fetch this separately
+        authorId: userId,
+        authorName: profileData.display_name || 'Anonymous',
+        authorAvatar: profileData.profile_image_url,
+        image: post.image_url
+      }));
+      
+      setPosts(transformedPosts);
+    } catch (error: any) {
+      console.error("Error fetching profile data:", error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to create post."
+        description: "Failed to load profile data.",
+        variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   
-  const handleLikePost = async (postId: string) => {
+  // Handle new post creation
+  const handleNewPost = async (content: string, image?: File | null): Promise<void> => {
     if (!user) return;
     
     try {
-      const { data: existingLike, error: checkError } = await supabase
-        .from('likes')
-        .select('*')
-        .eq('post_id', postId)
-        .eq('user_id', user.id)
-        .single();
+      const post = {
+        user_id: user.id,
+        content,
+        image_url: null // We'll update this if there's an image
+      };
+      
+      // If there's an image, upload it first
+      if (image) {
+        const fileName = `${user.id}/${Date.now()}-${image.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('post_images')
+          .upload(fileName, image);
+          
+        if (uploadError) throw uploadError;
         
-      if (checkError && checkError.code !== 'PGRST116') {
-        throw checkError;
+        // Get the public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('post_images')
+          .getPublicUrl(fileName);
+          
+        post.image_url = publicUrl;
       }
       
+      // Create the post
+      const { data, error } = await supabase.from('posts').insert(post).select();
+      
+      if (error) throw error;
+      
+      // Add the new post to state
+      if (data && data[0]) {
+        const newPost = {
+          id: data[0].id,
+          content: data[0].content,
+          timestamp: new Date(data[0].created_at),
+          likes: 0,
+          comments: 0,
+          authorId: user.id,
+          authorName: user.name,
+          authorAvatar: profileImage,
+          image: data[0].image_url
+        };
+        
+        setPosts(prevPosts => [newPost, ...prevPosts]);
+        
+        toast({
+          title: "Post Created",
+          description: "Your post has been published."
+        });
+      }
+    } catch (error: any) {
+      console.error("Error creating post:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create post. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  // Handle post like
+  const handleLikePost = async (postId: string): Promise<void> => {
+    if (!currentUser) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to like posts.",
+      });
+      return;
+    }
+    
+    try {
+      // Check if already liked
+      const { data: existingLike, error: checkError } = await supabase
+        .from('likes')
+        .select()
+        .eq('post_id', postId)
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      
+      if (checkError) throw checkError;
+      
       if (existingLike) {
-        await supabase
+        // Unlike
+        const { error: unlikeError } = await supabase
           .from('likes')
           .delete()
           .eq('id', existingLike.id);
           
-        setPosts(
-          posts.map(post => 
+        if (unlikeError) throw unlikeError;
+        
+        // Update UI
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
             post.id === postId 
-              ? { ...post, likes: post.likes - 1 } 
+              ? { ...post, likes: Math.max(0, post.likes - 1) } 
               : post
           )
         );
       } else {
-        const likeData = {
-          post_id: postId,
-          user_id: user.id
-        };
-        
-        await supabase
+        // Like
+        const { error: likeError } = await supabase
           .from('likes')
-          .insert(likeData);
+          .insert({ post_id: postId, user_id: currentUser.id });
           
-        setPosts(
-          posts.map(post => 
+        if (likeError) throw likeError;
+        
+        // Update UI
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
             post.id === postId 
               ? { ...post, likes: post.likes + 1 } 
               : post
           )
         );
       }
-    } catch (error) {
-      console.error('Error liking post:', error);
+    } catch (error: any) {
+      console.error("Error liking post:", error);
+      toast({
+        title: "Error",
+        description: "Failed to like post. Please try again.",
+        variant: "destructive",
+      });
     }
   };
   
-  if (!user) {
-    navigate("/account");
-    return { user: null };
-  }
-  
   return {
     user,
+    profile,
     posts,
-    profileImage,
+    isLoading,
+    profileImage, 
     setProfileImage,
     coverImage,
     setCoverImage,
     isOwnProfile,
-    loading,
-    profile,
     handleNewPost,
     handleLikePost
   };
-};
+}
