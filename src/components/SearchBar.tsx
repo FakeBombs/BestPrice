@@ -163,10 +163,8 @@ export const SearchBar = ({ className }: { className?: string }) => {
                 </svg>
               </div>
             )}
+            <Button type="submit" className="search__icon search__button search__icon--actionable"><Search className="h-4 w-4" /></Button>
           </div>
-          <Button type="submit" className="search__icon search__button search__icon--actionable">
-            <Search className="h-4 w-4" />
-          </Button>
         </form>
         
         <div className="ml-1">
