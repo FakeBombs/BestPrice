@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { UserProfile } from './types';
@@ -145,7 +144,6 @@ export function useAuthActions(
   const updateProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Type assertion to fix the issue
       const userData = { 
         ...data, 
         ...(data.language && { language: data.language })
@@ -158,7 +156,6 @@ export function useAuthActions(
 
       if (error) throw error;
 
-      // Update the user state
       setUser((prev: UserProfile | null) => {
         if (!prev) return null;
         return { 
@@ -196,7 +193,7 @@ export function useAuthActions(
       toast({
         title: 'Password Reset Email Sent',
         description:
-          'Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.',
+          "Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.",
       });
       return true;
     } catch (error: any) {
