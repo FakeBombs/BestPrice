@@ -1,17 +1,21 @@
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { Facebook, Twitter } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface LoginFormProps {
   onSuccess: () => void;
+  onForgotPassword?: () => void;
 }
 
-const LoginForm = ({ onSuccess }: LoginFormProps) => {
+const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
   const { login, socialLogin, isLoading } = useAuth();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -30,15 +34,24 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
     }
   };
   
+  const handleForgotPassword = () => {
+    if (onForgotPassword) {
+      onForgotPassword();
+    } else {
+      // Fallback if no handler is provided
+      window.location.href = '/forgot-password';
+    }
+  };
+  
   return (
     <div className="space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t('email')}</Label>
           <Input 
             id="email" 
             type="email" 
-            placeholder="email@example.com" 
+            placeholder={t('emailPlaceholder')} 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -46,10 +59,15 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         </div>
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="password">Password</Label>
-            <a href="#" className="text-xs text-primary hover:underline">
-              Forgot Password?
-            </a>
+            <Label htmlFor="password">{t('password')}</Label>
+            <Button
+              type="button"
+              variant="link"
+              className="p-0 h-auto"
+              onClick={handleForgotPassword}
+            >
+              {t('forgotPassword')}
+            </Button>
           </div>
           <Input 
             id="password" 
@@ -60,7 +78,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Sign In'}
+          {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
       </form>
       
@@ -70,7 +88,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
+            {t('orContinueWith')}
           </span>
         </div>
       </div>
@@ -90,7 +108,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             <path d="M1 1h22v22H1z" fill="none"/>
           </svg>
-          Google
+          {t('google')}
         </Button>
         <Button 
           type="button" 
@@ -100,7 +118,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
           disabled={isLoading}
         >
           <Facebook className="h-5 w-5 mr-2 text-blue-600" />
-          Facebook
+          {t('facebook')}
         </Button>
       </div>
       <Button 
@@ -111,7 +129,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         disabled={isLoading}
       >
         <Twitter className="h-5 w-5 mr-2 text-sky-500" />
-        Twitter
+        {t('twitter')}
       </Button>
     </div>
   );

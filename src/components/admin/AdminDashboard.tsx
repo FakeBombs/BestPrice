@@ -10,12 +10,15 @@ import {
   Users, 
   Settings, 
   BarChart, 
-  Store 
+  Store, 
+  Globe
 } from "lucide-react";
 import AdminHeader from "./AdminHeader";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const { t } = useTranslation();
   
   return (
     <div className="space-y-6">
@@ -95,6 +98,20 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="text-2xl font-bold">2,458</div>
                   <p className="text-sm text-muted-foreground">Εγγεγραμμένοι χρήστες</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link to="/admin/translations">
+              <Card className="hover:shadow-md transition-shadow">
+                <CardHeader className="pb-2">
+                  <Globe className="h-6 w-6 text-primary mb-2" />
+                  <CardTitle>Μεταφράσεις</CardTitle>
+                  <CardDescription>Διαχείριση μεταφράσεων και γλωσσών</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">5</div>
+                  <p className="text-sm text-muted-foreground">Υποστηριζόμενες γλώσσες</p>
                 </CardContent>
               </Card>
             </Link>

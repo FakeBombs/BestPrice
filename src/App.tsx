@@ -17,11 +17,17 @@ import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
 import AdminAdsPage from "./pages/admin/AdminAdsPage";
 import AdminWalletsPage from "./pages/admin/AdminWalletsPage";
+import TranslationManagementPage from "./pages/admin/TranslationManagementPage";
 import WalletPage from "./pages/WalletPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   return (
-    <>
+    <LanguageProvider>
       <Routes>
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
@@ -35,6 +41,10 @@ function App() {
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
           <Route path="account" element={<AccountPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="profile" element={<SocialProfilePage />} />
           <Route path="profile/:username" element={<SocialProfilePage />} />
           <Route path="friends" element={<SocialProfilePage />} />
@@ -51,9 +61,10 @@ function App() {
           <Route path="categories" element={<AdminCategoriesPage />} />
           <Route path="ads" element={<AdminAdsPage />} />
           <Route path="wallets" element={<AdminWalletsPage />} />
+          <Route path="translations" element={<TranslationManagementPage />} />
         </Route>
       </Routes>
-    </>
+    </LanguageProvider>
   );
 }
 

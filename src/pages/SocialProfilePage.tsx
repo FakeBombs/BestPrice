@@ -1,12 +1,7 @@
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "react-router-dom";
 import ProfileHeader from "../components/social/ProfileHeader";
-import ProfileAboutTab from "../components/social/ProfileAboutTab";
-import ProfileFriendsTab from "../components/social/ProfileFriendsTab";
-import ProfilePhotosTab from "../components/social/ProfilePhotosTab";
-import PostItem from "../components/social/post/PostItem";
-import CreatePostForm from "../components/social/post/CreatePostForm";
+import ProfileTabs from "../components/social/ProfileTabs";
 import { useProfile } from "../components/social/hooks/useProfile";
 
 export default function SocialProfilePage() {
@@ -40,52 +35,15 @@ export default function SocialProfilePage() {
         setCoverImage={setCoverImage}
       />
       
-      <Tabs defaultValue="timeline" className="space-y-6">
-        <TabsList className="w-full">
-          <TabsTrigger value="timeline" className="flex-1">Timeline</TabsTrigger>
-          <TabsTrigger value="about" className="flex-1">About</TabsTrigger>
-          <TabsTrigger value="friends" className="flex-1">Friends</TabsTrigger>
-          <TabsTrigger value="photos" className="flex-1">Photos</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="timeline" className="space-y-6">
-          {isOwnProfile && (
-            <CreatePostForm 
-              user={user}
-              profileImage={profileImage}
-              onPost={handleNewPost}
-            />
-          )}
-          
-          {posts.length === 0 ? (
-            <div className="bg-card p-6 rounded-md text-center text-muted-foreground">
-              No posts yet.
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {posts.map((post) => (
-                <PostItem 
-                  key={post.id} 
-                  post={post} 
-                  onLike={handleLikePost} 
-                />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="about">
-          <ProfileAboutTab profile={profile} />
-        </TabsContent>
-        
-        <TabsContent value="friends">
-          <ProfileFriendsTab />
-        </TabsContent>
-        
-        <TabsContent value="photos">
-          <ProfilePhotosTab />
-        </TabsContent>
-      </Tabs>
+      <ProfileTabs
+        user={user}
+        posts={posts}
+        isOwnProfile={isOwnProfile}
+        profileImage={profileImage}
+        profile={profile}
+        handleNewPost={handleNewPost}
+        handleLikePost={handleLikePost}
+      />
     </div>
   );
 }

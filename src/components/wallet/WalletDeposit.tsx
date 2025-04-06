@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import PaymentMethodSelector from "./payment-methods/PaymentMethodSelector";
-import { useWalletDeposit } from "./hooks/useWalletDeposit";
+import PaymentMethodForm from "./payment-methods/PaymentMethodForm";
+import { useDepositForm } from "./hooks/useDepositForm";
 
 interface WalletDepositProps {
   userId: string;
@@ -19,7 +20,7 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
     setPaymentMethod,
     loading,
     handleDeposit
-  } = useWalletDeposit(userId, onDepositComplete);
+  } = useDepositForm(userId, onDepositComplete);
 
   return (
     <Card>
@@ -48,6 +49,8 @@ const WalletDeposit = ({ userId, onDepositComplete }: WalletDepositProps) => {
             paymentMethod={paymentMethod}
             setPaymentMethod={setPaymentMethod}
           />
+          
+          <PaymentMethodForm paymentMethod={paymentMethod} />
         </div>
       </CardContent>
       <CardFooter>

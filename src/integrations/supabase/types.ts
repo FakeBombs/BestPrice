@@ -169,6 +169,7 @@ export type Database = {
           id: string
           location: string | null
           profile_image_url: string | null
+          role: string | null
           updated_at: string
           username: string | null
           website: string | null
@@ -181,6 +182,7 @@ export type Database = {
           id: string
           location?: string | null
           profile_image_url?: string | null
+          role?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -193,6 +195,7 @@ export type Database = {
           id?: string
           location?: string | null
           profile_image_url?: string | null
+          role?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null

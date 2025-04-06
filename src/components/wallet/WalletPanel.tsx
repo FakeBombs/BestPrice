@@ -11,7 +11,8 @@ import { useWalletData } from "./hooks/useWalletData";
 
 const WalletPanel = () => {
   const { user } = useAuth();
-  const { walletData } = useWalletData(user);
+  // Fixed: Pass user?.id instead of the entire user object
+  const { walletData } = useWalletData(user?.id);
   
   const handleDepositComplete = () => {
     // Nothing to do here as the realtime subscription will update the UI
