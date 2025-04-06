@@ -167,6 +167,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          language: string | null
           location: string | null
           profile_image_url: string | null
           role: string | null
@@ -180,6 +181,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          language?: string | null
           location?: string | null
           profile_image_url?: string | null
           role?: string | null
@@ -193,6 +195,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          language?: string | null
           location?: string | null
           profile_image_url?: string | null
           role?: string | null
@@ -232,6 +235,42 @@ export type Database = {
           type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      translations: {
+        Row: {
+          created_at: string | null
+          de: string | null
+          el: string | null
+          en: string | null
+          es: string | null
+          fr: string | null
+          id: string
+          key: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          de?: string | null
+          el?: string | null
+          en?: string | null
+          es?: string | null
+          fr?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          de?: string | null
+          el?: string | null
+          en?: string | null
+          es?: string | null
+          fr?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
         }
         Relationships: []
       }

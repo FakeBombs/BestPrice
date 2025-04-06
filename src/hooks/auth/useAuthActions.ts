@@ -146,7 +146,10 @@ export function useAuthActions(
     setIsLoading(true);
     try {
       // Type assertion to fix the issue
-      const userData = { ...data } as any;
+      const userData = { 
+        ...data, 
+        ...(data.language && { language: data.language })
+      } as any;
       
       const { error } = await supabase
         .from('profiles')
@@ -158,7 +161,10 @@ export function useAuthActions(
       // Update the user state
       setUser((prev: UserProfile | null) => {
         if (!prev) return null;
-        return { ...prev, ...data };
+        return { 
+          ...prev, 
+          ...data 
+        };
       });
 
       toast({
