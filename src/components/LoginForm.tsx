@@ -39,10 +39,8 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
     setError(null);
     
     try {
-      const success = await socialLogin(provider);
-      if (success) {
-        onSuccess();
-      }
+      await socialLogin(provider);
+      // Note: We don't call onSuccess here because socialLogin will redirect the user
     } catch (err) {
       console.error(`${provider} login error:`, err);
       setError(`${provider} login failed. Please try again.`);
@@ -98,7 +96,7 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full">
           {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
       </form>
@@ -120,7 +118,6 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
           variant="outline" 
           className="w-full" 
           onClick={() => handleSocialLogin('google')}
-          disabled={isLoading}
         >
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="h-5 w-5 mr-2">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -136,7 +133,6 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
           variant="outline" 
           className="w-full" 
           onClick={() => handleSocialLogin('facebook')}
-          disabled={isLoading}
         >
           <Facebook className="h-5 w-5 mr-2 text-blue-600" />
           {t('facebook')}
@@ -147,7 +143,6 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
         variant="outline" 
         className="w-full" 
         onClick={() => handleSocialLogin('twitter')}
-        disabled={isLoading}
       >
         <Twitter className="h-5 w-5 mr-2 text-sky-500" />
         {t('twitter')}

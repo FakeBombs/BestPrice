@@ -119,7 +119,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         </label>
       </div>
       
-      <Button type="submit" className="w-full" disabled={isLoading || !terms}>
+      <Button 
+        type="submit" 
+        className="w-full"
+        disabled={!terms}
+      >
         {isLoading ? 'Creating Account...' : 'Create Account'}
       </Button>
     </form>
