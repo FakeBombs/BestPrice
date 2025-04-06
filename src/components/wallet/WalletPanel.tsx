@@ -11,7 +11,7 @@ import { useWalletData } from "./hooks/useWalletData";
 
 const WalletPanel = () => {
   const { user } = useAuth();
-  // Fixed: Pass user?.id instead of the entire user object
+  // Fixed: Pass user?.id which is a string, matching the updated parameter type
   const { walletData } = useWalletData(user?.id || null);
   
   const handleDepositComplete = () => {

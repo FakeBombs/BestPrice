@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { WalletData } from "../types";
-import { User } from '@supabase/supabase-js';
 
-export const useWalletData = (user: User | null) => {
+export const useWalletData = (userId: string | null) => {
   const [walletData, setWalletData] = useState<WalletData>({
     balance: 0,
     pendingBalance: 0,
@@ -14,7 +12,7 @@ export const useWalletData = (user: User | null) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
+    if (!userId) {
       return;
     }
     
@@ -24,7 +22,7 @@ export const useWalletData = (user: User | null) => {
         const { data: wallet, error: walletError } = await supabase
           .from('wallets')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', userId)
           .single();
           
         if (walletError) throw walletError;
@@ -32,7 +30,7 @@ export const useWalletData = (user: User | null) => {
         const { data: transactionsData, error: txError } = await supabase
           .from('transactions')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', userId)
           .order('created_at', { ascending: false });
           
         if (txError) throw txError;
@@ -74,7 +72,7 @@ export const useWalletData = (user: User | null) => {
           event: '*',
           schema: 'public',
           table: 'wallets',
-          filter: `user_id=eq.${user.id}`
+          filter: `user_id=eq.${userId}`
         },
         (payload) => {
           if (payload.new) {
@@ -97,7 +95,7 @@ export const useWalletData = (user: User | null) => {
           event: 'INSERT',
           schema: 'public',
           table: 'transactions',
-          filter: `user_id=eq.${user.id}`
+          filter: `user_id=eq.${userId}`
         },
         (payload) => {
           if (payload.new) {
@@ -124,7 +122,7 @@ export const useWalletData = (user: User | null) => {
       supabase.removeChannel(walletChannel);
       supabase.removeChannel(transactionChannel);
     };
-  }, [user]);
+  }, [userId]);
 
   return { walletData, loading };
 };
