@@ -4,9 +4,12 @@ import { Facebook, Twitter, Instagram, Youtube, Mail, Phone } from 'lucide-react
 
 const Footer = () => {
   return (
-    <footer className="pt-10 pb-8">
-      <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div id="footer-wrapper">
+      <div id="back-to-top" className="pressable" style={{display: "flex"}}>Επιστροφή στην κορυφή</div>
+      <div id="promo-footer"></div>
+      <div className="root__wrapper bp-footer">
+        <div className="footer root">
+          <div class="footer__top">
           <div>
             <h3 className="text-lg font-semibold mb-4">BestPrice</h3>
             <p className="text-sm text-gray-600 mb-4">Το BestPrice είναι η πρώτη και μεγαλύτερη υπηρεσία σύγκρισης τιμών στην Ελλάδα.</p>
@@ -62,13 +65,14 @@ const Footer = () => {
               <li className="flex items-center text-sm text-gray-600"><Phone size={16} className="mr-2" />+1 (555) 123-4567</li>
             </ul>
           </div>
+          </div>
         </div>
         
         <div className="mt-10 pt-6">
           <p className="text-center text-sm text-gray-600">© {new Date().getFullYear()} BestPrice Marketplace. All rights reserved.</p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 
