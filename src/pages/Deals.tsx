@@ -136,6 +136,16 @@ const Deals = () => {
               </header>
             </section>
 
+
+            <div class="deals-black-filter__wrapper">
+              <div class="deals-black-filter">
+                <div class="deals-black-filter__label">
+                  <span>Black Προσφορές</span>
+                </div>
+                <input readonly="" type="checkbox" />
+              </div>
+            </div>
+
             
             {filteredDeals.map((product) => (
                 <ProductCard key={product.id} product={product} />
