@@ -175,10 +175,23 @@ const Deals = () => {
               </div>
             </header>
 
-            
-            {filteredDeals.map((product) => (
+            <div class="tools__sentinel tools__sentinel--up"></div>
+            <div class="tools tools--has-drop tools--has-sorting tools--sticky">
+              <div class="tools__button" data-id="drop">
+                <div class="tools__label">Πτώση %</div>
+              </div>
+              <div class="tools__button" data-id="sorting">
+                <div class="tools__label">Επιλεγμένες</div>
+              </div>
+            </div>
+            <div class="tools__sentinel tools__sentinel--down"></div>
+
+
+            <div class="p__products" data-pagination="">
+              {filteredDeals.map((product) => (
                 <ProductCard key={product.id} product={product} />
-            ))}
+              ))}
+            </div>
           </main>
         </div>
 
