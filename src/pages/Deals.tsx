@@ -89,6 +89,19 @@ const Deals = () => {
 
 
         <div className="deals-tabs">
+          <Tabs defaultValue="timeline" className="space-y-6">
+            <TabsList className="w-full">
+              <TabsTrigger value="timeline" className="flex-1">Timeline</TabsTrigger>
+              <TabsTrigger value="about" className="flex-1">About</TabsTrigger>
+              <TabsTrigger value="friends" className="flex-1">Friends</TabsTrigger>
+              <TabsTrigger value="photos" className="flex-1">Photos</TabsTrigger>
+            </TabsList>
+      
+            <TabsContent value="timeline"></TabsContent>
+            <TabsContent value="about"></TabsContent>
+            <TabsContent value="friends"></TabsContent>
+            <TabsContent value="photos"></TabsContent>
+          </Tabs>
         </div>
 
         <header className="page-header">
