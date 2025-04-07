@@ -88,8 +88,8 @@ const Deals = () => {
 
 
 
-        
-        
+        <div className="deals-tabs">
+        </div>
 
         <header className="page-header">
           <h1>Προσφορές &amp; Εκπτώσεις</h1>
