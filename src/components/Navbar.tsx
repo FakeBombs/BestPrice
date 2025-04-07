@@ -10,6 +10,7 @@ import NotificationButton from '@/components/NotificationButton';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return <div className="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
