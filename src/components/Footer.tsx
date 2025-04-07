@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <div id="footer-wrapper">
       <div id="back-to-top" className="pressable" style={{display: "flex"}}>Επιστροφή στην κορυφή</div>
