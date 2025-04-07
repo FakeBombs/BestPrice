@@ -89,11 +89,11 @@ const Deals = () => {
 
 
         <div className="deals-tabs">
-          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</a>
-          <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</a>
-          <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</a>
-          <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</a>
-          <a className="deals-tabs__tab" href="/deals/b">Ανά κατασκευαστή</a>
+          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</Link>
+          <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</Link>
+          <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</Link>
+          <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</Link>
+          <a className="deals-tabs__tab" href="/deals/b">Ανά κατασκευαστή</Link>
         </div>
 
         <header className="page-header">
@@ -103,10 +103,37 @@ const Deals = () => {
       
         <ProductFilter onSortChange={handleSortChange} onVendorFilter={handleVendorFilter} onPriceRangeFilter={handlePriceRangeFilter} onInStockOnly={handleInStockOnly} />
         
-        <div className="product-grid mt-6">
+        <div className="page-products">
+          <main className="page-products__main">
+
+            <div className="deals-distr__wrapper">
+              <div className="deals-distr deals-distr--center">
+                <div className="scroll scroll--center scroll--small">
+                  <div className="scroll__clip">
+                    <div className="scroll__scroller">
+                      <div className="scroll__content">
+                        <div className="deals-distr__cats">
+                          <Link data-id="6989" data-cnt="1131" className="deals-distr__cat" to="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><span>Τεχνολογία</span></Link>
+                          <Link data-id="2185" data-cnt="1720" className="deals-distr__cat" to="/deals/2185/home-garden.html" title="Προσφορές σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></Link>
+                          <Link data-id="2068" data-cnt="2190" className="deals-distr__cat" to="/deals/2068/fashion.html" title="Προσφορές σε Μόδα"><span>Μόδα</span></Link>
+                          <Link data-id="583" data-cnt="511" className="deals-distr__cat" to="/deals/583/health-beauty.html" title="Προσφορές σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></Link>
+                          <Link data-id="2175" data-cnt="526" className="deals-distr__cat" to="/deals/2175/paidika-brefika.html" title="Προσφορές σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></Link>
+                          <Link data-id="3058" data-cnt="269" className="deals-distr__cat" to="/deals/3058/sports-hobbies.html" title="Προσφορές σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></Link>
+                          <Link data-id="3204" data-cnt="204" className="deals-distr__cat" to="/deals/3204/auto-moto.html" title="Προσφορές σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div>
+              </div>
+            </div>
+
+
+            
           {filteredDeals.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
+          </main>
         </div>
 
 
