@@ -128,6 +128,14 @@ const Deals = () => {
               </div>
             </div>
 
+
+            <section class="deals__picks">
+              <header class="deals__picks-header">
+                <h2 class="section__title">Προσφορές της ημέρας</h2>
+                <div class="descr">Επιλεγμένες προσφορές από την ομάδα του BestPrice</div>
+              </header>
+            </section>
+
             
             {filteredDeals.map((product) => (
                 <ProductCard key={product.id} product={product} />
