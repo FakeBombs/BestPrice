@@ -41,27 +41,38 @@ const Footer = () => {
             </div>
 
             <div className="footer__section">
-            <h3 className="text-lg font-semibold mb-4">BestPrice</h3>
-            <ul className="space-y-2">
-              <li><Link to="/about" className="text-sm text-gray-600 hover:text-primary">Σχετικά με εμάς</Link></li>
-              <li><Link to="/blog" className="text-sm text-gray-600 hover:text-primary">Το Blog μας</Link></li>
-              <li><Link to="/guides" className="text-sm text-gray-600 hover:text-primary">Οδηγοί αγοράς</Link></li>
-              <li><Link to="/advertising" className="text-sm text-gray-600 hover:text-primary">Διαφήμιση</Link></li>
-              <li><Link to="/awards" className="text-sm text-gray-600 hover:text-primary">Οι διακρίσεις μας</Link></li>
-              <li><Link to="/privacy" className="text-sm text-gray-600 hover:text-primary">Προσωπικά δεδομένα</Link></li>
-              <li><Link to="/terms" className="text-sm text-gray-600 hover:text-primary">Όροι χρήσης</Link></li>
-              <li><Link to="/careers" className="text-sm text-gray-600 hover:text-primary">Θέσεις εργασίας (5)</Link></li>
-              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-primary">Επικοινωνία</Link></li>
-            </ul>
+              <div class="footer__section-header">
+                BestPrice
+                <div class="footer__section-icon"></div>
+              </div>
+              <div class="footer__section-scroller">
+                <div class="footer__section-content">
+                  <ul>
+                    <li><Link to="/about">Σχετικά με εμάς</Link></li>
+                    <li><Link to="/blog">Το Blog μας</Link></li>
+                    <li><Link to="/guides">Οδηγοί αγοράς</Link></li>
+                    <li><Link to="/insurance">Ασφάλιση Αγορών</Link></li>
+                    <li><Link to="/advertising">Διαφήμιση</Link></li>
+                    <li><Link to="/credits-club">Credits Club</Link></li>
+                    <li><Link to="/certification">Πιστοποίηση BestPrice</Link></li>
+                    <li><Link to="/customer-review-awards">Customer Review Awards</Link></li>
+                    <li><Link to="/awards">Οι διακρίσεις μας</Link></li>
+                    <li><Link to="/team">Η ομάδα μας</Link></li>
+                    <li><Link to="/assistant">BestPrice Assistant</Link></li>
+                    <li><Link to="/careers">Θέσεις εργασίας (5)</Link></li>
+                    <li><Link to="/contact">Επικοινωνία</Link></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div className="footer__section footer__section--in-numbers">
             <h3 className="text-lg font-semibold mb-4">Σε αριθμούς</h3>
             <ul className="space-y-2">
-              <li><Link to="/stores" className="text-sm text-gray-600 hover:text-primary">3.752 καταστήματα</Link></li>
-              <li><Link to="/categories" className="text-sm text-gray-600 hover:text-primary">27.155.066 προϊόντα</Link></li>
-              <li><Link to="/brands" className="text-sm text-gray-600 hover:text-primary">37.297 κατασκευαστές</Link></li>
-              <li><Link to="/deals" className="text-sm text-gray-600 hover:text-primary">6.624 προσφορές</Link></li>
+              <li><Link to="/stores">3.752 καταστήματα</Link></li>
+              <li><Link to="/categories">27.155.066 προϊόντα</Link></li>
+              <li><Link to="/brands">37.297 κατασκευαστές</Link></li>
+              <li><Link to="/deals">6.624 προσφορές</Link></li>
             </ul>
             </div>
 
