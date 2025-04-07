@@ -11,7 +11,7 @@ const Footer = () => {
           
           <div className="footer__top">
           <div className="footer__aside">
-            <Link rel="home" title="BestPrice" class="footer__logo pressable" to="/"><span>BestPrice.gr</span></Link>
+            <Link rel="home" title="BestPrice" class="footer__logo pressable" to="/"><span>BestPrice</span></Link>
             <div class="footer__identity">
               <p>Η πραγματικά καλύτερη τιμή</p>
               <p>Το BestPrice είναι η πρώτη και μεγαλύτερη υπηρεσία σύγκρισης τιμών στην Ελλάδα.</p>
@@ -125,7 +125,7 @@ const Footer = () => {
                 <div class="footer__section-scroller">
                   <div class="footer__section-content">
                     <p>Το BestPrice for Brands θα προσφέρει χρήσιμες πληροφορίες &amp; υπηρεσίες σε κατασκευαστές (Brands).</p>
-                    <Link title="Εκδήλωση ενδιαφέροντος για το BestPrice For Brands" to="https://brands.bestprice.gr" class="button">Περισσότερα</Link>
+                    <Link title="Εκδήλωση ενδιαφέροντος για το BestPrice For Brands" to="https://brands.nexushub-commerce.lovable.app" class="button">Περισσότερα</Link>
                   </div>
                 </div>
               </div>
@@ -134,12 +134,11 @@ const Footer = () => {
         </div>
           
           <div className="footer__social">
-            <p className="text-center text-sm text-gray-600">
-              <Link to="#" className="text-gray-500 hover:text-primary"><Facebook size={20} /></Link>
-              <Link to="#" className="text-gray-500 hover:text-primary"><Twitter size={20} /></Link>
-              <Link to="#" className="text-gray-500 hover:text-primary"><Instagram size={20} /></Link>
-              <Link to="#" className="text-gray-500 hover:text-primary"><Youtube size={20} /></Link>  
-            </p>
+            <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.facebook.com" data-network="facebook" class="footer__network"><Facebook size={24} /></Link>
+            <Link to="#" className="text-gray-500 hover:text-primary"><Facebook size={20} /></Link>
+            <Link to="#" className="text-gray-500 hover:text-primary"><Twitter size={20} /></Link>
+            <Link to="#" className="text-gray-500 hover:text-primary"><Instagram size={20} /></Link>
+            <Link to="#" className="text-gray-500 hover:text-primary"><Youtube size={20} /></Link>
           </div>
           
           <div className="footer__bottom">
