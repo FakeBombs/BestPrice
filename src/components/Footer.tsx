@@ -34,8 +34,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">BestPrice</h3>
             <ul className="space-y-2">
               <li><Link to="/about" className="text-sm text-gray-600 hover:text-primary">Σχετικά με εμάς</Link></li>
-              <li><Link to="/privacy" className="text-sm text-gray-600 hover:text-primary">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-sm text-gray-600 hover:text-primary">Terms & Conditions</Link></li>
+              <li><Link to="/blog" className="text-sm text-gray-600 hover:text-primary">Το Blog μας</Link></li>
+              <li><Link to="/guides" className="text-sm text-gray-600 hover:text-primary">Οδηγοί αγοράς</Link></li>
+              <li><Link to="/advertising" className="text-sm text-gray-600 hover:text-primary">Διαφήμιση</Link></li>
+              <li><Link to="/awards" className="text-sm text-gray-600 hover:text-primary">Οι διακρίσεις μας</Link></li>
+              <li><Link to="/privacy" className="text-sm text-gray-600 hover:text-primary">Προσωπικά δεδομένα</Link></li>
+              <li><Link to="/terms" className="text-sm text-gray-600 hover:text-primary">Όροι χρήσης</Link></li>
+              <li><Link to="/careers" className="text-sm text-gray-600 hover:text-primary">Θέσεις εργασίας (5)</Link></li>
               <li><Link to="/contact" className="text-sm text-gray-600 hover:text-primary">Επικοινωνία</Link></li>
             </ul>
           </div>
