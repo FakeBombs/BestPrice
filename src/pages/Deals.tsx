@@ -8,6 +8,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 const Deals = () => {
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
+  const { t } = useTranslation();
   
   useEffect(() => {
     const dealsData = fetchDeals();
