@@ -53,9 +53,9 @@ const Index = () => {
                   <div className="h-categories__verticals">
                     <Link data-id="deals" to="/deals?bpref=home-verticals">
                       <svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> 
-                      Προσφορές
+                      {t('deals')}
                     </Link>
-                    <Link to="/cat/6989/technology.html?bpref=home-verticals">Τεχνολογία</Link>
+                    <Link to="/cat/6989/technology.html?bpref=home-verticals">{t('technology')}</Link>
                     <Link to="/cat/2185/home-garden.html?bpref=home-verticals">Σπίτι &amp; Κήπος</Link>
                     <Link to="/cat/2068/fashion.html?bpref=home-verticals">Μόδα</Link>
                     <Link to="/cat/583/health-beauty.html?bpref=home-verticals">Υγεία &amp; Ομορφιά</Link>
@@ -77,7 +77,7 @@ const Index = () => {
                   <div className="h-categories__cover">
                     <div className="h-categories__badge drop drop--40">233 Νέες</div>
                       <img alt="Deals icon" className="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
-                    </div><h2 className="h-categories__label">Προσφορές</h2>
+                    </div><h2 className="h-categories__label">{t('deals')}</h2>
                 </Link>
                 <Link to="/cat/806/mobile-phones.html?bpref=home-categories" className="h-categories__category" title="Κινητά">
                   <div className="h-categories__cover">
