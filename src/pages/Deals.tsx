@@ -89,28 +89,7 @@ const Deals = () => {
 
 
         
-        <div className="deals-tabs">
-          <Link className="deals-tabs__tab deals-tabs__tab--selected" to="/deals">Προσφορές</Link>
-          <Link className="deals-tabs__tab" to="/deals/c">Ανά κατηγορία</Link>
-          <Link className="deals-tabs__tab" to="/deals/my">Οι Προσφορές μου</Link>
-          <Link className="deals-tabs__tab" to="/deals/m">Ανά κατάστημα</Link>
-          <Link className="deals-tabs__tab" to="/deals/b">Ανά κατασκευαστή</Link>
-        </div>
-
-        <header className="page-header">
-          <div>
-            <h1>Προσφορές &amp; Εκπτώσεις</h1>
-            <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
-          </div>
-        </header>
-      
-        <ProductFilter onSortChange={handleSortChange} onVendorFilter={handleVendorFilter} onPriceRangeFilter={handlePriceRangeFilter} onInStockOnly={handleInStockOnly} />
         
-        <div className="product-grid mt-6">
-          {filteredDeals.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
 
 
 
