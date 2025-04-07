@@ -38,15 +38,20 @@ const Brands = () => {
         </header>
         
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
-        {brands.map((brand) => (
+        <section className="top-brands">
+          <h3>Δημοφιλείς</h3>
+          <div class="top-brands__brands">
+            <div class="box-wrapper">
+          {brands.map((brand) => (
           <Card key={brand.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4 flex items-center justify-center h-32">
               <img src={brand.logo} alt={brand.name} className="max-h-16 max-w-full" />
             </CardContent>
           </Card>
-        ))}
-        </div>
+          ))}
+            </div>
+          </div>
+        </section>
 
 
         
