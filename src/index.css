@@ -117,10 +117,6 @@
     @apply min-h-screen;
   }
   
-  .bp-header {
-    @apply sticky top-0 z-50 bg-background border-b shadow-sm;
-  }
-  
   .root__wrapper {
     @apply w-full;
   }
