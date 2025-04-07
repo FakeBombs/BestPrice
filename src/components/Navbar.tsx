@@ -7,6 +7,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { SearchBar } from '@/components/SearchBar';
 import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
