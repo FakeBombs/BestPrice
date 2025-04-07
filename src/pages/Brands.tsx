@@ -24,25 +24,40 @@ const Brands = () => {
           <nav className="breadcrumb">
             <ol>
               <li><a href="/" rel="home" data-no-info=""><span>BestPrice.gr</span></a><span className="trail__breadcrumb-separator">›</span></li>
-              <li><a href="/brands" data-no-info="" class="trail__last"><span>Κατασκευαστές</span></a><span className="trail__breadcrumb-separator"></span></li>
+              <li><a href="/brands" data-no-info="" className="trail__last"><span>Κατασκευαστές</span></a><span className="trail__breadcrumb-separator"></span></li>
             </ol>
           </nav>
         </div>
 
-        <header class="page-header">
+        <header className="page-header">
           <h1>37.353 κατασκευαστές</h1>
-          <span class="autocomplete__wrapper" style={{display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000"}}>
+          <span className="autocomplete__wrapper" style={{display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000"}}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autocomplete="off" autocorrect="off" spellcheck="false"/>
-              <div class="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
+              <div className="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
           </span>
         </header>
+
+
+        <div className="brands-top-cats">
+          <div className="scroll">
+            <div className="scroll__clip">
+              <div className="scroll__scroller">
+                <div className="brands-top__inner scroll__content">
+                  <a className="brands__top-cat" href="/brands/6989/technology.html">Τεχνολογία</a>
+                  <a className="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
+                  <a className="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
+                  <a className="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
+                  <a className="brands__top-cat" href="/brands/2175/paidika-brefika.html">Παιδικά - Βρεφικά</a>
+                  <a className="brands__top-cat" href="/brands/3058/sports-hobbies.html">Hobby, Αθλητισμός</a>
+                  <a className="brands__top-cat" href="/brands/3204/auto-moto.html">Μηχανοκίνηση</a>
+                </div>
+              </div>
+            </div>
+          <div>
+        </div>
         
-      <h1 className="text-3xl font-bold mb-2">Μάρκες</h1>
-      <p className="text-muted-foreground mb-6">
-        Ανακάλυψε προϊόντα από τους κορυφαίους κατασκευαστές
-      </p>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
         {brands.map((brand) => (
           <Card key={brand.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4 flex items-center justify-center h-32">
@@ -50,7 +65,7 @@ const Brands = () => {
             </CardContent>
           </Card>
         ))}
-      </div>
+        </div>
 
 
         
