@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { fetchDeals } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Deals = () => {
   const [deals, setDeals] = useState([]);
