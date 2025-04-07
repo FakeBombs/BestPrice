@@ -105,6 +105,9 @@ const defaultTranslations: Translations = {
 
     // Deals
     deals: 'Deals',
+
+    // Categories
+    technology: 'Technology',
   },
   el: {
     // Greek translations
@@ -136,6 +139,9 @@ const defaultTranslations: Translations = {
     
     // Deals
     deals: 'Προσφορές',
+
+    // Categories
+    technology: 'Τεχνολογία',
   },
   // Add other languages
   es: {
