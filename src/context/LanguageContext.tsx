@@ -102,6 +102,9 @@ const defaultTranslations: Translations = {
     regularUser: 'Regular User',
     editProfile: 'Edit Profile',
     accountSummary: 'Account Summary',
+
+    // Deals
+    deals: 'Deals',
   },
   el: {
     // Greek translations
@@ -131,7 +134,8 @@ const defaultTranslations: Translations = {
     transactions: 'Συναλλαγές',
     connectWallet: 'Σύνδεση Πορτοφολιού',
     
-    // Add more Greek translations here
+    // Deals
+    deals: 'Προσφορές',
   },
   // Add other languages
   es: {
