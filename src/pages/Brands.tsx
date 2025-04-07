@@ -45,7 +45,9 @@ const Brands = () => {
           {brands.map((brand) => (
           <Card key={brand.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4 flex items-center justify-center h-32">
-              <img src={brand.logo} alt={brand.name} className="max-h-16 max-w-full" />
+              <a className="brand box" alt={brand.name} title={brand.name} href="/b/9/apple.html">
+                <img src={brand.logo} alt={brand.name} className="max-h-16 max-w-full" />
+              </a>
             </CardContent>
           </Card>
           ))}
