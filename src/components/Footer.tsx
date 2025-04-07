@@ -67,13 +67,20 @@ const Footer = () => {
             </div>
 
             <div className="footer__section footer__section--in-numbers">
-            <h3 className="text-lg font-semibold mb-4">Σε αριθμούς</h3>
-            <ul className="space-y-2">
-              <li><Link to="/stores">3.752 καταστήματα</Link></li>
-              <li><Link to="/categories">27.155.066 προϊόντα</Link></li>
-              <li><Link to="/brands">37.297 κατασκευαστές</Link></li>
-              <li><Link to="/deals">6.624 προσφορές</Link></li>
-            </ul>
+              <div class="footer__section-header">
+                Σε αριθμούς
+                <div class="footer__section-icon"></div>
+              </div>
+              <div class="footer__section-scroller">
+                <div class="footer__section-content">
+                  <ul>
+                    <li><Link to="/stores">3.752 καταστήματα</Link></li>
+                    <li><Link to="/categories">27.155.066 προϊόντα</Link></li>
+                    <li><Link to="/brands">37.297 κατασκευαστές</Link></li>
+                    <li><Link to="/deals">6.624 προσφορές</Link></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div className="footer__section footer__section--privacy">
@@ -96,11 +103,32 @@ const Footer = () => {
             </div>
 
             <div className="footer__section footer__section--b2b">
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center text-sm text-gray-600"><Mail size={16} className="mr-2" />contact@bestprice.example</li>
-              <li className="flex items-center text-sm text-gray-600"><Phone size={16} className="mr-2" />+1 (555) 123-4567</li>
-            </ul>
+              <div class="footer__b2b">
+                <div class="footer__section-header">
+                  BestPrice For Merchants
+                  <div class="footer__section-icon"></div>
+                </div>
+                <div class="footer__section-scroller">
+                  <div class="footer__section-content">
+                    <p>Έχεις ηλεκτρονικό κατάστημα;</p>
+                    <p>Δες πως το BestPrice μπορεί να σε βοηθήσει να αυξήσεις τις πωλήσεις σου!</p>
+                    <Link title="Πληροφορίες και είσοδος στο BestPrice For Merchants" to="https://merchants.nexushub-commerce.lovable.app" class="button">Για εμπόρους</Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="footer__b2b">
+                <div class="footer__section-header">
+                  <div>BestPrice For Brands</div>
+                  <div class="footer__section-icon"></div>
+                </div>
+                <div class="footer__section-scroller">
+                  <div class="footer__section-content">
+                    <p>Το BestPrice for Brands θα προσφέρει χρήσιμες πληροφορίες &amp; υπηρεσίες σε κατασκευαστές (Brands).</p>
+                    <Link title="Εκδήλωση ενδιαφέροντος για το BestPrice For Brands" to="https://brands.bestprice.gr" class="button">Περισσότερα</Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
