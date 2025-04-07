@@ -82,23 +82,40 @@ const Deals = () => {
   };
   
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-2">Προσφορές</h1>
-      <p className="text-muted-foreground mb-6">
-        Ανακάλυψε τις καλύτερες προσφορές της αγοράς
-      </p>
+    <div className="root__wrapper">
+      <div className="root">
+
+
+
+
+        
+        <div className="deals-tabs">
+          <Link className="deals-tabs__tab deals-tabs__tab--selected" to="/deals">Προσφορές</Link>
+          <Link className="deals-tabs__tab" to="/deals/c">Ανά κατηγορία</Link>
+          <Link className="deals-tabs__tab" to="/deals/my">Οι Προσφορές μου</Link>
+          <Link className="deals-tabs__tab" to="/deals/m">Ανά κατάστημα</Link>
+          <Link className="deals-tabs__tab" to="/deals/b">Ανά κατασκευαστή</Link>
+        </div>
+
+        <header className="page-header">
+          <h1>Προσφορές &amp; Εκπτώσεις</h1>
+          <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
+        </header>
       
-      <ProductFilter
-        onSortChange={handleSortChange}
-        onVendorFilter={handleVendorFilter}
-        onPriceRangeFilter={handlePriceRangeFilter}
-        onInStockOnly={handleInStockOnly}
-      />
-      
-      <div className="product-grid mt-6">
-        {filteredDeals.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        <ProductFilter onSortChange={handleSortChange} onVendorFilter={handleVendorFilter} onPriceRangeFilter={handlePriceRangeFilter} onInStockOnly={handleInStockOnly} />
+        
+        <div className="product-grid mt-6">
+          {filteredDeals.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
+
+
+
+
+
+        
       </div>
     </div>
   );
