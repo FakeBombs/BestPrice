@@ -89,7 +89,7 @@ const Deals = () => {
 
 
         <div className="deals-tabs">
-          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</a>
+          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">{t('deals')}</a>
           <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</a>
           <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</a>
           <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</a>
