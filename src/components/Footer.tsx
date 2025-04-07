@@ -27,14 +27,14 @@ const Footer = () => {
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
                   <ul>
-                    <li><Link to="/categories/c1">Τεχνολογία</Link></li>
+                    <li><Link to="/categories/c1">{t('technology')}</Link></li>
                     <li><Link to="/categories/c2">Σπίτι & Κήπος</Link></li>
                     <li><Link to="/categories/c3">Μόδα</Link></li>
                     <li><Link to="/categories/c4">Υγεία & Ομορφιά</Link></li>
                     <li><Link to="/categories/c5">Παιδικά, Βρεφικά</Link></li>
                     <li><Link to="/categories/c1">Αθλητισμός, Hobby</Link></li>
                     <li><Link to="/categories/c2">Μηχανοκίνηση</Link></li>
-                    <li><Link to="/deals">Προσφορές</Link></li>
+                    <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">Δώρα</Link></li>
                     <li><Link to="/give">BestPrice Give</Link></li>
                   </ul>
