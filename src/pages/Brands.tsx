@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 
 const brands = [
@@ -18,7 +17,7 @@ const brands = [
 
 const Brands = () => {
   return (
-    <div className="root__wrapper">
+    <div className="root__wrapper" id="page-brands">
       <div className="root">
         
         <div id="trail">
