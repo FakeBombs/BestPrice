@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import ProductCarousel from '@/components/ProductCarousel';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Index = () => {
   const { toast } = useToast();
@@ -15,6 +16,7 @@ const Index = () => {
   const [newArrivals, setNewArrivals] = useState([]);
   const rootCategories = getRootCategories();
   const categories = getCategories();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Fetch data on component mount
