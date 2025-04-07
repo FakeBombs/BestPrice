@@ -23,7 +23,7 @@ const Footer = () => {
           
           <div className="footer__sections">
             <div className="footer__section">
-            <h3 className="text-lg font-semibold mb-4">Κατηγορίες</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('categories')}</h3>
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
                   <ul>
@@ -35,7 +35,7 @@ const Footer = () => {
                     <li><Link to="/categories/c1">Αθλητισμός, Hobby</Link></li>
                     <li><Link to="/categories/c2">Μηχανοκίνηση</Link></li>
                     <li><Link to="/deals">{t('deals')}</Link></li>
-                    <li><Link to="/gifts">Δώρα</Link></li>
+                    <li><Link to="/gifts">{t('gifts')}</Link></li>
                     <li><Link to="/give">BestPrice Give</Link></li>
                   </ul>
                 </div>
