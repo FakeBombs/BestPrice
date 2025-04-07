@@ -42,15 +42,11 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div class="top-brands__brands">
             <div class="box-wrapper">
-          {brands.map((brand) => (
-          <Card key={brand.id}>
-            <CardContent>
-              <a className="brand box" alt={brand.name} title={brand.name} href="/b/9/apple.html">
-                <img itemprop="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
-              </a>
-            </CardContent>
-          </Card>
-          ))}
+              {brands.map((brand) => (
+                <a className="brand box" alt={brand.name} title={brand.name} key={brand.id} href="/b/9/apple.html">
+                  <img itemprop="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
+                </a>
+              ))}
             </div>
           </div>
         </section>
