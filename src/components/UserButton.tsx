@@ -19,6 +19,7 @@ const UserButton = () => {
   const { user, logout } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const { t } = useTranslation();
   
   const handleLoginClick = () => {
     setAuthMode('login');
