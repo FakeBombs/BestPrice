@@ -2,7 +2,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 
 const brands = [
-  { id: 'b1', name: 'Apple', logo: 'https://placehold.co/200x100?text=Apple' },
+  { id: 'b1', name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
   { id: 'b2', name: 'Samsung', logo: 'https://placehold.co/200x100?text=Samsung' },
   { id: 'b3', name: 'Sony', logo: 'https://placehold.co/200x100?text=Sony' },
   { id: 'b4', name: 'LG', logo: 'https://placehold.co/200x100?text=LG' },
@@ -18,7 +18,10 @@ const brands = [
 
 const Brands = () => {
   return (
-    <div>
+    <div class="root__wrapper">
+      <div class="root">
+
+        
       <h1 className="text-3xl font-bold mb-2">Μάρκες</h1>
       <p className="text-muted-foreground mb-6">
         Ανακάλυψε προϊόντα από τους κορυφαίους κατασκευαστές
@@ -32,6 +35,10 @@ const Brands = () => {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+
+        
       </div>
     </div>
   );
