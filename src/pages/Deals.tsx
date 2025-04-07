@@ -98,8 +98,10 @@ const Deals = () => {
         </div>
 
         <header className="page-header">
-          <h1>Προσφορές &amp; Εκπτώσεις</h1>
-          <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
+          <div>
+            <h1>Προσφορές &amp; Εκπτώσεις</h1>
+            <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
+          </div>
         </header>
       
         <ProductFilter onSortChange={handleSortChange} onVendorFilter={handleVendorFilter} onPriceRangeFilter={handlePriceRangeFilter} onInStockOnly={handleInStockOnly} />
