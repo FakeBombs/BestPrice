@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const NotFound = () => {
+  const { t } = useTranslation();
   return (
     <div>
+      
     <div className="root__wrapper" id="root-404">
       <div className="root">
       <h1 className="heading">Η σελίδα που ψάχνεις δεν είναι πλέον διαθέσιμη...</h1>
@@ -20,12 +22,14 @@ const NotFound = () => {
     
     <div className="top-deals__placeholder">
     <div className="top-deals">
+      
       <div className="top-deals__header root">
         <h3 className="top-deals__title">Σημερινές προσφορές</h3>
         <div className="top-deals__more">
           <Link to="/deals" className="dotted">Όλες οι προσφορές</Link>
         </div>
       </div>
+      
       <div className="scroll scroll--center scroll--no-scrolling">
         <div className="scroll__clip" style={{overflow: "hidden"}}>
           <div className="scroll__scroller">
@@ -35,8 +39,10 @@ const NotFound = () => {
           </div>
         </div>
       </div>
+      
     </div>
     </div>
+      
     </div>
   );
 };
