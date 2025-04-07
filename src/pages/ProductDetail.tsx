@@ -14,6 +14,7 @@ import ProductRelatedSections from '@/components/product/ProductRelatedSections'
 import PriceHistoryChart from '@/components/PriceHistoryChart';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const formatProductSlug = (title: string): string => {
   return title
