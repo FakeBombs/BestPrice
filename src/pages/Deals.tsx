@@ -89,19 +89,11 @@ const Deals = () => {
 
 
         <div className="deals-tabs">
-          <Tabs defaultValue="timeline" className="space-y-6">
-            <TabsList className="w-full">
-              <TabsTrigger value="timeline" className="flex-1">Timeline</TabsTrigger>
-              <TabsTrigger value="about" className="flex-1">About</TabsTrigger>
-              <TabsTrigger value="friends" className="flex-1">Friends</TabsTrigger>
-              <TabsTrigger value="photos" className="flex-1">Photos</TabsTrigger>
-            </TabsList>
-      
-            <TabsContent value="timeline"></TabsContent>
-            <TabsContent value="about"></TabsContent>
-            <TabsContent value="friends"></TabsContent>
-            <TabsContent value="photos"></TabsContent>
-          </Tabs>
+          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</a>
+          <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</a>
+          <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</a>
+          <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</a>
+          <a className="deals-tabs__tab" href="/deals/b">Ανά κατασκευαστή</a>
         </div>
 
         <header className="page-header">
