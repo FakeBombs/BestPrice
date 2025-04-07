@@ -129,22 +129,51 @@ const Deals = () => {
             </div>
 
 
-            <section class="deals__picks">
-              <header class="deals__picks-header">
-                <h2 class="section__title">Προσφορές της ημέρας</h2>
-                <div class="descr">Επιλεγμένες προσφορές από την ομάδα του BestPrice</div>
+            <section className="deals__picks">
+              <header className="deals__picks-header">
+                <h2 className="section__title">Προσφορές της ημέρας</h2>
+                <div className="descr">Επιλεγμένες προσφορές από την ομάδα του BestPrice</div>
               </header>
             </section>
 
 
-            <div class="deals-black-filter__wrapper">
-              <div class="deals-black-filter">
-                <div class="deals-black-filter__label">
+            <div className="deals-black-filter__wrapper">
+              <div className="deals-black-filter">
+                <div className="deals-black-filter__label">
                   <span>Black Προσφορές</span>
                 </div>
                 <input readonly="" type="checkbox" />
               </div>
             </div>
+
+
+
+            <header className="page-header page-header--deals-default">
+              <div className="page-header__sorting">
+                
+                <div className="tabs">
+                  <div className="tabs-wrapper">
+                    <nav>
+                      <a href="/deals" rel="nofollow" className="current">Επιλεγμένες</a>
+                      <a href="/deals?o=pop" rel="nofollow">Δημοφιλέστερες</a>
+                      <a href="/deals?o=ts%3Adesc" rel="nofollow">Νεότερες</a>
+                      <a href="/deals?o=pc%3Adesc" rel="nofollow">Μεγαλύτερη πτώση</a>
+                      <a href="/deals?o=price" rel="nofollow">Φθηνότερα</a>
+                      <a href="/deals?o=price%3Adesc" rel="nofollow">Ακριβότερα</a>
+                    </nav>
+                  </div>
+                </div>
+                
+                <select className="deals-drop-range">
+                  <option value="0">Ποσοστό πτώσης τιμής</option>
+                  <option value="15">15% ή περισσότερο</option>
+                  <option value="20">20% ή περισσότερο</option>
+                  <option value="25">25% ή περισσότερο</option>
+                  <option value="30">30% ή περισσότερο</option>
+                  <option value="50">50% ή περισσότερο</option>
+                </select>
+              </div>
+            </header>
 
             
             {filteredDeals.map((product) => (
