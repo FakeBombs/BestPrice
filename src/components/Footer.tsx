@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Threads, Instagram, Youtube, Mail, Phone } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -136,7 +136,7 @@ const Footer = () => {
           <div className="footer__social">
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.facebook.com" data-network="facebook" class="footer__network"><Facebook size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Twitter" to="https://www.x.com" data-network="x" class="footer__network"><Twitter size={24} /></Link>
-            <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Threads" to="https://www.threads.net" data-network="Threads" class="footer__network"><Threads size={24} /></Link>
+            <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Threads" to="https://www.threads.net" data-network="Threads" class="footer__network"><Facebook size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.instagram.com" data-network="instagram" class="footer__network"><Instagram size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο TikTok" to="https://www.tiktok.com" data-network="tiktok" class="footer__network"><Facebook size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο YouTube" to="https://www.youtube.com" data-network="youtube" class="footer__network"><Youtube size={24} /></Link>
