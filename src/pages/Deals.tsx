@@ -107,7 +107,17 @@ const Deals = () => {
           <main className="page-products__main">
 
             <div class="deals-distr__wrapper">
-              <div class="deals-distr deals-distr--center"></div>
+              <div class="deals-distr deals-distr--center">
+                <div class="scroll scroll--center scroll--small">
+                  <div class="scroll__clip">
+                    <div class="scroll__scroller">
+                      <div class="scroll__content">
+                        <div class="deals-distr__cats"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             
