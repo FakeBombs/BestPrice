@@ -99,7 +99,7 @@ const Deals = () => {
         </div>
 
         <header className="page-header">
-          <h1>Προσφορές &amp; Εκπτώσεις</h1>
+          <h1>{t('deals')} &amp; Εκπτώσεις</h1>
           <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
         </header>
       
@@ -115,13 +115,13 @@ const Deals = () => {
                     <div className="scroll__scroller">
                       <div className="scroll__content">
                         <div className="deals-distr__cats">
-                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="{t('deals')} σε {t('technology')}"><span>{t('technology')}</span></a>
-                          <a data-id="2185" data-cnt="1720" className="deals-distr__cat" href="/deals/2185/home-garden.html" title="{t('deals')} σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></a>
-                          <a data-id="2068" data-cnt="2190" className="deals-distr__cat" href="/deals/2068/fashion.html" title="{t('deals')} σε Μόδα"><span>Μόδα</span></a>
-                          <a data-id="583" data-cnt="511" className="deals-distr__cat" href="/deals/583/health-beauty.html" title="{t('deals')} σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></a>
-                          <a data-id="2175" data-cnt="526" className="deals-distr__cat" href="/deals/2175/paidika-brefika.html" title="{t('deals')} σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></a>
-                          <a data-id="3058" data-cnt="269" className="deals-distr__cat" href="/deals/3058/sports-hobbies.html" title="{t('deals')} σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></a>
-                          <a data-id="3204" data-cnt="204" className="deals-distr__cat" href="/deals/3204/auto-moto.html" title="{t('deals')} σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></a>
+                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><span>{t('technology')}</span></a>
+                          <a data-id="2185" data-cnt="1720" className="deals-distr__cat" href="/deals/2185/home-garden.html" title="Προσφορές σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></a>
+                          <a data-id="2068" data-cnt="2190" className="deals-distr__cat" href="/deals/2068/fashion.html" title="Προσφορές σε Μόδα"><span>Μόδα</span></a>
+                          <a data-id="583" data-cnt="511" className="deals-distr__cat" href="/deals/583/health-beauty.html" title="Προσφορές σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></a>
+                          <a data-id="2175" data-cnt="526" className="deals-distr__cat" href="/deals/2175/paidika-brefika.html" title="Προσφορές σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></a>
+                          <a data-id="3058" data-cnt="269" className="deals-distr__cat" href="/deals/3058/sports-hobbies.html" title="Προσφορές σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></a>
+                          <a data-id="3204" data-cnt="204" className="deals-distr__cat" href="/deals/3204/auto-moto.html" title="Προσφορές σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></a>
                         </div>
                       </div>
                     </div>
@@ -133,7 +133,7 @@ const Deals = () => {
 
             <section className="deals__picks">
               <header className="deals__picks-header">
-                <h2 className="section__title">Προσφορές της ημέρας</h2>
+                <h2 className="section__title">{t('deals')} της ημέρας</h2>
                 <div className="descr">Επιλεγμένες προσφορές από την ομάδα του BestPrice</div>
               </header>
             </section>
@@ -142,7 +142,7 @@ const Deals = () => {
             <div className="deals-black-filter__wrapper">
               <div className="deals-black-filter">
                 <div className="deals-black-filter__label">
-                  <span>Black Προσφορές</span>
+                  <span>Black {t('deals')}</span>
                 </div>
                 <input readonly="" type="checkbox" />
               </div>
