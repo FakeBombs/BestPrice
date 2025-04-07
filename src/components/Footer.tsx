@@ -23,6 +23,7 @@ const Footer = () => {
           </div>
           
           <div className="footer__sections">
+            <div className="footer__section">
             <h3 className="text-lg font-semibold mb-4">Κατηγορίες</h3>
             <ul className="space-y-2">
               <li><Link to="/categories/c1" className="text-sm text-gray-600 hover:text-primary">Smartphones</Link></li>
@@ -31,7 +32,9 @@ const Footer = () => {
               <li><Link to="/categories/c4" className="text-sm text-gray-600 hover:text-primary">Headphones</Link></li>
               <li><Link to="/categories/c5" className="text-sm text-gray-600 hover:text-primary">Cameras</Link></li>
             </ul>
-          
+            </div>
+
+            <div className="footer__section">
             <h3 className="text-lg font-semibold mb-4">BestPrice</h3>
             <ul className="space-y-2">
               <li><Link to="/about" className="text-sm text-gray-600 hover:text-primary">Σχετικά με εμάς</Link></li>
@@ -44,7 +47,9 @@ const Footer = () => {
               <li><Link to="/careers" className="text-sm text-gray-600 hover:text-primary">Θέσεις εργασίας (5)</Link></li>
               <li><Link to="/contact" className="text-sm text-gray-600 hover:text-primary">Επικοινωνία</Link></li>
             </ul>
-          
+            </div>
+
+            <div className="footer__section footer__section--in-numbers">
             <h3 className="text-lg font-semibold mb-4">Σε αριθμούς</h3>
             <ul className="space-y-2">
               <li><Link to="/stores" className="text-sm text-gray-600 hover:text-primary">3.752 καταστήματα</Link></li>
@@ -52,12 +57,34 @@ const Footer = () => {
               <li><Link to="/brands" className="text-sm text-gray-600 hover:text-primary">37.297 κατασκευαστές</Link></li>
               <li><Link to="/deals" className="text-sm text-gray-600 hover:text-primary">6.624 προσφορές</Link></li>
             </ul>
-          
+            </div>
+
+            <div class="footer__section footer__section--privacy">
+              <div class="footer__section-header">
+                Όροι χρήσης &amp; ιδιωτικότητα
+                <div class="footer__section-icon"></div>
+              </div>
+              
+              <div class="footer__section-scroller">
+                <div class="footer__section-content">
+                  <ul>
+                    <li><a rel="nofollow" href="/policies/terms">Όροι χρήσης</a></li>
+                    <li><a rel="nofollow" href="/policies/privacy">Πολιτική προσωπικών δεδομένων</a></li>
+                    <li><a rel="nofollow" href="/policies/cookies">Χρήση cookies</a></li>
+                    <li><a rel="nofollow" href="/gdpr">GDPR</a></li>
+                    <li><a rel="nofollow" href="/policies/dsa">DSA</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="footer__section footer__section--b2b">
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
               <li className="flex items-center text-sm text-gray-600"><Mail size={16} className="mr-2" />contact@bestprice.example</li>
               <li className="flex items-center text-sm text-gray-600"><Phone size={16} className="mr-2" />+1 (555) 123-4567</li>
             </ul>
+            </div>
           </div>
         </div>
         
