@@ -103,6 +103,10 @@ const defaultTranslations: Translations = {
     editProfile: 'Edit Profile',
     accountSummary: 'Account Summary',
 
+    // Footer & Other Pages
+    categories: 'Categories',
+    gifts: 'Gifts',
+
     // Deals
     deals: 'Deals',
 
@@ -136,6 +140,10 @@ const defaultTranslations: Translations = {
     deposit: 'Κατάθεση',
     transactions: 'Συναλλαγές',
     connectWallet: 'Σύνδεση Πορτοφολιού',
+
+    // Footer & Other Pages
+    categories: 'Κατηγορίες',
+    gifts: 'Δώρα',
     
     // Deals
     deals: 'Προσφορές',
