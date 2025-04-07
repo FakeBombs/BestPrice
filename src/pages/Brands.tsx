@@ -41,17 +41,7 @@ const Brands = () => {
         <div className="brands-top-cats">
           <div className="scroll">
             <div className="scroll__clip">
-              <div className="scroll__scroller">
-                <div className="brands-top__inner scroll__content">
-                  <a className="brands__top-cat" href="/brands/6989/technology.html">Τεχνολογία</a>
-                  <a className="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
-                  <a className="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
-                  <a className="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
-                  <a className="brands__top-cat" href="/brands/2175/paidika-brefika.html">Παιδικά - Βρεφικά</a>
-                  <a className="brands__top-cat" href="/brands/3058/sports-hobbies.html">Hobby, Αθλητισμός</a>
-                  <a className="brands__top-cat" href="/brands/3204/auto-moto.html">Μηχανοκίνηση</a>
-                </div>
-              </div>
+              
             </div>
           <div>
         </div>
