@@ -89,11 +89,11 @@ const Deals = () => {
 
 
         <div className="deals-tabs">
-          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</Link>
-          <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</Link>
-          <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</Link>
-          <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</Link>
-          <a className="deals-tabs__tab" href="/deals/b">Ανά κατασκευαστή</Link>
+          <a className="deals-tabs__tab deals-tabs__tab--selected" href="/deals">Προσφορές</a>
+          <a className="deals-tabs__tab" href="/deals/c">Ανά κατηγορία</a>
+          <a className="deals-tabs__tab" href="/deals/my">Οι Προσφορές μου</a>
+          <a className="deals-tabs__tab" href="/deals/m">Ανά κατάστημα</a>
+          <a className="deals-tabs__tab" href="/deals/b">Ανά κατασκευαστή</a>
         </div>
 
         <header className="page-header">
