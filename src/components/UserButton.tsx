@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const UserButton = () => {
   const { user, logout } = useAuth();
@@ -140,10 +141,10 @@ const UserButton = () => {
     <>
       <div className="flex items-center space-x-2">
         <Button variant="ghost" onClick={handleLoginClick}>
-          Sign In
+          {t('signIn')}
         </Button>
         <Button onClick={handleRegisterClick}>
-          Register
+          {t('register')}
         </Button>
       </div>
       
