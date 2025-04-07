@@ -36,15 +36,6 @@ const Brands = () => {
               <div className="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
           </span>
         </header>
-
-
-        <div className="brands-top-cats">
-          <div className="scroll">
-            <div className="scroll__clip">
-              
-            </div>
-          <div>
-        </div>
         
         
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
