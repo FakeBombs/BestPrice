@@ -30,6 +30,14 @@ const Brands = () => {
           </nav>
         </div>
 
+        <header class="page-header">
+          <h1>37.353 κατασκευαστές</h1>
+          <span class="autocomplete__wrapper" style={{display: "inline-block", position: "relative", vertical-align: "top", z-index: "500000000"}}>
+            <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autocomplete="off" autocorrect="off" spellcheck="false">
+              <div class="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
+          </span>
+        </header>
+
         
       <h1 className="text-3xl font-bold mb-2">Μάρκες</h1>
       <p className="text-muted-foreground mb-6">
