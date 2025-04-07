@@ -35,6 +35,7 @@ const ProductDetail = () => {
   const [categoryDeals, setCategoryDeals] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   // Redirect legacy URLs to new format
   useEffect(() => {
