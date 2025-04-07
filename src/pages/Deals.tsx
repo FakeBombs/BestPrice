@@ -106,13 +106,21 @@ const Deals = () => {
         <div className="page-products">
           <main className="page-products__main">
 
-            <div class="deals-distr__wrapper">
-              <div class="deals-distr deals-distr--center">
-                <div class="scroll scroll--center scroll--small">
-                  <div class="scroll__clip">
-                    <div class="scroll__scroller">
-                      <div class="scroll__content">
-                        <div class="deals-distr__cats"></div>
+            <div className="deals-distr__wrapper">
+              <div className="deals-distr deals-distr--center">
+                <div className="scroll scroll--center scroll--small">
+                  <div className="scroll__clip">
+                    <div className="scroll__scroller">
+                      <div className="scroll__content">
+                        <div className="deals-distr__cats">
+                          <Link data-id="6989" data-cnt="1131" className="deals-distr__cat" to="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><span>Τεχνολογία</span></Link>
+                          <Link data-id="2185" data-cnt="1720" className="deals-distr__cat" to="/deals/2185/home-garden.html" title="Προσφορές σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></Link>
+                          <Link data-id="2068" data-cnt="2190" className="deals-distr__cat" to="/deals/2068/fashion.html" title="Προσφορές σε Μόδα"><span>Μόδα</span></Link>
+                          <Link data-id="583" data-cnt="511" className="deals-distr__cat" to="/deals/583/health-beauty.html" title="Προσφορές σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></Link>
+                          <Link data-id="2175" data-cnt="526" className="deals-distr__cat" to="/deals/2175/paidika-brefika.html" title="Προσφορές σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></Link>
+                          <Link data-id="3058" data-cnt="269" className="deals-distr__cat" to="/deals/3058/sports-hobbies.html" title="Προσφορές σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></Link>
+                          <Link data-id="3204" data-cnt="204" className="deals-distr__cat" to="/deals/3204/auto-moto.html" title="Προσφορές σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></Link>
+                        </div>
                       </div>
                     </div>
                   </div>
