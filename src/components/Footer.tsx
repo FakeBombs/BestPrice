@@ -22,13 +22,22 @@ const Footer = () => {
           <div className="footer__sections">
             <div className="footer__section">
             <h3 className="text-lg font-semibold mb-4">Κατηγορίες</h3>
-            <ul className="space-y-2">
-              <li><Link to="/categories/c1" className="text-sm text-gray-600 hover:text-primary">Smartphones</Link></li>
-              <li><Link to="/categories/c2" className="text-sm text-gray-600 hover:text-primary">Laptops</Link></li>
-              <li><Link to="/categories/c3" className="text-sm text-gray-600 hover:text-primary">Tablets</Link></li>
-              <li><Link to="/categories/c4" className="text-sm text-gray-600 hover:text-primary">Headphones</Link></li>
-              <li><Link to="/categories/c5" className="text-sm text-gray-600 hover:text-primary">Cameras</Link></li>
-            </ul>
+              <div class="footer__section-scroller">
+                <div class="footer__section-content">
+                  <ul>
+                    <li><Link to="/categories/c1">Τεχνολογία</Link></li>
+                    <li><Link to="/categories/c2">Σπίτι & Κήπος</Link></li>
+                    <li><Link to="/categories/c3">Μόδα</Link></li>
+                    <li><Link to="/categories/c4">Υγεία & Ομορφιά</Link></li>
+                    <li><Link to="/categories/c5">Παιδικά, Βρεφικά</Link></li>
+                    <li><Link to="/categories/c1">Αθλητισμός, Hobby</Link></li>
+                    <li><Link to="/categories/c2">Μηχανοκίνηση</Link></li>
+                    <li><Link to="/deals">Προσφορές</Link></li>
+                    <li><Link to="/gifts">Δώρα</Link></li>
+                    <li><Link to="/give">BestPrice Give</Link></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div className="footer__section">
