@@ -115,13 +115,13 @@ const Deals = () => {
                     <div className="scroll__scroller">
                       <div className="scroll__content">
                         <div className="deals-distr__cats">
-                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><span>Τεχνολογία</span></a>
-                          <a data-id="2185" data-cnt="1720" className="deals-distr__cat" href="/deals/2185/home-garden.html" title="Προσφορές σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></a>
-                          <a data-id="2068" data-cnt="2190" className="deals-distr__cat" href="/deals/2068/fashion.html" title="Προσφορές σε Μόδα"><span>Μόδα</span></a>
-                          <a data-id="583" data-cnt="511" className="deals-distr__cat" href="/deals/583/health-beauty.html" title="Προσφορές σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></a>
-                          <a data-id="2175" data-cnt="526" className="deals-distr__cat" href="/deals/2175/paidika-brefika.html" title="Προσφορές σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></a>
-                          <a data-id="3058" data-cnt="269" className="deals-distr__cat" href="/deals/3058/sports-hobbies.html" title="Προσφορές σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></a>
-                          <a data-id="3204" data-cnt="204" className="deals-distr__cat" href="/deals/3204/auto-moto.html" title="Προσφορές σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></a>
+                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="{t('deals')} σε {t('technology')}"><span>{t('technology')}</span></a>
+                          <a data-id="2185" data-cnt="1720" className="deals-distr__cat" href="/deals/2185/home-garden.html" title="{t('deals')} σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></a>
+                          <a data-id="2068" data-cnt="2190" className="deals-distr__cat" href="/deals/2068/fashion.html" title="{t('deals')} σε Μόδα"><span>Μόδα</span></a>
+                          <a data-id="583" data-cnt="511" className="deals-distr__cat" href="/deals/583/health-beauty.html" title="{t('deals')} σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></a>
+                          <a data-id="2175" data-cnt="526" className="deals-distr__cat" href="/deals/2175/paidika-brefika.html" title="{t('deals')} σε Παιδικά - Βρεφικά"><span>Παιδικά - Βρεφικά</span></a>
+                          <a data-id="3058" data-cnt="269" className="deals-distr__cat" href="/deals/3058/sports-hobbies.html" title="{t('deals')} σε Hobby, Αθλητισμός"><span>Hobby, Αθλητισμός</span></a>
+                          <a data-id="3204" data-cnt="204" className="deals-distr__cat" href="/deals/3204/auto-moto.html" title="{t('deals')} σε Μηχανοκίνηση"><span>Μηχανοκίνηση</span></a>
                         </div>
                       </div>
                     </div>
