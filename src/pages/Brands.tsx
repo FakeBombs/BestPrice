@@ -40,14 +40,52 @@ const Brands = () => {
         
         <section className="top-brands">
           <h3>Δημοφιλείς</h3>
-          <div class="top-brands__brands">
-            <div class="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
+          <div className="top-brands__brands">
+            <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
               {brands.map((brand) => (
                 <a className="brand box" alt={brand.name} title={brand.name} key={brand.id} href="/b/9/apple.html">
                   <img itemprop="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
                 </a>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="brand-directory">
+          <div className="brand-directory__letters">
+            <div className="brand-directory__letters-wrapper">
+              <nav className="sticky" data-sticky-viewport="MD">
+                <a href="/brands#letter-0-9">0-9</a>
+                <a href="/brands#letter-A">A</a>
+                <a href="/brands#letter-B">B</a>
+                <a href="/brands#letter-C">C</a>
+                <a href="/brands#letter-D">D</a>
+                <a href="/brands#letter-E">E</a>
+                <a href="/brands#letter-F">F</a>
+                <a href="/brands#letter-G">G</a>
+                <a href="/brands#letter-H">H</a>
+                <a href="/brands#letter-I">I</a>
+                <a href="/brands#letter-J">J</a>
+                <a href="/brands#letter-K">K</a>
+                <a href="/brands#letter-L">L</a>
+                <a href="/brands#letter-M">M</a>
+                <a href="/brands#letter-N">N</a>
+                <a href="/brands#letter-O">O</a>
+                <a href="/brands#letter-P">P</a>
+                <a href="/brands#letter-Q">Q</a>
+                <a href="/brands#letter-R">R</a>
+                <a href="/brands#letter-S">S</a>
+                <a href="/brands#letter-T">T</a>
+                <a href="/brands#letter-U">U</a>
+                <a href="/brands#letter-V">V</a>
+                <a href="/brands#letter-W">W</a>
+                <a href="/brands#letter-X">X</a>
+                <a href="/brands#letter-Y">Y</a>
+                <a href="/brands#letter-Z">Z</a>
+                <a href="/brands#letter-Greek">Α-Ω</a>
+              </nav>
+            </div>
+          
           </div>
         </section>
 
