@@ -44,7 +44,7 @@ const Brands = () => {
             <div class="scroll__clip">
               <div class="scroll__scroller">
                 <div class="brands-top__inner scroll__content">
-                  <a class="brands__top-cat" href="/brands/6989/technology.html">Τεχνολογία</a>
+                  <a class="brands__top-cat" href="/brands/6989/technology.html">{t('technology')}</a>
                 </div>
               </div>
             </div>
