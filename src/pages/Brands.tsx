@@ -17,6 +17,7 @@ const brands = [
 ];
 
 const Brands = () => {
+  const { t } = useTranslation();
   return (
     <div className="root__wrapper" id="page-brands">
       <div className="root">
