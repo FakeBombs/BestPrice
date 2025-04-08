@@ -45,6 +45,12 @@ const Brands = () => {
               <div class="scroll__scroller">
                 <div class="brands-top__inner scroll__content">
                   <a class="brands__top-cat" href="/brands/6989/technology.html">{t('technology')}</a>
+                  <a class="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
+                  <a class="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
+                  <a class="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
+                  <a class="brands__top-cat" href="/brands/2175/paidika-brefika.html">Παιδικά - Βρεφικά</a>
+                  <a class="brands__top-cat" href="/brands/3058/sports-hobbies.html">Hobby, Αθλητισμός</a>
+                  <a class="brands__top-cat" href="/brands/3204/auto-moto.html">Μηχανοκίνηση</a>
                 </div>
               </div>
             </div>
