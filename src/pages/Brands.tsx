@@ -41,7 +41,7 @@ const Brands = () => {
         <section className="top-brands">
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
-            <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
+            <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddigRight: "0"}}>
               {brands.map((brand) => (
                 <a className="brand box" alt={brand.name} title={brand.name} key={brand.id} href="/b/${brandId}/${brandName}.html">
                   <img itemprop="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
