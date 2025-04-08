@@ -36,7 +36,16 @@ const Brands = () => {
               <div className="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
           </span>
         </header>
-        
+
+        <div class="brands-top-cats">
+          <div class="scroll">
+            <div class="scroll__clip">
+              <div class="scroll__scroller">
+                <div class="brands-top__inner scroll__content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
         
         <section className="top-brands">
           <h3>Δημοφιλείς</h3>
