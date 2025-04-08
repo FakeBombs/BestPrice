@@ -30,7 +30,7 @@ const Brands = () => {
         </div>
 
         <header className="page-header">
-          <h1>37.353 κατασκευαστές</h1>
+          <h1 style={{width: "85%"}}>37.353 κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000"}}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autocomplete="off" autocorrect="off" spellcheck="false"/>
               <div className="autocomplete autocomplete--minimal" style={{display: "none"}}></div>
