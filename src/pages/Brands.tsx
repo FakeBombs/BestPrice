@@ -5,14 +5,14 @@ const brands = [
   { id: 'b2', name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
   { id: 'b3', name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
   { id: 'b4', name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
-  { id: 'b5', name: 'Canon', logo: 'https://placehold.co/200x100?text=Canon' },
-  { id: 'b6', name: 'Nikon', logo: 'https://placehold.co/200x100?text=Nikon' },
-  { id: 'b7', name: 'Lenovo', logo: 'https://placehold.co/200x100?text=Lenovo' },
-  { id: 'b8', name: 'Dell', logo: 'https://placehold.co/200x100?text=Dell' },
-  { id: 'b9', name: 'HP', logo: 'https://placehold.co/200x100?text=HP' },
-  { id: 'b10', name: 'Asus', logo: 'https://placehold.co/200x100?text=Asus' },
-  { id: 'b11', name: 'Acer', logo: 'https://placehold.co/200x100?text=Acer' },
-  { id: 'b12', name: 'Microsoft', logo: 'https://placehold.co/200x100?text=Microsoft' }
+  { id: 'b5', name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
+  { id: 'b6', name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
+  { id: 'b7', name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
+  { id: 'b8', name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
+  { id: 'b9', name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
+  { id: 'b10', name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
+  { id: 'b11', name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
+  { id: 'b12', name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg' }
 ];
 
 const Brands = () => {
