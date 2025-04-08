@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const brands = [
   { id: 'b1', name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
