@@ -85,7 +85,45 @@ const Brands = () => {
                 <a href="/brands#letter-Greek">Α-Ω</a>
               </nav>
             </div>
-          
+
+            
+
+            <div class="brand-directory__letter" id="letter-0-9">
+              <aside><h3>0-9</h3></aside>
+              <div class="brand-directory__letter-main">
+                <ol>
+                  <li><a href="/b/30193/1more.html" rel="nofollow">1MORE</a></li>
+                  <li><a href="/b/43037/1stplayer.html" rel="nofollow">1stPlayer</a></li>
+                  <li><a href="/b/38369/24colours.html" rel="nofollow">24colours</a></li>
+                  <li><a href="/b/3320/2k.html" rel="nofollow">2K</a></li>
+                  <li><a href="/b/18388/2k-games.html" rel="nofollow">2K Games</a></li>
+                  <li><a href="/b/1912/3dconnexion.html" rel="nofollow">3Dconnexion</a></li>
+                  <li><a href="/b/41580/3ellen.html" rel="nofollow">3ellen</a></li>
+                  <li><a href="/b/4917/3go.html" rel="nofollow">3GO</a></li>
+                  <li><a href="/b/16764/3guys.html" rel="nofollow">3Guys</a></li>
+                  <li><a href="/b/206/3m.html" rel="nofollow">3M</a></li>
+                  <li><a href="/b/39177/3mk.html" rel="nofollow">3mk</a></li>
+                  <li><a href="/b/18136/4711.html" rel="nofollow">4711</a></li>
+                  <li><a href="/b/28227/4f.html" rel="nofollow">4F</a></li>
+                  <li><a href="/b/7228/4m.html" rel="nofollow">4M</a></li>
+                  <li><a href="/b/21425/4moms.html" rel="nofollow">4Moms</a></li>
+                  <li><a href="/b/38779/4teen4ty.html" rel="nofollow">4teen4ty</a></li>
+                  <li><a href="/b/25257/511-tactical.html" rel="nofollow">5.11 Tactical</a></li>
+                  <li><a href="/b/34087/500cosmetics.html" rel="nofollow">500Cosmetics</a></li>
+                  <li><a href="/b/5005/505-games.html" rel="nofollow">505 Games</a></li>
+                  <li><a href="/b/33983/5050-games.html" rel="nofollow">5050 Games</a></li>
+                  <li><a href="/b/42765/5five.html" rel="nofollow">5Five</a></li>
+                  <li><a href="/b/36409/70mai.html" rel="nofollow">70mai</a></li>
+                  <li><a href="/b/39065/7days.html" rel="nofollow">7Days</a></li>
+                  <li><a href="/b/30311/7elements.html" rel="nofollow">7elements</a></li>
+                  <li><a href="/b/30214/7nutrition.html" rel="nofollow">7Nutrition</a></li>
+                  <li><a href="/b/30267/8bitdo.html" rel="nofollow">8bitdo</a></li>
+                </ol>
+              </div>
+            </div>
+
+
+            
           </div>
         </section>
 
