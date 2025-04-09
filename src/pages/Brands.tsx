@@ -25,7 +25,7 @@ const Brands = () => {
         <div id="trail">
           <nav className="breadcrumb">
             <ol>
-              <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+              <li><a href="/" rel="home" data-no-info=""><span>BestPrice</span></a><span className="trail__breadcrumb-separator">›</span></li>
               <li><a href="/brands" data-no-info="" className="trail__last"><span>Κατασκευαστές</span></a><span className="trail__breadcrumb-separator"></span></li>
             </ol>
           </nav>
@@ -137,6 +137,48 @@ const Brands = () => {
 
             <div class="brand-directory__letter" id="letter-D">
               <aside><h3>D</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-E">
+              <aside><h3>E</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-F">
+              <aside><h3>F</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-G">
+              <aside><h3>G</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-H">
+              <aside><h3>H</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-I">
+              <aside><h3>I</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-J">
+              <aside><h3>J</h3></aside>
               <div class="brand-directory__letter-main">
                 
               </div>
