@@ -92,7 +92,13 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                   </a>
                 </div>
                 <div class="prices__props">
-                  <span data-status="IN_STOCK" class="av"><small>{priceInfo.inStock ? Άμεσα διαθέσιμο : Out of stock}</small></span>
+                  <span data-status="IN_STOCK" class="av">
+                    <small>
+                      {priceInfo.inStock
+                        ? <span className="text-green-600 flex items-center text-sm"><Check className="h-4 w-4 mr-1" /> In stock</span>
+                        : <span className="text-red-500 flex items-center text-sm"><X className="h-4 w-4 mr-1" /> Out of stock</span>
+                      }
+                  </small></span>
                 </div>
                 <div role="button" aria-label="All variations from store" data-id="45" class="prices__group-variations-button prices__group-variations-button--inside">
                   <span class="prices__group-variations-label">4  παραλλαγές</span>
