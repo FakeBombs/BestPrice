@@ -65,8 +65,8 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
           <div className="prices__root">
             <div className="prices__merchant">
               <div className="prices__merchant-meta">
-                <a aria-label="{vendor.name}" className="prices__merchant-logo" rel="nofollow" href="/to/181077790/samsung-galaxy-a56-5g-dual-sim-awesome-pink.html?from=2160473294&amp;seq=1">
-                  <img width="90" height="30" loading="lazy" src="{vendor.logo}" alt="{vendor.name}" title="{vendor.name}" />
+                <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="/to/181077790/samsung-galaxy-a56-5g-dual-sim-awesome-pink.html?from=2160473294&amp;seq=1">
+                  <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
                 </a>
               </div>
               <div>
