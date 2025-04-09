@@ -25,7 +25,7 @@ const Brands = () => {
         <div id="trail">
           <nav className="breadcrumb">
             <ol>
-              <li><a href="/" rel="home" data-no-info=""><span>BestPrice</span></a><span className="trail__breadcrumb-separator">›</span></li>
+              <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
               <li><a href="/brands" data-no-info="" className="trail__last"><span>Κατασκευαστές</span></a><span className="trail__breadcrumb-separator"></span></li>
             </ol>
           </nav>
