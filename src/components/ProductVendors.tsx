@@ -37,7 +37,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
       {/* Insert the sponsored ad at the top */}
       <TopVendorAd productId={product.id} />
       
-      <div className="prices" data-merchants="{product.prices.length}">
+      <div className="prices" data-merchants={product.prices.length}>
         {sortedPrices.map((priceInfo) => (
           <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} />
         ))}
@@ -68,7 +68,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="/to/181077790/samsung-galaxy-a56-5g-dual-sim-awesome-pink.html?from=2160473294&amp;seq=1">
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
                 </a>
-                <a data-tooltip="Πληροφορίες για το Plaisio" className="prices__merchant-link popup-anchor" data-mid="79" href="/m/79/plaisio.html">
+                <a data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid="79" href="/m/79/plaisio.html">
                   <svg aria-hidden="true" className="icon" width="12" height="12"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M0 6C0 9.312 2.688 12 6 12C9.312 12 12 9.312 12 6C12 2.688 9.312 0 6 0C2.688 0 0 2.688 0 6ZM5 10V6H7V10H5ZM5 5V3H7V5H5Z"/></svg>
                   <em>{vendor.name}</em>
                 </a>
@@ -84,15 +84,15 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
             </div>
           
           <div className="prices__products">
-            <div id="p-180878146" class="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid="79" data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
-              <div class="prices__main">
-                <div class="prices__title">
-                  <a data-price="54990" title={product.name} rel="nofollow noopener" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">
+            <div id="p-180878146" className="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid="79" data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
+              <div className="prices__main">
+                <div className="prices__title">
+                  <a data-price="54990" title={product.title} rel="nofollow noopener" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">
                     <h3>{product.title}</h3>
                   </a>
                 </div>
-                <div class="prices__props">
-                  <span data-status="IN_STOCK" class="av">
+                <div className="prices__props">
+                  <span data-status="IN_STOCK" className="av">
                     <small>
                       {priceInfo.inStock
                         ? <span>Άμεσα διαθέσιμο</span>
@@ -101,27 +101,27 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                     </small>
                   </span>
                 </div>
-                <div role="button" aria-label="All variations from store" data-id="45" class="prices__group-variations-button prices__group-variations-button--inside">
-                  <span class="prices__group-variations-label">4  παραλλαγές</span>
-                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div role="button" aria-label="All variations from store" data-id="45" className="prices__group-variations-button prices__group-variations-button--inside">
+                  <span className="prices__group-variations-label">4  παραλλαγές</span>
+                  <svg aria-hidden="true" className="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
               </div>
 
-              <div class="prices__price">
-                <div class="prices__price-wrapper">
+              <div className="prices__price">
+                <div className="prices__price-wrapper">
                   <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">${priceInfo.price.toFixed(2)}</a>
                 </div>
-                <div class="prices__costs">
-                  <div class="prices__cost-label">Μεταφορικά</div>
-                  <div class="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)}` : 'Δωρεάν'}</div>
+                <div className="prices__costs">
+                  <div className="prices__cost-label">Μεταφορικά</div>
+                  <div className="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)}` : 'Δωρεάν'}</div>
                 </div>
               </div>
 
-              <div class="prices__buttons">
-                <div class="prices__button">
-                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" class="button" disabled={!priceInfo.inStock}>
+              <div className="prices__buttons">
+                <div className="prices__button">
+                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" className="button" disabled={!priceInfo.inStock}>
                     <span>Δες το στο κατάστημα</span>
-                    <svg aria-hidden="true" class="icon" width="12" height="12"><path xmlns="http://www.w3.org/2000/svg" d="M3.41 0L2 1.41L6.58 6L2 10.59L3.41 12L9.41 6L3.41 0Z"/></svg>
+                    <svg aria-hidden="true" className="icon" width="12" height="12"><path xmlns="http://www.w3.org/2000/svg" d="M3.41 0L2 1.41L6.58 6L2 10.59L3.41 12L9.41 6L3.41 0Z"/></svg>
                   </a>
                 </div>
               </div>
