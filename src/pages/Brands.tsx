@@ -44,7 +44,7 @@ const Brands = () => {
             <div class="scroll__clip">
               <div class="scroll__scroller">
                 <div class="brands-top__inner scroll__content">
-                  <a class="brands__top-cat" href="/brands/6989/technology.html"><svg aria-hidden="true" className="icon" width="24" height="24"><use xlinkHref="/public/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg>{t('technology')}</a>
+                  <a class="brands__top-cat" href="/brands/6989/technology.html"><svg aria-hidden="true" className="icon" width="24" height="24"><use xlinkHref="https://raw.githubusercontent.com/FakeBombs/BestPrice/refs/heads/main/public/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg>{t('technology')}</a>
                   <a class="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
                   <a class="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
                   <a class="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
