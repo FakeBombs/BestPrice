@@ -106,7 +106,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 </div>
                 <div class="prices__costs">
                   <div class="prices__cost-label">Μεταφορικά</div>
-                  <div class="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)} shipping` : 'Δωρεάν'}</div>
+                  <div class="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)}` : 'Δωρεάν'}</div>
                 </div>
               </div>
 
@@ -120,12 +120,6 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
               </div>
               
               <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
-              
-              <div className="text-sm">
-                {priceInfo.shippingCost > 0 
-                  ? `+ $${priceInfo.shippingCost.toFixed(2)} shipping` 
-                  : 'Free shipping'}
-              </div>
               
               <div className="flex items-center mt-1">
                 {priceInfo.inStock 
