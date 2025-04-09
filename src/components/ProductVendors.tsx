@@ -88,7 +88,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
               <div class="prices__main">
                 <div class="prices__title">
                   <a data-price="54990" title={product.name} rel="nofollow noopener" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">
-                    <h3>{product.name}</h3>
+                    <h3>{product.title}</h3>
                   </a>
                 </div>
                 <div class="prices__props">
@@ -109,7 +109,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
 
               <div class="prices__price">
                 <div class="prices__price-wrapper">
-                  <a title="Samsung Galaxy A56 5G 8/256GB Awesome Pink" rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">${priceInfo.price.toFixed(2)}</a>
+                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">${priceInfo.price.toFixed(2)}</a>
                 </div>
                 <div class="prices__costs">
                   <div class="prices__cost-label">Μεταφορικά</div>
@@ -119,7 +119,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
 
               <div class="prices__buttons">
                 <div class="prices__button">
-                  <a title="Samsung Galaxy A56 5G 8/256GB Awesome Pink" rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" class="button" disabled={!priceInfo.inStock}>
+                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" class="button" disabled={!priceInfo.inStock}>
                     <span>Δες το στο κατάστημα</span>
                     <svg aria-hidden="true" class="icon" width="12" height="12"><path xmlns="http://www.w3.org/2000/svg" d="M3.41 0L2 1.41L6.58 6L2 10.59L3.41 12L9.41 6L3.41 0Z"/></svg>
                   </a>
