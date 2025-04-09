@@ -115,7 +115,7 @@ const Deals = () => {
                     <div className="scroll__scroller">
                       <div className="scroll__content">
                         <div className="deals-distr__cats">
-                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><span>{t('technology')}</span></a>
+                          <a data-id="6989" data-cnt="1131" className="deals-distr__cat" href="/deals/6989/technology.html" title="Προσφορές σε Τεχνολογία"><svg aria-hidden="true" className="icon" width="24" height="24"><path d="M17 2H7C6.44772 2 6 2.44772 6 3V21C6 21.5523 6.44772 22 7 22H17C17.5523 22 18 21.5523 18 21V3C18 2.44772 17.5523 2 17 2ZM12.5 4H14M10 4H10.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 19.5C12.5 19.7761 12.2761 20 12 20 11.7239 20 11.5 19.7761 11.5 19.5 11.5 19.2239 11.7239 19 12 19 12.2761 19 12.5 19.2239 12.5 19.5ZM15.25 6.5 8.5 13.25M12.2605 6.5 8.5 10.2316" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{t('technology')}</span></a>
                           <a data-id="2185" data-cnt="1720" className="deals-distr__cat" href="/deals/2185/home-garden.html" title="Προσφορές σε Σπίτι &amp; Κήπος"><span>Σπίτι &amp; Κήπος</span></a>
                           <a data-id="2068" data-cnt="2190" className="deals-distr__cat" href="/deals/2068/fashion.html" title="Προσφορές σε Μόδα"><span>Μόδα</span></a>
                           <a data-id="583" data-cnt="511" className="deals-distr__cat" href="/deals/583/health-beauty.html" title="Προσφορές σε Υγεία &amp; Ομορφιά"><span>Υγεία &amp; Ομορφιά</span></a>
