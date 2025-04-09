@@ -85,32 +85,32 @@ export interface Vendor {
 export const vendors: Vendor[] = [
   { 
     id: 'v1', 
-    name: 'TechStore',
-    logo: 'https://placehold.co/100x100?text=TechStore',
+    name: 'You',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/252.svg',
     rating: 4.5
   },
   { 
     id: 'v2', 
-    name: 'ElectroWorld',
-    logo: 'https://placehold.co/100x100?text=ElectroWorld',
+    name: 'Plaisio',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/79.svg',
     rating: 4.2
   },
   { 
     id: 'v3', 
-    name: 'MegaShop',
-    logo: 'https://placehold.co/100x100?text=MegaShop',
+    name: 'Public',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/743.svg',
     rating: 4.7
   },
   { 
     id: 'v4', 
-    name: 'BestBuy',
-    logo: 'https://placehold.co/100x100?text=BestBuy',
+    name: 'Κωτσόβολος',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/496.svg',
     rating: 4.0
   },
   { 
     id: 'v5', 
-    name: 'GlobalElectronics',
-    logo: 'https://placehold.co/100x100?text=GlobalElectronics',
+    name: 'Funky Buddha',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/4351.svg',
     rating: 4.3
   }
 ];
