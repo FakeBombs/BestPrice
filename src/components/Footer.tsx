@@ -139,7 +139,7 @@ const Footer = () => {
         </div>
           
           <div className="footer__social">
-            <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.facebook.com" data-network="facebook" class="footer__network"><Facebook size={24} /></Link>
+            <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.facebook.com" data-network="facebook" class="footer__network"><svg aria-hidden="true" class="icon" width="24" height="24"><path xmlns="http://www.w3.org/2000/svg" d="M24.045 12C24.045 5.34722 18.6528 -0.0449829 12 -0.0449829C5.34716 -0.0449829 -0.0450439 5.34722 -0.0450439 12C-0.0450439 18.0126 4.35716 22.9956 10.119 23.8998V15.4848H7.06316V12H10.119V9.34682C10.119 6.33062 11.9142 4.66082 14.6664 4.66082C15.9864 4.66082 17.3658 4.89842 17.3658 4.89842V7.86182H15.8478C14.3496 7.86182 13.8876 8.79242 13.8876 9.74282V12H17.2272L16.6926 15.4848H13.8876V23.8998C19.6428 22.9956 24.045 18.0126 24.045 12Z"/></svg></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Twitter" to="https://www.x.com" data-network="x" class="footer__network"><Twitter size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Threads" to="https://www.threads.net" data-network="Threads" class="footer__network"><Facebook size={24} /></Link>
             <Link target="_blank" rel="external nofollow noopener" title="Το BestPrice στο Facebook" to="https://www.instagram.com" data-network="instagram" class="footer__network"><Instagram size={24} /></Link>
