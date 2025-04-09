@@ -106,7 +106,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 </div>
                 <div class="prices__costs">
                   <div class="prices__cost-label">Μεταφορικά</div>
-                  <div class="prices__cost-value">Δωρεάν</div>
+                  <div class="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)} shipping` : 'Δωρεάν'}</div>
                 </div>
               </div>
 
