@@ -61,14 +61,10 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
   return (
     <Card className={!priceInfo.inStock ? 'opacity-70' : ''}>
       <CardContent className="p-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between">
+        <div className="prices__group" data-id="1" data-price="34650" data-hash="8c716c298df6afe61ed05f25374c5d48" data-is-open="" data-mid="11217" data-ts="1744146001" data-domain="mr-mobile.gr" data-mrating="4.6029">
           <div className="flex items-center mb-4 md:mb-0">
             <div className="w-12 h-12 mr-4">
-              <img 
-                src={vendor.logo} 
-                alt={vendor.name} 
-                className="w-full h-full object-contain"
-              />
+              <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-contain" />
             </div>
             <div>
               <h4 className="font-medium">{vendor.name}</h4>
