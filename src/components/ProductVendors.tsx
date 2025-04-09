@@ -85,6 +85,21 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
           
           <div className="prices__products">
             <div id="p-180878146" class="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid="79" data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
+              <div class="prices__main">
+                <div class="prices__title">
+                  <a data-price="54990" title={product.name} rel="nofollow noopener" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">
+                    <h3>{product.name}</h3>
+                  </a>
+                </div>
+                <div class="prices__props">
+                  <span data-status="IN_STOCK" class="av"><small>Άμεσα διαθέσιμο</small></span>
+                </div>
+                <div role="button" aria-label="All variations from store" data-id="45" class="prices__group-variations-button prices__group-variations-button--inside">
+                  <span class="prices__group-variations-label">4  παραλλαγές</span>
+                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              
               <h4 className="font-medium">{vendor.name}</h4>
               <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
               <div className="price-tag">${priceInfo.price.toFixed(2)}</div>
