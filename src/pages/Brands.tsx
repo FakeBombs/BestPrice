@@ -45,12 +45,12 @@ const Brands = () => {
               <div class="scroll__scroller">
                 <div class="brands-top__inner scroll__content">
                   <a class="brands__top-cat" href="/brands/6989/technology.html"><svg aria-hidden="true" className="icon" width="24" height="24"><path d="M17 2H7C6.44772 2 6 2.44772 6 3V21C6 21.5523 6.44772 22 7 22H17C17.5523 22 18 21.5523 18 21V3C18 2.44772 17.5523 2 17 2ZM12.5 4H14M10 4H10.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 19.5C12.5 19.7761 12.2761 20 12 20 11.7239 20 11.5 19.7761 11.5 19.5 11.5 19.2239 11.7239 19 12 19 12.2761 19 12.5 19.2239 12.5 19.5ZM15.25 6.5 8.5 13.25M12.2605 6.5 8.5 10.2316" stroke-linecap="round" stroke-linejoin="round"/></svg>{t('technology')}</a>
-                  <a class="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
-                  <a class="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
-                  <a class="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
-                  <a class="brands__top-cat" href="/brands/2175/paidika-brefika.html">Παιδικά - Βρεφικά</a>
-                  <a class="brands__top-cat" href="/brands/3058/sports-hobbies.html">Hobby, Αθλητισμός</a>
-                  <a class="brands__top-cat" href="/brands/3204/auto-moto.html">Μηχανοκίνηση</a>
+                  <a class="brands__top-cat" href="/brands/2185/home-garden.html"><svg aria-hidden="true" className="icon" width="24" height="24"><path fill-rule="evenodd" d="M6 2H18L20 12H4L6 2Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12V19.2543M16 12V16M5 20.5C5 19.9477 5.44772 19.5 6 19.5H18C18.5523 19.5 19 19.9477 19 20.5V22H5V20.5Z" stroke-linecap="round" stroke-linejoin="round"/></svg>Σπίτι &amp; Κήπος</a>
+                  <a class="brands__top-cat" href="/brands/2068/fashion.html"><svg aria-hidden="true" className="icon" width="24" height="24"></svg>Μόδα</a>
+                  <a class="brands__top-cat" href="/brands/583/health-beauty.html"><svg aria-hidden="true" className="icon" width="24" height="24"></svg>Υγεία &amp; Ομορφιά</a>
+                  <a class="brands__top-cat" href="/brands/2175/paidika-brefika.html"><svg aria-hidden="true" className="icon" width="24" height="24"></svg>Παιδικά - Βρεφικά</a>
+                  <a class="brands__top-cat" href="/brands/3058/sports-hobbies.html"><svg aria-hidden="true" className="icon" width="24" height="24"></svg>Hobby, Αθλητισμός</a>
+                  <a class="brands__top-cat" href="/brands/3204/auto-moto.html"><svg aria-hidden="true" className="icon" width="24" height="24"></svg>Μηχανοκίνηση</a>
                 </div>
               </div>
             </div>
