@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { Input } from '@/components/ui/input';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
