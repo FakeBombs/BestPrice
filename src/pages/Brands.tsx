@@ -184,6 +184,125 @@ const Brands = () => {
               </div>
             </div>
 
+            <div class="brand-directory__letter" id="letter-K">
+              <aside><h3>K</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-L">
+              <aside><h3>L</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-M">
+              <aside><h3>M</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-N">
+              <aside><h3>N</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-O">
+              <aside><h3>O</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-P">
+              <aside><h3>P</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-Q">
+              <aside><h3>Q</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-R">
+              <aside><h3>R</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-S">
+              <aside><h3>S</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-T">
+              <aside><h3>T</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-U">
+              <aside><h3>U</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-V">
+              <aside><h3>V</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-W">
+              <aside><h3>W</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-X">
+              <aside><h3>X</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-Y">
+              <aside><h3>Y</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-Z">
+              <aside><h3>Z</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
+            <div class="brand-directory__letter" id="letter-Greek">
+              <aside><h3>Α-Ω</h3></aside>
+              <div class="brand-directory__letter-main">
+                
+              </div>
+            </div>
+
 
             
           </div>
