@@ -103,6 +103,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
               </div>
               
               <div className="mt-4 md:mt-0 md:ml-4"><Button disabled={!priceInfo.inStock} className="w-full md:w-auto"><ExternalLink className="h-4 w-4 mr-2" />View Offer</Button></div>
+              </div>
             </div>
           </div>
 
