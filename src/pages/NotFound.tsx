@@ -34,7 +34,9 @@ const NotFound = () => {
         <div className="scroll__clip" style={{overflow: "hidden"}}>
           <div className="scroll__scroller">
             <div className="top-deals__products scroll__content">
-              <div className="top-deals__product-wrapper"></div>
+              <div className="top-deals__product-wrapper">
+                <a href="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html?bpref=top-deals" class="top-deals__product pressable"><div class="top-deals__drop"><svg class="drop drop--30" width="84" height="85" viewBox="0 0 84 85"><path fill-rule="evenodd" d="M0 0h84v85z"></path></svg><span class="drop drop--30">-36%</span></div><div class="ratio__wrapper top-deals__img"><div class="ratio"><img width="200" height="200" alt="Samsung Galaxy A56 8GB 256GB" class="ratio__content" loading="lazy" srcset="//bbpcdn.pstatic.gr/bpimg14/2md7Ns/1TUbSO_SX400Y400/1742223362/image.webp" src="//bbpcdn.pstatic.gr/bpimg14/2md7Ns/1TUbSO_SX200Y200/1742223362/image.webp"/></div></div><h4 class="top-deals__product-title">Samsung Galaxy A56 8GB 256GB</h4><div class="top-deals__price"><div class="top-deals__price-before">545,31€</div><strong>349,00€</strong></div></a>
+              </div>
             </div>
           </div>
         </div>
