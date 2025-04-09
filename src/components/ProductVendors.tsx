@@ -81,33 +81,29 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                   </a>
                 </div>
               </div>
-              <div>
-                <h4 className="font-medium">{vendor.name}</h4>
-                <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
+            </div>
+          
+          <div className="prices__products">
+            <div id="p-180878146" class="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid="79" data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
+              <h4 className="font-medium">{vendor.name}</h4>
+              <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
+              <div className="price-tag">${priceInfo.price.toFixed(2)}</div>
+              
+              <div className="text-sm">
+                {priceInfo.shippingCost > 0 
+                  ? `+ $${priceInfo.shippingCost.toFixed(2)} shipping` 
+                  : 'Free shipping'}
               </div>
+              
+              <div className="flex items-center mt-1">
+                {priceInfo.inStock 
+                  ? <span className="text-green-600 flex items-center text-sm"><Check className="h-4 w-4 mr-1" /> In stock</span>
+                  : <span className="text-red-500 flex items-center text-sm"><X className="h-4 w-4 mr-1" /> Out of stock</span>
+                }
+              </div>
+              
+              <div className="mt-4 md:mt-0 md:ml-4"><Button disabled={!priceInfo.inStock} className="w-full md:w-auto"><ExternalLink className="h-4 w-4 mr-2" />View Offer</Button></div>
             </div>
-          
-          <div className="flex flex-col md:items-end">
-            <div className="price-tag">${priceInfo.price.toFixed(2)}</div>
-            <div className="text-sm">
-              {priceInfo.shippingCost > 0 
-                ? `+ $${priceInfo.shippingCost.toFixed(2)} shipping` 
-                : 'Free shipping'}
-            </div>
-            <div className="flex items-center mt-1">
-              {priceInfo.inStock 
-                ? <span className="text-green-600 flex items-center text-sm"><Check className="h-4 w-4 mr-1" /> In stock</span>
-                : <span className="text-red-500 flex items-center text-sm"><X className="h-4 w-4 mr-1" /> Out of stock</span>
-              }
-            </div>
-          </div>
-          
-          <div className="mt-4 md:mt-0 md:ml-4">
-            <Button disabled={!priceInfo.inStock} className="w-full md:w-auto">
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View Offer
-            </Button>
-          </div>
           </div>
 
           <div className="prices__footer">
