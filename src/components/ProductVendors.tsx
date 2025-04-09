@@ -62,17 +62,16 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
     <Card className={!priceInfo.inStock ? 'opacity-70' : ''}>
       <CardContent className="p-4">
         <div className="prices__group" data-id="1" data-price="34650" data-hash="8c716c298df6afe61ed05f25374c5d48" data-is-open="" data-mid="11217" data-ts="1744146001" data-domain="mr-mobile.gr" data-mrating="4.6029">
-          <div className="flex items-center mb-4 md:mb-0">
-            <div className="w-12 h-12 mr-4">
-              <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <h4 className="font-medium">{vendor.name}</h4>
-              <div className="flex items-center text-sm text-muted-foreground">
-                Rating: {vendor.rating.toFixed(1)}/5.0
+          <div class="prices__root">
+            <div className="flex items-center mb-4 md:mb-0">
+              <div className="w-12 h-12 mr-4">
+                <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h4 className="font-medium">{vendor.name}</h4>
+                <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
               </div>
             </div>
-          </div>
           
           <div className="flex flex-col md:items-end">
             <div className="price-tag">${priceInfo.price.toFixed(2)}</div>
@@ -94,6 +93,17 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
               <ExternalLink className="h-4 w-4 mr-2" />
               View Offer
             </Button>
+          </div>
+          </div>
+
+          <div class="prices__footer">
+            <div class="prices__footer-items">
+              <div data-tooltip="Με την αγορά κερδίζεις 0,5 BestPrice Credit" data-tooltip-no-border="" data-is_certified="false" class="prices__footer-item prices__footer-item--loyalty loyalty-actions popup-anchor" data-listener-added="true">
+                <span>0,5</span>
+                <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M13.4 8.00001C13.4 10.9824 10.9824 13.4 8.00001 13.4C5.01767 13.4 2.60001 10.9824 2.60001 8.00001C2.60001 5.01767 5.01767 2.60001 8.00001 2.60001C10.9824 2.60001 13.4 5.01767 13.4 8.00001ZM14.8 8.00001C14.8 11.7555 11.7555 14.8 8.00001 14.8C4.24448 14.8 1.20001 11.7555 1.20001 8.00001C1.20001 4.24448 4.24448 1.20001 8.00001 1.20001C11.7555 1.20001 14.8 4.24448 14.8 8.00001ZM11.1326 9.59898C11.2092 9.3499 11.222 9.08022 11.1708 8.78993C11.1002 8.38944 10.9284 8.08717 10.6554 7.8831C10.3825 7.67903 10.043 7.57262 9.63679 7.56387L9.6311 7.53161C9.88884 7.35868 10.0748 7.14784 10.1889 6.89908C10.303 6.65032 10.3344 6.3808 10.2832 6.09051C10.2392 5.84055 10.1442 5.62796 9.99827 5.45276C9.85236 5.27757 9.65499 5.15232 9.40615 5.07703C9.16631 5.00569 8.93134 4.97368 8.70122 4.981C8.4711 4.98832 8.11414 5.03464 7.63033 5.11994L5.29999 5.53085L6.35852 11.5341L8.97915 11.072C9.41457 10.9952 9.76743 10.8942 10.0377 10.7689C10.308 10.6437 10.5458 10.4715 10.751 10.2524C10.9288 10.0659 11.056 9.84806 11.1326 9.59898ZM8.62489 6.38709C8.69215 6.47777 8.73455 6.57283 8.75208 6.67228C8.77483 6.8013 8.77335 6.91865 8.74765 7.02434C8.72194 7.13003 8.64466 7.2261 8.51579 7.31257C8.4244 7.3758 8.2934 7.42661 8.1228 7.465C7.9522 7.5034 7.74461 7.54416 7.50002 7.58729L7.25811 7.62994L7.03418 6.35995L7.17932 6.33436C7.48305 6.2808 7.71926 6.24123 7.88796 6.21564C8.05666 6.19005 8.20124 6.18881 8.32171 6.21191C8.45657 6.23801 8.55763 6.2964 8.62489 6.38709ZM9.56188 9.04869C9.52823 8.85785 9.46533 8.71721 9.37317 8.62676C9.28101 8.53632 9.14173 8.4812 8.95532 8.46141C8.82821 8.44779 8.65825 8.45836 8.44544 8.49312C8.23263 8.52787 8.01064 8.56563 7.77949 8.60638L7.44083 8.6661L7.70457 10.1619L7.81746 10.142C8.25289 10.0652 8.56444 10.0089 8.75211 9.97301C8.93978 9.93714 9.10699 9.87163 9.25372 9.77647C9.40314 9.68084 9.49825 9.57192 9.53906 9.44971C9.57987 9.32751 9.58748 9.19383 9.56188 9.04869Z"/></svg>
+              </div>
+              <a class="prices__footer-item" data-mid="11217" href="/m/11217/mr-mobilegr.html"><div class="dotted-link">Περιστέρι</div></a>
+            </div>
           </div>
         </div>
       </CardContent>
