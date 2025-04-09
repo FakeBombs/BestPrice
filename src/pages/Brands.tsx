@@ -44,7 +44,7 @@ const Brands = () => {
             <div class="scroll__clip">
               <div class="scroll__scroller">
                 <div class="brands-top__inner scroll__content">
-                  <a class="brands__top-cat" href="/brands/6989/technology.html">{t('technology')}</a>
+                  <a class="brands__top-cat" href="/brands/6989/technology.html"><svg aria-hidden="true" class="icon" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor"/></svg>{t('technology')}</a>
                   <a class="brands__top-cat" href="/brands/2185/home-garden.html">Σπίτι &amp; Κήπος</a>
                   <a class="brands__top-cat" href="/brands/2068/fashion.html">Μόδα</a>
                   <a class="brands__top-cat" href="/brands/583/health-beauty.html">Υγεία &amp; Ομορφιά</a>
