@@ -37,7 +37,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
       {/* Insert the sponsored ad at the top */}
       <TopVendorAd productId={product.id} />
       
-      <div className="space-y-4">
+      <div className="prices" data-merchants="{product.prices.length}">
         {sortedPrices.map((priceInfo) => (
           <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} />
         ))}
