@@ -15,11 +15,7 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
   <>
     <div className="product-overview__section">
       <div className="product-overview__section-title">Η καλύτερη τιμή</div>
-      <div className="product-overview__price">
-        {bestPrice && (
-             <div className="text-3xl font-bold text-primary">${bestPrice.price.toFixed(2)}</div>
-           )}
-      </div>
+      <div className="product-overview__price">{bestPrice && (<span>${bestPrice.price.toFixed(2)}</span>)}</div>
       <div className="product-overview__link" data-type="share">Μοιράσου την προσφορά</div>
       <div className="product-overview__link" data-type="notify" onClick={onNotifyMe}>Ειδοποίηση για πτώση τιμής</div>
       
