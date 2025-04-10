@@ -20,7 +20,7 @@ export const SearchBar = ({ className }: { className?: string }) => {
   useEffect(() => {
     const savedSearches = localStorage.getItem('recentSearches');
     if (savedSearches) {
-      setRecentSearches(JSON.parse(savedSearches).slice(0, 5));
+      setRecentSearches(JSON.parse(savedSearches).slice(0, 10));
     }
   }, []);
 
@@ -176,14 +176,20 @@ export const SearchBar = ({ className }: { className?: string }) => {
       </div>
 
       {showDropdown && recentSearches.length > 0 && (
-        <div ref={dropdownRef} className="absolute z-50 mt-1 w-full bg-background rounded-md border shadow-lg" >
-          <div className="p-2 text-xs font-medium text-muted-foreground">Recent Searches</div>
-          {recentSearches.map((term, index) => (
-            <div key={index} className="p-2 hover:bg-accent cursor-pointer flex items-center" onClick={() => handleRecentSearchClick(term)} >
-              <Search className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span>{term}</span>
-            </div>
-          ))}
+        <div ref={dropdownRef} className="search__menu">
+          <ul>
+            {recentSearches.map((term, index) => (
+              <li key={index} className="p-2 hover:bg-accent cursor-pointer flex items-center" onClick={() => handleRecentSearchClick(term)} >
+                <div class="search__icon" focusable="false">
+                  <svg fill="none" height="21" viewBox="0 0 20 21" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.599 11.883h4.389a.674.674 0 00.496-.2c.134-.134.2-.3.2-.497V5.479a.664.664 0 00-.2-.488.674.674 0 00-.496-.2.664.664 0 00-.488.2.664.664 0 00-.2.488v5.019H5.599a.674.674 0 00-.497.2c-.133.128-.2.29-.2.488s.067.363.2.497.3.2.497.2zm4.397 7.91c1.231 0 2.39-.234 3.475-.705a9.2 9.2 0 004.824-4.818 8.655 8.655 0 00.706-3.476c0-1.231-.235-2.39-.706-3.476a9.097 9.097 0 00-1.95-2.867A9.195 9.195 0 0013.47 2.5a8.665 8.665 0 00-3.483-.706c-1.231 0-2.39.235-3.475.706a9.224 9.224 0 00-4.807 4.818 8.655 8.655 0 00-.705 3.476c0 1.231.235 2.39.705 3.476a9.272 9.272 0 001.942 2.875 9.072 9.072 0 002.874 1.943 8.643 8.643 0 003.474.706zm0-1.776a7.13 7.13 0 01-5.111-2.109 7.312 7.312 0 01-1.542-2.3 7.098 7.098 0 01-.557-2.814c0-1 .186-1.934.557-2.805a7.284 7.284 0 011.542-2.31 7.133 7.133 0 012.29-1.55 7.13 7.13 0 012.813-.558c1.004 0 1.942.186 2.812.558a7.207 7.207 0 013.858 3.86c.372.87.557 1.806.557 2.805a7.097 7.097 0 01-.557 2.814 7.238 7.238 0 01-1.55 2.3 7.235 7.235 0 01-2.299 1.551 7.09 7.09 0 01-2.813.558z"></path></svg>
+                </div>
+                <div class="search__content"><strong>{term}</strong></div>
+                <div role="button" class="search__icon tooltip__anchor search__remove search__icon--actionable">
+                  <svg fill="none" height="19" viewBox="0 0 18 19" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M.364 17.75c.164.164.353.272.57.325.223.052.439.052.647 0a1.16 1.16 0 00.559-.313l6.87-6.876 6.857 6.876c.157.156.343.26.559.313.216.052.432.052.648 0 .216-.052.405-.16.57-.325.156-.156.26-.342.312-.559a1.319 1.319 0 000-.637 1.232 1.232 0 00-.313-.57l-6.858-6.876 6.858-6.864c.157-.164.26-.35.313-.56a1.2 1.2 0 000-.648 1.162 1.162 0 00-.313-.559 1.258 1.258 0 00-.58-.324 1.314 1.314 0 00-.637 0c-.216.045-.402.149-.559.313L9.01 7.342 2.14.466c-.156-.157-.342-.26-.558-.313S1.15.1.933.153C.717.205.528.313.363.477c-.156.157-.26.343-.312.56a1.364 1.364 0 000 .648c.052.216.156.398.313.547l6.858 6.876-6.858 6.887c-.157.15-.265.332-.324.548a1.364 1.364 0 000 .648c.052.217.16.403.324.56z"></path></svg>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
