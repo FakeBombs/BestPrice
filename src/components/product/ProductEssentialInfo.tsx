@@ -8,8 +8,14 @@ interface ProductEssentialInfoProps {
   onNotifyMe: () => void;
 };
 
+const ProductVendors = ({ product }: ProductVendorsProps) => {
+  // Sort prices from lowest to highest
+  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
+};
+
 const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssentialInfoProps) => {
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
+  const { t } = useTranslation();
   
   return (
   <>
