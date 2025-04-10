@@ -80,6 +80,7 @@ const Stores = () => {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in ullamcorper ex.
               </p>
             </li>
+          </ul>
         ))}
         <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
         <div style={{display: 'contents'}}></div>
