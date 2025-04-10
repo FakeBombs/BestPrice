@@ -15,7 +15,7 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
   
   return (
-    <div className="bg-muted/30 p-4 rounded-lg mb-6">
+    <div className="product-overview__section">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
         <div>
           <Badge className="mb-2 bg-green-500">Best Price</Badge>
