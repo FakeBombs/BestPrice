@@ -16,10 +16,6 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
-interface ProductDetailProps {
-  onNotifyMe: () => void;
-};
-
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
@@ -153,7 +149,7 @@ const ProductDetail = () => {
                   <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M0 8L6 15L16 4L13 1L6 8L3 5L0 8Z"/></svg>
                   <span class="item-actions__label">Το έχω</span>
                 </button>
-                <button class="item-actions__button" onClick={onNotifyMe}>
+                <button class="item-actions__button" onClick={handlePriceAlert}>
                   <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M13 8C13 4 11 1 8 1C5 1 3 4 3 8C3 9 1 12 1 12H15C15 12 13 9 13 8ZM10 13C10 13 10 15 8 15C6 15 6 13 6 13H10Z"/></svg>
                   <span class="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
                 </button>
