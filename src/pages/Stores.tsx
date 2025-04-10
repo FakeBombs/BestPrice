@@ -43,8 +43,24 @@ const Stores = () => {
           </div>
         </header>
 
+        <div class="tools__sentinel tools__sentinel--up"></div>
+        <div class="tools tools--has-sorting tools--has-search tools--sticky">
+          <div class="tools__button" data-id="sorting">
+            <svg aria-hidden="true" class="icon tools__icon" width="18" height="18"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M1.89126 3.08579C1.24441 3.70874 0.594486 4.33467 0 5C0.679463 5.04667 1.36084 5.0542 2 5C2.10749 8.00866 2.10749 10.9895 2 14C1.36084 13.942 0.679463 13.9514 0 14C0.589638 14.6587 1.23382 15.2794 1.87543 15.8977L1.87544 15.8977C2.25514 16.2635 2.63394 16.6285 3 17C3.47102 16.4716 3.98288 15.9905 4.4904 15.5135L4.49041 15.5135L4.49042 15.5134C5.01489 15.0205 5.53471 14.5319 6 14C5.31862 13.9533 4.63532 13.9458 4 14C3.92706 10.9838 3.92706 8.01242 4 5C4.63532 5.05231 5.31862 5.04479 6 5C5.53346 4.46457 5.01037 3.97339 4.48286 3.47807C3.97734 3.00339 3.46776 2.5249 3 2C2.63902 2.36565 2.26565 2.72522 1.89126 3.08579ZM18 3C14.3327 3.00231 10.6673 3.00231 7 3C7.00393 3.66667 7.00393 4.33333 7 5C8.83366 4.99885 10.6668 4.99942 12.5 5C14.3332 5.00058 16.1663 5.00115 18 5C17.9961 4.33103 17.9961 3.66667 18 3ZM10.2712 8.99854H10.2714C11.5141 8.9945 12.7568 8.99046 14 9C13.9963 9.67298 13.9963 10.327 14 11C12.7568 11.0095 11.5141 11.0055 10.2714 11.0015H10.2714C9.18105 10.9979 8.09073 10.9944 7 11C7.00372 10.3316 7.00372 9.66607 7 9C8.09069 9.00562 9.18097 9.00208 10.2712 8.99854ZM8.38387 13.9996C7.92258 14.0004 7.46129 14.0012 7 14C7.00327 14.6669 7.00327 15.3335 7 16C7.44443 15.999 7.88886 15.9998 8.33329 16.0006C8.88886 16.0016 9.44443 16.0026 10 16C9.99673 15.3311 9.99673 14.6669 10 14C9.46129 13.9977 8.92258 13.9987 8.38387 13.9996Z"/></svg>
+            <div class="tools__label">Δημοφιλία</div>
+          </div>
+          <div class="tools__search" data-id="search">
+            <span class="autocomplete__wrapper" style={{position: 'relative', display: 'inline-block', verticalAlign: 'top', zIndex: 500000000}}>
+              <input id="tools__search" placeholder="Αναζήτηση ..." type="search" autocomplete="off" autocorrect="off" spellcheck="false"/>
+              <div class="autocomplete autocomplete--minimal" style={{display: 'none'}}></div>
+            </span>
+          </div>
+        </div>
+        <div class="tools__sentinel tools__sentinel--down"></div>
+
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      <main id="merchant-listing">
+        <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
         {vendors.map((vendor) => (
           <Card key={vendor.id}>
             <CardContent className="p-6">
@@ -66,7 +82,9 @@ const Stores = () => {
             </CardContent>
           </Card>
         ))}
-      </div>
+        <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
+        <div style={{display: 'contents'}}></div>
+      </main>
 
 
 
