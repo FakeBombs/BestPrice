@@ -1,15 +1,12 @@
-
 import { Bell } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, ShoppingCart } from 'lucide-react';
 import { Product, ProductPrice, getVendorById } from '@/data/mockData';
 
 interface ProductEssentialInfoProps {
   product: Product;
   bestPrice: ProductPrice | undefined;
   onNotifyMe: () => void;
-}
+};
 
 const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssentialInfoProps) => {
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
