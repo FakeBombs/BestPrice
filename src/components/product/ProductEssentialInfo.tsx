@@ -29,7 +29,7 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
       )}
     </div>
     
-    <div class="product-overview__section"><div class="product-overview__section-title">Διατίθεται από</div><div class="product-overview__merchants">9 καταστήματα</div></div>
+    <div class="product-overview__section"><div class="product-overview__section-title">Διατίθεται από</div><div class="product-overview__merchants">({product.prices.length} καταστήματα</div></div>
     <div className="product-overview__section">
       <div class="product-overview__section-title">Πτώση τιμής</div>
       <div class="item-mini-graph__placeholder" data-intersected=""></div>
