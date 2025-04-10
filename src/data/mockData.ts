@@ -112,6 +112,24 @@ export const vendors: Vendor[] = [
     name: 'Funky Buddha',
     logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/4351.svg',
     rating: 4.3
+  },
+  { 
+    id: 'v6', 
+    name: 'Germanos',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/8697.svg',
+    rating: 4.1
+  },,
+  { 
+    id: 'v7', 
+    name: 'e-shop.gr',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/16.svg',
+    rating: 3.2
+  },,
+  { 
+    id: 'v8', 
+    name: 'Χαμόγελο του Παιδιού',
+    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/874.svg',
+    rating: 4.7
   }
 ];
 
