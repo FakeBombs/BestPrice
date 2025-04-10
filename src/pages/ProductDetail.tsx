@@ -16,6 +16,10 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
+interface ProductDetailProps {
+  onNotifyMe: () => void;
+};
+
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
