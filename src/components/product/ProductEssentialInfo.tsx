@@ -1,6 +1,7 @@
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product, ProductPrice, getVendorById } from '@/data/mockData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ProductEssentialInfoProps {
   product: Product;
