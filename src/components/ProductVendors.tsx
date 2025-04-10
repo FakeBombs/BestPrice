@@ -3,12 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Check, X, ExternalLink } from 'lucide-react';
 import { Product, ProductPrice, getVendorById } from '@/data/mockData';
 import TopVendorAd from './ads/TopVendorAd';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ProductVendorsProps {
   product: Product;
 }
 
 const ProductVendors = ({ product }: ProductVendorsProps) => {
+  const { t } = useTranslation();
   // Sort prices from lowest to highest
   const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
 
