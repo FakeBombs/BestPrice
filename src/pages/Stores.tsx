@@ -43,48 +43,48 @@ const Stores = () => {
           </div>
         </header>
 
-        <div class="tools__sentinel tools__sentinel--up"></div>
-        <div class="tools tools--has-sorting tools--has-search tools--sticky">
-          <div class="tools__button" data-id="sorting">
-            <svg aria-hidden="true" class="icon tools__icon" width="18" height="18"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M1.89126 3.08579C1.24441 3.70874 0.594486 4.33467 0 5C0.679463 5.04667 1.36084 5.0542 2 5C2.10749 8.00866 2.10749 10.9895 2 14C1.36084 13.942 0.679463 13.9514 0 14C0.589638 14.6587 1.23382 15.2794 1.87543 15.8977L1.87544 15.8977C2.25514 16.2635 2.63394 16.6285 3 17C3.47102 16.4716 3.98288 15.9905 4.4904 15.5135L4.49041 15.5135L4.49042 15.5134C5.01489 15.0205 5.53471 14.5319 6 14C5.31862 13.9533 4.63532 13.9458 4 14C3.92706 10.9838 3.92706 8.01242 4 5C4.63532 5.05231 5.31862 5.04479 6 5C5.53346 4.46457 5.01037 3.97339 4.48286 3.47807C3.97734 3.00339 3.46776 2.5249 3 2C2.63902 2.36565 2.26565 2.72522 1.89126 3.08579ZM18 3C14.3327 3.00231 10.6673 3.00231 7 3C7.00393 3.66667 7.00393 4.33333 7 5C8.83366 4.99885 10.6668 4.99942 12.5 5C14.3332 5.00058 16.1663 5.00115 18 5C17.9961 4.33103 17.9961 3.66667 18 3ZM10.2712 8.99854H10.2714C11.5141 8.9945 12.7568 8.99046 14 9C13.9963 9.67298 13.9963 10.327 14 11C12.7568 11.0095 11.5141 11.0055 10.2714 11.0015H10.2714C9.18105 10.9979 8.09073 10.9944 7 11C7.00372 10.3316 7.00372 9.66607 7 9C8.09069 9.00562 9.18097 9.00208 10.2712 8.99854ZM8.38387 13.9996C7.92258 14.0004 7.46129 14.0012 7 14C7.00327 14.6669 7.00327 15.3335 7 16C7.44443 15.999 7.88886 15.9998 8.33329 16.0006C8.88886 16.0016 9.44443 16.0026 10 16C9.99673 15.3311 9.99673 14.6669 10 14C9.46129 13.9977 8.92258 13.9987 8.38387 13.9996Z"/></svg>
-            <div class="tools__label">Δημοφιλία</div>
+        <div className="tools__sentinel tools__sentinel--up"></div>
+        <div className="tools tools--has-sorting tools--has-search tools--sticky">
+          <div className="tools__button" data-id="sorting">
+            <svg aria-hidden="true" className="icon tools__icon" width="18" height="18"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M1.89126 3.08579C1.24441 3.70874 0.594486 4.33467 0 5C0.679463 5.04667 1.36084 5.0542 2 5C2.10749 8.00866 2.10749 10.9895 2 14C1.36084 13.942 0.679463 13.9514 0 14C0.589638 14.6587 1.23382 15.2794 1.87543 15.8977L1.87544 15.8977C2.25514 16.2635 2.63394 16.6285 3 17C3.47102 16.4716 3.98288 15.9905 4.4904 15.5135L4.49041 15.5135L4.49042 15.5134C5.01489 15.0205 5.53471 14.5319 6 14C5.31862 13.9533 4.63532 13.9458 4 14C3.92706 10.9838 3.92706 8.01242 4 5C4.63532 5.05231 5.31862 5.04479 6 5C5.53346 4.46457 5.01037 3.97339 4.48286 3.47807C3.97734 3.00339 3.46776 2.5249 3 2C2.63902 2.36565 2.26565 2.72522 1.89126 3.08579ZM18 3C14.3327 3.00231 10.6673 3.00231 7 3C7.00393 3.66667 7.00393 4.33333 7 5C8.83366 4.99885 10.6668 4.99942 12.5 5C14.3332 5.00058 16.1663 5.00115 18 5C17.9961 4.33103 17.9961 3.66667 18 3ZM10.2712 8.99854H10.2714C11.5141 8.9945 12.7568 8.99046 14 9C13.9963 9.67298 13.9963 10.327 14 11C12.7568 11.0095 11.5141 11.0055 10.2714 11.0015H10.2714C9.18105 10.9979 8.09073 10.9944 7 11C7.00372 10.3316 7.00372 9.66607 7 9C8.09069 9.00562 9.18097 9.00208 10.2712 8.99854ZM8.38387 13.9996C7.92258 14.0004 7.46129 14.0012 7 14C7.00327 14.6669 7.00327 15.3335 7 16C7.44443 15.999 7.88886 15.9998 8.33329 16.0006C8.88886 16.0016 9.44443 16.0026 10 16C9.99673 15.3311 9.99673 14.6669 10 14C9.46129 13.9977 8.92258 13.9987 8.38387 13.9996Z"/></svg>
+            <div className="tools__label">Δημοφιλία</div>
           </div>
-          <div class="tools__search" data-id="search">
-            <span class="autocomplete__wrapper" style={{position: 'relative', display: 'inline-block', verticalAlign: 'top', zIndex: 500000000}}>
+          <div className="tools__search" data-id="search">
+            <span className="autocomplete__wrapper" style={{position: 'relative', display: 'inline-block', verticalAlign: 'top', zIndex: 500000000}}>
               <input id="tools__search" placeholder="Αναζήτηση ..." type="search" autocomplete="off" autocorrect="off" spellcheck="false"/>
-              <div class="autocomplete autocomplete--minimal" style={{display: 'none'}}></div>
+              <div className="autocomplete autocomplete--minimal" style={{display: 'none'}}></div>
             </span>
           </div>
         </div>
-        <div class="tools__sentinel tools__sentinel--down"></div>
+        <div className="tools__sentinel tools__sentinel--down"></div>
 
       
-      <main id="merchant-listing">
-        <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
-        <ul class="merchants-listing grid" data-pagination="">
-        {vendors.map((vendor) => (
-          <li class="merchants__merchant g-1 g-lg-2" key={vendor.id}>
-              <div className="flex items-center mb-4">
-                <div className="w-16 h-16 mr-4">
-                  <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-contain" />
+        <main id="merchant-listing">
+          <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
+          <ul className="merchants-listing grid" data-pagination="">
+            {vendors.map((vendor) => (
+              <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
+                <div className="merchants-listing__thumb-container" data-id={vendor.id}>
+                  <svg aria-hidden="true" className="icon merchants-listing__certification-icon" width="22" height="22"><path d="M20.3465 3.49928L19.8162 7.47118C19.0757 13.0148 16.1521 18.0982 11.6224 21.7225L11.2761 22L10.967 21.7706C6.07736 18.1298 2.9037 12.8348 2.12745 7.02192L1.65758 3.50066L2.3569 3.47867C4.43283 3.41273 6.47854 2.99506 8.40884 2.24904C9.27164 1.91519 10.0396 1.37938 10.6867 0.718545L11.3888 0.00137329L11.9013 0.56192C12.5635 1.28596 13.3672 1.87673 14.2794 2.23531C16.2098 2.99369 18.2623 3.42235 20.3465 3.49928Z" fill="#EFA818"/><path d="M12.0675 8.72416C12.7915 6.49984 13.7739 4.42803 15.0145 2.50596C14.7658 2.42078 14.5199 2.33011 14.2753 2.23394C13.3631 1.87535 12.5594 1.28458 11.8971 0.560547L11.3847 0L10.6826 0.717172C10.0355 1.37801 9.26615 1.91519 8.40472 2.24767C6.47442 2.99369 4.42871 3.41135 2.35278 3.4773L1.65346 3.49929L2.12333 7.02055C2.79104 12.0174 5.23106 16.6295 9.00786 20.1398C9.17548 16.1005 10.1922 12.2949 12.0675 8.72416Z" fill="#EFA818"/><path fill-rule="evenodd" clip-rule="evenodd" d="M15.7167 7.99397L10.7543 14.3308L7.22632 10.3139L8.68466 9.0331L10.6687 11.2921L14.1886 6.79727L15.7167 7.99397Z" fill="#fff"/></svg>
+                  <a className="merchants-listing__thumb" href="/m/743/public.html"><img src={vendor.logo} loading="lazy" alt={vendor.name}/></a>
                 </div>
-                <div>
-                  <h3 className="text-lg font-medium">{vendor.name}</h3>
-                  <div className="flex items-center mt-1">
-                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
-                    <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
-                  </div>
+                
+                <div className="merchants-listing__details">
+                  <h3><a href="/m/743/public.html" title={vendor.name}>{vendor.name}</a></h3>
+                  <p className="merchants-listing__counts">247.725 προϊόντα<span className="hide-mobile"> σε 1.627 κατηγορίες</span></p>
+                  <a className="merchant__rating" aria-label="Merchant reviews" href="/m/743/public/reviews">
+                    <span className="rating rating-all" data-total="519">
+                      <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
+                      <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
+                    </span>
+                  </a>
                 </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in ullamcorper ex.
-              </p>
-          </li>
-        ))}
-        </ul>
-        <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
-        <div style={{display: 'contents'}}></div>
-      </main>
+              </li>
+            ))}
+          </ul>
+          <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
+          <div style={{display: 'contents'}}></div>
+        </main>
 
 
 
