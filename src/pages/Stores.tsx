@@ -61,9 +61,9 @@ const Stores = () => {
       
       <main id="merchant-listing">
         <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
+        <ul class="merchants-listing grid" data-pagination="">
         {vendors.map((vendor) => (
-          <ul class="merchants-listing grid" data-pagination="" key={vendor.id}>
-            <li class="merchants__merchant g-1 g-lg-2">
+          <li class="merchants__merchant g-1 g-lg-2" key={vendor.id}>
               <div className="flex items-center mb-4">
                 <div className="w-16 h-16 mr-4">
                   <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-contain" />
@@ -79,9 +79,9 @@ const Stores = () => {
               <p className="text-sm text-muted-foreground">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in ullamcorper ex.
               </p>
-            </li>
-          </ul>
+          </li>
         ))}
+        </ul>
         <div style={{display: 'contents'}}><div style={{height: '1px', marginTop: '-1px'}}></div></div>
         <div style={{display: 'contents'}}></div>
       </main>
