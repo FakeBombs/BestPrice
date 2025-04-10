@@ -15,18 +15,22 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
   
   return (
+  <>
     <div className="product-overview__section">
+      <div class="product-overview__section-title">Η καλύτερη τιμή</div>
+      <div class="product-overview__price">{bestPrice && ( ${bestPrice.price.toFixed(2)} )}</div>
+      <div class="product-overview__link" data-type="share">Μοιράσου την προσφορά</div>
+      <div class="product-overview__link" data-type="notify" onClick={onNotifyMe}>Ειδοποίηση για πτώση τιμής</div>
+      
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
         <div>
-          <Badge className="mb-2 bg-green-500">Best Price</Badge>
           {bestPrice && (
-            <div className="text-3xl font-bold text-primary">${bestPrice.price.toFixed(2)}</div>
+            ${bestPrice.price.toFixed(2)}
           )}
         </div>
         
         <div className="mt-4 lg:mt-0 flex flex-col sm:flex-row gap-3">
           <Button onClick={onNotifyMe} variant="outline" className="flex items-center"><Bell className="h-4 w-4 mr-2" />Price Alert</Button>
-          <Button className="flex items-center"><ShoppingCart className="h-4 w-4 mr-2" />Compare Prices</Button>
         </div>
       </div>
       
@@ -44,6 +48,16 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
         Last price update: {new Date().toLocaleDateString()}
       </div>
     </div>
+    
+    <div className="product-overview__section"></div>
+    <div className="product-overview__section"></div>
+    <div className="product-overview__button">
+      <button class="item-actions__button">
+        <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7 1C8.10457 1 9 1.89826 9 2.99791V4H12V8H9V10H7V14H2V4H5V2.99791C5 1.8945 5.88773 1 7 1ZM8 2.99791V4.00209H6V2.99791C6 2.44375 6.44304 2 7 2C7.55093 2 8 2.44919 8 2.99791ZM10 9H12V11H14V13H12V15H10V13H8V11H10V9Z"/></svg>
+        <span class="item-actions__label">Λίστα Αγορών</span>
+      </button>
+    </div>
+  </>
   );
 };
 
