@@ -165,7 +165,7 @@ const ProductDetail = () => {
                   <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
                   <ProductHighlights specifications={product.specifications} />
                 </div>
-                <div className="product-overview product-overview--deal"><div className="product-overview__section"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div></div>
+                <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div>
               </div>
 
               <div className="sections item-sections">
