@@ -25,18 +25,8 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
         </div>
         
         <div className="mt-4 lg:mt-0 flex flex-col sm:flex-row gap-3">
-          <Button 
-            onClick={onNotifyMe}
-            variant="outline"
-            className="flex items-center"
-          >
-            <Bell className="h-4 w-4 mr-2" />
-            Price Alert
-          </Button>
-          <Button className="flex items-center">
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Compare Prices
-          </Button>
+          <Button onClick={onNotifyMe} variant="outline" className="flex items-center"><Bell className="h-4 w-4 mr-2" />Price Alert</Button>
+          <Button className="flex items-center"><ShoppingCart className="h-4 w-4 mr-2" />Compare Prices</Button>
         </div>
       </div>
       
