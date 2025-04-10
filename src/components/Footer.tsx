@@ -26,7 +26,12 @@ const Footer = () => {
           
           <div className="footer__sections">
             <div className="footer__section">
-            <h3 className="text-lg font-semibold mb-4">{t('categories')}</h3>
+              <div class="footer__section-header">
+                <div class="footer__section-label">{t('categories')}</div>
+                <div class="footer__section-icon">
+                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
                   <ul>
@@ -48,7 +53,9 @@ const Footer = () => {
             <div className="footer__section">
               <div class="footer__section-header">
                 BestPrice
-                <div class="footer__section-icon"></div>
+                <div class="footer__section-icon">
+                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
               </div>
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
@@ -74,7 +81,9 @@ const Footer = () => {
             <div className="footer__section footer__section--in-numbers">
               <div class="footer__section-header">
                 Σε αριθμούς
-                <div class="footer__section-icon"></div>
+                <div class="footer__section-icon">
+                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
               </div>
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
@@ -91,7 +100,9 @@ const Footer = () => {
             <div className="footer__section footer__section--privacy">
               <div className="footer__section-header">
                 Όροι χρήσης &amp; ιδιωτικότητα
-                <div className="footer__section-icon"></div>
+                <div className="footer__section-icon">
+                  <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
               </div>
               
               <div className="footer__section-scroller">
@@ -111,7 +122,9 @@ const Footer = () => {
               <div class="footer__b2b">
                 <div class="footer__section-header">
                   BestPrice For Merchants
-                  <div class="footer__section-icon"></div>
+                  <div class="footer__section-icon">
+                    <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
                 </div>
                 <div class="footer__section-scroller">
                   <div class="footer__section-content">
@@ -125,7 +138,9 @@ const Footer = () => {
               <div class="footer__b2b">
                 <div class="footer__section-header">
                   <div>BestPrice For Brands</div>
-                  <div class="footer__section-icon"></div>
+                  <div class="footer__section-icon">
+                    <svg aria-hidden="true" class="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
                 </div>
                 <div class="footer__section-scroller">
                   <div class="footer__section-content">
