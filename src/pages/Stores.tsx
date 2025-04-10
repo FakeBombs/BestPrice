@@ -2,10 +2,15 @@
 import { vendors } from '@/data/mockData';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Stores = () => {
+  const { t } = useTranslation();
   return (
     <div>
+
+
+      
       <h1 className="text-3xl font-bold mb-2">Καταστήματα</h1>
       <p className="text-muted-foreground mb-6">
         Ανακάλυψε τα συνεργαζόμενα καταστήματα του BestPrice
@@ -34,6 +39,10 @@ const Stores = () => {
           </Card>
         ))}
       </div>
+
+
+
+      
     </div>
   );
 };
