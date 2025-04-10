@@ -14,7 +14,21 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
 
   return (
     <div className="mt-6">
-      <h3 className="text-xl font-medium mb-4">Available from {product.prices.length} vendors</h3>
+      <header class="section__header">
+        <hgroup class="section__hgroup">
+          <h2 class="section__title">
+            Καταστήματα <small><span>({product.prices.length})</span></small>
+            <div class="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
+          </h2>
+        </hgroup>
+        <div class="section__side">
+          <label data-type="priceFull" data-always-available="" class="price-filters__filter">
+            <input type="checkbox"/>
+            <svg aria-hidden="true" class="icon" width="12" height="12"><path d="M3 4.95297V3.75H9V4.95297H3ZM3 8.25V7.04703H9V8.25H3Z"/><path fill-rule="evenodd" d="M8.00729 1.59067H3.99271C2.33585 1.59067 0.992706 2.93382 0.992706 4.59067V7.40935C0.992706 9.0662 2.33585 10.4093 3.99271 10.4093H8.00729C9.66415 10.4093 11.0073 9.0662 11.0073 7.40934V4.59067C11.0073 2.93381 9.66415 1.59067 8.00729 1.59067ZM3.99271 0.590668C1.78357 0.590668 -0.0072937 2.38153 -0.0072937 4.59067V7.40935C-0.0072937 9.61849 1.78357 11.4093 3.99271 11.4093H8.00729C10.2164 11.4093 12.0073 9.61848 12.0073 7.40934V4.59067C12.0073 2.38153 10.2164 0.590668 8.00729 0.590668H3.99271Z"/></svg>
+            <span class="price-filters__label">Τελική τιμή</span>
+          </label>
+        </div>
+      </header>
 
       <div className="filter-wrapper">
         <div className="scroll">
