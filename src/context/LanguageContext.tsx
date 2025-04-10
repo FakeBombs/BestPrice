@@ -113,6 +113,10 @@ const defaultTranslations: Translations = {
 
     // Categories
     technology: 'Technology',
+
+    // Products
+    clearFilters: 'Clear filters',
+    finalPrice: 'Final price',
   },
   el: {
     // Greek translations
@@ -152,6 +156,10 @@ const defaultTranslations: Translations = {
 
     // Categories
     technology: 'Τεχνολογία',
+
+    // Products
+    clearFilters: 'Καθαρισμός φίλτρων',
+    finalPrice: 'Τελική τιμή',
   },
   // Add other languages
   es: {
