@@ -27,14 +27,16 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
             : ' with free shipping'}
         </div>
       )}
-      
+    </div>
+    
+    <div class="product-overview__section"><div class="product-overview__section-title">Διατίθεται από</div><div class="product-overview__merchants">9 καταστήματα</div></div>
+    <div className="product-overview__section">
+      <div class="product-overview__section-title">Πτώση τιμής</div>
+      <div class="item-mini-graph__placeholder" data-intersected=""></div>
       <div className="mt-4 text-sm text-muted-foreground flex items-center">
         Last price update: {new Date().toLocaleDateString()}
       </div>
     </div>
-    
-    <div className="product-overview__section"></div>
-    <div className="product-overview__section"></div>
     <div className="product-overview__button">
       <button className="item-actions__button">
         <svg aria-hidden="true" className="icon" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7 1C8.10457 1 9 1.89826 9 2.99791V4H12V8H9V10H7V14H2V4H5V2.99791C5 1.8945 5.88773 1 7 1ZM8 2.99791V4.00209H6V2.99791C6 2.44375 6.44304 2 7 2C7.55093 2 8 2.44919 8 2.99791ZM10 9H12V11H14V13H12V15H10V13H8V11H10V9Z"/></svg>
