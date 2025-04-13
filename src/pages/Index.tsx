@@ -9,6 +9,10 @@ import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
+interface NavbarProps {
+  onSitemapToggle: () => void;
+}
+
 const Index = () => {
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
