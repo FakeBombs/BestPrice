@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -8,10 +8,17 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  
+
+  // Function to toggle 'has-sitemap' class and manage visibility
+  const sitemapToggle = () => {
+    const hasSitemap = !isSitemapVisible; // Determine the new visibility state
+    document.documentElement.classList.toggle('has-sitemap', hasSitemap); // Set the class accordingly
+    setIsSitemapVisible(hasSitemap); // Update state
+  };
+
   return (
     <div>
-      <Navbar />
+      <Navbar onSitemapToggle={sitemapToggle} />}
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
