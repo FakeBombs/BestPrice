@@ -1,4 +1,4 @@
-
+import React, { useEffect, useState } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -11,7 +11,23 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const sitemapToggle = () => {document.documentElement.classList.toggle('has-sitemap')};
+
+  const [isSitemapVisible, setIsSitemapVisible] = useState(false);
+  // Function to toggle 'has-sitemap' class and manage visibility
+  const sitemapToggle = () => {
+    document.documentElement.classList.toggle('has-sitemap');
+    setIsSitemapVisible(document.documentElement.classList.contains('has-sitemap'));
+  };
+  // Effect to update visibility if class changes outside of sitemapToggle
+  useEffect(() => {
+    const checkClass = () => {setIsSitemapVisible(document.documentElement.classList.contains('has-sitemap'))};
+    // Add event listener for future class changes if needed
+    document.documentElement.addEventListener('classlistchange', checkClass);
+    // Check the class initially
+    checkClass();
+    return () => {document.documentElement.removeEventListener('classlistchange', checkClass)};
+  }, []);
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return <div className="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
@@ -47,6 +63,11 @@ const Navbar = () => {
               <div></div>
               <div></div>
             </div>
+            {isSitemapVisible && (
+              <div className="popup-menu">
+                <p>This is the popup menu!</p>
+              </div>
+            )}
           </div>
 
           {/* Desktop Search */}
