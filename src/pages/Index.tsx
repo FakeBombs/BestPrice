@@ -67,7 +67,7 @@ const Index = () => {
                     <Link to="/cat/3058/sports-hobbies.html?bpref=home-verticals">Hobby, Αθλητισμός</Link>
                     <Link to="/cat/3204/auto-moto.html?bpref=home-verticals">Μηχανοκίνηση</Link>
                   </div>
-                  <div className="h-header__more pressable">
+                  <div className="h-header__more pressable" onClick={onSitemapToggle}>
                     <svg aria-hidden="true" className="icon" width="12" height="12"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg>
                     <span className="h-header__more-label">Όλες</span>
                     <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-right-20"></use></svg>
