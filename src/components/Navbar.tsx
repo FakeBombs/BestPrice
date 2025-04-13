@@ -11,6 +11,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Navbar = () => {
   const { t } = useTranslation();
+  const sitemapToggle = () => {document.documentElement.classList.toggle('has-sitemap')};
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return <div className="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
@@ -40,7 +41,7 @@ const Navbar = () => {
         </div>
 
         <div className="search__wrapper">
-          <div aria-label="Sitemap button" role="button" className="sitemap-button sitemap-button--desktop pressable">
+          <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" onClick={sitemapToggle}>
             <div className="sitemap-button__lines">
               <div></div>
               <div></div>
