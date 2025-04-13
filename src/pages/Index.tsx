@@ -8,6 +8,7 @@ import ProductCarousel from '@/components/ProductCarousel';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
+import Navbar from '@/components/Navbar';
 
 interface NavbarProps {
   onSitemapToggle: () => void;
@@ -21,6 +22,13 @@ const Index = () => {
   const rootCategories = getRootCategories();
   const categories = getCategories();
   const { t } = useTranslation();
+  const [isSitemapVisible, setIsSitemapVisible] = useState(false);
+  
+  // Define the toggler function
+  const onSitemapToggle = () => {
+    setIsSitemapVisible(prev => !prev);
+    document.documentElement.classList.toggle('has-sitemap', !isSitemapVisible);
+  };
 
   useEffect(() => {
     // Fetch data on component mount
@@ -44,6 +52,7 @@ const Index = () => {
   };
 
   return (
+    <Navbar onSitemapToggle={onSitemapToggle} />
     <div className="root__wrapper">
         <div className="root">
           <div className="sections">
