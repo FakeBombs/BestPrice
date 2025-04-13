@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -18,14 +18,19 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} />}
+      <Navbar onSitemapToggle={sitemapToggle} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
-            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
+            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={sitemapToggle}>
+            </div>
             <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
               <div className="root__wrapper">
-                <div className="root"></div>
+                <div className="root">
+                  <div class="root__wrapper">
+                    <div class="root"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </>
