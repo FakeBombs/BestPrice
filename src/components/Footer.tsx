@@ -5,7 +5,7 @@ const Footer = () => {
   const { t } = useTranslation();
   return (
     <div id="footer-wrapper">
-      <div id="back-to-top" className="pressable" style={{display: "flex"}}>Επιστροφή στην κορυφή<svg aria-hidden="true" class="icon" width="12" height="12"><path d="M1.41 9.41L6 4.83L10.59 9.41L12 8L6 2L0 8L1.41 9.41Z"/></svg></div>
+      <div id="back-to-top" className="pressable" style={{display: "flex"}}>Επιστροφή στην κορυφή<svg aria-hidden="true" class="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><path d="M1.41 9.41L6 4.83L10.59 9.41L12 8L6 2L0 8L1.41 9.41Z"/></svg></div>
       <div id="promo-footer"></div>
       <div className="root__wrapper bp-footer">
         <div className="footer root">
