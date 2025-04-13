@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Index from '@/components/Index';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     setIsSitemapVisible(hasSitemap); // Update state
   };
 
+  const { t } = useTranslation();
   return (
     <div>
       <Navbar onSitemapToggle={sitemapToggle} />
