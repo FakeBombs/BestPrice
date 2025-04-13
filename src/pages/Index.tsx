@@ -52,9 +52,9 @@ const Index = () => {
   };
 
   return (
-    <Navbar onSitemapToggle={onSitemapToggle} />
     <div className="root__wrapper">
         <div className="root">
+          <Navbar onSitemapToggle={onSitemapToggle} />
           <div className="sections">
             <div className="h-categories">
               <div className="h-header">
