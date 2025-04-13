@@ -7,27 +7,6 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-const menuItems = [
-  {
-    name: 'Προσφορές',
-    url: '/deals',
-    icon: (<svg className={`icon sitemap-desktop__item-icon icon--outline`} aria-hidden="true" width="24" height="24"><path d="M17.4706 21.187C18.7796 20.3144 19.8499 19.1286 20.5842 17.7372 21.3185 16.3458 21.6935 14.7931 21.6751 13.22 21.6827 11.3357 21.1422 9.48997 20.1194 7.9075L17.6408 10.8207C16.914 8.4335 16.9091 5.88472 17.6267 3.49476 17.6574 3.39448 17.6621 3.28805 17.6403 3.18547 17.6186 3.08289 17.5711 2.98751 17.5024 2.9083 17.4337 2.82909 17.3459 2.76865 17.2475 2.73264 17.149 2.69663 17.0429 2.68624 16.9393 2.70244 15.1927 2.98925 13.5401 3.69004 12.1197 4.74621 10.6993 5.80238 9.55238 7.18325 8.77483 8.77336L6.80352 6.71529C5.19373 8.49774 4.30951 10.8182 4.32492 13.22 4.30659 14.7931 4.68159 16.3458 5.41586 17.7372 6.15014 19.1286 7.22041 20.3144 8.52945 21.187M10.3665 17.928 15.6335 12.661" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5214 14.0553C11.2059 14.0553 11.7607 13.5004 11.7607 12.816 11.7607 12.1315 11.2059 11.5767 10.5214 11.5767 9.83696 11.5767 9.2821 12.1315 9.2821 12.816 9.2821 13.5004 9.83696 14.0553 10.5214 14.0553ZM15.4786 19.0124C16.1631 19.0124 16.7179 18.4576 16.7179 17.7731 16.7179 17.0887 16.1631 16.5338 15.4786 16.5338 14.7942 16.5338 14.2393 17.0887 14.2393 17.7731 14.2393 18.4576 14.7942 19.0124 15.4786 19.0124Z" stroke-linecap="round" stroke-linejoin="round"/></svg>),
-  },
-  {
-    name: 'Τεχνολογία',
-    url: '/cat/6989/technology.html?bpref=sitemap',
-    icon: (<svg className={`icon sitemap-desktop__item-icon icon--outline`} aria-hidden="true" width="24" height="24"><path d="M17 2H7C6.44772 2 6 2.44772 6 3V21C6 21.5523 6.44772 22 7 22H17C17.5523 22 18 21.5523 18 21V3C18 2.44772 17.5523 2 17 2ZM12.5 4H14M10 4H10.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 19.5C12.5 19.7761 12.2761 20 12 20 11.7239 20 11.5 19.7761 11.5 19.5 11.5 19.2239 11.7239 19 12 19 12.2761 19 12.5 19.2239 12.5 19.5ZM15.25 6.5 8.5 13.25M12.2605 6.5 8.5 10.2316" stroke-linecap="round" stroke-linejoin="round"/></svg>),
-  }
-];
-
-const SitemapMenu = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-  const handleMouseEnter = index => setActiveIndex(index);
-  const handleMouseLeave = () => setActiveIndex(null);
-};
-
-export default SitemapMenu;
-
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
 
@@ -37,6 +16,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     document.documentElement.classList.toggle('has-sitemap', hasSitemap); // Set the class accordingly
     setIsSitemapVisible(hasSitemap); // Update state
   };
+
+  const [isHovered, setIsHovered] = useState(null);
 
   return (
     <div>
@@ -55,17 +36,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         <div className="sitemap-desktop__sidebar">
                           <div className="sitemap-desktop__sidebar-extra">
 
-                            <a className="sitemap-desktop__item" href="/deals">
+                            <a href="/deals" className={`sitemap-desktop__item ${isHovered === 1 ? 'sitemap-desktop__item--selected' : ''}`} onMouseEnter={() => setIsHovered(1)} onMouseLeave={() => setIsHovered(null)}>
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-deals-24"></use></svg>{menuItems[0].name} (8.450)
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
                           </div>
                           <div className="sitemap-desktop__sidebar-categories">
-                            <a className="sitemap-desktop__item" href="/cat/6989/technology.html?bpref=sitemap">
+                            <a href="/cat/6989/technology.html?bpref=sitemap" className={`sitemap-desktop__item ${isHovered === 2 ? 'sitemap-desktop__item--selected' : ''}`} onMouseEnter={() => setIsHovered(2)} onMouseLeave={() => setIsHovered(null)}>
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg>Τεχνολογία
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
-                            <a className="sitemap-desktop__item" href="/cat/2185/home-garden.html?bpref=sitemap">
+                            <a href="/cat/2185/home-garden.html?bpref=sitemap" className={`sitemap-desktop__item ${isHovered === 3 ? 'sitemap-desktop__item--selected' : ''}`} onMouseEnter={() => setIsHovered(3)} onMouseLeave={() => setIsHovered(null)}>
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-cat-2185-24"></use></svg>Σπίτι &amp; Κήπος
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
