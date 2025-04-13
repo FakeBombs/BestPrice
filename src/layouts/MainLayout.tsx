@@ -19,10 +19,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <Navbar onToggleSitemap={toggleSitemapVisibility} />
       <div id="root" className="clr">
         {isSitemapVisible && (
-          <div class="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
-          <div class="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
-            <div class="root__wrapper">
-              <div class="root"></div>
+          <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
+          <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
+            <div className="root__wrapper">
+              <div className="root"></div>
             </div>
           </div>
         )}
