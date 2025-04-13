@@ -8,18 +8,21 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
+  
   return (
     <div>
       <Navbar />
       <div id="root" className="clr">
         {children}
         {isSitemapVisible && (
-          <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
-          <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
-            <div className="root__wrapper">
-              <div className="root"></div>
+          <>
+            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
+            <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
+              <div className="root__wrapper">
+                <div className="root"></div>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
       <Footer />
