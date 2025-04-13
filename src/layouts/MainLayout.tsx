@@ -9,14 +9,9 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-
-  // Function to toggle the visibility of the popup menu
-  const toggleSitemapVisibility = () => {
-    setIsSitemapVisible(prev => !prev);
-  };
   return (
     <div>
-      <Navbar onToggleSitemap={toggleSitemapVisibility} />
+      <Navbar />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
