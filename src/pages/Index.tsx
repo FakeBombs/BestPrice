@@ -15,6 +15,14 @@ interface IndexProps {
 }
 
 const Index: React.FC<IndexProps> = ({ onSitemapToggle }) => {
+  const [isSitemapVisible, setIsSitemapVisible] = useState(false);
+
+  // Function to toggle 'has-sitemap' class and manage visibility
+  const sitemapToggle = () => {
+    const hasSitemap = !isSitemapVisible; // Determine the new visibility state
+    document.documentElement.classList.toggle('has-sitemap', hasSitemap); // Set the class accordingly
+    setIsSitemapVisible(hasSitemap); // Update state
+  };
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [dailyDeals, setDailyDeals] = useState([]);
