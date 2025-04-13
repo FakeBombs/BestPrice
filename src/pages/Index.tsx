@@ -9,7 +9,11 @@ import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const Index = ({ onSitemapToggle }) => {
+interface IndexProps {
+  onSitemapToggle: () => void;
+}
+
+const Index: React.FC<IndexProps> = ({ onSitemapToggle }) => {
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [dailyDeals, setDailyDeals] = useState([]);
