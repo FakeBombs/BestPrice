@@ -35,7 +35,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </>
         )}
-        <Index onSitemapToggle={sitemapToggle} />
+
         {/* Pass sitemapToggle to children, including Index */}
         {React.Children.map(children, (child) => {
           return React.isValidElement(child) 
