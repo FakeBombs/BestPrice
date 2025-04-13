@@ -21,13 +21,6 @@ const Index: React.FC<IndexProps> = ({ onSitemapToggle }) => {
   const rootCategories = getRootCategories();
   const categories = getCategories();
   const { t } = useTranslation();
-  const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  
-  // Define the toggler function
-  const onSitemapToggle = () => {
-    setIsSitemapVisible(prev => !prev);
-    document.documentElement.classList.toggle('has-sitemap', !isSitemapVisible);
-  };
 
   useEffect(() => {
     // Fetch data on component mount
