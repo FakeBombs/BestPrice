@@ -13,7 +13,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <div>
       <Navbar />
       <div id="root" className="clr">
-        {children}
         {isSitemapVisible && (
           <>
             <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }}></div>
@@ -24,6 +23,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </>
         )}
+        
+        {children}
       </div>
       <Footer />
     </div>
