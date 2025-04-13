@@ -33,14 +33,13 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
                         <div className="sitemap-desktop__sidebar">
                           <div className="sitemap-desktop__sidebar-extra">
-
-                            <a href="/deals" className="sitemap-desktop__item sitemap-desktop__item--selected">
+                            <Link to="/deals" className="sitemap-desktop__item">
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-deals-24"></use></svg>Προσφορές (8.450)
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </a>
+                            </Link>
                           </div>
                           <div className="sitemap-desktop__sidebar-categories">
-                            <a href="/cat/6989/technology.html?bpref=sitemap" className="sitemap-desktop__item">
+                            <a href="/cat/6989/technology.html?bpref=sitemap" className="sitemap-desktop__item sitemap-desktop__item--selected">
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg>Τεχνολογία
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
