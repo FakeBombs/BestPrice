@@ -1,6 +1,7 @@
 import React, { useState, ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Index from '@/components/Index';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -35,7 +36,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </>
         )}
         
-        {children}
+        {/* Pass sitemapToggle to children, including Index */}
+        {React.Children.map(children, (child) => {
+          return React.isValidElement(child) 
+            ? React.cloneElement(child, { onSitemapToggle: sitemapToggle }) 
+            : child;
+        })}
       </div>
       <Footer />
     </div>
