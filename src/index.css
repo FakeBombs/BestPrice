@@ -309,7 +309,7 @@
 .sitemap-desktop__category-subs {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit,minmax(140px,220px));
+    grid-template-columns: repeat(4, 1fr);
     margin-top: 2rem;
     place-items: start
 }
@@ -317,7 +317,7 @@
 @media only screen and (min-width: 64em) {
     .sitemap-desktop__category-subs {
         gap:1.5rem;
-        grid-template-columns: repeat(auto-fit,minmax(160px,240px))
+        grid-template-columns: repeat(3, 1fr)
     }
 }
 
