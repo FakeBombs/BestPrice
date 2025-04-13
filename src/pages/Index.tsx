@@ -8,13 +8,8 @@ import ProductCarousel from '@/components/ProductCarousel';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
-import Navbar from '@/components/Navbar';
 
-interface NavbarProps {
-  onSitemapToggle: () => void;
-}
-
-const Index = () => {
+const Index = ({ onSitemapToggle }) => {
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [dailyDeals, setDailyDeals] = useState([]);
