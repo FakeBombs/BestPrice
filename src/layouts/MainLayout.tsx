@@ -22,8 +22,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
-            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={sitemapToggle}>
-            </div>
+            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={sitemapToggle}></div>
             <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
               <div className="root__wrapper">
                 <div className="root">
