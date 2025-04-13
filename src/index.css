@@ -405,7 +405,7 @@
 
 @media only screen and (min-width: 80em) {
     .sitemap-desktop__category-subs {
-        grid-template-columns:repeat(auto-fit,minmax(190px,320px))
+        grid-template-columns:repeat(4, 1fr)
     }
 
     .sitemap-desktop__sub {
