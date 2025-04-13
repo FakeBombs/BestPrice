@@ -7,6 +7,47 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
+const Menu = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const selectedClass = 'sitemap-desktop__item--selected';
+
+  const handleMouseEnter = (index) => {
+    setActiveIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveIndex(null);
+  };
+
+  const menuItems = [
+    {
+      name: 'Προσφορές',
+      url: '/deals',
+      icon: 'icon-home'
+    },
+    {
+      name: 'Τεχνολογία',
+      url: '/cat/6989/technology.html?bpref=sitemap',
+      icon: 'icon-about'
+    },
+    {
+      name: 'Services',
+      url: '/services',
+      icon: 'icon-services'
+    },
+    {
+      name: 'Deals',
+      url: '/deals',
+      icon: 'icon-deals'
+    },
+    {
+      name: 'Contact',
+      url: '/contact',
+      icon: 'icon-contact'
+    },
+  ];
+};
+
 const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
 
@@ -33,6 +74,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
                         <div className="sitemap-desktop__sidebar">
                           <div className="sitemap-desktop__sidebar-extra">
+
+
+                            {menuItems.map((item, index) => (
+                              <a className={`sitemap-desktop__item ${activeIndex === index ? selectedClass : ''}`} href={item.url} key={index} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
+                                <svg className={`icon sitemap-desktop__item-icon icon--outline`} aria-hidden="true" width="24" height="24">{item.icon}</svg>
+                                {item.name}
+                                <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                              </a>
+                            ))};
+
+                            
                             <a className="sitemap-desktop__item" href="/deals">
                               <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use xlink:href="/public/dist/images/icons/categories.svg#icon-deals-24"></use></svg>Προσφορές (8.450)
                               <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
