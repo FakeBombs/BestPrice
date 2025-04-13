@@ -1,5 +1,3 @@
-import React from 'react';
-import React, { useState } from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -12,14 +10,6 @@ import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, get
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Index: React.FC = () => {
-  const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-
-  // Function to toggle 'has-sitemap' class and manage visibility
-  const sitemapToggle = () => {
-    const newVisibility = !isSitemapVisible; // Determine the new visibility state
-    document.documentElement.classList.toggle('has-sitemap', newVisibility); // Set the class accordingly
-    setIsSitemapVisible(newVisibility); // Update state
-  };
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [dailyDeals, setDailyDeals] = useState([]);
@@ -73,7 +63,7 @@ const Index: React.FC = () => {
                     <Link to="/cat/3058/sports-hobbies.html?bpref=home-verticals">Hobby, Αθλητισμός</Link>
                     <Link to="/cat/3204/auto-moto.html?bpref=home-verticals">Μηχανοκίνηση</Link>
                   </div>
-                  <div className="h-header__more pressable" onClick={onSitemapToggle}>
+                  <div className="h-header__more pressable">
                     <svg aria-hidden="true" className="icon" width="12" height="12"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg>
                     <span className="h-header__more-label">Όλες</span>
                     <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-right-20"></use></svg>
