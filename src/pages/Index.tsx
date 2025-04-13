@@ -11,17 +11,12 @@ import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
-interface IndexProps {
-  onSitemapToggle: () => void;
-}
-
-const Index: React.FC<IndexProps> = ({ onSitemapToggle }) => {
+const Index: React.FC = () => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
 
   // Function to toggle 'has-sitemap' class and manage visibility
   const sitemapToggle = () => {
     const newVisibility = !isSitemapVisible; // Determine the new visibility state
-    console.log("Toggling sitemap visibility:", newVisibility); // Log visibility status
     document.documentElement.classList.toggle('has-sitemap', newVisibility); // Set the class accordingly
     setIsSitemapVisible(newVisibility); // Update state
   };
