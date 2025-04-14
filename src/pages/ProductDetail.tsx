@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import {getProductById, getSimilarProducts, getProductsByCategory, getBestPrice} from '@/data/mockData';
+import {getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, ProductPrice, getVendorById} from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -15,6 +15,16 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
+interface ProductDetailProps {
+  product: Product;
+  bestPrice: ProductPrice | undefined;
+};
+
+const ProductVendors = ({ product }: ProductVendorsProps) => {
+  // Sort prices from lowest to highest
+  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
+};
+
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
@@ -23,7 +33,7 @@ const formatProductSlug = (title: string): string => {
     .replace(/-+/g, '-');
 };
 
-const ProductDetail = () => {
+const ProductDetail = ({ product, bestPrice }: ProductDetailProps) => {
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
