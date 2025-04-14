@@ -1,4 +1,3 @@
-
 import { Star, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/data/mockData';
@@ -60,26 +59,6 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
             <a className="item-link__graph dotted-link" href="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html#graph">Γράφημα τιμής</a>
           </div>
         </div>
-      </div>
-
-      
-        <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-          <Button onClick={onAddToFavorites} variant="outline" size="icon">
-            <Heart className="h-5 w-5" />
-          </Button>
-          <Button onClick={onShareProduct} variant="outline" size="icon">
-            <Share2 className="h-5 w-5" />
-          </Button>
-      
-      <div className="flex items-center mb-4">
-        <div className="flex items-center text-yellow-400 mr-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className={`h-5 w-5 ${i < Math.round(product.rating) ? 'fill-current' : ''}`} />
-          ))}
-        </div>
-        <span className="text-sm text-muted-foreground">
-          {product.rating.toFixed(1)} ({product.reviews} reviews)
-        </span>
       </div>
     </>
   );
