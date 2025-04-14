@@ -32,9 +32,9 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   
   return (
     <ol>
-      <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span class="trail__breadcrumb-separator">›</span></li>
-      <li><Link to={`/cat/${categoryId}/${categorySlug}`} title="Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας Τεχνολογία" data-no-info=""><span>{product.category}</span></Link><span class="trail__breadcrumb-separator">›</span></li>
-      <li><span class="trail__last">{product.title}</span><span class="trail__breadcrumb-separator"></span></li>
+      <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+      <li><Link to={`/cat/${categoryId}/${categorySlug}`} title="Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας Τεχνολογία" data-no-info=""><span>{product.category}</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+      <li><span className="trail__last">{product.title}</span><span className="trail__breadcrumb-separator"></span></li>
     </ol>
   );
 };
