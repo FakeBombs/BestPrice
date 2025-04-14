@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +15,17 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
+const useClassList = (classNames) => {
+  useEffect(() => {
+    const classes = classNames.split(' ');
+    classes.forEach(className => document.documentElement.classList.add(className));
+
+    return () => {
+      classes.forEach(className => document.documentElement.classList.remove(className));
+    };
+  }, [classNames]);
+};
+
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
@@ -25,6 +35,7 @@ const formatProductSlug = (title: string): string => {
 };
 
 const ProductDetail = () => {
+  useClassList('windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home');
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -118,15 +129,6 @@ const ProductDetail = () => {
 
     setIsPriceAlertModalOpen(true);
   };
-
-  useEffect(() => {
-    const classList = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-    classList.split(' ').forEach(className => document.documentElement.classList.add(className));
-
-    return () => {
-      classList.split(' ').forEach(className => document.documentElement.classList.remove(className));
-    };
-  }, []);
 
   return (
     <div className="root__wrapper item-wrapper">
