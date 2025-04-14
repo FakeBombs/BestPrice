@@ -34,6 +34,7 @@ const formatProductSlug = (title: string): string => {
 };
 
 const ProductDetail = ({ product, bestPrice }: ProductDetailProps) => {
+  const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
