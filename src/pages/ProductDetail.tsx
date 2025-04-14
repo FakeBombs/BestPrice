@@ -119,10 +119,11 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
-    document.documentElement.classList.add('windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home');
-    
+    const classList = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+    classList.split(' ').forEach(className => document.documentElement.classList.add(className));
+
     return () => {
-      document.documentElement.classList.remove('');
+      classList.split(' ').forEach(className => document.documentElement.classList.remove(className));
     };
   }, []);
 
