@@ -4,26 +4,35 @@ import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 
-const useClassList = (classNames) => {
+const useHtmlAttributes = (classes, newId) => {
   useEffect(() => {
-    // Clear existing classes
-    document.documentElement.className = '';
+    const htmlElement = document.documentElement;
 
-    // Add new classes
-    const classes = classNames.split(' ');
-    classes.forEach(className => document.documentElement.classList.add(className));
-  
-    // Cleanup function to reset classes when the component unmounts
+    // Clear existing classes and ID
+    htmlElement.className = '';
+    htmlElement.removeAttribute('id');
+
+    // Add new classes and ID
+    const classesArray = classes.split(' ');
+    classesArray.forEach(className => htmlElement.classList.add(className));
+    
+    // Set new ID
+    if (newId) {
+      htmlElement.setAttribute('id', newId);
+    }
+
     return () => {
-      document.documentElement.className = '';
+      // Cleanup: remove added classes and ID on unmount
+      htmlElement.className = '';
+      htmlElement.removeAttribute('id');
     };
-  }, [classNames]);
+  }, [classes, newId]);
 };
 
 const SearchResults = () => {
 
   const userAgent = navigator.userAgent.toLowerCase();
-  const [jsEnabled, setJsEnabled] = useState(true); // State to track if JS is enabled
+  const [jsEnabled, setJsEnabled] = useState(true);
   let classNames = '';
 
   // List of ad-related elements to check for blocking
@@ -33,18 +42,16 @@ const SearchResults = () => {
   const checkAdBlockers = () => {
     return adElementsToCheck.some(selector => {
       const adElement = document.createElement('div');
-      adElement.className = selector.slice(1); // Remove the dot for the class name
+      adElement.className = selector.slice(1);
       document.body.appendChild(adElement);
       
-      // Check if the element is blocked by height or display property
       const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-      
-      document.body.removeChild(adElement); // Clean up
+      document.body.removeChild(adElement);
       return isBlocked;
     });
   };
 
-  const isAdBlocked = checkAdBlockers(); // Check if any ad elements are blocked
+  const isAdBlocked = checkAdBlockers();
 
   // Determine device type and set corresponding class names
   if (userAgent.includes('windows')) {
@@ -70,7 +77,13 @@ const SearchResults = () => {
   // Add class based on JavaScript status
   classNames += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  useClassList(classNames); // Use the computed class names
+  // Set a new ID for the <html> element
+  const newId = 'page-search';
+
+  useHtmlAttributes(classNames, newId); // Use the computed class names and new ID
+
+
+  
   
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
