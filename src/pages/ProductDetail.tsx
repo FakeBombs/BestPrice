@@ -118,6 +118,14 @@ const ProductDetail = () => {
     setIsPriceAlertModalOpen(true);
   };
 
+  useEffect(() => {
+    document.documentElement.classList.add('windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home');
+    
+    return () => {
+      document.documentElement.classList.remove('');
+    };
+  }, []);
+
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
