@@ -121,7 +121,10 @@ const ProductDetail = () => {
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
-        <div id="trail" style={{ position: "relative" }}><nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav></div>
+        <div id="trail" style={{ position: "relative" }}>
+          <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
+          <div className="comparison__placeholder"><div className="comparison__category"><div className="comparison__category-products"><div className="tooltip__anchor comparison__category-product"><div className="comparison__category-remove"><svg className="icon icon--no-margin" aria-hidden="true" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-round-x-20"></use></svg></div><a href="/item/2158420121/tcl-406-32gb.html?bpref=comparison-category"><img width="28" height="28" loading="lazy" alt="TCL 406 32GB" srcset="//bbpcdn.pstatic.gr/bpimg25/2m4vFL/1QXN8K_SX56Y56/1698752554/tcl-406-32gb.webp 2x" src="//bbpcdn.pstatic.gr/bpimg25/2m4vFL/1QXN8K_SX28Y28/1698752554/tcl-406-32gb.webp"/></a></div><div className="tooltip__anchor comparison__category-product"><div className="comparison__category-remove"><svg className="icon icon--no-margin" aria-hidden="true" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-round-x-20"></use></svg></div><a href="/item/2159422084/realme-note-50-4gb-128gb.html?bpref=comparison-category"><img width="28" height="28" loading="lazy" alt="Realme Note 50 4GB 128GB" srcset="//bbpcdn.pstatic.gr/bpimg21/aeRAp/1SYzV1_SX56Y56/1728492731/realme-note-50-4gb-128gb.webp 2x" src="//bbpcdn.pstatic.gr/bpimg21/aeRAp/1SYzV1_SX28Y28/1728492731/realme-note-50-4gb-128gb.webp"/></a></div></div><a href="/compare/2158420121-2159422084" className="button button--outline comparison__category-link">Σύγκριση (2)</a></div></div>
+        </div>
         <div className="item-layout__wrapper">
           <div className="item-layout">
             <aside className="item-aside stick-to-bottom">
@@ -131,30 +134,30 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              <div class="item-actions-buttons">
-                <button class="item-actions__button">
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7 1C8.10457 1 9 1.89826 9 2.99791V4H12V8H9V10H7V14H2V4H5V2.99791C5 1.8945 5.88773 1 7 1ZM8 2.99791V4.00209H6V2.99791C6 2.44375 6.44304 2 7 2C7.55093 2 8 2.44919 8 2.99791ZM10 9H12V11H14V13H12V15H10V13H8V11H10V9Z"/></svg>
-                  <span class="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
+              <div className="item-actions-buttons">
+                <button className="item-actions__button">
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7 1C8.10457 1 9 1.89826 9 2.99791V4H12V8H9V10H7V14H2V4H5V2.99791C5 1.8945 5.88773 1 7 1ZM8 2.99791V4.00209H6V2.99791C6 2.44375 6.44304 2 7 2C7.55093 2 8 2.44919 8 2.99791ZM10 9H12V11H14V13H12V15H10V13H8V11H10V9Z"/></svg>
+                  <span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
                 </button>
-                <button class="item-actions__button" data-id="compare">
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7.85103 0V2.90727H6L8.51483 6.34L11.0316 2.90727H9.17862V0H7.85103ZM9.17764 15.34V12.4327H11.03L8.51405 9L6 12.4327H7.85046V15.34H9.17764ZM13.8103 7H3V8.27273H13.8103V7Z"/></svg>
-                  <span class="item-actions__label">Προσθήκη στη σύγκριση</span>
+                <button className="item-actions__button" data-id="compare">
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M7.85103 0V2.90727H6L8.51483 6.34L11.0316 2.90727H9.17862V0H7.85103ZM9.17764 15.34V12.4327H11.03L8.51405 9L6 12.4327H7.85046V15.34H9.17764ZM13.8103 7H3V8.27273H13.8103V7Z"/></svg>
+                  <span className="item-actions__label">Προσθήκη στη σύγκριση</span>
                 </button>
-                <button class="item-actions__button" data-id="want">
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M5 2C6 2 7.27586 2.91379 8 4C8.73603 2.89595 10 2 11 2C12.9797 2 15 3.47207 15 6C15 10 8 14 8 14C8 14 1 10 1 6C1 3.44827 3 2 5 2Z"/></svg>
-                  <span class="item-actions__label">Το θέλω</span><span class="item-actions__count">25</span>
+                <button className="item-actions__button" data-id="want">
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M5 2C6 2 7.27586 2.91379 8 4C8.73603 2.89595 10 2 11 2C12.9797 2 15 3.47207 15 6C15 10 8 14 8 14C8 14 1 10 1 6C1 3.44827 3 2 5 2Z"/></svg>
+                  <span className="item-actions__label">Το θέλω</span><span className="item-actions__count">25</span>
                 </button>
-                <button class="item-actions__button" data-id="have">
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M0 8L6 15L16 4L13 1L6 8L3 5L0 8Z"/></svg>
-                  <span class="item-actions__label">Το έχω</span>
+                <button className="item-actions__button" data-id="have">
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M0 8L6 15L16 4L13 1L6 8L3 5L0 8Z"/></svg>
+                  <span className="item-actions__label">Το έχω</span>
                 </button>
-                <button class="item-actions__button" onClick={handlePriceAlert}>
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M13 8C13 4 11 1 8 1C5 1 3 4 3 8C3 9 1 12 1 12H15C15 12 13 9 13 8ZM10 13C10 13 10 15 8 15C6 15 6 13 6 13H10Z"/></svg>
-                  <span class="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
+                <button className="item-actions__button" onClick={handlePriceAlert}>
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M13 8C13 4 11 1 8 1C5 1 3 4 3 8C3 9 1 12 1 12H15C15 12 13 9 13 8ZM10 13C10 13 10 15 8 15C6 15 6 13 6 13H10Z"/></svg>
+                  <span className="item-actions__label">Ειδοποίηση για πτώση τιμής</span>
                 </button>
-                <button class="item-actions__button">
-                  <svg aria-hidden="true" class="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M1 3H14V6H1V3ZM16 10H14V8H12V10H10V12H12V14H14V12H16V10ZM9 11V13H10V14H1V11H9ZM1 7H11V9H9V10H1V7Z"/></svg>
-                  <span class="item-actions__label">Προσθήκη σε συλλογή</span>
+                <button className="item-actions__button">
+                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M1 3H14V6H1V3ZM16 10H14V8H12V10H10V12H12V14H14V12H16V10ZM9 11V13H10V14H1V11H9ZM1 7H11V9H9V10H1V7Z"/></svg>
+                  <span className="item-actions__label">Προσθήκη σε συλλογή</span>
                 </button>
               </div>
             </aside>
