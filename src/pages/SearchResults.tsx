@@ -55,7 +55,7 @@ const SearchResults = () => {
 
   // Determine device type and set corresponding class names
   if (userAgent.includes('windows')) {
-    classNames = 'windows supports-webp is-desktop';
+    classNames = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
     classNames = 'mobile supports-webp is-mobile';
   } else if (userAgent.includes('tablet')) {
@@ -67,7 +67,7 @@ const SearchResults = () => {
   }
 
   // Add class if ad blocker is detected
-  classNames += isAdBlocked ? ' ad-blocked' : ' ad-allowed';
+  classNames += isAdBlocked ? ' adblocked' : ' adallowed';
 
   // Check if JavaScript is enabled
   window.addEventListener('load', () => {
