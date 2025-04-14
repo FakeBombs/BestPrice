@@ -23,11 +23,6 @@ const formatProductSlug = (title: string): string => {
     .replace(/-+/g, '-');
 };
 
-const ProductVendors = ({ product }: ProductVendorsProps) => {
-  // Sort prices from lowest to highest
-  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
-};
-
 const ProductDetail = () => {
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
