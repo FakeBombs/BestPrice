@@ -23,6 +23,7 @@ const useClassList = (classNames) => {
 const SearchResults = () => {
 
   const userAgent = navigator.userAgent.toLowerCase();
+  const [jsEnabled, setJsEnabled] = useState(true); // State to track if JS is enabled
   let classNames = '';
 
   // Check for adblocker by testing common ad-blocking elements
@@ -54,6 +55,18 @@ const SearchResults = () => {
     classNames += ' ad-blocked';
   } else {
     classNames += ' ad-allowed';
+  }
+
+  // Check if JavaScript is enabled
+  window.addEventListener('load', () => {
+    setJsEnabled(true);
+  });
+
+  // Add class based on JavaScript status
+  if (!jsEnabled) {
+    classNames += ' js-disabled';
+  } else {
+    classNames += ' js-enabled';
   }
 
   useClassList(classNames); // Use the computed class names
