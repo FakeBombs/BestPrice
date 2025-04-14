@@ -15,16 +15,6 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
-interface ProductDetailProps {
-  product: Product;
-  bestPrice: ProductPrice | undefined;
-};
-
-const ProductVendors = ({ product }: ProductVendorsProps) => {
-  // Sort prices from lowest to highest
-  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
-};
-
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
@@ -33,7 +23,7 @@ const formatProductSlug = (title: string): string => {
     .replace(/-+/g, '-');
 };
 
-const ProductDetail = ({ product, bestPrice }: ProductDetailProps) => {
+const ProductDetail = () => {
   const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
