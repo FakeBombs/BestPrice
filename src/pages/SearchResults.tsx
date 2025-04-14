@@ -1,11 +1,27 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 
+const useClassList = (classNames) => {
+  useEffect(() => {
+    // Clear existing classes
+    document.documentElement.className = '';
+
+    // Add new classes
+    const classes = classNames.split(' ');
+    classes.forEach(className => document.documentElement.classList.add(className));
+  
+    // Cleanup function to reset classes when the component unmounts
+    return () => {
+      document.documentElement.className = '';
+    };
+  }, [classNames]);
+};
+
 const SearchResults = () => {
+  useClassList('windows');
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
