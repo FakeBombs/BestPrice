@@ -50,7 +50,7 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
                       </div>
                     </div>
                   </div>
-                  <div className="simple-rating__total">({product.rating.toFixed(1)} ({product.reviews}))</div>
+                  <div className="simple-rating__total">({product.reviews})</div>
                 </div>
               </a>
               
