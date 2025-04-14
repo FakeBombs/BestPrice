@@ -30,8 +30,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
               <div className="root__wrapper">
                 <div className="root">
-                  <div className="root__wrapper">
-                    <div className="root">
                       <div className="sitemap sitemap-desktop">
 
                         <div className="sitemap-desktop__sidebar">
@@ -141,10 +139,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         
                       
                       </div>
-                    </div>
                   </div>
                 </div>
-              </div>
             </div>
           </>
         )}
