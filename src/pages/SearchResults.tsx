@@ -21,7 +21,43 @@ const useClassList = (classNames) => {
 };
 
 const SearchResults = () => {
-  useClassList('windows');
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  let classNames = '';
+
+  // Check for adblocker by testing common ad-blocking elements
+  const isAdBlocked = (() => {
+    const adBlockElement = document.createElement('div');
+    adBlockElement.innerHTML = '&nbsp;';
+    adBlockElement.className = 'adsbox'; // A common class name that adblockers might block
+    document.body.appendChild(adBlockElement);
+    const isBlocked = adBlockElement.offsetHeight === 0; // If height is 0, it is blocked
+    document.body.removeChild(adBlockElement); // Clean up
+    return isBlocked;
+  })();
+
+  // Determine device type and set corresponding class names
+  if (userAgent.includes('windows')) {
+    classNames = 'windows supports-webp is-desktop';
+  } else if (userAgent.includes('mobile')) {
+    classNames = 'mobile supports-webp is-mobile';
+  } else if (userAgent.includes('tablet')) {
+    classNames = 'tablet supports-webp is-tablet';
+  } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
+    classNames = 'is-desktop';
+  } else {
+    classNames = 'unknown-device';
+  }
+
+  // Add class if ad blocker is detected
+  if (isAdBlocked) {
+    classNames += ' ad-blocked';
+  } else {
+    classNames += ' ad-allowed';
+  }
+
+  useClassList(classNames); // Use the computed class names
+  
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
