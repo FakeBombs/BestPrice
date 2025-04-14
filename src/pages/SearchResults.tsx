@@ -26,16 +26,25 @@ const SearchResults = () => {
   const [jsEnabled, setJsEnabled] = useState(true); // State to track if JS is enabled
   let classNames = '';
 
-  // Check for adblocker by testing common ad-blocking elements
-  const isAdBlocked = (() => {
-    const adBlockElement = document.createElement('div');
-    adBlockElement.innerHTML = '&nbsp;';
-    adBlockElement.className = 'adsbox'; // A common class name that adblockers might block
-    document.body.appendChild(adBlockElement);
-    const isBlocked = adBlockElement.offsetHeight === 0; // If height is 0, it is blocked
-    document.body.removeChild(adBlockElement); // Clean up
-    return isBlocked;
-  })();
+  // List of ad-related elements to check for blocking
+  const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+
+  // Function to check if any of the ad elements are blocked
+  const checkAdBlockers = () => {
+    return adElementsToCheck.some(selector => {
+      const adElement = document.createElement('div');
+      adElement.className = selector.slice(1); // Remove the dot for the class name
+      document.body.appendChild(adElement);
+      
+      // Check if the element is blocked by height or display property
+      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+      
+      document.body.removeChild(adElement); // Clean up
+      return isBlocked;
+    });
+  };
+
+  const isAdBlocked = checkAdBlockers(); // Check if any ad elements are blocked
 
   // Determine device type and set corresponding class names
   if (userAgent.includes('windows')) {
@@ -51,11 +60,7 @@ const SearchResults = () => {
   }
 
   // Add class if ad blocker is detected
-  if (isAdBlocked) {
-    classNames += ' ad-blocked';
-  } else {
-    classNames += ' ad-allowed';
-  }
+  classNames += isAdBlocked ? ' ad-blocked' : ' ad-allowed';
 
   // Check if JavaScript is enabled
   window.addEventListener('load', () => {
@@ -63,11 +68,7 @@ const SearchResults = () => {
   });
 
   // Add class based on JavaScript status
-  if (!jsEnabled) {
-    classNames += ' js-disabled';
-  } else {
-    classNames += ' js-enabled';
-  }
+  classNames += jsEnabled ? ' js-enabled' : ' js-disabled';
 
   useClassList(classNames); // Use the computed class names
   
