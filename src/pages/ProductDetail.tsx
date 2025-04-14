@@ -17,11 +17,16 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const useClassList = (classNames) => {
   useEffect(() => {
+    // Clear existing classes
+    document.documentElement.className = '';
+
+    // Add new classes
     const classes = classNames.split(' ');
     classes.forEach(className => document.documentElement.classList.add(className));
-
+  
+    // Cleanup function to reset classes when the component unmounts
     return () => {
-      classes.forEach(className => document.documentElement.classList.remove(className));
+      document.documentElement.className = '';
     };
   }, [classNames]);
 };
