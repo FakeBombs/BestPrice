@@ -4,73 +4,39 @@ import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 
-const useHtmlAttributes = (classes, newId) => {
+// Define the custom hooks to add classes/IDs
+function useBodyAttributes(classNames, id) {
   useEffect(() => {
-    const htmlElement = document.documentElement;
-
-    // Clear existing classes and ID
-    htmlElement.className = '';
-    htmlElement.removeAttribute('id');
-
-    // Add new classes and ID
-    const classesArray = classes.split(' ');
-    classesArray.forEach(className => htmlElement.classList.add(className));
-    
-    // Set new ID
-    if (newId) {
-      htmlElement.setAttribute('id', newId);
+    if (id) {
+      document.body.id = id;
     }
+    document.body.className = classNames.trim();  // Ensure no extra spaces
+  }, [classNames, id]);
+}
 
-    return () => {
-      // Cleanup: remove added classes and ID on unmount
-      htmlElement.className = '';
-      htmlElement.removeAttribute('id');
-    };
-  }, [classes, newId]);
-};
-
-const useBodyAttributes = (classes, newId) => {
+function useHtmlAttributes(classNames, id) {
   useEffect(() => {
-    const bodyElement = document.body;
-
-    // Clear existing classes and ID
-    bodyElement.className = '';
-    bodyElement.removeAttribute('id');
-
-    // Add new classes and ID
-    const classesArray = classes.split(' ');
-    classesArray.forEach(className => bodyElement.classList.add(className));
-    
-    // Set new ID
-    if (newId) {
-      bodyElement.setAttribute('id', newId);
+    if (id) {
+      document.documentElement.id = id;
     }
-
-    return () => {
-      // Cleanup: remove added classes and ID on unmount
-      bodyElement.className = '';
-      bodyElement.removeAttribute('id');
-    };
-  }, [classes, newId]);
-};
+    document.documentElement.className = classNames.trim();  // Ensure no extra spaces
+  }, [classNames, id]);
+}
 
 const SearchResults = () => {
 
   const userAgent = navigator.userAgent.toLowerCase();
-  const [jsEnabled, setJsEnabled] = useState(true);
+  const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
   let classNamesForHtml = '';
 
-  // List of ad-related elements to check for blocking
-  const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
-
-  // Function to check if any of the ad elements are blocked
+  // Check for ad blockers
   const checkAdBlockers = () => {
+    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
     return adElementsToCheck.some(selector => {
       const adElement = document.createElement('div');
       adElement.className = selector.slice(1);
       document.body.appendChild(adElement);
-      
       const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
       document.body.removeChild(adElement);
       return isBlocked;
@@ -79,39 +45,42 @@ const SearchResults = () => {
 
   const isAdBlocked = checkAdBlockers();
 
-  // Determine device type and set corresponding class names for body and html
+  // Determine device type
   if (userAgent.includes('windows')) {
-    classNamesForBody = 'has-filters-selected pagination-controlled';
-    classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+      classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+      classNamesForBody = 'has-filters-selected pagination-controlled';
   } else if (userAgent.includes('mobile')) {
-    classNamesForBody = 'mobile supports-webp is-mobile';
-    classNamesForHtml = 'mobile supports-webp is-mobile';
+      classNamesForHtml = 'is-mobile';
+      classNamesForBody = 'mobile';
   } else if (userAgent.includes('tablet')) {
-    classNamesForBody = 'tablet supports-webp is-tablet';
-    classNamesForHtml = 'tablet supports-webp is-tablet';
-  } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
-    classNamesForBody = 'is-desktop';
-    classNamesForHtml = 'is-desktop';
+      classNamesForHtml = 'is-tablet';
+      classNamesForBody = 'tablet';
   } else {
-    classNamesForBody = 'unknown-device';
-    classNamesForHtml = 'unknown-device';
+      classNamesForHtml = 'unknown-device';
   }
 
-  // Add class if ad blocker is detected
+  // Handle ad blockers
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
-  // Check if JavaScript is enabled
-  window.addEventListener('load', () => setJsEnabled(true), { once: true });
+  // Set JavaScript enabled state
+  useEffect(() => {
+    const handleLoad = () => {
+      setJsEnabled(true);
+    };
 
-  // Add class based on JavaScript status
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
+
+  // Add JS enabled/disabled class
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  // Set a new ID for the body and html elements
-  const newIdForBody = null;
+  // Set attributes
+  const newIdForBody = ''; // Keeping body ID empty
   const newIdForHtml = 'page-cat';
 
-  useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
-  useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);
+  useBodyAttributes(classNamesForBody, newIdForBody);
 
 
   
