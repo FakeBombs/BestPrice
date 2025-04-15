@@ -40,6 +40,31 @@ const useHtmlAttributes = (classes, newId) => {
   }, [classes, newId]);
 };
 
+const useBodyAttributes = (classes, newId) => {
+  useEffect(() => {
+    const bodyElement = document.body;
+
+    // Clear existing classes and ID
+    bodyElement.className = '';
+    bodyElement.removeAttribute('id');
+
+    // Add new classes and ID
+    const classesArray = classes.split(' ');
+    classesArray.forEach(className => bodyElement.classList.add(className));
+    
+    // Set new ID
+    if (newId) {
+      bodyElement.setAttribute('id', newId);
+    }
+
+    return () => {
+      // Cleanup: remove added classes and ID on unmount
+      bodyElement.className = '';
+      bodyElement.removeAttribute('id');
+    };
+  }, [classes, newId]);
+};
+
 const formatProductSlug = (title: string): string => {
   return title
     .toLowerCase()
