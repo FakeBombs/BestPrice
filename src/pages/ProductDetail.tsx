@@ -76,7 +76,8 @@ const formatProductSlug = (title: string): string => {
 const ProductDetail = () => {
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(true);
-  let classNames = '';
+  let classNamesForBody = '';
+  let classNamesForHtml = '';
 
   // List of ad-related elements to check for blocking
   const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
@@ -96,34 +97,39 @@ const ProductDetail = () => {
 
   const isAdBlocked = checkAdBlockers();
 
-  // Determine device type and set corresponding class names
+  // Determine device type and set corresponding class names for body and html
   if (userAgent.includes('windows')) {
-    classNames = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+    classNamesForBody = null;
+    classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
-    classNames = 'mobile supports-webp is-mobile';
+    classNamesForBody = 'mobile supports-webp is-mobile';
+    classNamesForHtml = 'mobile supports-webp is-mobile';
   } else if (userAgent.includes('tablet')) {
-    classNames = 'tablet supports-webp is-tablet';
+    classNamesForBody = 'tablet supports-webp is-tablet';
+    classNamesForHtml = 'tablet supports-webp is-tablet';
   } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
-    classNames = 'is-desktop';
+    classNamesForBody = 'is-desktop';
+    classNamesForHtml = 'is-desktop';
   } else {
-    classNames = 'unknown-device';
+    classNamesForBody = 'unknown-device';
+    classNamesForHtml = 'unknown-device';
   }
 
   // Add class if ad blocker is detected
-  classNames += isAdBlocked ? ' adblocked' : ' adallowed';
+  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
   // Check if JavaScript is enabled
-  window.addEventListener('load', () => {
-    setJsEnabled(true);
-  });
+  window.addEventListener('load', () => setJsEnabled(true), { once: true });
 
   // Add class based on JavaScript status
-  classNames += jsEnabled ? ' js-enabled' : ' js-disabled';
+  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  // Set a new ID for the <html> element
-  const newId = 'page-item';
+  // Set a new ID for the body and html elements
+  const newIdForBody = null;
+  const newIdForHtml = 'page-item';
 
-  useHtmlAttributes(classNames, newId); // Use the computed class names and new ID
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
+  useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
