@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Index from '@/components/Index';
@@ -116,8 +116,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             </div>
           </>
         )}
-
-        <Outlet />
         
         {/* Pass sitemapToggle to children, including Index */}
         {React.Children.map(children, (child) => {
