@@ -4,25 +4,6 @@ import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 
-// Define the custom hooks to add classes/IDs
-function useBodyAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.body.id = id;
-    }
-    document.body.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
-
-function useHtmlAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.documentElement.id = id;
-    }
-    document.documentElement.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
-
 const SearchResults = () => {
 
   const userAgent = navigator.userAgent.toLowerCase();
