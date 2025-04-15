@@ -201,7 +201,7 @@ const Deals = () => {
             <div className="deals-black-filter__wrapper">
               <div className="deals-black-filter">
                 <div className="deals-black-filter__label">
-                  <svg aria-hidden="true" class="icon" width="18" height="18" viewBox="0 0 18 18" role="img"><g xmlns="http://www.w3.org/2000/svg" clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.80311 17.9993C5.60911 17.8723 8.95611 10.8393 8.84111 10.5303C8.72511 10.2213 5.17611 9.09426 5.00311 8.55126C4.82911 8.00826 12.0101 -0.155736 12.1991 0.00226364C12.3871 0.160264 9.07011 7.24026 9.16011 7.47126C9.25111 7.70126 12.8881 8.87526 12.9981 9.45026C13.1091 10.0253 5.99611 18.1263 5.80311 17.9993Z" fill="url(#b)"/></g>></svg>
+                  <svg aria-hidden="true" class="icon" width="18" height="18" viewBox="0 0 18 18" role="img"><g xmlns="http://www.w3.org/2000/svg" clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.80311 17.9993C5.60911 17.8723 8.95611 10.8393 8.84111 10.5303C8.72511 10.2213 5.17611 9.09426 5.00311 8.55126C4.82911 8.00826 12.0101 -0.155736 12.1991 0.00226364C12.3871 0.160264 9.07011 7.24026 9.16011 7.47126C9.25111 7.70126 12.8881 8.87526 12.9981 9.45026C13.1091 10.0253 5.99611 18.1263 5.80311 17.9993Z" fill="url(#b)"/></g></svg>
                   <span>Black {t('deals')}</span>
                 </div>
                 <input readonly="" type="checkbox" />
