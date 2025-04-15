@@ -25,18 +25,13 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
   const isAdBlocked = checkAdBlockers();
 
   // Determine device type
-  if (userAgent.includes('windows')) {
-    classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-    classNamesForBody = 'has-filters-selected pagination-controlled';
-  } else if (userAgent.includes('mobile')) {
-    classNamesForHtml = 'is-mobile';
-    classNamesForBody = 'mobile';
-  } else if (userAgent.includes('tablet')) {
-    classNamesForHtml = 'is-tablet';
-    classNamesForBody = 'tablet';
-  } else {
-    classNamesForHtml = 'unknown-device';
-  }
+  classNamesForHtml = userAgent.includes('windows') ? 
+    'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home' : 
+    userAgent.includes('mobile') ? 'is-mobile' : 
+    userAgent.includes('tablet') ? 'is-tablet' : 
+    'unknown-device';
+  
+  classNamesForBody = userAgent.includes('windows') ? 'has-filters-selected pagination-controlled' : userAgent.includes('mobile') ? 'mobile' : userAgent.includes('tablet') ? 'tablet' : '';
 
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
@@ -50,7 +45,7 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
   }, []);
 
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
-    
+
   const newIdForBody = '';
   const newIdForHtml = 'page-cat';
   useHtmlAttributes(classNamesForHtml, newIdForHtml);
@@ -59,7 +54,7 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState(initialProducts || []);
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendorList, setVendorList] = useState(initialVendorList || []);
 
   useEffect(() => {
@@ -106,7 +101,6 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
-              {/* Existing filter categories */}
               <div className="filters__header">
                 <div className="filters__header-title">Φίλτρα</div>
               </div>
@@ -136,7 +130,7 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                 <div className="filter-container">
                   <ol data-total={vendorList.length}>
-                    {vendorList.map((vendor, index) => (
+                    {vendorList.map((vendor) => (
                       <li key={vendor.id}>
                         <Link to={`/search?q=${searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></Link>
                       </li>
