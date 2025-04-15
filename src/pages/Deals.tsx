@@ -5,6 +5,65 @@ import ProductFilter from '@/components/ProductFilter';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Deals = () => {
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  const [jsEnabled, setJsEnabled] = useState(false);
+  let classNamesForBody = '';
+  let classNamesForHtml = '';
+
+  // Check for ad blockers
+  const checkAdBlockers = () => {
+    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+    return adElementsToCheck.some(selector => {
+      const adElement = document.createElement('div');
+      adElement.className = selector.slice(1);
+      document.body.appendChild(adElement);
+      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+      document.body.removeChild(adElement);
+      return isBlocked;
+    });
+  };
+
+  const isAdBlocked = checkAdBlockers();
+
+  // Determine device type
+  if (userAgent.includes('windows')) {
+      classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+      classNamesForBody = 'has-sorting-filters pagination-controlled';
+  } else if (userAgent.includes('mobile')) {
+      classNamesForHtml = 'is-mobile';
+      classNamesForBody = 'mobile';
+  } else if (userAgent.includes('tablet')) {
+      classNamesForHtml = 'is-tablet';
+      classNamesForBody = 'tablet';
+  } else {
+      classNamesForHtml = 'unknown-device';
+  }
+
+  // Handle ad blockers
+  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
+
+  // Set JavaScript enabled state
+  useEffect(() => {
+    const handleLoad = () => {
+      setJsEnabled(true);
+    };
+
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
+
+  // Add JS enabled/disabled class
+  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+
+  // Set attributes
+  const newIdForBody = ''; // Keeping body ID empty
+  const newIdForHtml = 'page-deals';
+
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);
+  useBodyAttributes(classNamesForBody, newIdForBody);
+
+  
   const [deals, setDeals] = useState([]);
   const [filteredDeals, setFilteredDeals] = useState([]);
   const { t } = useTranslation();
