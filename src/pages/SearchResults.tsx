@@ -151,12 +151,19 @@ const SearchResults = () => {
     <div className="root__wrapper">
       <div className="root">
         <div className="page-products">
-          <aside class="page-products__filters">
-            <div id="filters"></div>
-            <div class="ads" data-max="0" data-ip="31.152.199.61"></div>
+          <aside className="page-products__filters">
+            <div id="filters">
+              <div className="filters__categories" data-filter-name="categories">
+                <div className="filters__header">
+                  <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+                </div>
+              </div>
+              <div className="filters__header"><div className="filters__header-title filters__header-title--filters">Φίλτρα</div></div>
+            </div>
+            <div className="ads" data-max="0" data-ip="31.152.199.61"></div>
           </aside>
 
-          <main class="page-products__main">
+          <main className="page-products__main">
       <h1 className="text-3xl font-bold mb-2">Αποτελέσματα Αναζήτησης</h1>
       <p className="text-muted-foreground mb-6">
         {filteredProducts.length} αποτελέσματα για "{searchQuery}"
