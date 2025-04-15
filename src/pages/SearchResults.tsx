@@ -71,7 +71,7 @@ const SearchResults = ({ vendors }) => {
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [vendors, setVendors] = useState([]);
+  const [vendorList, setVendorList] = useState([]);
   
   useEffect(() => {
     if (searchQuery) {
