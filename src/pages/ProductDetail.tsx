@@ -15,20 +15,29 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const useClassList = (classNames) => {
+const useHtmlAttributes = (classes, newId) => {
   useEffect(() => {
-    // Clear existing classes
-    document.documentElement.className = '';
+    const htmlElement = document.documentElement;
 
-    // Add new classes
-    const classes = classNames.split(' ');
-    classes.forEach(className => document.documentElement.classList.add(className));
-  
-    // Cleanup function to reset classes when the component unmounts
+    // Clear existing classes and ID
+    htmlElement.className = '';
+    htmlElement.removeAttribute('id');
+
+    // Add new classes and ID
+    const classesArray = classes.split(' ');
+    classesArray.forEach(className => htmlElement.classList.add(className));
+    
+    // Set new ID
+    if (newId) {
+      htmlElement.setAttribute('id', newId);
+    }
+
     return () => {
-      document.documentElement.className = '';
+      // Cleanup: remove added classes and ID on unmount
+      htmlElement.className = '';
+      htmlElement.removeAttribute('id');
     };
-  }, [classNames]);
+  }, [classes, newId]);
 };
 
 const formatProductSlug = (title: string): string => {
