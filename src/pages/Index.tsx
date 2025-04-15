@@ -8,6 +8,7 @@ import ProductCarousel from '@/components/ProductCarousel';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const Index = () => {
 
