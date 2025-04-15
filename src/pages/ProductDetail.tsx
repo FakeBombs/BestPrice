@@ -101,12 +101,16 @@ const isAdBlocked = checkAdBlockers();
 if (userAgent.includes('windows')) {
   classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
 } else if (userAgent.includes('mobile')) {
+  classNamesForBody = 'mobile supports-webp is-mobile'; // Set body class for mobile
   classNamesForHtml = 'mobile supports-webp is-mobile';
 } else if (userAgent.includes('tablet')) {
+  classNamesForBody = 'tablet supports-webp is-tablet'; // Set body class for tablet
   classNamesForHtml = 'tablet supports-webp is-tablet';
 } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
+  classNamesForBody = 'is-desktop'; // Set body class for desktop
   classNamesForHtml = 'is-desktop';
 } else {
+  classNamesForBody = 'unknown-device'; // Set body class for unknown devices
   classNamesForHtml = 'unknown-device';
 }
 
@@ -120,12 +124,13 @@ window.addEventListener('load', () => setJsEnabled(true), { once: true });
 classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
 // Generate IDs; use '' for body ID to leave it empty
-const newIdForBody = ''; // Set this to empty string to leave the ID blank
+const newIdForBody = ''; // Use empty string to leave the body ID blank
 const newIdForHtml = 'page-item';
 
 // Set attributes using the custom hooks
-useHtmlAttributes(classNamesForHtml, newIdForHtml);  // Use the computed class names and new ID for html
-useBodyAttributes(classNamesForBody || undefined, newIdForBody || undefined);  // Use the computed class names and new ID (empty) for body
+useHtmlAttributes(classNamesForHtml, newIdForHtml);  // Apply classes and ID for html
+useBodyAttributes(classNamesForBody || '', newIdForBody || '');  // Apply classes and ID for body
+
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
