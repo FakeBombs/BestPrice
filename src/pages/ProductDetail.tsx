@@ -15,55 +15,24 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const useHtmlAttributes = (classes, newId) => {
+// Define the custom hooks to add classes/IDs
+function useBodyAttributes(classNames, id) {
   useEffect(() => {
-    const htmlElement = document.documentElement;
-
-    // Clear existing classes and ID
-    htmlElement.className = '';
-    htmlElement.removeAttribute('id');
-
-    // Add new classes and ID
-    const classesArray = classes.split(' ');
-    classesArray.forEach(className => htmlElement.classList.add(className));
-    
-    // Set new ID
-    if (newId) {
-      htmlElement.setAttribute('id', newId);
+    if (id) {
+      document.body.id = id;
     }
+    document.body.className = classNames.trim();  // Ensure no extra spaces
+  }, [classNames, id]);
+}
 
-    return () => {
-      // Cleanup: remove added classes and ID on unmount
-      htmlElement.className = '';
-      htmlElement.removeAttribute('id');
-    };
-  }, [classes, newId]);
-};
-
-const useBodyAttributes = (classes, newId) => {
+function useHtmlAttributes(classNames, id) {
   useEffect(() => {
-    const bodyElement = document.body;
-
-    // Clear existing classes and ID
-    bodyElement.className = '';
-    bodyElement.removeAttribute('id');
-
-    // Add new classes and ID
-    const classesArray = classes.split(' ');
-    classesArray.forEach(className => bodyElement.classList.add(className));
-    
-    // Set new ID
-    if (newId) {
-      bodyElement.setAttribute('id', newId);
+    if (id) {
+      document.documentElement.id = id;
     }
-
-    return () => {
-      // Cleanup: remove added classes and ID on unmount
-      bodyElement.className = '';
-      bodyElement.removeAttribute('id');
-    };
-  }, [classes, newId]);
-};
+    document.documentElement.className = classNames.trim();  // Ensure no extra spaces
+  }, [classNames, id]);
+}
 
 const formatProductSlug = (title: string): string => {
   return title
@@ -75,61 +44,60 @@ const formatProductSlug = (title: string): string => {
 
 const ProductDetail = () => {
   const userAgent = navigator.userAgent.toLowerCase();
-const [jsEnabled, setJsEnabled] = useState(true);
-let classNamesForBody = '';  // Initialize as an empty string
-let classNamesForHtml = '';
+  const [jsEnabled, setJsEnabled] = useState(false);
+  let classNamesForBody = '';
+  let classNamesForHtml = '';
 
-// List of ad-related elements to check for blocking
-const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+  // Check for ad blockers
+  const checkAdBlockers = () => {
+    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+    return adElementsToCheck.some(selector => {
+      const adElement = document.createElement('div');
+      adElement.className = selector.slice(1);
+      document.body.appendChild(adElement);
+      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+      document.body.removeChild(adElement);
+      return isBlocked;
+    });
+  };
 
-// Function to check if any of the ad elements are blocked
-const checkAdBlockers = () => {
-  return adElementsToCheck.some(selector => {
-    const adElement = document.createElement('div');
-    adElement.className = selector.slice(1);
-    document.body.appendChild(adElement);
-    
-    const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-    document.body.removeChild(adElement);
-    return isBlocked;
-  });
-};
+  const isAdBlocked = checkAdBlockers();
 
-const isAdBlocked = checkAdBlockers();
+  // Determine device type
+  if (userAgent.includes('windows')) {
+      classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+  } else if (userAgent.includes('mobile')) {
+      classNamesForHtml = 'is-mobile';
+      classNamesForBody = 'mobile';
+  } else if (userAgent.includes('tablet')) {
+      classNamesForHtml = 'is-tablet';
+      classNamesForBody = 'tablet';
+  } else {
+      classNamesForHtml = 'unknown-device';
+  }
 
-// Determine device type and set corresponding class names for body and html
-if (userAgent.includes('windows')) {
-  classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-} else if (userAgent.includes('mobile')) {
-  classNamesForBody = 'mobile supports-webp is-mobile'; // Set body class for mobile
-  classNamesForHtml = 'mobile supports-webp is-mobile';
-} else if (userAgent.includes('tablet')) {
-  classNamesForBody = 'tablet supports-webp is-tablet'; // Set body class for tablet
-  classNamesForHtml = 'tablet supports-webp is-tablet';
-} else if (userAgent.includes('mac') || userAgent.includes('linux')) {
-  classNamesForBody = 'is-desktop'; // Set body class for desktop
-  classNamesForHtml = 'is-desktop';
-} else {
-  classNamesForBody = 'unknown-device'; // Set body class for unknown devices
-  classNamesForHtml = 'unknown-device';
-}
+  // Handle ad blockers
+  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
-// Add class if ad blocker is detected
-classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
+  // Set JavaScript enabled state
+  useEffect(() => {
+    const handleLoad = () => {
+      setJsEnabled(true);
+    };
 
-// Check if JavaScript is enabled
-window.addEventListener('load', () => setJsEnabled(true), { once: true });
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
 
-// Add class based on JavaScript status
-classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+  // Add JS enabled/disabled class
+  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-// Generate IDs; use '' for body ID to leave it empty
-const newIdForBody = ''; // Use empty string to leave the body ID blank
-const newIdForHtml = 'page-item';
+  // Set attributes
+  const newIdForBody = ''; // Keeping body ID empty
+  const newIdForHtml = 'page-item';
 
-// Set attributes using the custom hooks
-useHtmlAttributes(classNamesForHtml, newIdForHtml);  // Apply classes and ID for html
-useBodyAttributes(classNamesForBody || '', newIdForBody || '');  // Apply classes and ID for body
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);
+  useBodyAttributes(classNamesForBody, newIdForBody);
 
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
