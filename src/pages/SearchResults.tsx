@@ -1,89 +1,43 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { searchProducts } from '@/data/mockData';
+import { searchProducts } from '@/data/mockData'; // Ensure this function returns a promise resolving to product data
 import ProductCard from '@/components/ProductCard';
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const SearchResults = ({ initialVendorList }) => {
-  const userAgent = navigator.userAgent.toLowerCase();
-  const [jsEnabled, setJsEnabled] = useState(false);
-  let classNamesForBody = '';
-  let classNamesForHtml = '';
-
-  const checkAdBlockers = () => {
-    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
-    return adElementsToCheck.some(selector => {
-      const adElement = document.createElement('div');
-      adElement.className = selector.slice(1);
-      document.body.appendChild(adElement);
-      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-      document.body.removeChild(adElement);
-      return isBlocked;
-    });
-  };
-
-  const isAdBlocked = checkAdBlockers();
-
-  // Determine device type
-  classNamesForHtml = userAgent.includes('windows') ? 
-    'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home' : 
-    userAgent.includes('mobile') ? 'is-mobile' : 
-    userAgent.includes('tablet') ? 'is-tablet' : 
-    'unknown-device';
-  
-  classNamesForBody = userAgent.includes('windows') ? 'has-filters-selected pagination-controlled' : userAgent.includes('mobile') ? 'mobile' : userAgent.includes('tablet') ? 'tablet' : '';
-
-  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
-
-  useEffect(() => {
-    const handleLoad = () => {
-      setJsEnabled(true);
-    };
-
-    window.addEventListener('load', handleLoad);
-    return () => window.removeEventListener('load', handleLoad);
-  }, []);
-
-  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
-
-  const newIdForBody = '';
-  const newIdForHtml = 'page-cat';
-  useHtmlAttributes(classNamesForHtml, newIdForHtml);
-  useBodyAttributes(classNamesForBody, newIdForBody);
-
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendorList, setVendorList] = useState(initialVendorList || []);
 
+  // Fetch products based on search query
   useEffect(() => {
-    // Fetch products initially based on a search query or default products if needed
     const fetchProducts = async () => {
-      const results = await searchProducts(searchQuery);
-      setProducts(results);
-      setFilteredProducts(results); // Initialize filtered products
+      if (searchQuery) {
+        const results = await searchProducts(searchQuery); // Assuming this returns a promise
+        setProducts(results);
+      } else {
+        setProducts([]); // Or set a default product list if needed
+      }
     };
     fetchProducts();
-  }, [searchQuery]); // Add searchQuery dependency to fetch on query change
+  }, [searchQuery]);
 
+  // Filter products based on query and vendor list
   useEffect(() => {
     let filteredResults = products;
-
     if (searchQuery) {
       filteredResults = filteredResults.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
     if (vendorList.length > 0) {
       filteredResults = filteredResults.filter(product =>
         product.prices.some(price => vendorList.includes(price.vendorId))
       );
     }
-
     setFilteredProducts(filteredResults);
-  }, [searchQuery, products, vendorList]);
+  }, [products, vendorList, searchQuery]);
 
   const handleSort = (sortOption) => {
     const sorted = [...filteredProducts];
@@ -132,7 +86,6 @@ const SearchResults = ({ initialVendorList }) => {
                     <li data-filter="in-stock">
                       <Link onClick={() => handleInStockOnly(true)} to={`/search?q=${searchQuery}&instock=1`}>Άμεσα διαθέσιμα</Link>
                     </li>
-                    {/* Other existing filters can be added here */}
                   </ol>
                 </div>
               </div>
