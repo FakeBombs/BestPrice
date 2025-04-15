@@ -24,6 +24,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { LanguageProvider } from "./context/LanguageContext";
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
