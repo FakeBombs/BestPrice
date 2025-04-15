@@ -1,6 +1,6 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { searchProducts } from '@/data/mockData'; // Ensure this function returns a promise resolving to product data
+import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const SearchResults = ({ initialVendorList }) => {
@@ -10,44 +10,52 @@ const SearchResults = ({ initialVendorList }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendorList, setVendorList] = useState(initialVendorList || []);
 
-  // Fetch products based on search query
+  // Fetch products based on search query when the component mounts or when the search query changes
   useEffect(() => {
     const fetchProducts = async () => {
-      if (searchQuery) {
-        const results = await searchProducts(searchQuery); // Assuming this returns a promise
+      try {
+        const results = await searchProducts(searchQuery);
         setProducts(results);
-      } else {
-        setProducts([]); // Or set a default product list if needed
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
       }
     };
-    fetchProducts();
+    if (searchQuery) {
+      fetchProducts();
+    } else {
+      setProducts([]); // Set to an empty array if there's no query
+    }
   }, [searchQuery]);
 
-  // Filter products based on query and vendor list
+  // Filter products based on search query and vendor list
   useEffect(() => {
-    let filteredResults = products;
-    if (searchQuery) {
-      filteredResults = filteredResults.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    if (vendorList.length > 0) {
-      filteredResults = filteredResults.filter(product =>
-        product.prices.some(price => vendorList.includes(price.vendorId))
-      );
-    }
-    setFilteredProducts(filteredResults);
+    const filterProducts = () => {
+      let results = [...products]; // Create a shallow copy of products
+      if (searchQuery) {
+        results = results.filter(product =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+      if (vendorList.length > 0) {
+        results = results.filter(product =>
+          product.prices.some(price => vendorList.includes(price.vendorId))
+        );
+      }
+      setFilteredProducts(results);
+    };
+
+    // Trigger filtering when products or vendor list change
+    filterProducts();
   }, [products, vendorList, searchQuery]);
 
+  // Sorting and filtering functions
   const handleSort = (sortOption) => {
     const sorted = [...filteredProducts];
-
     if (sortOption === 'price-asc') {
       sorted.sort((a, b) => Math.min(...a.prices.map(p => p.price)) - Math.min(...b.prices.map(p => p.price)));
     } else if (sortOption === 'price-desc') {
       sorted.sort((a, b) => Math.min(...b.prices.map(p => p.price)) - Math.min(...a.prices.map(p => p.price)));
     }
-
     setFilteredProducts(sorted);
   };
 
@@ -55,7 +63,7 @@ const SearchResults = ({ initialVendorList }) => {
     if (inStockOnly) {
       setFilteredProducts(products.filter(product => product.prices.some(price => price.inStock)));
     } else {
-      setFilteredProducts(products);
+      setFilteredProducts(products); // Reset to all products
     }
   };
 
@@ -93,7 +101,7 @@ const SearchResults = ({ initialVendorList }) => {
                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                 <div className="filter-container">
                   <ol data-total={vendorList.length}>
-                    {vendorList.map((vendor) => (
+                    {vendorList.map(vendor => (
                       <li key={vendor.id}>
                         <Link to={`/search?q=${searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></Link>
                       </li>
@@ -118,7 +126,7 @@ const SearchResults = ({ initialVendorList }) => {
               </div>
             ) : (
               <div className="product-grid mt-6">
-                {filteredProducts.map((product) => (
+                {filteredProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
