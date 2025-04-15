@@ -29,11 +29,37 @@ const useHtmlAttributes = (classes, newId) => {
   }, [classes, newId]);
 };
 
+const useBodyAttributes = (classes, newId) => {
+  useEffect(() => {
+    const bodyElement = document.body;
+
+    // Clear existing classes and ID
+    bodyElement.className = '';
+    bodyElement.removeAttribute('id');
+
+    // Add new classes and ID
+    const classesArray = classes.split(' ');
+    classesArray.forEach(className => bodyElement.classList.add(className));
+    
+    // Set new ID
+    if (newId) {
+      bodyElement.setAttribute('id', newId);
+    }
+
+    return () => {
+      // Cleanup: remove added classes and ID on unmount
+      bodyElement.className = '';
+      bodyElement.removeAttribute('id');
+    };
+  }, [classes, newId]);
+};
+
 const SearchResults = () => {
 
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(true);
-  let classNames = '';
+  let classNamesForBody = '';
+  let classNamesForHtml = '';
 
   // List of ad-related elements to check for blocking
   const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
@@ -53,34 +79,41 @@ const SearchResults = () => {
 
   const isAdBlocked = checkAdBlockers();
 
-  // Determine device type and set corresponding class names
+  // Determine device type and set corresponding class names for body and html
   if (userAgent.includes('windows')) {
-    classNames = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+    classNamesForBody = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+    classNamesForHtml = 'windows supports-webp is-desktop';
   } else if (userAgent.includes('mobile')) {
-    classNames = 'mobile supports-webp is-mobile';
+    classNamesForBody = 'mobile supports-webp is-mobile';
+    classNamesForHtml = 'mobile supports-webp is-mobile';
   } else if (userAgent.includes('tablet')) {
-    classNames = 'tablet supports-webp is-tablet';
+    classNamesForBody = 'tablet supports-webp is-tablet';
+    classNamesForHtml = 'tablet supports-webp is-tablet';
   } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
-    classNames = 'is-desktop';
+    classNamesForBody = 'is-desktop';
+    classNamesForHtml = 'is-desktop';
   } else {
-    classNames = 'unknown-device';
+    classNamesForBody = 'unknown-device';
+    classNamesForHtml = 'unknown-device';
   }
 
-  // Add class if ad blocker is detected
-  classNames += isAdBlocked ? ' adblocked' : ' adallowed';
+  // Add class if ad blocker is detected for both <body> and <html>
+  classNamesForBody += isAdBlocked ? ' adblocked' : ' adallowed';
+  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
   // Check if JavaScript is enabled
-  window.addEventListener('load', () => {
-    setJsEnabled(true);
-  });
+  window.addEventListener('load', () => setJsEnabled(true), { once: true });
 
-  // Add class based on JavaScript status
-  classNames += jsEnabled ? ' js-enabled' : ' js-disabled';
+  // Add class based on JavaScript status for both body and html
+  classNamesForBody += jsEnabled ? ' js-enabled' : ' js-disabled';
+  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  // Set a new ID for the <html> element
-  const newId = 'page-search';
+  // Set a new ID for the body and html elements
+  const newIdForBody = isAdBlocked ? 'adblocked' : 'adallowed';
+  const newIdForHtml = isAdBlocked ? 'adblocked' : 'adallowed';
 
-  useHtmlAttributes(classNames, newId); // Use the computed class names and new ID
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
+  useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
 
 
   
