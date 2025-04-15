@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-const SearchResults = () => {
+const SearchResults = ({ vendors }) => {
 
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
@@ -112,7 +112,7 @@ const SearchResults = () => {
     setFilteredProducts(sorted);
   };
   
-  const handleVendorFilter = (vendors: string[]) => {
+  const handleVendorFilter = (vendors) => {
     if (vendors.length === 0) {
       setFilteredProducts(products);
       return;
@@ -160,30 +160,17 @@ const SearchResults = () => {
               
               <div className="filters__header"><div className="filters__header-title filters__header-title--filters">Φίλτρα</div></div>
               
-              <div class="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
-                <div class="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
-                <div class="filter-container">
-                  <ol data-total="15" data-hidden="10">
-                    <li><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=passadena.gr"><span>Passadena</span></a></li>
-                    <li><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=pinguin.gr"><span>Pinguin</span></a></li>
-                    <li><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=e-dructer.com"><span>e-dructer</span></a></li>
-                    <li><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=egalaxy.gr"><span>Egalaxy</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=fotistika4u.gr"><span>Fotistika4u</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=beegadget.gr"><span>Beegadget</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=mahatmahome.gr"><span>MahatmaHome</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=ekos.gr"><span>Ekos</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=symbolofashion.gr"><span>Symbolofashion</span></a></li>
-                    <li class="hidden"><a data-l="3" rel="nofollow" href="/search?q=rcf&amp;store=vrepair.gr"><span>Vrepair</span></a></li>
-                    <li class="hidden"><a data-l="2" rel="nofollow" href="/search?q=rcf&amp;store=odes.gr"><span>Odes</span></a></li>
-                    <li class="hidden"><a data-l="2" rel="nofollow" href="/search?q=rcf&amp;store=3dmall.gr"><span>3dMall</span></a></li>
-                    <li class="hidden"><a data-l="2" rel="nofollow" href="/search?q=rcf&amp;store=ledcity.gr"><span>LedCity</span></a></li>
-                    <li class="hidden"><a data-l="1" rel="nofollow" href="/search?q=rcf&amp;store=techstores.gr"><span>Techstores</span></a></li>
-                    <li class="hidden"><a data-l="1" rel="nofollow" href="/search?q=rcf&amp;store=buychoice.gr"><span>Buychoice</span></a></li>
+              <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
+                <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
+                <div className="filter-container">
+                  <ol data-total={vendors.length} data-hidden={vendors.length > 5 ? vendors.length - 5 : 0}>
+                    {vendors.map((vendor, index) => (
+                      <li key={vendor.id} className={index >= 5 ? "hidden" : ""}>
+                        <a data-l={3} rel="nofollow" href={`/search?q={searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></a>
+                      </li>
+                    ))}
                   </ol>
-                  <div id="filter-store-prompt" class="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων">
-                    <svg aria-hidden="true" class="icon" width="100%" height="100%"><use xlink:href="/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> 
-                    Εμφάνιση όλων
-                  </div>
+                  <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων"><svg aria-hidden="true" className="icon" width="100%" height="100%"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> Εμφάνιση όλων</div>
                 </div>
               </div>
               
