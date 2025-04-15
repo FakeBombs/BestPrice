@@ -49,7 +49,56 @@ const formatProductSlug = (title: string): string => {
 };
 
 const ProductDetail = () => {
-  useClassList('windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home');
+  const userAgent = navigator.userAgent.toLowerCase();
+  const [jsEnabled, setJsEnabled] = useState(true);
+  let classNames = '';
+
+  // List of ad-related elements to check for blocking
+  const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+
+  // Function to check if any of the ad elements are blocked
+  const checkAdBlockers = () => {
+    return adElementsToCheck.some(selector => {
+      const adElement = document.createElement('div');
+      adElement.className = selector.slice(1);
+      document.body.appendChild(adElement);
+      
+      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+      document.body.removeChild(adElement);
+      return isBlocked;
+    });
+  };
+
+  const isAdBlocked = checkAdBlockers();
+
+  // Determine device type and set corresponding class names
+  if (userAgent.includes('windows')) {
+    classNames = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+  } else if (userAgent.includes('mobile')) {
+    classNames = 'mobile supports-webp is-mobile';
+  } else if (userAgent.includes('tablet')) {
+    classNames = 'tablet supports-webp is-tablet';
+  } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
+    classNames = 'is-desktop';
+  } else {
+    classNames = 'unknown-device';
+  }
+
+  // Add class if ad blocker is detected
+  classNames += isAdBlocked ? ' adblocked' : ' adallowed';
+
+  // Check if JavaScript is enabled
+  window.addEventListener('load', () => {
+    setJsEnabled(true);
+  });
+
+  // Add class based on JavaScript status
+  classNames += jsEnabled ? ' js-enabled' : ' js-disabled';
+
+  // Set a new ID for the <html> element
+  const newId = 'page-item';
+
+  useHtmlAttributes(classNames, newId); // Use the computed class names and new ID
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
