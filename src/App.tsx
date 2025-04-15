@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Index from "./pages/Index";
@@ -23,13 +23,10 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { LanguageProvider } from "./context/LanguageContext";
-import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
-   <Router>
     <LanguageProvider>
-      <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
@@ -67,7 +64,6 @@ function App() {
         </Route>
       </Routes>
     </LanguageProvider>
-   </Router>
   );
 }
 
