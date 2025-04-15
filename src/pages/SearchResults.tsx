@@ -1,5 +1,5 @@
+import { useSearchParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
@@ -71,6 +71,7 @@ const SearchResults = ({ vendors }) => {
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [vendors, setVendors] = useState([]);
   
   useEffect(() => {
     if (searchQuery) {
@@ -117,13 +118,24 @@ const SearchResults = ({ vendors }) => {
       setFilteredProducts(products);
       return;
     }
-    
-    const filtered = products.filter(product => 
+
+    const filtered = products.filter(product =>
       product.prices.some(price => vendors.includes(price.vendorId))
     );
-    
+
     setFilteredProducts(filtered);
   };
+
+  useEffect(() => {
+    const filteredBySearch = products.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Apply vendor filtering if vendors are selected, else show all by search
+    const selectedVendors = []; // Replace this with your actual method of retrieving selected vendor IDs
+    handleVendorFilter(selectedVendors.length > 0 ? selectedVendors : filteredBySearch);
+    
+  }, [searchQuery, products]);
   
   const handlePriceRangeFilter = (min: number, max: number) => {
     const filtered = products.filter(product => {
