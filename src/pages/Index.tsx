@@ -9,24 +9,6 @@ import RootCategoryCard from '@/components/RootCategoryCard';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
-function useBodyAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.body.id = id;
-    }
-    document.body.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
-
-function useHtmlAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.documentElement.id = id;
-    }
-    document.documentElement.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
-
 const Index = () => {
   const { toast } = useToast();
   const [featuredProducts, setFeaturedProducts] = useState([]);
