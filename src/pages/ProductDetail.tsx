@@ -75,61 +75,61 @@ const formatProductSlug = (title: string): string => {
 
 const ProductDetail = () => {
   const userAgent = navigator.userAgent.toLowerCase();
-  const [jsEnabled, setJsEnabled] = useState(true);
-  let classNamesForBody = '';
-  let classNamesForHtml = '';
+const [jsEnabled, setJsEnabled] = useState(true);
+let classNamesForBody = '';  // Initialize as an empty string
+let classNamesForHtml = '';
 
-  // List of ad-related elements to check for blocking
-  const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+// List of ad-related elements to check for blocking
+const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
 
-  // Function to check if any of the ad elements are blocked
-  const checkAdBlockers = () => {
-    return adElementsToCheck.some(selector => {
-      const adElement = document.createElement('div');
-      adElement.className = selector.slice(1);
-      document.body.appendChild(adElement);
-      
-      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-      document.body.removeChild(adElement);
-      return isBlocked;
-    });
-  };
+// Function to check if any of the ad elements are blocked
+const checkAdBlockers = () => {
+  return adElementsToCheck.some(selector => {
+    const adElement = document.createElement('div');
+    adElement.className = selector.slice(1);
+    document.body.appendChild(adElement);
+    
+    const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+    document.body.removeChild(adElement);
+    return isBlocked;
+  });
+};
 
-  const isAdBlocked = checkAdBlockers();
+const isAdBlocked = checkAdBlockers();
 
-  // Determine device type and set corresponding class names for body and html
-  if (userAgent.includes('windows')) {
-    classNamesForBody = '';
-    classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-  } else if (userAgent.includes('mobile')) {
-    classNamesForBody = 'mobile supports-webp is-mobile';
-    classNamesForHtml = 'mobile supports-webp is-mobile';
-  } else if (userAgent.includes('tablet')) {
-    classNamesForBody = 'tablet supports-webp is-tablet';
-    classNamesForHtml = 'tablet supports-webp is-tablet';
-  } else if (userAgent.includes('mac') || userAgent.includes('linux')) {
-    classNamesForBody = 'is-desktop';
-    classNamesForHtml = 'is-desktop';
-  } else {
-    classNamesForBody = 'unknown-device';
-    classNamesForHtml = 'unknown-device';
-  }
+// Determine device type and set corresponding class names for body and html
+if (userAgent.includes('windows')) {
+  classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+} else if (userAgent.includes('mobile')) {
+  classNamesForBody = 'mobile supports-webp is-mobile';
+  classNamesForHtml = 'mobile supports-webp is-mobile';
+} else if (userAgent.includes('tablet')) {
+  classNamesForBody = 'tablet supports-webp is-tablet';
+  classNamesForHtml = 'tablet supports-webp is-tablet';
+} else if (userAgent.includes('mac') || userAgent.includes('linux')) {
+  classNamesForBody = 'is-desktop';
+  classNamesForHtml = 'is-desktop';
+} else {
+  classNamesForBody = 'unknown-device';
+  classNamesForHtml = 'unknown-device';
+}
 
-  // Add class if ad blocker is detected
-  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
+// Add class if ad blocker is detected
+classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
-  // Check if JavaScript is enabled
-  window.addEventListener('load', () => setJsEnabled(true), { once: true });
+// Check if JavaScript is enabled
+window.addEventListener('load', () => setJsEnabled(true), { once: true });
 
-  // Add class based on JavaScript status
-  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+// Add class based on JavaScript status
+classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  // Set a new ID for the body and html elements
-  const newIdForBody = null;
-  const newIdForHtml = 'page-cat';
+// Generate IDs; use '' for body ID to leave it empty
+const newIdForBody = ''; // Set this to empty string to leave the ID blank
+const newIdForHtml = 'page-cat';
 
-  useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
-  useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
+// Set attributes using the custom hooks
+useHtmlAttributes(classNamesForHtml, newIdForHtml);  // Use the computed class names and new ID for html
+useBodyAttributes(classNamesForBody, newIdForBody);  // Use the computed class names and new ID (empty) for body
   const { productId, productSlug } = useParams < { productId: string; productSlug?: string } > ();
   const navigate = useNavigate();
   const { toast } = useToast();
