@@ -113,38 +113,35 @@ const SearchResults = ({ vendors }) => {
     setFilteredProducts(sorted);
   };
   
-  const handleVendorFilter = (vendors) => {
-    if (vendors.length === 0) {
-      setFilteredProducts(products);
-      return;
-    }
+  const handleVendorFilter = () => {
+  if (vendorList.length === 0) {
+    setFilteredProducts(products);
+    return;
+  }
 
-    const filtered = products.filter(product =>
-      product.prices.some(price => vendors.includes(price.vendorId))
-    );
+  const filtered = products.filter(product =>
+    product.prices.some(price => vendorList.includes(price.vendorId))
+  );
 
-    setFilteredProducts(filtered);
-  };
+  setFilteredProducts(filtered);
+};
 
-  useEffect(() => {
-    const filteredBySearch = products.filter(product =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+useEffect(() => {
+  const filteredBySearch = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    // Apply vendor filtering if vendors are selected, else show all by search
-    const selectedVendors = []; // Replace this with your actual method of retrieving selected vendor IDs
-    handleVendorFilter(selectedVendors.length > 0 ? selectedVendors : filteredBySearch);
-    
-  }, [searchQuery, products]);
-  
-  const handlePriceRangeFilter = (min: number, max: number) => {
-    const filtered = products.filter(product => {
-      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
-      return minPrice >= min && minPrice <= max;
-    });
-    
-    setFilteredProducts(filtered);
-  };
+  // Use the vendorList state instead of creating a new empty array
+  handleVendorFilter(); // Call without parameters as it now uses vendorList directly
+
+  // Ensure to handle final filtering based on selected vendors and search query
+  const combinedFiltered = vendorList.length > 0 ? filteredBySearch.filter(product =>
+    product.prices.some(price => vendorList.includes(price.vendorId))
+  ) : filteredBySearch;
+
+  setFilteredProducts(combinedFiltered);
+
+}, [searchQuery, products, vendorList]); // Add vendorList as a dependency
   
   const handleInStockOnly = (inStockOnly: boolean) => {
     if (!inStockOnly) {
