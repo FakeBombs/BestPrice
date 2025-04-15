@@ -122,7 +122,7 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
                     <li data-filter="in-stock">
                       <Link onClick={() => handleInStockOnly(true)} to={`/search?q=${searchQuery}&instock=1`}>Άμεσα διαθέσιμα</Link>
                     </li>
-                    {/* Other existing filters */}
+                    {/* Other existing filters can be added here */}
                   </ol>
                 </div>
               </div>
