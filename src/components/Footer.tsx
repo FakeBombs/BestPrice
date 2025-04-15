@@ -1,11 +1,19 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const Footer = () => {
+const Footer: React.FC = () => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Smooth scroll
+    });
+  };
   const { t } = useTranslation();
   return (
     <div id="footer-wrapper">
-      <div id="back-to-top" className="pressable" style={{display: "flex"}}>Επιστροφή στην κορυφή<svg aria-hidden="true" class="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><path d="M1.41 9.41L6 4.83L10.59 9.41L12 8L6 2L0 8L1.41 9.41Z"/></svg></div>
+      <div id="back-to-top" className="pressable" onClick={handleClick} style={{display: "flex"}}>Επιστροφή στην κορυφή<svg aria-hidden="true" class="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><path d="M1.41 9.41L6 4.83L10.59 9.41L12 8L6 2L0 8L1.41 9.41Z"/></svg></div>
       <div id="promo-footer"></div>
       <div className="root__wrapper bp-footer">
         <div className="footer root">
