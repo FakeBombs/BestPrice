@@ -166,7 +166,7 @@ const SearchResults = ({ vendors }) => {
                   <ol data-total={vendors.length} data-hidden={vendors.length > 5 ? vendors.length - 5 : 0}>
                     {vendors.map((vendor, index) => (
                       <li key={vendor.id} className={index >= 5 ? "hidden" : ""}>
-                        <a data-l={3} rel="nofollow" href={`/search?q={searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></a>
+                        <Link data-l={3} rel="nofollow" to={`/search?q={searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></Link>
                       </li>
                     ))}
                   </ol>
