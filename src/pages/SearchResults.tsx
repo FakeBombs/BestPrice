@@ -148,6 +148,17 @@ const SearchResults = () => {
                   <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                 </div>
               </div>
+              <div class="page-header__sorting">
+                <div class="tabs">
+                  <div class="tabs-wrapper">
+                    <nav>
+                      <a href="/search?q=${searchQuery}" rel="nofollow" class="current"><div class="tabs__content">Σχετικότερα</div></a>
+                      <a onClick={() => handleSortChange('price-asc')} rel="nofollow"><div class="tabs__content">Φθηνότερα</div></a>
+                      <a onClick={() => handleSortChange('price-desc')} rel="nofollow"><div class="tabs__content">Ακριβότερα</div></a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {filteredProducts.length === 0 ? (
