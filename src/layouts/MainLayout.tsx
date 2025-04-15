@@ -4,14 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Index from '@/components/Index';
 import { useTranslation } from '@/hooks/useTranslation';
-
-const ScrollToTop = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  return null; // This component does not render anything visible
-};
+import { useLocation } from 'react-router-dom';
 
 // Define the custom hooks to add classes/IDs
 function useBodyAttributes(classNames, id) {
@@ -37,6 +30,12 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top on route change
+  }, [pathname]);
+  
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
 
   // Function to toggle 'has-sitemap' class and manage visibility
@@ -49,7 +48,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { t } = useTranslation();
   return (
     <div>
-      <ScrollToTop />
       <Navbar onSitemapToggle={sitemapToggle} />
       <div id="root" className="clr">
         {isSitemapVisible && (
