@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-const SearchResults = ({ vendors }) => {
+const SearchResults = ({ products, vendorList, searchQuery }) => {
 
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
@@ -70,16 +70,29 @@ const SearchResults = ({ vendors }) => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState(products);
   const [vendorList, setVendorList] = useState([]);
-  
+
   useEffect(() => {
-    if (searchQuery) {
-      const results = searchProducts(searchQuery);
-      setProducts(results);
-      setFilteredProducts(results);
-    }
-  }, [searchQuery]);
+  let filteredResults = products; // Start with all products
+
+  // Step 1: Filter by search query
+  if (searchQuery) {
+    filteredResults = filteredResults.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  // Step 2: Filter by vendor list if available
+  if (vendorList.length > 0) {
+    filteredResults = filteredResults.filter(product =>
+      product.prices.some(price => vendorList.includes(price.vendorId))
+    );
+  }
+
+  // Set filtered products based on combined criteria
+  setFilteredProducts(filteredResults);
+}, [searchQuery, products, vendorList]);
   
   // Filter and sort functions
   const handleSortChange = (value: string) => {
@@ -113,36 +126,6 @@ const SearchResults = ({ vendors }) => {
     setFilteredProducts(sorted);
   };
   
-  const handleVendorFilter = () => {
-  if (vendorList.length === 0) {
-    setFilteredProducts(products);
-    return;
-  }
-
-  const filtered = products.filter(product =>
-    product.prices.some(price => vendorList.includes(price.vendorId))
-  );
-
-  setFilteredProducts(filtered);
-};
-
-useEffect(() => {
-  const filteredBySearch = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Use the vendorList state instead of creating a new empty array
-  handleVendorFilter(); // Call without parameters as it now uses vendorList directly
-
-  // Ensure to handle final filtering based on selected vendors and search query
-  const combinedFiltered = vendorList.length > 0 ? filteredBySearch.filter(product =>
-    product.prices.some(price => vendorList.includes(price.vendorId))
-  ) : filteredBySearch;
-
-  setFilteredProducts(combinedFiltered);
-
-}, [searchQuery, products, vendorList]); // Add vendorList as a dependency
-  
   const handleInStockOnly = (inStockOnly: boolean) => {
     if (!inStockOnly) {
       setFilteredProducts(products);
@@ -170,17 +153,41 @@ useEffect(() => {
               <div className="filters__header"><div className="filters__header-title filters__header-title--filters">Φίλτρα</div></div>
               
               <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
-                <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
-                <div className="filter-container">
-                  <ol data-total={vendors.length} data-hidden={vendors.length > 5 ? vendors.length - 5 : 0}>
-                    {vendors.map((vendor, index) => (
-                      <li key={vendor.id} className={index >= 5 ? "hidden" : ""}>
-                        <Link data-l={3} rel="nofollow" to={`/search?q=${searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></Link>
-                      </li>
-                    ))}
-                  </ol>
-                  <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων"><svg aria-hidden="true" className="icon" width="100%" height="100%"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> Εμφάνιση όλων</div>
-                </div>
+  <div className="filter__header">
+    <h4>Πιστοποιημένα καταστήματα</h4>
+  </div>
+  <div className="filter-container">
+    <ol data-total={vendors.length} data-hidden={vendors.length > 5 ? vendors.length - 5 : 0}>
+      {vendors.map((vendor, index) => (
+        <li key={vendor.id} className={index >= 5 && !isExpanded ? "hidden" : ""}>
+          <Link data-l={3} rel="nofollow" to={`/search?q=${searchQuery}&store=${vendor.id}`}>
+            <span>{vendor.name}</span>
+          </Link>
+        </li>
+      ))}
+    </ol>
+    {vendors.length > 5 && (
+      <div
+        id="filter-store-prompt"
+        className="filters-more-prompt"
+        title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων"
+        role="button"
+        aria-expanded={isExpanded}
+        onClick={() => setIsExpanded(prev => !prev)} // Toggle expanded state
+        tabIndex={0} // Make it focusable
+        onKeyPress={event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            setIsExpanded(prev => !prev); // Allow toggling with keyboard
+          }
+        }}
+      >
+        <svg aria-hidden="true" className="icon" width="100%" height="100%">
+          <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
+        </svg>
+        Εμφάνιση όλων
+      </div>
+    )}
+  </div>
               </div>
               
             </div>
@@ -211,18 +218,28 @@ useEffect(() => {
       />
       
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-lg text-muted-foreground">
-            Δεν βρέθηκαν προϊόντα που να ταιριάζουν με την αναζήτησή σας.
-          </p>
-        </div>
-      ) : (
-        <div className="product-grid mt-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+  <div className="text-center py-12">
+    <p className="text-lg text-muted-foreground">
+      Δεν βρέθηκαν προϊόντα που να ταιριάζουν με την αναζήτησή σας.
+    </p>
+    {searchQuery && (
+      <p className="text-sm text-muted-foreground mt-2">
+        Προσπαθήστε να αλλάξετε τα κριτήρια αναζήτησής σας ή διαγράψτε κάποιο φίλτρο.
+      </p>
+    )}
+  </div>
+) : (
+  <div className="product-grid mt-6">
+    {filteredProducts.map((product) => (
+      <ProductCard key={product.id} product={product} />
+    ))}
+    {filteredProducts.length > 0 && (
+      <p className="text-lg text-muted-foreground mt-4">
+        Βρέθηκαν {filteredProducts.length} προϊόντα.
+      </p>
+    )}
+  </div>
+)}
           </main>
         </div>
       </div>
