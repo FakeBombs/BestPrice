@@ -149,7 +149,14 @@ const SearchResults = () => {
   
   return (
     <div className="root__wrapper">
-      <div class="root">
+      <div className="root">
+        <div className="page-products">
+          <aside class="page-products__filters">
+            <div id="filters"></div>
+            <div class="ads" data-max="0" data-ip="31.152.199.61"></div>
+          </aside>
+
+          <main class="page-products__main">
       <h1 className="text-3xl font-bold mb-2">Αποτελέσματα Αναζήτησης</h1>
       <p className="text-muted-foreground mb-6">
         {filteredProducts.length} αποτελέσματα για "{searchQuery}"
@@ -175,6 +182,8 @@ const SearchResults = () => {
           ))}
         </div>
       )}
+          </main>
+        </div>
       </div>
     </div>
   );
