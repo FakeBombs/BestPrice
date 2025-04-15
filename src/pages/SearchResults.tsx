@@ -4,7 +4,7 @@ import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-const SearchResults = ({ initialProducts, initialVendorList }) => {
+const SearchResults = ({ initialVendorList }) => {
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
@@ -53,9 +53,19 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
-  const [products, setProducts] = useState(initialProducts || []);
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendorList, setVendorList] = useState(initialVendorList || []);
+
+  useEffect(() => {
+    // Fetch products initially based on a search query or default products if needed
+    const fetchProducts = async () => {
+      const results = await searchProducts(searchQuery);
+      setProducts(results);
+      setFilteredProducts(results); // Initialize filtered products
+    };
+    fetchProducts();
+  }, [searchQuery]); // Add searchQuery dependency to fetch on query change
 
   useEffect(() => {
     let filteredResults = products;
