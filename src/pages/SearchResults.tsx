@@ -148,6 +148,35 @@ const SearchResults = ({ initialProducts, initialVendorList }) => {
               <div className="filters__header">
                 <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
               </div>
+              <div class="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+                <div class="filter__header"><h4>Εμφάνιση μόνο</h4></div>
+                <div class="filter-container">
+                  <ol>
+                    <li data-filter="certified">
+                      <Link title="Πιστοποιημένα καταστήματα" rel="nofollow" to="/search?q=${searchQuery}&amp;certified=1">
+                        <svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
+                        <span>Πιστοποιημένα καταστήματα</span>
+                      </Link>
+                    </li>
+                    <li id="filter-nearby" class="nearby-location is-set">
+                      <Link title="Κοντά μου" rel="nofollow" to="/search?q=${searchQuery}&amp;nearby=1">Κοντά μου (20 χλμ)</Link>
+                      <div class="filter-nearby__options">Επιλογές</div>
+                    </li>
+                    <li data-filter="in-stock">
+                      <Link title="Άμεσα διαθέσιμα" rel="nofollow" to="/search?q=${searchQuery}&amp;instock=1"><span>Άμεσα διαθέσιμα</span></Link>
+                    </li>
+                    <li data-filter="boxnow">
+                      <Link title="Παράδοση" rel="nofollow" to="/search?q=${searchQuery}&amp;boxnow=1">
+                        <svg aria-hidden="true" class="icon" width="24" height="24"><use xlink:href="/public/dist/images/icons/partners.svg#icon-boxnow"></use></svg>
+                        <span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW">
+                          <svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg>
+                        </span>
+                        <span>Παράδοση</span>
+                      </Link>
+                    </li>
+                  </ol>
+                </div>
+              </div>
               <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                 <div className="filter__header">
                   <h4>Πιστοποιημένα καταστήματα</h4>
