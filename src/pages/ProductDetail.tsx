@@ -99,7 +99,7 @@ const ProductDetail = () => {
 
   // Determine device type and set corresponding class names for body and html
   if (userAgent.includes('windows')) {
-    classNamesForBody = 'has-filters-selected pagination-controlled';
+    classNamesForBody = '';
     classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
     classNamesForBody = 'mobile supports-webp is-mobile';
