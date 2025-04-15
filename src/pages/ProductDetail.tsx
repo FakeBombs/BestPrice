@@ -99,6 +99,7 @@ const ProductDetail = () => {
 
   // Determine device type and set corresponding class names for body and html
   if (userAgent.includes('windows')) {
+    classNamesForBody = 'has-filters-selected pagination-controlled';
     classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
     classNamesForBody = 'mobile supports-webp is-mobile';
@@ -124,7 +125,8 @@ const ProductDetail = () => {
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
   // Set a new ID for the body and html elements
-  const newIdForHtml = 'page-item';
+  const newIdForBody = null;
+  const newIdForHtml = 'page-cat';
 
   useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
   useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
