@@ -81,8 +81,8 @@ const SearchResults = () => {
 
   // Determine device type and set corresponding class names for body and html
   if (userAgent.includes('windows')) {
-    classNamesForBody = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-    classNamesForHtml = 'windows supports-webp is-desktop';
+    classNamesForBody = 'has-filters-selected pagination-controlled';
+    classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
     classNamesForBody = 'mobile supports-webp is-mobile';
     classNamesForHtml = 'mobile supports-webp is-mobile';
@@ -97,20 +97,18 @@ const SearchResults = () => {
     classNamesForHtml = 'unknown-device';
   }
 
-  // Add class if ad blocker is detected for both <body> and <html>
-  classNamesForBody += isAdBlocked ? ' adblocked' : ' adallowed';
+  // Add class if ad blocker is detected
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
   // Check if JavaScript is enabled
   window.addEventListener('load', () => setJsEnabled(true), { once: true });
 
-  // Add class based on JavaScript status for both body and html
-  classNamesForBody += jsEnabled ? ' js-enabled' : ' js-disabled';
+  // Add class based on JavaScript status
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
   // Set a new ID for the body and html elements
-  const newIdForBody = isAdBlocked ? 'adblocked' : 'adallowed';
-  const newIdForHtml = isAdBlocked ? 'adblocked' : 'adallowed';
+  const newIdForBody = null;
+  const newIdForHtml = 'page-cat';
 
   useHtmlAttributes(classNamesForHtml, newIdForHtml);     // Use the computed class names and new ID for html
   useBodyAttributes(classNamesForBody, newIdForBody);     // Use the computed class names and new ID for body
