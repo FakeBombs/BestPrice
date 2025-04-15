@@ -13,26 +13,8 @@ import ProductRelatedSections from '@/components/product/ProductRelatedSections'
 import PriceHistoryChart from '@/components/PriceHistoryChart';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
-
-// Define the custom hooks to add classes/IDs
-function useBodyAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.body.id = id;
-    }
-    document.body.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
-
-function useHtmlAttributes(classNames, id) {
-  useEffect(() => {
-    if (id) {
-      document.documentElement.id = id;
-    }
-    document.documentElement.className = classNames.trim();  // Ensure no extra spaces
-  }, [classNames, id]);
-}
 
 const formatProductSlug = (title: string): string => {
   return title
