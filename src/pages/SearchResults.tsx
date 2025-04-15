@@ -9,53 +9,46 @@ const SearchResults = ({ initialVendorList }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendorList, setVendorList] = useState(initialVendorList || []);
-
-  // Fetch products based on search query when the component mounts or when the search query changes
+  
+  // Fetch products based on search query
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
+      if (searchQuery) {
         const results = await searchProducts(searchQuery);
         setProducts(results);
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
+      } else {
+        setProducts([]); // Set to an empty list if no search query
       }
     };
-    if (searchQuery) {
-      fetchProducts();
-    } else {
-      setProducts([]); // Set to an empty array if there's no query
-    }
+    fetchProducts();
   }, [searchQuery]);
 
   // Filter products based on search query and vendor list
   useEffect(() => {
-    const filterProducts = () => {
-      let results = [...products]; // Create a shallow copy of products
-      if (searchQuery) {
-        results = results.filter(product =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-      if (vendorList.length > 0) {
-        results = results.filter(product =>
-          product.prices.some(price => vendorList.includes(price.vendorId))
-        );
-      }
-      setFilteredProducts(results);
-    };
-
-    // Trigger filtering when products or vendor list change
-    filterProducts();
+    let results = [...products]; // Create a shallow copy of products
+    if (searchQuery) {
+      results = results.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (vendorList.length > 0) {
+      results = results.filter(product =>
+        product.prices.some(price => vendorList.includes(price.vendorId))
+      );
+    }
+    setFilteredProducts(results);
   }, [products, vendorList, searchQuery]);
 
-  // Sorting and filtering functions
+  // Handle sorting
   const handleSort = (sortOption) => {
     const sorted = [...filteredProducts];
+
     if (sortOption === 'price-asc') {
       sorted.sort((a, b) => Math.min(...a.prices.map(p => p.price)) - Math.min(...b.prices.map(p => p.price)));
     } else if (sortOption === 'price-desc') {
       sorted.sort((a, b) => Math.min(...b.prices.map(p => p.price)) - Math.min(...a.prices.map(p => p.price)));
     }
+
     setFilteredProducts(sorted);
   };
 
@@ -63,7 +56,7 @@ const SearchResults = ({ initialVendorList }) => {
     if (inStockOnly) {
       setFilteredProducts(products.filter(product => product.prices.some(price => price.inStock)));
     } else {
-      setFilteredProducts(products); // Reset to all products
+      setFilteredProducts(products);
     }
   };
 
@@ -103,7 +96,9 @@ const SearchResults = ({ initialVendorList }) => {
                   <ol data-total={vendorList.length}>
                     {vendorList.map(vendor => (
                       <li key={vendor.id}>
-                        <Link to={`/search?q=${searchQuery}&store=${vendor.id}`}><span>{vendor.name}</span></Link>
+                        <Link to={`/search?q=${searchQuery}&store=${vendor.id}`}>
+                          <span>{vendor.name}</span>
+                        </Link>
                       </li>
                     ))}
                   </ol>
