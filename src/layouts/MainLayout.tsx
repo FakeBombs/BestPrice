@@ -5,6 +5,14 @@ import Footer from '@/components/Footer';
 import Index from '@/components/Index';
 import { useTranslation } from '@/hooks/useTranslation';
 
+const ScrollToTop = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null; // This component does not render anything visible
+};
+
 // Define the custom hooks to add classes/IDs
 function useBodyAttributes(classNames, id) {
   useEffect(() => {
@@ -41,6 +49,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { t } = useTranslation();
   return (
     <div>
+      <ScrollToTop />
       <Navbar onSitemapToggle={sitemapToggle} />
       <div id="root" className="clr">
         {isSitemapVisible && (
