@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
-import { useBodyAttributes, useHtmlAttributes } from './hooks/useDocumentAttributes';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const SearchResults = () => {
 
