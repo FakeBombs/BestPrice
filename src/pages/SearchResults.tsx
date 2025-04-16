@@ -59,8 +59,16 @@ const SearchResults = () => {
       }
     });
 
-    // Convert object to array and sort
-    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({ category, count })).slice(0, 8);
+    // Convert object to array and match with category images
+    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
+      const categoryData = categories.find(cat => cat.name === category); // Adjust to match your data structure
+      return {
+        category,
+        count,
+        image: categoryData ? categoryData.image : '', // Safely access the image
+      };
+    }).slice(0, 8);
+
     setAvailableCategories(categoriesArray);
   };
 
