@@ -11,8 +11,8 @@ const SearchResults = () => {
   const [availableVendors, setAvailableVendors] = useState(new Set());
   const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
-  const [availableCategories, setAvailableCategories] = useState([]); // New state for categories
-  const [showMoreCategories, setShowMoreCategories] = useState(false); // To handle show more functionality
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
@@ -21,9 +21,9 @@ const SearchResults = () => {
     if (searchQuery) {
       const results = searchProducts(searchQuery);
       setProducts(results);
-      setFilteredProducts(results);
+      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, results);
       extractAvailableFilters(results);
-      extractCategories(results); // Extract categories based on results
+      extractCategories(results);
     }
   }, [searchQuery]);
 
@@ -51,34 +51,31 @@ const SearchResults = () => {
   };
 
   const extractCategories = (results) => {
-  const categoryCount = {};
-  
-  results.forEach(product => {
-    if (product.category) {
-      categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
-    }
-  });
+    const categoryCount = {};
 
-  const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
-    // Find the category data
-    const categoryData = categories.find(cat => cat.name === category);
-    
-    // Use rootCategoryId to find the rootCategoryData
-    const rootCategoryData = categoryData 
-      ? rootCategories.find(rootCat => rootCat.id === categoryData.rootCategoryId) 
-      : undefined;
-    
-    return {
-      category,
-      count,
-      isRoot: !!rootCategoryData, // true if it's a root category
-      slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '',
-      image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
-    };
-  }).slice(0, 8);
+    results.forEach(product => {
+      if (product.category) {
+        categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
+      }
+    });
 
-  setAvailableCategories(categoriesArray);
-};
+    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
+      const categoryData = categories.find(cat => cat.name === category);
+      const rootCategoryData = categoryData 
+        ? rootCategories.find(rootCat => rootCat.id === categoryData.rootCategoryId) 
+        : undefined;
+
+      return {
+        category,
+        count,
+        isRoot: !!rootCategoryData,
+        slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '',
+        image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
+      };
+    }).slice(0, 8);
+
+    setAvailableCategories(categoriesArray);
+  };
 
   const handleVendorFilter = (vendor) => {
     const newVendors = activeFilters.vendors.includes(vendor)
@@ -86,7 +83,7 @@ const SearchResults = () => {
       : [...activeFilters.vendors, vendor];
 
     setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
-    filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
+    filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
   };
 
   const handleBrandFilter = (brand) => {
@@ -95,7 +92,7 @@ const SearchResults = () => {
       : [...activeFilters.brands, brand];
 
     setActiveFilters(prev => ({ ...prev, brands: newBrands }));
-    filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly);
+    filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly, products);
   };
 
   const handleSpecFilter = (specKey, specValue) => {
@@ -110,11 +107,11 @@ const SearchResults = () => {
     }
 
     setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
-    filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly);
+    filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly, products);
   };
 
-  const filterProducts = (vendors, brands, specs, inStockOnly) => {
-    let filtered = products;
+  const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
+    let filtered = results;
 
     if (inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
@@ -137,6 +134,8 @@ const SearchResults = () => {
     }
 
     setFilteredProducts(filtered);
+    extractAvailableFilters(filtered); // Re-extract filters based on the newly filtered products
+    extractCategories(filtered); // Re-extract categories based on the newly filtered products
   };
 
   return (
@@ -145,7 +144,6 @@ const SearchResults = () => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
-              
               <div className="filters__categories" data-filter-name="categories">
                 <div className="filters__header">
                   <div className="filters__header-title filters__header-title--filters">Categories</div>
@@ -195,7 +193,6 @@ const SearchResults = () => {
                 </div>
               )}
 
-              {/* Existing Specification Filters */}
               {Object.keys(availableSpecs).length > 0 && (
                 Object.keys(availableSpecs).map(specKey => (
                   <div key={specKey} className="filter-specification default-list">
@@ -218,14 +215,14 @@ const SearchResults = () => {
                 <div className="filter-container">
                   <label>
                     <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
-                      setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly }));
-                      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, !activeFilters.inStockOnly);
+                      const newInStockOnly = !activeFilters.inStockOnly;
+                      setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
+                      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
                     }} />
                     Show only in-stock products
                   </label>
                 </div>
               </div>
-
             </div>
           </aside>
 
@@ -235,11 +232,11 @@ const SearchResults = () => {
               <div>{filteredProducts.length} products</div>
             </div>
             <section className="section">
-                <header className="section__header">
-                  <hgroup className="section__hgroup">
-                    <h2 className="section__title">Κατηγορίες</h2>
-                  </hgroup>
-                </header>
+              <header className="section__header">
+                <hgroup className="section__hgroup">
+                  <h2 className="section__title">Κατηγορίες</h2>
+                </hgroup>
+              </header>
               <ScrollableSlider>
                 <div className="categories categories--scrollable scroll__content">
                   {availableCategories.map((item) => (
@@ -250,8 +247,8 @@ const SearchResults = () => {
                     </a>
                   ))}
                 </div>
-                </ScrollableSlider>
-              </section>
+              </ScrollableSlider>
+            </section>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
             ) : (
