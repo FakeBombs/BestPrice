@@ -230,7 +230,7 @@ const SearchResults = ({ availableCategories }) => {
                 </header>
                 <ScrollableSlider>
                   <div className="categories categories--scrollable scroll__content">
-                    {availableCategories.map((item) => (
+                    {availableCategories.length > 0 && availableCategories.map((item) => (
                       <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
                         <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                         <h2 className="categories__title">{item.category}</h2>
