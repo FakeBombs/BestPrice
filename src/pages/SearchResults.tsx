@@ -282,6 +282,7 @@ const SearchResults = () => {
                 </div>
               </div>
             </div>
+            <div className="ads" data-max="0" data-ip="31.152.199.61"></div>
           </aside>
 
           <main className="page-products__main">
