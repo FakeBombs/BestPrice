@@ -204,7 +204,7 @@ const SearchResults = () => {
             <div id="filters">
               <div className="filters__categories" data-filter-name="categories">
                 <div className="filters__header">
-                  <div className="filters__header-title filters__header-title--filters">Categories</div>
+                  <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                 </div>
                 <ol>
                   {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
@@ -238,7 +238,7 @@ const SearchResults = () => {
 
               {Object.keys(availableBrands).length > 0 && (
                 <div className="filter-brand default-list">
-                  <div className="filter__header"><h4>Brands</h4></div>
+                  <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                   <div className="filter-container">
                     <ol>
                       {Object.keys(availableBrands).map(brand => (
