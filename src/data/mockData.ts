@@ -6,7 +6,7 @@ export interface RootCategory {
   name: string;
   slug: string;
   description: string;
-  icon: string;
+  image: string;
 }
 
 export const rootCategories: RootCategory[] = [
@@ -15,35 +15,35 @@ export const rootCategories: RootCategory[] = [
     name: 'Τεχνολογία',
     slug: 'technology',
     description: 'Smartphones, υπολογιστές, tablets και άλλες ηλεκτρονικές συσκευές',
-    icon: 'smartphone'
+    image: 'https://placehold.co/200x200'
   },
   {
     id: 'rc2',
     name: 'Οικιακές Συσκευές',
     slug: 'home-appliances',
     description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
-    icon: 'home'
+    image: 'https://placehold.co/200x200'
   },
   {
     id: 'rc3',
     name: 'Gaming',
     slug: 'gaming',
     description: 'Κονσόλες, παιχνίδια, αξεσουάρ gaming και περιφερειακά',
-    icon: 'gamepad'
+    image: 'https://placehold.co/200x200'
   },
   {
     id: 'rc4',
     name: 'Αθλητικά',
     slug: 'sports',
     description: 'Αθλητικά είδη, εξοπλισμός fitness και ρούχα',
-    icon: 'dumbbell'
+    image: 'https://placehold.co/200x200'
   },
   {
     id: 'rc5',
     name: 'Ένδυση',
     slug: 'clothing',
     description: 'Ρούχα, παπούτσια και αξεσουάρ',
-    icon: 'shirt'
+    image: 'https://placehold.co/200x200'
   }
 ];
 
@@ -52,26 +52,26 @@ export interface Category {
   id: string;
   name: string;
   rootCategoryId: string;
-  icon: string;
+  image: string;
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', icon: 'smartphone' },
-  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', icon: 'laptop' },
-  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', icon: 'tablet' },
-  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', icon: 'headphones' },
-  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', icon: 'camera' },
-  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', icon: 'monitor' },
-  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', icon: 'home' },
-  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', icon: 'gamepad' },
-  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', icon: 'dumbbell' },
-  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', icon: 'dumbbell' },
-  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' },
-  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', icon: 'shirt' }
+  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/806_SX200Y200/1629455538/mobile-phones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp 2x" alt="Κινητά" title="Κινητά"/>' },
+  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/2591_SX200Y200/1629455496/laptops.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp 2x" alt="Laptops" title="Laptops"/>' },
+  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/3446_SX200Y200/1629455501/tablets.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp 2x" alt="Tablets" title="Tablets"/>' },
+  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/8068_SX200Y200/1629455538/headphones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp 2x" alt="Headphones" title="Headphones"/>' },
+  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/3013_SX200Y200/1472043991/psifiakes-videokameres.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp 2x" alt="Ψηφιακές Βιντεοκάμερες" title="Ψηφιακές Βιντεοκάμερες"/>' },
+  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', image: 'https://placehold.co/200x200' },
+  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
+  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
+  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
+  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
+  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
+  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
+  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', image: 'https://placehold.co/200x200' },
+  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', image: 'https://placehold.co/200x200' },
+  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', image: 'https://placehold.co/200x200' },
+  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', image: 'https://placehold.co/200x200' }
 ];
 
 // Vendors
