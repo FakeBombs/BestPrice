@@ -4,12 +4,11 @@ import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const SearchResults = () => {
-  const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], models: [], specs: {}, inStockOnly: false });
+  const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [availableVendors, setAvailableVendors] = useState(new Set());
-  const [availableBrands, setAvailableBrands] = useState(new Set());
-  const [availableModels, setAvailableModels] = useState(new Set());
+  const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
 
   const [searchParams] = useSearchParams();
@@ -27,7 +26,6 @@ const SearchResults = () => {
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
     const brandsCount = {};
-    const models = new Set();
     const specs = {};
 
     results.forEach(product => {
@@ -35,7 +33,6 @@ const SearchResults = () => {
       if (product.brand) {
         brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; // Count occurrences of each brand
       }
-      models.add(product.model);
       Object.keys(product.specifications).forEach(specKey => {
         if (!specs[specKey]) {
           specs[specKey] = new Set();
@@ -46,7 +43,6 @@ const SearchResults = () => {
 
     setAvailableVendors(vendors);
     setAvailableBrands(brandsCount); // Store brand counts
-    setAvailableModels(models);
     setAvailableSpecs(specs);
   };
 
@@ -56,7 +52,7 @@ const SearchResults = () => {
       : [...activeFilters.vendors, vendor];
 
     setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
-    filterProducts(newVendors, activeFilters.brands, activeFilters.models, activeFilters.specs, activeFilters.inStockOnly);
+    filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
   };
 
   const handleBrandFilter = (brand) => {
@@ -65,16 +61,7 @@ const SearchResults = () => {
       : [...activeFilters.brands, brand];
 
     setActiveFilters(prev => ({ ...prev, brands: newBrands }));
-    filterProducts(activeFilters.vendors, newBrands, activeFilters.models, activeFilters.specs, activeFilters.inStockOnly);
-  };
-
-  const handleModelFilter = (model) => {
-    const newModels = activeFilters.models.includes(model)
-      ? activeFilters.models.filter(m => m !== model)
-      : [...activeFilters.models, model];
-
-    setActiveFilters(prev => ({ ...prev, models: newModels }));
-    filterProducts(activeFilters.vendors, activeFilters.brands, newModels, activeFilters.specs, activeFilters.inStockOnly);
+    filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly);
   };
 
   const handleSpecFilter = (specKey, specValue) => {
@@ -89,10 +76,10 @@ const SearchResults = () => {
     }
 
     setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
-    filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.models, currentSpecs, activeFilters.inStockOnly);
+    filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly);
   };
 
-  const filterProducts = (vendors, brands, models, specs, inStockOnly) => {
+  const filterProducts = (vendors, brands, specs, inStockOnly) => {
     let filtered = products;
 
     // Apply in-stock filter
@@ -108,11 +95,6 @@ const SearchResults = () => {
     // Apply brand filter
     if (brands.length > 0) {
       filtered = filtered.filter(product => brands.includes(product.brand));
-    }
-
-    // Apply model filter
-    if (models.length > 0) {
-      filtered = filtered.filter(product => models.includes(product.model));
     }
 
     // Apply specification filters
@@ -139,7 +121,9 @@ const SearchResults = () => {
                   <div className="filter-container">
                     <ol>
                       {Array.from(availableVendors).map(vendor => (
-                        <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}><span>{vendor}</span></li>
+                        <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
+                          <span>{vendor}</span>
+                        </li>
                       ))}
                     </ol>
                   </div>
@@ -152,20 +136,9 @@ const SearchResults = () => {
                   <div className="filter-container">
                     <ol>
                       {Object.keys(availableBrands).map(brand => (
-                        <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} {availableBrands[brand]}</span></li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
-              )}
-
-              {availableModels.size > 0 && (
-                <div className="filter-model default-list">
-                  <div className="filter__header"><h4>Models</h4></div>
-                  <div className="filter-container">
-                    <ol>
-                      {Array.from(availableModels).map(model => (
-                        <li key={model} className={activeFilters.models.includes(model) ? 'selected' : ''} onClick={() => handleModelFilter(model)}><span>{model}</span></li>
+                        <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
+                          <span>{brand} ({availableBrands[brand]})</span> {/* Display count of products */}
+                        </li>
                       ))}
                     </ol>
                   </div>
@@ -179,7 +152,9 @@ const SearchResults = () => {
                     <div className="filter-container">
                       <ol>
                         {Array.from(availableSpecs[specKey]).map(specValue => (
-                          <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
+                          <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                            <span>{specValue}</span>
+                          </li>
                         ))}
                       </ol>
                     </div>
@@ -190,7 +165,13 @@ const SearchResults = () => {
               <div className="filter-in-stock default-list">
                 <div className="filter__header"><h4>In Stock</h4></div>
                 <div className="filter-container">
-                  <label><input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly })); filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.models, activeFilters.specs, !activeFilters.inStockOnly);}} />Show only in-stock products</label>
+                  <label>
+                    <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
+                      setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly }));
+                      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, !activeFilters.inStockOnly);
+                    }} />
+                    Show only in-stock products
+                  </label>
                 </div>
               </div>
 
