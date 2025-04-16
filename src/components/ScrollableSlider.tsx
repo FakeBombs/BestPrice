@@ -41,11 +41,14 @@ const ScrollableSlider = ({ children }) => {
     scrollableRef.current.scrollBy({ left: 200, behavior: 'smooth' });
   };
 
+  // Use React.Children.toArray to ensure children is always an array
+  const childrenArray = React.Children.toArray(children);
+
   return (
     <div className="scroll">
       <div className="scroll__clip">
         <div className="scroll__scroller" ref={scrollableRef} style={{ overflowX: 'auto', display: 'flex', whiteSpace: 'nowrap', maxHeight: '400px' }}>
-          {children.length > 0 ? children : <p>No categories to display</p>}  {/* Render a fallback when no children */}
+          {childrenArray.length > 0 ? childrenArray : <p>No categories to display</p>}  {/* Render a fallback when no children */}
         </div>
       </div>
       <button onClick={handleScrollLeft} disabled={isLeftDisabled} className="scroll-button">Left</button>
