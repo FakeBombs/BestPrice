@@ -20,8 +20,8 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
         return <img src="//abpcdn.pstatic.gr/P/bpimg128/2483_SX200Y200/1473176668/home-appliances.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/2483_SX400Y400/1473176668/home-appliances.webp 2x" alt="Σπίτι & Κήπος" title="Σπίτι & Κήπος"/>;
       case 'fashion':
         return <img src="//abpcdn.pstatic.gr/P/bpimg128/2069_SX200Y200/1503657549/woman.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/2069_SX400Y400/1503657549/woman.webp 2x" alt="Μόδα" title="Μόδα"/>;
-      case 'camera':
-        return <Camera className="h-10 w-10" />;
+      case 'headphones':
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/8068_SX200Y200/1629455538/headphones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp 2x" alt="Headphones" title="Headphones"/>;
       case 'monitor':
         return <Monitor className="h-10 w-10" />;
       case 'home':
