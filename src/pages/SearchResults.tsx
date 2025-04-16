@@ -51,29 +51,34 @@ const SearchResults = () => {
   };
 
   const extractCategories = (results) => {
-    const categoryCount = {};
-    
-    results.forEach(product => {
-      if (product.category) {
-        categoryCount[product.category] = (categoryCount[product.category] || 0) + 1; // Count products in each category
-      }
-    });
+  const categoryCount = {};
+  
+  results.forEach(product => {
+    if (product.category) {
+      categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
+    }
+  });
 
-    // Convert object to array and match with category images
-    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
-      const categoryData = categories.find(cat => cat.name === category);
-      const rootCategoryData = rootCategories.find(rootCat => rootCat.name === category);
-      return {
-        category,
-        count,
-        isRoot: !!rootCategoryData,
-        slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '', 
-        image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
+  const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
+    // Find the category data
+    const categoryData = categories.find(cat => cat.name === category);
+    
+    // Use rootCategoryId to find the rootCategoryData
+    const rootCategoryData = categoryData 
+      ? rootCategories.find(rootCat => rootCat.id === categoryData.rootCategoryId) 
+      : undefined;
+    
+    return {
+      category,
+      count,
+      isRoot: !!rootCategoryData, // true if it's a root category
+      slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '',
+      image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
     };
   }).slice(0, 8);
 
-    setAvailableCategories(categoriesArray);
-  };
+  setAvailableCategories(categoriesArray);
+};
 
   const handleVendorFilter = (vendor) => {
     const newVendors = activeFilters.vendors.includes(vendor)
