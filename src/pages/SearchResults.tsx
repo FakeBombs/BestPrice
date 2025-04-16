@@ -149,10 +149,11 @@ const SearchResults = () => {
   // Determine the selected brand for display in the header
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(brand => brand.name === activeFilters.brands[0]) : null;
 
-  // Render applied filters
+  // Render applied filters for brands and specifications
   const renderAppliedFilters = () => {
     return (
       <div className="applied-filters">
+        {/* Render Brands */}
         {activeFilters.brands.map((brand) => (
           <h2 className="applied-filters__filter" key={brand}>
             <a 
@@ -169,22 +170,26 @@ const SearchResults = () => {
             </a>
           </h2>
         ))}
-        {activeFilters.vendors.map((vendor) => (
-          <h2 className="applied-filters__filter" key={vendor}>
-            <a 
-              data-scrollto="" 
-              data-filter-key="vendor" 
-              data-value-id={vendor} 
-              className="pressable" 
-              onClick={() => handleVendorFilter(vendor)} // Remove filter on click
-            >
-              <span className="applied-filters__label">{vendor}</span>
-              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
-                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-              </svg>
-            </a>
-          </h2>
-        ))}
+
+        {/* Render Specifications */}
+        {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+          specValues.map(specValue => (
+            <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+              <a 
+                data-scrollto="" 
+                data-filter-key="spec" 
+                data-value-id={`${specKey}-${specValue}`} 
+                className="pressable" 
+                onClick={() => handleSpecFilter(specKey, specValue)} // Remove filter on click
+              >
+                <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                </svg>
+              </a>
+            </h2>
+          ))
+        )}
       </div>
     );
   };
