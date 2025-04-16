@@ -111,13 +111,32 @@ const SearchResults = () => {
 
   const handleInStockOnly = () => {
     const newInStockOnly = !activeFilters.inStockOnly;
-    setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
-
     const filtered = newInStockOnly 
       ? products.filter(product => product.prices.some(price => price.inStock)) 
       : products;
 
-    setFilteredProducts(filtered);
+    // Update vendor filters based on availability
+    let availableVendors = new Set();
+    if (newInStockOnly) {
+      filtered.forEach(product => {
+        product.prices.forEach(price => {
+          if (price.inStock) {
+            availableVendors.add(price.vendorId);
+          }
+        });
+      });
+    }
+
+    setActiveFilters(prev => ({
+      ...prev,
+      inStockOnly: newInStockOnly,
+      vendors: [...availableVendors],
+    }));
+
+    // Set filtered products after updating vendor filters
+    setFilteredProducts(filtered.filter(product =>
+      [...availableVendors].some(vendor => product.prices.some(price => price.vendorId === vendor))
+    ));
   };
 
   return (
