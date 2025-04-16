@@ -65,6 +65,7 @@ const SearchResults = () => {
       return {
         category,
         count,
+        slug: categoryData ? categoryData.slug : '',
         image: categoryData ? categoryData.image : '', // Safely access the image
       };
     }).slice(0, 8);
@@ -145,7 +146,7 @@ const SearchResults = () => {
                 <ol>
                   {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
                     <li key={item.category}>
-                      <a href={`/#`}><span>{item.category} ({item.count})</span></a>
+                      <a href={`/categories/root/${item.slug}`}><span>{item.category} ({item.count})</span></a>
                     </li>
                   ))}
                 </ol>
@@ -235,7 +236,7 @@ const SearchResults = () => {
               <ScrollableSlider>
                 <div className="categories categories--scrollable scroll__content">
                   {availableCategories.map((item) => (
-                    <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
+                    <a key={item.category} title={item.category} className="categories__category" href={`/categories/root/${item.slug}`}>
                       <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                       <h2 className="categories__title">{item.category}</h2>
                       <div className="categories__cnt">{item.count} προϊόντα</div>
