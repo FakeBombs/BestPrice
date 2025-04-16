@@ -322,62 +322,7 @@ const SearchResults = () => {
                   )}
                 </div>
               </div>
-
-              {renderAppliedFilters()} {/* Render the applied filters here */}
-
-              <div className="page-header__sorting">
-                <div className="tabs">
-                  <div className="tabs-wrapper">
-                    <nav>
-                      <a 
-                        data-type="0" 
-                        rel="nofollow" 
-                        className={sortType === '0' ? 'current' : ''} 
-                        onClick={() => setSortType('0')}
-                      >
-                        <div className="tabs__content">Δημοφιλέστερα</div>
-                      </a>
-                      <a 
-                        data-type="2" 
-                        rel="nofollow" 
-                        className={sortType === '2' ? 'current' : ''} 
-                        onClick={() => setSortType('2')}
-                      >
-                        <div className="tabs__content">Φθηνότερα</div>
-                      </a>
-                      <a 
-                        data-type="release_dt" 
-                        rel="nofollow" 
-                        className={sortType === 'release_dt' ? 'current' : ''} 
-                        onClick={() => setSortType('release_dt')}
-                      >
-                        <div className="tabs__content">Νεότερα</div>
-                      </a>
-                      <a 
-                        data-type="discount" 
-                        rel="nofollow" 
-                        className={sortType === 'discount' ? 'current' : ''} 
-                        onClick={() => setSortType('discount')}
-                      >
-                        <div className="tabs__content">
-                          <svg aria-hidden="true" className="icon" width="16" height="16">
-                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use>
-                          </svg> 
-                          Μεγαλύτερη πτώση
-                        </div>
-                      </a>
-                      <a 
-                        data-type="merchants_desc" 
-                        rel="nofollow" 
-                        className={sortType === 'merchants_desc' ? 'current' : ''} 
-                        onClick={() => setSortType('merchants_desc')}
-                      >
-                        <div className="tabs__content">Αριθμός καταστημάτων</div>
-                      </a>
-                    </nav>
-                  </div>
-                </div>
-              </div>
+              {renderAppliedFilters()}
             </div>
             <section className="section">
               <header className="section__header">
@@ -397,6 +342,21 @@ const SearchResults = () => {
                 </div>
               </ScrollableSlider>
             </section>
+            <div className="page-header__sorting">
+              <div className="tabs">
+                <div className="tabs-wrapper">
+                  <nav>
+                    <a data-type="0" rel="nofollow" className={sortType === '0' ? 'current' : ''} onClick={() => setSortType('0')} ><div className="tabs__content">Δημοφιλέστερα</div></a>
+                    <a data-type="2" rel="nofollow" className={sortType === '2' ? 'current' : ''} onClick={() => setSortType('2')} ><div className="tabs__content">Φθηνότερα</div></a>
+                    <a data-type="release_dt" rel="nofollow" className={sortType === 'release_dt' ? 'current' : ''} onClick={() => setSortType('release_dt')} ><div className="tabs__content">Νεότερα</div></a>
+                    <a data-type="discount" rel="nofollow" className={sortType === 'discount' ? 'current' : ''} onClick={() => setSortType('discount')} >
+                      <div className="tabs__content"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Μεγαλύτερη πτώση</div>
+                    </a>
+                    <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                  </nav>
+                </div>
+              </div>
+            </div>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
             ) : (
