@@ -228,7 +228,7 @@ const SearchResults = () => {
                   <div className="scroll__clip">
                     <div className="scroll__scroller">
                       <Carousel>
-                        {availableCategories.map((item) => (
+                        {availableCategories.length > 0 && availableCategories.map((item) => (
                           <div className="categories categories--scrollable scroll__content" key={item.category}>
                             <a title={item.category} className="categories__category" href={`/#`}>
                               <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
