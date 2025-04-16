@@ -178,7 +178,6 @@ const SearchResults = () => {
                 </div>
               )}
 
-              {/* Existing Specification Filters */}
               {Object.keys(availableSpecs).length > 0 && (
                 Object.keys(availableSpecs).map(specKey => (
                   <div key={specKey} className="filter-specification default-list">
@@ -217,6 +216,30 @@ const SearchResults = () => {
               <h1>{searchQuery}</h1>
               <div>{filteredProducts.length} products</div>
             </div>
+            <section className="section">
+                <header className="section__header">
+                  <hgroup className="section__hgroup">
+                    <h2 className="section__title">Κατηγορίες</h2>
+                  </hgroup>
+                </header>
+                <div className="scroll">
+                  <div className="scroll__clip">
+                    <div className="scroll__scroller">
+                      <Carousel>
+                        {availableCategories.map((item) => (
+                          <div className="categories categories--scrollable scroll__content" key={item.category}>
+                            <a title={item.category} className="categories__category" href={`/#`}>
+                              <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                              <h2 className="categories__title">{item.category}</h2>
+                              <div className="categories__cnt">{item.count} προϊόντα</div>
+                            </a>
+                          </div>
+                        ))}
+                      </Carousel>
+                    </div>
+                  </div>
+                </div>
+              </section>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
             ) : (
