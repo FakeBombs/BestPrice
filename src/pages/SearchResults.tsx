@@ -61,14 +61,16 @@ const SearchResults = () => {
 
     // Convert object to array and match with category images
     const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
-      const categoryData = categories.find(cat => cat.name === category); // Adjust to match your data structure
+      const categoryData = categories.find(cat => cat.name === category);
+      const rootCategoryData = rootCategories.find(rootCat => rootCat.name === category);
       return {
         category,
         count,
-        slug: categoryData ? categoryData.slug : '',
-        image: categoryData ? categoryData.image : '', // Safely access the image
-      };
-    }).slice(0, 8);
+        isRoot: !!rootCategoryData,
+        slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '', 
+        image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
+    };
+  }).slice(0, 8);
 
     setAvailableCategories(categoriesArray);
   };
@@ -146,7 +148,7 @@ const SearchResults = () => {
                 <ol>
                   {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
                     <li key={item.category}>
-                      <a href={`/categories/root/${item.slug}`}><span>{item.category} ({item.count})</span></a>
+                      <a href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/c1/${item.slug}`}><span>{item.category} ({item.count})</span></a>
                     </li>
                   ))}
                 </ol>
@@ -236,7 +238,7 @@ const SearchResults = () => {
               <ScrollableSlider>
                 <div className="categories categories--scrollable scroll__content">
                   {availableCategories.map((item) => (
-                    <a key={item.category} title={item.category} className="categories__category" href={`/categories/root/${item.slug}`}>
+                    <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/c1/${item.slug}`}>
                       <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                       <h2 className="categories__title">{item.category}</h2>
                       <div className="categories__cnt">{item.count} προϊόντα</div>
