@@ -21,9 +21,17 @@ const SearchResults = () => {
     if (searchQuery) {
       const results = searchProducts(searchQuery);
       setProducts(results);
-      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, results);
+
+      // Reset filters for a new search
+      setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+      
+      // Filter products with no active filters on a new search
+      setFilteredProducts(results);
       extractAvailableFilters(results);
       extractCategories(results);
+    } else {
+      // Reset filtered products when there's no search query
+      setFilteredProducts([]);
     }
   }, [searchQuery]);
 
