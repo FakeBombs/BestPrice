@@ -9,7 +9,7 @@ const SearchResults = () => {
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
   let classNamesForHtml = '';
-  
+
   // State for active filters
   const [activeFilters, setActiveFilters] = useState({ vendors: [], inStockOnly: false });
 
@@ -95,23 +95,29 @@ const SearchResults = () => {
   };
 
   const handleVendorFilter = (vendor) => {
-    const newVendors = activeFilters.vendors.includes(vendor)
-      ? activeFilters.vendors.filter(v => v !== vendor)
-      : [...activeFilters.vendors, vendor];
+    if (activeFilters.inStockOnly) {
+      const newVendors = activeFilters.vendors.includes(vendor)
+        ? activeFilters.vendors.filter(v => v !== vendor)
+        : [...activeFilters.vendors, vendor];
 
-    setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
+      setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
 
-    // Update filtered products
-    const filtered = newVendors.length === 0 
-      ? products 
-      : products.filter(product => product.prices.some(price => newVendors.includes(price.vendorId)));
+      // Update filtered products
+      const filtered = newVendors.length === 0 
+        ? products.filter(product => product.prices.some(price => price.inStock)) 
+        : products.filter(product => product.prices.some(price => price.vendorId === vendor && price.inStock));
 
-    setFilteredProducts(filtered);
+      setFilteredProducts(filtered);
+    }
   };
 
   const handleInStockOnly = () => {
     const newInStockOnly = !activeFilters.inStockOnly;
-    setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
+    setActiveFilters(prev => {
+      // If inStockOnly is being enabled, keep current vendors
+      const vendors = newInStockOnly ? prev.vendors : [];
+      return { ...prev, inStockOnly: newInStockOnly, vendors };
+    });
 
     const filtered = newInStockOnly 
       ? products.filter(product => product.prices.some(price => price.inStock)) 
