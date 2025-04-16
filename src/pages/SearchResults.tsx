@@ -5,12 +5,14 @@ import ProductCard from '@/components/ProductCard';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const SearchResults = () => {
-
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
   let classNamesForHtml = '';
   
+  // State for active filters
+  const [activeFilters, setActiveFilters] = useState({ vendors: [], inStockOnly: false });
+
   // Check for ad blockers
   const checkAdBlockers = () => {
     const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
@@ -92,21 +94,29 @@ const SearchResults = () => {
     setFilteredProducts(sorted);
   };
 
-  const handleVendorFilter = (vendors) => {
-    const filtered = vendors.length === 0 ? products : products.filter(product => product.prices.some(price => vendors.includes(price.vendorId)));
+  const handleVendorFilter = (vendor) => {
+    const newVendors = activeFilters.vendors.includes(vendor)
+      ? activeFilters.vendors.filter(v => v !== vendor)
+      : [...activeFilters.vendors, vendor];
+
+    setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
+
+    // Update filtered products
+    const filtered = newVendors.length === 0 
+      ? products 
+      : products.filter(product => product.prices.some(price => newVendors.includes(price.vendorId)));
+
     setFilteredProducts(filtered);
   };
 
-  const handlePriceRangeFilter = (min, max) => {
-    const filtered = products.filter(product => {
-      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
-      return minPrice >= min && minPrice <= max;
-    });
-    setFilteredProducts(filtered);
-  };
+  const handleInStockOnly = () => {
+    const newInStockOnly = !activeFilters.inStockOnly;
+    setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
 
-  const handleInStockOnly = (inStockOnly) => {
-    const filtered = inStockOnly ? products.filter(product => product.prices.some(price => price.inStock)) : products;
+    const filtered = newInStockOnly 
+      ? products.filter(product => product.prices.some(price => price.inStock)) 
+      : products;
+
     setFilteredProducts(filtered);
   };
 
@@ -119,14 +129,18 @@ const SearchResults = () => {
               <div className="filters__header">
                 <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
               </div>
-              <div class="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
-                <div class="filter__header"><h4>Εμφάνιση μόνο</h4></div>
-                <div class="filter-container">
+              <div className="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+                <div className="filter__header"><h4>Εμφάνιση μόνο</h4></div>
+                <div className="filter-container">
                   <ol>
-                    <li data-filter="certified"><a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/search?q=rcf&amp;certified=1"><svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></a></li>
-                    <li id="filter-nearby" class="nearby-location is-set"><a title="Κοντά μου" rel="nofollow" href="/search?q=rcf&amp;nearby=1">Κοντά μου (20 χλμ)</a><div class="filter-nearby__options">Επιλογές</div></li>
-                    <li data-filter="in-stock" className={activeFilters.inStockOnly ? 'selected' : ''} onClick={handleInStockOnly}><a title={activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"} rel="nofollow"><span>{activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"}</span></a></li>
-                    <li data-filter="boxnow"><a title="Παράδοση" rel="nofollow" href="/search?q=rcf&amp;boxnow=1"><svg aria-hidden="true" class="icon" width="24" height="24"><use xlink:href="/public/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW"><svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></a></li>
+                    <li data-filter="certified"><a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/search?q=rcf&certified=1"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></a></li>
+                    <li id="filter-nearby" className="nearby-location is-set"><a title="Κοντά μου" rel="nofollow" href="/search?q=rcf&nearby=1">Κοντά μου (20 χλμ)</a><div className="filter-nearby__options">Επιλογές</div></li>
+                    <li data-filter="in-stock" className={activeFilters.inStockOnly ? 'selected' : ''} onClick={handleInStockOnly}>
+                      <a title={activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"} rel="nofollow">
+                        <span>{activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"}</span>
+                      </a>
+                    </li>
+                    <li data-filter="boxnow"><a title="Παράδοση" rel="nofollow" href="/search?q=rcf&boxnow=1"><svg aria-hidden="true" className="icon" width="24" height="24"><use xlinkHref="/public/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span className="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW"><svg aria-hidden="true" className="icon help" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></a></li>
                   </ol>
                 </div>
               </div>
@@ -151,13 +165,13 @@ const SearchResults = () => {
                   <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                 </div>
               </div>
-              <div class="page-header__sorting">
-                <div class="tabs">
-                  <div class="tabs-wrapper">
+              <div className="page-header__sorting">
+                <div className="tabs">
+                  <div className="tabs-wrapper">
                     <nav>
-                      <a href="/search?q=${searchQuery}" rel="nofollow" class="current"><div class="tabs__content">Σχετικότερα</div></a>
-                      <a onClick={() => handleSortChange('price-asc')} rel="nofollow"><div class="tabs__content">Φθηνότερα</div></a>
-                      <a onClick={() => handleSortChange('price-desc')} rel="nofollow"><div class="tabs__content">Ακριβότερα</div></a>
+                      <a href={`/search?q=${searchQuery}`} rel="nofollow" className="current"><div className="tabs__content">Σχετικότερα</div></a>
+                      <a onClick={() => handleSortChange('price-asc')} rel="nofollow"><div className="tabs__content">Φθηνότερα</div></a>
+                      <a onClick={() => handleSortChange('price-desc')} rel="nofollow"><div className="tabs__content">Ακριβότερα</div></a>
                     </nav>
                   </div>
                 </div>
