@@ -10,6 +10,8 @@ const SearchResults = () => {
   const [availableVendors, setAvailableVendors] = useState(new Set());
   const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
+  const [availableCategories, setAvailableCategories] = useState([]); // New state for categories
+  const [showMoreCategories, setShowMoreCategories] = useState(false); // To handle show more functionality
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
@@ -20,6 +22,7 @@ const SearchResults = () => {
       setProducts(results);
       setFilteredProducts(results);
       extractAvailableFilters(results);
+      extractCategories(results); // Extract categories based on results
     }
   }, [searchQuery]);
 
@@ -29,9 +32,9 @@ const SearchResults = () => {
     const specs = {};
 
     results.forEach(product => {
-      if (product.vendor) vendors.add(product.vendor); // Check if vendor exists
+      if (product.vendor) vendors.add(product.vendor);
       if (product.brand) {
-        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; // Count occurrences of each brand
+        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
       }
       Object.keys(product.specifications).forEach(specKey => {
         if (!specs[specKey]) {
@@ -42,8 +45,22 @@ const SearchResults = () => {
     });
 
     setAvailableVendors(vendors);
-    setAvailableBrands(brandsCount); // Store brand counts
+    setAvailableBrands(brandsCount);
     setAvailableSpecs(specs);
+  };
+
+  const extractCategories = (results) => {
+    const categoryCount = {};
+    
+    results.forEach(product => {
+      if (product.category) {
+        categoryCount[product.category] = (categoryCount[product.category] || 0) + 1; // Count products in each category
+      }
+    });
+
+    // Convert object to array and sort
+    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({ category, count })).slice(0, 8);
+    setAvailableCategories(categoriesArray);
   };
 
   const handleVendorFilter = (vendor) => {
@@ -82,22 +99,18 @@ const SearchResults = () => {
   const filterProducts = (vendors, brands, specs, inStockOnly) => {
     let filtered = products;
 
-    // Apply in-stock filter
     if (inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
     }
 
-    // Apply vendor filter
     if (vendors.length > 0) {
       filtered = filtered.filter(product => vendors.includes(product.vendor));
     }
 
-    // Apply brand filter
     if (brands.length > 0) {
       filtered = filtered.filter(product => brands.includes(product.brand));
     }
 
-    // Apply specification filters
     if (Object.keys(specs).length > 0) {
       filtered = filtered.filter(product => {
         return Object.entries(specs).every(([key, values]) => {
@@ -115,6 +128,26 @@ const SearchResults = () => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
+              
+              <div className="filters__categories" data-filter-name="categories">
+                <div className="filters__header">
+                  <div className="filters__header-title filters__header-title--filters">Categories</div>
+                </div>
+                <ol>
+                  {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
+                    <li key={item.category}>
+                      <a href={`/#`}><span>{item.category} ({item.count})</span></a>
+                    </li>
+                  ))}
+                </ol>
+                {availableCategories.length > 8 && (
+                  <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title="Show all categories">
+                    <svg aria-hidden="true" className="icon" width="100%" height="100%"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use></svg> 
+                    Show all
+                  </div>
+                )}
+              </div>
+
               {availableVendors.size > 0 && (
                 <div className="filter-vendor default-list">
                   <div className="filter__header"><h4>Vendors</h4></div>
@@ -137,7 +170,7 @@ const SearchResults = () => {
                     <ol>
                       {Object.keys(availableBrands).map(brand => (
                         <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
-                          <span>{brand} ({availableBrands[brand]})</span> {/* Display count of products */}
+                          <span>{brand} ({availableBrands[brand]})</span>
                         </li>
                       ))}
                     </ol>
@@ -145,6 +178,7 @@ const SearchResults = () => {
                 </div>
               )}
 
+              {/* Existing Specification Filters */}
               {Object.keys(availableSpecs).length > 0 && (
                 Object.keys(availableSpecs).map(specKey => (
                   <div key={specKey} className="filter-specification default-list">
