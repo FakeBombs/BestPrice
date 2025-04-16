@@ -95,29 +95,23 @@ const SearchResults = () => {
   };
 
   const handleVendorFilter = (vendor) => {
-    if (activeFilters.inStockOnly) {
-      const newVendors = activeFilters.vendors.includes(vendor)
-        ? activeFilters.vendors.filter(v => v !== vendor)
-        : [...activeFilters.vendors, vendor];
+    const newVendors = activeFilters.vendors.includes(vendor)
+      ? activeFilters.vendors.filter(v => v !== vendor)
+      : [...activeFilters.vendors, vendor];
 
-      setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
+    setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
 
-      // Update filtered products
-      const filtered = newVendors.length === 0 
-        ? products.filter(product => product.prices.some(price => price.inStock)) 
-        : products.filter(product => product.prices.some(price => price.vendorId === vendor && price.inStock));
+    // Update filtered products
+    const filtered = newVendors.length === 0 
+      ? products 
+      : products.filter(product => product.prices.some(price => newVendors.includes(price.vendorId)));
 
-      setFilteredProducts(filtered);
-    }
+    setFilteredProducts(filtered);
   };
 
   const handleInStockOnly = () => {
     const newInStockOnly = !activeFilters.inStockOnly;
-    setActiveFilters(prev => {
-      // If inStockOnly is being enabled, keep current vendors
-      const vendors = newInStockOnly ? prev.vendors : [];
-      return { ...prev, inStockOnly: newInStockOnly, vendors };
-    });
+    setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
 
     const filtered = newInStockOnly 
       ? products.filter(product => product.prices.some(price => price.inStock)) 
