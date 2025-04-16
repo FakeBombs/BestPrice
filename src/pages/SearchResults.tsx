@@ -10,7 +10,6 @@ const SearchResults = ({ availableCategories }) => {
   const [availableVendors, setAvailableVendors] = useState(new Set());
   const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
-  const [categories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -58,11 +57,10 @@ const SearchResults = ({ availableCategories }) => {
       }
     });
 
-    // Convert object to array and sort, with a placeholder image if not available
     const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({
       category,
       count,
-      image: 'https://placehold.co/200x200' // Placeholder for categories without images
+      image: 'https://placehold.co/200x200' 
     })).slice(0, 8);
     
     setAvailableCategories(categoriesArray);
@@ -133,7 +131,6 @@ const SearchResults = ({ availableCategories }) => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
-              
               <div className="filters__categories" data-filter-name="categories">
                 <div className="filters__header">
                   <div className="filters__header-title filters__header-title--filters">Categories</div>
@@ -222,23 +219,23 @@ const SearchResults = ({ availableCategories }) => {
               <div>{filteredProducts.length} products</div>
             </div>
             <section className="section">
-                <header className="section__header">
-                  <hgroup className="section__hgroup">
-                    <h2 className="section__title">Κατηγορίες</h2>
-                  </hgroup>
-                </header>
+              <header className="section__header">
+                <hgroup className="section__hgroup">
+                  <h2 className="section__title">Κατηγορίες</h2>
+                </hgroup>
+              </header>
 
-                  <div className="categories categories--scrollable scroll__content">
-                    {availableCategories.length > 0 && availableCategories.map((item) => (
-                      <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
-                        <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
-                        <h2 className="categories__title">{item.category}</h2>
-                        <div className="categories__cnt">{item.count} προϊόντα</div>
-                      </a>
-                    ))}
-                  </div>
+              <div className="categories categories--scrollable scroll__content">
+                {availableCategories.length > 0 && availableCategories.map((item) => (
+                  <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
+                    <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                    <h2 className="categories__title">{item.category}</h2>
+                    <div className="categories__cnt">{item.count} προϊόντα</div>
+                  </a>
+                ))}
+              </div>
 
-              </section>
+            </section>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
             ) : (
