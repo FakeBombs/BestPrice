@@ -63,7 +63,7 @@ const SearchResults = ({ availableCategories }) => {
     const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({
       category,
       count,
-      image: '/path/to/default/image.jpg' // Placeholder for categories without images
+      image: 'https://placehold.co/200x200' // Placeholder for categories without images
     })).slice(0, 8);
     
     setAvailableCategories(categoriesArray);
