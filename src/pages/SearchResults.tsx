@@ -13,7 +13,7 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('0'); // Default sorting type
+  const [sortType, setSortType] = useState('0');
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
@@ -22,16 +22,11 @@ const SearchResults = () => {
     if (searchQuery) {
       const results = searchProducts(searchQuery);
       setProducts(results);
-
-      // Reset filters for a new search
       setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
-
-      // Filter products with no active filters on a new search
       setFilteredProducts(results);
       extractAvailableFilters(results);
       extractCategories(results);
     } else {
-      // Reset filtered products when there's no search query
       setFilteredProducts([]);
     }
   }, [searchQuery]);
@@ -146,8 +141,8 @@ const SearchResults = () => {
     filtered = sortProducts(filtered);
 
     setFilteredProducts(filtered);
-    extractAvailableFilters(filtered); // Re-extract filters based on the newly filtered products
-    extractCategories(filtered); // Re-extract categories based on the newly filtered products
+    extractAvailableFilters(filtered);
+    extractCategories(filtered);
   };
 
   const sortProducts = (products) => {
@@ -176,13 +171,7 @@ const SearchResults = () => {
       <div className="applied-filters">
         {activeFilters.brands.map((brand) => (
           <h2 className="applied-filters__filter" key={brand}>
-            <a 
-              data-scrollto="" 
-              data-filter-key="brand" 
-              data-value-id={brand} 
-              className="pressable" 
-              onClick={() => handleBrandFilter(brand)} // Remove filter on click
-            >
+            <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)} >
               <span className="applied-filters__label">{brand}</span>
               <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -194,13 +183,7 @@ const SearchResults = () => {
         {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
           specValues.map(specValue => (
             <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-              <a 
-                data-scrollto="" 
-                data-filter-key="spec" 
-                data-value-id={`${specKey}-${specValue}`} 
-                className="pressable" 
-                onClick={() => handleSpecFilter(specKey, specValue)} // Remove filter on click
-              >
+              <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} >
                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -302,7 +285,7 @@ const SearchResults = () => {
           </aside>
 
           <main className="page-products__main">
-            <div className="page-header">
+            <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
                   <h1>{searchQuery}</h1>
@@ -323,40 +306,37 @@ const SearchResults = () => {
                 </div>
               </div>
               {renderAppliedFilters()}
-            </div>
-            <section className="section">
-              <header className="section__header">
-                <hgroup className="section__hgroup">
-                  <h2 className="section__title">Κατηγορίες</h2>
-                </hgroup>
-              </header>
-              <ScrollableSlider>
-                <div className="categories categories--scrollable scroll__content">
-                  {availableCategories.map((item) => (
-                    <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/c1/${item.slug}`}>
-                      <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
-                      <h2 className="categories__title">{item.category}</h2>
-                      <div className="categories__cnt">{item.count} προϊόντα</div>
-                    </a>
-                  ))}
-                </div>
-              </ScrollableSlider>
-            </section>
-            <div className="page-header__sorting">
-              <div className="tabs">
-                <div className="tabs-wrapper">
-                  <nav>
-                    <a data-type="0" rel="nofollow" className={sortType === '0' ? 'current' : ''} onClick={() => setSortType('0')} ><div className="tabs__content">Δημοφιλέστερα</div></a>
-                    <a data-type="2" rel="nofollow" className={sortType === '2' ? 'current' : ''} onClick={() => setSortType('2')} ><div className="tabs__content">Φθηνότερα</div></a>
-                    <a data-type="release_dt" rel="nofollow" className={sortType === 'release_dt' ? 'current' : ''} onClick={() => setSortType('release_dt')} ><div className="tabs__content">Νεότερα</div></a>
-                    <a data-type="discount" rel="nofollow" className={sortType === 'discount' ? 'current' : ''} onClick={() => setSortType('discount')} >
-                      <div className="tabs__content"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Μεγαλύτερη πτώση</div>
-                    </a>
-                    <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
-                  </nav>
+              <section className="section">
+                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
+                <ScrollableSlider>
+                  <div className="categories categories--scrollable scroll__content">
+                    {availableCategories.map((item) => (
+                      <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/c1/${item.slug}`}>
+                        <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                        <h2 className="categories__title">{item.category}</h2>
+                        <div className="categories__cnt">{item.count} προϊόντα</div>
+                      </a>
+                    ))}
+                  </div>
+                </ScrollableSlider>
+              </section>
+              <div className="page-header__sorting">
+                <div className="tabs">
+                  <div className="tabs-wrapper">
+                    <nav>
+                      <a data-type="0" rel="nofollow" className={sortType === '0' ? 'current' : ''} onClick={() => setSortType('0')} ><div className="tabs__content">Δημοφιλέστερα</div></a>
+                      <a data-type="2" rel="nofollow" className={sortType === '2' ? 'current' : ''} onClick={() => setSortType('2')} ><div className="tabs__content">Φθηνότερα</div></a>
+                      <a data-type="release_dt" rel="nofollow" className={sortType === 'release_dt' ? 'current' : ''} onClick={() => setSortType('release_dt')} ><div className="tabs__content">Νεότερα</div></a>
+                      <a data-type="discount" rel="nofollow" className={sortType === 'discount' ? 'current' : ''} onClick={() => setSortType('discount')} >
+                        <div className="tabs__content"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Μεγαλύτερη πτώση</div>
+                      </a>
+                      <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                    </nav>
+                  </div>
                 </div>
               </div>
-            </div>
+            </header>
+            
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
             ) : (
