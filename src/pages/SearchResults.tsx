@@ -4,6 +4,22 @@ import { searchProducts, categories, rootCategories } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
+// Imported brand data
+const brands = [
+  { id: 'b1', name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
+  { id: 'b2', name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
+  { id: 'b3', name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
+  { id: 'b4', name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
+  { id: 'b5', name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
+  { id: 'b6', name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
+  { id: 'b7', name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
+  { id: 'b8', name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
+  { id: 'b9', name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
+  { id: 'b10', name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
+  { id: 'b11', name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
+  { id: 'b12', name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg' }
+];
+
 const SearchResults = () => {
   const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
   const [products, setProducts] = useState([]);
@@ -146,6 +162,9 @@ const SearchResults = () => {
     extractCategories(filtered); // Re-extract categories based on the newly filtered products
   };
 
+  // Determine the selected brand for display in the header
+  const displayedBrand = activeFilters.brands.length === 1 ? brands.find(brand => brand.name === activeFilters.brands[0]) : null;
+
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -236,8 +255,25 @@ const SearchResults = () => {
 
           <main className="page-products__main">
             <div className="page-header">
-              <h1>{searchQuery}</h1>
-              <div>{filteredProducts.length} products</div>
+              <div className="page-header__title-wrapper">
+                <div className="page-header__title-main">
+                  <h1>{searchQuery}</h1>
+                  <div className="page-header__count-wrapper">
+                    <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
+                    <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
+                      <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                      <div className="alerts-minimal__label"></div>
+                    </div>
+                  </div>
+                </div>
+                <div className="page-header__title-aside">
+                  {displayedBrand && (
+                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
             <section className="section">
               <header className="section__header">
