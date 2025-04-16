@@ -47,12 +47,12 @@ const ScrollableSlider = ({ children }) => {
   return (
     <div className="scroll">
       <div className="scroll__clip">
-        <div className="scroll__scroller" ref={scrollableRef} style={{ overflowX: 'auto', display: 'flex', whiteSpace: 'nowrap', maxHeight: '400px' }}>
+        <div className="scroll__scroller" ref={scrollableRef} style={{ whiteSpace: 'nowrap' }}>
           {childrenArray.length > 0 ? childrenArray : <p>No categories to display</p>}  {/* Render a fallback when no children */}
         </div>
       </div>
-      <button onClick={handleScrollLeft} disabled={isLeftDisabled} className="scroll-button">Left</button>
-      <button onClick={handleScrollRight} disabled={isRightDisabled} className="scroll-button">Right</button>
+      <button aria-label="Scroll arrow previous" onClick={handleScrollLeft} disabled={isLeftDisabled} className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M8 0L9.41 1.41L3.83 7H16V9H3.83L9.41 14.59L8 16L0 8L8 0Z"/></svg></button>
+      <button aria-label="Scroll arrow next" onClick={handleScrollRight} disabled={isRightDisabled} className="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z"/></svg></button>
     </div>
   );
 };
