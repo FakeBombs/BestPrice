@@ -130,22 +130,13 @@ const SearchResults = () => {
                   </ol>
                 </div>
               </div>
-              <ol>
-                <li onClick={() => handleSortChange('price-asc')}>Τιμή: Χαμηλότερη προς Υψηλότερη</li>
-                <li onClick={() => handleSortChange('price-desc')}>Τιμή: Υψηλότερη προς Χαμηλότερη</li>
-                <li onClick={() => handleInStockOnly(true)}>Άμεσα διαθέσιμα</li>
-                {/* Add vendor filtering here dynamically based on your vendor data */}
-                {/* e.g., <li onClick={() => handleVendorFilter(['vendorId'])}>Vendor Name</li> */}
-              </ol>
               <div className="filter-store filter-collapsed default-list">
                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                 <div className="filter-container">
                   <ol>
-                    {/* Example hardcoded vendor list */}
                     <li onClick={() => handleVendorFilter(['v1'])}><span>You</span></li>
                     <li onClick={() => handleVendorFilter(['v2'])}><span>Plaisio</span></li>
                     <li onClick={() => handleVendorFilter(['v3'])}><span>Public</span></li>
-                    {/* Continue for other vendors... */}
                   </ol>
                 </div>
               </div>
