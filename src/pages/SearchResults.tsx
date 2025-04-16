@@ -14,7 +14,6 @@ const SearchResults = () => {
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [sortType, setSortType] = useState('0');
-
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
@@ -74,6 +73,7 @@ const SearchResults = () => {
         count,
         isRoot: !!rootCategoryData,
         slug: rootCategoryData ? rootCategoryData.slug : categoryData ? categoryData.slug : '',
+        id: categoryData ? categoryData.id : rootCategoryData ? rootCategoryData.id : '',
         image: categoryData ? categoryData.image : rootCategoryData ? rootCategoryData.image : '',
       };
     }).slice(0, 8);
@@ -147,16 +147,36 @@ const SearchResults = () => {
 
   const sortProducts = (products) => {
     switch (sortType) {
+      case 'price-asc':
+        return products.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return aPrice - bPrice;
+        });
+      case 'price-desc':
+        return products.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return bPrice - aPrice;
+        });
+      case 'rating-desc':
+        return products.sort((a, b) => b.rating - a.rating);
+      case 'reviews-desc':
+        return products.sort((a, b) => b.reviews - a.reviews);
       case '0': // Most Popular
-        return products.sort((a, b) => b.popularity - a.popularity); // Assuming you have popularity attribute
+        return products.sort((a, b) => b.popularity - a.popularity);
       case '2': // Cheapest First
-        return products.sort((a, b) => a.price - b.price);
+        return products.sort((a, b) => {
+          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
+          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          return aPrice - bPrice;
+        });
       case 'release_dt': // Newest First
         return products.sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
       case 'discount': // Largest Price Drop
-        return products.sort((a, b) => b.priceDrop - a.priceDrop); // Assuming you have priceDrop attribute
+        return products.sort((a, b) => b.priceDrop - a.priceDrop);
       case 'merchants_desc': // Highest Number of Available Vendors
-        return products.sort((a, b) => b.availableVendors - a.availableVendors); // Assuming you have availableVendors attribute
+        return products.sort((a, b) => b.availableVendors - a.availableVendors);
       default:
         return products;
     }
@@ -209,7 +229,7 @@ const SearchResults = () => {
                 <ol>
                   {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
                     <li key={item.category}>
-                      <a href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/${item.id}/${item.slug}`}><span>{item.category} ({item.count})</span></a>
+                      <a href={`/cat/${item.id}/${item.slug}`}><span>{item.category} ({item.count})</span></a>
                     </li>
                   ))}
                 </ol>
@@ -282,7 +302,6 @@ const SearchResults = () => {
                 </div>
               </div>
             </div>
-            <div className="ads" data-max="0" data-ip="31.152.199.61"></div>
           </aside>
 
           <main className="page-products__main">
