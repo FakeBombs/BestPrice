@@ -56,11 +56,11 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/806_SX200Y200/1629455538/mobile-phones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp 2x" alt="Κινητά" title="Κινητά"/>' },
-  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/2591_SX200Y200/1629455496/laptops.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp 2x" alt="Laptops" title="Laptops"/>' },
-  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/3446_SX200Y200/1629455501/tablets.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp 2x" alt="Tablets" title="Tablets"/>' },
-  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/8068_SX200Y200/1629455538/headphones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp 2x" alt="Headphones" title="Headphones"/>' },
-  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/3013_SX200Y200/1472043991/psifiakes-videokameres.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp 2x" alt="Ψηφιακές Βιντεοκάμερες" title="Ψηφιακές Βιντεοκάμερες"/>' },
+  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
+  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
+  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
+  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
+  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp' },
   { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', image: 'https://placehold.co/200x200' },
   { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
   { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
