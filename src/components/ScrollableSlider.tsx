@@ -22,9 +22,14 @@ const ScrollableSlider = ({ children }) => {
       checkScrollButtons();
     };
 
-    element.addEventListener('scroll', handleScroll);
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+    }
+
     return () => {
-      element.removeEventListener('scroll', handleScroll);
+      if (element) {
+        element.removeEventListener('scroll', handleScroll);
+      }
     };
   }, []);
 
@@ -39,8 +44,8 @@ const ScrollableSlider = ({ children }) => {
   return (
     <div className="scroll">
       <div className="scroll__clip">
-        <div className="scroll__scroller" ref={scrollableRef} style={{ overflowX: 'auto', display: 'flex', whiteSpace: 'nowrap' }}>
-          {children}
+        <div className="scroll__scroller" ref={scrollableRef} style={{ overflowX: 'auto', display: 'flex', whiteSpace: 'nowrap', maxHeight: '400px' }}>
+          {children.length > 0 ? children : <p>No categories to display</p>}  {/* Render a fallback when no children */}
         </div>
       </div>
       <button onClick={handleScrollLeft} disabled={isLeftDisabled} className="scroll-button">Left</button>
