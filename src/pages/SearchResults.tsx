@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import ScrollableSlider from '@/components/ScrollableSlider';
 
 const SearchResults = () => {
   const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
@@ -224,23 +224,17 @@ const SearchResults = () => {
                     <h2 className="section__title">Κατηγορίες</h2>
                   </hgroup>
                 </header>
-                <div className="scroll">
-                  <div className="scroll__clip">
-                    <div className="scroll__scroller">
-                      <div className="categories categories--scrollable scroll__content">
-                        <Carousel>
-                          {availableCategories.map((item) => (
-                            <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
-                              <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
-                              <h2 className="categories__title">{item.category}</h2>
-                              <div className="categories__cnt">{item.count} προϊόντα</div>
-                            </a>
-                          ))}
-                        </Carousel>
-                      </div>
-                    </div>
-                  </div>
+              <ScrollableSlider>
+                <div className="categories categories--scrollable scroll__content">
+                  {availableCategories.map((item) => (
+                    <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
+                      <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                      <h2 className="categories__title">{item.category}</h2>
+                      <div className="categories__cnt">{item.count} προϊόντα</div>
+                    </a>
+                  ))}
                 </div>
+                </ScrollableSlider>
               </section>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
