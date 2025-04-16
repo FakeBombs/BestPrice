@@ -482,13 +482,13 @@ const moreProducts = [
 // Combine all products
 const allProducts = [...products, ...moreProducts];
 
-export interface brands {
+export interface Brand {
   id: string;
   name: string;
   logo: string;
 }
 
-export const brands = [
+export const brands: Brand[] = [
   { id: 'b1', name: 'Apple', logo: '//orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
   { id: 'b2', name: 'Samsung', logo: '//orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
   { id: 'b3', name: 'Sony', logo: '//orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
