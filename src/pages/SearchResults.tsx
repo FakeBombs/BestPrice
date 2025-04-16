@@ -1,24 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { searchProducts, categories, rootCategories } from '@/data/mockData';
+import { searchProducts, categories, rootCategories, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
-
-// Imported brand data
-const brands = [
-  { id: 'b1', name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
-  { id: 'b2', name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
-  { id: 'b3', name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
-  { id: 'b4', name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
-  { id: 'b5', name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
-  { id: 'b6', name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
-  { id: 'b7', name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
-  { id: 'b8', name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
-  { id: 'b9', name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
-  { id: 'b10', name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
-  { id: 'b11', name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
-  { id: 'b12', name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg' }
-];
 
 const SearchResults = () => {
   const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
