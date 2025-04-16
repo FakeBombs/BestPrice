@@ -11,8 +11,8 @@ const SearchResults = ({ availableCategories }) => {
   const [availableVendors, setAvailableVendors] = useState(new Set());
   const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
-  const [categories, setAvailableCategories] = useState([]); // Renamed state for categories
-  const [showMoreCategories, setShowMoreCategories] = useState(false); // To handle show more functionality
+  const [categories, setAvailableCategories] = useState([]);
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
@@ -23,7 +23,7 @@ const SearchResults = ({ availableCategories }) => {
       setProducts(results);
       setFilteredProducts(results);
       extractAvailableFilters(results);
-      extractCategories(results); // Extract categories based on results
+      extractCategories(results);
     }
   }, [searchQuery]);
 
@@ -55,12 +55,17 @@ const SearchResults = ({ availableCategories }) => {
     
     results.forEach(product => {
       if (product.category) {
-        categoryCount[product.category] = (categoryCount[product.category] || 0) + 1; // Count products in each category
+        categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
       }
     });
 
-    // Convert object to array and sort
-    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({ category, count })).slice(0, 8);
+    // Convert object to array and sort, with a placeholder image if not available
+    const categoriesArray = Object.entries(categoryCount).map(([category, count]) => ({
+      category,
+      count,
+      image: '/path/to/default/image.jpg' // Placeholder for categories without images
+    })).slice(0, 8);
+    
     setAvailableCategories(categoriesArray);
   };
 
