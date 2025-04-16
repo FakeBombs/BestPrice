@@ -482,6 +482,21 @@ const moreProducts = [
 // Combine all products
 const allProducts = [...products, ...moreProducts];
 
+const brands = [
+  { id: 'b1', name: 'Apple', logo: '//orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
+  { id: 'b2', name: 'Samsung', logo: '//orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
+  { id: 'b3', name: 'Sony', logo: '//orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
+  { id: 'b4', name: 'LG', logo: '//orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
+  { id: 'b5', name: 'Canon', logo: '//orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
+  { id: 'b6', name: 'Nikon', logo: '//orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
+  { id: 'b7', name: 'Lenovo', logo: '//orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
+  { id: 'b8', name: 'Dell', logo: '//orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
+  { id: 'b9', name: 'HP', logo: '//orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
+  { id: 'b10', name: 'Asus', logo: '//orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
+  { id: 'b11', name: 'Acer', logo: '//orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
+  { id: 'b12', name: 'Microsoft', logo: '//orig-bpcdn.pstatic.gr/logs/brands/100.svg' }
+];
+
 // Helper functions to simulate API calls
 export const fetchFeaturedProducts = () => {
   return products.slice(0, 5);
