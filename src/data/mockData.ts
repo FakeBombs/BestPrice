@@ -22,28 +22,28 @@ export const rootCategories: RootCategory[] = [
     name: 'Οικιακές Συσκευές',
     slug: 'home-appliances',
     description: 'Ψυγεία, πλυντήρια, συσκευές κουζίνας και άλλες οικιακές συσκευές',
-    image: 'https://placehold.co/200x200'
+    image: '//placehold.co/200x200'
   },
   {
     id: 'rc3',
     name: 'Gaming',
     slug: 'gaming',
     description: 'Κονσόλες, παιχνίδια, αξεσουάρ gaming και περιφερειακά',
-    image: 'https://placehold.co/200x200'
+    image: '//placehold.co/200x200'
   },
   {
     id: 'rc4',
     name: 'Αθλητικά',
     slug: 'sports',
     description: 'Αθλητικά είδη, εξοπλισμός fitness και ρούχα',
-    image: 'https://placehold.co/200x200'
+    image: '//placehold.co/200x200'
   },
   {
     id: 'rc5',
     name: 'Ένδυση',
     slug: 'clothing',
     description: 'Ρούχα, παπούτσια και αξεσουάρ',
-    image: 'https://placehold.co/200x200'
+    image: '//placehold.co/200x200'
   }
 ];
 
@@ -56,22 +56,23 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Smartphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
+  { id: 'c1', name: 'Κινητά', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
   { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
   { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
   { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
   { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp' },
-  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', image: 'https://placehold.co/200x200' },
-  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
-  { id: 'c8', name: 'Πλυντήρια', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
-  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', image: 'https://placehold.co/200x200' },
-  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
-  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
-  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', image: 'https://placehold.co/200x200' },
-  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', image: 'https://placehold.co/200x200' },
-  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', image: 'https://placehold.co/200x200' },
-  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', image: 'https://placehold.co/200x200' },
-  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', image: 'https://placehold.co/200x200' }
+  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
+  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
+  { id: 'c8', name: 'Πλυντήρια Ρούχων', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
+  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2488_SX400Y400/1629455496/kouzines.webp' },
+  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
+  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
+  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
+  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', image: '//placehold.co/200x200' },
+  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', image: '//placehold.co/200x200' },
+  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', image: '//placehold.co/200x200' },
+  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', image: '//placehold.co/200x200' },
+  { id: 'c17', name: 'Smartwatches', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' }
 ];
 
 // Vendors
@@ -86,49 +87,49 @@ export const vendors: Vendor[] = [
   { 
     id: 'v1', 
     name: 'You',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/252.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg',
     rating: 4.5
   },
   { 
     id: 'v2', 
     name: 'Plaisio',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/79.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg',
     rating: 4.2
   },
   { 
     id: 'v3', 
     name: 'Public',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/743.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg',
     rating: 4.7
   },
   { 
     id: 'v4', 
     name: 'Κωτσόβολος',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/496.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg',
     rating: 4.0
   },
   { 
     id: 'v5', 
     name: 'Funky Buddha',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/4351.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg',
     rating: 4.3
   },
   { 
     id: 'v6', 
     name: 'Germanos',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/8697.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg',
     rating: 4.1
   },,
   { 
     id: 'v7', 
     name: 'e-shop.gr',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/16.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg',
     rating: 3.2
   },,
   { 
     id: 'v8', 
     name: 'Χαμόγελο του Παιδιού',
-    logo: 'https://orig-bpcdn.pstatic.gr/bpmerchants/874.svg',
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg',
     rating: 4.7
   }
 ];
@@ -164,12 +165,12 @@ export const products: Product[] = [
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    category: 'Smartphones',
+    category: 'Κινητά',
     description: 'The latest iPhone with a stunning design and powerful performance.',
-    image: 'https://bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
+    image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
-      'https://bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
-      'https://bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp',
+      '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
+      '//bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp',
     ],
     rating: 4.8,
     reviews: 245,
@@ -196,13 +197,13 @@ export const products: Product[] = [
     title: 'Samsung Galaxy S23 Ultra 512GB',
     brand: 'Samsung',
     model: 'Galaxy S23 Ultra',
-    category: 'Smartphones',
+    category: 'Κινητά',
     description: 'The ultimate Samsung phone with exceptional camera capabilities.',
-    image: 'https://placehold.co/400x400?text=Galaxy+S23',
+    image: '//placehold.co/400x400?text=Galaxy+S23',
     images: [
-      'https://placehold.co/400x400?text=Galaxy+S23',
-      'https://placehold.co/400x400?text=Galaxy+S23+Side',
-      'https://placehold.co/400x400?text=Galaxy+S23+Back',
+      '//placehold.co/400x400?text=Galaxy+S23',
+      '//placehold.co/400x400?text=Galaxy+S23+Side',
+      '//placehold.co/400x400?text=Galaxy+S23+Back',
     ],
     rating: 4.7,
     reviews: 189,
@@ -230,11 +231,11 @@ export const products: Product[] = [
     model: 'MacBook Pro',
     category: 'Laptops',
     description: 'Powerful MacBook Pro with the latest M2 Pro chip.',
-    image: 'https://placehold.co/400x400?text=MacBook+Pro',
+    image: '//placehold.co/400x400?text=MacBook+Pro',
     images: [
-      'https://placehold.co/400x400?text=MacBook+Pro',
-      'https://placehold.co/400x400?text=MacBook+Pro+Side',
-      'https://placehold.co/400x400?text=MacBook+Pro+Open',
+      '//placehold.co/400x400?text=MacBook+Pro',
+      '//placehold.co/400x400?text=MacBook+Pro+Side',
+      '//placehold.co/400x400?text=MacBook+Pro+Open',
     ],
     rating: 4.9,
     reviews: 156,
@@ -261,11 +262,11 @@ export const products: Product[] = [
     model: 'WH-1000XM5',
     category: 'Headphones',
     description: 'Industry-leading noise cancellation with exceptional sound quality.',
-    image: 'https://placehold.co/400x400?text=Sony+WH1000XM5',
+    image: '//placehold.co/400x400?text=Sony+WH1000XM5',
     images: [
-      'https://placehold.co/400x400?text=Sony+WH1000XM5',
-      'https://placehold.co/400x400?text=Sony+WH1000XM5+Side',
-      'https://placehold.co/400x400?text=Sony+WH1000XM5+Case',
+      '//placehold.co/400x400?text=Sony+WH1000XM5',
+      '//placehold.co/400x400?text=Sony+WH1000XM5+Side',
+      '//placehold.co/400x400?text=Sony+WH1000XM5+Case',
     ],
     rating: 4.8,
     reviews: 324,
@@ -292,11 +293,11 @@ export const products: Product[] = [
     model: 'iPad Pro',
     category: 'Tablets',
     description: 'The most powerful iPad yet with the M2 chip.',
-    image: 'https://placehold.co/400x400?text=iPad+Pro',
+    image: '//placehold.co/400x400?text=iPad+Pro',
     images: [
-      'https://placehold.co/400x400?text=iPad+Pro',
-      'https://placehold.co/400x400?text=iPad+Pro+Side',
-      'https://placehold.co/400x400?text=iPad+Pro+Angle',
+      '//placehold.co/400x400?text=iPad+Pro',
+      '//placehold.co/400x400?text=iPad+Pro+Side',
+      '//placehold.co/400x400?text=iPad+Pro+Angle',
     ],
     rating: 4.7,
     reviews: 112,
@@ -323,11 +324,11 @@ export const products: Product[] = [
     model: 'Q80B',
     category: 'TVs',
     description: 'A premium QLED 4K TV with excellent picture quality and smart features.',
-    image: 'https://placehold.co/400x400?text=Samsung+TV',
+    image: '//placehold.co/400x400?text=Samsung+TV',
     images: [
-      'https://placehold.co/400x400?text=Samsung+TV',
-      'https://placehold.co/400x400?text=Samsung+TV+Side',
-      'https://placehold.co/400x400?text=Samsung+TV+Back',
+      '//placehold.co/400x400?text=Samsung+TV',
+      '//placehold.co/400x400?text=Samsung+TV+Side',
+      '//placehold.co/400x400?text=Samsung+TV+Back',
     ],
     rating: 4.6,
     reviews: 78,
@@ -354,11 +355,11 @@ export const products: Product[] = [
     model: 'EOS R6 Mark II',
     category: 'Cameras',
     description: 'A professional mirrorless camera with exceptional performance.',
-    image: 'https://placehold.co/400x400?text=Canon+EOS+R6',
+    image: '//placehold.co/400x400?text=Canon+EOS+R6',
     images: [
-      'https://placehold.co/400x400?text=Canon+EOS+R6',
-      'https://placehold.co/400x400?text=Canon+EOS+R6+Top',
-      'https://placehold.co/400x400?text=Canon+EOS+R6+Back',
+      '//placehold.co/400x400?text=Canon+EOS+R6',
+      '//placehold.co/400x400?text=Canon+EOS+R6+Top',
+      '//placehold.co/400x400?text=Canon+EOS+R6+Back',
     ],
     rating: 4.8,
     reviews: 56,
@@ -385,11 +386,11 @@ export const products: Product[] = [
     model: 'PlayStation 5 Digital',
     category: 'Gaming Consoles',
     description: 'The next-generation gaming console from Sony (Digital Edition).',
-    image: 'https://placehold.co/400x400?text=PS5+Digital',
+    image: '//placehold.co/400x400?text=PS5+Digital',
     images: [
-      'https://placehold.co/400x400?text=PS5+Digital',
-      'https://placehold.co/400x400?text=PS5+Digital+Side',
-      'https://placehold.co/400x400?text=PS5+Digital+Front',
+      '//placehold.co/400x400?text=PS5+Digital',
+      '//placehold.co/400x400?text=PS5+Digital+Side',
+      '//placehold.co/400x400?text=PS5+Digital+Front',
     ],
     rating: 4.9,
     reviews: 234,
@@ -416,11 +417,11 @@ export const products: Product[] = [
     model: 'Watch Series 8',
     category: 'Smartwatches',
     description: 'Advanced health features in a stylish and durable design.',
-    image: 'https://placehold.co/400x400?text=Apple+Watch',
+    image: '//placehold.co/400x400?text=Apple+Watch',
     images: [
-      'https://placehold.co/400x400?text=Apple+Watch',
-      'https://placehold.co/400x400?text=Apple+Watch+Side',
-      'https://placehold.co/400x400?text=Apple+Watch+Back',
+      '//placehold.co/400x400?text=Apple+Watch',
+      '//placehold.co/400x400?text=Apple+Watch+Side',
+      '//placehold.co/400x400?text=Apple+Watch+Back',
     ],
     rating: 4.7,
     reviews: 167,
@@ -447,11 +448,11 @@ export const products: Product[] = [
     model: 'C2 OLED',
     category: 'TVs',
     description: 'Outstanding OLED TV with exceptional picture quality and perfect blacks.',
-    image: 'https://placehold.co/400x400?text=LG+C2+OLED',
+    image: '//placehold.co/400x400?text=LG+C2+OLED',
     images: [
-      'https://placehold.co/400x400?text=LG+C2+OLED',
-      'https://placehold.co/400x400?text=LG+C2+OLED+Side',
-      'https://placehold.co/400x400?text=LG+C2+OLED+Back',
+      '//placehold.co/400x400?text=LG+C2+OLED',
+      '//placehold.co/400x400?text=LG+C2+OLED+Side',
+      '//placehold.co/400x400?text=LG+C2+OLED+Back',
     ],
     rating: 4.9,
     reviews: 204,
