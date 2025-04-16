@@ -26,13 +26,15 @@ const SearchResults = () => {
 
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
-    const brands = new Set();
+    const brandsCount = {};
     const models = new Set();
     const specs = {};
 
     results.forEach(product => {
       if (product.vendor) vendors.add(product.vendor); // Check if vendor exists
-      brands.add(product.brand);
+      if (product.brand) {
+        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; // Count occurrences of each brand
+      }
       models.add(product.model);
       Object.keys(product.specifications).forEach(specKey => {
         if (!specs[specKey]) {
@@ -43,7 +45,7 @@ const SearchResults = () => {
     });
 
     setAvailableVendors(vendors);
-    setAvailableBrands(brands);
+    setAvailableBrands(brandsCount); // Store brand counts
     setAvailableModels(models);
     setAvailableSpecs(specs);
   };
@@ -149,17 +151,18 @@ const SearchResults = () => {
                 </div>
               )}
 
-              {availableBrands.size > 0 && (
+              {Object.keys(availableBrands).length > 0 && (
                 <div className="filter-brand default-list">
                   <div className="filter__header"><h4>Brands</h4></div>
                   <div className="filter-container">
                     <ol>
-                      {Array.from(availableBrands).map(brand => (
+                      {Object.keys(availableBrands).map(brand => (
                         <li 
                           key={brand} 
                           className={activeFilters.brands.includes(brand) ? 'selected' : ''} 
                           onClick={() => handleBrandFilter(brand)}>
                           <span>{brand}</span>
+                          <span> ({availableBrands[brand]})</span> {/* Display count of products */}
                         </li>
                       ))}
                     </ol>
@@ -204,6 +207,24 @@ const SearchResults = () => {
                   </div>
                 ))
               )}
+
+              <div className="filter-in-stock default-list">
+                <div className="filter__header"><h4>In Stock</h4></div>
+                <div className="filter-container">
+                  <label>
+                    <input 
+                      type="checkbox" 
+                      checked={activeFilters.inStockOnly} 
+                      onChange={() => {
+                        setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly }));
+                        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.models, activeFilters.specs, !activeFilters.inStockOnly);
+                      }}
+                    />
+                    Show only in-stock products
+                  </label>
+                </div>
+              </div>
+
             </div>
           </aside>
 
