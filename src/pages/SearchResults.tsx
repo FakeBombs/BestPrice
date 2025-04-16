@@ -149,6 +149,46 @@ const SearchResults = () => {
   // Determine the selected brand for display in the header
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(brand => brand.name === activeFilters.brands[0]) : null;
 
+  // Render applied filters
+  const renderAppliedFilters = () => {
+    return (
+      <div className="applied-filters">
+        {activeFilters.brands.map((brand) => (
+          <h2 className="applied-filters__filter" key={brand}>
+            <a 
+              data-scrollto="" 
+              data-filter-key="brand" 
+              data-value-id={brand} 
+              className="pressable" 
+              onClick={() => handleBrandFilter(brand)} // Remove filter on click
+            >
+              <span className="applied-filters__label">{brand}</span>
+              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+              </svg>
+            </a>
+          </h2>
+        ))}
+        {activeFilters.vendors.map((vendor) => (
+          <h2 className="applied-filters__filter" key={vendor}>
+            <a 
+              data-scrollto="" 
+              data-filter-key="vendor" 
+              data-value-id={vendor} 
+              className="pressable" 
+              onClick={() => handleVendorFilter(vendor)} // Remove filter on click
+            >
+              <span className="applied-filters__label">{vendor}</span>
+              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+              </svg>
+            </a>
+          </h2>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -258,6 +298,8 @@ const SearchResults = () => {
                   )}
                 </div>
               </div>
+
+              {renderAppliedFilters()} {/* Render the applied filters here */}
             </div>
             <section className="section">
               <header className="section__header">
