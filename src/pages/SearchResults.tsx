@@ -139,12 +139,7 @@ const SearchResults = () => {
                   <div className="filter-container">
                     <ol>
                       {Array.from(availableVendors).map(vendor => (
-                        <li 
-                          key={vendor} 
-                          className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} 
-                          onClick={() => handleVendorFilter(vendor)}>
-                          <span>{vendor}</span>
-                        </li>
+                        <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}><span>{vendor}</span></li>
                       ))}
                     </ol>
                   </div>
@@ -157,13 +152,7 @@ const SearchResults = () => {
                   <div className="filter-container">
                     <ol>
                       {Object.keys(availableBrands).map(brand => (
-                        <li 
-                          key={brand} 
-                          className={activeFilters.brands.includes(brand) ? 'selected' : ''} 
-                          onClick={() => handleBrandFilter(brand)}>
-                          <span>{brand}</span>
-                          <span> ({availableBrands[brand]})</span> {/* Display count of products */}
-                        </li>
+                        <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} {availableBrands[brand]}</span></li>
                       ))}
                     </ol>
                   </div>
@@ -176,12 +165,7 @@ const SearchResults = () => {
                   <div className="filter-container">
                     <ol>
                       {Array.from(availableModels).map(model => (
-                        <li 
-                          key={model} 
-                          className={activeFilters.models.includes(model) ? 'selected' : ''} 
-                          onClick={() => handleModelFilter(model)}>
-                          <span>{model}</span>
-                        </li>
+                        <li key={model} className={activeFilters.models.includes(model) ? 'selected' : ''} onClick={() => handleModelFilter(model)}><span>{model}</span></li>
                       ))}
                     </ol>
                   </div>
@@ -195,12 +179,7 @@ const SearchResults = () => {
                     <div className="filter-container">
                       <ol>
                         {Array.from(availableSpecs[specKey]).map(specValue => (
-                          <li 
-                            key={specValue} 
-                            className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} 
-                            onClick={() => handleSpecFilter(specKey, specValue)}>
-                            <span>{specValue}</span>
-                          </li>
+                          <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
                         ))}
                       </ol>
                     </div>
@@ -211,17 +190,7 @@ const SearchResults = () => {
               <div className="filter-in-stock default-list">
                 <div className="filter__header"><h4>In Stock</h4></div>
                 <div className="filter-container">
-                  <label>
-                    <input 
-                      type="checkbox" 
-                      checked={activeFilters.inStockOnly} 
-                      onChange={() => {
-                        setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly }));
-                        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.models, activeFilters.specs, !activeFilters.inStockOnly);
-                      }}
-                    />
-                    Show only in-stock products
-                  </label>
+                  <label><input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {setActiveFilters(prev => ({ ...prev, inStockOnly: !prev.inStockOnly })); filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.models, activeFilters.specs, !activeFilters.inStockOnly);}} />Show only in-stock products</label>
                 </div>
               </div>
 
