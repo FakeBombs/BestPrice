@@ -15,7 +15,7 @@ export const rootCategories: RootCategory[] = [
     name: 'Τεχνολογία',
     slug: 'technology',
     description: 'Smartphones, υπολογιστές, tablets και άλλες ηλεκτρονικές συσκευές',
-    image: 'https://placehold.co/200x200'
+    image: '<img src="//abpcdn.pstatic.gr/P/bpimg128/805_SX200Y200/1473253454/mobile.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp 2x" alt="Κινητή Τηλεφωνία" title="Κινητή Τηλεφωνία"/>'
   },
   {
     id: 'rc2',
