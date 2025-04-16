@@ -11,7 +11,7 @@ const SearchResults = ({ availableCategories }) => {
   const [availableVendors, setAvailableVendors] = useState(new Set());
   const [availableBrands, setAvailableBrands] = useState({});
   const [availableSpecs, setAvailableSpecs] = useState({});
-  const [availableCategories, setAvailableCategories] = useState([]); // New state for categories
+  const [categories, setAvailableCategories] = useState([]); // Renamed state for categories
   const [showMoreCategories, setShowMoreCategories] = useState(false); // To handle show more functionality
 
   const [searchParams] = useSearchParams();
@@ -225,7 +225,7 @@ const SearchResults = ({ availableCategories }) => {
                 </header>
                 <ScrollableSlider>
                   <div className="categories categories--scrollable scroll__content">
-                    {availableCategories.map((item) => (
+                    {categories.map((item) => ( // Using the renamed variable
                       <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
                         <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                         <h2 className="categories__title">{item.category}</h2>
