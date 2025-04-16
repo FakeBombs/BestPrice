@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { searchProducts, categories } from '@/data/mockData';
+import { searchProducts, categories, rootCategories } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
