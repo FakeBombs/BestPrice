@@ -228,7 +228,7 @@ const SearchResults = ({ availableCategories }) => {
                     <h2 className="section__title">Κατηγορίες</h2>
                   </hgroup>
                 </header>
-                <ScrollableSlider>
+
                   <div className="categories categories--scrollable scroll__content">
                     {availableCategories.length > 0 && availableCategories.map((item) => (
                       <a key={item.category} title={item.category} className="categories__category" href={`/#`}>
@@ -238,7 +238,7 @@ const SearchResults = ({ availableCategories }) => {
                       </a>
                     ))}
                   </div>
-                </ScrollableSlider>
+
               </section>
             {filteredProducts.length === 0 ? (
               <p>No products found matching your search.</p>
