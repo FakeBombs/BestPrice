@@ -142,7 +142,7 @@ const SearchResults = () => {
                 <div className="filter-container">
                   <ol>
                     {/* Example hardcoded vendor list */}
-                    <li onClick={() => handleVendorFilter(['passadena.gr'])}><span>Passadena</span></li>
+                    <li onClick={() => handleVendorFilter(['v1'])}><span>You</span></li>
                     <li onClick={() => handleVendorFilter(['pinguin.gr'])}><span>Pinguin</span></li>
                     {/* Continue for other vendors... */}
                   </ol>
