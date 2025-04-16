@@ -5,44 +5,33 @@ import ProductCard from '@/components/ProductCard';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const SearchResults = () => {
-  const userAgent = navigator.userAgent.toLowerCase();
-  const [jsEnabled, setJsEnabled] = useState(false);
-  
   const [activeFilters, setActiveFilters] = useState({ vendors: [], inStockOnly: false });
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [vendorAvailability, setVendorAvailability] = useState(new Map());  // Track vendor availability
+  const [availableVendors, setAvailableVendors] = useState(new Set());
 
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
-
-  // Set attributes
-  useHtmlAttributes('...', 'page-cat');
-  useBodyAttributes('...', '');
 
   useEffect(() => {
     if (searchQuery) {
       const results = searchProducts(searchQuery);
       setProducts(results);
-      setFilteredProducts(results); // Initially show all products
-      calculateVendorAvailability(results); // Calculate vendor availability
+      setFilteredProducts(results); // Show all products by default
+      extractAvailableVendors(results); // Extract unique vendors from search results
     }
   }, [searchQuery]);
 
-  // Calculate vendor availability mapping
-  const calculateVendorAvailability = (results) => {
-    let availabilityMap = new Map();
-    results.forEach((product) => {
-      product.prices.forEach((price) => {
+  const extractAvailableVendors = (results) => {
+    const vendors = new Set();
+    results.forEach(product => {
+      product.prices.forEach(price => {
         if (price.inStock) {
-          if (!availabilityMap.has(price.vendorId)) {
-            availabilityMap.set(price.vendorId, []);
-          }
-          availabilityMap.get(price.vendorId).push(product);
+          vendors.add(price.vendorId); // Collect only in-stock vendors
         }
       });
     });
-    setVendorAvailability(availabilityMap);
+    setAvailableVendors(vendors);
   };
 
   const handleVendorFilter = (vendor) => {
@@ -52,21 +41,30 @@ const SearchResults = () => {
 
     setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
 
-    const filtered = newVendors.length === 0 
-      ? products 
-      : products.filter(product => product.prices.some(price => newVendors.includes(price.vendorId)));
-
-    setFilteredProducts(filtered);
+    // Filter based on selected vendors
+    filterProducts(newVendors, activeFilters.inStockOnly);
   };
 
   const handleInStockOnly = () => {
     const newInStockOnly = !activeFilters.inStockOnly;
     setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
 
-    // Filter the products based on in-stock availability
-    const filtered = newInStockOnly 
-      ? products.filter(product => product.prices.some(price => price.inStock)) 
-      : products;
+    // Filtering products based on both vendor selection and in-stock only
+    filterProducts(activeFilters.vendors, newInStockOnly);
+  };
+
+  const filterProducts = (vendors, inStockOnly) => {
+    let filtered = products;
+
+    // Apply in-stock filter if selected
+    if (inStockOnly) {
+      filtered = filtered.filter(product => product.prices.some(price => price.inStock));
+    }
+
+    // Apply vendor filter if vendors are selected
+    if (vendors.length > 0) {
+      filtered = filtered.filter(product => product.prices.some(price => vendors.includes(price.vendorId)));
+    }
 
     setFilteredProducts(filtered);
   };
@@ -77,12 +75,14 @@ const SearchResults = () => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
-              {/* Filters UI remains the same */}
               <div className="filter-limit default-list">
                 <div className="filter__header"><h4>Εμφάνιση μόνο</h4></div>
                 <div className="filter-container">
                   <ol>
-                    <li data-filter="in-stock" className={activeFilters.inStockOnly ? 'selected' : ''} onClick={handleInStockOnly}>
+                    <li 
+                      data-filter="in-stock" 
+                      className={activeFilters.inStockOnly ? 'selected' : ''} 
+                      onClick={handleInStockOnly}>
                       <span>{activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"}</span>
                     </li>
                   </ol>
@@ -92,10 +92,8 @@ const SearchResults = () => {
                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                 <div className="filter-container">
                   <ol>
-                    {Array.from(vendorAvailability.keys()).map(vendor => (
-                      <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
-                        <span>{vendor}</span>
-                      </li>
+                    {Array.from(availableVendors).map(vendor => (
+                      <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}><span>{vendor}</span></li>
                     ))}
                   </ol>
                 </div>
