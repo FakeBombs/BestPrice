@@ -125,7 +125,7 @@ const SearchResults = () => {
                   <ol>
                     <li data-filter="certified"><a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/search?q=rcf&amp;certified=1"><svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></a></li>
                     <li id="filter-nearby" class="nearby-location is-set"><a title="Κοντά μου" rel="nofollow" href="/search?q=rcf&amp;nearby=1">Κοντά μου (20 χλμ)</a><div class="filter-nearby__options">Επιλογές</div></li>
-                    <li data-filter="in-stock" onClick={() => handleInStockOnly(true)}><a title="Άμεσα διαθέσιμα" rel="nofollow"><span>Άμεσα διαθέσιμα</span></a></li>
+                    <li data-filter="in-stock" className={activeFilters.inStockOnly ? 'selected' : ''} onClick={handleInStockOnly}><a title="{activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"}" rel="nofollow"><span>{activeFilters.inStockOnly ? "Όλα τα προιόντα" : "Άμεσα Διαθέσιμα"}</span></a></li>
                     <li data-filter="boxnow"><a title="Παράδοση" rel="nofollow" href="/search?q=rcf&amp;boxnow=1"><svg aria-hidden="true" class="icon" width="24" height="24"><use xlink:href="/public/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW"><svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></a></li>
                   </ol>
                 </div>
@@ -134,9 +134,9 @@ const SearchResults = () => {
                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                 <div className="filter-container">
                   <ol>
-                    <li onClick={() => handleVendorFilter(['v1'])}><span>You</span></li>
-                    <li onClick={() => handleVendorFilter(['v2'])}><span>Plaisio</span></li>
-                    <li onClick={() => handleVendorFilter(['v3'])}><span>Public</span></li>
+                    <li className={activeFilters.vendors.includes('v1') ? 'selected' : ''} onClick={() => handleVendorFilter('v1')}><span>You</span></li>
+                    <li className={activeFilters.vendors.includes('v2') ? 'selected' : ''} onClick={() => handleVendorFilter('v2')}><span>Plaisio</span></li>
+                    <li className={activeFilters.vendors.includes('v3') ? 'selected' : ''} onClick={() => handleVendorFilter('v3')}><span>Public</span></li>
                   </ol>
                 </div>
               </div>
