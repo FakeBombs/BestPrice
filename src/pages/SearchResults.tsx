@@ -149,15 +149,15 @@ const SearchResults = () => {
     switch (sortType) {
       case 'price-asc':
         return products.sort((a, b) => {
-          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
-          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
-          return aPrice - bPrice;
+          const minPriceA = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : Infinity;
+          const minPriceB = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : Infinity;
+          return minPriceA - minPriceB;
         });
       case 'price-desc':
         return products.sort((a, b) => {
-          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
-          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
-          return bPrice - aPrice;
+          const minPriceA = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : Infinity;
+          const minPriceB = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : Infinity;
+          return minPriceB - minPriceA;
         });
       case 'rating-desc':
         return products.sort((a, b) => b.rating - a.rating);
@@ -165,12 +165,6 @@ const SearchResults = () => {
         return products.sort((a, b) => b.reviews - a.reviews);
       case '0': // Most Popular
         return products.sort((a, b) => b.popularity - a.popularity);
-      case '2': // Cheapest First
-        return products.sort((a, b) => {
-          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
-          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
-          return aPrice - bPrice;
-        });
       case 'release_dt': // Newest First
         return products.sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
       case 'discount': // Largest Price Drop
