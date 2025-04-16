@@ -31,7 +31,7 @@ const SearchResults = () => {
     const specs = {};
 
     results.forEach(product => {
-      vendors.add(product.vendor);
+      if (product.vendor) vendors.add(product.vendor); // Check if vendor exists
       brands.add(product.brand);
       models.add(product.model);
       Object.keys(product.specifications).forEach(specKey => {
@@ -131,71 +131,79 @@ const SearchResults = () => {
         <div className="page-products">
           <aside className="page-products__filters">
             <div id="filters">
-              <div className="filter-vendor default-list">
-                <div className="filter__header"><h4>Vendors</h4></div>
-                <div className="filter-container">
-                  <ol>
-                    {Array.from(availableVendors).map(vendor => (
-                      <li 
-                        key={vendor} 
-                        className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} 
-                        onClick={() => handleVendorFilter(vendor)}>
-                        <span>{vendor}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-
-              <div className="filter-brand default-list">
-                <div className="filter__header"><h4>Brands</h4></div>
-                <div className="filter-container">
-                  <ol>
-                    {Array.from(availableBrands).map(brand => (
-                      <li 
-                        key={brand} 
-                        className={activeFilters.brands.includes(brand) ? 'selected' : ''} 
-                        onClick={() => handleBrandFilter(brand)}>
-                        <span>{brand}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-
-              <div className="filter-model default-list">
-                <div className="filter__header"><h4>Models</h4></div>
-                <div className="filter-container">
-                  <ol>
-                    {Array.from(availableModels).map(model => (
-                      <li 
-                        key={model} 
-                        className={activeFilters.models.includes(model) ? 'selected' : ''} 
-                        onClick={() => handleModelFilter(model)}>
-                        <span>{model}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-
-              {Object.keys(availableSpecs).map(specKey => (
-                <div key={specKey} className="filter-specification default-list">
-                  <div className="filter__header"><h4>{specKey}</h4></div>
+              {availableVendors.size > 0 && (
+                <div className="filter-vendor default-list">
+                  <div className="filter__header"><h4>Vendors</h4></div>
                   <div className="filter-container">
                     <ol>
-                      {Array.from(availableSpecs[specKey]).map(specValue => (
+                      {Array.from(availableVendors).map(vendor => (
                         <li 
-                          key={specValue} 
-                          className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} 
-                          onClick={() => handleSpecFilter(specKey, specValue)}>
-                          <span>{specValue}</span>
+                          key={vendor} 
+                          className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} 
+                          onClick={() => handleVendorFilter(vendor)}>
+                          <span>{vendor}</span>
                         </li>
                       ))}
                     </ol>
                   </div>
                 </div>
-              ))}
+              )}
+
+              {availableBrands.size > 0 && (
+                <div className="filter-brand default-list">
+                  <div className="filter__header"><h4>Brands</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Array.from(availableBrands).map(brand => (
+                        <li 
+                          key={brand} 
+                          className={activeFilters.brands.includes(brand) ? 'selected' : ''} 
+                          onClick={() => handleBrandFilter(brand)}>
+                          <span>{brand}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              )}
+
+              {availableModels.size > 0 && (
+                <div className="filter-model default-list">
+                  <div className="filter__header"><h4>Models</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Array.from(availableModels).map(model => (
+                        <li 
+                          key={model} 
+                          className={activeFilters.models.includes(model) ? 'selected' : ''} 
+                          onClick={() => handleModelFilter(model)}>
+                          <span>{model}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              )}
+
+              {Object.keys(availableSpecs).length > 0 && (
+                Object.keys(availableSpecs).map(specKey => (
+                  <div key={specKey} className="filter-specification default-list">
+                    <div className="filter__header"><h4>{specKey}</h4></div>
+                    <div className="filter-container">
+                      <ol>
+                        {Array.from(availableSpecs[specKey]).map(specValue => (
+                          <li 
+                            key={specValue} 
+                            className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} 
+                            onClick={() => handleSpecFilter(specKey, specValue)}>
+                            <span>{specValue}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </aside>
 
