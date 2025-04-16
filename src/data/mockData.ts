@@ -384,7 +384,7 @@ export const products: Product[] = [
     title: 'PlayStation 5 Digital Edition',
     brand: 'Sony',
     model: 'PlayStation 5 Digital',
-    category: 'Gaming Consoles',
+    category: 'Κονσόλες',
     description: 'The next-generation gaming console from Sony (Digital Edition).',
     image: '//placehold.co/400x400?text=PS5+Digital',
     images: [
