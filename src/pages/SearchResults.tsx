@@ -119,6 +119,17 @@ const SearchResults = () => {
               <div className="filters__header">
                 <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
               </div>
+              <div class="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+                <div class="filter__header"><h4>Εμφάνιση μόνο</h4></div>
+                <div class="filter-container">
+                  <ol>
+                    <li data-filter="certified"><a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/search?q=rcf&amp;certified=1"><svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></a></li>
+                    <li id="filter-nearby" class="nearby-location is-set"><a title="Κοντά μου" rel="nofollow" href="/search?q=rcf&amp;nearby=1">Κοντά μου (20 χλμ)</a><div class="filter-nearby__options">Επιλογές</div></li>
+                    <li data-filter="in-stock" onClick={() => handleInStockOnly(true)}><a title="Άμεσα διαθέσιμα" rel="nofollow"><span>Άμεσα διαθέσιμα</span></a></li>
+                    <li data-filter="boxnow"><a title="Παράδοση" rel="nofollow" href="/search?q=rcf&amp;boxnow=1"><svg aria-hidden="true" class="icon" width="24" height="24"><use xlink:href="/public/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW"><svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></a></li>
+                  </ol>
+                </div>
+              </div>
               <ol>
                 <li onClick={() => handleSortChange('price-asc')}>Τιμή: Χαμηλότερη προς Υψηλότερη</li>
                 <li onClick={() => handleSortChange('price-desc')}>Τιμή: Υψηλότερη προς Χαμηλότερη</li>
