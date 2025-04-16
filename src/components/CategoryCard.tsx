@@ -30,7 +30,7 @@ const CategoryCard = ({
       case 'laptops-accessories':
         return <img src="//abpcdn.pstatic.gr/P/bpimg128/2590_SX200Y200/1475756993/laptops-accessories.webp" srcSet="//abpcdn.pstatic.gr/P/bpimg128/2590_SX400Y400/1475756993/laptops-accessories.webp 2x" alt="Laptops, Αξεσουάρ" title="Laptops, Αξεσουάρ"/>;
       case 'headphones':
-        return <Headphones className="h-8 w-8" />;
+        return <img src="//abpcdn.pstatic.gr/P/bpimg128/8068_SX200Y200/1629455538/headphones.webp" srcset="//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp 2x" alt="Headphones" title="Headphones"/>;
       case 'camera':
         return <Camera className="h-8 w-8" />;
       case 'monitor':
