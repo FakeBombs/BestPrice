@@ -18,7 +18,7 @@ const SearchResults = () => {
     const searchQuery = searchParams.get('q') || '';
 
     useEffect(() => {
-        // Fetch results based on the search query when the component mounts or searchQuery changes
+        // Fetch products based on the search query when the component mounts or searchQuery changes
         const results = searchProducts(searchQuery);
         setProducts(results);
         setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
@@ -31,7 +31,7 @@ const SearchResults = () => {
     }, [searchQuery]);
 
     useEffect(() => {
-        // Apply filters and sorting
+        // Apply filters and sorting when filters change
         filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
     }, [activeFilters, sortType, products]);
 
@@ -41,7 +41,9 @@ const SearchResults = () => {
         const specs = {};
 
         results.forEach((product) => {
-            if (product.vendor) vendors.add(product.vendor);
+            if (product.vendor) {
+                vendors.add(product.vendor); // Collect unique vendors
+            }
             if (product.brand) {
                 brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
             }
