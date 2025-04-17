@@ -18,19 +18,15 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
   const categorySlug = formatCategorySlug(category.name);
 
   return (
-    <Card className="root-category__card">
-      <CardContent className="root-category__content">
-        <Link to={`/cat/${category.id}/${categorySlug}`} className="root-category__cover">
-          <img src={category.image} alt={category.name} title={category.name} className="root-category__image" />
+    <Card className="category-card">
+      <CardContent className="category-card__content">
+        <Link to={`/cat/${category.id}/${categorySlug}`} className="category-card__cover">
+          <img src={category.image} alt={category.name} title={category.name} className="category-card__image" />
         </Link>
-        <h2 className="root-category__category-title">
+        <h2 className="category-card__title">
           <Link to={`/cat/${category.id}/${categorySlug}`}>{category.name}</Link>
         </h2>
-        <div className="root-category__footer">
-          <div className="root-category__links">
-            <Link to="/">Κινητά</Link>
-          </div>
-        </div>
+        {/* No footer or subcategory links here since they do not exist */}
       </CardContent>
     </Card>
   );
