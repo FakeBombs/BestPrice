@@ -1,5 +1,11 @@
 import { useTranslation } from '@/hooks/useTranslation';
 
+export interface SubCategory {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 // Root Categories with icons
 export interface RootCategory {
   id: string;
@@ -7,6 +13,7 @@ export interface RootCategory {
   slug: string;
   description: string;
   image: string;
+  categories: SubCategory[];
 }
 
 export const rootCategories: RootCategory[] = [
