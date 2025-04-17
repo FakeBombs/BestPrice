@@ -177,6 +177,7 @@ const SearchResults = () => {
 
     const renderAppliedFilters = () => {
         return (
+          {(activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && (
             <div className="applied-filters">
                 {activeFilters.brands.map((brand) => (
                     <h2 className="applied-filters__filter" key={brand}>
@@ -202,6 +203,7 @@ const SearchResults = () => {
                     ))
                 )}
             </div>
+          )}
         );
     };
 
