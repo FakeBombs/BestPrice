@@ -13,7 +13,7 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('rating-desc');
+  const [sortType, setSortType] = useState('rating-desc'); // Default sorting
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
@@ -25,6 +25,8 @@ const SearchResults = () => {
       setFilteredProducts(results);
       extractAvailableFilters(results);
       extractCategories(results);
+      // Sort products after loading
+      setFilteredProducts(sortProducts(results));
     } else {
       setFilteredProducts([]);
     }
@@ -160,6 +162,7 @@ const SearchResults = () => {
           return maxPriceB - maxPriceA;
         });
       case 'rating-desc':
+      default:
         return [...products].sort((a, b) => {
           const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
           const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
@@ -171,15 +174,11 @@ const SearchResults = () => {
           const availableVendorsB = b.prices.filter(price => price.inStock).length;
           return availableVendorsB - availableVendorsA; 
         });
-      default:
-        return products;
     }
   };
 
-  // Determine the selected brand for display in the header
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(brand => brand.name === activeFilters.brands[0]) : null;
 
-  // Render applied filters for brands and specifications
   const renderAppliedFilters = () => {
     return (
       <div className="applied-filters">
@@ -193,7 +192,7 @@ const SearchResults = () => {
             </a>
           </h2>
         ))}
-
+        
         {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
           specValues.map(specValue => (
             <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
@@ -217,9 +216,7 @@ const SearchResults = () => {
           <aside className="page-products__filters">
             <div id="filters">
               <div className="filters__categories" data-filter-name="categories">
-                <div className="filters__header">
-                  <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
-                </div>
+                <div className="filters__header"><div className="filters__header-title filters__header-title--filters">Κατηγορίες</div></div>
                 <ol>
                   {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map(item => (
                     <li key={item.category}>
@@ -338,10 +335,26 @@ const SearchResults = () => {
                 <div className="tabs">
                   <div className="tabs-wrapper">
                     <nav>
-                      <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')} ><div className="tabs__content">Δημοφιλέστερα</div></a>
-                      <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')} ><div className="tabs__content">Φθηνότερα</div></a>
-                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')} ><div className="tabs__content">Ακριβότερα</div></a>
-                      <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                      <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => {
+                          setSortType('rating-desc');
+                          const sorted = sortProducts(filteredProducts);
+                          setFilteredProducts(sorted);
+                      }} ><div className="tabs__content">Δημοφιλέστερα</div></a>
+                      <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => {
+                          setSortType('price-asc');
+                          const sorted = sortProducts(filteredProducts);
+                          setFilteredProducts(sorted);
+                      }} ><div className="tabs__content">Φθηνότερα</div></a>
+                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => {
+                          setSortType('price-desc');
+                          const sorted = sortProducts(filteredProducts);
+                          setFilteredProducts(sorted);
+                      }} ><div className="tabs__content">Ακριβότερα</div></a>
+                      <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => {
+                          setSortType('merchants_desc');
+                          const sorted = sortProducts(filteredProducts);
+                          setFilteredProducts(sorted);
+                      }} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                     </nav>
                   </div>
                 </div>
