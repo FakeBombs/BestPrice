@@ -1,4 +1,4 @@
-// Mock data for the BestPrice application
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Root Categories with icons
 export interface RootCategory {
