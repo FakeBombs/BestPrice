@@ -306,14 +306,16 @@ const SearchResults = () => {
                                     </div>
                                 </div>
                                 <div className="page-header__title-aside">
-                                    {activeFilters.brands.length === 1 && ((() => {
-                                        const displayedBrand = availableBrands[activeFilters.brands[0]];
-                                        return displayedBrand ? (
-                                            <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                                <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                                             </a>
-                                        ) : null;
-                                    })())}
+                                    {activeFilters.brands.length === 1 && (
+                                        (() => {
+                                            const displayedBrand = availableBrands[activeFilters.brands[0]]; // Lookup in availableBrands
+                                            return displayedBrand ? (
+                                                <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                                                    <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                                                </a>
+                                            ) : null;
+                                        })()
+                                    )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
