@@ -13,23 +13,22 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('rating-desc'); // Default sorting to rating
+  const [sortType, setSortType] = useState('0');
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
   useEffect(() => {
-    loadProducts(searchQuery);
-  }, [searchQuery]); // Load products whenever the search query changes
-
-  const loadProducts = (query) => {
-    const results = searchProducts(query); // Fetch product list based on the query
-    setProducts(results);
-    setFilteredProducts(results); // Set initial filtered products to all fetched products
-    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false }); // Reset filters
-    extractAvailableFilters(results); // Extract filters based on loaded products
-    extractCategories(results); // Extract categories from loaded products
-    applyFilter(); // Initially apply filter to set sorted results
-  };
+    if (searchQuery) {
+      const results = searchProducts(searchQuery);
+      setProducts(results);
+      setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+      setFilteredProducts(results);
+      extractAvailableFilters(results);
+      extractCategories(results);
+    } else {
+      setFilteredProducts([]);
+    }
+  }, [searchQuery]);
 
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
@@ -41,10 +40,12 @@ const SearchResults = () => {
       if (product.brand) {
         brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
       }
-      for (const specKey in product.specifications) {
-        if (!specs[specKey]) specs[specKey] = new Set();
+      Object.keys(product.specifications).forEach(specKey => {
+        if (!specs[specKey]) {
+          specs[specKey] = new Set();
+        }
         specs[specKey].add(product.specifications[specKey]);
-      }
+      });
     });
 
     setAvailableVendors(vendors);
@@ -54,6 +55,7 @@ const SearchResults = () => {
 
   const extractCategories = (results) => {
     const categoryCount = {};
+
     results.forEach(product => {
       if (product.category) {
         categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
@@ -79,39 +81,68 @@ const SearchResults = () => {
     setAvailableCategories(categoriesArray);
   };
 
-  const applyFilter = () => {
-    let filtered = [...products]; 
+  const handleVendorFilter = (vendor) => {
+    const newVendors = activeFilters.vendors.includes(vendor)
+      ? activeFilters.vendors.filter(v => v !== vendor)
+      : [...activeFilters.vendors, vendor];
 
-    // Apply in-stock filter
-    if (activeFilters.inStockOnly) {
+    setActiveFilters(prev => ({ ...prev, vendors: newVendors }));
+    filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
+  };
+
+  const handleBrandFilter = (brand) => {
+    const newBrands = activeFilters.brands.includes(brand)
+      ? activeFilters.brands.filter(b => b !== brand)
+      : [...activeFilters.brands, brand];
+
+    setActiveFilters(prev => ({ ...prev, brands: newBrands }));
+    filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly, products);
+  };
+
+  const handleSpecFilter = (specKey, specValue) => {
+    const currentSpecs = { ...activeFilters.specs };
+    const specValues = currentSpecs[specKey] || [];
+
+    if (specValues.includes(specValue)) {
+      currentSpecs[specKey] = specValues.filter(v => v !== specValue);
+      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey]; 
+    } else {
+      currentSpecs[specKey] = [...specValues, specValue];
+    }
+
+    setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
+    filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly, products);
+  };
+
+  const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
+    let filtered = results;
+
+    if (inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
     }
 
-    // Apply vendor filter
-    if (activeFilters.vendors.length > 0) {
-      filtered = filtered.filter(product => activeFilters.vendors.includes(product.vendor));
+    if (vendors.length > 0) {
+      filtered = filtered.filter(product => vendors.includes(product.vendor));
     }
 
-    // Apply brand filter
-    if (activeFilters.brands.length > 0) {
-      filtered = filtered.filter(product => activeFilters.brands.includes(product.brand));
+    if (brands.length > 0) {
+      filtered = filtered.filter(product => brands.includes(product.brand));
     }
 
-    // Apply specification filters
-    if (Object.keys(activeFilters.specs).length > 0) {
+    if (Object.keys(specs).length > 0) {
       filtered = filtered.filter(product => {
-        return Object.entries(activeFilters.specs).every(([key, values]) => {
+        return Object.entries(specs).every(([key, values]) => {
           return values.includes(product.specifications[key]);
         });
       });
     }
 
-    sortAndSetProducts(filtered);
-  };
+    // Apply sorting based on sortType
+    filtered = sortProducts(filtered);
 
-  const sortAndSetProducts = (productsToSort) => {
-    const sortedProducts = sortProducts(productsToSort); 
-    setFilteredProducts(sortedProducts);
+    setFilteredProducts(filtered);
+    extractAvailableFilters(filtered);
+    extractCategories(filtered);
   };
 
   const sortProducts = (products) => {
@@ -145,39 +176,10 @@ const SearchResults = () => {
     }
   };
 
-  const handleVendorFilter = (vendor) => {
-    const updatedVendors = activeFilters.vendors.includes(vendor)
-      ? activeFilters.vendors.filter(v => v !== vendor)
-      : [...activeFilters.vendors, vendor];
+  // Determine the selected brand for display in the header
+  const displayedBrand = activeFilters.brands.length === 1 ? brands.find(brand => brand.name === activeFilters.brands[0]) : null;
 
-    setActiveFilters(prev => ({ ...prev, vendors: updatedVendors }));
-    applyFilter(); 
-  };
-
-  const handleBrandFilter = (brand) => {
-    const updatedBrands = activeFilters.brands.includes(brand)
-      ? activeFilters.brands.filter(b => b !== brand)
-      : [...activeFilters.brands, brand];
-
-    setActiveFilters(prev => ({ ...prev, brands: updatedBrands }));
-    applyFilter(); 
-  };
-
-  const handleSpecFilter = (specKey, specValue) => {
-    const currentSpecs = { ...activeFilters.specs };
-    const specValues = currentSpecs[specKey] || [];
-
-    if (specValues.includes(specValue)) {
-      currentSpecs[specKey] = specValues.filter(v => v !== specValue);
-      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey]; 
-    } else {
-      currentSpecs[specKey] = [...specValues, specValue];
-    }
-
-    setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
-    applyFilter(); 
-  };
-
+  // Render applied filters for brands and specifications
   const renderAppliedFilters = () => {
     return (
       <div className="applied-filters">
@@ -191,16 +193,11 @@ const SearchResults = () => {
             </a>
           </h2>
         ))}
+
         {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
           specValues.map(specValue => (
             <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-              <a
-                data-scrollto=""
-                data-filter-key="spec"
-                data-value-id={`${specKey}-${specValue}`}
-                className="pressable"
-                onClick={() => handleSpecFilter(specKey, specValue)}
-              >
+              <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} >
                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -292,7 +289,7 @@ const SearchResults = () => {
                     <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
                       const newInStockOnly = !activeFilters.inStockOnly;
                       setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
-                      applyFilter(); 
+                      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
                     }} />
                     Show only in-stock products
                   </label>
@@ -315,8 +312,10 @@ const SearchResults = () => {
                   </div>
                 </div>
                 <div className="page-header__title-aside">
-                  {activeFilters.brands.length === 1 && activeFilters.brands[0] && (
-                    <img src={brands[activeFilters.brands[0]].image} alt={activeFilters.brands[0]} />
+                  {displayedBrand && (
+                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                    </a>
                   )}
                 </div>
               </div>
@@ -339,50 +338,10 @@ const SearchResults = () => {
                 <div className="tabs">
                   <div className="tabs-wrapper">
                     <nav>
-                      <a 
-                        data-type="rating-desc" 
-                        rel="nofollow" 
-                        className={sortType === 'rating-desc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('rating-desc'); 
-                          sortAndSetProducts(filteredProducts); 
-                        }} 
-                      >
-                        <div className="tabs__content">Δημοφιλέστερα</div>
-                      </a>
-                      <a 
-                        data-type="price-asc" 
-                        rel="nofollow" 
-                        className={sortType === 'price-asc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('price-asc'); 
-                          sortAndSetProducts(filteredProducts); 
-                        }} 
-                      >
-                        <div className="tabs__content">Φθηνότερα</div>
-                      </a>
-                      <a 
-                        data-type="price-desc" 
-                        rel="nofollow" 
-                        className={sortType === 'price-desc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('price-desc'); 
-                          sortAndSetProducts(filteredProducts); 
-                        }} 
-                      >
-                        <div className="tabs__content">Ακριβότερα</div>
-                      </a>
-                      <a 
-                        data-type="merchants_desc" 
-                        rel="nofollow" 
-                        className={sortType === 'merchants_desc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('merchants_desc'); 
-                          sortAndSetProducts(filteredProducts); 
-                        }} 
-                      >
-                        <div className="tabs__content">Αριθμός καταστημάτων</div>
-                      </a>
+                      <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')} ><div className="tabs__content">Δημοφιλέστερα</div></a>
+                      <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')} ><div className="tabs__content">Φθηνότερα</div></a>
+                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')} ><div className="tabs__content">Ακριβότερα</div></a>
+                      <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')} ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                     </nav>
                   </div>
                 </div>
