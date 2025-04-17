@@ -296,13 +296,59 @@ const SearchResults = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1>
+                                    <h1>{searchQuery || 'All Products'}</h1> {/* Display 'All Products' if no search query is present */}
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
+                                        <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
+                                            <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                                            <div className="alerts-minimal__label"></div>
+                                        </div>
                                     </div>
+                                </div>
+                                <div className="page-header__title-aside">
+                                    {displayedBrand && (
+                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
+                            <section className="section">
+                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
+                                <ScrollableSlider>
+                                    <div className="categories categories--scrollable scroll__content">
+                                        {availableCategories.map((item) => (
+                                            <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/${item.id}/${item.slug}`}>
+                                                <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                                                <h2 className="categories__title">{item.category}</h2>
+                                                <div className="categories__cnt">{item.count} προϊόντα</div>
+                                            </a>
+                                        ))}
+                                    </div>
+                                </ScrollableSlider>
+                            </section>
+
+                            <div className="page-header__sorting">
+                                <div className="tabs">
+                                    <div className="tabs-wrapper">
+                                        <nav>
+                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
+                                                <div className="tabs__content">Δημοφιλέστερα</div>
+                                            </a>
+                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
+                                                <div className="tabs__content">Φθηνότερα</div>
+                                            </a>
+                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
+                                                <div className="tabs__content">Ακριβότερα</div>
+                                            </a>
+                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
+                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
+                                            </a>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
                         </header>
 
                         {filteredProducts.length === 0 ? (
