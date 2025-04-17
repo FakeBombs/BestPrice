@@ -8,30 +8,27 @@ const SearchResults = () => {
     const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [availableVendors, setAvailableVendors] = useState(new Set());
+    const [availableVendors, setAvailableVendors] = useState([]);
     const [availableBrands, setAvailableBrands] = useState({});
     const [availableSpecs, setAvailableSpecs] = useState({});
     const [availableCategories, setAvailableCategories] = useState([]);
     const [showMoreCategories, setShowMoreCategories] = useState(false);
-    const [sortType, setSortType] = useState('rating-desc'); // Default sorting
+    const [sortType, setSortType] = useState('rating-desc');
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q') || '';
 
     useEffect(() => {
-        // Fetch products based on the search query when the component mounts or searchQuery changes
         const results = searchProducts(searchQuery);
         setProducts(results);
         setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
         extractAvailableFilters(results);
         extractCategories(results);
         
-        // Sort products based on the selected sort type immediately after loading
         const sortedResults = sortProducts(results);
         setFilteredProducts(sortedResults);
     }, [searchQuery]);
 
     useEffect(() => {
-        // Apply filters and sorting when filters change
         filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
     }, [activeFilters, sortType, products]);
 
@@ -55,7 +52,7 @@ const SearchResults = () => {
             });
         });
 
-        setAvailableVendors(vendors);
+        setAvailableVendors(Array.from(vendors)); // Store vendors as an array
         setAvailableBrands(brandsCount);
         setAvailableSpecs(specs);
     };
@@ -140,7 +137,6 @@ const SearchResults = () => {
             });
         }
 
-        // Apply sorting based on sortType
         filtered = sortProducts(filtered);
         setFilteredProducts(filtered);
         extractAvailableFilters(filtered);
@@ -184,7 +180,13 @@ const SearchResults = () => {
             <div className="applied-filters">
                 {activeFilters.brands.map((brand) => (
                     <h2 className="applied-filters__filter" key={brand}>
-                        <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
+                        <a
+                            data-scrollto=""
+                            data-filter-key="brand"
+                            data-value-id={brand}
+                            className="pressable"
+                            onClick={() => handleBrandFilter(brand)}
+                        >
                             <span className="applied-filters__label">{brand}</span>
                             <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -196,7 +198,13 @@ const SearchResults = () => {
                 {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
                     specValues.map((specValue) => (
                         <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                            <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
+                            <a
+                                data-scrollto=""
+                                data-filter-key="spec"
+                                data-value-id={`${specKey}-${specValue}`}
+                                className="pressable"
+                                onClick={() => handleSpecFilter(specKey, specValue)}
+                            >
                                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                                     <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -238,12 +246,12 @@ const SearchResults = () => {
                                 )}
                             </div>
 
-                            {availableVendors.size > 0 && (
+                            {availableVendors.length > 0 && (
                                 <div className="filter-vendor default-list">
                                     <div className="filter__header"><h4>Vendors</h4></div>
                                     <div className="filter-container">
                                         <ol>
-                                            {Array.from(availableVendors).map((vendor) => (
+                                            {availableVendors.map((vendor) => (
                                                 <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
                                                     <span>{vendor}</span>
                                                 </li>
@@ -289,11 +297,15 @@ const SearchResults = () => {
                                 <div className="filter__header"><h4>In Stock</h4></div>
                                 <div className="filter-container">
                                     <label>
-                                        <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
-                                            const newInStockOnly = !activeFilters.inStockOnly;
-                                            setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                            filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
-                                        }} />
+                                        <input
+                                            type="checkbox"
+                                            checked={activeFilters.inStockOnly}
+                                            onChange={() => {
+                                                const newInStockOnly = !activeFilters.inStockOnly;
+                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
+                                            }} 
+                                        />
                                         Show only in-stock products
                                     </label>
                                 </div>
@@ -361,7 +373,7 @@ const SearchResults = () => {
                         </header>
 
                         {filteredProducts.length === 0 ? (
-                            <p>No products found matching your search.</p> // Displaying this message based on active filters
+                            <p>No products found matching your search.</p> 
                         ) : (
                             <div className="product-grid mt-6">
                                 {filteredProducts.map((product) => (
