@@ -28,14 +28,14 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       </li>
       {rootCategoryObj && (
         <li>
-          <Link to={`/categories/root/${rootCategorySlug}`} title={`Όλα τα προϊόντα της κατηγορίας ${rootCategoryObj.name}`} data-no-info="">
+          <Link to={`/categories/root/${rootCategorySlug}`} title={`Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${rootCategoryObj.name}`} data-no-info="">
             <span>{rootCategoryObj.name}</span>
           </Link>
           <span className="trail__breadcrumb-separator">›</span>
         </li>
       )}
       <li>
-        <Link to={`/cat/${categoryId}/${categorySlug}`} title={`Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${product.category}`} data-no-info="">
+        <Link to={`/cat/${categoryId}/${categorySlug}`} title={`Όλα τα προϊόντα της κατηγορίας ${product.category}`} data-no-info="">
           <span>{product.category}</span>
         </Link>
         <span className="trail__breadcrumb-separator">›</span>
