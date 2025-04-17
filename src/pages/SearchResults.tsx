@@ -176,35 +176,35 @@ const SearchResults = () => {
     const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
 
     const renderAppliedFilters = () => {
-        return (
-          {(activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && 
+      return (
+        (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && (
             <div className="applied-filters">
                 {activeFilters.brands.map((brand) => (
-                  <h2 className="applied-filters__filter" key={brand}>
-                  <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
-                    <span className="applied-filters__label">{brand}</span>
-                    <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
-                        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                    </svg>
-                  </a>
-            </h2>
+                    <h2 className="applied-filters__filter" key={brand}>
+                        <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
+                            <span className="applied-filters__label">{brand}</span>
+                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                            </svg>
+                        </a>
+                    </h2>
                 ))}
 
                 {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
-                 specValues.map((specValue) => (
-                  <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                      <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
-                        <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
-                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                        </svg>
-                      </a>
-                  </h2>
-                 ))
+                    specValues.map((specValue) => (
+                        <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                            <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
+                                <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                                    <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                                </svg>
+                            </a>
+                        </h2>
+                    ))
                 )}
             </div>
-          }
-        );
+        )
+      );
     };
 
     return (
