@@ -17,7 +17,7 @@ const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
-  // Fetch products based on search query
+  // Fetch products based on the search query
   useEffect(() => {
     if (searchQuery) {
       const results = searchProducts(searchQuery);
@@ -28,7 +28,7 @@ const SearchResults = () => {
       extractCategories(results);
     } else {
       setFilteredProducts([]);
-      setProducts([]); // Ensure products are cleared when the searchQuery is empty
+      setProducts([]); // Ensure products are cleared when the search query is empty
     }
   }, [searchQuery]);
 
@@ -208,7 +208,13 @@ const SearchResults = () => {
         {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
           specValues.map(specValue => (
             <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-              <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} >
+              <a
+                data-scrollto=""
+                data-filter-key="spec"
+                data-value-id={`${specKey}-${specValue}`}
+                className="pressable"
+                onClick={() => handleSpecFilter(specKey, specValue)}
+              >
                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -348,6 +354,7 @@ const SearchResults = () => {
                         className={sortType === '0' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('0'); 
+                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
                         }} 
                       ><div className="tabs__content">Δημοφιλέστερα</div></a>
                       <a 
@@ -356,6 +363,7 @@ const SearchResults = () => {
                         className={sortType === 'price-asc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-asc'); 
+                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
                         }} 
                       ><div className="tabs__content">Φθηνότερα</div></a>
                       <a 
@@ -364,6 +372,7 @@ const SearchResults = () => {
                         className={sortType === 'price-desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-desc'); 
+                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
                         }} 
                       ><div className="tabs__content">Ακριβότερα</div></a>
                       <a 
@@ -372,6 +381,7 @@ const SearchResults = () => {
                         className={sortType === 'merchants_desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('merchants_desc'); 
+                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
                         }} 
                       ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                     </nav>
