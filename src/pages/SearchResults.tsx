@@ -296,7 +296,7 @@ const SearchResults = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1> {/* Display 'All Products' if no search query is present */}
+                                    <h1>{searchQuery || 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                         <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
@@ -306,16 +306,18 @@ const SearchResults = () => {
                                     </div>
                                 </div>
                                 <div className="page-header__title-aside">
-                                    {displayedBrand && (
-                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                                    {activeFilters.brands.length === 1 && (
+                                        <a href={`/b/${activeFilters.brands[0].toLowerCase()}`} className="page-header__brand">
+                                            <span>{activeFilters.brands[0]}</span>
                                         </a>
                                     )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
                             <section className="section">
-                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup>
+                                </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
@@ -328,7 +330,6 @@ const SearchResults = () => {
                                     </div>
                                 </ScrollableSlider>
                             </section>
-
                             <div className="page-header__sorting">
                                 <div className="tabs">
                                     <div className="tabs-wrapper">
