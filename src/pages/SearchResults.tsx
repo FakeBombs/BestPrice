@@ -167,15 +167,19 @@ const SearchResults = () => {
           return minPriceB - minPriceA;
         });
       case 'rating-desc':
-        return [...products].sort((a, b) => b.rating - a.rating);
-      case 'reviews-desc':
-        return [...products].sort((a, b) => b.reviews - a.reviews);
+        // Sort by rating for "Δημοφιλέστερα"
+        return [...products].sort((a, b) => {
+          const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
+          const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
+          return averageRatingB - averageRatingA; // Higher rating first
+        });
       case '0': // Most Popular
         return [...products].sort((a, b) => b.popularity - a.popularity);
-      case 'release_dt': // Newest First
-        return [...products].sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
-      case 'discount': // Largest Price Drop
-        return [...products].sort((a, b) => b.priceDrop - a.priceDrop);
+      // Uncomment these when the respective data points are available
+      // case 'release_dt': // Newest First (temporarily commented out as requested)
+      //   return [...products].sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
+      // case 'discount': // Largest Price Drop (temporarily commented out as requested)
+      //   return [...products].sort((a, b) => b.priceDrop - a.priceDrop);
       case 'merchants_desc': // Sort by number of in-stock vendors
         return [...products].sort((a, b) => {
           const availableVendorsA = a.prices.filter(price => price.inStock).length;
@@ -216,6 +220,11 @@ const SearchResults = () => {
       </div>
     );
   };
+
+  // Utilize a useEffect for first click issue
+  useEffect(() => {
+    applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
+  }, [sortType]);
 
   return (
     <div className="root__wrapper">
@@ -344,7 +353,6 @@ const SearchResults = () => {
                         className={sortType === '0' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('0'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly); 
                         }} 
                       ><div className="tabs__content">Δημοφιλέστερα</div></a>
                       <a 
@@ -353,7 +361,6 @@ const SearchResults = () => {
                         className={sortType === 'price-asc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-asc'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly); 
                         }} 
                       ><div className="tabs__content">Φθηνότερα</div></a>
                       <a 
@@ -361,8 +368,7 @@ const SearchResults = () => {
                         rel="nofollow" 
                         className={sortType === 'release_dt' ? 'current' : ''} 
                         onClick={() => { 
-                          setSortType('release_dt'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly); 
+                          // setSortType('release_dt'); // Commented out as requested
                         }} 
                       ><div className="tabs__content">Νεότερα</div></a>
                       <a 
@@ -370,8 +376,7 @@ const SearchResults = () => {
                         rel="nofollow" 
                         className={sortType === 'discount' ? 'current' : ''} 
                         onClick={() => { 
-                          setSortType('discount'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly); 
+                          // setSortType('discount'); // Commented out as requested
                         }} 
                       >
                         <div className="tabs__content"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Μεγαλύτερη πτώση</div>
@@ -382,7 +387,6 @@ const SearchResults = () => {
                         className={sortType === 'merchants_desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('merchants_desc'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly); 
                         }} 
                       ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                     </nav>
