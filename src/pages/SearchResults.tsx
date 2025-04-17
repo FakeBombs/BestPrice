@@ -219,7 +219,7 @@ const SearchResults = () => {
                                 </div>
                                 <ol>
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
-                                        <li key={item.category}>
+                                        <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`}>
                                                 <span>{item.category} ({item.count})</span>
                                             </Link>
@@ -331,7 +331,7 @@ const SearchResults = () => {
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
-                                            <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/${item.id}/${item.slug}`}>
+                                            <a key={item.id} title={item.category} className="categories__category" href={`/cat/${item.id}/${item.slug}`}>
                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
