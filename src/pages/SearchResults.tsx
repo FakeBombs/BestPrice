@@ -31,10 +31,9 @@ const SearchResults = () => {
     }, [searchQuery]);
 
     useEffect(() => {
-        // Re-sort filtered products when the sort type changes
-        const sortedResults = sortProducts(filteredProducts);
-        setFilteredProducts(sortedResults);
-    }, [sortType]);
+        // Apply filters and sorting
+        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
+    }, [activeFilters, sortType, products]);
 
     const extractAvailableFilters = (results) => {
         const vendors = new Set();
@@ -61,7 +60,6 @@ const SearchResults = () => {
 
     const extractCategories = (results) => {
         const categoryCount = {};
-
         results.forEach((product) => {
             if (product.category) {
                 categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
@@ -93,7 +91,6 @@ const SearchResults = () => {
             : [...activeFilters.vendors, vendor];
 
         setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-        filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
     };
 
     const handleBrandFilter = (brand) => {
@@ -102,7 +99,6 @@ const SearchResults = () => {
             : [...activeFilters.brands, brand];
 
         setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
-        filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly, products);
     };
 
     const handleSpecFilter = (specKey, specValue) => {
@@ -117,7 +113,6 @@ const SearchResults = () => {
         }
 
         setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-        filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly, products);
     };
 
     const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
@@ -145,7 +140,6 @@ const SearchResults = () => {
 
         // Apply sorting based on sortType
         filtered = sortProducts(filtered);
-
         setFilteredProducts(filtered);
         extractAvailableFilters(filtered);
         extractCategories(filtered);
@@ -309,7 +303,7 @@ const SearchResults = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1> {/* Display 'All Products' if no search query is present */}
+                                    <h1>{searchQuery || 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                         <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
