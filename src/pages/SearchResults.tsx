@@ -300,6 +300,7 @@ const SearchResults = () => {
                                     </label>
                                 </div>
                             </div>
+                            <button className="button button--outline" id="filters__scrollback"><svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div></button>
                         </div>
                     </aside>
 
