@@ -268,7 +268,7 @@ const SearchResults = () => {
 
                             {Object.keys(availableSpecs).length > 0 && (
                                 Object.keys(availableSpecs).map((specKey) => (
-                                    <div key={specKey} className="filter-{specKey.toLowerCase()} default-list" data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                                         <div className="filter__header"><h4>{specKey}</h4></div>
                                         <div className="filter-container">
                                             <ol>
