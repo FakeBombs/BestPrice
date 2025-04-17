@@ -19,22 +19,18 @@ const SearchResults = () => {
 
   // Fetch products based on the search query
   useEffect(() => {
-    if (searchQuery) {
-      loadProducts(searchQuery);
-    } else {
-      setFilteredProducts([]);
-      setProducts([]); // Ensure products are cleared when the search query is empty
-    }
+    loadProducts(searchQuery);
   }, [searchQuery]);
 
   const loadProducts = (query) => {
     const results = searchProducts(query);
     setProducts(results);
-    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
     setFilteredProducts(results);
+    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+    
     extractAvailableFilters(results);
     extractCategories(results);
-    sortAndSetProducts(results);
+    sortAndSetProducts(results); // Sort the products on load
   };
 
   const extractAvailableFilters = (results) => {
@@ -89,7 +85,7 @@ const SearchResults = () => {
   };
 
   const applyFilter = () => {
-    let filtered = products;
+    let filtered = [...products]; // Work on a shallow copy of products
 
     if (activeFilters.inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
@@ -111,14 +107,12 @@ const SearchResults = () => {
       });
     }
 
-    sortAndSetProducts(filtered);
+    sortAndSetProducts(filtered); // Sort the filtered products
   };
 
   const sortAndSetProducts = (productsToSort) => {
     const sortedProducts = sortProducts(productsToSort);
     setFilteredProducts(sortedProducts);
-    extractAvailableFilters(sortedProducts);
-    extractCategories(sortedProducts);
   };
 
   const sortProducts = (products) => {
@@ -352,7 +346,7 @@ const SearchResults = () => {
                         className={sortType === 'rating-desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('rating-desc'); 
-                          sortAndSetProducts(filteredProducts);
+                          sortAndSetProducts(filteredProducts); 
                         }} 
                       >
                         <div className="tabs__content">Δημοφιλέστερα</div>
@@ -363,12 +357,20 @@ const SearchResults = () => {
                         className={sortType === 'price-asc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-asc'); 
-                          sortAndSetProducts(filteredProducts);
+                          sortAndSetProducts(filteredProducts); 
                         }} 
                       >
                         <div className="tabs__content">Φθηνότερα</div>
                       </a>
-                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => { setSortType('price-desc'); sortAndSetProducts(filteredProducts); }} >
+                      <a 
+                        data-type="price-desc" 
+                        rel="nofollow" 
+                        className={sortType === 'price-desc' ? 'current' : ''} 
+                        onClick={() => { 
+                          setSortType('price-desc'); 
+                          sortAndSetProducts(filteredProducts); 
+                        }} 
+                      >
                         <div className="tabs__content">Ακριβότερα</div>
                       </a>
                       <a 
@@ -377,7 +379,7 @@ const SearchResults = () => {
                         className={sortType === 'merchants_desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('merchants_desc'); 
-                          sortAndSetProducts(filteredProducts);
+                          sortAndSetProducts(filteredProducts); 
                         }} 
                       >
                         <div className="tabs__content">Αριθμός καταστημάτων</div>
