@@ -13,7 +13,7 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('0');
+  const [sortType, setSortType] = useState('rating-desc'); // Default to rating descending
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
@@ -161,7 +161,7 @@ const SearchResults = () => {
           const minPriceB = Math.min(...b.prices.filter(p => p.inStock).map(p => p.price), Infinity);
           return minPriceA - minPriceB;
         });
-      case 'price-desc': // New sorting option
+      case 'price-desc':
         return [...products].sort((a, b) => {
           const maxPriceA = Math.max(...a.prices.filter(p => p.inStock).map(p => p.price), 0);
           const maxPriceB = Math.max(...b.prices.filter(p => p.inStock).map(p => p.price), 0);
@@ -173,9 +173,7 @@ const SearchResults = () => {
           const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
           return averageRatingB - averageRatingA; // Higher rating first
         });
-      case '0': // Most Popular
-        return [...products].sort((a, b) => b.popularity - a.popularity);
-      case 'merchants_desc': // Sort by number of in-stock vendors
+      case 'merchants_desc':
         return [...products].sort((a, b) => {
           const availableVendorsA = a.prices.filter(price => price.inStock).length;
           const availableVendorsB = b.prices.filter(price => price.inStock).length;
@@ -328,6 +326,11 @@ const SearchResults = () => {
                     </div>
                   </div>
                 </div>
+                <div className="page-header__title-aside">
+                  {activeFilters.brands.length === 1 && activeFilters.brands[0] && (
+                    <img src={brands[activeFilters.brands[0]].image} alt={activeFilters.brands[0]} />
+                  )}
+                </div>
               </div>
               {renderAppliedFilters()}
               <section className="section">
@@ -349,41 +352,53 @@ const SearchResults = () => {
                   <div className="tabs-wrapper">
                     <nav>
                       <a 
-                        data-type="0" 
+                        data-type="rating-desc" 
                         rel="nofollow" 
-                        className={sortType === '0' ? 'current' : ''} 
+                        className={sortType === 'rating-desc' ? 'current' : ''} 
                         onClick={() => { 
-                          setSortType('0'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
+                          setSortType('rating-desc'); 
+                          const sortedProducts = sortProducts(filteredProducts);
+                          setFilteredProducts(sortedProducts);
                         }} 
-                      ><div className="tabs__content">Δημοφιλέστερα</div></a>
+                      >
+                        <div className="tabs__content">Δημοφιλέστερα</div>
+                      </a>
+                      <a 
+                        data-type="price-desc" 
+                        rel="nofollow" 
+                        className={sortType === 'price-desc' ? 'current' : ''} 
+                        onClick={() => { 
+                          setSortType('price-desc'); 
+                          const sortedProducts = sortProducts(filteredProducts);
+                          setFilteredProducts(sortedProducts);
+                        }} 
+                      >
+                        <div className="tabs__content">Φθηνότερα</div>
+                      </a>
                       <a 
                         data-type="price-asc" 
                         rel="nofollow" 
                         className={sortType === 'price-asc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-asc'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
+                          const sortedProducts = sortProducts(filteredProducts);
+                          setFilteredProducts(sortedProducts);
                         }} 
-                      ><div className="tabs__content">Φθηνότερα</div></a>
-                      <a 
-                        data-type="price-desc" // New sorting option
-                        rel="nofollow" 
-                        className={sortType === 'price-desc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('price-desc'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
-                        }} 
-                      ><div className="tabs__content">Ακριβότερα</div></a>
+                      >
+                        <div className="tabs__content">Ακριβότερα</div>
+                      </a>
                       <a 
                         data-type="merchants_desc" 
                         rel="nofollow" 
                         className={sortType === 'merchants_desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('merchants_desc'); 
-                          applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
+                          const sortedProducts = sortProducts(filteredProducts);
+                          setFilteredProducts(sortedProducts);
                         }} 
-                      ><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                      >
+                        <div className="tabs__content">Αριθμός καταστημάτων</div>
+                      </a>
                     </nav>
                   </div>
                 </div>
