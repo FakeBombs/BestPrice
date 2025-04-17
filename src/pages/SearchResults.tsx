@@ -148,16 +148,16 @@ const SearchResults = () => {
   const sortProducts = (products) => {
     switch (sortType) {
       case 'price-asc':
-        // Sort by the first available price in ascending order
+        // Sort by the lowest price among available prices
         return [...products].sort((a, b) => {
-          const minPriceA = a.prices.sort((x, y) => x.price - y.price)[0]?.price || Infinity;
-          const minPriceB = b.prices.sort((x, y) => x.price - y.price)[0]?.price || Infinity;
+          const minPriceA = Math.min(...(a.prices.filter(p => p.inStock).map(p => p.price)));
+          const minPriceB = Math.min(...(b.prices.filter(p => p.inStock).map(p => p.price)));
           return minPriceA - minPriceB;
         });
       case 'price-desc':
         return [...products].sort((a, b) => {
-          const minPriceA = a.prices.sort((x, y) => x.price - y.price)[0]?.price || Infinity;
-          const minPriceB = b.prices.sort((x, y) => x.price - y.price)[0]?.price || Infinity;
+          const minPriceA = Math.min(...(a.prices.filter(p => p.inStock).map(p => p.price)));
+          const minPriceB = Math.min(...(b.prices.filter(p => p.inStock).map(p => p.price)));
           return minPriceB - minPriceA;
         });
       case 'rating-desc':
@@ -170,8 +170,12 @@ const SearchResults = () => {
         return [...products].sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
       case 'discount': // Largest Price Drop
         return [...products].sort((a, b) => b.priceDrop - a.priceDrop);
-      case 'merchants_desc': // Highest Number of Available Vendors
-        return [...products].sort((a, b) => b.availableVendors - a.availableVendors);
+      case 'merchants_desc': // Sort by number of vendors with stock
+        return [...products].sort((a, b) => {
+          const availableVendorsA = a.prices.filter(p => p.inStock).length;
+          const availableVendorsB = b.prices.filter(p => p.inStock).length;
+          return availableVendorsB - availableVendorsA; // descending order
+        });
       default:
         return products;
     }
