@@ -13,26 +13,30 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('rating-desc'); // Default to rating descending
+  const [sortType, setSortType] = useState('rating-desc'); // Default sorting to rating
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
   // Fetch products based on the search query
   useEffect(() => {
     if (searchQuery) {
-      const results = searchProducts(searchQuery);
-      setProducts(results);
-      setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
-      setFilteredProducts(results);
-      extractAvailableFilters(results);
-      extractCategories(results);
+      loadProducts(searchQuery);
     } else {
       setFilteredProducts([]);
       setProducts([]); // Ensure products are cleared when the search query is empty
     }
   }, [searchQuery]);
 
-  // Extract available filters based on filtered products
+  const loadProducts = (query) => {
+    const results = searchProducts(query);
+    setProducts(results);
+    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+    setFilteredProducts(results);
+    extractAvailableFilters(results);
+    extractCategories(results);
+    sortAndSetProducts(results);
+  };
+
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
     const brandsCount = {};
@@ -56,7 +60,6 @@ const SearchResults = () => {
     setAvailableSpecs(specs);
   };
 
-  // Extract available categories based on filtered products
   const extractCategories = (results) => {
     const categoryCount = {};
 
@@ -85,74 +88,39 @@ const SearchResults = () => {
     setAvailableCategories(categoriesArray);
   };
 
-  // Handle selection of vendors
-  const handleVendorFilter = (vendor) => {
-    const updatedVendors = activeFilters.vendors.includes(vendor)
-      ? activeFilters.vendors.filter(v => v !== vendor)
-      : [...activeFilters.vendors, vendor];
-
-    setActiveFilters(prev => ({ ...prev, vendors: updatedVendors }));
-    applyFiltersAndSort(updatedVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
-  };
-
-  // Handle selection of brands
-  const handleBrandFilter = (brand) => {
-    const updatedBrands = activeFilters.brands.includes(brand)
-      ? activeFilters.brands.filter(b => b !== brand)
-      : [...activeFilters.brands, brand];
-
-    setActiveFilters(prev => ({ ...prev, brands: updatedBrands }));
-    applyFiltersAndSort(activeFilters.vendors, updatedBrands, activeFilters.specs, activeFilters.inStockOnly);
-  };
-
-  // Handle selection of specifications
-  const handleSpecFilter = (specKey, specValue) => {
-    const currentSpecs = { ...activeFilters.specs };
-    const specValues = currentSpecs[specKey] || [];
-
-    if (specValues.includes(specValue)) {
-      currentSpecs[specKey] = specValues.filter(v => v !== specValue);
-      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey]; 
-    } else {
-      currentSpecs[specKey] = [...specValues, specValue];
-    }
-
-    setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
-    applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly);
-  };
-
-  // Applies filters and sorts the filtered products 
-  const applyFiltersAndSort = (vendors, brands, specs, inStockOnly) => {
+  const applyFilter = () => {
     let filtered = products;
 
-    if (inStockOnly) {
+    if (activeFilters.inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
     }
 
-    if (vendors.length > 0) {
-      filtered = filtered.filter(product => vendors.includes(product.vendor));
+    if (activeFilters.vendors.length > 0) {
+      filtered = filtered.filter(product => activeFilters.vendors.includes(product.vendor));
     }
 
-    if (brands.length > 0) {
-      filtered = filtered.filter(product => brands.includes(product.brand));
+    if (activeFilters.brands.length > 0) {
+      filtered = filtered.filter(product => activeFilters.brands.includes(product.brand));
     }
 
-    if (Object.keys(specs).length > 0) {
+    if (Object.keys(activeFilters.specs).length > 0) {
       filtered = filtered.filter(product => {
-        return Object.entries(specs).every(([key, values]) => {
+        return Object.entries(activeFilters.specs).every(([key, values]) => {
           return values.includes(product.specifications[key]);
         });
       });
     }
 
-    // Sort products based on the current sortType
-    const sortedProducts = sortProducts(filtered);
+    sortAndSetProducts(filtered);
+  };
+
+  const sortAndSetProducts = (productsToSort) => {
+    const sortedProducts = sortProducts(productsToSort);
     setFilteredProducts(sortedProducts);
     extractAvailableFilters(sortedProducts);
     extractCategories(sortedProducts);
   };
 
-  // Sorting logic
   const sortProducts = (products) => {
     switch (sortType) {
       case 'price-asc':
@@ -184,15 +152,42 @@ const SearchResults = () => {
     }
   };
 
-  // Render applied filters
+  const handleVendorFilter = (vendor) => {
+    const updatedVendors = activeFilters.vendors.includes(vendor)
+      ? activeFilters.vendors.filter(v => v !== vendor)
+      : [...activeFilters.vendors, vendor];
+
+    setActiveFilters(prev => ({ ...prev, vendors: updatedVendors }));
+    applyFilter();
+  };
+
+  const handleBrandFilter = (brand) => {
+    const updatedBrands = activeFilters.brands.includes(brand)
+      ? activeFilters.brands.filter(b => b !== brand)
+      : [...activeFilters.brands, brand];
+
+    setActiveFilters(prev => ({ ...prev, brands: updatedBrands }));
+    applyFilter();
+  };
+
+  const handleSpecFilter = (specKey, specValue) => {
+    const currentSpecs = { ...activeFilters.specs };
+    const specValues = currentSpecs[specKey] || [];
+
+    if (specValues.includes(specValue)) {
+      currentSpecs[specKey] = specValues.filter(v => v !== specValue);
+      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey]; 
+    } else {
+      currentSpecs[specKey] = [...specValues, specValue];
+    }
+
+    setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
+    applyFilter();
+  };
+
   const renderAppliedFilters = () => {
     return (
       <div className="applied-filters">
-        {activeFilters.brands.length === 1 && ( // Display the brand image if only one brand is selected
-          <div className="brand-image">
-            <img src={brands[activeFilters.brands[0]].image} alt={activeFilters.brands[0]} />
-          </div>
-        )}
         {activeFilters.brands.map((brand) => (
           <h2 className="applied-filters__filter" key={brand}>
             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)} >
@@ -304,7 +299,7 @@ const SearchResults = () => {
                     <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
                       const newInStockOnly = !activeFilters.inStockOnly;
                       setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
-                      applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly);
+                      applyFilter();
                     }} />
                     Show only in-stock products
                   </label>
@@ -357,23 +352,10 @@ const SearchResults = () => {
                         className={sortType === 'rating-desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('rating-desc'); 
-                          const sortedProducts = sortProducts(filteredProducts);
-                          setFilteredProducts(sortedProducts);
+                          sortAndSetProducts(filteredProducts);
                         }} 
                       >
                         <div className="tabs__content">Δημοφιλέστερα</div>
-                      </a>
-                      <a 
-                        data-type="price-desc" 
-                        rel="nofollow" 
-                        className={sortType === 'price-desc' ? 'current' : ''} 
-                        onClick={() => { 
-                          setSortType('price-desc'); 
-                          const sortedProducts = sortProducts(filteredProducts);
-                          setFilteredProducts(sortedProducts);
-                        }} 
-                      >
-                        <div className="tabs__content">Φθηνότερα</div>
                       </a>
                       <a 
                         data-type="price-asc" 
@@ -381,10 +363,12 @@ const SearchResults = () => {
                         className={sortType === 'price-asc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('price-asc'); 
-                          const sortedProducts = sortProducts(filteredProducts);
-                          setFilteredProducts(sortedProducts);
+                          sortAndSetProducts(filteredProducts);
                         }} 
                       >
+                        <div className="tabs__content">Φθηνότερα</div>
+                      </a>
+                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => { setSortType('price-desc'); sortAndSetProducts(filteredProducts); }} >
                         <div className="tabs__content">Ακριβότερα</div>
                       </a>
                       <a 
@@ -393,8 +377,7 @@ const SearchResults = () => {
                         className={sortType === 'merchants_desc' ? 'current' : ''} 
                         onClick={() => { 
                           setSortType('merchants_desc'); 
-                          const sortedProducts = sortProducts(filteredProducts);
-                          setFilteredProducts(sortedProducts);
+                          sortAndSetProducts(filteredProducts);
                         }} 
                       >
                         <div className="tabs__content">Αριθμός καταστημάτων</div>
