@@ -15,7 +15,7 @@ export const rootCategories: RootCategory[] = [
     name: 'Τεχνολογία',
     slug: 'technology',
     description: 'Smartphones, υπολογιστές, tablets και άλλες ηλεκτρονικές συσκευές',
-    image: '//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp'
+    image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1473253454/mobile.webp'
   },
   {
     id: 'rc2',
@@ -47,32 +47,135 @@ export const rootCategories: RootCategory[] = [
   }
 ];
 
-// Subcategories
+// Subcategories with images and descriptions
 export interface Category {
   id: string;
   name: string;
   rootCategoryId: string;
   image: string;
+  description: string; // New field for subcategory description
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Κινητά', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
-  { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
-  { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
-  { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
-  { id: 'c5', name: 'Cameras', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp' },
-  { id: 'c6', name: 'Monitors', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
-  { id: 'c7', name: 'Ψυγεία', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
-  { id: 'c8', name: 'Πλυντήρια Ρούχων', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
-  { id: 'c9', name: 'Κουζίνες', rootCategoryId: 'rc2', image: '//abpcdn.pstatic.gr/P/bpimg128/2488_SX400Y400/1629455496/kouzines.webp' },
-  { id: 'c10', name: 'Κονσόλες', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
-  { id: 'c11', name: 'Παιχνίδια', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
-  { id: 'c12', name: 'Αξεσουάρ Gaming', rootCategoryId: 'rc3', image: '//placehold.co/200x200' },
-  { id: 'c13', name: 'Όργανα Γυμναστικής', rootCategoryId: 'rc4', image: '//placehold.co/200x200' },
-  { id: 'c14', name: 'Αθλητικά Παπούτσια', rootCategoryId: 'rc4', image: '//placehold.co/200x200' },
-  { id: 'c15', name: 'Ανδρικά Ρούχα', rootCategoryId: 'rc5', image: '//placehold.co/200x200' },
-  { id: 'c16', name: 'Γυναικεία Ρούχα', rootCategoryId: 'rc5', image: '//placehold.co/200x200' },
-  { id: 'c17', name: 'Smartwatches', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' }
+  {
+    id: 'c1',
+    name: 'Κινητά',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp',
+    description: 'Latest mobile phones available.'
+  },
+  {
+    id: 'c2',
+    name: 'Laptops',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp',
+    description: 'High-performance laptops for all your needs.'
+  },
+  {
+    id: 'c3',
+    name: 'Tablets',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp',
+    description: 'Portable tablets for work and play.'
+  },
+  {
+    id: 'c4',
+    name: 'Headphones',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp',
+    description: 'Superior sound quality headphones.'
+  },
+  {
+    id: 'c5',
+    name: 'Cameras',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp',
+    description: 'Capture your memories with high-quality cameras.'
+  },
+  {
+    id: 'c6',
+    name: 'Monitors',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp',
+    description: 'Experience crystal clear visuals.'
+  },
+  {
+    id: 'c7',
+    name: 'Ψυγεία',
+    rootCategoryId: 'rc2',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp',
+    description: 'Keep your food fresh with our refrigerators.'
+  },
+  {
+    id: 'c8',
+    name: 'Πλυντήρια Ρούχων',
+    rootCategoryId: 'rc2',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp',
+    description: 'Efficient washing machines for your home.'
+  },
+  {
+    id: 'c9',
+    name: 'Κουζίνες',
+    rootCategoryId: 'rc2',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/2488_SX400Y400/1629455496/kouzines.webp',
+    description: 'Cook like a chef with our kitchen appliances.'
+  },
+  {
+    id: 'c10',
+    name: 'Κονσόλες',
+    rootCategoryId: 'rc3',
+    image: '//placehold.co/200x200',
+    description: 'Get your game on with our consoles.'
+  },
+  {
+    id: 'c11',
+    name: 'Παιχνίδια',
+    rootCategoryId: 'rc3',
+    image: '//placehold.co/200x200',
+    description: 'Explore our vast selection of games.'
+  },
+  {
+    id: 'c12',
+    name: 'Αξεσουάρ Gaming',
+    rootCategoryId: 'rc3',
+    image: '//placehold.co/200x200',
+    description: 'Enhance your gaming experience with accessories.'
+  },
+  {
+    id: 'c13',
+    name: 'Όργανα Γυμναστικής',
+    rootCategoryId: 'rc4',
+    image: '//placehold.co/200x200',
+    description: 'Workout with our fitness equipment.'
+  },
+  {
+    id: 'c14',
+    name: 'Αθλητικά Παπούτσια',
+    rootCategoryId: 'rc4',
+    image: '//placehold.co/200x200',
+    description: 'Step up your game with our sports shoes.'
+  },
+  {
+    id: 'c15',
+    name: 'Ανδρικά Ρούχα',
+    rootCategoryId: 'rc5',
+    image: '//placehold.co/200x200',
+    description: 'Trendy clothes to upgrade your wardrobe.'
+  },
+  {
+    id: 'c16',
+    name: 'Γυναικεία Ρούχα',
+    rootCategoryId: 'rc5',
+    image: '//placehold.co/200x200',
+    description: 'Fashionable outfits for every occasion.'
+  },
+  {
+    id: 'c17',
+    name: 'Smartwatches',
+    rootCategoryId: 'rc1',
+    image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp',
+    description: 'Stay connected with our smartwatches.'
+  }
 ];
 
 // Vendors
@@ -119,13 +222,13 @@ export const vendors: Vendor[] = [
     name: 'Germanos',
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg',
     rating: 4.1
-  },,
+  },
   { 
     id: 'v7', 
     name: 'e-shop.gr',
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg',
     rating: 3.2
-  },,
+  },
   { 
     id: 'v8', 
     name: 'Χαμόγελο του Παιδιού',
@@ -509,7 +612,6 @@ export const fetchFeaturedProducts = () => {
 };
 
 export const fetchDeals = () => {
-  // In a real app, this would filter products with actual deals
   return products.slice(3, 8);
 };
 
