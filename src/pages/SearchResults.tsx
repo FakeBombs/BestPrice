@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { searchProducts, categories, rootCategories, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
@@ -180,13 +180,7 @@ const SearchResults = () => {
             <div className="applied-filters">
                 {activeFilters.brands.map((brand) => (
                     <h2 className="applied-filters__filter" key={brand}>
-                        <a
-                            data-scrollto=""
-                            data-filter-key="brand"
-                            data-value-id={brand}
-                            className="pressable"
-                            onClick={() => handleBrandFilter(brand)}
-                        >
+                        <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)} >
                             <span className="applied-filters__label">{brand}</span>
                             <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -198,13 +192,7 @@ const SearchResults = () => {
                 {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
                     specValues.map((specValue) => (
                         <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                            <a
-                                data-scrollto=""
-                                data-filter-key="spec"
-                                data-value-id={`${specKey}-${specValue}`}
-                                className="pressable"
-                                onClick={() => handleSpecFilter(specKey, specValue)}
-                            >
+                            <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} >
                                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
                                     <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
@@ -230,9 +218,9 @@ const SearchResults = () => {
                                 <ol>
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
                                         <li key={item.category}>
-                                            <a href={`/cat/${item.id}/${item.slug}`}>
+                                            <Link to={`/cat/${item.id}/${item.slug}`}>
                                                 <span>{item.category} ({item.count})</span>
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ol>
