@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products as allProducts, rootCategories } from '@/data/mockData'; // Adjust the path as needed
-import ProductCard from '@/components/ProductCard'; // Adjust the path based on your project structure
-import ScrollableSlider from '@/components/ScrollableSlider'; // Import the slider component
+import { categories, products as allProducts, rootCategories } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
+import ScrollableSlider from '@/components/ScrollableSlider';
 
 const CategoryPage: React.FC = () => {
   const { rootCategorySlug } = useParams<{ rootCategorySlug: string }>();
@@ -158,12 +158,90 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper">
       <div className="root">
         <div class="page-products">
-          <aside id="filters-aside" class="page-products__filters"></aside>
+          <aside id="filters-aside" class="page-products__filters">
+            <div id="filters" data-label="{rootCategory.name}">
+              <div class="filters__header"><h3 class="filters__header-title filters__header-title--filters">Φίλτρα</h3></div>
+              {availableVendors.length > 0 && (
+                                <div className="filter-vendor default-list">
+                                    <div className="filter__header"><h4>Vendors</h4></div>
+                                    <div className="filter-container">
+                                        <ol>
+                                            {availableVendors.map((vendor) => (
+                                                <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
+                                                    <span>{vendor}</span>
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    </div>
+                                </div>
+                            )}
+
+                            {Object.keys(availableBrands).length > 0 && (
+                                <div className="filter-brand default-list" data-filter-name data-type data-key>
+                                    <div className="filter__header"><h4>Κατασκευαστής</h4></div>
+                                    <div className="filter-container">
+                                        <ol>
+                                            {Object.keys(availableBrands).map((brand) => (
+                                                <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
+                                                    <span>{brand} ({availableBrands[brand]})</span>
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    </div>
+                                </div>
+                            )}
+
+                            {Object.keys(availableSpecs).length > 0 && (
+                                Object.keys(availableSpecs).map((specKey) => (
+                                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                                        <div className="filter__header"><h4>{specKey}</h4></div>
+                                        <div className="filter-container">
+                                            <ol>
+                                                {Array.from(availableSpecs[specKey]).map((specValue) => (
+                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                                                        <span>{specValue}</span>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+
+                            <div className="filter-in-stock default-list">
+                                <div className="filter__header"><h4>In Stock</h4></div>
+                                <div className="filter-container">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={activeFilters.inStockOnly}
+                                            onChange={() => {
+                                                const newInStockOnly = !activeFilters.inStockOnly;
+                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
+                                            }} 
+                                        />
+                                        Show only in-stock products
+                                    </label>
+                                </div>
+                            </div>
+                            <button className="button button--outline" id="filters__scrollback"><svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div></button>
+            </div>
+          </aside>
           <main>
             <header className="page-header">
-              <div className="page-header__title">
-                <h1>{rootCategory.name}</h1>
-                <div>{filteredProducts.length} products</div>
+              <div className="page-header__title-wrapper">
+                <div class="page-header__title-main">
+                  <h1>{rootCategory.name}</h1>
+                  <div>{filteredProducts.length} products</div>
+                </div>
+                <div className="page-header__title-aside">
+                  {displayedBrand && (
+                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                    </a>
+                  )}
+                </div>
               </div>
               <ScrollableSlider></ScrollableSlider>
               {renderAppliedFilters()}
