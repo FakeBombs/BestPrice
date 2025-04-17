@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { RootCategory } from '@/data/mockData';
 
 interface RootCategoryCardProps {
-  category: RootCategory;
+  category: RootCategory & { categories: { id: string; name: string; slug: string }[] }; // Ensure subcategories have required fields
 }
 
 const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
@@ -21,17 +21,19 @@ const RootCategoryCard = ({ category }: RootCategoryCardProps) => {
         <h2 className="root-category__category-title">
           <Link to={`/cat/${category.slug}?bpref=root-category__title`}>{category.name}</Link>
         </h2>
+        
         <div className="root-category__footer">
           <div className="root-category__links">
-            {category.categories.map((subCategory) => (
+            {category.categories.map(subCategory => (
               <Link 
                 key={subCategory.id} 
                 to={`/cat/${subCategory.slug}?bpref=root-category-subcat`} 
+                className="subcategory-link"
               >
                 {subCategory.name}
               </Link>
             )).reduce((prev, curr) => [prev, ', ', curr])} 
-            {/* The reduce adds commas between links */}
+            {/* Adds commas between links */}
           </div>
         </div>
       </CardContent>
