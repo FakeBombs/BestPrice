@@ -22,11 +22,11 @@ const SearchResults = () => {
       const results = searchProducts(searchQuery);
       setProducts(results);
       setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
-      setFilteredProducts(results);
       extractAvailableFilters(results);
       extractCategories(results);
       // Sort products after loading
-      setFilteredProducts(sortProducts(results));
+      const sortedResults = sortProducts(results); // Sort products to apply default sort
+      setFilteredProducts(sortedResults); // Set sorted results as filtered products
     } else {
       setFilteredProducts([]);
     }
@@ -142,7 +142,7 @@ const SearchResults = () => {
     // Apply sorting based on sortType
     filtered = sortProducts(filtered);
 
-    setFilteredProducts(filtered);
+    setFilteredProducts(filtered); // Update filtered products
     extractAvailableFilters(filtered);
     extractCategories(filtered);
   };
