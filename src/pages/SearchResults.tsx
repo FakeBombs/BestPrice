@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { searchProducts, categories, rootCategories, brands } from '@/data/mockData';
+import { searchProducts, categories, rootCategories } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
@@ -18,24 +18,22 @@ const SearchResults = () => {
     const searchQuery = searchParams.get('q') || '';
 
     useEffect(() => {
+        // Fetch initial products based on the search query
         const results = searchProducts(searchQuery);
         setProducts(results);
-        setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
         extractAvailableFilters(results);
         extractCategories(results);
-        // Immediately sort the results based on the sort type (default sorting)
-        const sortedResults = sortProducts(results);
-        setFilteredProducts(sortedResults.length ? sortedResults : results); // Ensure to show results or fallback
+
+        // Initial sort and set filtered products
+        setFilteredProducts(sortProducts(results));
     }, [searchQuery]);
 
     useEffect(() => {
-        // Re-sort filtered products when the sort type changes
-        const sortedResults = sortProducts(filteredProducts);
-        setFilteredProducts(sortedResults);
-    }, [sortType]);
+        // Re-filter and sort products when active filters change
+        applyFiltersAndSorting();
+    }, [activeFilters, sortType, products]);
 
     const extractAvailableFilters = (results) => {
-        // Filter extraction logic remains unchanged
         const vendors = new Set();
         const brandsCount = {};
         const specs = {};
@@ -59,7 +57,6 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
-        // Category extraction remains unchanged
         const categoryCount = {};
         results.forEach((product) => {
             if (product.category) {
@@ -86,68 +83,32 @@ const SearchResults = () => {
         setAvailableCategories(categoriesArray);
     };
 
-    const handleVendorFilter = (vendor) => {
-        const newVendors = activeFilters.vendors.includes(vendor)
-            ? activeFilters.vendors.filter((v) => v !== vendor)
-            : [...activeFilters.vendors, vendor];
+    const applyFiltersAndSorting = () => {
+        let filtered = [...products];
 
-        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-        filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
-    };
-
-    const handleBrandFilter = (brand) => {
-        const newBrands = activeFilters.brands.includes(brand)
-            ? activeFilters.brands.filter((b) => b !== brand)
-            : [...activeFilters.brands, brand];
-
-        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
-        filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly, products);
-    };
-
-    const handleSpecFilter = (specKey, specValue) => {
-        const currentSpecs = { ...activeFilters.specs };
-        const specValues = currentSpecs[specKey] || [];
-
-        if (specValues.includes(specValue)) {
-            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-        } else {
-            currentSpecs[specKey] = [...specValues, specValue];
-        }
-
-        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-        filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly, products);
-    };
-
-    const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
-        let filtered = results;
-
-        if (inStockOnly) {
+        if (activeFilters.inStockOnly) {
             filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
         }
 
-        if (vendors.length > 0) {
-            filtered = filtered.filter((product) => vendors.includes(product.vendor));
+        if (activeFilters.vendors.length > 0) {
+            filtered = filtered.filter((product) => activeFilters.vendors.includes(product.vendor));
         }
 
-        if (brands.length > 0) {
-            filtered = filtered.filter((product) => brands.includes(product.brand));
+        if (activeFilters.brands.length > 0) {
+            filtered = filtered.filter((product) => activeFilters.brands.includes(product.brand));
         }
 
-        if (Object.keys(specs).length > 0) {
+        if (Object.keys(activeFilters.specs).length > 0) {
             filtered = filtered.filter((product) => {
-                return Object.entries(specs).every(([key, values]) => {
+                return Object.entries(activeFilters.specs).every(([key, values]) => {
                     return values.includes(product.specifications[key]);
                 });
             });
         }
 
         // Apply sorting based on sortType
-        filtered = sortProducts(filtered);
-
-        setFilteredProducts(filtered);
-        extractAvailableFilters(filtered);
-        extractCategories(filtered);
+        const sortedFiltered = sortProducts(filtered);
+        setFilteredProducts(sortedFiltered);
     };
 
     const sortProducts = (products) => {
@@ -180,7 +141,35 @@ const SearchResults = () => {
         }
     };
 
-    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
+    const handleVendorFilter = (vendor) => {
+        const newVendors = activeFilters.vendors.includes(vendor)
+            ? activeFilters.vendors.filter((v) => v !== vendor)
+            : [...activeFilters.vendors, vendor];
+
+        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
+    };
+
+    const handleBrandFilter = (brand) => {
+        const newBrands = activeFilters.brands.includes(brand)
+            ? activeFilters.brands.filter((b) => b !== brand)
+            : [...activeFilters.brands, brand];
+
+        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+    };
+
+    const handleSpecFilter = (specKey, specValue) => {
+        const currentSpecs = { ...activeFilters.specs };
+        const specValues = currentSpecs[specKey] || [];
+
+        if (specValues.includes(specValue)) {
+            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+        } else {
+            currentSpecs[specKey] = [...specValues, specValue];
+        }
+
+        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+    };
 
     const renderAppliedFilters = () => {
         return (
@@ -295,7 +284,6 @@ const SearchResults = () => {
                                         <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
                                             const newInStockOnly = !activeFilters.inStockOnly;
                                             setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                            filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
                                         }} />
                                         Show only in-stock products
                                     </label>
@@ -311,57 +299,10 @@ const SearchResults = () => {
                                     <h1>{searchQuery || 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                                        <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
-                                            <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                                            <div className="alerts-minimal__label"></div>
-                                        </div>
                                     </div>
-                                </div>
-                                <div className="page-header__title-aside">
-                                    {displayedBrand && (
-                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                                        </a>
-                                    )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
-                            <section className="section">
-                                <header className="section__header">
-                                    <hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup>
-                                </header>
-                                <ScrollableSlider>
-                                    <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.map((item) => (
-                                            <a key={item.category} title={item.category} className="categories__category" href={item.isRoot ? `/categories/root/${item.slug}` : `/cat/${item.id}/${item.slug}`}>
-                                                <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
-                                                <h2 className="categories__title">{item.category}</h2>
-                                                <div className="categories__cnt">{item.count} προϊόντα</div>
-                                            </a>
-                                        ))}
-                                    </div>
-                                </ScrollableSlider>
-                            </section>
-                            <div className="page-header__sorting">
-                                <div className="tabs">
-                                    <div className="tabs-wrapper">
-                                        <nav>
-                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                                                <div className="tabs__content">Δημοφιλέστερα</div>
-                                            </a>
-                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                                                <div className="tabs__content">Φθηνότερα</div>
-                                            </a>
-                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                                                <div className="tabs__content">Ακριβότερα</div>
-                                            </a>
-                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
-                                            </a>
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
                         </header>
 
                         {filteredProducts.length === 0 ? (
