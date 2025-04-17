@@ -17,20 +17,18 @@ const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
-  // Fetch products based on the search query
   useEffect(() => {
     loadProducts(searchQuery);
-  }, [searchQuery]);
+  }, [searchQuery]); // Load products whenever the search query changes
 
   const loadProducts = (query) => {
-    const results = searchProducts(query);
+    const results = searchProducts(query); // Fetch product list based on the query
     setProducts(results);
-    setFilteredProducts(results);
-    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
-    
-    extractAvailableFilters(results);
-    extractCategories(results);
-    sortAndSetProducts(results); // Sort the products on load
+    setFilteredProducts(results); // Set initial filtered products to all fetched products
+    setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false }); // Reset filters
+    extractAvailableFilters(results); // Extract filters based on loaded products
+    extractCategories(results); // Extract categories from loaded products
+    applyFilter(); // Initially apply filter to set sorted results
   };
 
   const extractAvailableFilters = (results) => {
@@ -43,12 +41,10 @@ const SearchResults = () => {
       if (product.brand) {
         brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
       }
-      Object.keys(product.specifications).forEach(specKey => {
-        if (!specs[specKey]) {
-          specs[specKey] = new Set();
-        }
+      for (const specKey in product.specifications) {
+        if (!specs[specKey]) specs[specKey] = new Set();
         specs[specKey].add(product.specifications[specKey]);
-      });
+      }
     });
 
     setAvailableVendors(vendors);
@@ -58,7 +54,6 @@ const SearchResults = () => {
 
   const extractCategories = (results) => {
     const categoryCount = {};
-
     results.forEach(product => {
       if (product.category) {
         categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
@@ -85,20 +80,24 @@ const SearchResults = () => {
   };
 
   const applyFilter = () => {
-    let filtered = [...products]; // Work on a shallow copy of products
+    let filtered = [...products]; 
 
+    // Apply in-stock filter
     if (activeFilters.inStockOnly) {
       filtered = filtered.filter(product => product.prices.some(price => price.inStock));
     }
 
+    // Apply vendor filter
     if (activeFilters.vendors.length > 0) {
       filtered = filtered.filter(product => activeFilters.vendors.includes(product.vendor));
     }
 
+    // Apply brand filter
     if (activeFilters.brands.length > 0) {
       filtered = filtered.filter(product => activeFilters.brands.includes(product.brand));
     }
 
+    // Apply specification filters
     if (Object.keys(activeFilters.specs).length > 0) {
       filtered = filtered.filter(product => {
         return Object.entries(activeFilters.specs).every(([key, values]) => {
@@ -107,11 +106,11 @@ const SearchResults = () => {
       });
     }
 
-    sortAndSetProducts(filtered); // Sort the filtered products
+    sortAndSetProducts(filtered);
   };
 
   const sortAndSetProducts = (productsToSort) => {
-    const sortedProducts = sortProducts(productsToSort);
+    const sortedProducts = sortProducts(productsToSort); 
     setFilteredProducts(sortedProducts);
   };
 
@@ -127,19 +126,19 @@ const SearchResults = () => {
         return [...products].sort((a, b) => {
           const maxPriceA = Math.max(...a.prices.filter(p => p.inStock).map(p => p.price), 0);
           const maxPriceB = Math.max(...b.prices.filter(p => p.inStock).map(p => p.price), 0);
-          return maxPriceB - maxPriceA; // Highest price first
+          return maxPriceB - maxPriceA;
         });
       case 'rating-desc':
         return [...products].sort((a, b) => {
           const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
           const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-          return averageRatingB - averageRatingA; // Higher rating first
+          return averageRatingB - averageRatingA; 
         });
       case 'merchants_desc':
         return [...products].sort((a, b) => {
           const availableVendorsA = a.prices.filter(price => price.inStock).length;
           const availableVendorsB = b.prices.filter(price => price.inStock).length;
-          return availableVendorsB - availableVendorsA; // Descending
+          return availableVendorsB - availableVendorsA; 
         });
       default:
         return products;
@@ -152,7 +151,7 @@ const SearchResults = () => {
       : [...activeFilters.vendors, vendor];
 
     setActiveFilters(prev => ({ ...prev, vendors: updatedVendors }));
-    applyFilter();
+    applyFilter(); 
   };
 
   const handleBrandFilter = (brand) => {
@@ -161,7 +160,7 @@ const SearchResults = () => {
       : [...activeFilters.brands, brand];
 
     setActiveFilters(prev => ({ ...prev, brands: updatedBrands }));
-    applyFilter();
+    applyFilter(); 
   };
 
   const handleSpecFilter = (specKey, specValue) => {
@@ -176,7 +175,7 @@ const SearchResults = () => {
     }
 
     setActiveFilters(prev => ({ ...prev, specs: currentSpecs }));
-    applyFilter();
+    applyFilter(); 
   };
 
   const renderAppliedFilters = () => {
@@ -293,7 +292,7 @@ const SearchResults = () => {
                     <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
                       const newInStockOnly = !activeFilters.inStockOnly;
                       setActiveFilters(prev => ({ ...prev, inStockOnly: newInStockOnly }));
-                      applyFilter();
+                      applyFilter(); 
                     }} />
                     Show only in-stock products
                   </label>
