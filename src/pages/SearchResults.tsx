@@ -18,16 +18,14 @@ const SearchResults = () => {
     const searchQuery = searchParams.get('q') || '';
 
     useEffect(() => {
-        // Fetch results based on the search query when the component mounts or searchQuery changes
         const results = searchProducts(searchQuery);
         setProducts(results);
         setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
         extractAvailableFilters(results);
         extractCategories(results);
-        
-        // Sort products based on the selected sort type immediately after loading
+        // Immediately sort the results based on the sort type (default sorting)
         const sortedResults = sortProducts(results);
-        setFilteredProducts(sortedResults);
+        setFilteredProducts(sortedResults.length ? sortedResults : results); // Ensure to show results or fallback
     }, [searchQuery]);
 
     useEffect(() => {
@@ -37,6 +35,7 @@ const SearchResults = () => {
     }, [sortType]);
 
     const extractAvailableFilters = (results) => {
+        // Filter extraction logic remains unchanged
         const vendors = new Set();
         const brandsCount = {};
         const specs = {};
@@ -60,8 +59,8 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
+        // Category extraction remains unchanged
         const categoryCount = {};
-
         results.forEach((product) => {
             if (product.category) {
                 categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
@@ -309,7 +308,7 @@ const SearchResults = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1> {/* Display 'All Products' if no search query is present */}
+                                    <h1>{searchQuery || 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                         <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
@@ -328,7 +327,9 @@ const SearchResults = () => {
                             </div>
                             {renderAppliedFilters()}
                             <section className="section">
-                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup>
+                                </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
@@ -341,7 +342,6 @@ const SearchResults = () => {
                                     </div>
                                 </ScrollableSlider>
                             </section>
-
                             <div className="page-header__sorting">
                                 <div className="tabs">
                                     <div className="tabs-wrapper">
@@ -365,7 +365,7 @@ const SearchResults = () => {
                         </header>
 
                         {filteredProducts.length === 0 ? (
-                            <p>No products found matching your search.</p> // Displaying this message based on active filters
+                            <p>No products found matching your search.</p>
                         ) : (
                             <div className="product-grid mt-6">
                                 {filteredProducts.map((product) => (
