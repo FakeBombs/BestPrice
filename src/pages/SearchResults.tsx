@@ -252,7 +252,7 @@ const SearchResults = () => {
                             )}
 
                             {Object.keys(availableBrands).length > 0 && (
-                                <div className="filter-brand default-list">
+                                <div className="filter-brand default-list" data-filter-name data-type data-key>
                                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                                     <div className="filter-container">
                                         <ol>
@@ -268,7 +268,7 @@ const SearchResults = () => {
 
                             {Object.keys(availableSpecs).length > 0 && (
                                 Object.keys(availableSpecs).map((specKey) => (
-                                    <div key={specKey} className="filter-specification default-list">
+                                    <div key={specKey} className="filter-specification default-list" data-filter-name={specKey} data-type data-key="{specKey}">
                                         <div className="filter__header"><h4>{specKey}</h4></div>
                                         <div className="filter-container">
                                             <ol>
