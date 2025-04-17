@@ -14,13 +14,16 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   // Find the root category based on the slug
-  const rootCategory = categories.find(category => category.slug === rootCategorySlug);
+  const rootCategory = rootCategories.find(rootCat => rootCat.slug === rootCategorySlug);
 
   if (!rootCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  const products = allProducts.filter(product => product.categoryId === rootCategory.id);
+  // Fetch the relevant subcategories matching the root category
+  const subcategories = categories.filter(cat => cat.rootCategoryId === rootCategory.id);
+  
+  const products = allProducts.filter(product => subcategories.some(cat => cat.name === product.category));
 
   useEffect(() => {
     const sortedResults = sortProducts(products);
@@ -236,28 +239,28 @@ const CategoryPage: React.FC = () => {
                 <div className="tabs">
                   <div className="tabs-wrapper">
                     <nav>
-                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                                                <div className="tabs__content">Δημοφιλέστερα</div>
-                                            </a>
-                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                                                <div className="tabs__content">Φθηνότερα</div>
-                                            </a>
-                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                                                <div className="tabs__content">Ακριβότερα</div>
-                                            </a>
-                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
-                                            </a>
+                      <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
+                          <div className="tabs__content">Δημοφιλέστερα</div>
+                      </a>
+                      <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
+                          <div className="tabs__content">Φθηνότερα</div>
+                      </a>
+                      <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
+                          <div className="tabs__content">Ακριβότερα</div>
+                      </a>
+                      <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
+                          <div className="tabs__content">Αριθμός καταστημάτων</div>
+                      </a>
                     </nav>
                   </div>
                 </div>
               </div>
             </header>
-            {filteredProducts.length === 0 ? (<p>No products found matching your search.</p> ) : (
+            {filteredProducts.length === 0 ? (<p>No products found matching your search.</p>) : (
               <div className="page-products__main-wrapper">
-                <div class="p__products" data-pagination="">
+                <div className="p__products" data-pagination="">
                   {filteredProducts.map((product) => (
-                     <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               </div>
