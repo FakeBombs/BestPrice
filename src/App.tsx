@@ -7,6 +7,7 @@ import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import Categories from "./pages/Categories";
+import CategoryPage from "./pages/CategoryPage"; // Import your CategoryPage component
 import Brands from "./pages/Brands";
 import Stores from "./pages/Stores";
 import Deals from "./pages/Deals";
@@ -35,7 +36,7 @@ function App() {
           <Route path="item/:productId" element={<ProductDetail />} />
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="categories/:rootCategoryId" element={<Categories />} />
+          <Route path="categories/:rootCategorySlug" element={<CategoryPage />} /> {/* New Route */}
           <Route path="brands" element={<Brands />} />
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
