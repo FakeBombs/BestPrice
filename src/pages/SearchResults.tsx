@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { searchProducts, categories, rootCategories } from '@/data/mockData';
+import { searchProducts, categories, rootCategories, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
@@ -18,20 +18,23 @@ const SearchResults = () => {
     const searchQuery = searchParams.get('q') || '';
 
     useEffect(() => {
-        // Fetch initial products based on the search query
+        // Fetch results based on the search query when the component mounts or searchQuery changes
         const results = searchProducts(searchQuery);
         setProducts(results);
+        setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
         extractAvailableFilters(results);
         extractCategories(results);
-
-        // Initial sort and set filtered products
-        setFilteredProducts(sortProducts(results));
+        
+        // Sort products based on the selected sort type immediately after loading
+        const sortedResults = sortProducts(results);
+        setFilteredProducts(sortedResults);
     }, [searchQuery]);
 
     useEffect(() => {
-        // Re-filter and sort products when active filters change
-        applyFiltersAndSorting();
-    }, [activeFilters, sortType, products]);
+        // Re-sort filtered products when the sort type changes
+        const sortedResults = sortProducts(filteredProducts);
+        setFilteredProducts(sortedResults);
+    }, [sortType]);
 
     const extractAvailableFilters = (results) => {
         const vendors = new Set();
@@ -58,6 +61,7 @@ const SearchResults = () => {
 
     const extractCategories = (results) => {
         const categoryCount = {};
+
         results.forEach((product) => {
             if (product.category) {
                 categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
@@ -83,32 +87,68 @@ const SearchResults = () => {
         setAvailableCategories(categoriesArray);
     };
 
-    const applyFiltersAndSorting = () => {
-        let filtered = [...products];
+    const handleVendorFilter = (vendor) => {
+        const newVendors = activeFilters.vendors.includes(vendor)
+            ? activeFilters.vendors.filter((v) => v !== vendor)
+            : [...activeFilters.vendors, vendor];
 
-        if (activeFilters.inStockOnly) {
+        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
+        filterProducts(newVendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
+    };
+
+    const handleBrandFilter = (brand) => {
+        const newBrands = activeFilters.brands.includes(brand)
+            ? activeFilters.brands.filter((b) => b !== brand)
+            : [...activeFilters.brands, brand];
+
+        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+        filterProducts(activeFilters.vendors, newBrands, activeFilters.specs, activeFilters.inStockOnly, products);
+    };
+
+    const handleSpecFilter = (specKey, specValue) => {
+        const currentSpecs = { ...activeFilters.specs };
+        const specValues = currentSpecs[specKey] || [];
+
+        if (specValues.includes(specValue)) {
+            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+        } else {
+            currentSpecs[specKey] = [...specValues, specValue];
+        }
+
+        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+        filterProducts(activeFilters.vendors, activeFilters.brands, currentSpecs, activeFilters.inStockOnly, products);
+    };
+
+    const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
+        let filtered = results;
+
+        if (inStockOnly) {
             filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
         }
 
-        if (activeFilters.vendors.length > 0) {
-            filtered = filtered.filter((product) => activeFilters.vendors.includes(product.vendor));
+        if (vendors.length > 0) {
+            filtered = filtered.filter((product) => vendors.includes(product.vendor));
         }
 
-        if (activeFilters.brands.length > 0) {
-            filtered = filtered.filter((product) => activeFilters.brands.includes(product.brand));
+        if (brands.length > 0) {
+            filtered = filtered.filter((product) => brands.includes(product.brand));
         }
 
-        if (Object.keys(activeFilters.specs).length > 0) {
+        if (Object.keys(specs).length > 0) {
             filtered = filtered.filter((product) => {
-                return Object.entries(activeFilters.specs).every(([key, values]) => {
+                return Object.entries(specs).every(([key, values]) => {
                     return values.includes(product.specifications[key]);
                 });
             });
         }
 
         // Apply sorting based on sortType
-        const sortedFiltered = sortProducts(filtered);
-        setFilteredProducts(sortedFiltered);
+        filtered = sortProducts(filtered);
+
+        setFilteredProducts(filtered);
+        extractAvailableFilters(filtered);
+        extractCategories(filtered);
     };
 
     const sortProducts = (products) => {
@@ -141,35 +181,7 @@ const SearchResults = () => {
         }
     };
 
-    const handleVendorFilter = (vendor) => {
-        const newVendors = activeFilters.vendors.includes(vendor)
-            ? activeFilters.vendors.filter((v) => v !== vendor)
-            : [...activeFilters.vendors, vendor];
-
-        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-    };
-
-    const handleBrandFilter = (brand) => {
-        const newBrands = activeFilters.brands.includes(brand)
-            ? activeFilters.brands.filter((b) => b !== brand)
-            : [...activeFilters.brands, brand];
-
-        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
-    };
-
-    const handleSpecFilter = (specKey, specValue) => {
-        const currentSpecs = { ...activeFilters.specs };
-        const specValues = currentSpecs[specKey] || [];
-
-        if (specValues.includes(specValue)) {
-            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-        } else {
-            currentSpecs[specKey] = [...specValues, specValue];
-        }
-
-        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-    };
+    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
 
     const renderAppliedFilters = () => {
         return (
@@ -284,6 +296,7 @@ const SearchResults = () => {
                                         <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => {
                                             const newInStockOnly = !activeFilters.inStockOnly;
                                             setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                                            filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
                                         }} />
                                         Show only in-stock products
                                     </label>
@@ -296,7 +309,7 @@ const SearchResults = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1>
+                                    <h1>{searchQuery || 'All Products'}</h1> {/* Display 'All Products' if no search query is present */}
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                         <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
@@ -306,18 +319,16 @@ const SearchResults = () => {
                                     </div>
                                 </div>
                                 <div className="page-header__title-aside">
-                                    {activeFilters.brands.length === 1 && (
-                                        <a href={`/b/${activeFilters.brands[0].toLowerCase()}`} className="page-header__brand">
-                                            <span>{activeFilters.brands[0]}</span>
+                                    {displayedBrand && (
+                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
                                         </a>
                                     )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
                             <section className="section">
-                                <header className="section__header">
-                                    <hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup>
-                                </header>
+                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
@@ -330,6 +341,7 @@ const SearchResults = () => {
                                     </div>
                                 </ScrollableSlider>
                             </section>
+
                             <div className="page-header__sorting">
                                 <div className="tabs">
                                     <div className="tabs-wrapper">
@@ -353,7 +365,7 @@ const SearchResults = () => {
                         </header>
 
                         {filteredProducts.length === 0 ? (
-                            <p>No products found matching your search.</p>
+                            <p>No products found matching your search.</p> // Displaying this message based on active filters
                         ) : (
                             <div className="product-grid mt-6">
                                 {filteredProducts.map((product) => (
