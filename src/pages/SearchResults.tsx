@@ -306,11 +306,14 @@ const SearchResults = () => {
                                     </div>
                                 </div>
                                 <div className="page-header__title-aside">
-                                    {activeFilters.brands.length === 1 && (
-                                        <a href={`/b/${activeFilters.brands[0].toLowerCase()}`} className="page-header__brand">
-                                            <span>{activeFilters.brands[0]}</span>
-                                        </a>
-                                    )}
+                                    {activeFilters.brands.length === 1 && ((() => {
+                                        const displayedBrand = availableBrands[activeFilters.brands[0]];
+                                        return displayedBrand ? (
+                                            <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                                                <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                                             </a>
+                                        ) : null;
+                                    })())}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
