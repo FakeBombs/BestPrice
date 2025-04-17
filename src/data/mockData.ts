@@ -53,10 +53,11 @@ export interface Category {
   name: string;
   rootCategoryId: string;
   image: string;
+  slug: string;
 }
 
 export const categories: Category[] = [
-  { id: 'c1', name: 'Κινητά', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
+  { id: 'c1', name: 'Κινητά', rootCategoryId: 'rc1', slug: 'mobile-phones', image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
   { id: 'c2', name: 'Laptops', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
   { id: 'c3', name: 'Tablets', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
   { id: 'c4', name: 'Headphones', rootCategoryId: 'rc1', image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
