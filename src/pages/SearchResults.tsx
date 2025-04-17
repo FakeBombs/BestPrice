@@ -13,7 +13,7 @@ const SearchResults = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [availableCategories, setAvailableCategories] = useState([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [sortType, setSortType] = useState('0');
+  const [sortType, setSortType] = useState('rating-desc');
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
