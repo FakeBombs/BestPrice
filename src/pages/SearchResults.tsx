@@ -28,6 +28,7 @@ const SearchResults = () => {
       extractCategories(results);
     } else {
       setFilteredProducts([]);
+      setProducts([]); // Ensure products are cleared when the searchQuery is empty
     }
   }, [searchQuery]);
 
@@ -144,7 +145,7 @@ const SearchResults = () => {
       });
     }
 
-    // Sort products based on current sortType
+    // Sort products based on the current sortType
     const sortedProducts = sortProducts(filtered);
     setFilteredProducts(sortedProducts);
     extractAvailableFilters(sortedProducts);
@@ -160,14 +161,13 @@ const SearchResults = () => {
           const minPriceB = Math.min(...b.prices.filter(p => p.inStock).map(p => p.price), Infinity);
           return minPriceA - minPriceB;
         });
-      case 'price-desc':
+      case 'price-desc': // New sorting option
         return [...products].sort((a, b) => {
-          const minPriceA = Math.min(...a.prices.filter(p => p.inStock).map(p => p.price), Infinity);
-          const minPriceB = Math.min(...b.prices.filter(p => p.inStock).map(p => p.price), Infinity);
-          return minPriceB - minPriceA;
+          const maxPriceA = Math.max(...a.prices.filter(p => p.inStock).map(p => p.price), 0);
+          const maxPriceB = Math.max(...b.prices.filter(p => p.inStock).map(p => p.price), 0);
+          return maxPriceB - maxPriceA; // Highest price first
         });
       case 'rating-desc':
-        // Sort by rating for "Δημοφιλέστερα"
         return [...products].sort((a, b) => {
           const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
           const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
@@ -175,11 +175,6 @@ const SearchResults = () => {
         });
       case '0': // Most Popular
         return [...products].sort((a, b) => b.popularity - a.popularity);
-      // Uncomment these when the respective data points are available
-      // case 'release_dt': // Newest First (temporarily commented out as requested)
-      //   return [...products].sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0));
-      // case 'discount': // Largest Price Drop (temporarily commented out as requested)
-      //   return [...products].sort((a, b) => b.priceDrop - a.priceDrop);
       case 'merchants_desc': // Sort by number of in-stock vendors
         return [...products].sort((a, b) => {
           const availableVendorsA = a.prices.filter(price => price.inStock).length;
@@ -195,6 +190,11 @@ const SearchResults = () => {
   const renderAppliedFilters = () => {
     return (
       <div className="applied-filters">
+        {activeFilters.brands.length === 1 && ( // Display the brand image if only one brand is selected
+          <div className="brand-image">
+            <img src={brands[activeFilters.brands[0]].image} alt={activeFilters.brands[0]} />
+          </div>
+        )}
         {activeFilters.brands.map((brand) => (
           <h2 className="applied-filters__filter" key={brand}>
             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)} >
@@ -220,11 +220,6 @@ const SearchResults = () => {
       </div>
     );
   };
-
-  // Utilize a useEffect for first click issue
-  useEffect(() => {
-    applyFiltersAndSort(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly);
-  }, [sortType]);
 
   return (
     <div className="root__wrapper">
@@ -364,23 +359,13 @@ const SearchResults = () => {
                         }} 
                       ><div className="tabs__content">Φθηνότερα</div></a>
                       <a 
-                        data-type="release_dt" 
+                        data-type="price-desc" // New sorting option
                         rel="nofollow" 
-                        className={sortType === 'release_dt' ? 'current' : ''} 
+                        className={sortType === 'price-desc' ? 'current' : ''} 
                         onClick={() => { 
-                          // setSortType('release_dt'); // Commented out as requested
+                          setSortType('price-desc'); 
                         }} 
-                      ><div className="tabs__content">Νεότερα</div></a>
-                      <a 
-                        data-type="discount" 
-                        rel="nofollow" 
-                        className={sortType === 'discount' ? 'current' : ''} 
-                        onClick={() => { 
-                          // setSortType('discount'); // Commented out as requested
-                        }} 
-                      >
-                        <div className="tabs__content"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-flame-16"></use></svg> Μεγαλύτερη πτώση</div>
-                      </a>
+                      ><div className="tabs__content">Ακριβότερα</div></a>
                       <a 
                         data-type="merchants_desc" 
                         rel="nofollow" 
