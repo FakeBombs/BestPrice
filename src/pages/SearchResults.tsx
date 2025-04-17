@@ -366,10 +366,12 @@ const SearchResults = () => {
                         {filteredProducts.length === 0 ? (
                             <p>No products found matching your search.</p> 
                         ) : (
-                            <div className="product-grid mt-6">
-                                {filteredProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
+                            <div className="page-products__main-wrapper">
+                                <div class="p__products" data-pagination="">
+                                    {filteredProducts.map((product) => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </main>
