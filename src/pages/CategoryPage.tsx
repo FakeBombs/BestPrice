@@ -155,27 +155,27 @@ const CategoryPage: React.FC = () => {
   };
 
   return (
-    <div className="category-page">
-      <ScrollableSlider> {/* Slider for offers based on this category */}
-        {/* Add your offer items here */}
-      </ScrollableSlider>
-
-      <h1>{rootCategory.name}</h1>
-      {renderAppliedFilters()}
-      
-      <header className="page-header">
-        <div className="page-header__title">
-          <h1>{rootCategory.name}</h1>
-          <div>{filteredProducts.length} products</div>
-        </div>
+    <div className="root__wrapper">
+      <div className="root">
+        <div class="page-products">
+          <aside id="filters-aside" class="page-products__filters"></aside>
+          <main>
+            <header className="page-header">
+              <div className="page-header__title">
+                <h1>{rootCategory.name}</h1>
+                <div>{filteredProducts.length} products</div>
+              </div>
+              <ScrollableSlider></ScrollableSlider>
+              {renderAppliedFilters()}
         <div className="page-header__sorting">
           <button onClick={() => setSortType('rating-desc')}>Sort by Rating</button>
           <button onClick={() => setSortType('price-asc')}>Sort by Price: Low to High</button>
           <button onClick={() => setSortType('price-desc')}>Sort by Price: High to Low</button>
         </div>
-      </header>
+            </header>
 
-      <div className="category-products">
+      <div class="page-products__main-wrapper page-products__main-wrapper">
+        <div class="page-products__products">
         {filteredProducts.length === 0 ? (
           <p>No products found in this category.</p>
         ) : (
@@ -185,6 +185,10 @@ const CategoryPage: React.FC = () => {
             ))}
           </div>
         )}
+      </div>
+      </div>
+          </main>
+        </div>
       </div>
     </div>
   );
