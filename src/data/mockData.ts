@@ -267,6 +267,15 @@ export const getProductsByCategory = (categoryId: number) => {
   return products.filter(product => product.categoryIds.includes(categoryId));
 };
 
+export const getSimilarProducts = (productId: string) => {
+  const product = getProductById(productId);
+  if (!product) return [];
+  
+  return products
+    .filter(p => p.category === product.category && p.id !== productId)
+    .slice(0, 5);
+};
+
 export const getVendorById = (vendorId: number) => {
   return vendors.find(vendor => vendor.id === vendorId);
 };
