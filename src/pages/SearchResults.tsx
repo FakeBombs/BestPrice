@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { searchProducts, categories, brands } from '@/data/mockData'; // Removed rootCategories import
+import { searchProducts, categories, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
@@ -39,7 +39,7 @@ const SearchResults = () => {
 
         results.forEach((product) => {
             if (product.vendor) {
-                vendors.add(product.vendor); // Collect unique vendors
+                vendors.add(product.vendor);
             }
             if (product.brand) {
                 brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
@@ -52,7 +52,7 @@ const SearchResults = () => {
             });
         });
 
-        setAvailableVendors(Array.from(vendors)); // Store vendors as an array
+        setAvailableVendors(Array.from(vendors));
         setAvailableBrands(brandsCount);
         setAvailableSpecs(specs);
     };
@@ -60,54 +60,24 @@ const SearchResults = () => {
     const extractCategories = (results) => {
         const categoryCount = {};
         results.forEach((product) => {
-            if (product.category) {
-                categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
-            }
+            product.categoryIds.forEach(categoryId => {
+                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+            });
         });
 
-        const categoriesArray = Object.entries(categoryCount).map(([category, count]) => {
-            const categoryData = categories.find((cat) => cat.name === category);
+        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+            const categoryData = categories.find(cat => cat.id === parseInt(id)); // Match by numeric ID
 
             return {
-                category,
-                count,
-                slug: categoryData ? categoryData.slug : '',
                 id: categoryData ? categoryData.id : '',
+                category: categoryData ? categoryData.name : '',
+                slug: categoryData ? categoryData.slug : '',
+                count,
                 image: categoryData ? categoryData.image : '',
             };
-        }).slice(0, 8);
+        }).filter(cat => cat.id) // Filter out any undefined categories
 
         setAvailableCategories(categoriesArray);
-    };
-
-    const handleVendorFilter = (vendor) => {
-        const newVendors = activeFilters.vendors.includes(vendor)
-            ? activeFilters.vendors.filter((v) => v !== vendor)
-            : [...activeFilters.vendors, vendor];
-
-        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-    };
-
-    const handleBrandFilter = (brand) => {
-        const newBrands = activeFilters.brands.includes(brand)
-            ? activeFilters.brands.filter((b) => b !== brand)
-            : [...activeFilters.brands, brand];
-
-        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
-    };
-
-    const handleSpecFilter = (specKey, specValue) => {
-        const currentSpecs = { ...activeFilters.specs };
-        const specValues = currentSpecs[specKey] || [];
-
-        if (specValues.includes(specValue)) {
-            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-        } else {
-            currentSpecs[specKey] = [...specValues, specValue];
-        }
-
-        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
     };
 
     const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
@@ -307,10 +277,6 @@ const SearchResults = () => {
                                     <h1>{searchQuery || 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                                        <div data-url="/cat/6280/smartwatches/f/1_9/apple.html" data-title="{searchQuery}" data-max-price="0" className="alerts-minimal">
-                                            <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                                            <div className="alerts-minimal__label"></div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="page-header__title-aside">
@@ -327,11 +293,11 @@ const SearchResults = () => {
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
-                                            <a key={item.id} title={item.category} className="categories__category" href={`/cat/${item.id}/${item.slug}`}>
+                                            <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </ScrollableSlider>
