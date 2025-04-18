@@ -143,7 +143,7 @@ const ProductDetail = () => {
 
   const basePrice = bestPrice.price || 999;
 
-  const days = getDaysFromRange(1m);
+  const days = getDaysFromRange('1m');
   const priceData = generatePriceData(basePrice || 0, getDaysFromRange(timeRange));
   if (!priceData.length) { return <div>No price data available.</div>; }
 
