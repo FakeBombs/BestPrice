@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-import PriceHistoryChart, { getDaysFromRange, generatePriceData } from '@/components/PriceHistoryChart';
+
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -127,13 +127,6 @@ const ProductDetail = () => {
   const bestPrice = getBestPrice(product);
   if (!bestPrice) return <div>Price data unavailable</div>;
 
-  const basePrice = bestPrice.price || 999;
-
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
-  const days = getDaysFromRange(timeRange);
-  const priceData = generatePriceData(basePrice, days);
-  if (!priceData.length) return <div>No price data available.</div>;
-
   const handleImageChange = (image: string) => {
     setCurrentImage(image);
   };
@@ -236,7 +229,7 @@ const ProductDetail = () => {
                   <ProductVendors product={product} />
                 </section>
                 <section id="item-graph" className="section">
-                  <PriceHistoryChart productId={`${product.id}`} basePrice={bestPrice?.price || 999} timeRange={timeRange} setTimeRange={setTimeRange} />
+                  
                 </section>
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
