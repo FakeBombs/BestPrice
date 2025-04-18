@@ -38,8 +38,12 @@ interface PriceHistoryChartProps {
 
 const PriceHistoryChart = ({ productId, basePrice, timeRange, setTimeRange }: PriceHistoryChartProps) => {
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
-  const minPrice = Math.min(...priceData.map(item => item.price));
-  const currentPrice = priceData[priceData.length - 1]?.price || 0;
+
+  // Check if priceData has values before using it
+  const minPrice = priceData.length > 0 ? Math.min(...priceData.map(item => item.price)) : 0;
+  const currentPrice = priceData.length > 0 ? priceData[priceData.length - 1]?.price || 0 : 0;
+
+  if (!priceData.length) return <div>No price data available.</div>;
 
   return (
     <Card>
