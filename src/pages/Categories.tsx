@@ -1,14 +1,11 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   getCategories, 
   getRootCategories, 
   getProductsByCategory, 
-  getProductsByRootCategory,
-  getCategoryById,
-  getRootCategoryById,
   getRootCategoryBySlug,
+  getCategoryById,
   getCategoriesByRootCategory
 } from '@/data/mockData';
 import AllCategoriesView from '@/components/category/AllCategoriesView';
@@ -27,19 +24,18 @@ const Categories = () => {
   const { categoryId, categorySlug, rootSlug } = useParams<{ 
     categoryId?: string; 
     categorySlug?: string;
-    rootSlug?: string 
+    rootSlug?: string; 
   }>();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  
+
   // If categoryId is provided, we're viewing a specific category
   // If rootSlug is provided, we're viewing a root category
-  // If neither is provided, we're viewing all categories
-  const category = categoryId ? getCategoryById(categoryId) : null;
+  const category = categoryId ? getCategoryById(Number(categoryId)) : null;
   const rootCategoryFromSlug = rootSlug ? getRootCategoryBySlug(rootSlug) : null;
-  const rootCategory = category ? getRootCategoryById(category.rootCategoryId) : rootCategoryFromSlug;
-  
+  const rootCategory = category ? getRootCategories().find(root => root.id === category.parentId) : rootCategoryFromSlug;
+
   // Redirect legacy URLs to new format
   useEffect(() => {
     if (category && !categorySlug) {
@@ -47,7 +43,7 @@ const Categories = () => {
       navigate(`/cat/${categoryId}/${correctSlug}`, { replace: true });
     }
   }, [categoryId, category, categorySlug, navigate]);
-  
+
   useEffect(() => {
     if (category) {
       // Fetch products for a specific category
@@ -56,7 +52,7 @@ const Categories = () => {
       setFilteredProducts(categoryProducts);
     } else if (rootCategory) {
       // Fetch products for a root category
-      const rootCategoryProducts = getProductsByRootCategory(rootCategory.id);
+      const rootCategoryProducts = getProductsByCategory(rootCategory.id);
       setProducts(rootCategoryProducts);
       setFilteredProducts(rootCategoryProducts);
     } else {
@@ -65,7 +61,7 @@ const Categories = () => {
       setFilteredProducts([]);
     }
   }, [category, rootCategory]);
-  
+
   // Filter and sort functions
   const handleSortChange = (value: string) => {
     const sorted = [...filteredProducts];
@@ -73,15 +69,15 @@ const Categories = () => {
     switch (value) {
       case 'price-asc':
         sorted.sort((a, b) => {
-          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
-          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          const aPrice = Math.min(...(a.prices.map(p => p.price) || [Infinity]));
+          const bPrice = Math.min(...(b.prices.map(p => p.price) || [Infinity]));
           return aPrice - bPrice;
         });
         break;
       case 'price-desc':
         sorted.sort((a, b) => {
-          const aPrice = a.prices.length ? Math.min(...a.prices.map(p => p.price)) : 0;
-          const bPrice = b.prices.length ? Math.min(...b.prices.map(p => p.price)) : 0;
+          const aPrice = Math.min(...(a.prices.map(p => p.price) || [Infinity]));
+          const bPrice = Math.min(...(b.prices.map(p => p.price) || [Infinity]));
           return bPrice - aPrice;
         });
         break;
@@ -98,7 +94,7 @@ const Categories = () => {
     setFilteredProducts(sorted);
   };
   
-  const handleVendorFilter = (vendors: string[]) => {
+  const handleVendorFilter = (vendors: number[]) => {
     if (vendors.length === 0) {
       setFilteredProducts(products);
       return;
@@ -113,7 +109,7 @@ const Categories = () => {
   
   const handlePriceRangeFilter = (min: number, max: number) => {
     const filtered = products.filter(product => {
-      const minPrice = product.prices.length ? Math.min(...product.prices.map(p => p.price)) : 0;
+      const minPrice = Math.min(...(product.prices.map(p => p.price) || [Infinity]));
       return minPrice >= min && minPrice <= max;
     });
     
@@ -132,7 +128,7 @@ const Categories = () => {
     
     setFilteredProducts(filtered);
   };
-  
+
   // Determine which view to render
   if (category) {
     return (
