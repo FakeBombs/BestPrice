@@ -232,7 +232,7 @@ const ProductDetail = () => {
                   <ProductVendors product={product} />
                 </section>
                 <section id="item-graph" className="section">
-                  <PriceHistoryChart productId={product.id} basePrice={basePrice} timeRange={timeRange} setTimeRange={setTimeRange} />
+                  
                 </section>
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
