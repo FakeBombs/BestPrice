@@ -1,10 +1,10 @@
 // Category interface for nested structure
 export interface Category {
-  id: number;              // Numeric ID for URL
-  name: string;           // Category name
-  slug: string;           // URL slug
-  parentId?: number;      // Optional parent ID for nesting
-  image: string;          // Category image
+  id: number;              
+  name: string;           
+  slug: string;           
+  parentId?: number;      
+  image: string;          
 }
 
 // Main categories
@@ -23,36 +23,37 @@ export const categories: Category[] = [
   // Subcategories under Technology
   { id: 10, name: 'Κινητά', slug: 'mobile-phones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
   { id: 11, name: 'Laptops', slug: 'laptops', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
-  { id: 12, name: 'Tablets', slug: 'tablets', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
-  { id: 13, name: 'Headphones', slug: 'headphones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
-  { id: 14, name: 'Cameras', slug: 'cameras', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp' },
-  { id: 15, name: 'Monitors', slug: 'monitors', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
+  { id: 20, name: 'Tablets', slug: 'tablets', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
+  { id: 21, name: 'Smartwatches', slug: 'smartwatches', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' },
 
   // Subcategories under Home & Garden
   { id: 16, name: 'Ψυγεία', slug: 'refrigerators', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
   { id: 17, name: 'Πλυντήρια Ρούχων', slug: 'washing-machines', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
-  { id: 18, name: 'Κουζίνες', slug: 'kitchen-appliances', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2488_SX400Y400/1629455496/kouzines.webp' },
+  { id: 22, name: 'Kitchen Accessories', slug: 'kitchen-accessories', parentId: 17, image: '//placehold.co/200x150?text=Kitchen+Accessories' },
+  { id: 23, name: 'Garden Tools', slug: 'garden-tools', parentId: 16, image: '//placehold.co/200x150?text=Garden+Tools' },
 
   // Subcategories under Fashion
   { id: 19, name: 'Gaming Consoles', slug: 'gaming-consoles', parentId: 3, image: '//placehold.co/200x200' },
-  { id: 20, name: 'Παιχνίδια', slug: 'games', parentId: 3, image: '//placehold.co/200x200' },
-  { id: 21, name: 'Αξεσουάρ Gaming', slug: 'gaming-accessories', parentId: 3, image: '//placehold.co/200x200' },
+  { id: 24, name: 'Cars and Accessories', slug: 'cars-accessories', parentId: 3, image: '//placehold.co/200x200' },
+  { id: 25, name: 'Men’s Clothing', slug: 'mens-clothing', parentId: 3, image: '//placehold.co/200x200' },
+  { id: 26, name: 'Women’s Clothing', slug: 'womens-clothing', parentId: 3, image: '//placehold.co/200x200' },
 
   // Subcategories under Health & Beauty
-  { id: 22, name: 'Sport Equipment', slug: 'sport-equipment', parentId: 4, image: '//placehold.co/200x200' },
-  { id: 23, name: 'Sports Shoes', slug: 'sports-shoes', parentId: 4, image: '//placehold.co/200x200' },
-
+  { id: 27, name: 'Sport Equipment', slug: 'sport-equipment', parentId: 4, image: '//placehold.co/200x200' },
+  { id: 28, name: 'Cosmetics', slug: 'cosmetics', parentId: 4, image: '//placehold.co/200x200' },
+  
   // Subcategories under Children & Baby
-  { id: 24, name: 'Men’s Clothing', slug: 'mens-clothing', parentId: 5, image: '//placehold.co/200x200' },
-  { id: 25, name: 'Women’s Clothing', slug: 'womens-clothing', parentId: 5, image: '//placehold.co/200x200' },
+  { id: 29, name: 'Baby Toys', slug: 'baby-toys', parentId: 5, image: '//placehold.co/200x200' },
+  { id: 30, name: 'Clothing', slug: 'clothing', parentId: 5, image: '//placehold.co/200x200' },
 
-  // Additional subcategories
-  { id: 26, name: 'Smartwatches', slug: 'smartwatches', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' }
+  // Subcategories under Hobby & Sports
+  { id: 31, name: 'Sportswear', slug: 'sportswear', parentId: 6, image: '//placehold.co/200x200' },
+  { id: 32, name: 'Outdoor Gear', slug: 'outdoor-gear', parentId: 6, image: '//placehold.co/200x200' }
 ];
 
 // Vendors
 export interface Vendor {
-  id: number; // Numeric ID for URL
+  id: number; 
   name: string;
   logo: string;
   rating: number;
@@ -71,7 +72,7 @@ export const vendors: Vendor[] = [
 
 // Product price from vendor
 export interface ProductPrice {
-  vendorId: number; // Changed to numeric ID for URL
+  vendorId: number; 
   price: number;
   shippingCost: number;
   inStock: boolean;
@@ -79,11 +80,11 @@ export interface ProductPrice {
 
 // Product
 export interface Product {
-  id: number; // Numeric ID
+  id: number; 
   title: string;
   brand: string;
   model: string;
-  categoryIds: number[]; // Array of category IDs
+  categoryIds: number[];
   description: string;
   image: string;
   images: string[];
@@ -93,14 +94,14 @@ export interface Product {
   prices: ProductPrice[];
 }
 
-// Sample products
+// Sample products (20 random products)
 export const products: Product[] = [
   {
     id: 1,
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    categoryIds: [10], // Associated categories
+    categoryIds: [10], 
     description: 'The latest iPhone with stunning design and performance.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
@@ -132,7 +133,7 @@ export const products: Product[] = [
     title: 'Samsung Galaxy S23 Ultra 512GB',
     brand: 'Samsung',
     model: 'Galaxy S23 Ultra',
-    categoryIds: [10], // Associates with "Mobile Phones"
+    categoryIds: [10],
     description: 'The ultimate Samsung phone with exceptional camera capabilities.',
     image: '//placehold.co/400x400?text=Galaxy+S23',
     images: [
@@ -159,12 +160,372 @@ export const products: Product[] = [
       { vendorId: 5, price: 1189.99, shippingCost: 5, inStock: true }
     ]
   },
-  // Additional products go here
+  {
+    id: 3,
+    title: 'MacBook Pro 16-inch',
+    brand: 'Apple',
+    model: 'MacBook Pro',
+    categoryIds: [11],
+    description: 'High-performance laptop for professionals.',
+    image: '//placehold.co/400x400?text=MacBook+Pro',
+    images: ['//placehold.co/400x400?text=MacBook+Pro'],
+    rating: 4.6,
+    reviews: 200,
+    specifications: {
+      'Processor': 'Apple M1 Pro',
+      'RAM': '16GB',
+      'Storage': '512GB SSD',
+      'Dimensions': '3.5 x 13.5 x 9.8 inches',
+      'Weight': '4.7 pounds'
+    },
+    prices: [
+      { vendorId: 1, price: 2499.99, shippingCost: 0, inStock: true },
+      { vendorId: 2, price: 2399.99, shippingCost: 10, inStock: true }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Sony 55 Inch 4K UHD TV',
+    brand: 'Sony',
+    model: 'Bravia',
+    categoryIds: [12],
+    description: 'Stunning visuals and vibrant colors.',
+    image: '//placehold.co/400x400?text=Sony+TV',
+    images: ['//placehold.co/400x400?text=Sony+TV'],
+    rating: 4.8,
+    reviews: 150,
+    specifications: {
+      'Resolution': '4K UHD',
+      'Screen Type': 'LED',
+      'Smart TV': 'Yes',
+      'Weight': '37.5 pounds'
+    },
+    prices: [
+      { vendorId: 3, price: 899.99, shippingCost: 0, inStock: true },
+      { vendorId: 4, price: 849.99, shippingCost: 20, inStock: true }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Dell XPS 13 Laptop',
+    brand: 'Dell',
+    model: 'XPS 13',
+    categoryIds: [11],
+    description: 'Ultra-thin laptop with stunning 4K display.',
+    image: '//placehold.co/400x400?text=Dell+XPS+13',
+    images: ['//placehold.co/400x400?text=Dell+XPS+13'],
+    rating: 4.5,
+    reviews: 180,
+    specifications: {
+      'Processor': 'Intel i7',
+      'RAM': '16GB',
+      'Storage': '1TB SSD',
+      'Dimensions': '0.58 x 11.6 x 7.8 inches',
+      'Weight': '2.7 pounds'
+    },
+    prices: [
+      { vendorId: 2, price: 1299.99, shippingCost: 0, inStock: true },
+      { vendorId: 6, price: 1249.99, shippingCost: 5, inStock: true }
+    ]
+  },
+  {
+    id: 6,
+    title: 'Fitness Tracker Watch',
+    brand: 'Fitbit',
+    model: 'Versa 3',
+    categoryIds: [20],
+    description: 'Monitor your health and fitness activities.',
+    image: '//placehold.co/400x400?text=Fitness+Tracker',
+    images: ['//placehold.co/400x400?text=Fitness+Tracker'],
+    rating: 4.4,
+    reviews: 300,
+    specifications: {
+      'Battery Life': '6+ days',
+      'Water Resistant': 'Yes',
+      'Syncs to': 'Mobile App'
+    },
+    prices: [
+      { vendorId: 2, price: 229.99, shippingCost: 0, inStock: true },
+      { vendorId: 3, price: 199.99, shippingCost: 5, inStock: true }
+    ]
+  },
+  {
+    id: 7,
+    title: 'Nike Running Shoes',
+    brand: 'Nike',
+    model: 'Air Zoom Pegasus',
+    categoryIds: [22],
+    description: 'Comfortable running shoes for all-day wear.',
+    image: '//placehold.co/400x400?text=Nike+Shoes',
+    images: ['//placehold.co/400x400?text=Nike+Shoes'],
+    rating: 4.7,
+    reviews: 350,
+    specifications: {
+      'Material': 'Synthetic',
+      'Weight': '10.6 ounces',
+      'Style': 'Running'
+    },
+    prices: [
+      { vendorId: 1, price: 119.99, shippingCost: 0, inStock: true },
+      { vendorId: 6, price: 109.99, shippingCost: 5, inStock: true }
+    ]
+  },
+  {
+    id: 8,
+    title: 'PlayStation 5 Console',
+    brand: 'Sony',
+    model: 'PS5',
+    categoryIds: [19],
+    description: 'Next-gen gaming console with stunning graphics.',
+    image: '//placehold.co/400x400?text=PS5',
+    images: ['//placehold.co/400x400?text=PS5'],
+    rating: 4.9,
+    reviews: 500,
+    specifications: {
+      'Storage': '825GB SSD',
+      'Resolution': 'Up to 120fps',
+      'Includes': 'Controller and Cable'
+    },
+    prices: [
+      { vendorId: 1, price: 499.99, shippingCost: 0, inStock: true },
+      { vendorId: 2, price: 489.99, shippingCost: 10, inStock: true }
+    ]
+  },
+  {
+    id: 9,
+    title: 'Wireless Headphones',
+    brand: 'Bose',
+    model: 'QuietComfort 35',
+    categoryIds: [13],
+    description: 'Noise-cancelling headphones for immersive sound.',
+    image: '//placehold.co/400x400?text=Bose+Headphones',
+    images: ['//placehold.co/400x400?text=Bose+Headphones'],
+    rating: 4.8,
+    reviews: 275,
+    specifications: {
+      'Battery Life': '20 hours',
+      'Features': 'Bluetooth, Voice Assistant'
+    },
+    prices: [
+      { vendorId: 3, price: 299.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 10,
+    title: 'Artificial Intelligence for Beginners',
+    brand: 'TechBooks',
+    model: 'AI Basics',
+    categoryIds: [11],
+    description: 'An introductory book on artificial intelligence concepts.',
+    image: '//placehold.co/400x400?text=AI+Book',
+    images: ['//placehold.co/400x400?text=AI+Book'],
+    rating: 4.5,
+    reviews: 50,
+    specifications: {
+      'Pages': '400',
+      'ISBN': '978-3-16-148410-0'
+    },
+    prices: [
+      { vendorId: 5, price: 29.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 11,
+    title: 'Camping Tent',
+    brand: 'NatureHike',
+    model: 'Camping Tent X1',
+    categoryIds: [31],
+    description: 'Spacious camping tent for outdoor adventures.',
+    image: '//placehold.co/400x400?text=Camping+Tent',
+    images: ['//placehold.co/400x400?text=Camping+Tent'],
+    rating: 4.6,
+    reviews: 100,
+    specifications: {
+      'Capacity': '4 Persons',
+      'Material': 'Waterproof'
+    },
+    prices: [
+      { vendorId: 6, price: 149.99, shippingCost: 0, inStock: true },
+      { vendorId: 2, price: 139.99, shippingCost: 10, inStock: true }
+    ]
+  },
+  {
+    id: 12,
+    title: 'Vegetable Planter Box',
+    brand: 'Gardener\'s Supply',
+    model: 'Planter Box to go',
+    categoryIds: [23],
+    description: 'Perfect for urban gardening!',
+    image: '//placehold.co/400x400?text=Vegetable+Planter',
+    images: ['//placehold.co/400x400?text=Vegetable+Planter'],
+    rating: 4.7,
+    reviews: 60,
+    specifications: {
+      'Material': 'Wood',
+      'Dimensions': '40 x 20 x 15 inches'
+    },
+    prices: [
+      { vendorId: 1, price: 79.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 13,
+    title: 'Nonstick Cookware Set',
+    brand: 'T-fal',
+    model: 'Cookware Basic Set',
+    categoryIds: [17],
+    description: 'Durable cookware set for everyday cooking.',
+    image: '//placehold.co/400x400?text=Cookware+Set',
+    images: ['//placehold.co/400x400?text=Cookware+Set'],
+    rating: 4.4,
+    reviews: 150,
+    specifications: {
+      'Material': 'Nonstick',
+      'Gauge': '304 Stainless Steel'
+    },
+    prices: [
+      { vendorId: 6, price: 99.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 14,
+    title: 'Fashion Backpack',
+    brand: 'SwissGear',
+    model: 'Travel Backpack',
+    categoryIds: [25],
+    description: 'Stylish and functional backpack for travel.',
+    image: '//placehold.co/400x400?text=Backpack',
+    images: ['//placehold.co/400x400?text=Backpack'],
+    rating: 4.7,
+    reviews: 120,
+    specifications: {
+      'Material': 'Polyester',
+      'Dimensions': '17.5 x 12.5 x 7 inches'
+    },
+    prices: [
+      { vendorId: 5, price: 59.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 15,
+    title: 'Electric Kettle',
+    brand: 'Hamilton Beach',
+    model: 'Electric Kettle 1.7L',
+    categoryIds: [16],
+    description: 'Quick boiling kettle for hot beverages.',
+    image: '//placehold.co/400x400?text=Electric+Kettle',
+    images: ['//placehold.co/400x400?text=Electric+Kettle'],
+    rating: 4.5,
+    reviews: 90,
+    specifications: {
+      'Material': 'Stainless Steel',
+      'Capacity': '1.7 Liters'
+    },
+    prices: [
+      { vendorId: 2, price: 39.99, shippingCost: 0, inStock: true },
+      { vendorId: 3, price: 34.99, shippingCost: 5, inStock: true }
+    ]
+  },
+  {
+    id: 16,
+    title: 'Yoga Mat',
+    brand: 'Liforme',
+    model: 'Eco-Friendly',
+    categoryIds: [22],
+    description: 'Durable and non-slip yoga mat.',
+    image: '//placehold.co/400x400?text=Yoga+Mat',
+    images: ['//placehold.co/400x400?text=Yoga+Mat'],
+    rating: 4.8,
+    reviews: 200,
+    specifications: {
+      'Material': 'Natural Rubber',
+      'Thickness': '5mm'
+    },
+    prices: [
+      { vendorId: 1, price: 49.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 17,
+    title: 'Pet Cat Tree',
+    brand: 'PawHut',
+    model: 'Pet Kitty Tower',
+    categoryIds: [29],
+    description: 'Fun play area for your cat.',
+    image: '//placehold.co/400x400?text=Cat+Tree',
+    images: ['//placehold.co/400x400?text=Cat+Tree'],
+    rating: 4.6,
+    reviews: 80,
+    specifications: {
+      'Material': 'Wood and Fabric',
+      'Height': '4 feet'
+    },
+    prices: [
+      { vendorId: 4, price: 79.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 18,
+    title: 'Children’s Educational Tablet',
+    brand: 'Amazon',
+    model: 'Fire HD 10',
+    categoryIds: [10],
+    description: 'Kids-friendly tablet with educational content.',
+    image: '//placehold.co/400x400?text=Kids+Tablet',
+    images: ['//placehold.co/400x400?text=Kids+Tablet'],
+    rating: 4.7,
+    reviews: 300,
+    specifications: {
+      'Battery Life': '12 hours',
+      'Size': '10.1 inch'
+    },
+    prices: [
+      { vendorId: 1, price: 149.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 19,
+    title: 'Smart TV Stick',
+    brand: 'Amazon',
+    model: 'Fire Stick 4K',
+    categoryIds: [13],
+    description: 'Stream all your favorites in 4K resolution.',
+    image: '//placehold.co/400x400?text=Smart+TV+Stick',
+    images: ['//placehold.co/400x400?text=Smart+TV+Stick'],
+    rating: 4.9,
+    reviews: 400,
+    specifications: {
+      'Supports': '4K Ultra HD, HDR',
+      'Includes': 'Alexa Voice Remote'
+    },
+    prices: [
+      { vendorId: 5, price: 49.99, shippingCost: 0, inStock: true }
+    ]
+  },
+  {
+    id: 20,
+    title: 'Drone with Camera',
+    brand: 'DJI',
+    model: 'Mavic Air 2',
+    categoryIds: [14],
+    description: 'Capture stunning aerial footage.',
+    image: '//placehold.co/400x400?text=Drone',
+    images: ['//placehold.co/400x400?text=Drone'],
+    rating: 4.8,
+    reviews: 150,
+    specifications: {
+      'Camera': '48MP',
+      'Flight Time': '34 minutes'
+    },
+    prices: [
+      { vendorId: 2, price: 799.99, shippingCost: 0, inStock: true }
+    ]
+  }
 ];
 
 // Brands
 export interface Brand {
-  id: number; // Numeric ID
+  id: number; 
   name: string;
   logo: string;
 }
@@ -245,8 +606,6 @@ export const getBestPrice = (product: Product) => {
 export const getCategories = () => {
   return categories;
 };
-
-// Removed getRootCategories function since rootCategories are no longer used
 
 export const getBrands = () => {
   return brands;
