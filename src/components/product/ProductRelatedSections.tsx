@@ -1,6 +1,6 @@
 import ProductCarousel from '@/components/ProductCarousel';
 import SimilarProductsSlider from '@/components/SimilarProductsSlider';
-import { Product } from '@/data/mockData';
+import { Product, getCategoryById } from '@/data/mockData';
 
 interface ProductRelatedSectionsProps {
   similarProducts: Product[];
@@ -15,6 +15,7 @@ const ProductRelatedSections = ({
   recentlyViewed,
   productId
 }: ProductRelatedSectionsProps) => {
+  const category = categoryDeals.length > 0 ? getCategoryById(categoryDeals[0].categoryIds[0])?.name : 'this category';
   return (
     <>
       {/* Similar Products */}
@@ -22,7 +23,7 @@ const ProductRelatedSections = ({
       
       {/* Deals in this Category */}
       <ProductCarousel 
-        title={`Deals in ${categoryDeals.length > 0 ? categoryDeals[0].category : 'this category'}`} 
+        title={`Deals in ${category}`} 
         products={categoryDeals} 
         emptyMessage="No deals found in this category"
       />
