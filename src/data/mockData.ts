@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/useTranslation';
+const { t } = useTranslation();
 
 // Category interface for nested structure
 export interface Category {
