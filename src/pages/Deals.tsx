@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchDeals, mainCategories } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
+import { dealsSVG } from '@/data/mockData';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -163,15 +164,17 @@ const Deals = () => {
                     <div className="scroll__scroller">
                       <div className="scroll__content">
                         <div className="deals-distr__cats">
-                          {mainCategories.map(category => (
-                            <a key={category.id} data-id={category.id} className="deals-distr__cat" href={`/deals/${category.id}/${category.slug}.html`} title={`Προσφορές σε ${category.name}`}>
-                              <svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img">
-                                {/* Corresponding SVG Paths for each Category should go here */}
-                                <path d="M0 0h24v24H0z" fill="none" />
-                              </svg>
-                              <span>{category.name}</span>
-                            </a>
-                          ))}
+                          {mainCategories.map(category => {
+                            // Find the SVG for the current category
+                            const categorySvg = dealsSVG.find(svg => svg.id === category.id);
+
+                            return (
+                              <Link key={category.id} data-id={category.id} className="deals-distr__cat" to={`/deals/${category.id}/${category.slug}.html`} title={`Προσφορές σε ${category.name}`}>
+                                {categorySvg && ( <span dangerouslySetInnerHTML={{ __html: categorySvg.path }} /> )}
+                                <span>{category.name}</span>
+                              </Link>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
