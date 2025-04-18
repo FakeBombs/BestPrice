@@ -7,7 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import ProductCarousel from '@/components/ProductCarousel';
 import RootCategoryCard from '@/components/RootCategoryCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
-import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories, getRootCategories } from '@/data/mockData';
+import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
