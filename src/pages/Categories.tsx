@@ -6,7 +6,7 @@ import {
   getProductsByCategory, 
   getRootCategoryBySlug,
   getCategoryById,
-  getCategoriesByRootCategory
+  getCategoriesByRootCategory 
 } from '@/data/mockData';
 import AllCategoriesView from '@/components/category/AllCategoriesView';
 import RootCategoryView from '@/components/category/RootCategoryView';
