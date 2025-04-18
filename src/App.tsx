@@ -33,7 +33,6 @@ function App() {
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="item/:productId/:productSlug?" element={<ProductDetail />} />
-          <Route path="item/:productId" element={<ProductDetail />} />
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
           <Route path="cat/:id/:slug" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
