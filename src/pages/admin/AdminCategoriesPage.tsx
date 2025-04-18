@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -25,7 +24,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import AdminHeader from "@/components/admin/AdminHeader";
 import CategoryForm from "@/components/admin/CategoryForm";
-import { Category, RootCategory, categories, rootCategories } from "@/data/mockData";
+import { Category, categories } from "@/data/mockData"; // Removed rootCategories since it's no longer used
 
 export default function AdminCategoriesPage() {
   const navigate = useNavigate();
@@ -41,11 +40,6 @@ export default function AdminCategoriesPage() {
   const filteredCategories = categories.filter(category => 
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
-  const getRootCategoryName = (rootCategoryId: string) => {
-    const rootCategory = rootCategories.find(r => r.id === rootCategoryId);
-    return rootCategory ? rootCategory.name : 'Unknown';
-  };
   
   const handleSaveCategory = (categoryData: Partial<Category>) => {
     // In a real app, this would save to the database
@@ -125,7 +119,7 @@ export default function AdminCategoriesPage() {
               {filteredCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className="font-medium">{category.name}</TableCell>
-                  <TableCell>{getRootCategoryName(category.rootCategoryId)}</TableCell>
+                  <TableCell>{category.parentId ? categories.find(cat => cat.id === category.parentId)?.name : 'N/A'}</TableCell>
                   <TableCell className="text-muted-foreground">{category.id}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
