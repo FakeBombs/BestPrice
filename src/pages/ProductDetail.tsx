@@ -141,25 +141,8 @@ const ProductDetail = () => {
   const bestPrice = getBestPrice(product);
   if (!bestPrice) return <div>Price data unavailable</div>; 
 
-  const generatePriceData = (basePrice: number, days: number) => {
-  const data = [];
-  const now = new Date();
-  
-  for (let i = days; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(now.getDate() - i);
-    const variation = Math.random() * 20 - 10; 
-    const price = Math.max(basePrice + variation, basePrice * 0.8);
-    
-    data.push({
-      date: date.toISOString().split('T')[0],
-      price: parseFloat(price.toFixed(2))
-    });
-  }
-  
-  return data;
-  };
-  
+  const basePrice = bestPrice.price || 999;
+
   const priceData = generatePriceData(basePrice || 0, getDaysFromRange(timeRange));
   if (!priceData.length) { return <div>No price data available.</div>; }
 
