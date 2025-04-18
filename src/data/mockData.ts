@@ -259,6 +259,10 @@ export const searchProducts = (query: string) => {
   );
 };
 
+export const getCategoryById = (id: number) => {
+  return categories.find(category => category.id === id);
+};
+
 export const getProductById = (id: number) => {
   return products.find(product => product.id === id);
 };
