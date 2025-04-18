@@ -81,12 +81,12 @@ const ProductDetail = () => {
 
   const { toast } = useToast();
   const { user } = useAuth();
-  const [product, setProduct] = useState(null);
-  const [currentImage, setCurrentImage] = useState('');
-  const [similarProducts, setSimilarProducts] = useState([]);
-  const [categoryDeals, setCategoryDeals] = useState([]);
-  const [recentlyViewed, setRecentlyViewed] = useState([]);
-  const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
+  const [product, setProduct] = useState<any | null>(null);
+  const [currentImage, setCurrentImage] = useState<string>('');
+  const [similarProducts, setSimilarProducts] = useState<any[]>([]);
+  const [categoryDeals, setCategoryDeals] = useState<any[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<any[]>([]);
+  const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState<boolean>(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -178,9 +178,6 @@ const ProductDetail = () => {
       <div className="root">
         <div id="trail" style={{ position: "relative" }}>
           <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
-          <div className="comparison__placeholder">
-            {/* Comparison UI remains unchanged but can be adjusted based on actual product data */}
-          </div>
         </div>
         <div className="item-layout__wrapper">
           <div className="item-layout">
@@ -192,7 +189,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="item-actions-buttons">
-                <button className="item-actions__button">
+                <button className="item-actions__button" onClick={handleAddToFavorites}>
                   <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M7 1C8.10457 1 9 1.89826 9 2.99791V4H12V8H9V10H7V14H2V4H5V2.99791C5 1.8945 5.88773 1 7 1ZM8 2.99791V4.00209H6V2.99791C6 2.44375 6.44304 2 7 2C7.55093 2 8 2.44919 8 2.99791ZM10 9H12V11H14V13H12V15H10V13H8V11H10V9Z"/></svg>
                   <span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span>
                 </button>
