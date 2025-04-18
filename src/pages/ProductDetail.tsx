@@ -136,6 +136,9 @@ const ProductDetail = () => {
   }
 
   const bestPrice = getBestPrice(product);
+  if (!bestPrice) return <div>Price data unavailable</div>;
+  const priceData = generatePriceData(basePrice || 0, getDaysFromRange(timeRange));
+  if (!priceData.length) { return <div>No price data available.</div>; }
 
   const handleImageChange = (image: string) => {
     setCurrentImage(image);
@@ -239,7 +242,7 @@ const ProductDetail = () => {
                   <ProductVendors product={product} />
                 </section>
                 <section id="item-graph" className="section">
-                  <PriceHistoryChart productId={product.id} basePrice={bestPrice?.price || 999} />
+                  <PriceHistoryChart productId={`${product.id}`} basePrice={bestPrice?.price || 999} />
                 </section>
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
