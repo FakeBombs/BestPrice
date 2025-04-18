@@ -13,13 +13,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
 
     return (
       <li key={categorySlug}>
-        <Link 
-          to={`/cat/${category.id}/${categorySlug}`} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`}
-          data-no-info=""
-        >
-          <span>{categoryTitle}</span>
-        </Link>
+        <Link to={`/cat/${category.id}/${categorySlug}`} title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info=""><span>{categoryTitle}</span></Link>
       </li>
     );
   };
@@ -56,8 +50,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         </React.Fragment>
       ))}
       <li>
+        <span className="trail__breadcrumb-separator">›</span>
         <span className="trail__last truncate max-w-[200px]">{product.title}</span>
-        <span className="trail__breadcrumb-separator"></span>
       </li>
     </ol>
   );
