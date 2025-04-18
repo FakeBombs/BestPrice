@@ -8,7 +8,7 @@ import { Review } from './reviews/types';
 import { mockReviews } from './reviews/mockData';
 
 interface UserReviewsProps {
-  productId: string;
+  productId: number;
   rating: number;
   reviewCount: number;
 }
