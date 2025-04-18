@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { fetchDeals, mainCategories } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
-import { dealsSVG } from '@/data/mockData';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -166,14 +165,8 @@ const Deals = () => {
                       <div className="scroll__content">
                         <div className="deals-distr__cats">
                           {mainCategories.map(category => {
-                            // Find the SVG for the current category
-                            const categorySvg = dealsSVG.find(svg => svg.id === category.id);
-
                             return (
-                              <Link key={category.id} data-id={category.id} className="deals-distr__cat" to={`/deals/${category.id}/${category.slug}.html`} title={`Προσφορές σε ${category.name}`}>
-                                {categorySvg && ( <span dangerouslySetInnerHTML={{ __html: categorySvg.path }} /> )}
-                                <span>{category.name}</span>
-                              </Link>
+                              <Link key={category.id} data-id={category.id} className="deals-distr__cat" to={`/deals/${category.id}/${category.slug}.html`} title={`Προσφορές σε ${category.name}`}><span>{category.name}</span></Link>
                             );
                           })}
                         </div>
