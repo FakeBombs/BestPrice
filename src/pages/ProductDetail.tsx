@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
+import PriceHistoryChart, { generatePriceData } from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 
 import PriceAlertModal from '@/components/PriceAlertModal';
