@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -127,8 +127,7 @@ const ProductDetail = () => {
   const bestPrice = getBestPrice(product);
   if (!bestPrice) return <div>Price data unavailable</div>;
 
-  const basePrice = bestPrice.price || 999; // Set a default base price
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
+  
 
   const handleImageChange = (image: string) => {
     setCurrentImage(image);
