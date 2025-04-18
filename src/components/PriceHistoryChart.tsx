@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import { 
   LineChart, 
   Line, 
@@ -58,8 +58,8 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
   );
 };
 
-const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => {
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
+const PriceHistoryChart: FC<PriceHistoryChartProps> = ({ productId, basePrice }) => {
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m'); // Ensure this is defined at the top of the component
 
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
 
