@@ -178,6 +178,9 @@ const ProductDetail = () => {
       <div className="root">
         <div id="trail" style={{ position: "relative" }}>
           <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
+          <div className="comparison__placeholder">
+            {/* Comparison UI remains unchanged but can be adjusted based on actual product data */}
+          </div>
         </div>
         <div className="item-layout__wrapper">
           <div className="item-layout">
