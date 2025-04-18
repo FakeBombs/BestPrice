@@ -82,6 +82,7 @@ const ProductDetail = () => {
   useBodyAttributes(classNamesForBody, newIdForBody);
 
   const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  const numericProductId = Number(productId);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -103,7 +104,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (productId) {
-      const productData = getProductById(productId);
+      const productData = getProductById(numericProductId);
       if (productData) {
         setProduct(productData);
         setCurrentImage(productData.image);
