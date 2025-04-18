@@ -36,7 +36,7 @@ const generatePriceData = (basePrice: number, days: number) => {
 };
 
 interface PriceHistoryChartProps {
-  productId: string;
+  productId: number;
   basePrice: number;
 }
 
