@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
+import PriceHistoryChart, { getDaysFromRange, generatePriceData } from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -21,8 +21,7 @@ const ProductDetail = () => {
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
   let classNamesForHtml = '';
-
-  // Check for ad blockers
+  
   const checkAdBlockers = () => {
     const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
     return adElementsToCheck.some(selector => {
@@ -37,7 +36,6 @@ const ProductDetail = () => {
 
   const isAdBlocked = checkAdBlockers();
 
-  // Determine device type
   if (userAgent.includes('windows')) {
     classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
@@ -50,10 +48,8 @@ const ProductDetail = () => {
     classNamesForHtml = 'unknown-device';
   }
 
-  // Handle ad blockers
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
-  // Set JavaScript enabled state
   useEffect(() => {
     const handleLoad = () => {
       setJsEnabled(true);
@@ -63,29 +59,26 @@ const ProductDetail = () => {
     return () => window.removeEventListener('load', handleLoad);
   }, []);
 
-  // Add JS enabled/disabled class
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
 
-  // Set attributes
-  const newIdForBody = ''; // Keeping body ID empty
+  const newIdForBody = '';
   const newIdForHtml = 'page-item';
 
   useHtmlAttributes(classNamesForHtml, newIdForHtml);
   useBodyAttributes(classNamesForBody, newIdForBody);
 
   const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  const numericProductId = Number(productId); // Convert productId to a number
+  const numericProductId = Number(productId);
   const navigate = useNavigate();
+
   useEffect(() => {
-    // If a slug is provided and it's not lowercase, redirect to lowercase version
     if (productSlug && productSlug !== productSlug.toLowerCase()) {
       navigate(`/item/${numericProductId}/${productSlug.toLowerCase()}`, { replace: true });
-    } 
-    // If no slug is provided, navigate to the route that uses only the productId
-    else if (!productSlug) {
+    } else if (!productSlug) {
       navigate(`/item/${numericProductId}/`, { replace: true });
     }
   }, [numericProductId, productSlug, navigate]);
+
   const { toast } = useToast();
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
@@ -96,7 +89,6 @@ const ProductDetail = () => {
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
   const { t } = useTranslation();
 
-  // Redirect legacy URLs to new format
   useEffect(() => {
     if (productId && product && !productSlug) {
       const correctSlug = formatProductSlug(product.title);
@@ -110,21 +102,16 @@ const ProductDetail = () => {
       if (productData) {
         setProduct(productData);
         setCurrentImage(productData.image);
-
-        // Get similar products
+        
         setSimilarProducts(getSimilarProducts(productId));
-
-        // Get category deals - in a real app, this would filter for actual deals
         setCategoryDeals(getProductsByCategory(productData.category).slice(0, 5));
 
-        // Get recently viewed from localStorage
         const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
         const recentlyViewedProducts = recentlyViewedIds
           .map(id => getProductById(id))
-          .filter(p => p); // Remove any nulls
+          .filter(p => p);
         setRecentlyViewed(recentlyViewedProducts);
 
-        // Update recently viewed in localStorage
         if (!recentlyViewedIds.includes(productId)) {
           const updatedRecentlyViewed = [productId, ...recentlyViewedIds].slice(0, 10);
           localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
@@ -138,13 +125,13 @@ const ProductDetail = () => {
   }
 
   const bestPrice = getBestPrice(product);
-  if (!bestPrice) return <div>Price data unavailable</div>; 
+  if (!bestPrice) return <div>Price data unavailable</div>;
 
   const basePrice = bestPrice.price || 999;
 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
-  const days = getDaysFromRange('1m');
-  const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
+  const days = getDaysFromRange(timeRange);
+  const priceData = generatePriceData(basePrice, days);
   if (!priceData.length) return <div>No price data available.</div>;
 
   const handleImageChange = (image: string) => {
