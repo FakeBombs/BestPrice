@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,12 +32,11 @@ export const getDaysFromRange = (range: string): number => {
 interface PriceHistoryChartProps {
   productId: number;
   basePrice: number;
+  timeRange: '1m' | '3m' | '6m' | '1y';
+  setTimeRange: React.Dispatch<React.SetStateAction<'1m' | '3m' | '6m' | '1y'>>;
 }
 
-const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => {
-  // Ensure this useState is defined here and check the return value.
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
-  
+const PriceHistoryChart = ({ productId, basePrice, timeRange, setTimeRange }: PriceHistoryChartProps) => {
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
   const minPrice = Math.min(...priceData.map(item => item.price));
   const currentPrice = priceData[priceData.length - 1]?.price || 0;
