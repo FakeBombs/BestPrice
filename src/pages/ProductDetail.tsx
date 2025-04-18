@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-import PriceHistoryChart, { generatePriceData } from '@/components/PriceHistoryChart';
+import PriceHistoryChart, { generatePriceData, getDaysFromRange } from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 
 import PriceAlertModal from '@/components/PriceAlertModal';
@@ -143,6 +143,7 @@ const ProductDetail = () => {
 
   const basePrice = bestPrice.price || 999;
 
+  const days = getDaysFromRange(1m);
   const priceData = generatePriceData(basePrice || 0, getDaysFromRange(timeRange));
   if (!priceData.length) { return <div>No price data available.</div>; }
 
