@@ -1,6 +1,3 @@
-import { useTranslation } from '@/hooks/useTranslation';
-const { t } = useTranslation();
-
 // Category interface for nested structure
 export interface Category {
   id: number;              // Numeric ID for URL
@@ -12,7 +9,7 @@ export interface Category {
 
 // Main categories
 export const mainCategories: Category[] = [
-  { id: 1, name: '{t('technology')}', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
   { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: '//placehold.co/200x150?text=Home+Garden' },
   { id: 3, name: 'Μόδα', slug: 'fashion', image: '//placehold.co/200x150?text=Fashion' },
   { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: '//placehold.co/200x150?text=Health+Beauty' },
@@ -82,27 +79,27 @@ export interface SvgIcon {
 // SVGs for Deals categories
 export const dealsSVG: SvgIcon[] = [
   {
-    id: 'technology',
+    id: 'Τεχνολογία',
     title: 'Technology Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img"><path d="M17 2H7C6.44772 2 6 2.44772 6 3V21C6 21.5523 6.44772 22 7 22H17C17.5523 22 18 21.5523 18 21V3C18 2.44772 17.5523 2 17 2ZM12.5 4H14M10 4H10.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   },
   {
-    id: 'home-garden',
+    id: 'Σπίτι & Κήπος',
     title: 'Home & Garden Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img"><path fill-rule="evenodd" d="M6 2H18L20 12H4L6 2Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12V19.2543M16 12V16M5 20.5C5 19.9477 5.44772 19.5 6 19.5H18C18.5523 19.5 19 19.9477 19 20.5V22H5V20.5Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   },
   {
-    id: 'fashion',
+    id: 'Μόδα',
     title: 'Fashion Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img"><path d="M5.8777 7.5C5.93812 8.06394 5.97559 8.72578 5.97559 9.5V22H17.9756V9.5C17.9756 8.72578 18.0131 8.06394 18.0735 7.5M18.5 11.0626L22 10.0626L18.9756 4.5L14.9756 2H8.97559L4.97559 4.5L2 10.0626L5.5 11.0626" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.97559 2.25C8.97559 3.90685 10.3187 5.25 11.9756 5.25C13.6324 5.25 14.9756 3.90685 14.9756 2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   },
   {
-    id: 'health-beauty',
+    id: 'Υγεία & Ομορφιά',
     title: 'Health & Beauty Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img"><path d="M6 4 8 18V21C8 21.5523 8.44772 22 9 22H15C15.5523 22 16 21.5523 16 21V18L18 4V2H6V4ZM8 18H15.75M6.5 4.5H11.5M14 4.5H15" stroke-linecap="round" stroke-linejoin="round"/></svg>`
   },
   {
-    id: 'kids-baby',
+    id: 'Παιδικά - Βρεφικά',
     title: 'Kids & Baby Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img">
               <path d="M12.5 15.75C12.5 18.7876 10.0376 21.25 7 21.25 3.96243 21.25 1.5 18.7876 1.5 15.75 1.5 12.7124 3.96243 10.25 7 10.25 10.0376 10.25 12.5 12.7124 12.5 15.75ZM22.5 17.75C22.5 19.683 20.933 21.25 19 21.25 17.067 21.25 15.5 19.683 15.5 17.75 15.5 15.817 17.067 14.25 19 14.25 20.933 14.25 22.5 15.817 22.5 17.75Z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -111,7 +108,7 @@ export const dealsSVG: SvgIcon[] = [
             </svg>`
   },
   {
-    id: 'sports-hobbies',
+    id: 'Hobby, Αθλητισμός',
     title: 'Sports & Hobbies Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img">
               <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke-linecap="round" stroke-linejoin="round"/>
@@ -119,7 +116,7 @@ export const dealsSVG: SvgIcon[] = [
             </svg>`
   },
   {
-    id: 'auto-moto',
+    id: 'Μηχανοκίνηση',
     title: 'Auto & Moto Icon',
     path: `<svg aria-hidden="true" className="icon" width="24" height="24" viewBox="0 0 24 24" role="img">
               <path d="M18 12C18 15.3137 15.3137 18 12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12Z" stroke-linecap="round" stroke-linejoin="round"/>
