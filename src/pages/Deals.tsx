@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchDeals, mainCategories } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
