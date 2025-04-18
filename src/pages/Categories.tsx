@@ -2,14 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   getCategories, 
-  getRootCategories, 
   getProductsByCategory, 
-  getRootCategoryBySlug,
-  getCategoryById,
-  getCategoriesByRootCategory 
-} from '@/data/mockData';
+  getCategoryById 
+} from '@/data/mockData'; // Removed imports related to root categories
 import AllCategoriesView from '@/components/category/AllCategoriesView';
-import RootCategoryView from '@/components/category/RootCategoryView';
 import SingleCategoryView from '@/components/category/SingleCategoryView';
 
 const formatCategorySlug = (name: string): string => {
@@ -21,20 +17,16 @@ const formatCategorySlug = (name: string): string => {
 };
 
 const Categories = () => {
-  const { categoryId, categorySlug, rootSlug } = useParams<{ 
+  const { categoryId, categorySlug } = useParams<{ 
     categoryId?: string; 
     categorySlug?: string;
-    rootSlug?: string; 
   }>();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   // If categoryId is provided, we're viewing a specific category
-  // If rootSlug is provided, we're viewing a root category
   const category = categoryId ? getCategoryById(Number(categoryId)) : null;
-  const rootCategoryFromSlug = rootSlug ? getRootCategoryBySlug(rootSlug) : null;
-  const rootCategory = category ? getRootCategories().find(root => root.id === category.parentId) : rootCategoryFromSlug;
 
   // Redirect legacy URLs to new format
   useEffect(() => {
@@ -50,17 +42,12 @@ const Categories = () => {
       const categoryProducts = getProductsByCategory(category.id);
       setProducts(categoryProducts);
       setFilteredProducts(categoryProducts);
-    } else if (rootCategory) {
-      // Fetch products for a root category
-      const rootCategoryProducts = getProductsByCategory(rootCategory.id);
-      setProducts(rootCategoryProducts);
-      setFilteredProducts(rootCategoryProducts);
     } else {
-      // No need to fetch products for all categories view
+      // No need to fetch products if no category is selected
       setProducts([]);
       setFilteredProducts([]);
     }
-  }, [category, rootCategory]);
+  }, [category]);
 
   // Filter and sort functions
   const handleSortChange = (value: string) => {
@@ -135,21 +122,6 @@ const Categories = () => {
       <SingleCategoryView 
         category={category} 
         products={filteredProducts}
-        rootCategory={rootCategory}
-        onSortChange={handleSortChange}
-        onVendorFilter={handleVendorFilter}
-        onPriceRangeFilter={handlePriceRangeFilter}
-        onInStockOnly={handleInStockOnly}
-      />
-    );
-  } else if (rootCategory) {
-    const subcategories = getCategoriesByRootCategory(rootCategory.id);
-    
-    return (
-      <RootCategoryView 
-        rootCategory={rootCategory} 
-        subcategories={subcategories}
-        products={filteredProducts}
         onSortChange={handleSortChange}
         onVendorFilter={handleVendorFilter}
         onPriceRangeFilter={handlePriceRangeFilter}
@@ -159,7 +131,6 @@ const Categories = () => {
   } else {
     return (
       <AllCategoriesView 
-        rootCategories={getRootCategories()} 
         categories={getCategories()} 
       />
     );
