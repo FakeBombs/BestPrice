@@ -1,4 +1,3 @@
-
 import ProductCarousel from '@/components/ProductCarousel';
 import SimilarProductsSlider from '@/components/SimilarProductsSlider';
 import { Product } from '@/data/mockData';
@@ -7,7 +6,7 @@ interface ProductRelatedSectionsProps {
   similarProducts: Product[];
   categoryDeals: Product[];
   recentlyViewed: Product[];
-  productId: string;
+  productId: number;
 }
 
 const ProductRelatedSections = ({ 
