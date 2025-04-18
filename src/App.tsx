@@ -36,7 +36,7 @@ function App() {
           <Route path="item/:productId" element={<ProductDetail />} />
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="cat/:id/:slug" element={<CategoryPage />} /> {/* New Route */}
+          <Route path="cat/:id/:slug" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
           <Route path="brands" element={<Brands />} />
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
