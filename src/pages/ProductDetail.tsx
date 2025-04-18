@@ -132,7 +132,7 @@ const ProductDetail = () => {
   }, [productId]);
 
   if (!product) {
-    return <div className="flex justify-center items-center h-96">Loading...</div>;
+    return <div className="flex justify-center items-center h-96">Product not found. Please check the URL.</div>;
   }
 
   const bestPrice = getBestPrice(product);
