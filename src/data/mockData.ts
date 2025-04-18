@@ -9,24 +9,46 @@ export interface Category {
   image: string;          // Category image
 }
 
+// Main categories
+export const mainCategories: Category[] = [
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
+  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: '//placehold.co/200x150?text=Home+Garden' },
+  { id: 3, name: 'Μόδα', slug: 'fashion', image: '//placehold.co/200x150?text=Fashion' },
+  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: '//placehold.co/200x150?text=Health+Beauty' },
+  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', image: '//placehold.co/200x150?text=Children+Baby' },
+  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', image: '//placehold.co/200x150?text=Hobby+Sports' },
+  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', image: '//placehold.co/200x150?text=Auto+Moto' }
+];
+
 // Subcategories and nested categories
 export const categories: Category[] = [
+  // Subcategories under Technology
   { id: 10, name: 'Κινητά', slug: 'mobile-phones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
   { id: 11, name: 'Laptops', slug: 'laptops', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
   { id: 12, name: 'Tablets', slug: 'tablets', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
   { id: 13, name: 'Headphones', slug: 'headphones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
   { id: 14, name: 'Cameras', slug: 'cameras', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/3013_SX400Y400/1472043991/psifiakes-videokameres.webp' },
   { id: 15, name: 'Monitors', slug: 'monitors', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
+
+  // Subcategories under Home & Garden
   { id: 16, name: 'Ψυγεία', slug: 'refrigerators', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
   { id: 17, name: 'Πλυντήρια Ρούχων', slug: 'washing-machines', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
   { id: 18, name: 'Κουζίνες', slug: 'kitchen-appliances', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2488_SX400Y400/1629455496/kouzines.webp' },
+
+  // Subcategories under Fashion
   { id: 19, name: 'Gaming Consoles', slug: 'gaming-consoles', parentId: 3, image: '//placehold.co/200x200' },
   { id: 20, name: 'Παιχνίδια', slug: 'games', parentId: 3, image: '//placehold.co/200x200' },
   { id: 21, name: 'Αξεσουάρ Gaming', slug: 'gaming-accessories', parentId: 3, image: '//placehold.co/200x200' },
+
+  // Subcategories under Health & Beauty
   { id: 22, name: 'Sport Equipment', slug: 'sport-equipment', parentId: 4, image: '//placehold.co/200x200' },
   { id: 23, name: 'Sports Shoes', slug: 'sports-shoes', parentId: 4, image: '//placehold.co/200x200' },
+
+  // Subcategories under Children & Baby
   { id: 24, name: 'Men’s Clothing', slug: 'mens-clothing', parentId: 5, image: '//placehold.co/200x200' },
   { id: 25, name: 'Women’s Clothing', slug: 'womens-clothing', parentId: 5, image: '//placehold.co/200x200' },
+
+  // Additional subcategories
   { id: 26, name: 'Smartwatches', slug: 'smartwatches', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' }
 ];
 
