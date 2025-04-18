@@ -50,7 +50,7 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
 const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => {
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
-  export const getDaysFromRange = (range: string): number => {
+export const getDaysFromRange = (range: string): number => {
     switch(range) {
       case '1m': return 30;
       case '3m': return 90;
