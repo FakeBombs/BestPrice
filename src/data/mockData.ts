@@ -11,7 +11,7 @@ export interface Category {
 
 // Main categories
 export const mainCategories: Category[] = [
-  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
+  { id: 1, name: '{t('technology')}', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
   { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: '//placehold.co/200x150?text=Home+Garden' },
   { id: 3, name: 'Μόδα', slug: 'fashion', image: '//placehold.co/200x150?text=Fashion' },
   { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: '//placehold.co/200x150?text=Health+Beauty' },
@@ -126,6 +126,8 @@ export const dealsSVG: SvgIcon[] = [
             </svg>`
   }
 ];
+
+
 
 // Product price from vendor
 export interface ProductPrice {
