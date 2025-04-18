@@ -578,12 +578,12 @@ export const getProductsByCategory = (categoryId: number) => {
   return products.filter(product => product.categoryIds.includes(categoryId));
 };
 
-export const getSimilarProducts = (productId: string) => {
+export const getSimilarProducts = (productId: number) => {
   const product = getProductById(productId);
   if (!product) return [];
   
   return products
-    .filter(p => p.categoryIds.includes(productId) && p.id !== productId)
+    .filter(p => product.categoryIds.some(id => p.categoryIds.includes(id)) && p.id !== productId)
     .slice(0, 5);
 };
 
