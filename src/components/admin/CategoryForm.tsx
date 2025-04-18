@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Card, 
@@ -13,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Category, RootCategory, categories, rootCategories } from "@/data/mockData";
+import { Category, categories } from "@/data/mockData"; // Removed rootCategories since it's no longer used
 
 interface CategoryFormProps {
   category?: Category;
@@ -25,8 +24,9 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
   const [formData, setFormData] = useState<Partial<Category>>({
     id: '',
     name: '',
-    rootCategoryId: '',
-    icon: ''
+    slug: '',
+    parentId: undefined,
+    image: '',
   });
   
   useEffect(() => {
@@ -34,8 +34,9 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
       setFormData({
         id: category.id,
         name: category.name,
-        rootCategoryId: category.rootCategoryId,
-        icon: category.icon
+        slug: category.slug,
+        parentId: category.parentId,
+        image: category.image,
       });
     }
   }, [category]);
@@ -47,7 +48,7 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.rootCategoryId) {
+    if (!formData.name || (formData.parentId === undefined)) {
       toast({
         title: "Ελλιπή στοιχεία",
         description: "Παρακαλούμε συμπληρώστε όλα τα υποχρεωτικά πεδία.",
@@ -56,14 +57,14 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
       return;
     }
     
-    // Generate a new ID if creating new category
+    // Generate a new ID if creating a new category
     if (!formData.id) {
       formData.id = `c${categories.length + 1}`;
     }
     
-    // Use default icon if not provided
-    if (!formData.icon) {
-      formData.icon = 'box';
+    // Use a default image if not provided
+    if (!formData.image) {
+      formData.image = '//placehold.co/200x200'; // Placeholder if no image is provided
     }
     
     onSave(formData);
@@ -92,35 +93,22 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="rootCategory">Βασική Κατηγορία *</Label>
+            <Label htmlFor="parentId">Βασική Κατηγορία *</Label>
             <Select 
-              value={formData.rootCategoryId}
-              onValueChange={(value) => handleChange('rootCategoryId', value)}
+              value={formData.parentId?.toString() || ''}
+              onValueChange={(value) => handleChange('parentId', Number(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Επιλέξτε βασική κατηγορία" />
               </SelectTrigger>
               <SelectContent>
-                {rootCategories.map((rootCat) => (
-                  <SelectItem key={rootCat.id} value={rootCat.id}>
-                    {rootCat.name}
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id.toString()}>
+                    {cat.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="icon">Εικονίδιο</Label>
-            <Input 
-              id="icon" 
-              value={formData.icon} 
-              onChange={(e) => handleChange('icon', e.target.value)}
-              placeholder="π.χ. smartphone, laptop, home"
-            />
-            <p className="text-xs text-muted-foreground">
-              Χρησιμοποιήστε ονόματα εικονιδίων από τη βιβλιοθήκη Lucide (π.χ. smartphone, laptop, home)
-            </p>
           </div>
           
           <div className="space-y-2">
@@ -129,6 +117,7 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
               id="image" 
               type="file" 
               accept="image/*"
+              onChange={(e) => handleChange('image', e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
               Προαιρετικά: Ανεβάστε μια εικόνα για την κατηγορία
