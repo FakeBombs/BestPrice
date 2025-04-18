@@ -66,7 +66,7 @@ const SearchResults = () => {
         });
 
         const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-            const categoryData = categories.find(cat => cat.id === parseInt(id)); // Match by numeric ID
+            const categoryData = categories.find(cat => cat.id === parseInt(id));
 
             return {
                 id: categoryData ? categoryData.id : '',
@@ -75,7 +75,7 @@ const SearchResults = () => {
                 count,
                 image: categoryData ? categoryData.image : '',
             };
-        }).filter(cat => cat.id) // Filter out any undefined categories
+        }).filter(cat => cat.id);
 
         setAvailableCategories(categoriesArray);
     };
@@ -137,6 +137,36 @@ const SearchResults = () => {
                     return availableVendorsB - availableVendorsA;
                 });
         }
+    };
+
+    const handleVendorFilter = (vendor) => {
+        const newVendors = activeFilters.vendors.includes(vendor)
+            ? activeFilters.vendors.filter((v) => v !== vendor)
+            : [...activeFilters.vendors, vendor];
+
+        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
+    };
+
+    const handleBrandFilter = (brand) => {
+        const newBrands = activeFilters.brands.includes(brand)
+            ? activeFilters.brands.filter((b) => b !== brand)
+            : [...activeFilters.brands, brand];
+
+        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+    };
+
+    const handleSpecFilter = (specKey, specValue) => {
+        const currentSpecs = { ...activeFilters.specs };
+        const specValues = currentSpecs[specKey] || [];
+
+        if (specValues.includes(specValue)) {
+            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+        } else {
+            currentSpecs[specKey] = [...specValues, specValue];
+        }
+
+        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
     };
 
     const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
