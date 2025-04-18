@@ -26,6 +26,9 @@ export const categories: Category[] = [
   { id: 20, name: 'Tablets', slug: 'tablets', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
   { id: 21, name: 'Smartwatches', slug: 'smartwatches', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' },
 
+  // Subcategories under Mobile Phones
+  { id: 30, name: 'Smartphones', slug: 'smartphones', parentId: 10, image: '//placehold.co/200x150?text=Smartphones' },
+
   // Subcategories under Home & Garden
   { id: 16, name: 'Ψυγεία', slug: 'refrigerators', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
   { id: 17, name: 'Πλυντήρια Ρούχων', slug: 'washing-machines', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
@@ -48,7 +51,12 @@ export const categories: Category[] = [
 
   // Subcategories under Hobby & Sports
   { id: 31, name: 'Sportswear', slug: 'sportswear', parentId: 6, image: '//placehold.co/200x200' },
-  { id: 32, name: 'Outdoor Gear', slug: 'outdoor-gear', parentId: 6, image: '//placehold.co/200x200' }
+  { id: 32, name: 'Outdoor Gear', slug: 'outdoor-gear', parentId: 6, image: '//placehold.co/200x200' },
+
+  // New Subcategories for Image
+  { id: 12, name: 'Εικόνα', slug: 'image', parentId: 1, image: '//placehold.co/200x150?text=Image' },
+  { id: 13, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'tv-accessories', parentId: 12, image: '//placehold.co/200x150?text=TV+Accessories' },
+  { id: 14, name: 'Τηλεοράσεις', slug: 'televisions', parentId: 13, image: '//placehold.co/200x150?text=Televisions' }
 ];
 
 // Vendors
@@ -101,7 +109,7 @@ export const products: Product[] = [
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    categoryIds: [10], 
+    categoryIds: [10, 30], // Now includes the smartphone subcategory
     description: 'The latest iPhone with stunning design and performance.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
@@ -133,7 +141,7 @@ export const products: Product[] = [
     title: 'Samsung Galaxy S23 Ultra 512GB',
     brand: 'Samsung',
     model: 'Galaxy S23 Ultra',
-    categoryIds: [10],
+    categoryIds: [10, 30], // Now includes the smartphone subcategory
     description: 'The ultimate Samsung phone with exceptional camera capabilities.',
     image: '//placehold.co/400x400?text=Galaxy+S23',
     images: [
@@ -188,7 +196,7 @@ export const products: Product[] = [
     title: 'Sony 55 Inch 4K UHD TV',
     brand: 'Sony',
     model: 'Bravia',
-    categoryIds: [12],
+    categoryIds: [14, 13, 12], // Updated categories
     description: 'Stunning visuals and vibrant colors.',
     image: '//placehold.co/400x400?text=Sony+TV',
     images: ['//placehold.co/400x400?text=Sony+TV'],
@@ -469,7 +477,7 @@ export const products: Product[] = [
     title: 'Children’s Educational Tablet',
     brand: 'Amazon',
     model: 'Fire HD 10',
-    categoryIds: [10],
+    categoryIds: [10, 30], // Now includes the smartphone subcategory
     description: 'Kids-friendly tablet with educational content.',
     image: '//placehold.co/400x400?text=Kids+Tablet',
     images: ['//placehold.co/400x400?text=Kids+Tablet'],
