@@ -9,40 +9,6 @@ export interface Category {
   image: string;          // Category image
 }
 
-// Root Categories
-export const rootCategories: Category[] = [
-  {
-    id: 1,
-    name: 'Τεχνολογία',
-    slug: 'technology',
-    image: '//abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp'
-  },
-  {
-    id: 2,
-    name: 'Οικιακές Συσκευές',
-    slug: 'home-appliances',
-    image: '//placehold.co/200x200'
-  },
-  {
-    id: 3,
-    name: 'Gaming',
-    slug: 'gaming',
-    image: '//placehold.co/200x200'
-  },
-  {
-    id: 4,
-    name: 'Αθλητικά',
-    slug: 'sports',
-    image: '//placehold.co/200x200'
-  },
-  {
-    id: 5,
-    name: 'Ένδυση',
-    slug: 'clothing',
-    image: '//placehold.co/200x200'
-  }
-];
-
 // Subcategories and nested categories
 export const categories: Category[] = [
   { id: 10, name: 'Κινητά', slug: 'mobile-phones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
@@ -73,54 +39,14 @@ export interface Vendor {
 }
 
 export const vendors: Vendor[] = [
-  { 
-    id: 1, 
-    name: 'You',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg',
-    rating: 4.5
-  },
-  { 
-    id: 2, 
-    name: 'Plaisio',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg',
-    rating: 4.2
-  },
-  { 
-    id: 3, 
-    name: 'Public',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg',
-    rating: 4.7
-  },
-  { 
-    id: 4, 
-    name: 'Κωτσόβολος',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg',
-    rating: 4.0
-  },
-  { 
-    id: 5, 
-    name: 'Funky Buddha',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg',
-    rating: 4.3
-  },
-  { 
-    id: 6, 
-    name: 'Germanos',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg',
-    rating: 4.1
-  },
-  { 
-    id: 7, 
-    name: 'e-shop.gr',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg',
-    rating: 3.2
-  },
-  { 
-    id: 8, 
-    name: 'Χαμόγελο του Παιδιού',
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg',
-    rating: 4.7
-  }
+  { id: 1, name: 'You', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5 },
+  { id: 2, name: 'Plaisio', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', rating: 4.2 },
+  { id: 3, name: 'Public', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', rating: 4.7 },
+  { id: 4, name: 'Κωτσόβολος', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', rating: 4.0 },
+  { id: 5, name: 'Funky Buddha', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', rating: 4.3 },
+  { id: 6, name: 'Germanos', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', rating: 4.1 },
+  { id: 7, name: 'e-shop.gr', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', rating: 3.2 },
+  { id: 8, name: 'Χαμόγελο του Παιδιού', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', rating: 4.7 }
 ];
 
 // Product price from vendor
@@ -276,7 +202,7 @@ export const getSimilarProducts = (productId: string) => {
   if (!product) return [];
   
   return products
-    .filter(p => p.category === product.category && p.id !== productId)
+    .filter(p => p.categoryIds.includes(productId) && p.id !== productId)
     .slice(0, 5);
 };
 
@@ -300,9 +226,7 @@ export const getCategories = () => {
   return categories;
 };
 
-export const getRootCategories = () => {
-  return rootCategories;
-};
+// Removed getRootCategories function since rootCategories are no longer used
 
 export const getBrands = () => {
   return brands;
