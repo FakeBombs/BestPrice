@@ -1,4 +1,3 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductSpecTable from '@/components/ProductSpecTable';
 import UserReviews from '@/components/UserReviews';
@@ -24,10 +23,6 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
           <h3 className="text-xl font-medium mb-4">Product Description</h3>
           <div className="prose max-w-none">
             <p className="mb-4">{product.description}</p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu 
-              pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
-            </p>
           </div>
         </TabsContent>
         <TabsContent value="reviews" className="p-4 border rounded-lg mt-4">
