@@ -16,14 +16,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const formatProductSlug = (title: string): string => {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-};
-
 const ProductDetail = () => {
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
@@ -82,8 +74,18 @@ const ProductDetail = () => {
   useBodyAttributes(classNamesForBody, newIdForBody);
 
   const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  const numericProductId = Number(productId);
+  const numericProductId = Number(productId); // Convert productId to a number
   const navigate = useNavigate();
+  useEffect(() => {
+    // If a slug is provided and it's not lowercase, redirect to lowercase version
+    if (productSlug && productSlug !== productSlug.toLowerCase()) {
+      navigate(`/item/${numericProductId}/${productSlug.toLowerCase()}`, { replace: true });
+    } 
+    // If no slug is provided, navigate to the route that uses only the productId
+    else if (!productSlug) {
+      navigate(`/item/${numericProductId}/`, { replace: true });
+    }
+  }, [numericProductId, productSlug, navigate]);
   const { toast } = useToast();
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
