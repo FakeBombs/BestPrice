@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products as allProducts, rootCategories } from '@/data/mockData';
+import { categories, products as allProducts } from '@/data/mockData'; // Removed rootCategories import
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
@@ -13,17 +13,17 @@ const CategoryPage: React.FC = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [sortType, setSortType] = useState('rating-desc');
 
-  // Find the root category based on the slug
-  const rootCategory = rootCategories.find(rootCat => rootCat.slug === rootCategorySlug);
+  // Find the main category matching the rootCategorySlug using slug
+  const mainCategory = categories.find(cat => cat.slug === rootCategorySlug);
 
-  if (!rootCategory) {
+  if (!mainCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  // Fetch the relevant subcategories matching the root category
-  const subcategories = categories.filter(cat => cat.rootCategoryId === rootCategory.id);
-  
-  const products = allProducts.filter(product => subcategories.some(cat => cat.name === product.category));
+  // Fetch the relevant subcategories
+  const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
+
+  const products = allProducts.filter(product => product.categoryIds.includes(mainCategory.id));
 
   useEffect(() => {
     const sortedResults = sortProducts(products);
@@ -153,7 +153,7 @@ const CategoryPage: React.FC = () => {
       <div className="root">
         <div className="page-products">
           <aside id="filters-aside" className="page-products__filters">
-            <div id="filters" data-label={rootCategory.name}>
+            <div id="filters" data-label={mainCategory.name}>
               <div className="filters__header">
                 <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
               </div>
@@ -230,7 +230,7 @@ const CategoryPage: React.FC = () => {
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
-                  <h1>{rootCategory.name}</h1>
+                  <h1>{mainCategory.name}</h1>
                   <div>{filteredProducts.length} products</div>
                 </div>
               </div>
