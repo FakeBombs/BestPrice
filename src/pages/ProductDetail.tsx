@@ -9,7 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import ProductVendors from '@/components/ProductVendors';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
+
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -232,7 +232,7 @@ const ProductDetail = () => {
                   <ProductVendors product={product} />
                 </section>
                 <section id="item-graph" className="section">
-                  
+                  <PriceHistoryChart productId={product.id} basePrice={basePrice} timeRange={timeRange} setTimeRange={setTimeRange} />
                 </section>
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
