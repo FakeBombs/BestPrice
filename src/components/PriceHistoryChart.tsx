@@ -11,8 +11,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Function to generate mock price data if needed
-const generatePriceData = (basePrice: number, days: number) => {
+// Exported function to generate mock price data
+export const generatePriceData = (basePrice: number, days: number) => {
   const data = [];
   const now = new Date();
   
@@ -63,7 +63,7 @@ const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => 
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
 
   const minPrice = Math.min(...priceData.map(item => item.price));
-  const currentPrice = priceData[priceData.length - 1].price;
+  const currentPrice = priceData[priceData.length - 1]?.price || 0; // Ensure it defaults if no data
 
   return (
     <Card>
@@ -91,8 +91,6 @@ const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => 
               />
               <YAxis tickFormatter={(value) => `$${value}`} />
               <Tooltip content={<CustomTooltipContent />} />
-              
-              {/* Example to add reference lines */}
               <ReferenceLine y={currentPrice} stroke="red" strokeDasharray="3 3" />
               <Line type="monotone" dataKey="price" stroke="#EC1639" />
             </LineChart>
@@ -107,4 +105,4 @@ const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => 
   );
 };
 
-export default PriceHistoryChart;
+export default PriceHistoryChart; 
