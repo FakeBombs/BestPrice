@@ -47,18 +47,19 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
   );
 };
 
+// Function to get days from the selected range
+const getDaysFromRange = (range: string): number => {
+  switch(range) {
+    case '1m': return 30;
+    case '3m': return 90;
+    case '6m': return 180;
+    case '1y': return 365;
+    default: return 30;
+  }
+};
+
 const PriceHistoryChart = ({ productId, basePrice }: PriceHistoryChartProps) => {
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
-
-export const getDaysFromRange = (range: string): number => {
-    switch(range) {
-      case '1m': return 30;
-      case '3m': return 90;
-      case '6m': return 180;
-      case '1y': return 365;
-      default: return 30;
-    }
-  };
 
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
 
@@ -105,4 +106,4 @@ export const getDaysFromRange = (range: string): number => {
   );
 };
 
-export default PriceHistoryChart; 
+export default PriceHistoryChart;
