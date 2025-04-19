@@ -19,11 +19,16 @@ const CategoryPage: React.FC = () => {
   
   useEffect(() => {
     let foundCategoryId: number | undefined = undefined;
-    
+
+    // Log the URL parameters
+    console.log('URL Params:', { mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug });
+
     // Attempting to parse different IDs from URL
     if (mainCatId) {
       foundCategoryId = parseInt(mainCatId, 10);
+      console.log("Parsed Main Category ID:", foundCategoryId);
       const foundCategory = mainCategories.find(cat => cat.id === foundCategoryId && cat.slug === mainCatSlug);
+      console.log("Found Main Category:", foundCategory);
       if (foundCategory) {
         setCurrentCategory(foundCategory);
         return; // Stop additional checks if main category is found
@@ -31,8 +36,10 @@ const CategoryPage: React.FC = () => {
     }
 
     if (subCatId) {
-      foundCategoryId = parseInt(subCatId);
+      foundCategoryId = parseInt(subCatId, 10);
+      console.log("Parsed Sub Category ID:", foundCategoryId);
       const foundSubCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === subCatSlug);
+      console.log("Found Sub Category:", foundSubCategory);
       if (foundSubCategory) {
         setCurrentCategory(foundSubCategory);
         return; // Stop additional checks if subcategory is found
@@ -40,8 +47,10 @@ const CategoryPage: React.FC = () => {
     }
 
     if (urlCategoryId) {
-      foundCategoryId = parseInt(urlCategoryId);
+      foundCategoryId = parseInt(urlCategoryId, 10);
+      console.log("Parsed Leaf Category ID:", foundCategoryId);
       const foundLeafCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === categorySlug);
+      console.log("Found Leaf Category:", foundLeafCategory);
       if (foundLeafCategory) {
         setCurrentCategory(foundLeafCategory);
         return; // Stop additional checks if leaf category is found
@@ -52,13 +61,19 @@ const CategoryPage: React.FC = () => {
   }, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
 
   useEffect(() => {
-    if (!currentCategory) return;
+    if (!currentCategory) {
+      console.log("Current Category not found");
+      return;
+    }
+
+    console.log("Current Category:", currentCategory);
 
     // Load products for leaf categories
     if (!currentCategory.parentId) {
       setFilteredProducts([]); // No products for main categories
     } else {
       const productsToDisplay = products.filter(product => product.categoryIds.includes(currentCategory.id));
+      console.log("Filtered Products:", productsToDisplay);
       setFilteredProducts(productsToDisplay);
     }
   }, [currentCategory]);
