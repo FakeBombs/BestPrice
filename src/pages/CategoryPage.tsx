@@ -5,6 +5,8 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
+  console.log({ mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug });
+  
   const { mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId: urlCategoryId, categorySlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
@@ -23,9 +25,14 @@ const CategoryPage: React.FC = () => {
     // Attempting to parse different IDs from URL
     if (mainCatId) {
       foundCategoryId = parseInt(mainCatId, 10);
+      console.log("Parsed Main Category ID:", foundCategoryId);
       const foundCategory = mainCategories.find(cat => cat.id === foundCategoryId && cat.slug === mainCatSlug);
       if (foundCategory) {
         setCurrentCategory(foundCategory);
+        console.log("Found Category:", foundCategory); 
+console.log("Found SubCategory:", foundSubCategory); 
+console.log("Found Leaf Category:", foundLeafCategory);
+        console.log("Current Category:", currentCategory);
         return; // Stop additional checks if main category is found
       }
     }
