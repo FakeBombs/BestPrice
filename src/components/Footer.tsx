@@ -2,36 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
+import { brands, products , vendors} from './mockData';
+
+const getStats = () => {
+    const totalProducts = products.length;
+    const totalVendors = vendors.length;
+    const totalBrands = brands.length;
+    const totalDeals = products.length >= 5 ? 5 : products.length; 
+
+    return {
+        totalProducts,
+        totalVendors,
+        totalBrands,
+        totalDeals,
+    };
+};
+
+// Use the function to get statistics
+const stats = getStats();
+console.log('Total Products:', stats.totalProducts);
+console.log('Total Vendors:', stats.totalVendors);
+console.log('Total Brands:', stats.totalBrands);
+console.log('Total Deals:', stats.totalDeals);
+
 const Footer: React.FC = () => {
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [totalVendors, setTotalVendors] = useState(0);
-  const [totalBrands, setTotalBrands] = useState(0);
-  const [totalDeals, setTotalDeals] = useState(0);
-  useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-                const productResponse = await fetch('/api/products/count');
-                const vendorResponse = await fetch('/api/vendors/count');
-                const brandResponse = await fetch('/api/brands/count');
-                const dealResponse = await fetch('/api/deals/count');
-
-                const productData = await productResponse.json();
-                const vendorData = await vendorResponse.json();
-                const brandData = await brandResponse.json();
-                const dealData = await dealResponse.json();
-
-                setTotalProducts(productData.count || 0);
-                setTotalVendors(vendorData.count || 0);
-                setTotalBrands(brandData.count || 0);
-                setTotalDeals(dealData.count || 0);
-            } catch (error) {
-                console.error('Error fetching counts:', error);
-            }
-      };
-    fetchCounts();
-  }, []);
-
-  
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     window.scrollTo({
