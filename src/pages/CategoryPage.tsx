@@ -16,75 +16,82 @@ const CategoryPage: React.FC = () => {
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  
+  // Unified critical logic to fetch the category
+  useEffect(() => {
+    let categoryId: number | undefined = undefined;
+    
+    // Attempting to parse different IDs from URL
+    if (mainCatId) {
+      categoryId = parseInt(mainCatId);
+      const foundCategory = mainCategories.find(cat => cat.id === categoryId && cat.slug === mainCatSlug);
+      if (foundCategory) {
+        setCurrentCategory(foundCategory);
+        return; // Stop additional checks if main category is found
+      }
+    }
+
+    if (subCatId) {
+      categoryId = parseInt(subCatId);
+      const foundSubCategory = categories.find(cat => cat.id === categoryId && cat.slug === subCatSlug);
+      if (foundSubCategory) {
+        setCurrentCategory(foundSubCategory);
+        return; // Stop additional checks if subcategory is found
+      }
+    }
+
+    if (categorytId) {
+      categoryId = parseInt(categorytId);
+      const foundLeafCategory = categories.find(cat => cat.id === categoryId && cat.slug === categorySlug);
+      if (foundLeafCategory) {
+        setCurrentCategory(foundLeafCategory);
+        return; // Stop additional checks if leaf category is found
+      }
+    }
+
+    setCurrentCategory(undefined); // If no category found
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug]);
 
   useEffect(() => {
-    let foundCategory: Category | undefined;
+    if (!currentCategory) return;
 
-    // Check for main category
-    if (mainCatId) {
-      const id = parseInt(mainCatId);
-      foundCategory = mainCategories.find(cat => cat.id === id && cat.slug === mainCatSlug);
-    }
-
-    // Check for subcategory
-    if (!foundCategory && subCatId) {
-      const id = parseInt(subCatId);
-      foundCategory = categories.find(cat => cat.id === id && cat.slug === subCatSlug);
-    }
-
-    // Check for leaf category
-    if (!foundCategory && categorytId) {
-      const id = parseInt(categorytId);
-      foundCategory = categories.find(cat => cat.id === id && cat.slug === categorySlug);
-    }
-
-    if (foundCategory) {
-      setCurrentCategory(foundCategory);
-
-      // Load products for leaf categories
-      if (!foundCategory.parentId) {
-        setFilteredProducts([]); // No products for main categories with parentId undefined
-      } else {
-        const productsToDisplay = products.filter(product => product.categoryIds.includes(foundCategory.id));
-        setFilteredProducts(productsToDisplay);
-      }
+    // Load products for leaf categories
+    if (!currentCategory.parentId) {
+      setFilteredProducts([]); // No products for main categories
     } else {
-      setCurrentCategory(undefined); // No category found
+      const productsToDisplay = products.filter(product => product.categoryIds.includes(currentCategory.id));
+      setFilteredProducts(productsToDisplay);
     }
-
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug]);
+  }, [currentCategory]);
 
   // Handle category not found
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  // Function to render main categories
-  const renderMainCategories = () => {
-    return (
-      <div>
-        <h2>Main Categories</h2>
-        <div className="main-categories">
-          {mainCategories.map((cat) => (
-            <div key={cat.id}>
-              <Link to={`/cat/${cat.id}/${cat.slug}`}>
-                <h3>{cat.name}</h3>
-              </Link>
-            </div>
-          ))}
-        </div>
+  // Render main categories
+  const renderMainCategories = () => (
+    <div>
+      <h2>Main Categories</h2>
+      <div className="main-categories">
+        {mainCategories.map((cat) => (
+          <div key={cat.id}>
+            <Link to={`/cat/${cat.id}/${cat.slug}`}>
+              <h3>{cat.name}</h3>
+            </Link>
+          </div>
+        ))}
       </div>
-    );
-  };
+    </div>
+  );
 
-  // Function to render subcategories with further subcategories
-  const renderSubcategoriesWithSubcategories = () => {
+  // Render subcategories
+  const renderSubcategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
-
     return (
       <div>
-        <h2>Subcategories with More Subcategories</h2>
-        <div className="subcategories-with-subcategories">
+        <h2>Subcategories</h2>
+        <div className="subcategories">
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id}>
@@ -101,49 +108,25 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  // Function to render leaf subcategories
-  const renderLeafSubcategories = () => {
-    const leafSubcategories = categories.filter(cat => 
-      cat.parentId === currentCategory.id && 
-      !categories.some(child => child.parentId === cat.id)
-    );
+  // Render leaf products
+  const renderProducts = () => (
+    <div>
+      <h2>Products</h2>
+      {filteredProducts.length > 0 ? (
+        filteredProducts.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))
+      ) : (
+        <p>No products in this category.</p>
+      )}
+    </div>
+  );
 
-    return (
-      <div>
-        <h2>Leaf Subcategories (No Further Subcategories)</h2>
-        <div className="leaf-subcategories">
-          {leafSubcategories.length > 0 ? (
-            leafSubcategories.map((leaf) => (
-              <div key={leaf.id}>
-                <Link to={`/cat/${leaf.id}/${leaf.slug}`}>
-                  <h3>{leaf.name}</h3>
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p>No leaf subcategories available for this category.</p>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  // Main rendering
   return (
     <div>
-      {renderMainCategories()} // Always show main categories
-      {renderSubcategoriesWithSubcategories()} // Show subcategories with further subcategories
-      {renderLeafSubcategories()} // Show leaf subcategories
-
-      {/* Render products for leaf categories only */}
-      {currentCategory.parentId && filteredProducts.length > 0 && (
-        <div>
-          <h2>Products</h2>
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+      {renderMainCategories()}
+      {renderSubcategories()}
+      {currentCategory && currentCategory.parentId && renderProducts()} {/* Only show products if it's not a main category */}
     </div>
   );
 };
