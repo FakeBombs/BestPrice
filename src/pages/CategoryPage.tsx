@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useParams, Link } from 'react-router-dom';
 import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { subCatId, subCatSlug } = useParams<{ subCatId: string; subCatSlug: string }>();
+  const { subCatId } = useParams<{ subCatId: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [currentSubCategory, setCurrentSubCategory] = useState<Category | undefined>(undefined);
+  const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    const subCategoryId = subCatId ? parseInt(subCatId) : undefined;
-    const mainCategory = categories.find(cat => cat.id === subCategoryId);
+    const categoryId = subCatId ? parseInt(subCatId) : undefined;
+    const category = categories.find(cat => cat.id === categoryId);
 
-    if (mainCategory) {
-      setCurrentSubCategory(mainCategory);
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+    if (category) {
+      setCurrentCategory(category);
+      const productsToDisplay = products.filter(product => 
+        product.categoryIds.includes(category.id)
+      );
       setFilteredProducts(productsToDisplay);
     }
   }, [subCatId]);
 
-  if (!currentSubCategory) {
+  if (!currentCategory) {
     return <h1>Category Not Found</h1>;
   }
 
@@ -38,7 +40,8 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const hasSubcategories = categories.some(cat => cat.parentId === currentSubCategory.id);
+  const hasSubcategories = categories.filter(cat => cat.parentId === currentCategory.id);
+  const isMainCategory = currentCategory.parentId === null;
 
   return (
     <div className="root__wrapper">
@@ -48,7 +51,7 @@ const CategoryPage: React.FC = () => {
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
-                  <h1>{currentSubCategory.name}</h1>
+                  <h1>{currentCategory.name}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                   </div>
@@ -74,11 +77,11 @@ const CategoryPage: React.FC = () => {
               </div>
             </div>
 
-            {hasSubcategories && !subCatId ? (
+            {isMainCategory && hasSubcategories.length > 0 ? (
               <div className="subcategories-list">
                 <h2>Subcategories:</h2>
                 <ul>
-                  {categories.filter(cat => cat.parentId === currentSubCategory.id).map(subCat => (
+                  {hasSubcategories.map(subCat => (
                     <li key={subCat.id}>
                       <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                     </li>
