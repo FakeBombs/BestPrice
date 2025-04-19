@@ -11,8 +11,8 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
-    if (subCategory) { ... }
-  }, [ categoryId ]);
+    // if (subCategory) { ... }
+  }, [/* categoryId */]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
@@ -21,7 +21,7 @@ const CategoryPage: React.FC = () => {
   const sortProducts = (products) => {
     switch ('rating-desc') { // Using a hard-coded value for testing
       case 'price-asc':
-        // return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
+        return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
         return products; // Placeholder
       case 'price-desc':
         // return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
