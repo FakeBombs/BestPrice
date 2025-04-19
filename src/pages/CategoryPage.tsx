@@ -15,19 +15,16 @@ const CategoryPage: React.FC = () => {
     const mainCategory = categories.find(cat => cat.id === subCategoryId);
     
     if (mainCategory) {
-      // Case 1: Main Category Found
       setCurrentSubCategory(mainCategory);
       const productsToDisplay = products.filter(product => product.categoryIds.includes(mainCategory.id));
       setFilteredProducts(productsToDisplay);
     } else {
-      // Case 2: Subcategory Scenario
       const subCategory = categories.find(cat => cat.id === subCategoryId);
       if (subCategory) {
         setCurrentSubCategory(subCategory);
         const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
         setFilteredProducts(productsToDisplay);
       } else {
-        // Case 3: If no main category or subcategory is found
         setCurrentSubCategory(undefined);
       }
     }
@@ -57,35 +54,48 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="root__wrapper">
       <div className="root">
-
-        {/* Main Categories Section */}
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title="BestPrice.gr" href="/"></a>
-              <h1>Categories</h1>
-            </div>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {mainCategories.map(mainCat => (
-            <div className="root-category__category" key={mainCat.id}>
-              <a href={`/cat/${mainCat.id}/${mainCat.slug}`} className="root-category__cover">
-                <img src={mainCat.image} alt={mainCat.name} title={mainCat.name} />
-              </a>
-              <h2 className="root-category__category-title">
-                <a href={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</a>
-              </h2>
-              <div className="root-category__footer">
-                <div className="root-category__links">
-                  {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (
-                    <a key={subCat.id} href={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</a>
-                  ))}
+        
+        {/* Main Categories Section (only show if not a subcategory) */}
+        {subCatId === undefined ? (  // Check if the current URL is for a main category
+          <>
+            <div className="page-header">
+              <div className="hgroup">
+                <div className="page-header__title-wrapper">
+                  <a className="trail__back pressable" title="BestPrice.gr" href="/"></a>
+                  <h1>{currentSubCategory.name}</h1> {/* Display the name of the currently selected main category */}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            <div className="root-category__categories">
+              {mainCategories.map(mainCat => (
+                <div className="root-category__category" key={mainCat.id}>
+                  <a href={`/cat/${mainCat.id}/${mainCat.slug}`} className="root-category__cover">
+                    <img src={mainCat.image} alt={mainCat.name} title={mainCat.name} />
+                  </a>
+                  <h2 className="root-category__category-title">
+                    <a href={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</a>
+                  </h2>
+                  <div className="root-category__footer">
+                    <div className="root-category__links">
+                      {/* Map subcategories belonging to this main category */}
+                      {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (
+                        <div key={subCat.id}>
+                          <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                          {/* Nested subcategories for this subcategory if any */}
+                          <div className="nested-subcategories">
+                            {categories.filter(cat => cat.parentId === subCat.id).map(nestedSubCat => (
+                              <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}`}>{nestedSubCat.name}</Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : null} {/* End of Main Categories Section */}
 
         {/* Subcategories with more subcategories Section */}
         {hasSubcategories && !subCatId ? (
@@ -115,7 +125,7 @@ const CategoryPage: React.FC = () => {
             )}
           </div>
         ) : null}
-        
+
       </div>
     </div>
   );
