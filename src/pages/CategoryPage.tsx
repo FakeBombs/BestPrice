@@ -69,29 +69,24 @@ const CategoryPage: React.FC = () => {
             </div>
             <div className="root-category__categories">
               {mainCategories.map(mainCat => (
-                <div className="root-category__category" key={mainCat.id}>
-                  <a href={`/cat/${mainCat.id}/${mainCat.slug}`} className="root-category__cover">
-                    <img src={mainCat.image} alt={mainCat.name} title={mainCat.name} />
-                  </a>
+                {/* Map subcategories belonging to this main category */}
+                {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (
+                <div className="root-category__category" key={subCat.id}>
+                  <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                    <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                  </Link>
                   <h2 className="root-category__category-title">
-                    <a href={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</a>
+                    <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                   </h2>
                   <div className="root-category__footer">
                     <div className="root-category__links">
-                      {/* Map subcategories belonging to this main category */}
-                      {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (
-                        <div key={subCat.id}>
-                          <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-                          {/* Nested subcategories for this subcategory if any */}
-                          <div className="nested-subcategories">
-                            {categories.filter(cat => cat.parentId === subCat.id).map(nestedSubCat => (
-                              <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}`}>{nestedSubCat.name}</Link>
-                            ))}
-                          </div>
-                        </div>
+                      {/* Nested subcategories for this subcategory if any */}
+                      {categories.filter(cat => cat.parentId === subCat.id).map(nestedSubCat => (
+                        <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}`}>{nestedSubCat.name}</Link>
                       ))}
                     </div>
                   </div>
+                ))}
                 </div>
               ))}
             </div>
