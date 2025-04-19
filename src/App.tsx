@@ -37,9 +37,9 @@ function App() {
           <Route path="item/:productId/:productSlug.html" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
-          <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
-          <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
-          <Route path="/cat/:categoryId/:subCatId" element={<CategoryPage />}
+          <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> 
+          <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} />
+          <Route path="/cat/:categoryId/:subCatId/:subCatSlug*" element={<CategoryPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="b/:brandId/" element={<BrandPage />} />
           <Route path="b/:brandId/:slug" element={<BrandPage />} />
