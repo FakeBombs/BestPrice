@@ -3,27 +3,25 @@ import { useParams, Link } from 'react-router-dom';
 import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
+// Main component
 const CategoryPage: React.FC = () => {
-  const { categoryId, subCatId, subCatSlug } = useParams<{ categoryId: string; subCatId: string; subCatSlug: string }>();
+  const { subCatId, subCatSlug } = useParams<{ subCatId: string; subCatSlug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  const [currentSubCategory, setCurrentSubCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    const catId = parseInt(categoryId);
     const subCategoryId = subCatId ? parseInt(subCatId) : undefined;
-    const mainCategory = categories.find(cat => cat.id === catId);
-    
+    const mainCategory = categories.find(cat => cat.id === subCategoryId);
+
     if (mainCategory) {
-      setCurrentCategory(mainCategory);
-      const productsToDisplay = products.filter(product => 
-        subCategoryId ? product.categoryIds.includes(subCategoryId) : product.categoryIds.includes(catId)
-      );
+      setCurrentSubCategory(mainCategory);
+      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
       setFilteredProducts(productsToDisplay);
     }
-  }, [categoryId, subCatId]);
+  }, [subCatId]);
 
-  if (!currentCategory) {
+  if (!currentSubCategory) {
     return <h1>Category Not Found</h1>;
   }
 
@@ -40,7 +38,7 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const hasSubcategories = categories.some(cat => cat.parentId === currentCategory.id);
+  const hasSubcategories = categories.some(cat => cat.parentId === currentSubCategory.id);
 
   return (
     <div className="root__wrapper">
@@ -50,7 +48,7 @@ const CategoryPage: React.FC = () => {
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
-                  <h1>{currentCategory.name}</h1>
+                  <h1>{currentSubCategory.name}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                   </div>
@@ -80,9 +78,9 @@ const CategoryPage: React.FC = () => {
               <div className="subcategories-list">
                 <h2>Subcategories:</h2>
                 <ul>
-                  {categories.filter(cat => cat.parentId === currentCategory.id).map(subCat => (
+                  {categories.filter(cat => cat.parentId === currentSubCategory.id).map(subCat => (
                     <li key={subCat.id}>
-                      <Link to={`/cat/${categoryId}/${subCat.id}`}>{subCat.name}</Link>
+                      <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                     </li>
                   ))}
                 </ul>
