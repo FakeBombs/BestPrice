@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug, searchQuery } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId?: string; subCatSlug?: string; searchQuery?: string }>(); 
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId?: string; subCatSlug?: string }>(); 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
@@ -15,19 +15,25 @@ const CategoryPage: React.FC = () => {
 
     if (mainCategory) {
       setCurrentCategory(mainCategory);
-      const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
-      setFilteredProducts([]); // Clear products, we will show subcategories
-    } else {
-      const subCategoryId = subCatId ? parseInt(subCatId) : undefined; 
-      const subCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug);
-
-      if (subCategory) {
-        setCurrentCategory(subCategory);
-        const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
-        setFilteredProducts(productsToDisplay);
+      
+      if (subCatId) {
+        const subCategoryId = parseInt(subCatId);
+        const subCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug);
+        
+        if (subCategory) {
+          setCurrentCategory(subCategory);
+          const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
+          setFilteredProducts(productsToDisplay);        
+        } else {
+          setCurrentCategory(undefined);
+        }
       } else {
-        setCurrentCategory(undefined);
+        // When there's no subCategoryId
+        const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
+        setFilteredProducts([]); // Clear products, we will show subcategories
       }
+    } else {
+      setCurrentCategory(undefined);
     }
   }, [mainCatId, mainCatSlug, subCatId, subCatSlug]);
 
@@ -44,7 +50,12 @@ const CategoryPage: React.FC = () => {
           subcategories.map(subCat => (
             <div className="root-category__category" key={subCat.id}>
               <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category`} className="root-category__cover">
-                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                <img 
+                  src={subCat.image} 
+                  srcSet={`${subCat.image2x} 2x`} 
+                  alt={subCat.name} 
+                  title={subCat.name} 
+                />
               </Link>
               <h2 className="root-category__category-title">
                 <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category__title`}>
