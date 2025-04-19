@@ -33,13 +33,17 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
-          <Route path="item/:productId/:productSlug.html" element={<ProductDetail />} />
+          // For CategoryPage
+          <Route path="/cat/:subCatId/:subCatSlug*" element={<CategoryPage />} />
+          <Route path="/cat/:subCatId/:subCatSlug(\\.[a-zA-Z0-9]+)?" element={<CategoryPage />} />
+          // Additional CategoryPage routes
+          <Route path="/cat/:categoryId/:slug*" element={<CategoryPage />} />
+          <Route path="/cat/:categoryId/:slug(\\.[a-zA-Z0-9]+)?" element={<CategoryPage />} />
+          // For ProductDetail
+          <Route path="item/:productId/:productSlug*" element={<ProductDetail />} />
+          <Route path="item/:productId/:productSlug(\\.[a-zA-Z0-9]+)?" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
-          <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> 
-          <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} />
-          <Route path="/cat/:subCatId/:subCatSlug*" element={<CategoryPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="b/:brandId/" element={<BrandPage />} />
           <Route path="b/:brandId/:slug" element={<BrandPage />} />
