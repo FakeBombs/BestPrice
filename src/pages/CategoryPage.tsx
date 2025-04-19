@@ -5,72 +5,73 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId?: string; subCatSlug?: string }>(); 
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId?: string; subCatSlug?: string; categorytId?: string; categorySlug?: string }>(); 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-    const mainCategoryId = mainCatId ? parseInt(mainCatId) : undefined;
-    const mainCategory = mainCategories.find(cat => cat.id === mainCategoryId && cat.slug === mainCatSlug);
+    let foundCategory = undefined;
 
-    if (mainCategory) {
-      setCurrentCategory(mainCategory);
+    // Check if we are in the main category route
+    if (mainCatId && mainCatSlug) {
+      const mainCategoryId = parseInt(mainCatId);
+      foundCategory = mainCategories.find(cat => cat.id === mainCategoryId && cat.slug === mainCatSlug);
+      setCurrentCategory(foundCategory);
       
-      if (subCatId) {
-        const subCategoryId = parseInt(subCatId);
-        const subCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug);
-        
-        if (subCategory) {
-          setCurrentCategory(subCategory);
-          const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
-          setFilteredProducts(productsToDisplay);        
-        } else {
-          setCurrentCategory(undefined);
-        }
+      if (foundCategory) {
+        // Reset filteredProducts for main category
+        setFilteredProducts([]);
+      }
+    } 
+    // Check if we are in subcategory routes
+    else if (subCatId && subCatSlug) {
+      const subCategoryId = parseInt(subCatId);
+      foundCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug);
+      
+      if (foundCategory) {
+        setCurrentCategory(foundCategory);
+        const productsToDisplay = products.filter(product => product.categoryIds.includes(foundCategory.id));
+        setFilteredProducts(productsToDisplay);
       } else {
-        // When there's no subCategoryId
-        const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
-        setFilteredProducts([]); // Clear products, we will show subcategories
+        setCurrentCategory(undefined);
+      }
+    } 
+    // Check if we are in leaf category routes
+    else if (categorytId && categorySlug) {
+      const categoryId = parseInt(categorytId);
+      foundCategory = categories.find(cat => cat.id === categoryId && cat.slug === categorySlug);
+      
+      if (foundCategory) {
+        setCurrentCategory(foundCategory);
+        const productsToDisplay = products.filter(product => product.categoryIds.includes(foundCategory.id));
+        setFilteredProducts(productsToDisplay);
+      } else {
+        setCurrentCategory(undefined);
       }
     } else {
-      setCurrentCategory(undefined);
+      setCurrentCategory(undefined); // No valid category found
     }
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug]);
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug]);
 
   if (!currentCategory) {
-    return <h1>Category Not Found</h1>;
+    return <h1>Category Not Found</h1>; // Display error if category not found
   }
 
   // 1. Rendering Main Category's Subcategories
   const renderSubcategoriesForMainCategory = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
+    
     return (
       <div className="root-category__categories">
         {subcategories.length > 0 ? (
           subcategories.map(subCat => (
             <div className="root-category__category" key={subCat.id}>
-              <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category`} className="root-category__cover">
-                <img 
-                  src={subCat.image} 
-                  srcSet={`${subCat.image2x} 2x`} 
-                  alt={subCat.name} 
-                  title={subCat.name} 
-                />
+              <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                <img src={subCat.image} srcSet={`${subCat.image2x} 2x`} alt={subCat.name} title={subCat.name} />
               </Link>
               <h2 className="root-category__category-title">
-                <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category__title`}>
-                  {subCat.name}
-                </Link>
+                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
               </h2>
-              <div className="root-category__footer">
-                <div className="root-category__links">
-                  {subCat.subcategories && subCat.subcategories.map(nestedSubCat => (
-                    <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}.html?bpref=root-category-subcat`}>
-                      {nestedSubCat.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
             </div>
           ))
         ) : (
@@ -80,69 +81,10 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  // 2. If we are in a Subcategory that contains more subcategories or brands
-  const renderSubcategoriesSection = () => {
-    if (currentCategory && currentCategory.parentId) {
-      const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
-      const brands = Array.from(new Set(products
-        .filter(product => product.categoryIds.includes(currentCategory.id))
-        .map(product => product.brand)
-      )); // Get distinct brands from products in the current category
-
-      return (
-        <div>
-          <h2>Subcategories:</h2>
-          {subcategories.length > 0 ? (
-            subcategories.map(subCat => (
-              <div className="root-category__category" key={subCat.id}>
-                <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=sub-category`} className="root-category__cover">
-                  <img 
-                    src={subCat.image} 
-                    srcSet={`${subCat.image2x} 2x`} 
-                    alt={subCat.name} 
-                    title={subCat.name} 
-                  />
-                </Link>
-                <h3 className="root-category__category-title">
-                  <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=sub-category-title`}>
-                    {subCat.name}
-                  </Link>
-                </h3>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {subCat.subcategories && subCat.subcategories.map(nestedSubCat => (
-                      <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}.html?bpref=sub-category-nested`}>
-                        {nestedSubCat.name}
-                      </Link>
-                    ))}
-                    {brands.length > 0 && (
-                      <>
-                        <h4>Brands:</h4>
-                        {brands.map(brand => (
-                          <Link key={brand} to={`?filter=brand&value=${brand}`} onClick={() => { 
-                            // Auto-select brand logic can be placed here
-                          }}>
-                            {brand}
-                          </Link>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No subcategories or brands available.</p>
-          )}
-        </div>
-      );
-    }
-    return null; // This is for leaf subcategories
-  };
-
-  // 3. Rendering Products Section for Leaf Subcategories
+  // 2. Rendering Products Section for Leaf Subcategories
   const renderProductsSection = () => {
-    if (currentCategory?.parentId && filteredProducts.length > 0) { // Only show products for leaf subcategories
+    // Only show products for leaf categories
+    if (filteredProducts.length > 0) { 
       return (
         <div>
           {filteredProducts.length === 0 ? (
@@ -157,15 +99,13 @@ const CategoryPage: React.FC = () => {
         </div>
       );
     }
-    return null; // No products to show for main category or no products
+    return null; // No products to show
   };
 
   return (
-    <div className="root__wrapper root-category__root">
-      <div class="root">
-        {currentCategory && !currentCategory.parentId ? renderSubcategoriesForMainCategory() : renderSubcategoriesSection()} 
-        {renderProductsSection()} 
-      </div>
+    <div>
+      {currentCategory.parentId ? renderSubcategoriesForMainCategory() : null}
+      {renderProductsSection()} 
     </div>
   );
 };
