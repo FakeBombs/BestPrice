@@ -11,7 +11,11 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
-    if (subCategory) { ... }
+    if (subCategory) {
+  setCurrentCategory(subCategory);
+  const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+  setFilteredProducts(productsToDisplay);
+}
   }, [categoryId]);
 
   if (!currentCategory) {
