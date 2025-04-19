@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
-import ProductCard from '@/components/ProductCard'; // Adjust import path
+import { categories, products } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
@@ -19,13 +19,11 @@ const CategoryPage: React.FC = () => {
   }
 
   const sortProducts = (products) => {
-    switch ('sortType') { // Using a hard-coded value for testing
+    switch ('sortType') {
       case 'price-asc':
         return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
-        return products; // Placeholder
       case 'price-desc':
         return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
-        return products; // Placeholder
       case 'rating-desc':
       default:
         return [...products].sort((a, b) => b.rating - a.rating);
