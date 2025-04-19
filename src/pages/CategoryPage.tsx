@@ -24,7 +24,7 @@ const CategoryPage: React.FC = () => {
         return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
         return products; // Placeholder
       case 'price-desc':
-        // return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
+        return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
         return products; // Placeholder
       case 'rating-desc':
       default:
