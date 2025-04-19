@@ -19,7 +19,7 @@ const CategoryPage: React.FC = () => {
   
   // Unified critical logic to fetch the category
   useEffect(() => {
-    let categoryId: number | undefined = undefined;
+    let foundCategoryId: number | undefined = undefined;
     
     // Attempting to parse different IDs from URL
     if (mainCatId) {
