@@ -33,11 +33,14 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          // For Categories
-          <Route path="/cat/:mainCatId/:mainCatSlug" element={<CategoryPage />} /> // For Main Categories
-          <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug" element={<CategoryPage />} /> // For Subcategories / Leaf
-          // For Product Detail
-          <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
+          {/* For Main Categories */}
+          <Route path="/cat/:mainCatId/:mainCatSlug" element={<CategoryPage />} />
+          {/* For Subcategories that contain more Subcategories */}
+          <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug" element={<CategoryPage />} />
+          {/* For Subcategories that do not contain more Subcategories (leaf nodes) */}
+          <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug/*" element={<CategoryPage />} />
+          {/* For Product Detail */}
+          <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="brands" element={<Brands />} />
