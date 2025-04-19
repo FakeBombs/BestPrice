@@ -12,24 +12,18 @@ const CategoryPage: React.FC = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [sortType, setSortType] = useState('rating-desc');
 
-  // Find main category matching rootCategorySlug
-  const mainCategory = mainCategories.find(cat => cat.slug === rootCategorySlug);
-
-  // If no main category found, return the not found message
-  if (!mainCategory) {
+  // Find subcategory matching the rootCategorySlug
+  const subCategory = categories.find(cat => cat.slug === rootCategorySlug);
+  
+  // If no subcategory found return the not found message
+  if (!subCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  // Fetch subcategories for the main category
-  const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
-
-  // Load products from both the main category and its subcategories
-  const productsToDisplay = [
-    ...allProducts.filter(product => 
-      product.categoryIds.includes(mainCategory.id) || 
-      subcategories.some(subCat => product.categoryIds.includes(subCat.id))
-    )
-  ];
+  // Load products specifically for the found subcategory
+  const productsToDisplay = allProducts.filter(product => 
+    product.categoryIds.includes(subCategory.id)
+  );
 
   useEffect(() => {
     const sortedResults = sortProducts(productsToDisplay);
@@ -159,16 +153,7 @@ const CategoryPage: React.FC = () => {
       <div className="root">
         <div className="page-products">
           <header className="page-header">
-            <h1>{mainCategory.name}</h1>
-            {subcategories.length > 0 && (
-              <div className="subcategories">
-                {subcategories.map(subcategory => (
-                  <Link key={subcategory.id} to={`/cat/${subcategory.slug}.html`}>
-                    {subcategory.name}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <h1>{subCategory.name}</h1>
             <div>{filteredProducts.length} products</div>
           </header>
           <main>
