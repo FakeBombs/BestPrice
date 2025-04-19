@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData';
-import ProductCard from '@/components/ProductCard';
+import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
+import ProductCard from '@/components/ProductCard'; // Adjust import path
 
 const CategoryPage: React.FC = () => {
-  console.log("Initial b value:", b);
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
@@ -100,9 +99,63 @@ const CategoryPage: React.FC = () => {
     }
   };
 
+  const handleVendorFilter = (vendor) => {
+    const newVendors = activeFilters.vendors.includes(vendor)
+      ? activeFilters.vendors.filter((v) => v !== vendor)
+      : [...activeFilters.vendors, vendor];
+    setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
+  };
+
+  const handleBrandFilter = (brand) => {
+    const newBrands = activeFilters.brands.includes(brand)
+      ? activeFilters.brands.filter((b) => b !== brand)
+      : [...activeFilters.brands, brand];
+    setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+  };
+
+  const handleSpecFilter = (specKey, specValue) => {
+    const currentSpecs = { ...activeFilters.specs };
+    const specValues = currentSpecs[specKey] || [];
+    if (specValues.includes(specValue)) {
+      currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+    } else {
+      currentSpecs[specKey] = [...specValues, specValue];
+    }
+    setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+  };
+
+  const renderAppliedFilters = () => {
+    return (
+      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey =>
+        activeFilters.specs[specKey].length > 0)) && (
+        <div className="applied-filters">
+          {activeFilters.brands.map((brand) => (
+            <h2 className="applied-filters__filter" key={brand}>
+              <a onClick={() => handleBrandFilter(brand)}>
+                <span className="applied-filters__label">{brand}</span>
+              </a>
+            </h2>
+          ))}
+          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+            specValues.map((specValue) => (
+              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                <a onClick={() => handleSpecFilter(specKey, specValue)}>
+                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                </a>
+              </h2>
+            ))
+          )}
+        </div>
+      )
+    );
+  };
+
   return (
     <div className="root__wrapper">
-      
+      <div className="root">
+        test
+      </div>
     </div>
   );
 };
