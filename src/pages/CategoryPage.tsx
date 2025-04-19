@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; 
+import { useParams } from 'react-router-dom';
 import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
@@ -7,19 +7,46 @@ const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    const subCategoryId = parseInt(categoryId);
-    const subCategory = categories.find(cat => cat.id === subCategoryId);
-    
-    if (subCategory) {
-      setCurrentCategory(subCategory);
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
-      setFilteredProducts(productsToDisplay);
-    } else {
-      setCurrentCategory(undefined); // Ensure category is unset if not found
-    }
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        
+        const subCategoryId = parseInt(categoryId);
+        const subCategory = categories.find(cat => cat.id === subCategoryId);
+        
+        if (!subCategory) {
+          throw new Error("Category not found");
+        }
+
+        setCurrentCategory(subCategory);
+        
+        const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+        if (productsToDisplay.length === 0) {
+          throw new Error("No products found for this category");
+        }
+
+        setFilteredProducts(productsToDisplay);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [categoryId]);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  
+  if (error) {
+    return <h1>Error: {error}</h1>;
+  }
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
@@ -41,7 +68,7 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const sortedProducts = sortProducts(filteredProducts, 'rating-desc'); // You can change this sortType based on your needs
+  const sortedProducts = sortProducts(filteredProducts, 'rating-desc');
 
   return (
     <div className="root__wrapper">
@@ -50,6 +77,9 @@ const CategoryPage: React.FC = () => {
         {sortedProducts.map(product => (
           <ProductCard key={product.id} product={product} />
         ))}
+      </div>
+      <div className="additional-info">
+        <p>For more information about this category, visit the <a href={`/category/${categoryId}/info`}>info page</a>.</p>
       </div>
     </div>
   );
