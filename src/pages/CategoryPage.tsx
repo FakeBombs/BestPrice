@@ -4,21 +4,24 @@ import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
-  const { categoryId } = useParams<{ categoryId: string; slug?: string }>();
+  const { categoryId, subCatId } = useParams<{ categoryId: string; subCatId?: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
-  
-  useEffect(() => {
-    const subCategoryId = parseInt(categoryId);
-    const subCategory = categories.find(cat => cat.id === subCategoryId);
 
-    if (subCategory) {
-      setCurrentCategory(subCategory);
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+  useEffect(() => {
+    const catId = parseInt(categoryId);
+    const subCategoryId = subCatId ? parseInt(subCatId) : undefined;
+    const mainCategory = categories.find(cat => cat.id === catId);
+    
+    if (mainCategory) {
+      setCurrentCategory(mainCategory);
+      const productsToDisplay = products.filter(product => 
+        subCategoryId ? product.categoryIds.includes(subCategoryId) : product.categoryIds.includes(catId)
+      );
       setFilteredProducts(productsToDisplay);
     }
-  }, [categoryId]);
+  }, [categoryId, subCatId]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
@@ -37,9 +40,8 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  // Identify if the current category is a leaf category (the last subcategory)
   const hasSubcategories = categories.some(cat => cat.parentId === currentCategory.id);
-  
+
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -74,13 +76,13 @@ const CategoryPage: React.FC = () => {
               </div>
             </div>
 
-            {hasSubcategories ? (
+            {hasSubcategories && !subCatId ? (
               <div className="subcategories-list">
                 <h2>Subcategories:</h2>
                 <ul>
                   {categories.filter(cat => cat.parentId === currentCategory.id).map(subCat => (
                     <li key={subCat.id}>
-                      <a href={`/category/${subCat.id}`}>{subCat.name}</a>
+                      <a href={`/cat/${categoryId}/${subCat.id}`}>{subCat.name}</a>
                     </li>
                   ))}
                 </ul>
