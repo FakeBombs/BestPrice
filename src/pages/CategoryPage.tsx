@@ -4,28 +4,52 @@ import { categories, products } from '@/data/mockData'; // Adjust the import pat
 import ProductCard from '@/components/ProductCard'; // Adjust the import path
 
 const CategoryPage: React.FC = () => {
-  const { categoryId, rootCategorySlug } = useParams<{ categoryId: string; rootCategorySlug: string }>();
+  const { categoryId } = useParams<{ categoryId: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-
-  // Find the subcategory based on the ID from the URL
-  const subCategory = categories.find(cat => cat.id === parseInt(categoryId) && !cat.parentId);
+  const [subCategories, setSubCategories] = useState<Category[]>([]);
+  
+  // Find the main category based on the ID from the URL
+  const mainCategory = categories.find(cat => cat.id === parseInt(categoryId) && !cat.parentId);
 
   useEffect(() => {
-    if (subCategory) {
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
+    if (mainCategory) {
+      // Set subcategories belonging to the main category
+      const subCategoriesToDisplay = categories.filter(cat => cat.parentId === mainCategory.id);
+      setSubCategories(subCategoriesToDisplay);
+      
+      // Also fetch products related to the main category's subcategories
+      const productsToDisplay = products.filter(product => 
+        product.categoryIds.includes(mainCategory.id)
+      );
       setFilteredProducts(productsToDisplay);
     }
-  }, [subCategory]);
+  }, [mainCategory]);
 
-  if (!subCategory) {
-    return <h1>Category Not Found: "{rootCategorySlug}"</h1>;
+  if (!mainCategory) {
+    return <h1>Main Category Not Found</h1>;
   }
 
   return (
     <div>
-      <h1>{subCategory.name}</h1>
+      <h1>{mainCategory.name}</h1>
+      <h2>Subcategories:</h2>
+      {subCategories.length === 0 ? (
+        <p>No subcategories found.</p>
+      ) : (
+        <ul>
+          {subCategories.map(subCategory => (
+            <li key={subCategory.id}>
+              <a href={`/cat/${subCategory.id}/${subCategory.slug}`}>
+                {subCategory.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      
+      <h2>Products:</h2>
       {filteredProducts.length === 0 ? (
-        <p>No products found matching your search.</p>
+        <p>No products found for this category.</p>
       ) : (
         <div>
           {filteredProducts.map(product => (
