@@ -13,11 +13,23 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = subCatId ? parseInt(subCatId) : undefined;
     const mainCategory = categories.find(cat => cat.id === subCategoryId);
-
+    
     if (mainCategory) {
+      // Case 1: Main Category Found
       setCurrentSubCategory(mainCategory);
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+      const productsToDisplay = products.filter(product => product.categoryIds.includes(mainCategory.id));
       setFilteredProducts(productsToDisplay);
+    } else {
+      // Case 2: Subcategory Scenario
+      const subCategory = categories.find(cat => cat.id === subCategoryId);
+      if (subCategory) {
+        setCurrentSubCategory(subCategory);
+        const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
+        setFilteredProducts(productsToDisplay);
+      } else {
+        // Case 3: If no main category or subcategory is found
+        setCurrentSubCategory(undefined);
+      }
     }
   }, [subCatId]);
 
@@ -43,63 +55,60 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="root__wrapper">
       <div className="root">
-        <div className="page-products">
-          <main className="page-products__main">
-            <header className="page-header">
-              <div className="page-header__title-wrapper">
-                <div className="page-header__title-main">
-                  <h1>{currentSubCategory.name}</h1>
-                  <div className="page-header__count-wrapper">
-                    <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                  </div>
-                </div>
-              </div>
-            </header>
-
-            <div className="page-header__sorting">
-              <div className="tabs">
-                <div className="tabs-wrapper">
-                  <nav>
-                    <a data-type="rating-desc" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                      <div className="tabs__content">Δημοφιλέστερα</div>
-                    </a>
-                    <a data-type="price-asc" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                      <div className="tabs__content">Φθηνότερα</div>
-                    </a>
-                    <a data-type="price-desc" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                      <div className="tabs__content">Ακριβότερα</div>
-                    </a>
-                  </nav>
+        {/* Main Categories Section */}
+        <div className="page-header">
+          <div className="hgroup">
+            <div className="page-header__title-wrapper">
+              <a className="trail__back pressable" title="BestPrice.gr" href="/"></a>
+              <h1>Categories</h1>  {/* Main Category Title */}
+            </div>
+          </div>
+        </div>
+        <div className="root-category__categories">
+          {categories.filter(cat => !cat.parentId).map(mainCat => (  // Filter for main categories
+            <div className="root-category__category" key={mainCat.id}>
+              <a href={`/cat/${mainCat.id}/${mainCat.slug}`} className="root-category__cover">
+                <img src={mainCat.image} alt={mainCat.name} title={mainCat.name} />
+              </a>
+              <h2 className="root-category__category-title">
+                <a href={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</a>
+              </h2>
+              <div className="root-category__footer">
+                <div className="root-category__links">
+                  {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (  // Subcategories for the main category
+                    <a key={subCat.id} href={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</a>
+                  ))}
                 </div>
               </div>
             </div>
+          ))}
+        </div>
 
-            {hasSubcategories && !subCatId ? (
-              <div className="subcategories-list">
-                <h2>Subcategories:</h2>
-                <ul>
-                  {categories.filter(cat => cat.parentId === currentSubCategory.id).map(subCat => (
-                    <li key={subCat.id}>
-                      <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {/* Subcategories with more subcategories */}
+        {hasSubcategories && !subCatId ? (
+          <div className="subcategories-list">
+            <h2>Subcategories:</h2>
+            <ul>
+              {categories.filter(cat => cat.parentId === currentSubCategory.id).map(subCat => (
+                <li key={subCat.id}>
+                  <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="page-products__main-wrapper">
+            {filteredProducts.length === 0 ? (
+              <p>No products found in this category.</p>
             ) : (
-              <div className="page-products__main-wrapper">
-                {filteredProducts.length === 0 ? (
-                  <p>No products found in this category.</p>
-                ) : (
-                  <div className="p__products" data-pagination="">
-                    {sortProducts(filteredProducts).map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
-                )}
+              <div className="p__products" data-pagination="">
+                {sortProducts(filteredProducts).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </div>
             )}
-          </main>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
