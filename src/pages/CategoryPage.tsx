@@ -5,59 +5,59 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId?: string; subCatSlug?: string; categorytId?: string; categorySlug?: string }>(); 
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug } = useParams<{
+    mainCatId?: string;
+    mainCatSlug?: string;
+    subCatId?: string;
+    subCatSlug?: string;
+    categorytId?: string; 
+    categorySlug?: string;
+  }>(); 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-    let foundCategory = undefined;
+    let foundCategory: Category | undefined;
+  
+    // Check for main category
+    if (mainCatId) {
+      const id = parseInt(mainCatId);
+      foundCategory = mainCategories.find(cat => cat.id === id && cat.slug === mainCatSlug);
+    }
+    
+    // Check for subcategory (that can contain subcategories)
+    if (!foundCategory && subCatId) {
+      const id = parseInt(subCatId);
+      foundCategory = categories.find(cat => cat.id === id && cat.slug === subCatSlug);
+    }
 
-    // Check if we are in the main category route
-    if (mainCatId && mainCatSlug) {
-      const mainCategoryId = parseInt(mainCatId);
-      foundCategory = mainCategories.find(cat => cat.id === mainCategoryId && cat.slug === mainCatSlug);
+    // Check for leaf category
+    if (!foundCategory && categorytId) {
+      const id = parseInt(categorytId);
+      foundCategory = categories.find(cat => cat.id === id && cat.slug === categorySlug);
+    }
+
+    if (foundCategory) {
       setCurrentCategory(foundCategory);
       
-      if (foundCategory) {
-        // Reset filteredProducts for main category
-        setFilteredProducts([]);
-      }
-    } 
-    // Check if we are in subcategory routes
-    else if (subCatId && subCatSlug) {
-      const subCategoryId = parseInt(subCatId);
-      foundCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug);
-      
-      if (foundCategory) {
-        setCurrentCategory(foundCategory);
+      // If it is a subcategory or leaf category, fetch products
+      if (foundCategory.parentId) {
         const productsToDisplay = products.filter(product => product.categoryIds.includes(foundCategory.id));
         setFilteredProducts(productsToDisplay);
       } else {
-        setCurrentCategory(undefined);
-      }
-    } 
-    // Check if we are in leaf category routes
-    else if (categorytId && categorySlug) {
-      const categoryId = parseInt(categorytId);
-      foundCategory = categories.find(cat => cat.id === categoryId && cat.slug === categorySlug);
-      
-      if (foundCategory) {
-        setCurrentCategory(foundCategory);
-        const productsToDisplay = products.filter(product => product.categoryIds.includes(foundCategory.id));
-        setFilteredProducts(productsToDisplay);
-      } else {
-        setCurrentCategory(undefined);
+        setFilteredProducts([]); // No products for main categories
       }
     } else {
-      setCurrentCategory(undefined); // No valid category found
+      setCurrentCategory(undefined); // No category was found
     }
+
   }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>; // Display error if category not found
   }
 
-  // 1. Rendering Main Category's Subcategories
+  // 1. Rendering Main Category's Subcategories for a main category
   const renderSubcategoriesForMainCategory = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
     
@@ -81,10 +81,10 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  // 2. Rendering Products Section for Leaf Subcategories
+  // 2. Rendering Products Section for Leaf Subcategories / Categories
   const renderProductsSection = () => {
-    // Only show products for leaf categories
-    if (filteredProducts.length > 0) { 
+    // Show products for leaf categories or subcategories
+    if (currentCategory && filteredProducts.length > 0) { 
       return (
         <div>
           {filteredProducts.length === 0 ? (
