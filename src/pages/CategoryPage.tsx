@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products } from '@/data/mockData'; // Adjust the import path
+import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
 import ProductCard from '@/components/ProductCard'; // Adjust the import path
 
 const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
+  const { slug } = useParams<{ slug: string }>(); // This is just to capture the slug
+
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
 
@@ -15,7 +17,7 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     if (subCategory) {
       setCurrentCategory(subCategory);
-      // Get products that belong to the category ID of the subcategory
+      // Filter products based on category ID
       const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
       setFilteredProducts(productsToDisplay);
     }
