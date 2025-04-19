@@ -27,14 +27,13 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const parentCategory = categories.find(cat => category.parentId === cat.id);
     const hasSubcategories = categories.some(cat => cat.parentId === categoryId);
 
-    if (parentCategory) {
-      const parentPath = findCategoryPath(parentCategory.id);
-      return [...parentPath, getCategoryPath(category, !hasSubcategories)];
-    } else {
-      return [getCategoryPath(category, !hasSubcategories)];
-    }
+    const path = parentCategory ? findCategoryPath(parentCategory.id) : [];
+    path.push(getCategoryPath(category, !hasSubcategories));
+
+    return path;
   };
 
+  // Assuming product has categoryIds and we want the first one for the breadcrumb
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
