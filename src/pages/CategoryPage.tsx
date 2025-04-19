@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { categories, products as allProducts, mainCategories } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
-import ScrollableSlider from '@/components/ScrollableSlider';
-import { Link } from 'react-router-dom';
 
 const CategoryPage: React.FC = () => {
   const { rootCategorySlug } = useParams<{ rootCategorySlug: string }>();
@@ -14,50 +12,34 @@ const CategoryPage: React.FC = () => {
   const [availableSpecs, setAvailableSpecs] = useState({});
   const [sortType, setSortType] = useState('rating-desc');
 
-  // Find the main category matching the rootCategorySlug using slug
+  // Find main category matching rootCategorySlug
   const mainCategory = mainCategories.find(cat => cat.slug === rootCategorySlug);
 
+  // If no main category found, return the not found message
   if (!mainCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  // Fetch subcategories
+  // Fetch subcategories for the main category
   const subcategories = categories.filter(cat => cat.parentId === mainCategory.id);
 
-  // If there are subcategories, display them
-  if (subcategories.length > 0) {
-    return (
-      <div className="root__wrapper">
-        <div className="root">
-          <div className="page-products">
-            <header className="page-header">
-              <h1>{mainCategory.name}</h1>
-              <div className="subcategories">
-                {subcategories.map(subcategory => (
-                  <Link key={subcategory.id} to={`/cat/${subcategory.slug}.html`}>
-                    {subcategory.name}
-                  </Link>
-                ))}
-              </div>
-            </header>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // If no subcategories, show products
-  const products = allProducts.filter(product => product.categoryIds.includes(mainCategory.id));
+  // Load products from both the main category and its subcategories
+  const productsToDisplay = [
+    ...allProducts.filter(product => 
+      product.categoryIds.includes(mainCategory.id) || 
+      subcategories.some(subCat => product.categoryIds.includes(subCat.id))
+    )
+  ];
 
   useEffect(() => {
-    const sortedResults = sortProducts(products);
+    const sortedResults = sortProducts(productsToDisplay);
     setFilteredProducts(sortedResults);
     extractAvailableFilters(sortedResults);
-  }, [products]);
+  }, [productsToDisplay]);
 
   useEffect(() => {
-    filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
-  }, [activeFilters, sortType, products]);
+    filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, productsToDisplay);
+  }, [activeFilters, sortType, productsToDisplay]);
 
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
@@ -176,23 +158,27 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper">
       <div className="root">
         <div className="page-products">
-          <aside id="filters-aside" className="page-products__filters">
-          {/* Existing filters logic here … */}
-          </aside>
+          <header className="page-header">
+            <h1>{mainCategory.name}</h1>
+            {subcategories.length > 0 && (
+              <div className="subcategories">
+                {subcategories.map(subcategory => (
+                  <Link key={subcategory.id} to={`/cat/${subcategory.slug}.html`}>
+                    {subcategory.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+            <div>{filteredProducts.length} products</div>
+          </header>
           <main>
-            <header className="page-header">
-              <div className="page-header__title-wrapper">
-                <div className="page-header__title-main">
-                  <h1>{mainCategory.name}</h1>
-                  <div>{filteredProducts.length} products</div>
-                </div>
-              </div>
-              {renderAppliedFilters()}
-              <div className="page-header__sorting">
-                {/* Sorting tabs here … */}
-              </div>
-            </header>
-            {filteredProducts.length === 0 ? (<p>No products found matching your search.</p>) : (
+            {renderAppliedFilters()}
+            <div className="page-header__sorting">
+              {/* Put sorting tabs logic here if necessary */}
+            </div>
+            {filteredProducts.length === 0 ? (
+              <p>No products found matching your search.</p>
+            ) : (
               <div className="page-products__main-wrapper">
                 <div className="p__products" data-pagination="">
                   {filteredProducts.map((product) => (
