@@ -11,32 +11,46 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
+    
     if (subCategory) {
-  setCurrentCategory(subCategory);
-  const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
-  setFilteredProducts(productsToDisplay);
-}
+      setCurrentCategory(subCategory);
+      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
+      setFilteredProducts(productsToDisplay);
+    } else {
+      setCurrentCategory(undefined); // Ensure category is unset if not found
+    }
   }, [categoryId]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  const sortProducts = (products) => {
-    switch ('sortType') {
+  if (filteredProducts.length === 0) {
+    return <p>No products found in this category.</p>;
+  }
+
+  const sortProducts = (productsToSort: Product[], sortType: string) => {
+    switch (sortType) {
       case 'price-asc':
-        return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
+        return [...productsToSort].sort((a, b) => a.prices[0].price - b.prices[0].price);
       case 'price-desc':
-        return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
+        return [...productsToSort].sort((a, b) => b.prices[0].price - a.prices[0].price);
       case 'rating-desc':
       default:
-        return [...products].sort((a, b) => b.rating - a.rating);
+        return [...productsToSort].sort((a, b) => b.rating - a.rating);
     }
   };
 
+  const sortedProducts = sortProducts(filteredProducts, 'rating-desc'); // You can change this sortType based on your needs
+
   return (
     <div className="root__wrapper">
-      {/* Main components */}
+      <h2>{currentCategory.name}</h2>
+      <div className="products-grid">
+        {sortedProducts.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 };
