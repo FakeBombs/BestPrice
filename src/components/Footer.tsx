@@ -4,26 +4,14 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 import { brands, products , vendors} from '@/data/mockData';
 
-const getStats = () => {
-    const totalProducts = products.length;
-    const totalVendors = vendors.length;
-    const totalBrands = brands.length;
-    const totalDeals = products.length >= 5 ? 5 : products.length; 
-
-    return {
-        totalProducts,
-        totalVendors,
-        totalBrands,
-        totalDeals,
-    };
-};
-
-// Use the function to get statistics
+// Call the function and assign the result to a variable
 const stats = getStats();
-console.log('Total Products:', stats.totalProducts);
-console.log('Total Vendors:', stats.totalVendors);
-console.log('Total Brands:', stats.totalBrands);
-console.log('Total Deals:', stats.totalDeals);
+
+// Use the `stats` variable to log specific values
+const totalProductsMessage = `Total Products: ${stats.totalProducts}`;
+const totalVendorsMessage = `Total Vendors: ${stats.totalVendors}`;
+const totalBrandsMessage = `Total Brands: ${stats.totalBrands}`;
+const totalDealsMessage = `Total Deals: ${stats.totalDeals}`;
 
 const Footer: React.FC = () => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -118,10 +106,10 @@ const Footer: React.FC = () => {
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
                   <ul>
-                    <li><Link to="/stores">{totalVendors} καταστήματα</Link></li>
-                    <li><Link to="/search">{totalProducts} προϊόντα</Link></li>
-                    <li><Link to="/brands">{totalBrands} κατασκευαστές</Link></li>
-                    <li><Link to="/deals">{totalDeals} προσφορές</Link></li>
+                    <li><Link to="/stores">{stats.totalVendors} καταστήματα</Link></li>
+                    <li><Link to="/search">{stats.totalProducts} προϊόντα</Link></li>
+                    <li><Link to="/brands">{stats.totalBrands} κατασκευαστές</Link></li>
+                    <li><Link to="/deals">{stats.totalDeals} προσφορές</Link></li>
                   </ul>
                 </div>
               </div>
