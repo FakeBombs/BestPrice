@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products } from '@/data/mockData'; // Ensure this path is correct
-import ProductCard from '@/components/ProductCard'; // Ensure this path is correct
+import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
+import ProductCard from '@/components/ProductCard'; // Adjust import path
 
 const CategoryPage: React.FC = () => {
-  // Intentionally undefined variable for testing
-  // Uncomment to test error visibility
-  // console.log("Initial b value:", b); // Commented to avoid throwing error at startup
-
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
@@ -21,7 +17,6 @@ const CategoryPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
-  const [displayedBrand, setDisplayedBrand] = useState<{ id: string; name: string; logo: string } | undefined>(undefined); // Added displayedBrand state
 
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
@@ -66,18 +61,6 @@ const CategoryPage: React.FC = () => {
     setAvailableVendors(Array.from(vendors));
     setAvailableBrands(brandsCount);
     setAvailableSpecs(specs);
-  };
-
-  // New Part Added: Include the displayedBrand to be rendered conditionally
-  const renderBrandLogo = () => {
-    if (displayedBrand) {
-      return (
-        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-          <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-        </a>
-      );
-    }
-    return null;
   };
 
   const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
@@ -188,7 +171,7 @@ const CategoryPage: React.FC = () => {
             )}
 
             {Object.keys(availableBrands).length > 0 && (
-              <div className="filter-brand default-list" data-filter-name data-type data-key>
+              <div className="filter-brand default-list">
                 <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                 <div className="filter-container">
                   <ol>
@@ -204,7 +187,7 @@ const CategoryPage: React.FC = () => {
 
             {Object.keys(availableSpecs).length > 0 && (
               Object.keys(availableSpecs).map((specKey) => (
-                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`}>
                   <div className="filter__header"><h4>{specKey}</h4></div>
                   <div className="filter-container">
                     <ol>
@@ -247,9 +230,6 @@ const CategoryPage: React.FC = () => {
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                   </div>
                 </div>
-                <div className="page-header__title-aside">
-                  {renderBrandLogo()}
-                </div>
               </div>
               {renderAppliedFilters()}
             </header>
@@ -267,7 +247,6 @@ const CategoryPage: React.FC = () => {
                     <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
                       <div className="tabs__content">Ακριβότερα</div>
                     </a>
-                    {/* New Sorting Option */}
                     <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
                       <div className="tabs__content">Αριθμός καταστημάτων</div>
                     </a>
