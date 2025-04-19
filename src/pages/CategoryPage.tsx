@@ -60,42 +60,25 @@ const CategoryPage: React.FC = () => {
         {currentCategory && !currentCategory.parentId ? (  // Show this only if the current category is a main category
           <>
             <div className="page-header">
-              <div className="hgroup">
-                <div className="page-header__title-wrapper">
-                  <a className="trail__back pressable" title="BestPrice.gr" href="/"></a>
-                  <h1>{currentCategory.name}</h1> {/* Display the name of the currently selected main category */}
-                </div>
-              </div>
+              <div className="hgroup"><div className="page-header__title-wrapper"><a className="trail__back pressable" title="BestPrice.gr" href="/"></a><h1>{currentCategory.name}</h1> {/* Display the name of the currently selected main category */}</div></div>
             </div>
             <div className="root-category__categories">
               {categories.filter(cat => cat.parentId === mainCategoryId).map(subCat => (
-    <div className="root-category__category" key={subCat.id}>
-      <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-        <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-      </Link>
-      <h2 className="root-category__category-title">
-        <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-      </h2>
-
-      <div className="root-category__footer">
-        <div className="root-category__links">
-          {/* Nested subcategories for this subcategory */}
-          {categories.filter(cat => cat.parentId === subCat.id).map(nestedSubCat => (
-            <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}`}>
-              {nestedSubCat.name}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
+                <div className="root-category__category" key={subCat.id}>
+                  <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
+                  <h2 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h2>
+                  
+                  <div className="root-category__footer">
+                    <div className="root-category__links">
+                      {/* Nested subcategories for this subcategory */}
+                      {categories.filter(cat => cat.parentId === subCat.id).map(nestedSubCat => (
+                        <Link key={nestedSubCat.id} to={`/cat/${nestedSubCat.id}/${nestedSubCat.slug}`}>{nestedSubCat.name}</Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
           </>
         ) : null} {/* End of Main Categories Section */}
 
