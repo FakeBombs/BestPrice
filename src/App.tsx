@@ -39,7 +39,7 @@ function App() {
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> 
           <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} />
-          <Route path="/cat/:categoryId/:subCatId/:subCatSlug*" element={<CategoryPage />} />
+          <Route path="/cat/:subCatId/:subCatSlug*" element={<CategoryPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="b/:brandId/" element={<BrandPage />} />
           <Route path="b/:brandId/:slug" element={<BrandPage />} />
