@@ -276,7 +276,24 @@ const CategoryPage: React.FC = () => {
             </header>
 
             <div className="page-header__sorting">
-              {/* Sorting tabs logic if necessary */}
+              <div className="tabs">
+                <div className="tabs-wrapper">
+                  <nav>
+                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
+                                                <div className="tabs__content">Δημοφιλέστερα</div>
+                                            </a>
+                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
+                                                <div className="tabs__content">Φθηνότερα</div>
+                                            </a>
+                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
+                                                <div className="tabs__content">Ακριβότερα</div>
+                                            </a>
+                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
+                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
+                                            </a>
+                  </nav>
+                </div>
+              </div>
             </div>
             {filteredProducts.length === 0 ? (
               <p>No products found in this category.</p>
