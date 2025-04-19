@@ -4,20 +4,19 @@ import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
-  const { categoryId } = useParams<{ categoryId: string; slug: string }>();
+  const { categoryId } = useParams<{ categoryId: string; slug?: string }>(); // Changed slug to optional since it's unused
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [activeFilters, setActiveFilters] = useState({
-    vendors: [],
-    brands: [],
-    specs: {},
+    vendors: [] as string[],
+    brands: [] as string[],
+    specs: {} as Record<string, string[]>, // Adjusted to ensure specs is typed correctly
     inStockOnly: false,
   });
   const [availableVendors, setAvailableVendors] = useState<string[]>([]);
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
-  
 
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
@@ -39,22 +38,18 @@ const CategoryPage: React.FC = () => {
     filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, filteredProducts);
   }, [activeFilters, filteredProducts]);
 
-  const extractAvailableFilters = (results) => {
-    const vendors = new Set();
+  const extractAvailableFilters = (results: Product[]) => {
+    const vendors = new Set<string>();
     const brandsCount: Record<string, number> = {};
     const specs: Record<string, Set<string>> = {};
 
     results.forEach((product) => {
-      if (product.vendor) {
-        vendors.add(product.vendor);
-      }
+      if (product.vendor) vendors.add(product.vendor); // Check for vendor existence
       if (product.brand) {
-        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
+        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; // Count brands
       }
       Object.keys(product.specifications).forEach((specKey) => {
-        if (!specs[specKey]) {
-          specs[specKey] = new Set();
-        }
+        if (!specs[specKey]) specs[specKey] = new Set<string>(); // Initialize if not present
         specs[specKey].add(product.specifications[specKey]);
       });
     });
@@ -64,11 +59,12 @@ const CategoryPage: React.FC = () => {
     setAvailableSpecs(specs);
   };
 
-  const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
+  const filterProducts = (vendors: string[], brands: string[], specs: Record<string, string[]>, inStockOnly: boolean, results: Product[]) => {
     let filtered = results;
 
     if (inStockOnly) {
-      filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
+      // Ensure prices exist for each product before filtering
+      filtered = filtered.filter((product) => product.prices && product.prices.some((price) => price.inStock));
     }
     if (vendors.length > 0) {
       filtered = filtered.filter((product) => vendors.includes(product.vendor));
@@ -87,48 +83,188 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(sortProducts(filtered));
   };
 
-  const sortProducts = (products) => {
+  const sortProducts = (products: Product[]) => {
+    const sortedProducts = [...products]; // Create a copy for sorting
     switch (sortType) {
       case 'price-asc':
-        return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
+        return sortedProducts.sort((a, b) => (a.prices[0]?.price || 0) - (b.prices[0]?.price || 0)); // Added optional chaining and default value
       case 'price-desc':
-        return [...products].sort((a, b) => b.prices[0].price - a.prices[0].price);
+        return sortedProducts.sort((a, b) => (b.prices[0]?.price || 0) - (a.prices[0]?.price || 0)); // Added optional chaining and default value
       case 'rating-desc':
       default:
-        return [...products].sort((a, b) => b.rating - a.rating);
+        return sortedProducts.sort((a, b) => b.rating - a.rating);
     }
   };
 
-  const handleVendorFilter = (vendor) => {
+  const handleVendorFilter = (vendor: string) => {
     const newVendors = activeFilters.vendors.includes(vendor)
       ? activeFilters.vendors.filter((v) => v !== vendor)
       : [...activeFilters.vendors, vendor];
     setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
   };
 
-  const handleBrandFilter = (brand) => {
+  const handleBrandFilter = (brand: string) => {
     const newBrands = activeFilters.brands.includes(brand)
       ? activeFilters.brands.filter((b) => b !== brand)
       : [...activeFilters.brands, brand];
     setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
   };
 
-  const handleSpecFilter = (specKey, specValue) => {
+  const handleSpecFilter = (specKey: string, specValue: string) => {
     const currentSpecs = { ...activeFilters.specs };
     const specValues = currentSpecs[specKey] || [];
     if (specValues.includes(specValue)) {
       currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey]; // Clean up if no specs left for the key
     } else {
       currentSpecs[specKey] = [...specValues, specValue];
     }
     setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
   };
 
+  const renderAppliedFilters = () => {
+    return (
+      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey =>
+        activeFilters.specs[specKey].length > 0)) && (
+        <div className="applied-filters">
+          {activeFilters.brands.map((brand) => (
+            <h2 className="applied-filters__filter" key={brand}>
+              <a onClick={() => handleBrandFilter(brand)}>
+                <span className="applied-filters__label">{brand}</span>
+              </a>
+            </h2>
+          ))}
+          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+            specValues.map((specValue) => (
+              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                <a onClick={() => handleSpecFilter(specKey, specValue)}>
+                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                </a>
+              </h2>
+            ))
+          )}
+        </div>
+      )
+    );
+  };
+
   return (
     <div className="root__wrapper">
       <div className="root">
-        test
+        <div className="page-products">
+          <aside className="page-products__filters">
+            {availableVendors.length > 0 && (
+              <div className="filter-vendor default-list">
+                <div className="filter__header"><h4>Vendors</h4></div>
+                <div className="filter-container">
+                  <ol>
+                    {availableVendors.map((vendor) => (
+                      <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
+                        <span>{vendor}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            )}
+
+            {Object.keys(availableBrands).length > 0 && (
+              <div className="filter-brand default-list" data-filter-name data-type data-key>
+                <div className="filter__header"><h4>Κατασκευαστής</h4></div>
+                <div className="filter-container">
+                  <ol>
+                    {Object.keys(availableBrands).map((brand) => (
+                      <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
+                        <span>{brand} ({availableBrands[brand]})</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            )}
+
+            {Object.keys(availableSpecs).length > 0 && (
+              Object.keys(availableSpecs).map((specKey) => (
+                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                  <div className="filter__header"><h4>{specKey}</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Array.from(availableSpecs[specKey]).map((specValue) => (
+                        <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                          <span>{specValue}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              ))
+            )}
+
+            <div className="filter-in-stock default-list">
+              <div className="filter__header"><h4>In Stock</h4></div>
+              <div className="filter-container">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={activeFilters.inStockOnly}
+                    onChange={() => {
+                      const newInStockOnly = !activeFilters.inStockOnly;
+                      setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                      filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, filteredProducts);
+                    }} 
+                  />
+                  Show only in-stock products
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          <main className="page-products__main">
+            <header className="page-header">
+              <div className="page-header__title-wrapper">
+                <div className="page-header__title-main">
+                  <h1>{currentCategory.name}</h1>
+                  <div className="page-header__count-wrapper">
+                    <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
+                  </div>
+                </div>
+              </div>
+              {renderAppliedFilters()}
+            </header>
+
+            <div className="page-header__sorting">
+              <div className="tabs">
+                <div className="tabs-wrapper">
+                  <nav>
+                    <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
+                      <div className="tabs__content">Δημοφιλέστερα</div>
+                    </a>
+                    <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
+                      <div className="tabs__content">Φθηνότερα</div>
+                    </a>
+                    <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
+                      <div className="tabs__content">Ακριβότερα</div>
+                    </a>
+                    <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
+                      <div className="tabs__content">Αριθμός καταστημάτων</div>
+                    </a>
+                  </nav>
+                </div>
+              </div>
+            </div>
+            {filteredProducts.length === 0 ? (
+              <p>No products found in this category.</p>
+            ) : (
+              <div className="page-products__main-wrapper">
+                <div className="p__products" data-pagination="">
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );
