@@ -8,12 +8,11 @@ const CategoryPage: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [activeFilters, setActiveFilters] = useState({
-    brands: [],
+    specs: {},
   });
-  const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
+  const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
   
-
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
@@ -31,25 +30,33 @@ const CategoryPage: React.FC = () => {
   }
 
   useEffect(() => {
-    filterProducts(activeFilters.brands, filteredProducts);
+    filterProducts(activeFilters.specs, filteredProducts);
   }, [activeFilters, filteredProducts]);
 
   const extractAvailableFilters = (results: Product[]) => {
-    const brandsCount: Record<string, number> = {};
+    const specs: Record<string, Set<string>> = {};
+
     results.forEach((product) => {
-      if (product.brand) {
-        brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
-      }
+      Object.keys(product.specifications).forEach((specKey) => {
+        if (!specs[specKey]) {
+          specs[specKey] = new Set();
+        }
+        specs[specKey].add(product.specifications[specKey]);
+      });
     });
 
-    setAvailableBrands(brandsCount);
+    setAvailableSpecs(specs);
   };
 
-  const filterProducts = (brands: string[], results: Product[]) => {
+  const filterProducts = (specs: Record<string, string[]>, results: Product[]) => {
     let filtered = results;
 
-    if (brands.length > 0) {
-      filtered = filtered.filter((product) => brands.includes(product.brand));
+    if (Object.keys(specs).length > 0) {
+      filtered = filtered.filter((product) => {
+        return Object.entries(specs).every(([key, values]) => {
+          return values.includes(product.specifications[key]);
+        });
+      });
     }
 
     setFilteredProducts(sortProducts(filtered));
@@ -67,50 +74,56 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const handleBrandFilter = (brand: string) => {
-    const newBrands = activeFilters.brands.includes(brand)
-      ? activeFilters.brands.filter((b) => b !== brand)
-      : [...activeFilters.brands, brand];
-    setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+  const handleSpecFilter = (specKey: string, specValue: string) => {
+    const currentSpecs = { ...activeFilters.specs };
+    const specValues = currentSpecs[specKey] || [];
+    if (specValues.includes(specValue)) {
+      currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+    } else {
+      currentSpecs[specKey] = [...specValues, specValue];
+    }
+    setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
   };
 
   const renderAppliedFilters = () => {
     return (
-      activeFilters.brands.length > 0 && (
+      Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) && (
         <div className="applied-filters">
-          {activeFilters.brands.map((brand) => (
-            <h2 className="applied-filters__filter" key={brand}>
-              <a onClick={() => handleBrandFilter(brand)}>
-                <span className="applied-filters__label">{brand}</span>
-              </a>
-            </h2>
-          ))}
+          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+            specValues.map((specValue) => (
+              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                <a onClick={() => handleSpecFilter(specKey, specValue)}>
+                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                </a>
+              </h2>
+            ))
+          )}
         </div>
       )
     );
   };
-
-  const displayedBrand = activeFilters.brands.length > 0 ? availableBrands[activeFilters.brands[0]] : null;
 
   return (
     <div className="root__wrapper">
       <div className="root">
         <div className="page-products">
           <aside className="page-products__filters">
-            {Object.keys(availableBrands).length > 0 && (
-              <div className="filter-brand default-list" data-filter-name data-type data-key>
-                <div className="filter__header"><h4>Κατασκευαστής</h4></div>
-                <div className="filter-container">
-                  <ol>
-                    {Object.keys(availableBrands).map((brand) => (
-                      <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
-                        <span>{brand} ({availableBrands[brand]})</span>
-                      </li>
-                    ))}
-                  </ol>
+            {Object.keys(availableSpecs).length > 0 &&
+              Object.keys(availableSpecs).map((specKey) => (
+                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                  <div className="filter__header"><h4>{specKey}</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Array.from(availableSpecs[specKey]).map((specValue) => (
+                        <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                          <span>{specValue}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
-              </div>
-            )}
+              ))}
           </aside>
 
           <main className="page-products__main">
@@ -121,13 +134,6 @@ const CategoryPage: React.FC = () => {
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                   </div>
-                </div>
-                <div className="page-header__title-aside">
-                  {displayedBrand && (
-                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                    </a>
-                  )}
                 </div>
               </div>
               {renderAppliedFilters()}
