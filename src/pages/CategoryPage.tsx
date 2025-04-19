@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products } from '@/data/mockData'; // Adjust the import path as needed
-import ProductCard from '@/components/ProductCard'; // Adjust the import path as needed
+import { categories, products } from '@/data/mockData'; // Adjust the import path
+import ProductCard from '@/components/ProductCard'; // Adjust the import path
 
-// CategoryPage component
 const CategoryPage: React.FC = () => {
-  const { categoryId } = useParams<{ categoryId: string }>(); // Change to get category ID
-  const { rootCategorySlug } = useParams<{ rootCategorySlug: string }>(); // Route for category slug
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // State for products
+  const { categoryId, rootCategorySlug } = useParams<{ categoryId: string; rootCategorySlug: string }>();
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-  // Locate the subcategory based on the ID from the URL
-  const subCategory = categories.find(cat => cat.id === parseInt(categoryId));
+  // Find the subcategory based on the ID from the URL
+  const subCategory = categories.find(cat => cat.id === parseInt(categoryId) && !cat.parentId);
 
   useEffect(() => {
     if (subCategory) {
@@ -19,7 +17,6 @@ const CategoryPage: React.FC = () => {
     }
   }, [subCategory]);
 
-  // If no matching subcategory was found
   if (!subCategory) {
     return <h1>Category Not Found: "{rootCategorySlug}"</h1>;
   }
