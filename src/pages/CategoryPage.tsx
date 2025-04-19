@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
-import ProductCard from '@/components/ProductCard'; // Adjust import path
+import { categories, products } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
@@ -123,32 +123,6 @@ const CategoryPage: React.FC = () => {
       currentSpecs[specKey] = [...specValues, specValue];
     }
     setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-  };
-
-  const renderAppliedFilters = () => {
-    return (
-      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey =>
-        activeFilters.specs[specKey].length > 0)) && (
-        <div className="applied-filters">
-          {activeFilters.brands.map((brand) => (
-            <h2 className="applied-filters__filter" key={brand}>
-              <a onClick={() => handleBrandFilter(brand)}>
-                <span className="applied-filters__label">{brand}</span>
-              </a>
-            </h2>
-          ))}
-          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
-            specValues.map((specValue) => (
-              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                <a onClick={() => handleSpecFilter(specKey, specValue)}>
-                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                </a>
-              </h2>
-            ))
-          )}
-        </div>
-      )
-    );
   };
 
   return (
