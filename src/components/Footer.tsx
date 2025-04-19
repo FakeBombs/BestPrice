@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products , vendors, , getCategories, mainCategories } from '@/data/mockData';
+import { brands, products , vendors, mainCategories } from '@/data/mockData';
 
 // Define the getStats function inside the Footer component
 const getStats = () => {
