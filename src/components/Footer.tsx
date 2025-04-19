@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Footer: React.FC = () => {
+  const [totalProducts, setTotalProducts] = useState(0);
+  useEffect(() => {
+    fetch('/api/products/count')
+        .then(response => response.json())
+        .then(data => setTotalProducts(data.count));
+  }, []);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     window.scrollTo({
@@ -96,7 +102,7 @@ const Footer: React.FC = () => {
                 <div class="footer__section-content">
                   <ul>
                     <li><Link to="/stores">3.752 καταστήματα</Link></li>
-                    <li><Link to="/categories">27.155.066 προϊόντα</Link></li>
+                    <li><Link to="/search">{totalProducts} προϊόντα</Link></li>
                     <li><Link to="/brands">37.297 κατασκευαστές</Link></li>
                     <li><Link to="/deals">6.624 προσφορές</Link></li>
                   </ul>
