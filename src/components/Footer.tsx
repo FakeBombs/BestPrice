@@ -2,13 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
+const [totalProducts, setTotalProducts] = useState(0);
+const [totalVendors, setTotalVendors] = useState(0);
+const [totalBrands, setTotalBrands] = useState(0);
+const [totalDeals, setTotalDeals] = useState(0);
+
+useEffect(() => {
+  const fetchCounts = async () => {
+            try {
+                const productResponse = await fetch('/api/products/count');
+                const vendorResponse = await fetch('/api/vendors/count');
+                const brandResponse = await fetch('/api/brands/count');
+                const dealResponse = await fetch('/api/deals/count');
+
+                const productData = await productResponse.json();
+                const vendorData = await vendorResponse.json();
+                const brandData = await brandResponse.json();
+                const dealData = await dealResponse.json();
+
+                setTotalProducts(productData.count || 0);
+                setTotalVendors(vendorData.count || 0);
+                setTotalBrands(brandData.count || 0);
+                setTotalDeals(dealData.count || 0);
+            } catch (error) {
+                console.error('Error fetching counts:', error);
+            }
+        };
+
+ fetchCounts();
+}, []);
+
 const Footer: React.FC = () => {
-  const [totalProducts, setTotalProducts] = useState(0);
-  useEffect(() => {
-    fetch('/api/products/count')
-        .then(response => response.json())
-        .then(data => setTotalProducts(data.count));
-  }, []);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     window.scrollTo({
@@ -101,10 +125,10 @@ const Footer: React.FC = () => {
               <div class="footer__section-scroller">
                 <div class="footer__section-content">
                   <ul>
-                    <li><Link to="/stores">3.752 καταστήματα</Link></li>
+                    <li><Link to="/stores">{totalVendors} καταστήματα</Link></li>
                     <li><Link to="/search">{totalProducts} προϊόντα</Link></li>
-                    <li><Link to="/brands">37.297 κατασκευαστές</Link></li>
-                    <li><Link to="/deals">6.624 προσφορές</Link></li>
+                    <li><Link to="/brands">{totalBrands} κατασκευαστές</Link></li>
+                    <li><Link to="/deals">{totalDeals} προσφορές</Link></li>
                   </ul>
                 </div>
               </div>
