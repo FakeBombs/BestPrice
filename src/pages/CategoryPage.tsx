@@ -19,7 +19,7 @@ const CategoryPage: React.FC = () => {
   }
 
   const sortProducts = (products) => {
-    switch ('rating-desc') { // Using a hard-coded value for testing
+    switch ('sortType') { // Using a hard-coded value for testing
       case 'price-asc':
         return [...products].sort((a, b) => a.prices[0].price - b.prices[0].price);
         return products; // Placeholder
