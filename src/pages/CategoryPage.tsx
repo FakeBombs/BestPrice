@@ -100,13 +100,6 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const handleVendorFilter = (vendor) => {
-    const newVendors = activeFilters.vendors.includes(vendor)
-      ? activeFilters.vendors.filter((v) => v !== vendor)
-      : [...activeFilters.vendors, vendor];
-    setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-  };
-
   return (
     <div className="root__wrapper">
       
