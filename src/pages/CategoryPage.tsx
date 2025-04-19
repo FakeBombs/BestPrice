@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { categories, products } from '@/data/mockData';
+import { categories, products } from '@/data/mockData'; // Consider whether this is related to your Supabase API
 import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
@@ -101,11 +101,7 @@ const CategoryPage: React.FC = () => {
       </div>
       <div className="products-grid">
         {sortedProducts.map(product => (
-          <div key={product.id}>
-            <ProductCard product={product} />
-            {/* Intentionally causing a possible error for testing */}
-            {undefinedVariable} {/* This line intentionally contains an error */}
-          </div>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
       <footer>
