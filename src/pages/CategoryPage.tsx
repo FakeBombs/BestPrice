@@ -28,17 +28,32 @@ const CategoryPage: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>{currentCategory.name}</h1>
-      {filteredProducts.length === 0 ? (
-        <p>No products found in this category.</p>
-      ) : (
-        <div>
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+    <div className="root__wrapper">
+      <div className="root">
+        <div className="page-products">
+          <header className="page-header">
+            <h1>{currentCategory.name}</h1>
+            <div>{filteredProducts.length} products</div>
+          </header>
+          <main>
+            {renderAppliedFilters()}
+            <div className="page-header__sorting">
+              {/* Put sorting tabs logic here if necessary */}
+            </div>
+            {filteredProducts.length === 0 ? (
+              <p>No products found matching your search.</p>
+            ) : (
+              <div className="page-products__main-wrapper">
+                <div className="p__products" data-pagination="">
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
         </div>
-      )}
+      </div>
     </div>
   );
 };
