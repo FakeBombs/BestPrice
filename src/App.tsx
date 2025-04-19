@@ -36,7 +36,7 @@ function App() {
           {/* For Main Categories */}
           <Route path="/cat/:mainCatId/:mainCatSlug" element={<CategoryPage />} />
           {/* For Subcategories that contain more Subcategories */}
-          <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug" element={<CategoryPage />} />
+          <Route path="/cat/:subCatId/:subCatSlug" element={<CategoryPage />} />
           {/* For Subcategories that do not contain more Subcategories (leaf nodes) */}
           <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug/*" element={<CategoryPage />} />
           {/* For Product Detail */}
