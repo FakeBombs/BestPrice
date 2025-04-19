@@ -9,6 +9,7 @@ import SearchResults from "./pages/SearchResults";
 import Categories from "./pages/Categories";
 import CategoryPage from "./pages/CategoryPage"; // Import your CategoryPage component
 import Brands from "./pages/Brands";
+import BrandPage from "./pages/BrandPage"; // Import your CategoryPage component
 import Stores from "./pages/Stores";
 import Deals from "./pages/Deals";
 import NotFound from "./pages/NotFound";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
           <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
           <Route path="brands" element={<Brands />} />
+          <Route path="b/:brandId/:slug" element={<BrandPage />} />
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
           <Route path="account" element={<AccountPage />} />
