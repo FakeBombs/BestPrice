@@ -127,7 +127,7 @@ const ProductDetail = () => {
   const bestPrice = getBestPrice(product);
   if (!bestPrice) return <div>Price data unavailable</div>;
 
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
+  const basePrice = bestPrice.price || 999;
 
   const handleImageChange = (image: string) => {
     setCurrentImage(image);
