@@ -12,7 +12,7 @@ const CategoryPage: React.FC = () => {
   });
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
-  
+
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
@@ -86,24 +86,6 @@ const CategoryPage: React.FC = () => {
     setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
   };
 
-  const renderAppliedFilters = () => {
-    return (
-      Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) && (
-        <div className="applied-filters">
-          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
-            specValues.map((specValue) => (
-              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                <a onClick={() => handleSpecFilter(specKey, specValue)}>
-                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                </a>
-              </h2>
-            ))
-          )}
-        </div>
-      )
-    );
-  };
-
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -136,7 +118,6 @@ const CategoryPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-              {renderAppliedFilters()}
             </header>
 
             <div className="page-header__sorting">
