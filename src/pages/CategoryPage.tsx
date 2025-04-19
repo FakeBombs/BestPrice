@@ -50,22 +50,25 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  const hasSubcategories = categories.some(cat => cat.parentId === currentSubCategory.id);
+  const mainCategories = categories.filter(cat => !cat.parentId);
+  const subcategories = categories.filter(cat => cat.parentId === currentSubCategory.id);
+  const hasSubcategories = subcategories.length > 0;
 
   return (
     <div className="root__wrapper">
       <div className="root">
+
         {/* Main Categories Section */}
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
               <a className="trail__back pressable" title="BestPrice.gr" href="/"></a>
-              <h1>Categories</h1>  {/* Main Category Title */}
+              <h1>Categories</h1>
             </div>
           </div>
         </div>
         <div className="root-category__categories">
-          {categories.filter(cat => !cat.parentId).map(mainCat => (  // Filter for main categories
+          {mainCategories.map(mainCat => (
             <div className="root-category__category" key={mainCat.id}>
               <a href={`/cat/${mainCat.id}/${mainCat.slug}`} className="root-category__cover">
                 <img src={mainCat.image} alt={mainCat.name} title={mainCat.name} />
@@ -75,7 +78,7 @@ const CategoryPage: React.FC = () => {
               </h2>
               <div className="root-category__footer">
                 <div className="root-category__links">
-                  {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (  // Subcategories for the main category
+                  {categories.filter(cat => cat.parentId === mainCat.id).map(subCat => (
                     <a key={subCat.id} href={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</a>
                   ))}
                 </div>
@@ -84,19 +87,22 @@ const CategoryPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Subcategories with more subcategories */}
+        {/* Subcategories with more subcategories Section */}
         {hasSubcategories && !subCatId ? (
           <div className="subcategories-list">
-            <h2>Subcategories:</h2>
+            <h2>Subcategories with More Options:</h2>
             <ul>
-              {categories.filter(cat => cat.parentId === currentSubCategory.id).map(subCat => (
+              {subcategories.map(subCat => (
                 <li key={subCat.id}>
                   <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                 </li>
               ))}
             </ul>
           </div>
-        ) : (
+        ) : null}
+
+        {/* Products Section for Subcategories without more subcategories */}
+        {!hasSubcategories ? (
           <div className="page-products__main-wrapper">
             {filteredProducts.length === 0 ? (
               <p>No products found in this category.</p>
@@ -108,7 +114,8 @@ const CategoryPage: React.FC = () => {
               </div>
             )}
           </div>
-        )}
+        ) : null}
+        
       </div>
     </div>
   );
