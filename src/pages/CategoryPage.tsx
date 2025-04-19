@@ -13,25 +13,11 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = subCatId ? parseInt(subCatId) : undefined;
     const mainCategory = categories.find(cat => cat.id === subCategoryId);
-    
+
     if (mainCategory) {
-      // Case 1: Main Category Found
       setCurrentSubCategory(mainCategory);
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(mainCategory.id));
+      const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
       setFilteredProducts(productsToDisplay);
-    } else {
-      // Case 2: Subcategory Scenario
-      const subCategory = categories.find(cat => cat.id === subCategoryId);
-      if (subCategory) {
-        setCurrentSubCategory(subCategory);
-        const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
-        setFilteredProducts(productsToDisplay);
-      }
-      
-      // Case 3: If no main category or subcategory is found
-      else {
-        setCurrentSubCategory(undefined);
-      }
     }
   }, [subCatId]);
 
