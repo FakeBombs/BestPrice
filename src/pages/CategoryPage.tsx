@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData';
+import { useParams, useSearchParams, Link } from 'react-router-dom'; 
+import { categories, products, searchProducts, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
