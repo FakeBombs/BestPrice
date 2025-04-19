@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom'; 
 import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
 import ProductCard from '@/components/ProductCard'; // Adjust import path
 
 const CategoryPage: React.FC = () => {
-  // Uncommenting this line will trigger the ReferenceError 
-  // console.log("Initial b value:", b);  // Commented out for testing
-
+  console.log("Initial b value:", b);
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
@@ -20,6 +18,7 @@ const CategoryPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
+  
 
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
@@ -29,7 +28,7 @@ const CategoryPage: React.FC = () => {
       setCurrentCategory(subCategory);
       const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
       setFilteredProducts(productsToDisplay);
-      extractAvailableFilters(productsToDisplay);
+      extractAvailableFilters(productsToDisplay); 
     }
   }, [categoryId]);
 
@@ -127,36 +126,11 @@ const CategoryPage: React.FC = () => {
     setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
   };
 
-  const renderAppliedFilters = () => {
-    return (
-      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey =>
-        activeFilters.specs[specKey].length > 0)) && (
-        <div className="applied-filters">
-          {activeFilters.brands.map((brand) => (
-            <h2 className="applied-filters__filter" key={brand}>
-              <a onClick={() => handleBrandFilter(brand)}>
-                <span className="applied-filters__label">{brand}</span>
-              </a>
-            </h2>
-          ))}
-          {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
-            specValues.map((specValue) => (
-              <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                <a onClick={() => handleSpecFilter(specKey, specValue)}>
-                  <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                </a>
-              </h2>
-            ))
-          )}
-        </div>
-      )
-    );
-  };
-
   return (
     <div className="root__wrapper">
       <div className="root">
         <div className="page-products">
+          {/* Removed categories from filters as requested */}
           <aside className="page-products__filters">
             {availableVendors.length > 0 && (
               <div className="filter-vendor default-list">
@@ -174,7 +148,7 @@ const CategoryPage: React.FC = () => {
             )}
 
             {Object.keys(availableBrands).length > 0 && (
-              <div className="filter-brand default-list">
+              <div className="filter-brand default-list" data-filter-name data-type data-key>
                 <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                 <div className="filter-container">
                   <ol>
@@ -190,7 +164,7 @@ const CategoryPage: React.FC = () => {
 
             {Object.keys(availableSpecs).length > 0 && (
               Object.keys(availableSpecs).map((specKey) => (
-                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`}>
+                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                   <div className="filter__header"><h4>{specKey}</h4></div>
                   <div className="filter-container">
                     <ol>
@@ -233,31 +207,36 @@ const CategoryPage: React.FC = () => {
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                   </div>
                 </div>
+                <div className="page-header__title-aside">
+                  {displayedBrand && (
+                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                    </a>
+                  )}
+                </div>
               </div>
-              {renderAppliedFilters()}
             </header>
 
             <div className="page-header__sorting">
               <div className="tabs">
                 <div className="tabs-wrapper">
                   <nav>
-                    <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                      <div className="tabs__content">Δημοφιλέστερα</div>
-                    </a>
-                    <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                      <div className="tabs__content">Φθηνότερα</div>
-                    </a>
-                    <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                      <div className="tabs__content">Ακριβότερα</div>
-                    </a>
-                    <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                      <div className="tabs__content">Αριθμός καταστημάτων</div>
-                    </a>
+                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
+                                                <div className="tabs__content">Δημοφιλέστερα</div>
+                                            </a>
+                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
+                                                <div className="tabs__content">Φθηνότερα</div>
+                                            </a>
+                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
+                                                <div className="tabs__content">Ακριβότερα</div>
+                                            </a>
+                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
+                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
+                                            </a>
                   </nav>
                 </div>
               </div>
             </div>
-
             {filteredProducts.length === 0 ? (
               <p>No products found in this category.</p>
             ) : (
