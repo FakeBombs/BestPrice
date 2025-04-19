@@ -36,7 +36,7 @@ interface PriceHistoryChartProps {
   setTimeRange: React.Dispatch<React.SetStateAction<'1m' | '3m' | '6m' | '1y'>>;
 }
 
-const PriceHistoryChart = ({ productId, basePrice, timeRange, setTimeRange }: PriceHistoryChartProps) => {
+const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({ productId, basePrice, timeRange, setTimeRange }) => {
   const priceData = generatePriceData(basePrice, getDaysFromRange(timeRange));
 
   // Check if priceData has values before using it
