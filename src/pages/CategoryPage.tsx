@@ -8,7 +8,7 @@ const CategoryPage: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
-
+  
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
@@ -37,6 +37,9 @@ const CategoryPage: React.FC = () => {
     }
   };
 
+  // Identify if the current category is a leaf category (the last subcategory)
+  const hasSubcategories = categories.some(cat => cat.parentId === currentCategory.id);
+  
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -70,15 +73,29 @@ const CategoryPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            {filteredProducts.length === 0 ? (
-              <p>No products found in this category.</p>
+
+            {hasSubcategories ? (
+              <div className="subcategories-list">
+                <h2>Subcategories:</h2>
+                <ul>
+                  {categories.filter(cat => cat.parentId === currentCategory.id).map(subCat => (
+                    <li key={subCat.id}>
+                      <a href={`/category/${subCat.id}`}>{subCat.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <div className="page-products__main-wrapper">
-                <div className="p__products" data-pagination="">
-                  {sortProducts(filteredProducts).map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
+                {filteredProducts.length === 0 ? (
+                  <p>No products found in this category.</p>
+                ) : (
+                  <div className="p__products" data-pagination="">
+                    {sortProducts(filteredProducts).map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </main>
