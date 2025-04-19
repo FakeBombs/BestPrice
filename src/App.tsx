@@ -36,6 +36,7 @@ function App() {
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
           <Route path="/cat/:categoryId/:rootCategorySlug" component={CategoryPage} /> {/* New Route for Category using ID and Slug */}
+          <Route path="/cat/:categoryId/:rootCategorySlug.html" component={CategoryPage} /> {/* New Route for Category using ID and Slug */}
           <Route path="brands" element={<Brands />} />
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
