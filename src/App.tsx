@@ -33,6 +33,9 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
+          // For Main Categories
+          <Route path="/cat/:mainCatId/:mainCatSlug*" element={<CategoryPage />} />
+          <Route path="/cat/:mainCatId/:mainCatSlug(\\.[a-zA-Z0-9]+)?" element={<CategoryPage />} />
           // For SubCategories
           <Route path="/cat/:subCatId/:subCatSlug*" element={<CategoryPage />} />
           <Route path="/cat/:subCatId/:subCatSlug(\\.[a-zA-Z0-9]+)?" element={<CategoryPage />} />
