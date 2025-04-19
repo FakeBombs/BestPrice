@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products , vendors} from '@/data/mockData';
+import { brands, products , vendors, , getCategories, mainCategories } from '@/data/mockData';
 
 // Define the getStats function inside the Footer component
 const getStats = () => {
@@ -66,13 +66,7 @@ const Footer: React.FC = () => {
               <div className="footer__section-scroller">
                 <div className="footer__section-content">
                   <ul>
-                    <li><Link to="/categories/c1">{t('technology')}</Link></li>
-                    <li><Link to="/categories/c2">Σπίτι & Κήπος</Link></li>
-                    <li><Link to="/categories/c3">Μόδα</Link></li>
-                    <li><Link to="/categories/c4">Υγεία & Ομορφιά</Link></li>
-                    <li><Link to="/categories/c5">Παιδικά, Βρεφικά</Link></li>
-                    <li><Link to="/categories/c1">Αθλητισμός, Hobby</Link></li>
-                    <li><Link to="/categories/c2">Μηχανοκίνηση</Link></li>
+                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.id}/${category.slug}.html?bpref=home-verticals`}>{t(category.name)}</Link> ))}
                     <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">{t('gifts')}</Link></li>
                     <li><Link to="/give">BestPrice Give</Link></li>
