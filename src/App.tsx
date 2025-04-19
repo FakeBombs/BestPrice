@@ -32,10 +32,12 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="item/:productId/:productSlug?" element={<ProductDetail />} />
-          <Route path="category/:categorySlug" element={<Categories />} />
+          <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
+          <Route path="item/:productId/:productSlug.html" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
+          <Route path="/cat/:categoryId/:slug.html" element={<CategoryPage />} /> {/* New Route for Category using ID and Slug */}
           <Route path="brands" element={<Brands />} />
           <Route path="stores" element={<Stores />} />
           <Route path="deals" element={<Deals />} />
