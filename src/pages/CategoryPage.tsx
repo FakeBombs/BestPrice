@@ -44,12 +44,7 @@ const CategoryPage: React.FC = () => {
           subcategories.map(subCat => (
             <div className="root-category__category" key={subCat.id}>
               <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category`} className="root-category__cover">
-                <img 
-                  src={subCat.image} 
-                  srcSet={`${subCat.image2x} 2x`} 
-                  alt={subCat.name} 
-                  title={subCat.name} 
-                />
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
               </Link>
               <h2 className="root-category__category-title">
                 <Link to={`/cat/${subCat.id}/${subCat.slug}.html?bpref=root-category__title`}>
@@ -155,9 +150,11 @@ const CategoryPage: React.FC = () => {
   };
 
   return (
-    <div>
-      {currentCategory && !currentCategory.parentId ? renderSubcategoriesForMainCategory() : renderSubcategoriesSection()} 
-      {renderProductsSection()} 
+    <div className="root__wrapper root-category__root">
+      <div class="root">
+        {currentCategory && !currentCategory.parentId ? renderSubcategoriesForMainCategory() : renderSubcategoriesSection()} 
+        {renderProductsSection()} 
+      </div>
     </div>
   );
 };
