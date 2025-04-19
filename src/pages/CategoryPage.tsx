@@ -22,7 +22,7 @@ const CategoryPage: React.FC = () => {
     
     // Attempting to parse different IDs from URL
     if (mainCatId) {
-      foundCategoryId = parseInt(mainCatId);
+      foundCategoryId = parseInt(mainCatId, 10);
       const foundCategory = mainCategories.find(cat => cat.id === foundCategoryId && cat.slug === mainCatSlug);
       if (foundCategory) {
         setCurrentCategory(foundCategory);
