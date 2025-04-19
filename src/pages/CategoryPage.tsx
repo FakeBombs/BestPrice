@@ -10,7 +10,7 @@ const CategoryPage: React.FC = () => {
   
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
-    // const subCategory = categories.find(cat => cat.id === subCategoryId);
+    const subCategory = categories.find(cat => cat.id === subCategoryId);
     // if (subCategory) { ... }
   }, [/* categoryId */]);
 
