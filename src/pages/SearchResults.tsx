@@ -74,9 +74,10 @@ const SearchResults = () => {
                 slug: categoryData ? categoryData.slug : '',
                 count,
                 image: categoryData ? categoryData.image : '',
+                parentId: categoryData ? categoryData.parentId : null, // Added to access parent for filtering subcategories
             };
-        }).filter(cat => cat.id);
-
+        }).filter(cat => cat.id && cat.parentId); // Only include subcategories
+        
         setAvailableCategories(categoriesArray);
     };
 
