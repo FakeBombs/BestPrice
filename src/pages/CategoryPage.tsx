@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; 
+import { useParams, Link } from 'react-router-dom'; 
 import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
@@ -82,7 +82,7 @@ const CategoryPage: React.FC = () => {
                 <ul>
                   {categories.filter(cat => cat.parentId === currentCategory.id).map(subCat => (
                     <li key={subCat.id}>
-                      <a href={`/cat/${categoryId}/${subCat.id}`}>{subCat.name}</a>
+                      <Link to={`/cat/${categoryId}/${subCat.id}`}>{subCat.name}</Link>
                     </li>
                   ))}
                 </ul>
