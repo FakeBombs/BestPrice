@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
-import { brands, products , vendors} from './mockData';
+import { brands, products , vendors} from '@/data/mockData';
 
 const getStats = () => {
     const totalProducts = products.length;
