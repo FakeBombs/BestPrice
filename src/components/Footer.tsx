@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
               <div className="footer__section-scroller">
                 <div className="footer__section-content">
                   <ul>
-                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.id}/${category.slug}.html?bpref=home-verticals`}>{t(category.name)}</Link> ))}
+                    {mainCategories.map(category => ( <li></><Link key={category.id} to={`/cat/${category.id}/${category.slug}.html?bpref=home-verticals`}>{t(category.name)}</Link></li> ))}
                     <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">{t('gifts')}</Link></li>
                     <li><Link to="/give">BestPrice Give</Link></li>
