@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData';
+import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 // Main component
