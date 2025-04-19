@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
-import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
-import ProductCard from '@/components/ProductCard'; // Adjust import path
+import { categories, products } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
   console.log("Initial b value:", b);
@@ -105,13 +105,6 @@ const CategoryPage: React.FC = () => {
       ? activeFilters.vendors.filter((v) => v !== vendor)
       : [...activeFilters.vendors, vendor];
     setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-  };
-
-  const handleBrandFilter = (brand) => {
-    const newBrands = activeFilters.brands.includes(brand)
-      ? activeFilters.brands.filter((b) => b !== brand)
-      : [...activeFilters.brands, brand];
-    setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
   };
 
   return (
