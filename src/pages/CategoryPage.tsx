@@ -36,13 +36,12 @@ const CategoryPage: React.FC = () => {
             <div>{filteredProducts.length} products</div>
           </header>
           <main>
-            {renderAppliedFilters()}
             <div className="page-header__sorting">
               {/* Put sorting tabs logic here if necessary */}
             </div>
-            {filteredProducts.length === 0 ? (
-              <p>No products found matching your search.</p>
-            ) : (
+      {filteredProducts.length === 0 ? (
+        <p>No products found in this category.</p>
+      ) : (
               <div className="page-products__main-wrapper">
                 <div className="p__products" data-pagination="">
                   {filteredProducts.map((product) => (
@@ -50,11 +49,12 @@ const CategoryPage: React.FC = () => {
                   ))}
                 </div>
               </div>
-            )}
+      )}
           </main>
         </div>
       </div>
     </div>
   );
-  
-  export default CategoryPage;
+};
+
+export default CategoryPage;
