@@ -5,21 +5,23 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug } = useParams<{ mainCatId: string; mainCatSlug: string }>(); // Adjusted to use mainCatId and mainCatSlug
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug } = useParams<{ mainCatId: string; mainCatSlug: string; subCatId: string; subCatSlug: string }>(); // Updated to include subCatId and subCatSlug
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    const categoryId = mainCatId ? parseInt(mainCatId) : undefined; // Update to use mainCatId
-    const mainCategory = mainCategories.find(cat => cat.id === categoryId && cat.slug === mainCatSlug); // Check using both id and slug
-    
+    const mainCategoryId = mainCatId ? parseInt(mainCatId) : undefined;
+    const mainCategory = mainCategories.find(cat => cat.id === mainCategoryId && cat.slug === mainCatSlug);
+
     if (mainCategory) {
       setCurrentCategory(mainCategory);
       const productsToDisplay = products.filter(product => product.categoryIds.includes(mainCategory.id));
       setFilteredProducts(productsToDisplay);
     } else {
-      const subCategory = categories.find(cat => cat.id === categoryId);
+      const subCategoryId = subCatId ? parseInt(subCatId) : undefined; // Getting subcategory ID
+      const subCategory = categories.find(cat => cat.id === subCategoryId && cat.slug === subCatSlug); // Ensure slug also matches
+
       if (subCategory) {
         setCurrentCategory(subCategory);
         const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategory.id));
@@ -28,7 +30,7 @@ const CategoryPage: React.FC = () => {
         setCurrentCategory(undefined);
       }
     }
-  }, [mainCatId]); // Adjusted dependency to mainCatId
+  }, [mainCatId, subCatId]); // Adjusted dependencies
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
@@ -55,7 +57,7 @@ const CategoryPage: React.FC = () => {
       <div className="root">
         
         {/* Main Categories Section (only show if not a subcategory) */}
-        {!currentCategory.parentId ? (  // Check if the current URL is for a main category
+        {currentCategory && !currentCategory.parentId ? (  // Show this only if the current category is a main category
           <>
             <div className="page-header">
               <div className="hgroup">
@@ -97,7 +99,7 @@ const CategoryPage: React.FC = () => {
         ) : null} {/* End of Main Categories Section */}
 
         {/* Subcategories with more subcategories Section */}
-        {hasSubcategories && mainCatId ? (
+        {hasSubcategories && !mainCatId ? (
           <div className="subcategories-list">
             <h2>Subcategories with More Options:</h2>
             <ul>
@@ -110,7 +112,7 @@ const CategoryPage: React.FC = () => {
           </div>
         ) : null}
 
-        {/* Products Section for Subcategories without more subcategories */}
+        {/* Products Section for individual subcategories without more subcategories */}
         {!hasSubcategories ? (
           <div className="page-products__main-wrapper">
             {filteredProducts.length === 0 ? (
