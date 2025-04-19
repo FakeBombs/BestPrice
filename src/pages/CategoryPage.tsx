@@ -12,7 +12,7 @@ const CategoryPage: React.FC = () => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
     // if (subCategory) { ... }
-  }, [/* categoryId */]);
+  }, [categoryId]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
