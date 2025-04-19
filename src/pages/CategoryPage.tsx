@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // Added Link import for category navigation
 import { categories, products } from '@/data/mockData'; // Adjust import paths as necessary
 import ProductCard from '@/components/ProductCard'; // Adjust the import path
 
@@ -17,6 +17,9 @@ const CategoryPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
+  const [showMoreCategories, setShowMoreCategories] = useState(false); // New state for showing more categories
+  const displayedBrand = undefined; // Placeholder for selected brand (add logic as needed)
+  const availableCategories = categories; // Assuming categories from your mockData
 
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
@@ -28,17 +31,15 @@ const CategoryPage: React.FC = () => {
       setFilteredProducts(productsToDisplay);
       extractAvailableFilters(productsToDisplay); // Extract filters using products directly
     }
-  }, [categoryId]); // Removed slug since it's not needed for filtering or fetching categories
+  }, [categoryId]);
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
   }
 
-  const productsToDisplay = filteredProducts;
-
   useEffect(() => {
-    filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, productsToDisplay);
-  }, [activeFilters, productsToDisplay]); // Ensure active filters are applied on products to display
+    filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, filteredProducts);
+  }, [activeFilters, filteredProducts]);
 
   const extractAvailableFilters = (results) => {
     const vendors = new Set();
@@ -85,9 +86,7 @@ const CategoryPage: React.FC = () => {
       });
     }
 
-    filtered = sortProducts(filtered);
-    setFilteredProducts(filtered);
-    extractAvailableFilters(filtered);
+    setFilteredProducts(sortProducts(filtered)); // Sort and then set filtered products
   };
 
   const sortProducts = (products) => {
@@ -130,7 +129,8 @@ const CategoryPage: React.FC = () => {
 
   const renderAppliedFilters = () => {
     return (
-      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && (
+      (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey =>
+        activeFilters.specs[specKey].length > 0)) && (
         <div className="applied-filters">
           {activeFilters.brands.map((brand) => (
             <h2 className="applied-filters__filter" key={brand}>
@@ -158,120 +158,125 @@ const CategoryPage: React.FC = () => {
       <div className="root">
         <div className="page-products">
           <aside className="page-products__filters">
-                        <div id="filters">
-                            <div className="filters__categories" data-filter-name="categories">
-                                <div className="filters__header">
-                                    <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
-                                </div>
-                                <ol>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
-                                        <li key={item.id}>
-                                            <Link to={`/cat/${item.id}/${item.slug}.html`}>
-                                                <span>{item.category} ({item.count})</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ol>
-                                {availableCategories.length > 8 && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title="Show all categories">
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
-                                        </svg>
-                                        Show all
-                                    </div>
-                                )}
-                            </div>
+            <div id="filters">
+              <div className="filters__categories" data-filter-name="categories">
+                <div className="filters__header">
+                  <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+                </div>
+                <ol>
+                  {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
+                    <li key={item.id}>
+                      <Link to={`/cat/${item.id}/${item.slug}.html`}>
+                        <span>{item.category} ({item.count})</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+                {availableCategories.length > 8 && (
+                  <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title="Show all categories">
+                    <svg aria-hidden="true" className="icon" width="100%" height="100%">
+                      <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
+                    </svg>
+                    Show all
+                  </div>
+                )}
+              </div>
 
-                            {availableVendors.length > 0 && (
-                                <div className="filter-vendor default-list">
-                                    <div className="filter__header"><h4>Vendors</h4></div>
-                                    <div className="filter-container">
-                                        <ol>
-                                            {availableVendors.map((vendor) => (
-                                                <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
-                                                    <span>{vendor}</span>
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    </div>
-                                </div>
-                            )}
+              {availableVendors.length > 0 && (
+                <div className="filter-vendor default-list">
+                  <div className="filter__header"><h4>Vendors</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {availableVendors.map((vendor) => (
+                        <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
+                          <span>{vendor}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              )}
 
-                            {Object.keys(availableBrands).length > 0 && (
-                                <div className="filter-brand default-list" data-filter-name data-type data-key>
-                                    <div className="filter__header"><h4>Κατασκευαστής</h4></div>
-                                    <div className="filter-container">
-                                        <ol>
-                                            {Object.keys(availableBrands).map((brand) => (
-                                                <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
-                                                    <span>{brand} ({availableBrands[brand]})</span>
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    </div>
-                                </div>
-                            )}
+              {Object.keys(availableBrands).length > 0 && (
+                <div className="filter-brand default-list" data-filter-name data-type data-key>
+                  <div className="filter__header"><h4>Κατασκευαστής</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Object.keys(availableBrands).map((brand) => (
+                        <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
+                          <span>{brand} ({availableBrands[brand]})</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              )}
 
-                            {Object.keys(availableSpecs).length > 0 && (
-                                Object.keys(availableSpecs).map((specKey) => (
-                                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
-                                        <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container">
-                                            <ol>
-                                                {Array.from(availableSpecs[specKey]).map((specValue) => (
-                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
-                                                        <span>{specValue}</span>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+              {Object.keys(availableSpecs).length > 0 && (
+                Object.keys(availableSpecs).map((specKey) => (
+                  <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                    <div className="filter__header"><h4>{specKey}</h4></div>
+                    <div className="filter-container">
+                      <ol>
+                        {Array.from(availableSpecs[specKey]).map((specValue) => (
+                          <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                            <span>{specValue}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                ))
+              )}
 
-                            <div className="filter-in-stock default-list">
-                                <div className="filter__header"><h4>In Stock</h4></div>
-                                <div className="filter-container">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={activeFilters.inStockOnly}
-                                            onChange={() => {
-                                                const newInStockOnly = !activeFilters.inStockOnly;
-                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
-                                            }} 
-                                        />
-                                        Show only in-stock products
-                                    </label>
-                                </div>
-                            </div>
-                            <button className="button button--outline" id="filters__scrollback"><svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div></button>
-                        </div>
-                    </aside>
-          
+              <div className="filter-in-stock default-list">
+                <div className="filter__header"><h4>In Stock</h4></div>
+                <div className="filter-container">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={activeFilters.inStockOnly}
+                      onChange={() => {
+                        const newInStockOnly = !activeFilters.inStockOnly;
+                        setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, filteredProducts);
+                      }} 
+                    />
+                    Show only in-stock products
+                  </label>
+                </div>
+              </div>
+              <button className="button button--outline" id="filters__scrollback">
+                <svg className="icon" aria-hidden="true" width="12" height="12">
+                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use>
+                </svg>
+                <div>Φίλτρα</div>
+              </button>
+            </div>
+          </aside>
+
           <main className="page-products__main">
             <header className="page-header">
               <div className="page-header__title-wrapper">
-                                <div className="page-header__title-main">
-                                    <h1>{currentCategory.name}</h1>
-                                    <div className="page-header__count-wrapper">
-                                        <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                                    </div>
-                                </div>
-                                <div className="page-header__title-aside">
-                                    {displayedBrand && (
-                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
+                <div className="page-header__title-main">
+                  <h1>{currentCategory.name}</h1>
+                  <div className="page-header__count-wrapper">
+                    <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
+                  </div>
+                </div>
+                <div className="page-header__title-aside">
+                  {displayedBrand && (
+                    <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                      <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                    </a>
+                  )}
+                </div>
+              </div>
               {renderAppliedFilters()}
-          </header>
-            
+            </header>
+
             <div className="page-header__sorting">
-              {/* Put sorting tabs logic here if necessary */}
+              {/* Sorting tabs logic if necessary */}
             </div>
             {filteredProducts.length === 0 ? (
               <p>No products found in this category.</p>
