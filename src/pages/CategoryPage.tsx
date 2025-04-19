@@ -40,8 +40,8 @@ const CategoryPage: React.FC = () => {
       }
     }
 
-    if (categorytId) {
-      categoryId = parseInt(categorytId);
+    if (categoryId) {
+      categoryId = parseInt(categoryId);
       const foundLeafCategory = categories.find(cat => cat.id === categoryId && cat.slug === categorySlug);
       if (foundLeafCategory) {
         setCurrentCategory(foundLeafCategory);
@@ -50,7 +50,7 @@ const CategoryPage: React.FC = () => {
     }
 
     setCurrentCategory(undefined); // If no category found
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categorytId, categorySlug]);
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId, categorySlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
