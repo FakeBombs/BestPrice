@@ -4,6 +4,9 @@ import { categories, products } from '@/data/mockData'; // Adjust import paths a
 import ProductCard from '@/components/ProductCard'; // Adjust import path
 
 const CategoryPage: React.FC = () => {
+  // Uncommenting this line will trigger the ReferenceError 
+  // console.log("Initial b value:", b);  // Commented out for testing
+
   const { categoryId } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
