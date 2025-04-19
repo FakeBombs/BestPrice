@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId, categorySlug } = useParams<{
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId: urlCategoryId, categorySlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
     subCatId?: string;
@@ -17,14 +17,13 @@ const CategoryPage: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
-  // Unified critical logic to fetch the category
   useEffect(() => {
     let foundCategoryId: number | undefined = undefined;
     
     // Attempting to parse different IDs from URL
     if (mainCatId) {
-      categoryId = parseInt(mainCatId);
-      const foundCategory = mainCategories.find(cat => cat.id === categoryId && cat.slug === mainCatSlug);
+      foundCategoryId = parseInt(mainCatId);
+      const foundCategory = mainCategories.find(cat => cat.id === foundCategoryId && cat.slug === mainCatSlug);
       if (foundCategory) {
         setCurrentCategory(foundCategory);
         return; // Stop additional checks if main category is found
@@ -32,17 +31,17 @@ const CategoryPage: React.FC = () => {
     }
 
     if (subCatId) {
-      categoryId = parseInt(subCatId);
-      const foundSubCategory = categories.find(cat => cat.id === categoryId && cat.slug === subCatSlug);
+      foundCategoryId = parseInt(subCatId);
+      const foundSubCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === subCatSlug);
       if (foundSubCategory) {
         setCurrentCategory(foundSubCategory);
         return; // Stop additional checks if subcategory is found
       }
     }
 
-    if (categoryId) {
-      categoryId = parseInt(categoryId);
-      const foundLeafCategory = categories.find(cat => cat.id === categoryId && cat.slug === categorySlug);
+    if (urlCategoryId) {
+      foundCategoryId = parseInt(urlCategoryId);
+      const foundLeafCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === categorySlug);
       if (foundLeafCategory) {
         setCurrentCategory(foundLeafCategory);
         return; // Stop additional checks if leaf category is found
@@ -50,7 +49,7 @@ const CategoryPage: React.FC = () => {
     }
 
     setCurrentCategory(undefined); // If no category found
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId, categorySlug]);
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
