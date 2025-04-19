@@ -11,7 +11,7 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
     const subCategory = categories.find(cat => cat.id === subCategoryId);
-    // if (subCategory) { ... }
+    if (subCategory) { ... }
   }, [/* categoryId */]);
 
   if (!currentCategory) {
