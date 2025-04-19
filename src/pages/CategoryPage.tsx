@@ -4,7 +4,7 @@ import { categories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
 const CategoryPage: React.FC = () => {
-  const { categoryId, subCatId } = useParams<{ categoryId: string; subCatId?: string }>();
+  const { categoryId, subCatId, subCatSlug } = useParams<{ categoryId: string; subCatId: string; subCatSlug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
