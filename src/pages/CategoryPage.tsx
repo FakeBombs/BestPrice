@@ -18,7 +18,7 @@ const CategoryPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [sortType, setSortType] = useState('rating-desc'); // Default sort type
-  const displayedBrand = undefined; // Placeholder for selected brand (add logic as needed)
+  
 
   useEffect(() => {
     const subCategoryId = parseInt(categoryId);
