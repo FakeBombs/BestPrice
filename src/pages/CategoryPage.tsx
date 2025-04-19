@@ -29,7 +29,6 @@ const CategoryPage: React.FC = () => {
       case 'rating-desc':
       default:
         return [...products].sort((a, b) => b.rating - a.rating);
-        return products; // Placeholder
     }
   };
 
