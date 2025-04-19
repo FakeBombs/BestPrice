@@ -13,7 +13,9 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
 
     return (
       <li key={categorySlug}>
-        <Link to={`/cat/${category.id}/${categorySlug}`} title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info=""><span>{categoryTitle}</span></Link>
+        <Link to={`/cat/${category.id}/${categorySlug}`} title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info="">
+          <span>{categoryTitle}</span>
+        </Link>
       </li>
     );
   };
