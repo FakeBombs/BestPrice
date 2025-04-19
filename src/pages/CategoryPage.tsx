@@ -4,24 +4,20 @@ import { categories, products } from '@/data/mockData'; // Adjust import paths a
 import ProductCard from '@/components/ProductCard'; // Adjust the import path
 
 const CategoryPage: React.FC = () => {
-  const { categoryId } = useParams<{ categoryId: string }>();
-  const { slug } = useParams<{ slug: string }>(); // This is just to capture the slug
-
+  const { categoryId, slug } = useParams<{ categoryId: string; slug: string }>();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
 
-  // Find the subcategory based on the ID from the URL
-  const subCategoryId = parseInt(categoryId);
-  const subCategory = categories.find(cat => cat.id === subCategoryId);
-
   useEffect(() => {
+    const subCategoryId = parseInt(categoryId);
+    const subCategory = categories.find(cat => cat.id === subCategoryId);
+
     if (subCategory) {
       setCurrentCategory(subCategory);
-      // Filter products based on category ID
       const productsToDisplay = products.filter(product => product.categoryIds.includes(subCategoryId));
       setFilteredProducts(productsToDisplay);
     }
-  }, [subCategory, subCategoryId]);
+  }, [categoryId, slug]); // Make sure slug is part of the dependency array
 
   if (!currentCategory) {
     return <h1>Category Not Found</h1>;
