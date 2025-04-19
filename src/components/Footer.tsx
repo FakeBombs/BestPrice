@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const [totalProducts, setTotalProducts] = useState(0);
-const [totalVendors, setTotalVendors] = useState(0);
-const [totalBrands, setTotalBrands] = useState(0);
-const [totalDeals, setTotalDeals] = useState(0);
-
-useEffect(() => {
-  const fetchCounts = async () => {
-            try {
+const Footer: React.FC = () => {
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalVendors, setTotalVendors] = useState(0);
+  const [totalBrands, setTotalBrands] = useState(0);
+  const [totalDeals, setTotalDeals] = useState(0);
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
                 const productResponse = await fetch('/api/products/count');
                 const vendorResponse = await fetch('/api/vendors/count');
                 const brandResponse = await fetch('/api/brands/count');
@@ -27,12 +27,11 @@ useEffect(() => {
             } catch (error) {
                 console.error('Error fetching counts:', error);
             }
-        };
+      };
+    fetchCounts();
+  }, []);
 
- fetchCounts();
-}, []);
-
-const Footer: React.FC = () => {
+  
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     window.scrollTo({
