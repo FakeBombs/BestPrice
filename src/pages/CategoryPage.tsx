@@ -114,18 +114,6 @@ const CategoryPage: React.FC = () => {
     setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
   };
 
-  const handleSpecFilter = (specKey, specValue) => {
-    const currentSpecs = { ...activeFilters.specs };
-    const specValues = currentSpecs[specKey] || [];
-    if (specValues.includes(specValue)) {
-      currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-      if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-    } else {
-      currentSpecs[specKey] = [...specValues, specValue];
-    }
-    setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-  };
-
   return (
     <div className="root__wrapper">
       
