@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { brands } from '@/data/mockData'; // Ensure this path is correct
+import { brands, groupedBrands } from '@/data/mockData'; // Ensure this path is correct
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
   const { t } = useTranslation();
-
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
-  // Filter brands for suggestions based on the search term
+  // Function to group brands by their first character
+  const groupBrands = (brandsArray) => {
+    return brandsArray.reduce((acc, brand) => {
+      const firstChar = brand.name.charAt(0).toUpperCase();
+      if (/[A-Z]/.test(firstChar)) {  // Latin letters
+        if (!acc.latin) acc.latin = {};
+        acc.latin[firstChar] = acc.latin[firstChar] || [];
+        acc.latin[firstChar].push(brand);
+      } else if (/[0-9]/.test(firstChar)) {  // Numbers
+        if (!acc.numbers) acc.numbers = [];
+        acc.numbers.push(brand);
+      } else if (/[\u0391-\u03A9]/.test(firstChar)) { // Greek letters (Α-Ω)
+        if (!acc.greek) acc.greek = [];
+        acc.greek.push(brand); // Add brand to a single Greek array
+      }
+      return acc;
+    }, {});
+  };
+
+  const groupedBrands = groupBrands(brands);
+
   const getFilteredBrands = () => {
     return brands.filter(brand =>
       brand.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -19,15 +39,13 @@ const Brands = () => {
 
   const filteredBrands = getFilteredBrands();
 
-  // Handle search input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     setShowSuggestions(value.length > 0);
-    setActiveSuggestionIndex(-1); // Reset the active suggestion index
+    setActiveSuggestionIndex(-1);
   };
 
-  // Handle key down events for keyboard navigation
   const handleKeyDown = (e) => {
     const filtered = getFilteredBrands();
     if (e.key === 'ArrowDown') {
@@ -39,6 +57,8 @@ const Brands = () => {
         const selectedBrand = filtered[activeSuggestionIndex];
         window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
       }
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
     }
   };
 
@@ -84,7 +104,11 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
             <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddingRight: "0"}}>
-              {brands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
+              {brands.map((brand) => (
+                <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}>
+                  <img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
+                </Link>
+              ))}
             </div>
           </div>
         </section>
@@ -92,28 +116,45 @@ const Brands = () => {
         <section className="brand-directory">
           <div className="brand-directory__letters">
             <div className="brand-directory__letters-wrapper">
-              {/* Navigation Links */}
               <nav className="brand-directory__nav">
                 <a href="/brands#letter-0-9">0-9</a>
-                {Object.keys(groupedBrands.latin || {}).map(letter => ( <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a> ))}
+                {Object.keys(groupedBrands.latin || {}).map(letter => (
+                  <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a>
+                ))}
                 <a href="/brands#letter-Greek">Α-Ω</a>
               </nav>
             </div>
-
+            
             {/* Numbers Section */}
             <div className="brand-directory__letter" id="letter-0-9">
               <aside><h3>0-9</h3></aside>
               <div className="brand-directory__letter-main">
-                <ol> {filterGroupedBrands(groupedBrands.numbers || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
+                <ol>
+                  {groupedBrands.numbers?.map((brand) => (
+                    <li key={brand.id}>
+                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                        {brand.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
 
             {/* Latin Characters Section */}
             {Object.keys(groupedBrands.latin || {}).map(letter => (
-              <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
+              <div className="brand-directory__letter" id={`letter-${letter}`} key={letter}>
                 <aside><h3>{letter}</h3></aside>
                 <div className="brand-directory__letter-main">
-                  <ol> {filterGroupedBrands(groupedBrands.latin[letter] || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
+                  <ol>
+                    {groupedBrands.latin[letter]?.map((brand) => (
+                      <li key={brand.id}>
+                        <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                          {brand.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               </div>
             ))}
@@ -122,7 +163,15 @@ const Brands = () => {
             <div className="brand-directory__letter" id="letter-Greek">
               <aside><h3>Α-Ω</h3></aside>
               <div className="brand-directory__letter-main">
-                <ol> {filterGroupedBrands(groupedBrands.greek || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
+                <ol>
+                  {groupedBrands.greek?.map((brand) => (
+                    <li key={brand.id}>
+                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                        {brand.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
           </div>
