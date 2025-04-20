@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { brands, groupedBrands } from '@/data/mockData'; // Ensure this path is correct
+import { brands, groupedBrands } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
   const { t } = useTranslation();
-
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -84,33 +84,8 @@ const Brands = () => {
         <header className="page-header">
           <h1 style={{ width: "50%" }}>{brands.length} κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
-            <input
-              type="search"
-              id="brand-search-q"
-              placeholder="Γρήγορη εύρεση ..."
-              autoComplete="off"
-              autoCorrect="off"
-              spellCheck="false"
-              value={searchTerm}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown} // Add onKeyDown for navigation
-            />
-            {showSuggestions && (
-              <div className="autocomplete autocomplete--minimal">
-                <ol>
-                  {filteredBrands.map((brand, index) => (
-                    <li
-                      key={brand.id}
-                      className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} // Use 'highlight' for active class
-                      onMouseEnter={() => setActiveSuggestionIndex(index)}
-                      onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}
-                    >
-                      {brand.name}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
+            <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} onKeyDown={handleKeyDown} />
+            {showSuggestions && ( <div className="autocomplete autocomplete--minimal"><ol>{filteredBrands.map((brand, index) => ( <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}><div className="autocomplete__content"><div className="autocomplete__padder">{brand.name}</div></div></li> ))}</ol></div> )}
           </span>
         </header>
 
@@ -136,11 +111,7 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
             <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddingRight: "0"}}>
-              {brands.map((brand) => (
-                <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}>
-                  <img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
-                </Link>
-              ))}
+              {brands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
             </div>
           </div>
         </section>
@@ -160,51 +131,21 @@ const Brands = () => {
             {/* Numbers Section */}
             <div className="brand-directory__letter" id="letter-0-9">
               <aside><h3>0-9</h3></aside>
-              <div className="brand-directory__letter-main">
-                <ol>
-                  {groupedBrands.numbers?.map((brand) => (
-                    <li key={brand.id}>
-                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                        {brand.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+              <div className="brand-directory__letter-main"><ol>{groupedBrands.numbers?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
             </div>
 
             {/* Latin Characters Section */}
             {Object.keys(groupedBrands.latin || {}).map(letter => (
               <div className="brand-directory__letter" id={`letter-${letter}`} key={letter}>
                 <aside><h3>{letter}</h3></aside>
-                <div className="brand-directory__letter-main">
-                  <ol>
-                    {groupedBrands.latin[letter]?.map((brand) => (
-                      <li key={brand.id}>
-                        <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                          {brand.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
+                <div className="brand-directory__letter-main"><ol>{groupedBrands.latin[letter]?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
               </div>
             ))}
 
             {/* Combined Greek Characters Section (Α-Ω) */}
             <div className="brand-directory__letter" id="letter-Greek">
               <aside><h3>Α-Ω</h3></aside>
-              <div className="brand-directory__letter-main">
-                <ol>
-                  {groupedBrands.greek?.map((brand) => (
-                    <li key={brand.id}>
-                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                        {brand.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+              <div className="brand-directory__letter-main"><ol>{groupedBrands.greek?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
             </div>
           </div>
         </section>
