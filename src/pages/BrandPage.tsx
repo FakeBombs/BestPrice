@@ -4,7 +4,7 @@ import { searchProducts, categories, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
-const SearchResults = () => {
+const BrandPage = () => {
     const [activeFilters, setActiveFilters] = useState({ vendors: [], specs: {}, inStockOnly: false });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -15,8 +15,15 @@ const SearchResults = () => {
     const [sortType, setSortType] = useState('rating-desc');
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q') || '';
+    const { brandId, brandName } = useParams();
     const { brandName } = useParams(); // Get brandName from URL
     const displayedBrand = brandName ? brands.find((brand) => brand.name.toLowerCase() === brandName.toLowerCase()) : null;
+    const normBrandName = brandName?.toLowerCase();
+
+    // Filter products by brand name (case insensitive)
+    const filteredProducts = products.filter(product => 
+        product.brand.toLowerCase() === normBrandName
+    );
 
     useEffect(() => {
         const results = searchProducts(searchQuery);
@@ -346,4 +353,4 @@ const SearchResults = () => {
     );
 };
 
-export default SearchResults;
+export default BrandPage;
