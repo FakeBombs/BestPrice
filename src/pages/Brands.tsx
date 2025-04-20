@@ -78,7 +78,17 @@ const Brands = () => {
           <h1 style={{width: "50%"}}>{brands.length} κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} />
-            {showSuggestions && ( <div className="autocomplete"><ol>{filteredBrands.map((brand, index) => ( <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'active' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}>{brand.name}</li> ))}</ol></div> )}
+            {showSuggestions && (
+              <div className="autocomplete">
+                <ol>
+                  {filteredBrands.map((brand, index) => (
+                    <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}>
+                      {brand.name}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
           </span>
         </header>
 
