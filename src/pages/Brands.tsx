@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { brands, groupedBrands } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -58,7 +59,7 @@ const Brands = () => {
       case 'Enter':
         if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
           const selectedBrand = filtered[activeSuggestionIndex];
-          window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
+          navigate(`/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`);
         }
         break;
       case 'Escape':
@@ -85,7 +86,7 @@ const Brands = () => {
           <h1 style={{ width: "50%" }}>{brands.length} κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} onKeyDown={handleKeyDown} />
-            {showSuggestions && ( <div className="autocomplete autocomplete--minimal"><ol>{filteredBrands.map((brand, index) => ( <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}><div className="autocomplete__content"><div className="autocomplete__padder">{brand.name}</div></div></li> ))}</ol></div> )}
+            {showSuggestions && ( <div className="autocomplete autocomplete--minimal"><ol>{filteredBrands.map((brand, index) => ( <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => navigate(`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`)}><div className="autocomplete__content"><div className="autocomplete__padder">{brand.name}</div></div></li> ))}</ol></div> )}
           </span>
         </header>
 
