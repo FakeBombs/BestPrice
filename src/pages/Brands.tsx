@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 import { brands } from '@/data/mockData';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTranslation } from '@/hooks/useTranslation';
