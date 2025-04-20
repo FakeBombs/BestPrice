@@ -3,7 +3,7 @@ import { brands } from '@/data/mockData';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const Brands = () => {
+const Brands = ({ brand }) => {
   const { t } = useTranslation();
   const brandId = brand.id;
   const brandName = brand.name;
