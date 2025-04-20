@@ -684,7 +684,8 @@ export const brands: Brand[] = [
   { id: 9, name: 'HP', logo: '//orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
   { id: 10, name: 'Asus', logo: '//orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
   { id: 11, name: 'Acer', logo: '//orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
-  { id: 12, name: 'Microsoft', logo: '//orig-bpcdn.pstatic.gr/logs/brands/100.svg' }
+  { id: 12, name: 'Microsoft', logo: '//orig-bpcdn.pstatic.gr/logs/brands/100.svg' },
+  { id: 13, name: 'ΑΛΦΑ', logo: '//orig-bpcdn.pstatic.gr/logs/brands/30165.svg' }
 ];
 
 // Helper functions to simulate API calls
