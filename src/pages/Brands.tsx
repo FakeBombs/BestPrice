@@ -47,20 +47,20 @@ const Brands = () => {
   };
 
   const handleKeyDown = (e) => {
-    const filtered = getFilteredBrands();
-    if (e.key === 'ArrowDown') {
-      setActiveSuggestionIndex(prevIndex => (prevIndex < filtered.length - 1 ? prevIndex + 1 : prevIndex));
-    } else if (e.key === 'ArrowUp') {
-      setActiveSuggestionIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
-    } else if (e.key === 'Enter') {
-      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
-        const selectedBrand = filtered[activeSuggestionIndex];
-        window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
-      }
-    } else if (e.key === 'Escape') {
-      setShowSuggestions(false);
+  const filtered = getFilteredBrands();
+  if (e.key === 'ArrowDown') {
+    setActiveSuggestionIndex(prevIndex => (prevIndex < filtered.length - 1 ? prevIndex + 1 : prevIndex));
+  } else if (e.key === 'ArrowUp') {
+    setActiveSuggestionIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
+  } else if (e.key === 'Enter') {
+    if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
+      const selectedBrand = filtered[activeSuggestionIndex];
+      window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
     }
-  };
+  } else if (e.key === 'Escape') {
+    setShowSuggestions(false);
+  }
+};
 
   return (
     <div className="root__wrapper" id="page-brands">
