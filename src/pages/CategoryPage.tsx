@@ -18,65 +18,62 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-    let foundCategoryId: number | undefined = undefined;
+  let foundCategoryId: number | undefined = undefined;
 
-    // Log the URL parameters
-    console.log('URL Params:', { mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug });
-
-    // Attempting to parse different IDs from URL
-    if (mainCatId) {
-      foundCategoryId = parseInt(mainCatId, 10);
-      console.log("Parsed Main Category ID:", foundCategoryId);
-      const foundCategory = mainCategories.find(cat => cat.id === foundCategoryId && cat.slug === mainCatSlug);
-      console.log("Found Main Category:", foundCategory);
-      if (foundCategory) {
-        setCurrentCategory(foundCategory);
-        return; // Stop additional checks if main category is found
-      }
+  if (mainCatId) {
+    foundCategoryId = parseInt(mainCatId, 10);
+    const foundCategory = mainCategories.find(cat => 
+      cat.id === foundCategoryId && cat.slug === mainCatSlug
+    );
+    if (foundCategory) {
+      setCurrentCategory(foundCategory);
+      return; // Stop additional checks if main category is found
     }
+  }
 
-    if (subCatId) {
-      foundCategoryId = parseInt(subCatId, 10);
-      console.log("Parsed Sub Category ID:", foundCategoryId);
-      const foundSubCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === subCatSlug);
-      console.log("Found Sub Category:", foundSubCategory);
-      if (foundSubCategory) {
-        setCurrentCategory(foundSubCategory);
-        return; // Stop additional checks if subcategory is found
-      }
+  if (subCatId) {
+    foundCategoryId = parseInt(subCatId, 10);
+    const foundSubCategory = categories.find(cat => 
+      cat.id === foundCategoryId && cat.slug === subCatSlug
+    );
+    if (foundSubCategory) {
+      setCurrentCategory(foundSubCategory);
+      return; // Stop additional checks if subcategory is found
     }
+  }
 
-    if (urlCategoryId) {
-      foundCategoryId = parseInt(urlCategoryId, 10);
-      console.log("Parsed Leaf Category ID:", foundCategoryId);
-      const foundLeafCategory = categories.find(cat => cat.id === foundCategoryId && cat.slug === categorySlug);
-      console.log("Found Leaf Category:", foundLeafCategory);
-      if (foundLeafCategory) {
-        setCurrentCategory(foundLeafCategory);
-        return; // Stop additional checks if leaf category is found
-      }
+  if (urlCategoryId) {
+    foundCategoryId = parseInt(urlCategoryId, 10);
+    const foundLeafCategory = categories.find(cat => 
+      cat.id === foundCategoryId && cat.slug === categorySlug
+    );
+
+    if (foundLeafCategory) {
+      setCurrentCategory(foundLeafCategory);
+      return; // Stop additional checks if leaf category is found
     }
+  }
 
-    setCurrentCategory(undefined); // If no category found
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
+  setCurrentCategory(undefined); // If no category found
+}, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
 
-  useEffect(() => {
-    if (!currentCategory) {
-      console.log("Current Category not found");
-      return;
-    }
+useEffect(() => {
+  if (!currentCategory) return;
 
-    console.log("Current Category:", currentCategory);
+  // Check if the selected category is a leaf category (has no subcategories)
+  const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id); 
 
-    // Load products for leaf categories
-    if (!currentCategory.parentId) {
-      setFilteredProducts([]); // No products for main categories
-    } else {
-      const productsToDisplay = products.filter(product => product.categoryIds.includes(currentCategory.id));
-      console.log("Filtered Products:", productsToDisplay);
-      setFilteredProducts(productsToDisplay);
-    }
-  }, [currentCategory]);
+  if (!isLeafCategory) {
+    // If it's a main category or subcategory, do not look for products
+    setFilteredProducts([]); // No products to display
+  } else {
+    // Load products for leaf categories only
+    const productsToDisplay = products.filter(product => 
+      product.categoryIds.includes(currentCategory.id)
+    );
+    setFilteredProducts(productsToDisplay);
+  }
+}, [currentCategory, products]); // Ensure to include products in dependencies
 
   // Handle category not found
   if (!currentCategory) {
