@@ -6,20 +6,27 @@ import { useTranslation } from '@/hooks/useTranslation';
 const Brands = () => {
   const { t } = useTranslation();
 
-  // Function to group brands by their first letter
-  const groupBrandsByFirstLetter = (brandsArray) => {
+  // Function to group brands by their first character
+  const groupBrands = (brandsArray) => {
     return brandsArray.reduce((acc, brand) => {
       const firstChar = brand.name.charAt(0).toUpperCase();
-      const key = !isNaN(firstChar) ? '0-9' : firstChar; // Group numbers under "0-9"
-      if (!acc[key]) {
-        acc[key] = [];
+      if (/[A-Z]/.test(firstChar)) { // Latin letters
+        if (!acc.latin) acc.latin = {};
+        acc.latin[firstChar] = acc.latin[firstChar] || [];
+        acc.latin[firstChar].push(brand);
+      } else if (/[0-9]/.test(firstChar)) { // Numbers
+        if (!acc.numbers) acc.numbers = [];
+        acc.numbers.push(brand);
+      } else if (/[\u0391-\u03A9]/.test(firstChar)) { // Greek letters (Α-Ω)
+        if (!acc.greek) acc.greek = {};
+        acc.greek[firstChar] = acc.greek[firstChar] || [];
+        acc.greek[firstChar].push(brand);
       }
-      acc[key].push(brand);
       return acc;
     }, {});
   };
 
-  const groupedBrands = groupBrandsByFirstLetter(brands);
+  const groupedBrands = groupBrands(brands);
 
   return (
     <div className="root__wrapper" id="page-brands">
@@ -81,44 +88,57 @@ const Brands = () => {
 
             
 
-            <div className="brand-directory__letter" id="letter-0-9">
-              <aside><h3>0-9</h3></aside>
-              <div className="brand-directory__letter-main">
-                <ol>
-                  {groupedBrands['0-9']?.map(brand => (
-                    <li key={brand.id}>
-                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                        {brand.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
+            {/* Numbers Section */}
+        <div className="brand-directory__letter" id="letter-0-9">
+          <aside><h3>0-9</h3></aside>
+          <div className="brand-directory__letter-main">
+            <ol>
+              {groupedBrands.numbers?.map(brand => (
+                <li key={brand.id}>
+                  <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                    {brand.name}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
 
-            {Object.keys(groupedBrands).filter(key => key !== '0-9').map(letter => (
-              <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
-                <aside><h3>{letter}</h3></aside>
-                <div className="brand-directory__letter-main">
-                  <ol>
-                    {groupedBrands[letter]?.map(brand => (
-                      <li key={brand.id}>
-                        <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                          {brand.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-            ))}
-
-            <div class="brand-directory__letter" id="letter-Greek">
-              <aside><h3>Α-Ω</h3></aside>
-              <div class="brand-directory__letter-main">
-                
-              </div>
+        {/* Latin Characters Section */}
+        {Object.keys(groupedBrands.latin || {}).map(letter => (
+          <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
+            <aside><h3>{letter}</h3></aside>
+            <div className="brand-directory__letter-main">
+              <ol>
+                {groupedBrands.latin[letter]?.map(brand => (
+                  <li key={brand.id}>
+                    <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                      {brand.name}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
             </div>
+          </div>
+        ))}
+
+        {/* Greek Characters Section */}
+        {Object.keys(groupedBrands.greek || {}).map(letter => (
+          <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
+            <aside><h3>{letter}</h3></aside>
+            <div className="brand-directory__letter-main">
+              <ol>
+                {groupedBrands.greek[letter]?.map(brand => (
+                  <li key={brand.id}>
+                    <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                      {brand.name}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ))}
 
 
             
