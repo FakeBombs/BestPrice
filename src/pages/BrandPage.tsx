@@ -18,7 +18,6 @@ const BrandPage = () => {
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q') || '';
     const { brandId, brandName } = useParams();
-    const { brandName } = useParams(); // Get brandName from URL
     const displayedBrand = brandName ? brands.find((brand) => brand.name.toLowerCase() === brandName.toLowerCase()) : null;
     const normBrandName = brandName?.toLowerCase();
 
