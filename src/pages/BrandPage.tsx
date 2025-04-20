@@ -183,11 +183,6 @@ const BrandPage = () => {
                             </h2>
                         ))
                     )}
-                    {displayedBrand && (
-                        <h2 className="applied-filters__brand">
-                            <img src={displayedBrand.logo} alt={`${displayedBrand.name} logo`} height="24" />
-                        </h2>
-                    )}
                 </div>
             )
         );
