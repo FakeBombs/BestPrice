@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { brands } from '@/data/mockData';
+import { brands } from '@/data/mockData'; // Ensure this path is correct
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
@@ -36,16 +36,23 @@ const Brands = () => {
     brand.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Handle search input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     setShowSuggestions(value.length > 0);
   };
 
+  // Filter grouped brands sections based on search term
+  const filterGroupedBrands = (group) => {
+    return group.filter(brand =>
+      brand.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   return (
     <div className="root__wrapper" id="page-brands">
       <div className="root">
-        
         <div id="trail">
           <nav className="breadcrumb">
             <ol>
@@ -60,13 +67,7 @@ const Brands = () => {
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} />
             <div className={`autocomplete autocomplete--minimal ${showSuggestions ? 'show' : ''}`} style={{ display: showSuggestions ? 'block' : 'none' }}>
-              <ol>
-                {filteredBrands.map((brand, index) => (
-                  <li className="" data-index={index} key={brand.id}>
-                    <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}`} className="autocomplete__content"> <div className="autocomplete__padder">{brand.name}</div> </Link>
-                  </li>
-                ))}
-              </ol>
+              <ol> {filteredBrands.map((brand, index) => ( <li className="" data-index={index} key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}`} className="autocomplete__content"> <div className="autocomplete__padder">{brand.name}</div> </Link></li> ))} </ol>
             </div>
           </span>
         </header>
@@ -93,11 +94,7 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
             <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddingRight: "0"}}>
-              {filteredBrands.map((brand) => (
-                <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}>
-                  <img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} />
-                </Link>
-              ))}
+              {filteredBrands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
             </div>
           </div>
         </section>
@@ -108,9 +105,7 @@ const Brands = () => {
               {/* Navigation Links */}
               <nav className="brand-directory__nav">
                 <a href="/brands#letter-0-9">0-9</a>
-                {Object.keys(groupedBrands.latin || {}).map(letter => (
-                  <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a>
-                ))}
+                {Object.keys(groupedBrands.latin || {}).map(letter => ( <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a> ))}
                 <a href="/brands#letter-Greek">Α-Ω</a>
               </nav>
             </div>
@@ -119,15 +114,7 @@ const Brands = () => {
             <div className="brand-directory__letter" id="letter-0-9">
               <aside><h3>0-9</h3></aside>
               <div className="brand-directory__letter-main">
-                <ol>
-                  {groupedBrands.numbers?.map(brand => (
-                    <li key={brand.id}>
-                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                        {brand.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
+                <ol> {filterGroupedBrands(groupedBrands.numbers || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
               </div>
             </div>
 
@@ -136,15 +123,7 @@ const Brands = () => {
               <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
                 <aside><h3>{letter}</h3></aside>
                 <div className="brand-directory__letter-main">
-                  <ol>
-                    {groupedBrands.latin[letter]?.map(brand => (
-                      <li key={brand.id}>
-                        <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                          {brand.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
+                  <ol> {filterGroupedBrands(groupedBrands.latin[letter] || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
                 </div>
               </div>
             ))}
@@ -153,21 +132,11 @@ const Brands = () => {
             <div className="brand-directory__letter" id="letter-Greek">
               <aside><h3>Α-Ω</h3></aside>
               <div className="brand-directory__letter-main">
-                <ol>
-                  {groupedBrands.greek?.map(brand => (
-                    <li key={brand.id}>
-                      <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                        {brand.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
+                <ol> {filterGroupedBrands(groupedBrands.greek || []).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))} </ol>
               </div>
             </div>
           </div>
         </section>
-
-        
       </div>
     </div>
   );
