@@ -5,6 +5,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
   const { t } = useTranslation();
+  const brandId = brand.id;
+  const brandName = brand.name;
   return (
     <div className="root__wrapper" id="page-brands">
       <div className="root">
