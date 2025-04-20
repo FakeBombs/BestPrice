@@ -6,48 +6,40 @@ import { useTranslation } from '@/hooks/useTranslation';
 const Brands = () => {
   const { t } = useTranslation();
 
-  // State for search input and filtered brands
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
-  // Function to group brands by their first character
-  const groupBrands = (brandsArray) => {
-    return brandsArray.reduce((acc, brand) => {
-      const firstChar = brand.name.charAt(0).toUpperCase();
-      if (/[A-Z]/.test(firstChar)) {  // Latin letters
-        if (!acc.latin) acc.latin = {};
-        acc.latin[firstChar] = acc.latin[firstChar] || [];
-        acc.latin[firstChar].push(brand);
-      } else if (/[0-9]/.test(firstChar)) {  // Numbers
-        if (!acc.numbers) acc.numbers = [];
-        acc.numbers.push(brand);
-      } else if (/[\u0391-\u03A9]/.test(firstChar)) { // Greek letters (Α-Ω)
-        if (!acc.greek) acc.greek = [];
-        acc.greek.push(brand); // Add brand to a single Greek array
-      }
-      return acc;
-    }, {});
+  // Filter brands for suggestions based on the search term
+  const getFilteredBrands = () => {
+    return brands.filter(brand =>
+      brand.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   };
 
-  const groupedBrands = groupBrands(brands);
-  
-  // Filter brands based on the search term
-  const filteredBrands = brands.filter(brand =>
-    brand.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBrands = getFilteredBrands();
 
   // Handle search input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     setShowSuggestions(value.length > 0);
+    setActiveSuggestionIndex(-1); // Reset the active suggestion index
   };
 
-  // Filter grouped brands sections based on search term
-  const filterGroupedBrands = (group) => {
-    return group.filter(brand =>
-      brand.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // Handle key down events for keyboard navigation
+  const handleKeyDown = (e) => {
+    const filtered = getFilteredBrands();
+    if (e.key === 'ArrowDown') {
+      setActiveSuggestionIndex(prevIndex => (prevIndex < filtered.length - 1 ? prevIndex + 1 : prevIndex));
+    } else if (e.key === 'ArrowUp') {
+      setActiveSuggestionIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
+    } else if (e.key === 'Enter') {
+      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
+        const selectedBrand = filtered[activeSuggestionIndex];
+        window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
+      }
+    }
   };
 
   return (
@@ -66,9 +58,7 @@ const Brands = () => {
           <h1 style={{width: "50%"}}>{brands.length} κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} />
-            <div className={`autocomplete autocomplete--minimal ${showSuggestions ? 'show' : ''}`} style={{ display: showSuggestions ? 'block' : 'none' }}>
-              <ol> {filteredBrands.map((brand, index) => ( <li className="" data-index={index} key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} className="autocomplete__content"> <div className="autocomplete__padder">{brand.name}</div> </Link></li> ))} </ol>
-            </div>
+            {showSuggestions && ( <div className="autocomplete"><ol>{filteredBrands.map((brand, index) => ( <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'active' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}>{brand.name}</li> ))}</ol></div> )}
           </span>
         </header>
 
@@ -94,7 +84,7 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
             <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddingRight: "0"}}>
-              {filteredBrands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
+              {brands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
             </div>
           </div>
         </section>
