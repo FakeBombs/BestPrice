@@ -18,9 +18,8 @@ const Brands = () => {
         if (!acc.numbers) acc.numbers = [];
         acc.numbers.push(brand);
       } else if (/[\u0391-\u03A9]/.test(firstChar)) { // Greek letters (Α-Ω)
-        if (!acc.greek) acc.greek = {};
-        acc.greek[firstChar] = acc.greek[firstChar] || [];
-        acc.greek[firstChar].push(brand);
+        if (!acc.greek) acc.greek = [];
+        acc.greek.push(brand); // Add brand to a single Greek array
       }
       return acc;
     }, {});
@@ -88,6 +87,7 @@ const Brands = () => {
 
             
 
+            
             {/* Numbers Section */}
         <div className="brand-directory__letter" id="letter-0-9">
           <aside><h3>0-9</h3></aside>
@@ -122,23 +122,21 @@ const Brands = () => {
           </div>
         ))}
 
-        {/* Greek Characters Section */}
-        {Object.keys(groupedBrands.greek || {}).map(letter => (
-          <div className={`brand-directory__letter`} id={`letter-${letter}`} key={letter}>
-            <aside><h3>{letter}</h3></aside>
-            <div className="brand-directory__letter-main">
-              <ol>
-                {groupedBrands.greek[letter]?.map(brand => (
-                  <li key={brand.id}>
-                    <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
-                      {brand.name}
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </div>
+        {/* Combined Greek Characters Section (Α-Ω) */}
+        <div className="brand-directory__letter" id="letter-Greek">
+          <aside><h3>Α-Ω</h3></aside>
+          <div className="brand-directory__letter-main">
+            <ol>
+              {groupedBrands.greek?.map(brand => (
+                <li key={brand.id}>
+                  <Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">
+                    {brand.name}
+                  </Link>
+                </li>
+              ))}
+            </ol>
           </div>
-        ))}
+        </div>
 
 
             
