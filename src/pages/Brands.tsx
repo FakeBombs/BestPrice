@@ -1,12 +1,11 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { brands } from '@/data/mockData';
-import { Card, CardContent } from '@/components/ui/card';
+import { brands } from '@/data/mockData'; // Ensure this path is correct
 import { useTranslation } from '@/hooks/useTranslation';
 
-const Brands = ({ brand }) => {
+const Brands = () => {
   const { t } = useTranslation();
-  const brandId = brand.id;
-  const brandName = brand.name;
+
   return (
     <div className="root__wrapper" id="page-brands">
       <div className="root">
