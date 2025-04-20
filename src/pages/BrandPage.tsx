@@ -4,15 +4,18 @@ import { products } from '@/data/mockData'; // Adjust the path according to your
 import ProductCard from '@/components/ProductCard'; // Assuming you have a ProductCard component to render products
 
 const BrandPage = () => {
-    const { brandId } = useParams(); // Get the brandId from the URL
-    const brandIdNumber = parseInt(brandId, 10); // Convert to number if needed 
+    const { brandId, brandName } = useParams(); // Get both brandId and brandName from the URL
+    // Optional: Normalize the brandName for comparison (e.g., lowercase)
+    const normBrandName = brandName?.toLowerCase();
 
-    // Filter products by brandId
-    const filteredProducts = products.filter(product => product.brandId === brandIdNumber);
+    // Filter products by brand name (case insensitive)
+    const filteredProducts = products.filter(product => 
+        product.brand.toLowerCase() === normBrandName
+    );
 
     return (
         <div className="brand-page">
-            <h1>Products for Brand ID: {brandId}</h1>
+            <h1>Products for {brandName}</h1>
             {filteredProducts.length > 0 ? (
                 <div className="product-list">
                     {filteredProducts.map(product => (
