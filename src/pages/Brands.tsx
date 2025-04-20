@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
   const { t } = useTranslation();
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -43,24 +43,31 @@ const Brands = () => {
     const value = e.target.value;
     setSearchTerm(value);
     setShowSuggestions(value.length > 0);
-    setActiveSuggestionIndex(-1);
+    setActiveSuggestionIndex(-1); // Reset active suggestion when input changes
   };
 
   const handleKeyDown = (e) => {
-  const filtered = getFilteredBrands();
-  if (e.key === 'ArrowDown') {
-    setActiveSuggestionIndex(prevIndex => (prevIndex < filtered.length - 1 ? prevIndex + 1 : prevIndex));
-  } else if (e.key === 'ArrowUp') {
-    setActiveSuggestionIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
-  } else if (e.key === 'Enter') {
-    if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
-      const selectedBrand = filtered[activeSuggestionIndex];
-      window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
+    const filtered = getFilteredBrands();
+    switch (e.key) {
+      case 'ArrowDown':
+        setActiveSuggestionIndex(prevIndex => (prevIndex < filtered.length - 1 ? prevIndex + 1 : prevIndex));
+        break;
+      case 'ArrowUp':
+        setActiveSuggestionIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
+        break;
+      case 'Enter':
+        if (activeSuggestionIndex >= 0 && activeSuggestionIndex < filtered.length) {
+          const selectedBrand = filtered[activeSuggestionIndex];
+          window.location.href = `/b/${selectedBrand.id}/${selectedBrand.name.replace(/\s+/g, '-').toLowerCase()}.html`;
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        break;
+      default:
+        break;
     }
-  } else if (e.key === 'Escape') {
-    setShowSuggestions(false);
-  }
-};
+  };
 
   return (
     <div className="root__wrapper" id="page-brands">
@@ -75,14 +82,29 @@ const Brands = () => {
         </div>
 
         <header className="page-header">
-          <h1 style={{width: "50%"}}>{brands.length} κατασκευαστές</h1>
+          <h1 style={{ width: "50%" }}>{brands.length} κατασκευαστές</h1>
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
-            <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} />
+            <input
+              type="search"
+              id="brand-search-q"
+              placeholder="Γρήγορη εύρεση ..."
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck="false"
+              value={searchTerm}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown} // Add onKeyDown for navigation
+            />
             {showSuggestions && (
               <div className="autocomplete">
                 <ol>
                   {filteredBrands.map((brand, index) => (
-                    <li key={brand.id} className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} onMouseEnter={() => setActiveSuggestionIndex(index)} onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}>
+                    <li
+                      key={brand.id}
+                      className={`autocomplete__item ${index === activeSuggestionIndex ? 'highlight' : ''}`} // Use 'highlight' for active class
+                      onMouseEnter={() => setActiveSuggestionIndex(index)}
+                      onClick={() => window.location.href = `/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`}
+                    >
                       {brand.name}
                     </li>
                   ))}
