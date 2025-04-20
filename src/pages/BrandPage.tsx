@@ -7,7 +7,9 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 const BrandPage = () => {
     const [activeFilters, setActiveFilters] = useState({ vendors: [], specs: {}, inStockOnly: false });
     const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = products.filter(product => 
+        product.brand.toLowerCase() === normBrandName
+    );
     const [availableVendors, setAvailableVendors] = useState([]);
     const [availableSpecs, setAvailableSpecs] = useState({});
     const [availableCategories, setAvailableCategories] = useState([]);
@@ -19,11 +21,6 @@ const BrandPage = () => {
     const { brandName } = useParams(); // Get brandName from URL
     const displayedBrand = brandName ? brands.find((brand) => brand.name.toLowerCase() === brandName.toLowerCase()) : null;
     const normBrandName = brandName?.toLowerCase();
-
-    // Filter products by brand name (case insensitive)
-    const filteredProducts = products.filter(product => 
-        product.brand.toLowerCase() === normBrandName
-    );
 
     useEffect(() => {
         const results = searchProducts(searchQuery);
