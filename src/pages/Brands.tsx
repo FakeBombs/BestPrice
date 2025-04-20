@@ -67,7 +67,7 @@ const Brands = () => {
           <span className="autocomplete__wrapper" style={{ display: "inline-block", position: "relative", verticalAlign: "top", zIndex: "500000000" }}>
             <input type="search" id="brand-search-q" placeholder="Γρήγορη εύρεση ..." autoComplete="off" autoCorrect="off" spellCheck="false" value={searchTerm} onChange={handleInputChange} />
             <div className={`autocomplete autocomplete--minimal ${showSuggestions ? 'show' : ''}`} style={{ display: showSuggestions ? 'block' : 'none' }}>
-              <ol> {filteredBrands.map((brand, index) => ( <li className="" data-index={index} key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}`} className="autocomplete__content"> <div className="autocomplete__padder">{brand.name}</div> </Link></li> ))} </ol>
+              <ol> {filteredBrands.map((brand, index) => ( <li className="" data-index={index} key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} className="autocomplete__content"> <div className="autocomplete__padder">{brand.name}</div> </Link></li> ))} </ol>
             </div>
           </span>
         </header>
