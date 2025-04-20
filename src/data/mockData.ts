@@ -673,20 +673,22 @@ export interface Brand {
 }
 
 export const brands: Brand[] = [
-  { id: 1, name: 'Apple', logo: '//orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
-  { id: 2, name: 'Samsung', logo: '//orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
-  { id: 3, name: 'Sony', logo: '//orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
-  { id: 4, name: 'LG', logo: '//orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
-  { id: 5, name: 'Canon', logo: '//orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
-  { id: 6, name: 'Nikon', logo: '//orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
-  { id: 7, name: 'Lenovo', logo: '//orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
-  { id: 8, name: 'Dell', logo: '//orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
-  { id: 9, name: 'HP', logo: '//orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
-  { id: 10, name: 'Asus', logo: '//orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
-  { id: 11, name: 'Acer', logo: '//orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
-  { id: 12, name: 'Microsoft', logo: '//orig-bpcdn.pstatic.gr/logs/brands/100.svg' },
-  { id: 13, name: 'ΑΛΦΑ', logo: '//orig-bpcdn.pstatic.gr/logs/brands/30165.svg' },
-  { id: 13, name: 'Χρωτέχ', logo: '//orig-bpcdn.pstatic.gr/logs/brands/36032.svg' }
+  { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
+  { id: 2, name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
+  { id: 3, name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
+  { id: 4, name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
+  { id: 5, name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
+  { id: 6, name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
+  { id: 7, name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
+  { id: 8, name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
+  { id: 9, name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
+  { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
+  { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
+  { id: 12, name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg' },
+  { id: 13, name: 'ΑΛΦΑ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30165.svg' },
+  { id: 14, name: '3Guys', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16764.svg' },
+  { id: 15, name: '2K Games', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/18388.svg' },
+  { id: 16, name: '7Days', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/39065.svg' }
 ];
 
 // Helper functions to simulate API calls
