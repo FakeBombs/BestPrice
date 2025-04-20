@@ -20,43 +20,177 @@ export const mainCategories: Category[] = [
 
 // Subcategories and nested categories
 export const categories: Category[] = [
-  // Subcategories under Technology
-  { id: 10, name: 'Κινητά', slug: 'mobile-phones', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
-  { id: 11, name: 'Laptops', slug: 'laptops', parentId: 1, image: '//abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
-  { id: 20, name: 'Tablets', slug: 'tablets', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
-  { id: 21, name: 'Smartwatches', slug: 'smartwatches', parentId: 10, image: '//abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' },
+  // Subcategories of Τεχνολογία
+  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/805_SX400Y400/1473253454/mobile.webp' },
+  { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: 'https://www.bestprice.gr/cat/2544/ypologistes.html?bpref=root-category' },
+  { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2590_SX400Y400/1475756993/laptops-accessories.webp' },
+  { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6992_SX400Y400/1473176060/eikona.webp' },
+  { id: 14, name: 'Smartwatches, Wearables', slug: 'smartwatches-wearables', parentId: 1, image: 'https://www.bestprice.gr/cat/6991/wearables.html?bpref=root-category' },
+  { id: 15, name: 'Tablets, Αξεσουάρ', slug: 'tablets-accessories', parentId: 1, image: 'https://www.bestprice.gr/cat/6161/tablets-accessories.html?bpref=root-category' },
+  { id: 16, name: 'Video Games', slug: 'video-games', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/894_SX400Y400/1473260108/video-games.webp' },
+  { id: 17, name: 'Ήχος', slug: 'audio', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6993_SX400Y400/1473176050/hxos.webp' },
+  { id: 18, name: 'Φωτογραφία, Video', slug: 'photography-video', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3000_SX400Y400/1629455498/photo-video.webp' },
+  { id: 19, name: 'Ηλεκτρονικά', slug: 'electronics', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/680_SX400Y400/1473176128/consumer-electronics.webp' },
+  { id: 20, name: 'Τηλεφωνία', slug: 'telephony', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/797_SX400Y400/1473176102/telephony.webp' },
+  { id: 21, name: 'Gadgets', slug: 'gadgets', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/703_SX400Y400/1473176113/gadgets.webp' },
 
-  // Subcategories under Mobile Phones
-  { id: 30, name: 'Smartphones', slug: 'smartphones', parentId: 10, image: '//placehold.co/200x150?text=Smartphones' },
+  // Subcategories of Σπίτι & Κήπος
+  { id: 22, name: 'Οικιακές Συσκευές', slug: 'home-appliances', parentId: 2, image: 'https://www.bestprice.gr/cat/2483/home-appliances.html?bpref=root-category' },
+  { id: 23, name: 'Εργαλεία', slug: 'tools', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3499_SX400Y400/1474901528/tools.webp' },
+  { id: 24, name: 'Έπιπλα', slug: 'furniture', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2186_SX400Y400/1629455494/epipla.webp' },
+  { id: 25, name: 'Κήπος', slug: 'garden', parentId: 2, image: 'https://www.bestprice.gr/cat/2400/khpos.html?bpref=root-category' },
+  { id: 26, name: 'Είδη Σπιτιού', slug: 'home-items', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6990_SX400Y400/1473176080/eidh-spitiou.webp' },
+  { id: 27, name: 'Λευκά Είδη', slug: 'home-linens', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2268_SX400Y400/1629455494/leuka-eidh.webp' },
+  { id: 28, name: 'Φωτισμός', slug: 'lighting', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6092_SX400Y400/1477319884/fotistika.webp' },
+  { id: 29, name: 'Είδη Κουζίνας', slug: 'kitchen-items', parentId: 2, image: '//placehold.co/200x150?text=Kitchen+Items' },
+  { id: 30, name: 'Τρόφιμα & Ποτά', slug: 'food-beverages', parentId: 2, image: '//placehold.co/200x150?text=Food+Beverages' },
+  { id: 31, name: 'Ηλεκτρολογικά', slug: 'electrical-items', parentId: 2, image: '//placehold.co/200x150?text=Electrical+Items' },
+  { id: 32, name: 'Είδη Καπνιστού', slug: 'smoking-items', parentId: 2, image: '//placehold.co/200x150?text=Smoking+Items' },
+  { id: 33, name: 'Είδη Γραφείου', slug: 'office-items', parentId: 2, image: '//placehold.co/200x150?text=Office+Items' },
+  { id: 34, name: 'Είδη Δώρων', slug: 'gift-items', parentId: 2, image: '//placehold.co/200x150?text=Gift+Items' },
+  { id: 35, name: 'Συστήματα Ασφαλείας', slug: 'security-systems', parentId: 2, image: '//placehold.co/200x150?text=Security+Systems' },
+  { id: 36, name: 'Επαγγελματικός Εξοπλισμός', slug: 'professional-equipment', parentId: 2, image: '//placehold.co/200x150?text=Professional+Equipment' },
+  { id: 37, name: 'Εποχιακά Είδη', slug: 'seasonal-items', parentId: 2, image: '//placehold.co/200x150?text=Seasonal+Items' },
+  { id: 38, name: 'Τσάντες για Ψώνια', slug: 'shopping-bags', parentId: 2, image: '//placehold.co/200x150?text=Shopping+Bags' },
+  { id: 39, name: 'Καρότσια Λαϊκής', slug: 'shopping-trolleys', parentId: 2, image: '//placehold.co/200x150?text=Shopping+Trolleys' },
+  { id: 40, name: 'Εκκλησιαστικά Είδη', slug: 'church-items', parentId: 2, image: '//placehold.co/200x150?text=Church+Items' },
+  { id: 41, name: 'Είδη Κατοικιδίων', slug: 'pet-items', parentId: 2, image: '//placehold.co/200x150?text=Pet+Items' },
 
-  // Subcategories under Home & Garden
-  { id: 16, name: 'Ψυγεία', slug: 'refrigerators', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2485_SX400Y400/1629455496/psigeia.webp' },
-  { id: 17, name: 'Πλυντήρια Ρούχων', slug: 'washing-machines', parentId: 2, image: '//abpcdn.pstatic.gr/P/bpimg128/2492_SX400Y400/1629455496/plyntiria-rouxwn.webp' },
-  { id: 22, name: 'Kitchen Accessories', slug: 'kitchen-accessories', parentId: 17, image: '//placehold.co/200x150?text=Kitchen+Accessories' },
-  { id: 23, name: 'Garden Tools', slug: 'garden-tools', parentId: 16, image: '//placehold.co/200x150?text=Garden+Tools' },
+  // Subcategories of Μόδα
+  { id: 42, name: 'Γυναικεία Μόδα', slug: 'womens-fashion', parentId: 3, image: '//placehold.co/200x150?text=Womens+Fashion' },
+  { id: 43, name: 'Ανδρική Μόδα', slug: 'mens-fashion', parentId: 3, image: '//placehold.co/200x150?text=Mens+Fashion' },
+  { id: 44, name: 'Ρολόγια', slug: 'watches', parentId: 3, image: '//placehold.co/200x150?text=Watches' },
+  { id: 45, name: 'Κοσμήματα', slug: 'jewelry', parentId: 3, image: '//placehold.co/200x150?text=Jewelry' },
+  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 3, image: '//placehold.co/200x150?text=Optics' },
+  { id: 47, name: 'Converse All Star', slug: 'converse-all-star', parentId: 3, image: '//placehold.co/200x150?text=Converse+All+Star' },
+  { id: 48, name: 'Ομπρέλες Βροχής', slug: 'rain-umbrellas', parentId: 3, image: '//placehold.co/200x150?text=Rain+Umbrellas' },
+  { id: 49, name: 'Αξεσουάρ Παπουτσιών', slug: 'shoe-accessories', parentId: 3, image: '//placehold.co/200x150?text=Footwear+Accessories' },
+  { id: 50, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 3, image: '//placehold.co/200x150?text=Childrens+Baby+Fashion' },
+  { id: 51, name: 'Sneakers', slug: 'sneakers', parentId: 3, image: '//placehold.co/200x150?text=Sneakers' },
 
-  // Subcategories under Fashion
-  { id: 19, name: 'Gaming Consoles', slug: 'gaming-consoles', parentId: 3, image: '//placehold.co/200x200' },
-  { id: 24, name: 'Cars and Accessories', slug: 'cars-accessories', parentId: 3, image: '//placehold.co/200x200' },
-  { id: 25, name: 'Men’s Clothing', slug: 'mens-clothing', parentId: 3, image: '//placehold.co/200x200' },
-  { id: 26, name: 'Women’s Clothing', slug: 'womens-clothing', parentId: 3, image: '//placehold.co/200x200' },
+  // Subcategories of Υγεία & Ομορφιά
+  { id: 52, name: 'Περιποίηση', slug: 'grooming', parentId: 4, image: '//placehold.co/200x150?text=Grooming' },
+  { id: 53, name: 'Είδη Φαρμακείου', slug: 'pharmacy-products', parentId: 4, image: '//placehold.co/200x150?text=Pharmacy+Products' },
+  { id: 54, name: 'Αρώματα', slug: 'perfumes', parentId: 4, image: '//placehold.co/200x150?text=Perfumes' },
+  { id: 55, name: 'Συμπληρώματα Διατροφής', slug: 'dietary-supplements', parentId: 4, image: '//placehold.co/200x150?text=Supplements' },
+  { id: 56, name: 'Συσκευές Περιποίησης', slug: 'grooming-devices', parentId: 4, image: '//placehold.co/200x150?text=Grooming+Devices' },
+  { id: 57, name: 'Μακιγιάζ', slug: 'makeup', parentId: 4, image: '//placehold.co/200x150?text=Makeup' },
+  { id: 58, name: 'Αντηλιακή Προστασία', slug: 'sun-protection', parentId: 4, image: '//placehold.co/200x150?text=Sun+Protection' },
+  { id: 59, name: 'Ιατρικά Είδη', slug: 'medical-supplies', parentId: 4, image: '//placehold.co/200x150?text=Medical+Supplies' },
+  { id: 60, name: 'Μανικιούρ - Πεντικιούρ', slug: 'manicure-pedicure', parentId: 4, image: '//placehold.co/200x150?text=Manicure+Pedicure' },
+  { id: 61, name: 'Στοματική Υγιεινή', slug: 'oral-hygiene', parentId: 4, image: '//placehold.co/200x150?text=Oral+Hygiene' },
+  { id: 62, name: 'Sex Toys', slug: 'sex-toys', parentId: 4, image: '//placehold.co/200x150?text=Sex+Toys' },
+  { id: 63, name: 'Σύσφιξη', slug: 'tightening', parentId: 4, image: '//placehold.co/200x150?text=Tightening' },
+  { id: 64, name: 'Προϊόντα Κάνναβης', slug: 'cannabis-products', parentId: 4, image: '//placehold.co/200x150?text=Cannabis+Products' },
+  { id: 65, name: 'Ορθοπεδικά', slug: 'orthopedic', parentId: 4, image: '//placehold.co/200x150?text=Orthopedic' },
+  { id: 66, name: 'Βοηθήματα Ασθενών', slug: 'patient-aids', parentId: 4, image: '//placehold.co/200x150?text=Patient+Aids' },
+  { id: 67, name: 'Οπτικά', slug: 'opticals', parentId: 4, image: '//placehold.co/200x150?text=Opticals' },
+  { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '//placehold.co/200x150?text=Korean+Cosmetics' },
 
-  // Subcategories under Health & Beauty
-  { id: 27, name: 'Sport Equipment', slug: 'sport-equipment', parentId: 4, image: '//placehold.co/200x200' },
-  { id: 28, name: 'Cosmetics', slug: 'cosmetics', parentId: 4, image: '//placehold.co/200x200' },
-  
-  // Subcategories under Children & Baby
-  { id: 29, name: 'Baby Toys', slug: 'baby-toys', parentId: 5, image: '//placehold.co/200x200' },
-  { id: 30, name: 'Clothing', slug: 'clothing', parentId: 5, image: '//placehold.co/200x200' },
+  // Subcategories of Παιδικά - Βρεφικά
+  { id: 69, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 5, image: '//placehold.co/200x150?text=Childrens+Baby+Fashion' },
+  { id: 70, name: 'Παιδικά Παιχνίδια', slug: 'childrens-toys', parentId: 5, image: '//placehold.co/200x150?text=Childrens+Toys' },
+  { id: 71, name: 'Σχολικά Είδη', slug: 'school-supplies', parentId: 5, image: '//placehold.co/200x150?text=School+Supplies' },
+  { id: 72, name: 'Βρεφικά Παιχνίδια', slug: 'baby-toys', parentId: 5, image: '//placehold.co/200x150?text=Baby+Toys' },
+  { id: 73, name: 'Βρεφικά Είδη', slug: 'baby-products', parentId: 5, image: '//placehold.co/200x150?text=Baby+Products' },
+  { id: 74, name: 'Παιδικά Λευκά Είδη', slug: 'childrens-linens', parentId: 5, image: '//placehold.co/200x150?text=Childrens+Linens' },
+  { id: 75, name: 'Βαπτιστικά', slug: 'christening-items', parentId: 5, image: '//placehold.co/200x150?text=Christening+Items' },
+  { id: 76, name: 'Παιδικά Ρολόγια', slug: 'childrens-watches', parentId: 5, image: '//placehold.co/200x150?text=Childrens+Watches' },
 
-  // Subcategories under Hobby & Sports
-  { id: 31, name: 'Sportswear', slug: 'sportswear', parentId: 6, image: '//placehold.co/200x200' },
-  { id: 32, name: 'Outdoor Gear', slug: 'outdoor-gear', parentId: 6, image: '//placehold.co/200x200' },
+  // Subcategories of Hobby, Αθλητισμός
+  { id: 77, name: 'Αθλήματα', slug: 'sports', parentId: 6, image: '//placehold.co/200x150?text=Sports' },
+  { id: 78, name: 'Ποδηλασία', slug: 'cycling', parentId: 6, image: '//placehold.co/200x150?text=Cycling' },
+  { id: 79, name: 'Ελεύθερος Χρόνος', slug: 'leisure-time', parentId: 6, image: '//placehold.co/200x150?text=Leisure+Time' },
+  { id: 80, name: 'Ψάρεμα, Καταδύσεις', slug: 'fishing-diving', parentId: 6, image: '//placehold.co/200x150?text=Fishing+Diving' },
+  { id: 81, name: 'Είδη Θαλάσσης', slug: 'sea-items', parentId: 6, image: '//placehold.co/200x150?text=Sea+Items' },
+  { id: 82, name: 'Camping', slug: 'camping', parentId: 6, image: '//placehold.co/200x150?text=Camping' },
+  { id: 83, name: 'Είδη Ταξιδίου, Τσάντες', slug: 'travel-items-bags', parentId: 6, image: '//placehold.co/200x150?text=Travel+Items+and+Bags' },
+  { id: 84, name: 'Βιβλία', slug: 'books', parentId: 6, image: '//placehold.co/200x150?text=Books' },
+  { id: 85, name: 'Κυνήγι', slug: 'hunting', parentId: 6, image: '//placehold.co/200x150?text=Hunting' },
+  { id: 86, name: 'Είδη Γυμναστικής', slug: 'gym-equipment', parentId: 6, image: '//placehold.co/200x150?text=Gym+Equipment' },
+  { id: 87, name: 'Είδη Κατοικιδίων', slug: 'pet-items', parentId: 6, image: '//placehold.co/200x150?text=Pet+Items' },
+  { id: 88, name: 'Drones & Αξεσουάρ', slug: 'drones-accessories', parentId: 6, image: '//placehold.co/200x150?text=Drones+and+Accessories' },
+  { id: 89, name: 'Ηλεκτρικά Πατίνια', slug: 'electric-scooters', parentId: 6, image: '//placehold.co/200x150?text=Electric+Scooters' },
+  { id: 90, name: 'Hoverboards', slug: 'hoverboards', parentId: 6, image: '//placehold.co/200x150?text=Hoverboards' },
+  { id: 91, name: 'Μουσικά Όργανα', slug: 'musical-instruments', parentId: 6, image: '//placehold.co/200x150?text=Musical+Instruments' },
+  { id: 92, name: 'Αξεσουάρ Αθλημάτων', slug: 'sports-accessories', parentId: 6, image: '//placehold.co/200x150?text=Sports+Accessories' },
+  { id: 93, name: 'Είδη Εξερεύνησης', slug: 'exploration-items', parentId: 6, image: '//placehold.co/200x150?text=Exploration+Items' },
+  { id: 94, name: 'Γυναικεία Αθλητικά Ρούχα', slug: 'womens-sports-clothing', parentId: 6, image: '//placehold.co/200x150?text=Womens+Sports+Clothing' },
+  { id: 95, name: 'Γυναικεία Αθλητικά Παπούτσια', slug: 'womens-sports-shoes', parentId: 6, image: '//placehold.co/200x150?text=Womens+Sports+Shoes' },
+  { id: 96, name: 'Ανδρικά Αθλητικά Ρούχα', slug: 'mens-sports-clothing', parentId: 6, image: '//placehold.co/200x150?text=Mens+Sports+Clothing' },
+  { id: 97, name: 'Ανδρικά Αθλητικά Παπούτσια', slug: 'mens-sports-shoes', parentId: 6, image: '//placehold.co/200x150?text=Mens+Sports+Shoes' },
 
-  // New Subcategories for Image
-  { id: 12, name: 'Εικόνα', slug: 'image', parentId: 1, image: '//placehold.co/200x150?text=Image' },
-  { id: 13, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'tv-accessories', parentId: 12, image: '//placehold.co/200x150?text=TV+Accessories' },
-  { id: 14, name: 'Τηλεοράσεις', slug: 'televisions', parentId: 13, image: '//placehold.co/200x150?text=Televisions' }
+  // Subcategories of Μηχανοκίνηση
+  { id: 98, name: 'Αυτοκίνητο', slug: 'car', parentId: 7, image: '//placehold.co/200x150?text=Car' },
+  { id: 99, name: 'Μοτοσυκλέτα', slug: 'motorcycle', parentId: 7, image: '//placehold.co/200x150?text=Motorcycle' },
+  { id: 100, name: 'Σκάφος', slug: 'boat', parentId: 7, image: '//placehold.co/200x150?text=Boat' },
+  { id: 101, name: 'Είδη Φορτηγού', slug: 'truck-items', parentId: 7, image: '//placehold.co/200x150?text=Truck+Items' },
+
+  // Subcategories of Κινητή Τηλεφωνία of Main Category Τεχνολογία
+  { id: 102, name: 'Κινητά', slug: 'mobiles', parentId: 10, image: '//placehold.co/200x150?text=Mobiles' },
+  { id: 103, name: 'iPhone', slug: 'iphone', parentId: 10, image: '//placehold.co/200x150?text=iPhone' },
+  { id: 104, name: 'Θήκες Κινητών', slug: 'mobile-cases', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Cases' },
+  { id: 105, name: 'Bluetooth Handsfree', slug: 'bluetooth-handsfree', parentId: 10, image: '//placehold.co/200x150?text=Bluetooth+Handsfree' },
+  { id: 106, name: 'Handsfree', slug: 'handsfree', parentId: 10, image: '//placehold.co/200x150?text=Handsfree' },
+  { id: 107, name: 'Φορτιστές Κινητών', slug: 'mobile-chargers', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Chargers' },
+  { id: 108, name: 'Tempered Glass', slug: 'tempered-glass', parentId: 10, image: '//placehold.co/200x150?text=Tempered+Glass' },
+  { id: 109, name: 'Προστασία Οθόνης', slug: 'screen-protection', parentId: 10, image: '//placehold.co/200x150?text=Screen+Protection' },
+  { id: 110, name: 'Power Banks', slug: 'power-banks', parentId: 10, image: '//placehold.co/200x150?text=Power+Banks' },
+  { id: 111, name: 'Μπαταρίες Κινητών', slug: 'mobile-batteries', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Batteries' },
+  { id: 112, name: 'Selfie Stick', slug: 'selfie-stick', parentId: 10, image: '//placehold.co/200x150?text=Selfie+Stick' },
+  { id: 113, name: 'Βάσεις Κινητού', slug: 'mobile-stands', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Stands' },
+  { id: 114, name: 'Καλώδια Φόρτισης', slug: 'charging-cables', parentId: 10, image: '//placehold.co/200x150?text=Charging+Cables' },
+  { id: 115, name: 'Anti-Lost Tracker', slug: 'anti-lost-tracker', parentId: 10, image: '//placehold.co/200x150?text=Anti-Lost+Tracker' },
+  { id: 116, name: 'Ανταλλακτικά Κινητών', slug: 'mobile-replacements', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Replacements' },
+  { id: 117, name: 'Gimbal Κινητών', slug: 'mobile-gimbal', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Gimbal' },
+  { id: 118, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 10, image: '//placehold.co/200x150?text=Touch+Pens' },
+  { id: 119, name: 'Αξεσουάρ Γραφίδας', slug: 'pen-accessories', parentId: 10, image: '//placehold.co/200x150?text=Pen+Accessories' },
+  { id: 120, name: 'Πλήκτρα Mobile Gaming', slug: 'mobile-gaming-buttons', parentId: 10, image: '//placehold.co/200x150?text=Mobile+Gaming+Buttons' },
+
+  // Subcategories of Υπολογιστές of Main Category Τεχνολογία
+  { id: 121, name: 'Περιφερειακά, Αναλώσιμα', slug: 'peripherals-consumables', parentId: 11, image: '//placehold.co/200x150?text=Peripherals' },
+  { id: 122, name: 'Hardware', slug: 'hardware', parentId: 11, image: '//placehold.co/200x150?text=Hardware' },
+  { id: 123, name: 'Δικτυακά', slug: 'networking', parentId: 11, image: '//placehold.co/200x150?text=Networking' },
+  { id: 124, name: 'Desktops & Servers', slug: 'desktops-servers', parentId: 11, image: '//placehold.co/200x150?text=Desktops+Servers' },
+  { id: 125, name: 'Οθόνες PC, Αξεσουάρ', slug: 'monitors-accessories', parentId: 11, image: '//placehold.co/200x150?text=Monitors' },
+  { id: 126, name: 'Software', slug: 'software', parentId: 11, image: '//placehold.co/200x150?text=Software' },
+  { id: 127, name: 'Επεκτάσεις Εγγύησης', slug: 'warranty-extensions', parentId: 11, image: '//placehold.co/200x150?text=Warranty+Extensions' },
+
+  // Subcategories of Περιφερειακά, Αναλώσιμα of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 128, name: 'Εκτυπωτές & Αξεσουάρ', slug: 'printers-accessories', parentId: 121, image: '//placehold.co/200x150?text=Printers+Accessories' },
+  { id: 129, name: 'Συσκευές Εισόδου', slug: 'input-devices', parentId: 121, image: '//placehold.co/200x150?text=Input+Devices' },
+  { id: 130, name: 'Multimedia', slug: 'multimedia', parentId: 121, image: '//placehold.co/200x150?text=Multimedia' },
+  { id: 131, name: 'Scanner & Αξεσουάρ', slug: 'scanners-accessories', parentId: 121, image: '//placehold.co/200x150?text=Scanners+Accessories' },
+  { id: 132, name: 'USB Sticks', slug: 'usb-sticks', parentId: 121, image: '//placehold.co/200x150?text=USB+Sticks' },
+  { id: 133, name: 'USB Hubs', slug: 'usb-hubs', parentId: 121, image: '//placehold.co/200x150?text=USB+Hubs' },
+  { id: 134, name: 'UPS, Αξεσουάρ', slug: 'ups-accessories', parentId: 121, image: '//placehold.co/200x150?text=UPS+Accessories' },
+  { id: 135, name: 'Καλώδια, Adaptors', slug: 'cables-adapters', parentId: 121, image: '//placehold.co/200x150?text=Cables+and+Adapters' },
+  { id: 136, name: 'Καλώδια Τροφοδοσίας', slug: 'power-cables', parentId: 121, image: '//placehold.co/200x150?text=Power+Cables' },
+  { id: 137, name: 'Καλώδια USB', slug: 'usb-cables', parentId: 121, image: '//placehold.co/200x150?text=USB+Cables' },
+
+  // Subcategories of Hardware of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 138, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 122, image: '//placehold.co/200x150?text=Graphics+Cards' },
+  { id: 139, name: 'Μητρικές Κάρτες', slug: 'motherboards', parentId: 122, image: '//placehold.co/200x150?text=Motherboards' },
+  { id: 140, name: 'CPU', slug: 'cpu', parentId: 122, image: '//placehold.co/200x150?text=CPU' },
+  { id: 141, name: 'Σκληροί Δίσκοι', slug: 'hard-disks', parentId: 122, image: '//placehold.co/200x150?text=Hard+Disks' },
+  { id: 142, name: 'RAM', slug: 'ram', parentId: 122, image: '//placehold.co/200x150?text=RAM' },
+  { id: 143, name: 'Κουτιά Υπολογιστών', slug: 'computer-cases', parentId: 122, image: '//placehold.co/200x150?text=Computer+Cases' },
+  { id: 144, name: 'Τροφοδοτικά Υπολογιστών', slug: 'power-supplies', parentId: 122, image: '//placehold.co/200x150?text=Power+Supplies' },
+  { id: 145, name: 'Cooling PC', slug: 'cooling-pc', parentId: 122, image: '//placehold.co/200x150?text=Cooling+PC' },
+  { id: 146, name: 'Optical Drives', slug: 'optical-drives', parentId: 122, image: '//placehold.co/200x150?text=Optical+Drives' },
+  { id: 147, name: 'Tuning Parts', slug: 'tuning-parts', parentId: 122, image: '//placehold.co/200x150?text=Tuning+Parts' },
+  { id: 148, name: 'Κάρτες Τηλεόρασης, Video', slug: 'tv-cards', parentId: 122, image: '//placehold.co/200x150?text=TV+Cards' },
+
+  // Subcategories of Δικτυακά of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 149, name: 'WiFi Extenders', slug: 'wifi-extenders', parentId: 123, image: '//placehold.co/200x150?text=WiFi+Extenders' },
+  { id: 150, name: 'Routers', slug: 'routers', parentId: 123, image: '//placehold.co/200x150?text=Routers' },
+  { id: 151, name: 'Access Points', slug: 'access-points', parentId: 123, image: '//placehold.co/200x150?text=Access+Points' },
+  { id: 152, name: 'USB Adapters Δικτύου', slug: 'usb-network-adapters', parentId: 123, image: '//placehold.co/200x150?text=USB+Network+Adapters' },
+  { id: 153, name: 'Powerline', slug: 'powerline', parentId: 123, image: '//placehold.co/200x150?text=Powerline' },
+  { id: 154, name: 'Καλώδια Δικτύου', slug: 'network-cables', parentId: 123, image: '//placehold.co/200x150?text=Network+Cables' },
+  { id: 155, name: 'Κάρτες Δικτύου', slug: 'network-cards', parentId: 123, image: '//placehold.co/200x150?text=Network+Cards' },
+  { id: 156, name: 'Κεραίες WiFi', slug: 'wifi-antennas', parentId: 123, image: '//placehold.co/200x150?text=WiFi+Antennas' },
+  { id: 157, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 123, image: '//placehold.co/200x150?text=Bluetooth+Adapter' }
 ];
 
 // Vendors
