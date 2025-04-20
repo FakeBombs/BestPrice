@@ -96,7 +96,7 @@ const Brands = () => {
               onKeyDown={handleKeyDown} // Add onKeyDown for navigation
             />
             {showSuggestions && (
-              <div className="autocomplete">
+              <div className="autocomplete autocomplete--minimal">
                 <ol>
                   {filteredBrands.map((brand, index) => (
                     <li
