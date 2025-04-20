@@ -18,16 +18,18 @@ const BrandPage = () => {
     const { brandId, brandName } = useParams(); // Get brandId and brandName from URL
     const displayedBrand = brandName ? brands.find((brand) => brand.name.toLowerCase() === brandName.toLowerCase()) : null;
 
+    // Retrieve products based on the brand specified in the URL
     useEffect(() => {
         const results = searchProducts(searchQuery);
-        setProducts(results);
+        const brandFilteredResults = results.filter(product => product.brand === (displayedBrand ? displayedBrand.name : ''));
+        setProducts(brandFilteredResults);
         setActiveFilters({ vendors: [], specs: {}, inStockOnly: false });
-        extractAvailableFilters(results);
-        extractCategories(results);
+        extractAvailableFilters(brandFilteredResults);
+        extractCategories(brandFilteredResults);
         
-        const sortedResults = sortProducts(results);
+        const sortedResults = sortProducts(brandFilteredResults);
         setFilteredProducts(sortedResults);
-    }, [searchQuery]);
+    }, [searchQuery, displayedBrand]);
 
     useEffect(() => {
         filterProducts(activeFilters.vendors, activeFilters.specs, activeFilters.inStockOnly, products);
@@ -277,7 +279,7 @@ const BrandPage = () => {
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
-                                    <h1>{searchQuery || 'All Products'}</h1>
+                                    <h1>{displayedBrand ? displayedBrand.name : 'All Products'}</h1>
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                     </div>
