@@ -112,7 +112,7 @@ const Brands = () => {
           <h3>Δημοφιλείς</h3>
           <div className="top-brands__brands">
             <div className="box-wrapper grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" style={{paddingRight: "0"}}>
-              {brands.map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
+              {brands.slice(0, 12).map((brand) => ( <Link className="brand box" alt={brand.name} title={brand.name} key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html`}><img itemProp="logo" alt={brand.name} title={brand.name} loading="lazy" src={brand.logo} /></Link> ))}
             </div>
           </div>
         </section>
