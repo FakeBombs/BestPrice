@@ -80,18 +80,14 @@ const Brands = () => {
         <section className="brand-directory">
           <div className="brand-directory__letters">
             <div className="brand-directory__letters-wrapper">
-              <nav className="sticky" data-sticky-viewport="MD">
-                <a href="/brands#letter-0-9">0-9</a><a href="/brands#letter-A">A</a><a href="/brands#letter-B">B</a><a href="/brands#letter-C">C</a><a href="/brands#letter-D">D</a><a href="/brands#letter-E">E</a><a href="/brands#letter-F">F</a><a href="/brands#letter-G">G</a><a href="/brands#letter-H">H</a><a href="/brands#letter-I">I</a><a href="/brands#letter-J">J</a><a href="/brands#letter-K">K</a><a href="/brands#letter-L">L</a><a href="/brands#letter-M">M</a><a href="/brands#letter-N">N</a><a href="/brands#letter-O">O</a><a href="/brands#letter-P">P</a><a href="/brands#letter-Q">Q</a><a href="/brands#letter-R">R</a><a href="/brands#letter-S">S</a><a href="/brands#letter-T">T</a><a href="/brands#letter-U">U</a><a href="/brands#letter-V">V</a><a href="/brands#letter-W">W</a><a href="/brands#letter-X">X</a><a href="/brands#letter-Y">Y</a><a href="/brands#letter-Z">Z</a><a href="/brands#letter-Greek">Α-Ω</a>
-              </nav>
+              {/* Navigation Links */}
+              <nav className="brand-directory__nav"><a href="/brands#letter-0-9">0-9</a> {Object.keys(groupedBrands.latin || {}).map(letter => ( <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a> ))} <a href="/brands#letter-Greek">Α-Ω</a></nav>
             </div>
 
-            
-
-            
             {/* Numbers Section */}
-        <div className="brand-directory__letter" id="letter-0-9">
-          <aside><h3>0-9</h3></aside>
-          <div className="brand-directory__letter-main">
+            <div className="brand-directory__letter" id="letter-0-9">
+              <aside><h3>0-9</h3></aside>
+              <div className="brand-directory__letter-main">
             <ol>
               {groupedBrands.numbers?.map(brand => (
                 <li key={brand.id}>
