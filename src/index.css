@@ -13,6 +13,30 @@ html {
     scroll-behavior: smooth;
 }
 
+.autocomplete.autocomplete--minimal {
+    border-color: #ddd;
+    box-shadow: none
+}
+.autocomplete {
+    background: var(--colors-themed-header-form-hover-bg);
+    border: 1px solid var(--colors-themed-card-border);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .15);
+    left: 0;
+    margin-left: -1px;
+    margin-top: -1px;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 100%;
+    width: 100%;
+    z-index: 99999999999
+}
+.autocomplete li, .autocomplete ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+
 .sitemap-mobile__theme {
     align-items: center;
     background-color: var(--colors-themed-header-bg);
