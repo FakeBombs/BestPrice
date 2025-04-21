@@ -255,7 +255,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     </div>
                                 </div>
                             </section>
-                            <PaymentMethodsComponent paymentMethods={vendor.paymentMethods} />
+                            <PaymentMethodsComponent paymentMethods={selectedVendor.paymentMethods} />
                         </section>
 
                         {/* Deals Section */}
