@@ -69,11 +69,14 @@ const PaymentMethodsComponent = ({ paymentMethods }) => {
     );
 
     return (
-        <section className="merchant__shipping-options">
+      <section>
+        <h2 class="ui-kit__secondary">Χαρακτηριστικά καταστήματος</h2>
+        <div className="merchant__shipping-options">
             {renderList(PaymentMethods, "Τρόποι πληρωμής")}
             {renderList(shippingMethods, "Αποστολή, μεταφορικά")}
             {renderList(additionalServices, "Επιπλέον υπηρεσίες")}
-        </section>
+        </div>
+      </section>
     );
 };
 
