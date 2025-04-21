@@ -20,7 +20,7 @@ const VendorPage = () => {
 
     return (
         <div id="root" className="clr">
-      <section className="merchant-hero root_wrapper" style={{ background: '#f84632', borderBottom: 0 }}>
+      <section className="merchant-hero root_wrapper" style={{ background: 'var(--colors-themed-card-bg)', borderBottom: 0 }}>
         <div className="root">
           <div className="merchant-trail">
             <nav className="breadcrumb">
