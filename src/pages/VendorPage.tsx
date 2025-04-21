@@ -18,7 +18,7 @@ const VendorPage = () => {
         return <p>Vendor not found.</p>;
     }
 
-    const vendorName = vendorName; // Change based on the current vendor
+    const vendorName = ${vendorName}; // Change based on the current vendor
   
     // Simple selection logic for background color based on vendor name
     const backgroundColor = vendorName === 'Plaisio' ? '#f84632' :
