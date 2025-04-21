@@ -5,10 +5,9 @@ import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
 const SearchResults = () => {
-    const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false, certification: [] });
+    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, certification: [] });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [availableVendors, setAvailableVendors] = useState([]);
     const [availableBrands, setAvailableBrands] = useState({});
     const [availableSpecs, setAvailableSpecs] = useState({});
     const [availableCategories, setAvailableCategories] = useState([]);
@@ -20,7 +19,7 @@ const SearchResults = () => {
     useEffect(() => {
         const results = searchProducts(searchQuery);
         setProducts(results);
-        setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false, certification: [] });
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certification: [] });
         extractAvailableFilters(results);
         extractCategories(results);
         
@@ -29,18 +28,14 @@ const SearchResults = () => {
     }, [searchQuery]);
 
     useEffect(() => {
-        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, activeFilters.certification, products);
+        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, activeFilters.certification, products);
     }, [activeFilters, sortType, products]);
 
     const extractAvailableFilters = (results) => {
-        const vendors = new Set();
         const brandsCount = {};
         const specs = {};
 
         results.forEach((product) => {
-            if (product.vendor) {
-                vendors.add(product.vendor);
-            }
             if (product.brand) {
                 brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
             }
@@ -52,7 +47,6 @@ const SearchResults = () => {
             });
         });
 
-        setAvailableVendors(Array.from(vendors));
         setAvailableBrands(brandsCount);
         setAvailableSpecs(specs);
     };
@@ -81,19 +75,11 @@ const SearchResults = () => {
         setAvailableCategories(categoriesArray);
     };
 
-    const filterProducts = (vendors, brands, specs, inStockOnly, certification, results) => {
+    const filterProducts = (brands, inStockOnly, certification, results) => {
         let filtered = results;
 
         if (inStockOnly) {
             filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
-        }
-
-        if (vendors.length > 0) {
-            filtered = filtered.filter((product) => vendors.includes(product.vendor));
-        }
-
-        if (brands.length > 0) {
-            filtered = filtered.filter((product) => brands.includes(product.brand));
         }
 
         if (certification.length > 0) {
@@ -144,14 +130,6 @@ const SearchResults = () => {
         }
     };
 
-    const handleVendorFilter = (vendor) => {
-        const newVendors = activeFilters.vendors.includes(vendor)
-            ? activeFilters.vendors.filter((v) => v !== vendor)
-            : [...activeFilters.vendors, vendor];
-
-        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-    };
-
     const handleBrandFilter = (brand) => {
         const newBrands = activeFilters.brands.includes(brand)
             ? activeFilters.brands.filter((b) => b !== brand)
@@ -182,8 +160,6 @@ const SearchResults = () => {
         setActiveFilters((prev) => ({ ...prev, certification: newCertification }));
     };
 
-    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
-
     const renderAppliedFilters = () => {
         return (
             (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && (
@@ -198,7 +174,6 @@ const SearchResults = () => {
                             </a>
                         </h2>
                     ))}
-
                     {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
                         specValues.map((specValue) => (
                             <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
@@ -245,21 +220,6 @@ const SearchResults = () => {
                                 )}
                             </div>
 
-                            {availableVendors.length > 0 && (
-                                <div className="filter-vendor default-list">
-                                    <div className="filter__header"><h4>Vendors</h4></div>
-                                    <div className="filter-container">
-                                        <ol>
-                                            {availableVendors.map((vendor) => (
-                                                <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
-                                                    <span>{vendor}</span>
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    </div>
-                                </div>
-                            )}
-
                             {Object.keys(availableBrands).length > 0 && (
                                 <div className="filter-brand default-list" data-filter-name data-type data-key>
                                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
@@ -302,7 +262,7 @@ const SearchResults = () => {
                                             onChange={() => {
                                                 const newInStockOnly = !activeFilters.inStockOnly;
                                                 setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, activeFilters.certification, products);
+                                                filterProducts(activeFilters.brands, newInStockOnly, activeFilters.certification, products);
                                             }} 
                                         />
                                         Show only in-stock products
@@ -345,13 +305,6 @@ const SearchResults = () => {
                                     <div className="page-header__count-wrapper">
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                     </div>
-                                </div>
-                                <div className="page-header__title-aside">
-                                    {displayedBrand && (
-                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                                        </a>
-                                    )}
                                 </div>
                             </div>
                             {renderAppliedFilters()}
