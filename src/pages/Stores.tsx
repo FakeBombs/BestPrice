@@ -90,32 +90,11 @@ const Stores = () => {
             })}
 
 
-            <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
-                  <div className="merchants-listing__thumb-container" data-id={vendor.id}>
-                    <svg aria-hidden="true" className="icon merchants-listing__certification-icon" width="22" height="22">
-                      {/* SVG paths here */}
-                    </svg>
-                    <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${vendorSlug}.html`}>
-                      <img src={vendor.logo} loading="lazy" alt={vendor.name} />
-                    </Link>
-                  </div>
-                  <div className="merchants-listing__details">
-                    <h3>
-                      <Link to="/m/10/test.html" title={vendor.name}>
-                        {vendor.name}
+            
+                      <Link to="/m/10/test.html" title="test">
+                        test
                       </Link>
-                    </h3>
-                    <p className="merchants-listing__counts">
-                      {vendor.productCount} προϊόντα<span className="hide-mobile"> σε {vendor.categoryCount} κατηγορίες</span>
-                    </p>
-                    <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendorSlug}.html#reviews`}>
-                      <span className="rating rating-all" data-total="519">
-                        <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
-                        <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
-                      </span>
-                    </Link>
-                  </div>
-                </li>
+                  
 
 
             
