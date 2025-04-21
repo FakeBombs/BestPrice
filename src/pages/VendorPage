@@ -5,9 +5,9 @@ const VendorPage = () => {
   const { id, vendorSlug } = useParams<{ id: string; vendorSlug: string }>();
   const vendor = vendors.find(v => v.id === parseInt(id));
 
-  // Ensure the slug matches the vendor name
   const expectedSlug = vendor ? vendor.name.toLowerCase().replace(/ /g, '-') : '';
 
+  // Return early if vendor is not found or slug does not match
   if (!vendor || vendorSlug !== expectedSlug) {
     return <div>Vendor not found!</div>;
   }
@@ -17,7 +17,6 @@ const VendorPage = () => {
       <h1>{vendor.name}</h1>
       <img src={vendor.logo} alt={`${vendor.name} logo`} />
       <p>Rating: {vendor.rating}</p>
-      {/* Include more vendor details as necessary */}
     </div>
   );
 };
