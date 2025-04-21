@@ -10,105 +10,63 @@
 
 
 html {scroll-behavior: smooth}
+.filter-store li a[data-l="3"]:after {
+    background-image: url(https://bp.pstatic.gr/public/dist/095f3e964b5c14ade8be.svg)
+}
+.filter-store li a[data-l="2"]:after {
+    background-image: url(https://bp.pstatic.gr/public/dist/b2d88e0b4f185d73a33f.svg)
+}
+.filter-store li a[data-l="1"]:after {
+    background-image: url(https://bp.pstatic.gr/public/dist/c5617f3f11540901da46.svg)
+}
+
 #page-merchant .merchant-certified {
     align-items: center;
     color: #fff;
     display: flex
 }
-
 #page-merchant .merchant-certified a,#page-merchant .merchant-certified b {
     cursor: pointer!important;
     font-weight: 400;
     text-decoration: underline
 }
-
-#page-merchant .merchant-certified--wrapper {
-    padding: 16px 20px
-}
-
-#page-merchant .merchant-certified--bronze {
-    background: #e8d5c8!important
-}
-
-#page-merchant .merchant-certified--bronze a,#page-merchant .merchant-certified--bronze span {
-    color: #26282c
-}
-
-#page-merchant .merchant-certified--silver {
-    background: #e1e2e3!important
-}
-
-#page-merchant .merchant-certified--silver a,#page-merchant .merchant-certified--silver span {
-    color: #26282c
-}
-
-#page-merchant .merchant-certified--gold {
-    background: #ebe1c3!important
-}
-
-#page-merchant .merchant-certified--gold a,#page-merchant .merchant-certified--gold span {
-    color: #26282c
-}
-
-#page-merchant .merchant-certified--platinum {
-    background: #b4b5b5!important
-}
-
-#page-merchant .merchant-certified--platinum a,#page-merchant .merchant-certified--platinum span {
-    color: #fff
-}
-
+#page-merchant .merchant-certified--wrapper {padding: 16px 20px}
+#page-merchant .merchant-certified--bronze {background: #e8d5c8!important}
+#page-merchant .merchant-certified--bronze a,#page-merchant .merchant-certified--bronze span {color: #26282c}
+#page-merchant .merchant-certified--silver {background: #e1e2e3!important}
+#page-merchant .merchant-certified--silver a,#page-merchant .merchant-certified--silver span {color: #26282c}
+#page-merchant .merchant-certified--gold {background: #ebe1c3!important}
+#page-merchant .merchant-certified--gold a,#page-merchant .merchant-certified--gold span {color: #26282c}
+#page-merchant .merchant-certified--platinum {background: #b4b5b5!important}
+#page-merchant .merchant-certified--platinum a,#page-merchant .merchant-certified--platinum span {color: #fff}
 #page-merchant .merchant-certified svg {
     flex-shrink: 0;
     margin-right: 7px
 }
-
-#page-merchant .merchant-certified--bronze {
-    background-color: #d4834e
-}
-
-#page-merchant .merchant-certified--gold {
-    background-color: #d9b12d
-}
-
-#page-merchant .merchant-certified--platinum {
-    background-color: #a5a5a5
-}
-
-#page-merchant .merchant-certified--silver {
-    background-color: #b3b3b3
-}
-
-#page-merchant #root #merchant-map {
-    margin-bottom: 0
-}
-
-#page-merchant #root #merchant-map header {
-    margin-bottom: 16px
-}
-
+#page-merchant .merchant-certified--bronze {background-color: #d4834e}
+#page-merchant .merchant-certified--gold {background-color: #d9b12d}
+#page-merchant .merchant-certified--platinum {background-color: #a5a5a5}
+#page-merchant .merchant-certified--silver {background-color: #b3b3b3}
+#page-merchant #root #merchant-map {margin-bottom: 0}
+#page-merchant #root #merchant-map header {margin-bottom: 16px}
 #page-merchant #root #merchant-map #merchant-map-placeholder {
     display: grid;
     height: 350px;
     overflow: hidden
 }
-
 @media only screen and (min-width: 48em) {
     #page-merchant #root #merchant-map #merchant-map-placeholder {
         margin-left:0;
         margin-right: 0
     }
 }
-
 #page-merchant #root .merchant-map__pops {
     margin-top: 14px
 }
-
 #page-merchant #root .merchant-map__pop-wrapper {
     display: flex;
     padding: 5px
 }
-
 #page-merchant #root .merchant-map__pop {
     background-color: var(--colors-themed-card-dark-bg);
     border: 1px solid var(--colors-themed-card-border);
@@ -122,41 +80,33 @@ html {scroll-behavior: smooth}
     padding: 14px;
     width: 277px
 }
-
 #page-merchant #root .merchant-map__pop:hover {
     border-color: var(--colors-themed-anchor-hover)
 }
-
 #page-merchant #root .merchant-map__pop:hover .merchant-map__pop-meta address {
     color: var(--colors-themed-anchor-hover)
 }
-
 #page-merchant #root .merchant-map__pop-icon {
     color: #767676;
     flex: none;
     margin-right: 7px
 }
-
 #page-merchant #root .merchant-map__pop-meta {
     display: flex;
     flex-direction: column;
     min-width: 0
 }
-
 #page-merchant #root .merchant-map__pop-meta address {
     font-style: normal;
     word-wrap: break-word
 }
-
 #page-merchant #root .page-merchant__gallery-wrapper {
     max-width: 100%;
     min-width: 0
 }
-
 #page-merchant #root .page-merchant__gallery-images {
     display: flex
 }
-
 #page-merchant #root .page-merchant__gallery-image {
     background-position: 50%;
     background-repeat: no-repeat;
@@ -170,7 +120,6 @@ html {scroll-behavior: smooth}
     transition: box-shadow .25s ease-in-out;
     width: 72px
 }
-
 #page-merchant #root .page-merchant__gallery-image span {
     align-items: center;
     background: #23272b;
@@ -182,36 +131,29 @@ html {scroll-behavior: smooth}
     opacity: .8;
     width: 100%
 }
-
 .no-touch #page-merchant #root .page-merchant__gallery-image:hover {
     box-shadow: 0 0 0 1px #2d69c6
 }
-
 #page-merchant #root #merchant-deals header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 16px
 }
-
 #page-merchant #root #merchant-deals header .descr {
     margin-top: 16px
 }
-
 #page-merchant #root #merchant-deals header .descr.hidden {
     display: none
 }
-
 #page-merchant #root #merchant-deals header .descr a {
     color: var(--colors-themed-anchor)
 }
-
 #page-merchant #root #merchant-deals .end-slide,#page-merchant #root .root--merchant .end-slide {
     align-items: center;
     display: flex;
     justify-content: center
 }
-
 #page-merchant #root #merchant-deals .product-more-slide .more-link-arrow,#page-merchant #root .root--merchant .product-more-slide .more-link-arrow {
     align-items: center;
     aspect-ratio: 1;
@@ -223,7 +165,6 @@ html {scroll-behavior: smooth}
     justify-content: center;
     width: 64px
 }
-
 #page-merchant #root #merchant-deals .product-more-slide a,#page-merchant #root .root--merchant .product-more-slide a {
     align-items: center;
     background: 0 0;
@@ -234,17 +175,14 @@ html {scroll-behavior: smooth}
     justify-content: center;
     width: 100%
 }
-
 #page-merchant #root #merchant-deals .product-more-slide a:hover,#page-merchant #root .root--merchant .product-more-slide a:hover {
     color: #295fb2
 }
-
 #page-merchant #root #merchant-deals .product-more-slide a .icon,#page-merchant #root .root--merchant .product-more-slide a .icon {
     color: inherit;
     height: 16px;
     width: 16px
 }
-
 @media only screen and (min-width: 48em) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -257,7 +195,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 64em) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -270,7 +207,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 1520px) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -283,7 +219,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 80em) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -296,7 +231,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 120em) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -309,7 +243,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 150em) {
     #page-merchant #root #merchant-deals .scroll .products.products--full-width .product__wrapper,#page-merchant #root #popular-products .scroll .products.products--full-width .product__wrapper {
         flex:none;
@@ -322,7 +255,6 @@ html {scroll-behavior: smooth}
         margin-right: 0
     }
 }
-
 @media only screen and (min-width: 48em) {
     #page-merchant #root #merchant-deals header {
         flex-direction:row
@@ -332,7 +264,6 @@ html {scroll-behavior: smooth}
         margin: 0
     }
 }
-
 #page-merchant #root .merchant-trail #trail {
     background: var(--colors-themed-merchantpage-desktop-trail-bg);
     border-radius: 2px;
@@ -342,11 +273,9 @@ html {scroll-behavior: smooth}
     opacity: .8;
     padding: 16px 10px
 }
-
 #page-merchant #root .merchant-trail #trail,#page-merchant #root .merchant-trail #trail nav li:last-child a {
     color: var(--colors-themed-merchantpage-desktop-trail)
 }
-
 #page-merchant #root .merchant-trail--mobile #trail {
     background: 0 0;
     display: flex;
@@ -355,15 +284,12 @@ html {scroll-behavior: smooth}
     max-width: 100%;
     padding: 16px 10px
 }
-
 #page-merchant #root .merchant-trail--mobile #trail nav li:last-child a {
     color: var(--colors-themed-merchantpage-trail)
 }
-
 #page-merchant #root .brand__logo-title {
     color: #2d69c6!important
 }
-
 #page-merchant #root .merchant-logo {
     background: #fff;
     border-radius: 8px;
@@ -373,24 +299,20 @@ html {scroll-behavior: smooth}
     min-width: 120px;
     padding: 14px
 }
-
 #page-merchant #root .merchant-logo img {
     align-self: center;
     box-shadow: none
 }
-
 #page-merchant #root .merchant-logo--certification {
     cursor: pointer!important;
     position: absolute;
     right: -20px;
     top: -20px
 }
-
 #page-merchant #root .merchant-logo--certification svg {
     height: 32px;
     width: 32px
 }
-
 @media only screen and (min-width: 48em) {
     #page-merchant #root .merchant-trail #trail {
         padding:4px 16px
@@ -408,11 +330,9 @@ html {scroll-behavior: smooth}
         padding-top: 30px
     }
 }
-
 #page-merchant #root .masthead,#page-merchant #root .masthead__main {
     width: 100%
 }
-
 #page-merchant #root .masthead__wrapper {
     background: var(--colors-themed-card-bg);
     border: 0;
@@ -421,29 +341,24 @@ html {scroll-behavior: smooth}
     position: relative;
     z-index: 12
 }
-
 #page-merchant #root .masthead__id {
     display: flex;
     flex-direction: column;
     width: 100%
 }
-
 #page-merchant #root .masthead__id-section {
     display: flex;
     gap: 1rem
 }
-
 #page-merchant #root .masthead__id-section:first-child {
     border-bottom: 1px solid var(--colors-themed-border-default);
     flex-direction: column;
     margin-bottom: 32px;
     padding-bottom: 32px
 }
-
 #page-merchant #root .masthead__id-section:nth-child(2) {
     flex-wrap: wrap-reverse
 }
-
 #page-merchant #root .masthead__id-section--item {
     align-items: flex-start;
     display: flex;
@@ -451,31 +366,25 @@ html {scroll-behavior: smooth}
     margin-bottom: 7px;
     width: 100%
 }
-
 #page-merchant #root .masthead .id a {
     color: #2d69c6
 }
-
 #page-merchant #root .masthead .id a svg {
     color: var(--colors-themed-text-base)
 }
-
 #page-merchant #root .masthead .id .rating {
     font-size: 1.5rem
 }
-
 @media only screen and (min-width: 80em) {
     #page-merchant #root .masthead .id .rating {
         font-size:1.6rem
     }
 }
-
 @media only screen and (min-width: 120em) {
     #page-merchant #root .masthead .id .rating {
         font-size:1.7rem
     }
 }
-
 #page-merchant #root .id__rating-wrapper {
     align-items: center;
     display: grid;
@@ -484,100 +393,79 @@ html {scroll-behavior: smooth}
     justify-content: start;
     margin-bottom: 1rem
 }
-
 #page-merchant #root .masthead .id__rating {
     color: #a1a1a1!important
 }
-
 [data-theme=dark] #page-merchant #root .masthead .id__rating {
     color: #9ea7b1!important
 }
-
 #page-merchant #root .masthead .id__meta {
     margin: 0
 }
-
 #page-merchant #root .masthead .id__meta [data-type=joined] {
     font-size: 14px
 }
-
 #page-merchant #root .masthead .id__meta li {
     border: none;
     display: flex;
     padding: 0 0 16px
 }
-
 #page-merchant #root .masthead .id__meta li svg {
     color: #a1a1a1!important;
     height: 20px;
     width: 16px
 }
-
 #page-merchant #root .masthead .id__meta li[data-type=orders] span {
     color: #a1a1a1!important;
     font-weight: 400!important
 }
-
 [data-theme=dark] #page-merchant #root .masthead .id__meta li[data-type=orders] span {
     color: #9ea7b1!important
 }
-
 #page-merchant #root .masthead .id__meta li span.social-links a.new-icon svg {
     color: #a1a1a1!important
 }
-
 [data-theme=dark] #page-merchant #root .masthead .id__meta li span.social-links a.new-icon svg {
     color: #9ea7b1!important
 }
-
 #page-merchant #root .masthead .id__meta li a {
     color: var(--colors-themed-anchor)
 }
-
 #page-merchant #root .masthead .id__meta li svg {
     color: var(--colors-themed-text-base)
 }
-
 #page-merchant #root .masthead .id__meta li[data-type=address] a {
     align-items: flex-start;
     display: flex;
     max-width: 200px
 }
-
 #page-merchant #root .masthead .id__meta li[data-type=address] a:hover small {
     text-decoration: underline
 }
-
 #page-merchant #root .masthead .id__meta li:last-child,#page-merchant #root .masthead .id__meta li[data-type=address] {
     padding: 0
 }
-
 #page-merchant #root .masthead .id__meta li[data-type=storesCount] {
     padding-left: 22px
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] {
     display: flex;
     flex-direction: column
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] .brand__logo-title {
     align-items: center;
     height: 100%;
     margin: 0;
     width: 56px
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] .brand__logo-title span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] div {
     display: flex
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] a {
     align-content: center;
     background: #fff;
@@ -588,19 +476,16 @@ html {scroll-behavior: smooth}
     min-height: 72px;
     min-width: 72px
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] a img {
     height: 54px;
     width: 54px
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] .id__more {
     color: #fff;
     display: block;
     margin: 0;
     position: relative
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] .id__more--counter {
     align-items: center;
     background: #1d2124;
@@ -610,7 +495,6 @@ html {scroll-behavior: smooth}
     opacity: .8;
     z-index: 10
 }
-
 #page-merchant #root .masthead__id-section--item [data-type=brands] .id__more div {
     border: none;
     border-radius: 8px;
@@ -620,7 +504,6 @@ html {scroll-behavior: smooth}
     position: absolute;
     top: 0
 }
-
 #page-merchant #root .merchant-mobile-friendly {
     align-items: center;
     background: hsla(0,0%,100%,.925);
