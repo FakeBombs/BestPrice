@@ -62,13 +62,24 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     useHtmlAttributes(classNamesForHtml, newIdForHtml);
     useBodyAttributes(classNamesForBody, newIdForBody);
 
-    const { vendorId, vendorName } = useParams(); // No change here
-    const [selectedVendor, setSelectedVendor] = useState(null); // Renamed vendor state
+    const slugify = (text) => {
+        return text
+            .toString()
+            .toLowerCase()
+            .replace(/\s+/g, '-')  // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+            .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from start
+            .replace(/-+$/, ''); // Trim hyphens from end
+    };
+    
+    const { vendorId, vendorName } = useParams();
+    const [selectedVendor, setSelectedVendor] = useState(null);
+
     const displayedVendor = vendorName ? 
-    vendors.find(v => v.name.toLowerCase() === vendorName.toLowerCase()) : null;
+        vendors.find(v => slugify(v.name) === vendorName.toLowerCase()) : null;
 
     useEffect(() => {
-        // Set the vendor based on the displayedVendor found by name
         if (displayedVendor) {
             setSelectedVendor(displayedVendor);
         }
