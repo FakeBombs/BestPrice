@@ -205,6 +205,26 @@ export interface Vendor {
   paymentMethods: PaymentMethod[]; // List of payment methods offered
 }
 
+// Payment Methods Enum
+ export enum PaymentMethod {
+   COD = "Αντικαταβολή",
+   CreditCard = "Πιστωτικές κάρτες",
+   PayPal = "PayPal",
+   BankTransfer = "Τραπεζική κατάθεση",
+   VivaPayments = "Viva Payments",
+   Paysafecard = "Paysafecard",
+   Courier = "Ταχυμεταφορά (Courier)",
+   NetworkPickup = "Παραλαβή από δίκτυο",
+   TransportCompany = "Μεταφορική εταιρία",
+   PickupVia = "Παραλαβή μέσω",
+   FreeReturn = "Δωρεάν επιστροφή",
+   PointsCollection = "Συλλογή πόντων",
+   GiftCards = "Δωροκάρτες",
+   ExtendedWarranty = "Επέκταση εγγύησης",
+   WeddingList = "Λίστα γάμου/μωρού",
+   DeviceRecycling = "Ανακύκλωση συσκευών"
+ }
+
 export const vendors: Vendor[] = [
   { 
     id: 1, 
