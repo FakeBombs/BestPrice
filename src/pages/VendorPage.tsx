@@ -107,23 +107,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
         return <NotFound />;
     }
 
-    useEffect(() => {
-    if (selectedVendor) {
-        document.title = `● ${selectedVendor.name} | BestPrice`;
-        const metaDescription = document.querySelector("meta[name='description']");
-        const descriptionContent = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
-        
-        if (metaDescription) {
-            metaDescription.setAttribute("content", descriptionContent);
-        } else {
-            const newMetaDescription = document.createElement("meta");
-            newMetaDescription.name = "description";
-            newMetaDescription.content = descriptionContent;
-            document.head.appendChild(newMetaDescription);
-        }
-    }
-    }, [selectedVendor]);
-
     return (
         <div id="root" className="clr">
             <section className="merchant-hero root_wrapper" style={{ background: 'var(--colors-themed-card-bg)', borderBottom: 0 }}>
@@ -186,7 +169,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                             </div>
                                             <ul className="id__meta">
                                                 <li data-type="joined">
-                                                    <span className="ui-kit__text ui-kit__muted">On {selectedVendor.name} since 01/01/2020</span>
+                                                    <span className="ui-kit__text ui-kit__muted">On BestPrice since 01/01/2020</span>
                                                 </li>
                                                 <li data-type="social" style={{ display: 'flex' }}>
                                                     <span className="social-links">
