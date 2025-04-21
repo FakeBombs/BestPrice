@@ -19,14 +19,20 @@ const PaymentMethod = {
     DeviceRecycling: 'Ανακύκλωση συσκευών',
 };
 
-const allPaymentMethods = Object.values(PaymentMethod);
+const PaymentMethods = [
+    PaymentMethod.COD,
+    PaymentMethod.CreditCard,
+    PaymentMethod.PayPal,
+    PaymentMethod.BankTransfer,
+    PaymentMethod.VivaPayments,
+    PaymentMethod.Paysafecard,
+];
 const shippingMethods = [
     PaymentMethod.Courier,
     PaymentMethod.NetworkPickup,
     PaymentMethod.TransportCompany,
     PaymentMethod.PickupVia,
 ];
-
 const additionalServices = [
     PaymentMethod.FreeReturn,
     PaymentMethod.PointsCollection,
@@ -64,7 +70,7 @@ const PaymentMethodsComponent = ({ paymentMethods }) => {
 
     return (
         <section className="merchant__shipping-options">
-            {renderList(allPaymentMethods, "Τρόποι πληρωμής")}
+            {renderList(PaymentMethods, "Τρόποι πληρωμής")}
             {renderList(shippingMethods, "Αποστολή, μεταφορικά")}
             {renderList(additionalServices, "Επιπλέον υπηρεσίες")}
         </section>
