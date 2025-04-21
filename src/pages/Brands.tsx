@@ -31,6 +31,7 @@ const Brands = () => {
   };
 
   const groupedBrands = groupBrands(brands);
+  const completeAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
   const getFilteredBrands = () => {
     return brands.filter(brand =>
@@ -120,7 +121,6 @@ const Brands = () => {
         <section className="brand-directory">
           <div className="brand-directory__letters">
             <div className="brand-directory__letters-wrapper">
-              const completeAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
               <nav className="brand-directory__nav">
                 <Link to="/brands#letter-0-9" style={{ opacity: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 1 : 0.5, cursor: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 'pointer' : 'not-allowed' }}>0-9</Link>
                 {completeAlphabet.map(letter => {
