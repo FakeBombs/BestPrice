@@ -7,10 +7,11 @@ import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
 import Categories from "./pages/Categories";
-import CategoryPage from "./pages/CategoryPage"; // Import your CategoryPage component
+import CategoryPage from "./pages/CategoryPage";
 import Brands from "./pages/Brands";
-import BrandPage from "./pages/BrandPage"; // Import your CategoryPage component
+import BrandPage from "./pages/BrandPage";
 import Stores from "./pages/Stores";
+import BrandPage from "./pages/BrandPage";
 import Deals from "./pages/Deals";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./components/admin/AdminDashboard";
@@ -41,7 +42,8 @@ function App() {
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="brands" element={<Brands />} />
           <Route path="/b/:brandId/:brandName.html" element={<BrandPage />} />
-          <Route path="stores" element={<Stores />} />
+          <Route path="m" element={<Stores />} />
+          <Route path="m/:vendorId/:vendorSlug" element={<VendorPage />} />
           <Route path="deals" element={<Deals />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="login" element={<LoginPage />} />
