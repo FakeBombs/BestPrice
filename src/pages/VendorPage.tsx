@@ -10,7 +10,15 @@ interface VendorPageProps { }
 const VendorPage: React.FC<VendorPageProps> = () => {
     useEffect(() => {
         document.title = `● ${selectedVendor.name} | BestPrice`;
-        document.description = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+        const metaDescription = document.querySelector("meta[name='description']");
+        if (metaDescription) {
+            metaDescription.setAttribute("content", `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`);
+        } else {
+            const newMetaDescription = document.createElement("meta");
+            newMetaDescription.name = "description";
+            newMetaDescription.content = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+            document.head.appendChild(newMetaDescription);
+        }
     }, [selectedVendor]);
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
