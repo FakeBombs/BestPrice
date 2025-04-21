@@ -200,6 +200,7 @@ export interface Vendor {
   logo: string;
   rating: number;
   url: string;
+  certificationLevel: string;
   telephone: string[]; // Multiple telephone numbers
   location?: string[]; // Optional multiple locations
   paymentMethods: PaymentMethod[]; // List of payment methods offered
@@ -231,6 +232,7 @@ export const vendors: Vendor[] = [
     name: 'You', 
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', 
     rating: 4.5, 
+    certificationLevel: 'Bronze', 
     url: 'https://www.you.gr', 
     telephone: ['211 9991900'], 
     location: ['Αργυρουπόλεως 2Α, Καλλιθέα'], 
@@ -241,6 +243,7 @@ export const vendors: Vendor[] = [
     name: 'Plaisio', 
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', 
     rating: 4.2, 
+    certificationLevel: 'Silver', 
     url: 'https://www.plaisio.gr', 
     telephone: ['456123789'], 
     location: ['Location B'], 
@@ -251,6 +254,7 @@ export const vendors: Vendor[] = [
     name: 'Public', 
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', 
     rating: 4.7, 
+    certificationLevel: 'Gold', 
     url: 'https://www.public.gr', 
     telephone: ['210 8181333'], 
     location: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
