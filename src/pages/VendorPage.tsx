@@ -7,7 +7,7 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 
 interface VendorPageProps { }
 
-const VendorPage: React.FC<VendorPageProps> = ({ selectedVendor }) => {
+const VendorPage: React.FC<VendorPageProps> = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
@@ -108,16 +108,20 @@ const VendorPage: React.FC<VendorPageProps> = ({ selectedVendor }) => {
     }
 
     useEffect(() => {
+    if (selectedVendor) {
         document.title = `● ${selectedVendor.name} | BestPrice`;
         const metaDescription = document.querySelector("meta[name='description']");
+        const descriptionContent = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+        
         if (metaDescription) {
-            metaDescription.setAttribute("content", `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`);
+            metaDescription.setAttribute("content", descriptionContent);
         } else {
             const newMetaDescription = document.createElement("meta");
             newMetaDescription.name = "description";
-            newMetaDescription.content = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+            newMetaDescription.content = descriptionContent;
             document.head.appendChild(newMetaDescription);
         }
+    }
     }, [selectedVendor]);
 
     return (
