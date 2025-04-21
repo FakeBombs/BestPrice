@@ -66,7 +66,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     const [selectedVendor, setSelectedVendor] = useState(null);
 
     const displayedVendor = vendorName ? 
-    vendors.find(v => slugify(v.name) === vendorName) : null; // Note we do not call `.toLowerCase()` here, as it's already lowercased in slugify
+    vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
 
     useEffect(() => {
         if (displayedVendor) {
