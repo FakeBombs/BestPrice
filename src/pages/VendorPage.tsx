@@ -7,7 +7,7 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 
 interface VendorPageProps { }
 
-const VendorPage: React.FC<VendorPageProps> = () => {
+const VendorPage: React.FC<VendorPageProps> = ({ selectedVendor }) => {
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
