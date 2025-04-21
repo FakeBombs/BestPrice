@@ -5,6 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Stores = () => {
   const { t } = useTranslation();
+  const vendorSlug = vendor.name.toLowerCase().replace(/ /g, '-');
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -66,18 +67,18 @@ const Stores = () => {
               <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
                 <div className="merchants-listing__thumb-container" data-id={vendor.id}>
                   <svg aria-hidden="true" className="icon merchants-listing__certification-icon" width="22" height="22"><path d="M20.3465 3.49928L19.8162 7.47118C19.0757 13.0148 16.1521 18.0982 11.6224 21.7225L11.2761 22L10.967 21.7706C6.07736 18.1298 2.9037 12.8348 2.12745 7.02192L1.65758 3.50066L2.3569 3.47867C4.43283 3.41273 6.47854 2.99506 8.40884 2.24904C9.27164 1.91519 10.0396 1.37938 10.6867 0.718545L11.3888 0.00137329L11.9013 0.56192C12.5635 1.28596 13.3672 1.87673 14.2794 2.23531C16.2098 2.99369 18.2623 3.42235 20.3465 3.49928Z" fill="#EFA818"/><path d="M12.0675 8.72416C12.7915 6.49984 13.7739 4.42803 15.0145 2.50596C14.7658 2.42078 14.5199 2.33011 14.2753 2.23394C13.3631 1.87535 12.5594 1.28458 11.8971 0.560547L11.3847 0L10.6826 0.717172C10.0355 1.37801 9.26615 1.91519 8.40472 2.24767C6.47442 2.99369 4.42871 3.41135 2.35278 3.4773L1.65346 3.49929L2.12333 7.02055C2.79104 12.0174 5.23106 16.6295 9.00786 20.1398C9.17548 16.1005 10.1922 12.2949 12.0675 8.72416Z" fill="#EFA818"/><path fill-rule="evenodd" clip-rule="evenodd" d="M15.7167 7.99397L10.7543 14.3308L7.22632 10.3139L8.68466 9.0331L10.6687 11.2921L14.1886 6.79727L15.7167 7.99397Z" fill="#fff"/></svg>
-                  <a className="merchants-listing__thumb" href="/m/743/public.html"><img src={vendor.logo} loading="lazy" alt={vendor.name}/></a>
+                  <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${vendorSlug}.html`}><img src={vendor.logo} loading="lazy" alt={vendor.name}/></Link>
                 </div>
                 
                 <div className="merchants-listing__details">
-                  <h3><a href="/m/743/public.html" title={vendor.name}>{vendor.name}</a></h3>
+                  <h3><Link to={`/m/${vendor.id}/${vendorSlug}.html`} title={vendor.name}>{vendor.name}</Link></h3>
                   <p className="merchants-listing__counts">247.725 προϊόντα<span className="hide-mobile"> σε 1.627 κατηγορίες</span></p>
-                  <a className="merchant__rating" aria-label="Merchant reviews" href="/m/743/public/reviews">
+                  <Link className="merchant__rating" aria-label="Merchant reviews" to="{`/m/${vendor.id}/${vendorSlug}.html#reviews`}">
                     <span className="rating rating-all" data-total="519">
                       <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
                       <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </li>
             ))}
