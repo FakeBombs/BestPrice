@@ -61,24 +61,12 @@ const VendorPage: React.FC<VendorPageProps> = () => {
 
     useHtmlAttributes(classNamesForHtml, newIdForHtml);
     useBodyAttributes(classNamesForBody, newIdForBody);
-
-    const slugify = (text) => {
-    return text
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, '-')    // Replace spaces with hyphens
-        .replace(/\//g, '_')     // Replace slashes with underscores
-        .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-        .replace(/\-\-+/g, '-')   // Replace multiple hyphens with a single hyphen
-        .replace(/^-+/, '')       // Trim hyphens from start
-        .replace(/-+$/, '');      // Trim hyphens from end
-};
     
     const { vendorId, vendorName } = useParams();
     const [selectedVendor, setSelectedVendor] = useState(null);
 
     const displayedVendor = vendorName ? 
-    vendors.find(v => slugify(v.name) === vendorName.toLowerCase()) : null;
+    vendors.find(v => slugify(v.name) === vendorName) : null; // Note we do not call `.toLowerCase()` here, as it's already lowercased in slugify
 
     useEffect(() => {
         if (displayedVendor) {
