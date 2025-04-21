@@ -58,7 +58,7 @@ const Stores = () => {
         <main id="merchant-listing">
           <ul className="merchants-listing grid" data-pagination="">
             {vendors.map((vendor) => {
-            const vendorSlug = vendor.name.toLowerCase().replace(/\s+/g, '/');
+            const vendorSlug = vendor.name.toLowerCase().replace(/\s+/g, '-');
               return (
                 <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
                   <div className="merchants-listing__thumb-container" data-id={vendor.id}>
