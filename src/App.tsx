@@ -11,7 +11,7 @@ import CategoryPage from "./pages/CategoryPage";
 import Brands from "./pages/Brands";
 import BrandPage from "./pages/BrandPage";
 import Stores from "./pages/Stores";
-import BrandPage from "./pages/BrandPage";
+import VendorPage from "./pages/VendorPage";
 import Deals from "./pages/Deals";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./components/admin/AdminDashboard";
