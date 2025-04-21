@@ -66,6 +66,15 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [loading, setLoading] = useState(true); // Loading state
 
+    const displayedVendor = vendorName ? 
+    vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
+
+    useEffect(() => {
+        if (displayedVendor) {
+            setSelectedVendor(displayedVendor);
+        }
+    }, [displayedVendor]);
+
     useEffect(() => {
         // Simulate data fetching or processing
         const foundVendor = vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName);
@@ -79,19 +88,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     }
 
     // Display if vendor is not found after loading is complete
-    if (!selectedVendor) {
-        return <p>Vendor not found.</p>;
-    }
-
-    const displayedVendor = vendorName ? 
-    vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
-
-    useEffect(() => {
-        if (displayedVendor) {
-            setSelectedVendor(displayedVendor);
-        }
-    }, [displayedVendor]);
-
     if (!selectedVendor) {
         return <p>Vendor not found.</p>;
     }
