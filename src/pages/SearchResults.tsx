@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
 const SearchResults = () => {
-    const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+    const [activeFilters, setActiveFilters] = useState({ vendors: [], brands: [], specs: {}, inStockOnly: false, certification: [] });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [availableVendors, setAvailableVendors] = useState([]);
@@ -20,7 +20,7 @@ const SearchResults = () => {
     useEffect(() => {
         const results = searchProducts(searchQuery);
         setProducts(results);
-        setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false });
+        setActiveFilters({ vendors: [], brands: [], specs: {}, inStockOnly: false, certification: [] });
         extractAvailableFilters(results);
         extractCategories(results);
         
@@ -29,7 +29,7 @@ const SearchResults = () => {
     }, [searchQuery]);
 
     useEffect(() => {
-        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products);
+        filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, activeFilters.certification, products);
     }, [activeFilters, sortType, products]);
 
     const extractAvailableFilters = (results) => {
@@ -74,14 +74,14 @@ const SearchResults = () => {
                 slug: categoryData ? categoryData.slug : '',
                 count,
                 image: categoryData ? categoryData.image : '',
-                parentId: categoryData ? categoryData.parentId : null, // Added to access parent for filtering subcategories
+                parentId: categoryData ? categoryData.parentId : null,
             };
-        }).filter(cat => cat.id && cat.parentId); // Only include subcategories
+        }).filter(cat => cat.id && cat.parentId);
         
         setAvailableCategories(categoriesArray);
     };
 
-    const filterProducts = (vendors, brands, specs, inStockOnly, results) => {
+    const filterProducts = (vendors, brands, specs, inStockOnly, certification, results) => {
         let filtered = results;
 
         if (inStockOnly) {
@@ -94,6 +94,10 @@ const SearchResults = () => {
 
         if (brands.length > 0) {
             filtered = filtered.filter((product) => brands.includes(product.brand));
+        }
+
+        if (certification.length > 0) {
+            filtered = filtered.filter((vendor) => certification.includes(vendor.certificationLevel));
         }
 
         if (Object.keys(specs).length > 0) {
@@ -168,6 +172,14 @@ const SearchResults = () => {
         }
 
         setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+    };
+
+    const handleCertificationFilter = (level) => {
+        const newCertification = activeFilters.certification.includes(level)
+            ? activeFilters.certification.filter((l) => l !== level)
+            : [...activeFilters.certification, level];
+
+        setActiveFilters((prev) => ({ ...prev, certification: newCertification }));
     };
 
     const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
@@ -290,14 +302,38 @@ const SearchResults = () => {
                                             onChange={() => {
                                                 const newInStockOnly = !activeFilters.inStockOnly;
                                                 setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, products);
+                                                filterProducts(activeFilters.vendors, activeFilters.brands, activeFilters.specs, newInStockOnly, activeFilters.certification, products);
                                             }} 
                                         />
                                         Show only in-stock products
                                     </label>
                                 </div>
                             </div>
-                            <button className="button button--outline" id="filters__scrollback"><svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div></button>
+
+                            {/* Certification Filter for Vendors */}
+                            <div className="filter-certification default-list">
+                                <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
+                                <div className="filter-container">
+                                    <ol>
+                                        <li className={activeFilters.certification.includes('Bronze') ? 'selected' : ''} onClick={() => handleCertificationFilter('Bronze')}>
+                                            <a data-l="1"><span>Bronze</span></a>
+                                        </li>
+                                        <li className={activeFilters.certification.includes('Silver') ? 'selected' : ''} onClick={() => handleCertificationFilter('Silver')}>
+                                            <a data-l="2"><span>Silver</span></a>
+                                        </li>
+                                        <li className={activeFilters.certification.includes('Gold') ? 'selected' : ''} onClick={() => handleCertificationFilter('Gold')}>
+                                            <a data-l="3"><span>Gold</span></a>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <button className="button button--outline" id="filters__scrollback">
+                                <svg className="icon" aria-hidden="true" width="12" height="12">
+                                    <use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use>
+                                </svg>
+                                <div>Φίλτρα</div>
+                            </button>
                         </div>
                     </aside>
 
