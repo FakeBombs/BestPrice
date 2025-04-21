@@ -24,6 +24,7 @@ const allPaymentMethods = Object.values(PaymentMethod);
 const PaymentMethodsComponent = ({ paymentMethods }) => {
     return (
       <section>
+        <h2 class="ui-kit__secondary">Χαρακτηριστικά καταστήματος</h2>
         <div className="merchant__shipping-options">
             <div>
                 <h4 className="ui-kit__text ui-kit__strong ui-kit__mb-3">Τρόποι πληρωμής</h4>
