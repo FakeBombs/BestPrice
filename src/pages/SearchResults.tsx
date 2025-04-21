@@ -75,7 +75,7 @@ const SearchResults = () => {
         setAvailableCategories(categoriesArray);
     };
 
-    const filterProducts = (brands, inStockOnly, certification, results) => {
+    const filterProducts = (brands, specs, inStockOnly, certification, results) => {
         let filtered = results;
 
         if (inStockOnly) {
@@ -83,7 +83,7 @@ const SearchResults = () => {
         }
 
         if (certification.length > 0) {
-            filtered = filtered.filter((vendor) => certification.includes(vendor.certificationLevel));
+            filtered = filtered.filter((vendor) => certification.includes(vendor.certification));
         }
 
         if (Object.keys(specs).length > 0) {
@@ -252,25 +252,7 @@ const SearchResults = () => {
                                 ))
                             )}
 
-                            <div className="filter-in-stock default-list">
-                                <div className="filter__header"><h4>In Stock</h4></div>
-                                <div className="filter-container">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={activeFilters.inStockOnly}
-                                            onChange={() => {
-                                                const newInStockOnly = !activeFilters.inStockOnly;
-                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.brands, newInStockOnly, activeFilters.certification, products);
-                                            }} 
-                                        />
-                                        Show only in-stock products
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Certification Filter for Vendors */}
+                            {/* Certification Filter for Vendors moved above In Stock */}
                             <div className="filter-certification default-list">
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
@@ -285,6 +267,24 @@ const SearchResults = () => {
                                             <a data-l="3"><span>Gold</span></a>
                                         </li>
                                     </ol>
+                                </div>
+                            </div>
+
+                            <div className="filter-in-stock default-list">
+                                <div className="filter__header"><h4>In Stock</h4></div>
+                                <div className="filter-container">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={activeFilters.inStockOnly}
+                                            onChange={() => {
+                                                const newInStockOnly = !activeFilters.inStockOnly;
+                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
+                                                filterProducts(activeFilters.brands, activeFilters.specs, newInStockOnly, activeFilters.certification, products);
+                                            }} 
+                                        />
+                                        Show only in-stock products
+                                    </label>
                                 </div>
                             </div>
 
