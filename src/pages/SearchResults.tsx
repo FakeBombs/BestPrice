@@ -253,7 +253,7 @@ const SearchResults = () => {
                             )}
 
                             {/* Certification Filter for Vendors moved above In Stock */}
-                            <div className="filter-certification default-list">
+                            <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
                                     <ol>
