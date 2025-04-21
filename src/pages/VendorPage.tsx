@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { vendors } from '@/data/mockData';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-const VendorPage = () => {
+interface VendorPageProps { vendor: Vendor; }
+
+const VendorPage: React.FC<VendorPageProps> = ({ vendor }) => {
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
@@ -163,36 +165,38 @@ const VendorPage = () => {
                       </ul>
                     </div>
                     <div>
-                      <ul className="id__meta">
-                        <li data-type="url" itemProp="url" content="https://www.myshop.com/">
-                          <a className="ui-kit__text" target="blank" href="https://www.myshop.com/" rel="external nofollow noopener">
-                            <svg aria-hidden="true" className="icon" width="16" height="16">
-                              <use xlinkHref="/public/dist/images/icons/icons.svg#icon-world-16"></use>
-                            </svg>
-                            myshop.com
-                          </a>
-                        </li>
-                        <li data-type="telephone">
-                          <svg aria-hidden="true" className="icon icon--outline" width="14" height="14">
-                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-phone-14"></use>
-                          </svg>
-                          <span className="ui-kit__text"><a href="tel:1234567890">123 456 7890</a></span>
-                        </li>
-                        <li data-type="address">
-                          <a href="/m/1234/myshop.html#merchant-map">
-                            <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                              <use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use>
-                            </svg>
-                            <span className="ui-kit__text">123 Sample St, Cityname</span>
-                          </a>
-                        </li>
-                        <li data-type="storesCount">
-                          <a href="/m/1234/myshop.html#merchant-map">
-                            <small className="ui-kit__small ui-kit__muted">10 more stores</small>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+  <ul className="id__meta">
+    <li data-type="url" itemProp="url" content={vendor.domain}>
+      <a className="ui-kit__text" target="_blank" href={vendor.domain} rel="external nofollow noopener">
+        <svg aria-hidden="true" className="icon" width="16" height="16">
+          <use xlinkHref="/public/dist/images/icons/icons.svg#icon-world-16"></use>
+        </svg>
+        {vendor.domain}
+      </a>
+    </li>
+    <li data-type="telephone">
+      <svg aria-hidden="true" className="icon icon--outline" width="14" height="14">
+        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-phone-14"></use>
+      </svg>
+      <span className="ui-kit__text">
+        <a href={`tel:${vendor.telephone.join(',')}`}>{vendor.telephone.join(', ')}</a>
+      </span>
+    </li>
+    <li data-type="address">
+      <a href="/m/1234/myshop.html#merchant-map">
+        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
+          <use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use>
+        </svg>
+        <span className="ui-kit__text">{vendor.location ? vendor.location.join(', ') : 'No locations available'}</span>
+      </a>
+    </li>
+    <li data-type="storesCount">
+      <a href="/m/1234/myshop.html#merchant-map">
+        <small className="ui-kit__small ui-kit__muted">10 more stores</small> {/* Update this dynamically if necessary */}
+      </a>
+    </li>
+  </ul>
+</div>
                   </div>
                   <div className="masthead__id-section">
                     <ul className="id__meta">
