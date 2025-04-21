@@ -132,21 +132,21 @@ const Brands = () => {
             {/* Numbers Section */}
             <div className="brand-directory__letter" id="letter-0-9">
               <aside><h3>0-9</h3></aside>
-              <div className="brand-directory__letter-main"><ol>{groupedBrands.numbers?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
+              <div className="brand-directory__letter-main"><ol>{groupedBrands.numbers?.sort((a, b) => {return parseFloat(a.name) - parseFloat(b.name);}).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
             </div>
 
             {/* Latin Characters Section */}
-            {Object.keys(groupedBrands.latin || {}).map(letter => (
+            {Object.keys(groupedBrands.latin || {}).sort().map(letter => (
               <div className="brand-directory__letter" id={`letter-${letter}`} key={letter}>
                 <aside><h3>{letter}</h3></aside>
-                <div className="brand-directory__letter-main"><ol>{groupedBrands.latin[letter]?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
+                <div className="brand-directory__letter-main"><ol>{groupedBrands.latin[letter]?.sort((a, b) => a.name.localeCompare(b.name)).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
               </div>
             ))}
 
             {/* Combined Greek Characters Section (Α-Ω) */}
             <div className="brand-directory__letter" id="letter-Greek">
               <aside><h3>Α-Ω</h3></aside>
-              <div className="brand-directory__letter-main"><ol>{groupedBrands.greek?.map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
+              <div className="brand-directory__letter-main"><ol>{groupedBrands.greek?.sort((a, b) => a.name.localeCompare(b.name)).map((brand) => ( <li key={brand.id}><Link to={`/b/${brand.id}/${brand.name.replace(/\s+/g, '-').toLowerCase()}.html`} rel="nofollow">{brand.name}</Link></li> ))}</ol></div>
             </div>
           </div>
         </section>
