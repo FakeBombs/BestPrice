@@ -8,6 +8,10 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 interface VendorPageProps { }
 
 const VendorPage: React.FC<VendorPageProps> = () => {
+    useEffect(() => {
+        document.title = `● ${selectedVendor.name} | BestPrice`;
+        document.description = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+    }, [selectedVendor]);
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
