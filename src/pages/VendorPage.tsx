@@ -66,12 +66,18 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     
     const { vendorId, vendorName } = useParams();
     const [selectedVendor, setSelectedVendor] = useState(null);
+    const [additionalLocations, setAdditionalLocations] = useState(0);
     const [loading, setLoading] = useState(true); // Loading state
 
     const displayedVendor = vendorName ? 
     vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
 
-    const additionalLocations = selectedVendor.location && selectedVendor.location.length > 1 ? selectedVendor.location.length - 1 : 0;
+    useEffect(() => {
+    if (selectedVendor && selectedVendor.location) {
+        const count = selectedVendor.location.length > 1 ? selectedVendor.location.length - 1 : 0;
+        setAdditionalLocations(count);
+    }
+    }, [selectedVendor]);
 
     useEffect(() => {
         if (displayedVendor) {
