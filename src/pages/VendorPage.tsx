@@ -18,29 +18,27 @@ const VendorPage = () => {
         return <p>Vendor not found.</p>;
     }
 
+    const vendorName = vendorName; // Change based on the current vendor
+  
+    // Simple selection logic for background color based on vendor name
+    const backgroundColor = vendorName === 'Plaisio' ? '#f84632' :
+                            vendorName === 'AnotherShop' ? '#2196F3' : '#FFC107'; // Default fallback color
+
     return (
         <div id="root" className="clr">
-      <section className="merchant-hero root_wrapper" style={{ background: '#4CAF50', borderBottom: 0 }}>
+      <section className="merchant-hero root_wrapper" style={{ background: backgroundColor, borderBottom: 0 }}>
         <div className="root">
           <div className="merchant-trail">
             <nav className="breadcrumb">
               <ol>
-                <li>
-                  <a href="/" rel="home" data-no-info="">
-                    <span>MyShop.com</span>
-                  </a>
-                  <span className="trail__breadcrumb-separator">›</span>
-                </li>
-                <li>
-                  <a href="/m" data-no-info="" className="trail__last"><span>Stores</span></a>
-                  <span className="trail__breadcrumb-separator"></span>
-                </li>
+                <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+                <li><Link to="/m" data-no-info="" className="trail__last"><span>Καταστήματα</span></Link></li>
               </ol>
             </nav>
           </div>
           
           <div className="merchant-logo">
-            <img src="//myshopcdn.com/images/store_logo.svg" alt="MyShop logo" title="MyShop" />
+            <img src={vendorImage} alt={`${vendorName} logo`} title={vendorName} />
             <span className="merchant-logo--certification" data-certification="silver">
               <svg aria-hidden="true" className="icon" width="22" height="22">
                 <use xlinkHref="/public/dist/images/icons/certification.svg#icon-silver-22"></use>
@@ -56,10 +54,10 @@ const VendorPage = () => {
             <use xlinkHref="/public/dist/images/icons/certification.svg#icon-silver-22"></use>
           </svg>
           <span className="hide-tablet">
-            Certified Store (<a href="/certification">Silver</a>)
+            Certified Store (<Link to="/certification">Silver</Link>)
           </span>
           <span className="hide-mobile">
-            MyShop is a certified store (<b data-certification="silver">Silver</b>)
+            {vendorName} is a certified store (<b data-certification="silver">Silver</b>)
           </span>
         </div>
       </div>
@@ -70,7 +68,7 @@ const VendorPage = () => {
             <div className="masthead__main">
               <div className="id">
                 <div className="id__title">
-                  <h1 itemProp="name">MyShop</h1>
+                  <h1 itemProp="name">{vendorName}</h1>
                 </div>
                 <div className="masthead__id">
                   <div className="masthead__id-section">
@@ -87,7 +85,7 @@ const VendorPage = () => {
                       </div>
                       <ul className="id__meta">
                         <li data-type="joined">
-                          <span className="ui-kit__text ui-kit__muted">On MyShop since 01/01/2020</span>
+                          <span className="ui-kit__text ui-kit__muted">On {vendorName} since 01/01/2020</span>
                         </li>
                         <li data-type="social" style={{ display: 'flex' }}>
                           <span className="social-links">
@@ -209,7 +207,7 @@ const VendorPage = () => {
             <section className="section">
               <header className="section__header">
                 <hgroup className="section__hgroup">
-                  <h2 className="section__title"><a href="/deals/m/1234/1234/myshop.html">Deals from MyShop</a></h2>
+                  <h2 className="section__title"><a href="/deals/m/1234/1234/myshop.html">Deals from {vendorName}</a></h2>
                 </hgroup>
               </header>
               <div className="scroll">
@@ -266,7 +264,7 @@ const VendorPage = () => {
             <section className="section">
               <header className="section__header">
                 <hgroup className="section__hgroup">
-                  <h2 className="section__title">Popular Categories from MyShop</h2>
+                  <h2 className="section__title">Popular Categories from {vendorName}</h2>
                 </hgroup>
               </header>
               <div className="categories">
@@ -292,7 +290,7 @@ const VendorPage = () => {
               <section className="section">
                 <header className="section__header">
                   <hgroup className="section__hgroup">
-                    <h2 className="section__title">Reviews of MyShop</h2>
+                    <h2 className="section__title">Reviews of {vendorName}</h2>
                   </hgroup>
                 </header>
                 <div>
