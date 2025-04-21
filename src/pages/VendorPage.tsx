@@ -82,11 +82,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
         setLoading(false); // Set loading to false after processing
     }, [vendorName]); // Ensure it runs when vendorName changes
 
-    // If loading, show loading message
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
     // If vendor not found, show NotFound component
     if (!selectedVendor) {
         return <NotFound />;
