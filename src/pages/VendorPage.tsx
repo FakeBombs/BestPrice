@@ -8,18 +8,6 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 interface VendorPageProps { }
 
 const VendorPage: React.FC<VendorPageProps> = () => {
-    useEffect(() => {
-        document.title = `● ${selectedVendor.name} | BestPrice`;
-        const metaDescription = document.querySelector("meta[name='description']");
-        if (metaDescription) {
-            metaDescription.setAttribute("content", `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`);
-        } else {
-            const newMetaDescription = document.createElement("meta");
-            newMetaDescription.name = "description";
-            newMetaDescription.content = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
-            document.head.appendChild(newMetaDescription);
-        }
-    }, [selectedVendor]);
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
@@ -118,6 +106,19 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     if (!selectedVendor) {
         return <NotFound />;
     }
+
+    useEffect(() => {
+        document.title = `● ${selectedVendor.name} | BestPrice`;
+        const metaDescription = document.querySelector("meta[name='description']");
+        if (metaDescription) {
+            metaDescription.setAttribute("content", `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`);
+        } else {
+            const newMetaDescription = document.createElement("meta");
+            newMetaDescription.name = "description";
+            newMetaDescription.content = `Πληροφορίες, αξιολογήσεις χρηστών, διεύθυνση, τηλέφωνα επικοινωνίας και ωράριο λειτουργίας. Δες τα προϊόντα και τις προσφορές του ${selectedVendor.name}`;
+            document.head.appendChild(newMetaDescription);
+        }
+    }, [selectedVendor]);
 
     return (
         <div id="root" className="clr">
