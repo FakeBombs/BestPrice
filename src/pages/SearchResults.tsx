@@ -26,7 +26,7 @@ const SearchResults = () => {
 
         const sortedResults = sortProducts(results);
         setFilteredProducts(sortedResults);
-        updateCertifiedVendors(sortedResults); // Update certified vendors based on initial search results
+        updateCertifiedVendors(sortedResults);
     }, [searchQuery]);
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const SearchResults = () => {
     const extractCategories = (results) => {
         const categoryCount = {};
         results.forEach((product) => {
-            product.categoryIds?.forEach(categoryId => { // Safely access categoryIds
+            (product.categoryIds || []).forEach(categoryId => {  // Safely access categoryIds
                 categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
             });
         });
@@ -79,10 +79,10 @@ const SearchResults = () => {
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map(); // Use a map to collect unique vendors based on certification
         results.forEach(product => {
-            product.vendors.forEach(vendorId => {
+            (product.vendors || []).forEach(vendorId => {
                 const vendor = vendors.find(v => v.id === vendorId);
                 if (vendor && vendor.certification) {
-                    vendorMap.set(vendor.id, vendor); // Collect vendor info if not already added
+                    vendorMap.set(vendor.id, vendor);
                 }
             });
         });
@@ -115,21 +115,21 @@ const SearchResults = () => {
         setFilteredProducts(filtered);
         extractAvailableFilters(filtered);
         extractCategories(filtered);
-        updateCertifiedVendors(filtered); // Update certified vendors based on filtered results
+        updateCertifiedVendors(filtered);
     };
 
     const sortProducts = (products) => {
         switch (sortType) {
             case 'price-asc':
                 return [...products].sort((a, b) => {
-                    const minPriceA = Math.min(...a.prices.filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    const minPriceB = Math.min(...b.prices.filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
                     return minPriceA - minPriceB;
                 });
             case 'price-desc':
                 return [...products].sort((a, b) => {
-                    const maxPriceA = Math.max(...a.prices.filter((p) => p.inStock).map((p) => p.price), 0);
-                    const maxPriceB = Math.max(...b.prices.filter((p) => p.inStock).map((p) => p.price), 0);
+                    const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                    const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
                     return maxPriceB - maxPriceA;
                 });
             case 'rating-desc':
@@ -141,8 +141,8 @@ const SearchResults = () => {
                 });
             case 'merchants_desc':
                 return [...products].sort((a, b) => {
-                    const availableVendorsA = a.prices.filter((price) => price.inStock).length;
-                    const availableVendorsB = b.prices.filter((price) => price.inStock).length;
+                    const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
+                    const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
                     return availableVendorsB - availableVendorsA;
                 });
         }
@@ -177,7 +177,7 @@ const SearchResults = () => {
 
         setActiveFilters((prev) => ({ ...prev, certification: newCertification }));
         filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products.filter(product =>
-            product.vendors.includes(vendor.id) // Filter products by selected certified vendor
+            (product.vendors || []).includes(vendor.id) // Filter products by selected certified vendor
         ));
     };
 
