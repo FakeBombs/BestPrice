@@ -120,14 +120,13 @@ const Brands = () => {
         <section className="brand-directory">
           <div className="brand-directory__letters">
             <div className="brand-directory__letters-wrapper">
+              const completeAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
               <nav className="brand-directory__nav">
                 <Link to="/brands#letter-0-9" style={{ opacity: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 1 : 0.5, cursor: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 'pointer' : 'not-allowed' }}>0-9</Link>
-  {completeAlphabet.map(letter => {
-    const hasBrands = groupedBrands.latin[letter] && groupedBrands.latin[letter].length > 0;
-    return (
-      <Link key={letter} to={`/brands#letter-${letter}`} style={{ opacity: hasBrands ? 1 : 0.5, cursor: hasBrands ? 'pointer' : 'not-allowed' }}>{letter}</Link>
-    );
-  })}
+                {completeAlphabet.map(letter => {
+                  const hasBrands = groupedBrands.latin[letter] && groupedBrands.latin[letter].length > 0;
+                  return ( <Link key={letter} to={`/brands#letter-${letter}`} style={{ opacity: hasBrands ? 1 : 0.5, cursor: hasBrands ? 'pointer' : 'not-allowed' }}>{letter}</Link> );
+                })}
                 <Link to="/brands#letter-Greek" style={{ opacity: groupedBrands.greek && groupedBrands.greek.length > 0 ? 1 : 0.5, cursor: groupedBrands.greek && groupedBrands.greek.length > 0 ? 'pointer' : 'not-allowed' }}>Α-Ω</Link>
               </nav>
             </div>
