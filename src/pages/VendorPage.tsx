@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import NotFound from '@/pages/NotFound';
 import { vendors } from '@/data/mockData';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
@@ -76,20 +77,19 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     }, [displayedVendor]);
 
     useEffect(() => {
-        // Simulate data fetching or processing
         const foundVendor = vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName);
         setSelectedVendor(foundVendor);
-        setLoading(false); // Set loading to false after retrieving vendor
+        setLoading(false); // Set loading to false after processing
     }, [vendorName]); // Ensure it runs when vendorName changes
 
-    // Show loading indicator while data is being processed
+    // If loading, show loading message
     if (loading) {
         return <p>Loading...</p>;
     }
 
-    // Display if vendor is not found after loading is complete
+    // If vendor not found, show NotFound component
     if (!selectedVendor) {
-        return <p>Vendor not found.</p>;
+        return <NotFound />;
     }
 
     return (
