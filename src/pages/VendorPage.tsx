@@ -64,7 +64,8 @@ const VendorPage: React.FC<VendorPageProps> = () => {
 
     const { vendorId, vendorName } = useParams(); // No change here
     const [selectedVendor, setSelectedVendor] = useState(null); // Renamed vendor state
-    const displayedVendor = vendorName ? vendors.find(v => v.name === vendorName) : null;
+    const displayedVendor = vendorName ? 
+    vendors.find(v => v.name.toLowerCase() === vendorName.toLowerCase()) : null;
 
     useEffect(() => {
         // Set the vendor based on the displayedVendor found by name
