@@ -38,13 +38,13 @@ const ProductDetail = () => {
   if (userAgent.includes('windows')) {
     classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   } else if (userAgent.includes('mobile')) {
-    classNamesForHtml = 'is-mobile';
+    classNamesForHtml = 'supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-mobile is-modern flex-in-button is-prompting-to-add-to-home';
     classNamesForBody = 'mobile';
   } else if (userAgent.includes('tablet')) {
-    classNamesForHtml = 'is-tablet';
+    classNamesForHtml = 'supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-tablet is-modern flex-in-button is-prompting-to-add-to-home';
     classNamesForBody = 'tablet';
   } else {
-    classNamesForHtml = 'unknown-device';
+    classNamesForHtml = 'supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant unknown-device is-modern flex-in-button is-prompting-to-add-to-home';
   }
 
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
