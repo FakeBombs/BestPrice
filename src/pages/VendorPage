@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { vendors } from '@/data/mockData';
 
 const VendorPage = () => {
-  const { id, vendorSlug } = useParams();
+  const { id, vendorSlug } = useParams<{ id: string; vendorSlug: string }>();
   const vendor = vendors.find(v => v.id === parseInt(id));
 
   // Ensure the slug matches the vendor name
