@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
 import { vendors } from '@/data/mockData';
+import PaymentMethodsComponent from '@/components/PaymentMethods';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 interface VendorPageProps { }
@@ -185,12 +186,12 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                         </div>
                                         <div>
                                             <ul className="id__meta">
-                                                <li data-type="url" itemProp="url" content={selectedVendor.domain}>
-                                                    <a className="ui-kit__text" target="_blank" href={selectedVendor.domain} rel="external nofollow noopener">
+                                                <li data-type="url" itemProp="url" content={selectedVendor.url}>
+                                                    <a className="ui-kit__text" target="_blank" href={selectedVendor.url} rel="external nofollow noopener">
                                                         <svg aria-hidden="true" className="icon" width="16" height="16">
                                                             <use xlinkHref="/public/dist/images/icons/icons.svg#icon-world-16"></use>
                                                         </svg>
-                                                        {selectedVendor.domain}
+                                                        {selectedVendor.url}
                                                     </a>
                                                 </li>
                                                 <li data-type="telephone">
@@ -254,32 +255,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     </div>
                                 </div>
                             </section>
-                            <section>
-                                <h2 className="ui-kit__secondary">Store Features</h2>
-                                <div className="merchant__shipping-options">
-                                    <div>
-                                        <h4 className="ui-kit__text ui-kit__strong ui-kit__mb-3">Payment Methods</h4>
-                                        <ol>
-                                            <li className="supported"><span className="ui-kit__text">Cash on Delivery</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                            <li className="supported"><span className="ui-kit__text">Credit Cards</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                        </ol>
-                                    </div>
-                                    <div>
-                                        <h4 className="ui-kit__text ui-kit__strong ui-kit__mb-3">Shipping Options</h4>
-                                        <ol>
-                                            <li className="supported"><span className="ui-kit__text">Express Delivery</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                            <li className="supported"><span className="ui-kit__text">In-Store Pickup</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                        </ol>
-                                    </div>
-                                    <div>
-                                        <h4 className="ui-kit__text ui-kit__strong ui-kit__mb-3">Additional Services</h4>
-                                        <ol>
-                                            <li className="supported"><span className="ui-kit__text">Free Returns</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                            <li className="supported"><span className="ui-kit__text">Gift Cards</span><span className="check-icon--supported"><svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-check-16"></use></svg></span></li>
-                                        </ol>
-                                    </div>
-                                </div>
-                            </section>
+                            <PaymentMethodsComponent paymentMethods={vendor.paymentMethods} />
                         </section>
 
                         {/* Deals Section */}
