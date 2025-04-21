@@ -32,7 +32,7 @@ const VendorPage = () => {
           </div>
           
           <div className="merchant-logo">
-            <img src={vendorLogo} alt={`${vendorName} logo`} title={vendorName} />
+            <img src={vendor.Logo} alt={`${vendor.Name} logo`} title={vendor.Name} />
             <span className="merchant-logo--certification" data-certification="silver">
               <svg aria-hidden="true" className="icon" width="22" height="22">
                 <use xlinkHref="/public/dist/images/icons/certification.svg#icon-silver-22"></use>
