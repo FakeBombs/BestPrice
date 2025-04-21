@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
               <div className="footer__section-scroller">
                 <div className="footer__section-content">
                   <ul>
-                    <li><Link to="/stores">{stats.totalVendors} καταστήματα</Link></li>
+                    <li><Link to="/m">{stats.totalVendors} καταστήματα</Link></li>
                     <li><Link to="/search">{stats.totalProducts} προϊόντα</Link></li>
                     <li><Link to="/brands">{stats.totalBrands} κατασκευαστές</Link></li>
                     <li><Link to="/deals">{stats.totalDeals} προσφορές</Link></li>
