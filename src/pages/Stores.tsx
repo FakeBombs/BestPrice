@@ -11,12 +11,12 @@ const Stores = () => {
         .toString()
         .toLowerCase()
         .replace(/\s+/g, '-')    // Replace spaces with hyphens
-        .replace(/\//g, '-')      // Replace slashes with hyphens or underscores based on your preference
+        .replace(/[\/\\]/g, '-') // Replace slashes and backslashes with hyphens
         .replace(/[^\w\-]+/g, '') // Remove any non-word characters
         .replace(/\-\-+/g, '-')   // Replace multiple hyphens with a single hyphen
         .replace(/^-+/, '')       // Trim hyphens from start
         .replace(/-+$/, '');      // Trim hyphens from end
-};
+  };
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -47,10 +47,10 @@ const Stores = () => {
             <div className="tabs">
               <div className="tabs-wrapper">
                 <nav>
-                  <a data-type="" href="/stores" className="current">Δημοφιλία</a>
-                  <a data-type="title:asc" href="/stores?o=title%3Aasc">Αλφαβητικά</a>
-                  <a data-type="level:desc" href="/stores?o=level%3Adesc">Πιστοποίηση</a>
-                  <a data-type="orders" href="/stores?o=orders">
+                  <a data-type="" href="/m" className="current">Δημοφιλία</a>
+                  <a data-type="title:asc" href="/m?o=title%3Aasc">Αλφαβητικά</a>
+                  <a data-type="level:desc" href="/m?o=level%3Adesc">Πιστοποίηση</a>
+                  <a data-type="orders" href="/m?o=orders">
                     <svg aria-hidden="true" className="icon" width="16" height="16">
                       <path xmlns="http://www.w3.org/2000/svg" d="M14.0001 4.69998L8.0171 7.99698C8.01193 7.99997 8.00607 8.00154 8.0001 8.00154C7.99413 8.00154 7.98827 7.99997 7.9831 7.99698L2.0001 4.70098M8.0001 7.99998V14.666M8.0001 14.666C8.00289 14.666 8.00564 14.6653 8.0081 14.664L13.9901 11.338V11.34C13.9933 11.338 13.996 11.3352 13.9977 11.3319C13.9995 11.3285 14.0003 11.3248 14.0001 11.321V4.70898C14.0001 4.70098 13.9961 4.69398 13.9901 4.68998L8.0081 1.33598C8.00564 1.33467 8.00289 1.33398 8.0001 1.33398C7.99731 1.33398 7.99456 1.33467 7.9921 1.33598L2.0101 4.68898C2.0041 4.69298 2.0001 4.69998 2.0001 4.70798V11.32C1.99971 11.3239 2.00045 11.3279 2.00222 11.3314C2.00399 11.335 2.00672 11.3379 2.0101 11.34L7.9921 14.664C7.99456 14.6653 7.99731 14.666 8.0001 14.666Z"/>
                     </svg>
@@ -82,26 +82,32 @@ const Stores = () => {
         <main id="merchant-listing">
           <ul className="merchants-listing grid" data-pagination="">
             {vendors.map((vendor) => {
-    // Use slugify function here
-    const vendorSlug = slugify(vendor.name);
+              // Use slugify function here
+              const vendorSlug = slugify(vendor.name);
+
+              // Debugging: Check slug output
+              console.log(`Vendor ID: ${vendor.id}, Vendor Name: ${vendor.name}, Slug: ${vendorSlug}`);
+
+              // If the slug is empty, use a fallback
+              const safeVendorSlug = vendorSlug || `vendor-${vendor.id}`; // Fallback to a unique ID
     return (
         <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
             <div className="merchants-listing__thumb-container" data-id={vendor.id}>
                 <svg aria-hidden="true" className="icon merchants-listing__certification-icon" width="22" height="22">
                   {/* SVG paths here */}
                 </svg>
-                <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${vendorSlug}.html`}>
+                <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${safeVendorSlug}.html`}>
                     <img src={vendor.logo} loading="lazy" alt={vendor.name} />
                 </Link>
             </div>
             <div className="merchants-listing__details">
                 <h3>
-                    <Link to={`/m/${vendor.id}/${vendorSlug}.html`} title={vendor.name}>
+                    <Link to={`/m/${vendor.id}/${safeVendorSlug}.html`} title={vendor.name}>
                         {vendor.name}
                     </Link>
                 </h3>
                 <p className="merchants-listing__counts">247.725 προϊόντα<span className="hide-mobile"> σε 1.627 κατηγορίες</span></p>
-                <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendorSlug}.html#reviews`}>
+                <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${safeVendorSlug}.html#reviews`}>
                     <span className="rating rating-all" data-total="519">
                         <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
                         <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
