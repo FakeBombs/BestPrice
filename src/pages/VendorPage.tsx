@@ -77,12 +77,23 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     }, [displayedVendor]);
 
     useEffect(() => {
-        const foundVendor = vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName);
-        setSelectedVendor(foundVendor);
-        setLoading(false); // Set loading to false after processing
-    }, [vendorName]); // Ensure it runs when vendorName changes
+        setLoading(true); // Start loading when vendorName changes
 
-    // If vendor not found, show NotFound component
+        const foundVendor = vendors.find(v =>
+            v.name.toLowerCase().replace(/\s+/g, '-') === vendorName
+        );
+        
+        // Delay the setting of selectedVendor to simulate data fetching
+        setSelectedVendor(foundVendor);
+        setLoading(false); // End loading state
+    }, [vendorName]);
+
+    // While loading, return null or a spinner, you can implement loading feedback here
+    if (loading) {
+        return null; // Or some loading indicator
+    }
+
+    // Vendor is not found, show NotFound component
     if (!selectedVendor) {
         return <NotFound />;
     }
