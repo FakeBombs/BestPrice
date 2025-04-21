@@ -81,12 +81,14 @@ const VendorPage = () => {
       <section className="merchant-hero root_wrapper" style={{ background: 'var(--colors-themed-card-bg)', borderBottom: 0 }}>
         <div className="root">
           <div className="merchant-trail">
+              <div id="trail">
             <nav className="breadcrumb">
               <ol>
                 <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
                 <li><Link to="/m" data-no-info="" className="trail__last"><span>Καταστήματα</span></Link></li>
               </ol>
             </nav>
+              </div>
           </div>
           
           <div className="merchant-logo">
