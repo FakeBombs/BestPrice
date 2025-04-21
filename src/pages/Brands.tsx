@@ -121,11 +121,14 @@ const Brands = () => {
           <div className="brand-directory__letters">
             <div className="brand-directory__letters-wrapper">
               <nav className="brand-directory__nav">
-                <a href="/brands#letter-0-9">0-9</a>
-                {Object.keys(groupedBrands.latin || {}).map(letter => (
-                  <a key={letter} href={`/brands#letter-${letter}`}>{letter}</a>
-                ))}
-                <a href="/brands#letter-Greek">Α-Ω</a>
+                <Link to="/brands#letter-0-9" style={{ opacity: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 1 : 0.5, cursor: groupedBrands.numbers && groupedBrands.numbers.length > 0 ? 'pointer' : 'not-allowed' }}>0-9</Link>
+  {completeAlphabet.map(letter => {
+    const hasBrands = groupedBrands.latin[letter] && groupedBrands.latin[letter].length > 0;
+    return (
+      <Link key={letter} to={`/brands#letter-${letter}`} style={{ opacity: hasBrands ? 1 : 0.5, cursor: hasBrands ? 'pointer' : 'not-allowed' }}>{letter}</Link>
+    );
+  })}
+                <Link to="/brands#letter-Greek" style={{ opacity: groupedBrands.greek && groupedBrands.greek.length > 0 ? 1 : 0.5, cursor: groupedBrands.greek && groupedBrands.greek.length > 0 ? 'pointer' : 'not-allowed' }}>Α-Ω</Link>
               </nav>
             </div>
             
