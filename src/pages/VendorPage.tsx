@@ -1,80 +1,79 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { vendors } from '@/data/mockData';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-interface VendorPageProps { vendor: Vendor; }
+interface VendorPageProps { }
 
-const VendorPage: React.FC<VendorPageProps> = ({ vendor }) => {
+const VendorPage: React.FC<VendorPageProps> = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     const [jsEnabled, setJsEnabled] = useState(false);
     let classNamesForBody = '';
     let classNamesForHtml = '';
 
-  // Check for ad blockers
-  const checkAdBlockers = () => {
-    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
-    return adElementsToCheck.some(selector => {
-      const adElement = document.createElement('div');
-      adElement.className = selector.slice(1);
-      document.body.appendChild(adElement);
-      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-      document.body.removeChild(adElement);
-      return isBlocked;
-    });
-  };
-
-  const isAdBlocked = checkAdBlockers();
-
-  // Determine device type
-  if (userAgent.includes('windows')) {
-      classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-  } else if (userAgent.includes('mobile')) {
-      classNamesForHtml = 'is-mobile';
-      classNamesForBody = 'mobile';
-  } else if (userAgent.includes('tablet')) {
-      classNamesForHtml = 'is-tablet';
-      classNamesForBody = 'tablet';
-  } else {
-      classNamesForHtml = 'unknown-device';
-  }
-
-  // Handle ad blockers
-  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
-
-  // Set JavaScript enabled state
-  useEffect(() => {
-    const handleLoad = () => {
-      setJsEnabled(true);
+    // Check for ad blockers
+    const checkAdBlockers = () => {
+        const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+        return adElementsToCheck.some(selector => {
+            const adElement = document.createElement('div');
+            adElement.className = selector.slice(1);
+            document.body.appendChild(adElement);
+            const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+            document.body.removeChild(adElement);
+            return isBlocked;
+        });
     };
 
-    window.addEventListener('load', handleLoad);
-    return () => window.removeEventListener('load', handleLoad);
-  }, []);
+    const isAdBlocked = checkAdBlockers();
 
-  // Add JS enabled/disabled class
-  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+    // Determine device type
+    if (userAgent.includes('windows')) {
+        classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+    } else if (userAgent.includes('mobile')) {
+        classNamesForHtml = 'is-mobile';
+        classNamesForBody = 'mobile';
+    } else if (userAgent.includes('tablet')) {
+        classNamesForHtml = 'is-tablet';
+        classNamesForBody = 'tablet';
+    } else {
+        classNamesForHtml = 'unknown-device';
+    }
 
-  // Set attributes
-  const newIdForBody = ''; // Keeping body ID empty
-  const newIdForHtml = 'page-merchant';
+    // Handle ad blockers
+    classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
 
-  useHtmlAttributes(classNamesForHtml, newIdForHtml);
-  useBodyAttributes(classNamesForBody, newIdForBody);
+    // Set JavaScript enabled state
+    useEffect(() => {
+        const handleLoad = () => {
+            setJsEnabled(true);
+        };
 
-    
-    const { vendorId, vendorName } = useParams();
-    const [vendor, setVendor] = useState(null);
-    const displayedVendor = vendorName ? vendors.find((v) => v.name.toLowerCase() === vendorName.toLowerCase()) : null;
+        window.addEventListener('load', handleLoad);
+        return () => window.removeEventListener('load', handleLoad);
+    }, []);
+
+    // Add JS enabled/disabled class
+    classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+
+    // Set attributes
+    const newIdForBody = ''; // Keeping body ID empty
+    const newIdForHtml = 'page-merchant';
+
+    useHtmlAttributes(classNamesForHtml, newIdForHtml);
+    useBodyAttributes(classNamesForBody, newIdForBody);
+
+    const { vendorId, vendorName } = useParams(); // No change here
+    const [selectedVendor, setSelectedVendor] = useState(null); // Renamed vendor state
+    const displayedVendor = vendorName ? vendors.find(v => v.name === vendorName) : null;
 
     useEffect(() => {
         // Set the vendor based on the displayedVendor found by name
         if (displayedVendor) {
-            setVendor(displayedVendor);
+            setSelectedVendor(displayedVendor);
         }
     }, [displayedVendor]);
 
-    if (!vendor) {
+    if (!selectedVendor) {
         return <p>Vendor not found.</p>;
     }
 
