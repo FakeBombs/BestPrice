@@ -3,9 +3,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
+const vendorSlug = vendor.name.toLowerCase().replace(/ /g, '-');
+
 const Stores = () => {
   const { t } = useTranslation();
-  const vendorSlug = vendor.name.toLowerCase().replace(/ /g, '-');
   return (
     <div className="root__wrapper">
       <div className="root">
