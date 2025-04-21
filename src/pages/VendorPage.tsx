@@ -18,15 +18,9 @@ const VendorPage = () => {
         return <p>Vendor not found.</p>;
     }
 
-    const vendorName = ({ vendorName }); // Change based on the current vendor
-  
-    // Simple selection logic for background color based on vendor name
-    const backgroundColor = vendorName === 'Plaisio' ? '#f84632' :
-                            vendorName === 'AnotherShop' ? '#2196F3' : '#FFC107'; // Default fallback color
-
     return (
         <div id="root" className="clr">
-      <section className="merchant-hero root_wrapper" style={{ background: backgroundColor, borderBottom: 0 }}>
+      <section className="merchant-hero root_wrapper" style={{ background: '#f84632', borderBottom: 0 }}>
         <div className="root">
           <div className="merchant-trail">
             <nav className="breadcrumb">
