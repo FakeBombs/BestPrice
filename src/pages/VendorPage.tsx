@@ -71,6 +71,8 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     const displayedVendor = vendorName ? 
     vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
 
+    const additionalLocations = selectedVendor.location && selectedVendor.location.length > 1 ? selectedVendor.location.length - 1 : 0;
+
     useEffect(() => {
         if (displayedVendor) {
             setSelectedVendor(displayedVendor);
@@ -207,12 +209,12 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                         <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
                                                             <use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use>
                                                         </svg>
-                                                        <span className="ui-kit__text">{selectedVendor.location ? selectedVendor.location.join(', ') : 'No locations available'}</span>
+                                                        <span className="ui-kit__text">{selectedVendor.location && selectedVendor.location.length > 0 ? selectedVendor.location.slice(0, 1).join(', ') : 'No locations available'}</span>
                                                     </a>
                                                 </li>
                                                 <li data-type="storesCount">
                                                     <a href="/m/1234/myshop.html#merchant-map">
-                                                        <small className="ui-kit__small ui-kit__muted">10 more stores</small> {/* Update this dynamically if necessary */}
+                                                        <small className="ui-kit__small ui-kit__muted">{additionalLocations > 0 ? `${additionalLocations} more stores` : 'No more stores'}</small>
                                                     </a>
                                                 </li>
                                             </ul>
