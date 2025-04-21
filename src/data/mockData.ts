@@ -227,14 +227,86 @@ export interface Vendor {
 }
 
 export const vendors: Vendor[] = [
-  { id: 1, name: 'You', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5, url: 'https://www.you.gr', telephone: ['211 9991900'], location: ['Αργυρουπόλεως 2Α, Καλλιθέα'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 2, name: 'Plaisio', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', rating: 4.2, url: 'https://www.plaisio.gr', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 3, name: 'Public', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', rating: 4.7, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 4, name: 'Κωτσόβολος', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', rating: 4.0, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 5, name: 'Funky Buddha', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', rating: 4.3, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 6, name: 'Germanos', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', rating: 4.1, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 7, name: 'e-shop.gr', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', rating: 3.2, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
-  { id: 8, name: 'Χαμόγελο του Παιδιού', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', rating: 4.7, url: 'https://example.com/vendor-b', telephone: ['456123789'], location: ['Location C'], paymentMethods: [ PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn ]} },
+  { 
+    id: 1, 
+    name: 'You', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', 
+    rating: 4.5, 
+    url: 'https://www.you.gr', 
+    telephone: ['211 9991900'], 
+    location: ['Αργυρουπόλεως 2Α, Καλλιθέα'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 2, 
+    name: 'Plaisio', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', 
+    rating: 4.2, 
+    url: 'https://www.plaisio.gr', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 3, 
+    name: 'Public', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', 
+    rating: 4.7, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 4, 
+    name: 'Κωτσόβολος', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', 
+    rating: 4.0, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 5, 
+    name: 'Funky Buddha', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', 
+    rating: 4.3, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 6, 
+    name: 'Germanos', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', 
+    rating: 4.1, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 7, 
+    name: 'e-shop.gr', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', 
+    rating: 3.2, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
+  { 
+    id: 8, 
+    name: 'Χαμόγελο του Παιδιού', 
+    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', 
+    rating: 4.7, 
+    url: 'https://example.com/vendor-b', 
+    telephone: ['456123789'], 
+    location: ['Location C'], 
+    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+  },
 ];
 
 // Product price from vendor
