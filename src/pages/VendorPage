@@ -1,0 +1,25 @@
+import { useParams, Link } from 'react-router-dom';
+import { vendors } from '@/data/mockData';
+
+const VendorPage = () => {
+  const { id, vendorSlug } = useParams();
+  const vendor = vendors.find(v => v.id === parseInt(id));
+
+  // Ensure the slug matches the vendor name
+  const expectedSlug = vendor ? vendor.name.toLowerCase().replace(/ /g, '-') : '';
+
+  if (!vendor || vendorSlug !== expectedSlug) {
+    return <div>Vendor not found!</div>;
+  }
+
+  return (
+    <div>
+      <h1>{vendor.name}</h1>
+      <img src={vendor.logo} alt={`${vendor.name} logo`} />
+      <p>Rating: {vendor.rating}</p>
+      {/* Include more vendor details as necessary */}
+    </div>
+  );
+};
+
+export default VendorPage;
