@@ -193,26 +193,6 @@ export const categories: Category[] = [
   { id: 157, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 123, image: '//placehold.co/200x150?text=Bluetooth+Adapter' }
 ];
 
-// Payment Methods Enum
-export enum PaymentMethod {
-  COD = "Αντικαταβολή",
-  CreditCard = "Πιστωτικές κάρτες",
-  PayPal = "PayPal",
-  BankTransfer = "Τραπεζική κατάθεση",
-  VivaPayments = "Viva Payments",
-  Paysafecard = "Paysafecard",
-  Courier = "Ταχυμεταφορά (Courier)",
-  NetworkPickup = "Παραλαβή από δίκτυο",
-  TransportCompany = "Μεταφορική εταιρία",
-  PickupVia = "Παραλαβή μέσω",
-  FreeReturn = "Δωρεάν επιστροφή",
-  PointsCollection = "Συλλογή πόντων",
-  GiftCards = "Δωροκάρτες",
-  ExtendedWarranty = "Επέκταση εγγύησης",
-  WeddingList = "Λίστα γάμου/μωρού",
-  DeviceRecycling = "Ανακύκλωση συσκευών"
-}
-
 // Vendors
 export interface Vendor {
   id: number; 
@@ -254,7 +234,7 @@ export const vendors: Vendor[] = [
     url: 'https://www.public.gr', 
     telephone: ['210 8181333'], 
     location: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
-    paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling] 
+    paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling] 
   },
   { 
     id: 4, 
