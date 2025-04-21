@@ -7,16 +7,16 @@ import { useTranslation } from '@/hooks/useTranslation';
 const Stores = () => {
   const { t } = useTranslation();
   const slugify = (text) => {
-    return text
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, '-')    // Replace spaces with hyphens
-        .replace(/[\/\\]/g, '-') // Replace slashes and backslashes with hyphens
-        .replace(/[^\w\-]+/g, '') // Remove any non-word characters
-        .replace(/\-\-+/g, '-')   // Replace multiple hyphens with a single hyphen
-        .replace(/^-+/, '')       // Trim hyphens from start
-        .replace(/-+$/, '');      // Trim hyphens from end
-  };
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w\-]+/g, '') // Remove any non-word characters except hyphens
+    .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+    .replace(/^-+/, '') // Trim hyphens from start
+    .replace(/-+$/, ''); // Trim hyphens from end
+};
   return (
     <div className="root__wrapper">
       <div className="root">
@@ -82,32 +82,26 @@ const Stores = () => {
         <main id="merchant-listing">
           <ul className="merchants-listing grid" data-pagination="">
             {vendors.map((vendor) => {
-              // Use slugify function here
+              // Create a slug for the vendor's name
               const vendorSlug = slugify(vendor.name);
-
-              // Debugging: Check slug output
-              console.log(`Vendor ID: ${vendor.id}, Vendor Name: ${vendor.name}, Slug: ${vendorSlug}`);
-
-              // If the slug is empty, use a fallback
-              const safeVendorSlug = vendorSlug || `vendor-${vendor.id}`; // Fallback to a unique ID
     return (
         <li className="merchants__merchant g-1 g-lg-2" key={vendor.id}>
             <div className="merchants-listing__thumb-container" data-id={vendor.id}>
                 <svg aria-hidden="true" className="icon merchants-listing__certification-icon" width="22" height="22">
                   {/* SVG paths here */}
                 </svg>
-                <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${safeVendorSlug}.html`}>
+                <Link className="merchants-listing__thumb" to={`/m/${vendor.id}/${vendorSlug}.html`}>
                     <img src={vendor.logo} loading="lazy" alt={vendor.name} />
                 </Link>
             </div>
             <div className="merchants-listing__details">
                 <h3>
-                    <Link to={`/m/${vendor.id}/${safeVendorSlug}.html`} title={vendor.name}>
+                    <Link to={`/m/${vendor.id}/${vendorSlug}.html`} title={vendor.name}>
                         {vendor.name}
                     </Link>
                 </h3>
                 <p className="merchants-listing__counts">247.725 προϊόντα<span className="hide-mobile"> σε 1.627 κατηγορίες</span></p>
-                <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${safeVendorSlug}.html#reviews`}>
+                <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendorSlug}.html#reviews`}>
                     <span className="rating rating-all" data-total="519">
                         <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
                         <span className="text-sm">{vendor.rating.toFixed(1)}/5.0</span>
