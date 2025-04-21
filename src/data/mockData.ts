@@ -222,7 +222,6 @@ export interface Vendor {
   url: string;
   telephone: string[]; // Multiple telephone numbers
   location?: string[]; // Optional multiple locations
-  domain: string; // Required domain
   paymentMethods: PaymentMethod[]; // List of payment methods offered
 }
 
@@ -244,8 +243,8 @@ export const vendors: Vendor[] = [
     rating: 4.2, 
     url: 'https://www.plaisio.gr', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
+    location: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
+    paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling] 
   },
   { 
     id: 3, 
