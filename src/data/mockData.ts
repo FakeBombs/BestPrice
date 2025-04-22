@@ -193,7 +193,6 @@ export const categories: Category[] = [
   { id: 157, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 123, image: '//placehold.co/200x150?text=Bluetooth+Adapter' }
 ];
 
-// Vendors
 export interface Vendor {
   id: number; 
   name: string;
@@ -202,7 +201,8 @@ export interface Vendor {
   url: string;
   certification: string;
   telephone: string[]; // Multiple telephone numbers
-  location?: string[]; // Optional multiple locations
+  location?: { lat: number; lng: number }[]; // Optional multiple locations defined by lat/lng
+  address?: string[]; // Optional multiple addresses
   paymentMethods: PaymentMethod[]; // List of payment methods offered
 }
 
@@ -235,7 +235,8 @@ export const vendors: Vendor[] = [
     certification: 'Bronze', 
     url: 'https://www.you.gr', 
     telephone: ['211 9991900'], 
-    location: ['Αργυρουπόλεως 2Α, Καλλιθέα'], 
+    address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], 
+    location: [{ lat: 37.9337, lng: 23.7004 }], // Add random latitude and longitude
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
   { 
@@ -246,7 +247,8 @@ export const vendors: Vendor[] = [
     certification: 'Silver', 
     url: 'https://www.plaisio.gr', 
     telephone: ['456123789'], 
-    location: ['Location B'], 
+    address: ['Location B'], 
+    location: [{ lat: 37.9838, lng: 23.7275 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty] 
   },
   { 
@@ -257,7 +259,8 @@ export const vendors: Vendor[] = [
     certification: 'Gold', 
     url: 'https://www.public.gr', 
     telephone: ['210 8181333'], 
-    location: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
+    address: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
+    location: [{ lat: 38.0747, lng: 23.7582 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling] 
   },
   { 
@@ -268,7 +271,8 @@ export const vendors: Vendor[] = [
     certification: 'Gold',
     url: 'https://example.com/vendor-b', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
+    address: ['Location C'], 
+    location: [{ lat: 37.9090, lng: 23.7105 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
   { 
@@ -278,7 +282,8 @@ export const vendors: Vendor[] = [
     rating: 4.3,
     url: 'https://example.com/vendor-b', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
+    address: ['Location C'], 
+    location: [{ lat: 37.9500, lng: 23.6000 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
   { 
@@ -289,7 +294,8 @@ export const vendors: Vendor[] = [
     certification: '',
     url: 'https://example.com/vendor-b', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
+    address: ['Location C'], 
+    location: [{ lat: 37.9700, lng: 23.7350 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
   { 
@@ -300,7 +306,8 @@ export const vendors: Vendor[] = [
     certification: 'Gold',
     url: 'https://example.com/vendor-b', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
+    address: ['Location C'], 
+    location: [{ lat: 38.0100, lng: 23.6000 }], // Random latitude and longitude
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
   { 
@@ -311,7 +318,8 @@ export const vendors: Vendor[] = [
     certification: 'Bronze',
     url: 'https://example.com/vendor-b', 
     telephone: ['456123789'], 
-    location: ['Location C'], 
+    address: ['Location C'], 
+    location: [{ lat: 37.9200, lng: 23.5400 }], // Random latitude and longitude 
     paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
   },
 ];
