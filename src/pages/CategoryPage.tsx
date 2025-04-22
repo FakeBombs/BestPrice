@@ -116,20 +116,20 @@ const CategoryPage: React.FC = () => {
       </div>
       <div className="root-category__categories">
         {subcategories.length > 0 ? (
-         subcategories.map((subCat) => (
-          <div key={subCat.id} className="root-category__category">
-            <Link to={`/cat/${subCat.id}/${subCat.slug}`} class="root-category__cover">
-              <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-            </Link>
-            <h2 class="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>Κινητή Τηλεφωνία</Link></h2>
-            <div class="root-category__footer">
-              <div class="root-category__links">
-                <a href="/cat/813/bluetooth.html?bpref=root-category-subcat">Bluetooth Handsfree</a>
+          subcategories.map((subCat) => (
+            <div key={subCat.id} className="root-category__category">
+              <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
+              <h2 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h2>
+              <div className="root-category__footer">
+                <div className="root-category__links">
+                  {subCat.subcategories && subCat.subcategories.length > 0 ? (
+                    subCat.subcategories.map((subSubCat) => ( <a key={subSubCat.id} href={`/cat/${subSubCat.id}/${subSubCat.slug}`}>{subSubCat.name}</a> ))
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-        ))
-      )}
+          ))
+        ) : null}
       </div>
     </div>
   );
