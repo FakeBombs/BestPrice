@@ -390,7 +390,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 <div class="scroll__clip">
                                     <div class="scroll__scroller">
                                         <div class="merchant-map__pops grid scroll__content">
-                                            {vendors.map(vendor => (
+                                            {vendors.filter(vendor => vendor.id === selectedVendor).map(vendor => (
                                                 vendor.address.map((addr, index) => (
                                                     <div className="merchant-map__pop-wrapper" key={`${vendor.id}-${index}`}>
                                                         <div className="merchant-map__pop pressable" data-id={vendor.id}>
