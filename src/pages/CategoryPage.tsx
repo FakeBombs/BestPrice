@@ -115,19 +115,21 @@ const CategoryPage: React.FC = () => {
         </div>
       </div>
       <div className="root-category__categories">
-        {mainCategories.map((cat) => (
-          <div key={cat.id} className="root-category__category">
-            <Link to={`/cat/${cat.id}/${cat.slug}`} class="root-category__cover">
-              <img src={cat.image} alt={cat.name} title={cat.name} />
+        {subcategories.length > 0 ? (
+         subcategories.map((subCat) => (
+          <div key={subCat.id} className="root-category__category">
+            <Link to={`/cat/${subCat.id}/${subCat.slug}`} class="root-category__cover">
+              <img src={subCat.image} alt={subCat.name} title={subCat.name} />
             </Link>
-            <h2 class="root-category__category-title"><Link to={`/cat/${cat.id}/${cat.slug}`}>Κινητή Τηλεφωνία</Link></h2>
+            <h2 class="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>Κινητή Τηλεφωνία</Link></h2>
             <div class="root-category__footer">
               <div class="root-category__links">
                 <a href="/cat/813/bluetooth.html?bpref=root-category-subcat">Bluetooth Handsfree</a>
               </div>
             </div>
           </div>
-        ))}
+        ))
+      )}
       </div>
     </div>
   );
