@@ -58,7 +58,7 @@ const CategoryPage: React.FC = () => {
     let category = currentCategory;
     while (category) {
       breadcrumbs.unshift(
-        <li key={category.id}><Link to={`/cat/${mainCatId}/${mainCatSlug}.html`}>{category.name}</Link></li>
+        <li key={category.id}><Link to={`/cat/${mainCatId}/${mainCatSlug}`}>{category.name}</Link></li>
       );
       category = categories.find(cat => cat.id === category.parentId);
     }
@@ -99,11 +99,11 @@ const CategoryPage: React.FC = () => {
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`} className="root-category__cover">
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
                   <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                 </Link>
                 <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`}>{subCat.name}</Link>
+                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
                 </h2>
               </div>
             ))
@@ -133,11 +133,11 @@ const CategoryPage: React.FC = () => {
     {subcategories.length > 0 ? (
       subcategories.map((subCat) => (
         <div key={subCat.id} className="root-category__category">
-          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`} className="root-category__cover">
+          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
             <img src={subCat.image} alt={subCat.name} title={subCat.name} />
           </Link>
           <h2 className="root-category__category-title">
-            <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`}>{subCat.name}</Link>
+            <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
           </h2>
         </div>
       ))
