@@ -96,34 +96,37 @@ const CategoryPage: React.FC = () => {
           </div>
         </div>
         <div className="root-category__categories">
-  {subcategories.length > 0 ? (
-    subcategories.map((subCat) => (
-      <div key={subCat.id} className="root-category__category">
-        <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-          <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-        </Link>
-        <h2 className="root-category__category-title">
-          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-        </h2>
-        <div className="root-category__footer">
-          <div className="root-category__links">
-            {subcategories
-              .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)  // Filter to find subCats of the current subCat
-              .map((linkedSubCat, index, arr) => (
-                <span key={linkedSubCat.id}>
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>
-                    {linkedSubCat.name}
-                  </Link>
-                  {index < arr.length - 1 && ', '} {/* Add comma except for the last item */}
-                </span>
-              ))}
+  {mainCategories.map((mainCat) => (
+    <div key={mainCat.id} className="root-category__category">
+      <h2 className="root-category__category-title">{mainCat.name}</h2>
+      {categories
+        .filter(subCat => subCat.parentId === mainCat.id) // Get subcategories for the main category
+        .map((subCat) => (
+          <div key={subCat.id} className="root-category__subcategory">
+            <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover">
+              <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+            </Link>
+            <h3 className="root-category__subcategory-title">
+              <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link>
+            </h3>
+            <div className="root-category__footer">
+              <div className="root-category__links">
+                {categories
+                  .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Get linked subcategories for the current subcategory
+                  .map((linkedSubCat, index, arr) => (
+                    <span key={linkedSubCat.id}>
+                      <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
+                        {linkedSubCat.name}
+                      </Link>
+                      {index < arr.length - 1 && ', '} {/* Add comma except for the last item */}
+                    </span>
+                  ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    ))
-  ) : (
-    <p>No subcategories available for this category.</p>
-  )}
+        ))}
+    </div>
+  ))}
 </div>
       </div>
     );
