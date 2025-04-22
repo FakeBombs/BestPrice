@@ -135,7 +135,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
             {selectedVendor.certification && (
             <div className={`merchant-certified--wrapper merchant-certified--${selectedVendor.certification.toLowerCase()} root__wrapper`}>
                 <div className="root merchant-certified">
-                    <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                    <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`https://www.bestprice.gr/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
                     <span className="hide-tablet">Certified Store (<Link to="/certification">{selectedVendor.certification}</Link>)</span>
                     <span className="hide-mobile">{selectedVendor.name} is a certified store (<b data-certification={selectedVendor.certification.toLowerCase()}>{selectedVendor.certification}</b>)</span>
                 </div>
