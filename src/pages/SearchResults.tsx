@@ -258,7 +258,6 @@ const SearchResults = () => {
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
                                         <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
-                                                <img src={item.image} alt={`Category ${item.category}`} width="200" height="200" />
                                                 <span>{item.category} ({item.count})</span>
                                             </Link>
                                         </li>
