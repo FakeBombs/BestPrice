@@ -226,14 +226,29 @@ const SearchResults = () => {
                             </a>
                         </h2>
                     ))}
-                    {activeFilters.certifications.map((certification) => (
-                        <h2 className="applied-filters__filter" key={certification}>
-                            <span className="applied-filters__label">{certification}</span>
-                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove certification filter" onClick={() => handleVendorFilter({ certification })}>
-                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                            </svg>
+                    {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+                      specValues.map((specValue) => (
+                        <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                            <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
+                                <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                                    <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                                </svg>
+                            </a>
                         </h2>
-                    ))}
+                      ))
+                    )}
+                    {activeFilters.certifications.map((certification) => {
+                      const vendor = certifiedVendors.find(v => v.certification === certification);
+                      return vendor ? (
+                          <h2 className="applied-filters__filter" key={vendor.id}>
+                              <span className="applied-filters__label">{vendor.name}</span>
+                              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove certification filter" onClick={() => handleVendorFilter(vendor)}>
+                                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                              </svg>
+                          </h2>
+                      ) : null;
+                    })}
                     <button onClick={handleResetFilters}>
                         <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters">
                             <use xlinkHref="/public/dist/images/icons/icons.svg#icon-refresh"></use>
