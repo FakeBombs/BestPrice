@@ -90,6 +90,12 @@ const SearchResults = () => {
     setCertifiedVendors(vendorArray);
     };
 
+    // Sort vendors by priority Gold (3), Silver (2), Bronze (1)
+    const sortedVendors = certifiedVendors.sort((a, b) => {
+        const levels = { Gold: 3, Silver: 2, Bronze: 1 };
+        return levels[b.certification] - levels[a.certification]; // Sort descending
+    });
+
     const filterProducts = (brands, specs, inStockOnly, results) => {
         let filtered = results;
         if (inStockOnly) {
@@ -261,12 +267,13 @@ const SearchResults = () => {
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
                                     <ol>
-                                        {certifiedVendors.length > 0 ? certifiedVendors.map(vendor => (
-                                            <li key={vendor.id} onClick={() => handleVendorFilter(vendor)} style={{ cursor: 'pointer' }}>
-                                                <span>{vendor.name} ({vendor.certification})</span>
-                                            </li>
-                                        )) : <li>No certified vendors found.</li>}
+                                        {sortedVendors.map(vendor => (
+                                            <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`}><a data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} style={{ cursor: 'pointer' }} onClick={() => handleVendorFilter(vendor)}><span>{vendor.name}</span></a></li>
+                                    ))}
                                     </ol>
+                                    {sortedVendors.length > 8 && (
+                                        <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" onClick={() => setShowMoreCategories(prev => !prev)}><svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>Εμφάνιση όλων</div>
+                                    )}
                                 </div>
                             </div>
 
