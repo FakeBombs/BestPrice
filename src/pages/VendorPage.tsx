@@ -186,6 +186,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                         </a>
                                                     </span>
                                                 </li>
+                                                <li><span class="id__status id__status--ready id__status--open"><span class="status-dot"></span><span class="ui-kit__small">Ανοιχτό μέχρι τις 21:00</span></span></li>
                                             </ul>
                                         </div>
                                         <div>
