@@ -172,14 +172,21 @@ const SearchResults = () => {
     };
 
     const handleVendorFilter = (vendor) => {
-        const newCertification = activeFilters.certification.includes(vendor.certification)
-            ? activeFilters.certification.filter((l) => l !== vendor.certification)
-            : [vendor.certification];
+    // Update the activeFilters to indicate which vendor is selected
+    setActiveFilters((prev) => ({ ...prev, certification: [vendor.certification] })); // Optional: still track certification
 
-        setActiveFilters((prev) => ({ ...prev, certification: newCertification }));
-        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products.filter(product =>
-            (product.vendors || []).includes(vendor.id) 
-        ));
+    // Filter products based on the selected vendor's ID
+    const filteredByVendor = products.filter(product =>
+        (product.prices || []).some(price => price.vendorId === vendor.id)
+    );
+
+    // Update filtered products with vendor-specific results
+    filterProducts(
+        activeFilters.brands, 
+        activeFilters.specs, 
+        activeFilters.inStockOnly, 
+        filteredByVendor
+      );
     };
 
     const renderAppliedFilters = () => {
@@ -221,11 +228,9 @@ const SearchResults = () => {
                                     ))}
                                 </ol>
                                 {availableCategories.length > 8 && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title={showMoreCategories ? "Show less categories" : "Show all categories"}>
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
-                                        </svg>
-                                        {showMoreCategories ? "Show less" : "Show all"}
+                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
+                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>
+                                        {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
                                     </div>
                                 )}
                             </div>
@@ -249,15 +254,7 @@ const SearchResults = () => {
                                 Object.keys(availableSpecs).map((specKey) => (
                                     <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                                         <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container">
-                                            <ol>
-                                                {Array.from(availableSpecs[specKey]).map((specValue) => (
-                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
-                                                        <span>{specValue}</span>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </div>
+                                        <div className="filter-container"><ol>{Array.from(availableSpecs[specKey]).map((specValue) => ( <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li> ))}</ol></div>
                                     </div>
                                 ))
                             )}
@@ -269,7 +266,7 @@ const SearchResults = () => {
                                     <ol>
                                         {sortedVendors.map(vendor => (
                                             <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`}><a data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} style={{ cursor: 'pointer' }} onClick={() => handleVendorFilter(vendor)}><span>{vendor.name}</span></a></li>
-                                    ))}
+                                        ))}
                                     </ol>
                                     {sortedVendors.length > 8 && (
                                         <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" onClick={() => setShowMoreCategories(prev => !prev)}><svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>Εμφάνιση όλων</div>
@@ -280,18 +277,7 @@ const SearchResults = () => {
                             <div className="filter-in-stock default-list">
                                 <div className="filter__header"><h4>In Stock</h4></div>
                                 <div className="filter-container">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={activeFilters.inStockOnly}
-                                            onChange={() => {
-                                                const newInStockOnly = !activeFilters.inStockOnly;
-                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.brands, activeFilters.specs, newInStockOnly, products);
-                                            }} 
-                                        />
-                                        Show only in-stock products
-                                    </label>
+                                    <label><input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => { const newInStockOnly = !activeFilters.inStockOnly; setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly })); filterProducts(activeFilters.brands, activeFilters.specs, newInStockOnly, products); }} />Άμεσα διαθέσιμα</label>
                                 </div>
                             </div>
 
