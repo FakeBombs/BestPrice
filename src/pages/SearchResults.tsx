@@ -4,14 +4,17 @@ import { searchProducts, categories, vendors } from '@/data/mockData'; // Ensure
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
+const MAX_DISPLAY_COUNT = 10;
+
 const SearchResults = () => {
-    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, certification: null });
+    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [availableBrands, setAvailableBrands] = useState({});
     const [availableSpecs, setAvailableSpecs] = useState({});
     const [availableCategories, setAvailableCategories] = useState([]);
     const [showMoreCategories, setShowMoreCategories] = useState(false);
+    const [showMoreVendors, setShowMoreVendors] = useState(false);
     const [certifiedVendors, setCertifiedVendors] = useState([]);
     const [sortType, setSortType] = useState('rating-desc');
     const [searchParams] = useSearchParams();
@@ -20,7 +23,7 @@ const SearchResults = () => {
     useEffect(() => {
         const results = searchProducts(searchQuery);
         setProducts(results);
-        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certification: null });
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
         extractAvailableFilters(results);
         extractCategories(results);
         updateCertifiedVendors(results);
@@ -29,7 +32,7 @@ const SearchResults = () => {
     }, [searchQuery]);
 
     useEffect(() => {
-        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.certification);
+        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.certifications);
     }, [activeFilters, sortType, products]);
 
     const extractAvailableFilters = (results) => {
@@ -90,9 +93,7 @@ const SearchResults = () => {
         setCertifiedVendors(vendorArray);
     };
 
-    const sortedVendors = certifiedVendors;
-
-    const filterProducts = (brands, specs, inStockOnly, results, selectedCertification) => {
+    const filterProducts = (brands, specs, inStockOnly, results, certifications) => {
         let filtered = results;
 
         if (inStockOnly) {
@@ -103,11 +104,11 @@ const SearchResults = () => {
             filtered = filtered.filter((product) => brands.includes(product.brand));
         }
 
-        if (selectedCertification) {
+        if (certifications.length > 0) {
             filtered = filtered.filter(product =>
                 (product.prices || []).some(price => {
                     const vendor = vendors.find(v => v.id === price.vendorId);
-                    return vendor && vendor.certification === selectedCertification;
+                    return vendor && certifications.includes(vendor.certification);
                 })
             );
         }
@@ -180,22 +181,18 @@ const SearchResults = () => {
     };
 
     const handleVendorFilter = (vendor) => {
-        const newCertification = activeFilters.certification === vendor.certification ? null : vendor.certification;
-        setActiveFilters((prev) => ({ ...prev, certification: newCertification })); // Optional: still track certification
+        const newCertifications = activeFilters.certifications.includes(vendor.certification)
+            ? activeFilters.certifications.filter(c => c !== vendor.certification)
+            : [...activeFilters.certifications, vendor.certification];
 
-        // Filter products based on the selected vendor's ID
-        filterProducts(
-            activeFilters.brands, 
-            activeFilters.specs, 
-            activeFilters.inStockOnly, 
-            products, 
-            newCertification
-        );
+        setActiveFilters((prev) => ({ ...prev, certifications: newCertifications }));
+
+        // No need to filter here since handled in effect
     };
 
     const renderAppliedFilters = () => {
         return (
-            (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.certification) && (
+            (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.certifications.length > 0) && (
                 <div className="applied-filters">
                     {activeFilters.brands.map((brand) => (
                         <h2 className="applied-filters__filter" key={brand}>
@@ -207,14 +204,14 @@ const SearchResults = () => {
                             </a>
                         </h2>
                     ))}
-                    {activeFilters.certification && (
-                        <h2 className="applied-filters__filter">
-                            <span className="applied-filters__label">{activeFilters.certification}</span>
-                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" onClick={() => handleVendorFilter({ certification: activeFilters.certification })}>
+                    {activeFilters.certifications.map((certification) => (
+                        <h2 className="applied-filters__filter" key={certification}>
+                            <span className="applied-filters__label">{certification}</span>
+                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" onClick={() => handleVendorFilter({ certification })}>
                                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                             </svg>
                         </h2>
-                    )}
+                    ))}
                 </div>
             )
         );
@@ -231,7 +228,7 @@ const SearchResults = () => {
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
+                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
                                         <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
                                                 <span>{item.category} ({item.count})</span>
@@ -239,9 +236,9 @@ const SearchResults = () => {
                                         </li>
                                     ))}
                                 </ol>
-                                {availableCategories.length > 8 && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>
+                                {availableCategories.length > MAX_DISPLAY_COUNT && (
+                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
+                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>
                                         {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
                                     </div>
                                 )}
@@ -266,7 +263,9 @@ const SearchResults = () => {
                                 Object.keys(availableSpecs).map((specKey) => (
                                     <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                                         <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container"><ol>{Array.from(availableSpecs[specKey]).map((specValue) => ( <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li> ))}</ol></div>
+                                        <div className="filter-container"><ol>{Array.from(availableSpecs[specKey]).map((specValue) => (
+                                            <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
+                                        ))}</ol></div>
                                     </div>
                                 ))
                             )}
@@ -276,12 +275,22 @@ const SearchResults = () => {
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
                                     <ol>
-                                        {sortedVendors.map(vendor => (
-                                            <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`}><a data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} style={{ cursor: 'pointer' }} onClick={() => handleVendorFilter(vendor)}><span>{vendor.name}</span></a></li>
+                                        {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
+                                            <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} 
+                                                className={activeFilters.certifications.includes(vendor.certification) ? 'selected' : ''}
+                                                onClick={() => handleVendorFilter(vendor)}>
+                                                <span>{vendor.name}</span>
+                                            </li>
                                         ))}
                                     </ol>
-                                    {sortedVendors.length > 8 && (
-                                        <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" onClick={() => setShowMoreCategories(prev => !prev)}><svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>Εμφάνιση όλων</div>
+                                    {certifiedVendors.length > MAX_DISPLAY_COUNT && (
+                                        <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" 
+                                            onClick={() => setShowMoreVendors(prev => !prev)}>
+                                            <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                                                <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                                            </svg>
+                                            {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -301,7 +310,7 @@ const SearchResults = () => {
                                                     activeFilters.specs, 
                                                     newInStockOnly, 
                                                     products,
-                                                    activeFilters.certification
+                                                    activeFilters.certifications
                                                 ); 
                                             }} 
                                         />Άμεσα διαθέσιμα
