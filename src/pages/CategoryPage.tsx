@@ -107,14 +107,25 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => (
-    <div>
-      <h2>Main Categories</h2>
-      <div className="main-categories">
+    <div class="page-header">
+      <div class="hgroup">
+        <div class="page-header__title-wrapper">
+          <a class="trail__back pressable" title="BestPrice.gr" href="/"><svg aria-hidden="true" class="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg></a>
+          {mainCategories.map((cat) => ( <h1 key={cat.id}>{cat.name}</h1> ))}
+        </div>
+      </div>
+      <div className="root-category__categories">
         {mainCategories.map((cat) => (
-          <div key={cat.id}>
-            <Link to={`/cat/${cat.id}/${cat.slug}`}>
-              <h3>{cat.name}</h3>
+          <div key={cat.id} className="root-category__category">
+            <Link to={`/cat/${cat.id}/${cat.slug}`} class="root-category__cover">
+              <img src={cat.image} alt={cat.name} title={cat.name} />
             </Link>
+            <h2 class="root-category__category-title"><Link to={`/cat/${cat.id}/${cat.slug}`}>Κινητή Τηλεφωνία</Link></h2>
+            <div class="root-category__footer">
+              <div class="root-category__links">
+                <a href="/cat/813/bluetooth.html?bpref=root-category-subcat">Bluetooth Handsfree</a>
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -157,11 +168,13 @@ const CategoryPage: React.FC = () => {
   );
 
   return (
-    <div>
-      {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
-      {renderMainCategories()}
-      {renderSubcategories()}
-      {currentCategory && currentCategory.parentId && renderProducts()} {/* Only show products if it's not a main category */}
+    <div class="root__wrapper root-category__root">
+      <div class="root">
+        {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
+        {renderMainCategories()}
+        {renderSubcategories()}
+        {currentCategory && currentCategory.parentId && renderProducts()} {/* Only show products if it's not a main category */}
+      </div>
     </div>
   );
 };
