@@ -1,8 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { searchProducts, categories, vendors } from '@/data/mockData'; // Ensure `vendors` is imported
+import { searchProducts, categories, vendors } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
+
+// Debounce function
+const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+};
 
 const MAX_DISPLAY_COUNT = 10;
 
@@ -19,9 +36,10 @@ const SearchResults = () => {
     const [sortType, setSortType] = useState('rating-desc');
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q') || '';
+    const debouncedSearchQuery = useDebounce(searchQuery, 300); // Using debounce
 
     useEffect(() => {
-        const results = searchProducts(searchQuery);
+        const results = searchProducts(debouncedSearchQuery);
         setProducts(results);
         setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
         extractAvailableFilters(results);
@@ -29,11 +47,11 @@ const SearchResults = () => {
         updateCertifiedVendors(results);
         const sortedResults = sortProducts(results);
         setFilteredProducts(sortedResults);
-    }, [searchQuery]);
+    }, [debouncedSearchQuery]);
 
     useEffect(() => {
         filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.certifications);
-    }, [activeFilters, sortType, products]);
+    }, [activeFilters, products]);
 
     const extractAvailableFilters = (results) => {
         const brandsCount = {};
@@ -186,8 +204,10 @@ const SearchResults = () => {
             : [...activeFilters.certifications, vendor.certification];
 
         setActiveFilters((prev) => ({ ...prev, certifications: newCertifications }));
+    };
 
-        // No need to filter here since handled in effect
+    const handleResetFilters = () => {
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
     };
 
     const renderAppliedFilters = () => {
@@ -198,7 +218,7 @@ const SearchResults = () => {
                         <h2 className="applied-filters__filter" key={brand}>
                             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
                                 <span className="applied-filters__label">{brand}</span>
-                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove filter" onClick={() => handleBrandFilter(brand)}>
                                     <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                                 </svg>
                             </a>
@@ -207,11 +227,17 @@ const SearchResults = () => {
                     {activeFilters.certifications.map((certification) => (
                         <h2 className="applied-filters__filter" key={certification}>
                             <span className="applied-filters__label">{certification}</span>
-                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" onClick={() => handleVendorFilter({ certification })}>
+                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove certification filter" onClick={() => handleVendorFilter({ certification })}>
                                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                             </svg>
                         </h2>
                     ))}
+                    <button onClick={handleResetFilters}>
+                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters">
+                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-refresh"></use>
+                        </svg>
+                        Reset Filters
+                    </button>
                 </div>
             )
         );
@@ -222,7 +248,8 @@ const SearchResults = () => {
             <div className="root">
                 <div className="page-products">
                     <aside className="page-products__filters">
-                        <div id="filters">
+                        <div id="filters" role="complementary" aria-labelledby="filters-header">
+                            <h2 id="filters-header">Filters</h2>
                             <div className="filters__categories" data-filter-name="categories">
                                 <div className="filters__header">
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
@@ -231,6 +258,7 @@ const SearchResults = () => {
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
                                         <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
+                                                <img src={item.image} alt={`Category ${item.category}`} width="200" height="200" />
                                                 <span>{item.category} ({item.count})</span>
                                             </Link>
                                         </li>
@@ -238,7 +266,9 @@ const SearchResults = () => {
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
                                     <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>
+                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                                            <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                                        </svg>
                                         {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
                                     </div>
                                 )}
@@ -263,9 +293,15 @@ const SearchResults = () => {
                                 Object.keys(availableSpecs).map((specKey) => (
                                     <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                                         <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container"><ol>{Array.from(availableSpecs[specKey]).map((specValue) => (
-                                            <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
-                                        ))}</ol></div>
+                                        <div className="filter-container">
+                                            <ol>
+                                                {Array.from(availableSpecs[specKey]).map((specValue) => (
+                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                                                        <span>{specValue}</span>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -344,7 +380,7 @@ const SearchResults = () => {
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
                                             <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
-                                                <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
+                                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
                                             </Link>
@@ -379,7 +415,7 @@ const SearchResults = () => {
                             <p>No products found matching your search.</p> 
                         ) : (
                             <div className="page-products__main-wrapper">
-                                <div className="p__products" data-pagination="">
+                                <div className="p__products" role="list">
                                     {filteredProducts.map((product) => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
