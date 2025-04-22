@@ -335,7 +335,9 @@ const SearchResults = () => {
                                             <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} 
                                                 className={activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}
                                                 onClick={() => handleVendorFilter(vendor)}>
-                                                <span>{vendor.name}</span>
+                                                <a href="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
+                                                    <span>{vendor.name}</span>
+                                                </a>
                                             </li>
                                         ))}
                                     </ol>
