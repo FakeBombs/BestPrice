@@ -6,11 +6,10 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatSlug, subSubCatSlug } = useParams<{
+  const { mainCatId, mainCatSlug, subCatSlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
     subCatSlug?: string;
-    subSubCatSlug?: string;
   }>(); 
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -150,41 +149,6 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-   // New render function for sub-subcategories
-  const renderSubSubCategories = () => {
-    const subSubcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-    return (
-      <div className="page-header">
-        <div className="hgroup">
-          <div className="page-header__title-wrapper">
-            <a className="trail__back pressable" title="BestPrice.gr" href="/">
-              <svg aria-hidden="true" className="icon" width={16} height={16}>
-                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-              </svg>
-            </a>
-            <h1>{currentCategory?.name}</h1>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subSubcategories.length > 0 ? (
-            subSubcategories.map((subSubCat) => (
-              <div key={subSubCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCatSlug}/${subSubCat.slug}.html`} className="root-category__cover">
-                  <img src={subSubCat.image} alt={subSubCat.name} title={subSubCat.name} />
-                </Link>
-                <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCatSlug}/${subSubCat.slug}.html`}>{subSubCat.name}</Link>
-                </h2>
-              </div>
-            ))
-          ) : (
-            <p>No sub-subcategories available for this category.</p>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   const renderProducts = () => (
     <div>
       <h2>Products</h2>
@@ -202,7 +166,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-        {subSubCatSlug ? renderSubSubCategories() : (subCatSlug ? renderSubcategories() : (currentCategory?.parentId ? renderMainCategories() : renderProducts()))}
+        {subCatSlug ? renderSubcategories() : (currentCategory?.parentId ? renderMainCategories() : renderProducts()))}
       </div>
     </div>
   );
