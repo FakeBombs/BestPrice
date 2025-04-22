@@ -96,21 +96,32 @@ const CategoryPage: React.FC = () => {
           </div>
         </div>
         <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+  {subcategories.length > 0 ? (
+    subcategories.map((subCat) => (
+      <div key={subCat.id} className="root-category__category">
+        <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
+          <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+        </Link>
+        <h2 className="root-category__category-title">
+          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
+        </h2>
+        <div className="root-category__footer">
+          <div className="root-category__links">
+            {subcategories
+              .filter(cat => cat.parentId === subCat.id || cat.parentId === currentCategory?.id)
+              .map(linkedSubCat => (
+                <Link key={linkedSubCat.id} to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>
+                  {linkedSubCat.name}
                 </Link>
-                <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                </h2>
-              </div>
-            ))
-          ) : (
-            <p>No subcategories available for this category.</p>
-          )}
+              ))}
+          </div>
         </div>
+      </div>
+    ))
+  ) : (
+    <p>No subcategories available for this category.</p>
+  )}
+</div>
       </div>
     );
   };
