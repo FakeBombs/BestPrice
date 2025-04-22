@@ -390,17 +390,15 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 <div class="scroll__clip">
                                     <div class="scroll__scroller">
                                         <div class="merchant-map__pops grid scroll__content">
-                                            {vendors.filter(vendor => vendor.id === selectedVendor).map(vendor => (
-                                                vendor.address.map((addr, index) => (
-                                                    <div className="merchant-map__pop-wrapper" key={`${vendor.id}-${index}`}>
-                                                        <div className="merchant-map__pop pressable" data-id={vendor.id}>
-                                                            <div className="merchant-map__pop-meta">
-                                                                <address itemProp="address" className="ui-kit__tertiary ui-kit__pb-2">{addr}</address>
-                                                                <small className="ui-kit__small ui-kit__muted">Κατάστημα / Παραλαβή</small>
-                                                            </div>
+                                            {selectedVendor.address.map((addr, index) => (
+                                                <div className="merchant-map__pop-wrapper" key={`${selectedVendor.id}-${index}`}>
+                                                    <div className="merchant-map__pop pressable" data-id={selectedVendor.id}>
+                                                        <div className="merchant-map__pop-meta">
+                                                            <address itemProp="address" className="ui-kit__tertiary ui-kit__pb-2">{addr}</address>
+                                                            <small className="ui-kit__small ui-kit__muted">Κατάστημα / Παραλαβή</small>
                                                         </div>
                                                     </div>
-                                                ))
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
