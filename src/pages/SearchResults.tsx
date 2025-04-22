@@ -74,15 +74,24 @@ const SearchResults = () => {
     };
 
     const updateCertifiedVendors = (results) => {
-        const vendorMap = new Map();
-        results.forEach(product => {
-            (product.vendors || []).forEach(vendorId => {
-                const vendor = vendors.find(v => v.id === vendorId);
-                if (vendor && vendor.certification) {
-                    vendorMap.set(vendor.id, vendor);
-                }
-            });
+    const vendorMap = new Map();
+    results.forEach(product => {
+        console.log("Checking product:", product); // Log products
+        (product.vendors || []).forEach(vendorId => {
+            const vendor = vendors.find(v => v.id === vendorId);
+            if (vendor && vendor.certification) {
+                console.log("Found vendor:", vendor); // Log found vendors
+                vendorMap.set(vendor.id, vendor);
+            }
         });
+    });
+    const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
+        const levels = { Gold: 3, Silver: 2, Bronze: 1 };
+        return levels[b.certification] - levels[a.certification];
+    });
+    setCertifiedVendors(vendorArray);
+    console.log("Certified vendors:", vendorArray); // Log certified vendors found
+};
 
         // Convert the Map to an array and sort by certification type
         const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
