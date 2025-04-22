@@ -132,19 +132,15 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                 </div>
             </section>
 
-            <div className="merchant-certified--wrapper merchant-certified--silver root__wrapper">
+            {selectedVendor.certification && (
+            <div className={`merchant-certified--wrapper merchant-certified--${selectedVendor.certification.toLowerCase()} root__wrapper`}>
                 <div className="root merchant-certified">
-                    <svg aria-hidden="true" className="icon" width="22" height="22">
-                        <use xlinkHref="/public/dist/images/icons/certification.svg#icon-silver-22"></use>
-                    </svg>
-                    <span className="hide-tablet">
-                        Certified Store (<Link to="/certification">Silver</Link>)
-                    </span>
-                    <span className="hide-mobile">
-                        {selectedVendor.name} is a certified store (<b data-certification="silver">Silver</b>)
-                    </span>
+                    <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                    <span className="hide-tablet">Certified Store (<Link to="/certification">{selectedVendor.certification}</Link>)</span>
+                    <span className="hide-mobile">{selectedVendor.name} is a certified store (<b data-certification={selectedVendor.certification.toLowerCase()}>{selectedVendor.certification}</b>)</span>
                 </div>
             </div>
+            )}
 
             <div className="masthead__wrapper root__wrapper">
                 <div className="root">
