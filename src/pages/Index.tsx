@@ -112,7 +112,7 @@ const Index = () => {
                       <svg aria-hidden="true" className="icon" width="16" height="16"><path d="M5.31495 0C6.35344 0.642754 7.33417 1.41701 8.04328 2.42354C9.05473 3.81105 9.54018 5.55252 9.43203 7.26325C10.0305 6.84171 10.4484 6.16085 10.4324 5.41365C11.3922 6.8749 12.0227 8.59668 12.1173 10.3529C12.2268 11.9777 11.5791 13.6343 10.382 14.7404C9.8081 15.3069 9.08669 15.6977 8.33947 15.989C8.86915 15.5404 9.37795 15.0292 9.60285 14.3556C9.97892 13.3184 9.80686 12.1164 9.20713 11.1972C8.70447 10.4082 8.02731 9.7298 7.64386 8.86584C7.36735 8.27715 7.26535 7.6258 7.24937 6.98058C6.31166 7.72412 5.66153 8.80807 5.44031 9.9842C5.26457 10.7744 5.29038 11.5905 5.37149 12.3906C4.52349 11.9936 4.14866 10.9981 4.30105 10.1108C3.5649 11.2402 3.12123 12.6338 3.38915 13.982C3.56612 14.8165 4.13268 15.4864 4.78773 16C3.27978 15.4347 1.97829 14.2733 1.39575 12.753C0.759141 11.1603 0.906619 9.2886 1.72266 7.7868C2.4797 6.38453 3.68534 5.2846 4.43378 3.87619C5.08759 2.69884 5.342 1.33713 5.31495 0V0Z"/></svg> 
                       {t('deals')}
                     </Link>
-                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.id}/${category.slug}.html?bpref=home-verticals`}>{t(category.name)}</Link> ))}
+                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.id}/${category.slug}?bpref=home-verticals`}>{t(category.name)}</Link> ))}
                   </div>
                   <div className="h-header__more pressable">
                     <svg aria-hidden="true" className="icon" width="12" height="12"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg>
