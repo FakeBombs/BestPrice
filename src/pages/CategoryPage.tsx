@@ -17,35 +17,21 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-    const categoryId = subCatId || mainCatId; // Accept subCatId or fallback to mainCatId
-    const categorySlug = subCatSlug || mainCatSlug;
+    const currentId = subCatId ? subCatId : mainCatId; // Get the current ID to find the category
+    const currentSlug = subCatSlug ? subCatSlug : mainCatSlug;
 
-    let foundCategoryId: number | undefined;
+    const foundId = parseInt(currentId || '0', 10); // Parse ID
 
-    if (mainCatId) {
-      foundCategoryId = parseInt(mainCatId, 10);
-      const foundMainCategory = mainCategories.find(cat => 
-        cat.id === foundCategoryId && cat.slug === categorySlug
-      );
-      if (foundMainCategory) {
-        setCurrentCategory(foundMainCategory);
-        return;
-      }
+    // Find the current category in mainCategories or categories
+    const foundCategory = subCatId
+      ? categories.find(cat => cat.id === foundId && cat.slug === currentSlug)
+      : mainCategories.find(cat => cat.id === foundId && cat.slug === currentSlug);
+
+    if (foundCategory) {
+      setCurrentCategory(foundCategory);
+    } else {
+      setCurrentCategory(undefined);
     }
-
-    if (subCatId) {
-      foundCategoryId = parseInt(subCatId, 10);
-      const foundSubCategory = categories.find(cat => 
-        cat.id === foundCategoryId && cat.slug === subCatSlug
-      );
-      if (foundSubCategory) {
-        setCurrentCategory(foundSubCategory);
-        return;
-      }
-    }
-
-    // If no category is found
-    setCurrentCategory(undefined);
   }, [mainCatId, mainCatSlug, subCatId, subCatSlug]);
 
   useEffect(() => {
@@ -104,7 +90,9 @@ const CategoryPage: React.FC = () => {
         <div className="hgroup">
           <div className="page-header__title-wrapper">
             <a className="trail__back pressable" title="BestPrice.gr" href="/">
-              <svg aria-hidden="true" className="icon" width={16} height={16}><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
+              <svg aria-hidden="true" className="icon" width={16} height={16}>
+                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+              </svg>
             </a>
             <h1>{currentCategory?.name}</h1>
           </div>
@@ -113,11 +101,11 @@ const CategoryPage: React.FC = () => {
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`} className="root-category__cover">
                   <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                 </Link>
                 <h2 className="root-category__category-title">
-                  <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                 </h2>
               </div>
             ))
@@ -136,11 +124,11 @@ const CategoryPage: React.FC = () => {
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => (
             <div key={subCat.id} className="root-category__category">
-              <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`} className="root-category__cover">
                 <img src={subCat.image} alt={subCat.name} title={subCat.name} />
               </Link>
               <h2 className="root-category__category-title">
-                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
               </h2>
             </div>
           ))
@@ -168,7 +156,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
-        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Distinguish between main and subcategories */}
+        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Render either subcategories or main categories */}
         {renderProducts()} {/* Show products only if they're present */}
       </div>
     </div>
