@@ -34,9 +34,10 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          {/* Consolidated Category Route */}
+          <Route path="/cat/:mainCatId/:mainCatSlug/:subCatId/:subCatSlug" element={<CategoryPage />} />
+          <Route path="/cat/:mainCatId/:mainCatSlug" element={<CategoryPage />} />
+          <Route path="/cat/:subCatId/:subCatSlug" element={<CategoryPage />} />
           <Route path="/cat/:categoryId/:slug" element={<CategoryPage />} />
-          {/* For Product Detail */}
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
