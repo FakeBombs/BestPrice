@@ -249,7 +249,6 @@ const SearchResults = () => {
                 <div className="page-products">
                     <aside className="page-products__filters">
                         <div id="filters" role="complementary" aria-labelledby="filters-header">
-                            <h2 id="filters-header">Filters</h2>
                             <div className="filters__categories" data-filter-name="categories">
                                 <div className="filters__header">
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
