@@ -19,69 +19,96 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-  let foundCategoryId: number | undefined = undefined;
+    let foundCategoryId: number | undefined = undefined;
 
-  if (mainCatId) {
-    foundCategoryId = parseInt(mainCatId, 10);
-    const foundCategory = mainCategories.find(cat => 
-      cat.id === foundCategoryId && cat.slug === mainCatSlug
-    );
-    if (foundCategory) {
-      setCurrentCategory(foundCategory);
-      return; // Stop additional checks if main category is found
+    if (mainCatId) {
+      foundCategoryId = parseInt(mainCatId, 10);
+      const foundCategory = mainCategories.find(cat => 
+        cat.id === foundCategoryId && cat.slug === mainCatSlug
+      );
+      if (foundCategory) {
+        setCurrentCategory(foundCategory);
+        return; 
+      }
     }
-  }
 
-  if (subCatId) {
-    foundCategoryId = parseInt(subCatId, 10);
-    const foundSubCategory = categories.find(cat => 
-      cat.id === foundCategoryId && cat.slug === subCatSlug
-    );
-    if (foundSubCategory) {
-      setCurrentCategory(foundSubCategory);
-      return; // Stop additional checks if subcategory is found
+    if (subCatId) {
+      foundCategoryId = parseInt(subCatId, 10);
+      const foundSubCategory = categories.find(cat => 
+        cat.id === foundCategoryId && cat.slug === subCatSlug
+      );
+      if (foundSubCategory) {
+        setCurrentCategory(foundSubCategory);
+        return; 
+      }
     }
-  }
 
-  if (urlCategoryId) {
-    foundCategoryId = parseInt(urlCategoryId, 10);
-    const foundLeafCategory = categories.find(cat => 
-      cat.id === foundCategoryId && cat.slug === categorySlug
-    );
+    if (urlCategoryId) {
+      foundCategoryId = parseInt(urlCategoryId, 10);
+      const foundLeafCategory = categories.find(cat => 
+        cat.id === foundCategoryId && cat.slug === categorySlug
+      );
 
-    if (foundLeafCategory) {
-      setCurrentCategory(foundLeafCategory);
-      return; // Stop additional checks if leaf category is found
+      if (foundLeafCategory) {
+        setCurrentCategory(foundLeafCategory);
+        return; 
+      }
     }
-  }
 
-  setCurrentCategory(undefined); // If no category found
-}, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
+    setCurrentCategory(undefined); 
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
 
-useEffect(() => {
-  if (!currentCategory) return;
+  useEffect(() => {
+    if (!currentCategory) return;
 
-  // Check if the selected category is a leaf category (has no subcategories)
-  const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id); 
+    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id); 
 
-  if (!isLeafCategory) {
-    // If it's a main category or subcategory, do not look for products
-    setFilteredProducts([]); // No products to display
-  } else {
-    // Load products for leaf categories only
-    const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
-    );
-    setFilteredProducts(productsToDisplay);
-  }
-}, [currentCategory, products]); // Ensure to include products in dependencies
+    if (!isLeafCategory) {
+      setFilteredProducts([]); 
+    } else {
+      const productsToDisplay = products.filter(product => 
+        product.categoryIds.includes(currentCategory.id)
+      );
+      setFilteredProducts(productsToDisplay);
+    }
+  }, [currentCategory, products]); 
 
-  // Handle category not found
   if (!currentCategory) {
     return <NotFound />;
   }
 
-  // Render main categories
+  // Render breadcrumbs
+  const renderBreadcrumbs = () => {
+    const breadcrumbs = [];
+
+    let category = currentCategory;
+    while (category) {
+      breadcrumbs.unshift(
+        <li key={category.id}>
+          <Link to={`/cat/${category.id}/${category.slug}`}>
+            {category.name}
+          </Link>
+        </li>
+      );
+      category = categories.find(cat => cat.id === category.parentId); // Move up the hierarchy
+    }
+
+    return (
+      <ol>
+        <li>
+          <Link to="/" rel="home">BestPrice</Link>
+          <span> › </span>
+        </li>
+        {breadcrumbs.map((crumb, index) => (
+          <React.Fragment key={index}>
+            {crumb}
+            {index < breadcrumbs.length - 1 && <span> › </span>}
+          </React.Fragment>
+        ))}
+      </ol>
+    );
+  };
+
   const renderMainCategories = () => (
     <div>
       <h2>Main Categories</h2>
@@ -97,7 +124,6 @@ useEffect(() => {
     </div>
   );
 
-  // Render subcategories
   const renderSubcategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
     return (
@@ -120,7 +146,6 @@ useEffect(() => {
     );
   };
 
-  // Render leaf products
   const renderProducts = () => (
     <div>
       <h2>Products</h2>
@@ -136,6 +161,7 @@ useEffect(() => {
 
   return (
     <div>
+      {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
       {renderMainCategories()}
       {renderSubcategories()}
       {currentCategory && currentCategory.parentId && renderProducts()} {/* Only show products if it's not a main category */}
