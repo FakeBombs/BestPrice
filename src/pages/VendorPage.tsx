@@ -353,6 +353,13 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     <div className="categories__cnt">99 products</div>
                                 </a>
                             </div>
+                            <div id="popular-categories" class="popular-categories">
+                                <div class="expand popular-categories__view-wrapper">
+                                    <Link className="button popular-categories__view-all" rel="nofollow" href={`/search?store=${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                        <span>Δες όλα τα προϊόντα<span className="hide-mobile"> του καταστήματος</span></span>
+                                    </Link>
+                                </div>
+                            </div>
                         </section>
 
                         {/* Reviews Section */}
