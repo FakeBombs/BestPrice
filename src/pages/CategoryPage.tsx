@@ -165,9 +165,8 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
-        {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
-        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Render based on the category type */}
-        {renderProducts()} {/* Show products only if they're present */}
+        {renderBreadcrumbs()}
+        {currentCategory?.parentId ? renderSubcategories() : currentCategory ? renderMainCategories() : renderProducts()}
       </div>
     </div>
   );
