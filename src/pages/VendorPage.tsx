@@ -66,17 +66,26 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     
     const { vendorId, vendorName } = useParams();
     const [selectedVendor, setSelectedVendor] = useState(null);
-    const [additionalLocations, setAdditionalLocations] = useState(0);
+    const [additionalAddresses, setAdditionalAddresses] = useState(0);
     const [loading, setLoading] = useState(true); // Loading state
 
     const displayedVendor = vendorName ? 
     vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
 
     useEffect(() => {
-    if (selectedVendor && selectedVendor.location) {
-        const count = selectedVendor.location.length > 1 ? selectedVendor.location.length - 1 : 0;
-        setAdditionalLocations(count);
-    }
+      if (vendorId) {
+        const foundVendor = vendors.find(v => v.id.toString() === vendorId);
+        setSelectedVendor(foundVendor);
+      }
+    }, [vendorId]);
+
+    // Set the additional address logic.
+    useEffect(() => {
+      if (selectedVendor) {
+        // This assumes selectedVendor contains the address and any locations you'd want to map
+        const additionalAdsCount = vendors.filter(v => v.id !== selectedVendor.id && v.address).length; 
+        setAdditionalAddresses(additionalAdsCount);
+      }
     }, [selectedVendor]);
 
     useEffect(() => {
@@ -209,15 +218,13 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 </li>
                                                 <li data-type="address">
                                                     <a href="/m/1234/myshop.html#merchant-map">
-                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use>
-                                                        </svg>
-                                                        <span className="ui-kit__text">{selectedVendor.location && selectedVendor.location.length > 0 ? selectedVendor.location.slice(0, 1).join(', ') : 'No locations available'}</span>
+                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
+                                                        <span className="ui-kit__text">{selectedVendor.address ? selectedVendor.address : 'No locations available'}</span>
                                                     </a>
                                                 </li>
                                                 <li data-type="storesCount">
                                                     <a href="/m/1234/myshop.html#merchant-map">
-                                                        <small className="ui-kit__small ui-kit__muted">{additionalLocations > 0 ? `${additionalLocations} more stores` : 'No more stores'}</small>
+                                                        <small className="ui-kit__small ui-kit__muted">{additionalAddresses > 0 ? `${additionalAddresses} more stores available` : 'No more stores'}</small>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -379,6 +386,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     {/* Map content will go here */}
                                 </div>
                             </div>
+                            
                         </section>
                     </div>
                 </div>
