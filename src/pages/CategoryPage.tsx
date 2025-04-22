@@ -78,7 +78,7 @@ useEffect(() => {
 
   // Handle category not found
   if (!currentCategory) {
-    return <h1>Category Not Found</h1>;
+    return <NotFound />;
   }
 
   // Render main categories
