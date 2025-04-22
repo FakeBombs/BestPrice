@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { searchProducts, categories, vendors, brands } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
@@ -7,17 +7,14 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 // Debounce function
 const useDebounce = (value, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
-
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedValue(value);
         }, delay);
-
         return () => {
             clearTimeout(handler);
         };
     }, [value, delay]);
-
     return debouncedValue;
 };
 
@@ -239,15 +236,15 @@ const SearchResults = () => {
                       ))
                     )}
                     {activeFilters.certifications.map((certification) => {
-                      const vendor = certifiedVendors.find(v => v.certification === certification);
-                      return vendor ? (
+                      const vendorsWithCertification = certifiedVendors.filter(v => v.certification === certification);
+                      return vendorsWithCertification.map(vendor => (
                           <h2 className="applied-filters__filter" key={vendor.id}>
                               <span className="applied-filters__label">{vendor.name}</span>
                               <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove certification filter" onClick={() => handleVendorFilter(vendor)}>
                                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                               </svg>
                           </h2>
-                      ) : null;
+                      ));
                     })}
                     <button onClick={handleResetFilters}>
                         <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters">
@@ -397,7 +394,11 @@ const SearchResults = () => {
                             </div>
                             {renderAppliedFilters()}
                             <section className="section">
-                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup">
+                                        <h2 className="section__title">Κατηγορίες</h2>
+                                    </hgroup>
+                                </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
