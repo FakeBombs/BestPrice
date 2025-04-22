@@ -6,13 +6,11 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug, categoryId: urlCategoryId, categorySlug } = useParams<{
+  const { mainCatId, mainCatSlug, subCatId, subCatSlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
     subCatId?: string;
     subCatSlug?: string;
-    categoryId?: string; 
-    categorySlug?: string;
   }>(); 
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -46,12 +44,9 @@ const CategoryPage: React.FC = () => {
       }
     }
 
-    // Additional category parsing if necessary
-    //...
-
     // If no category is found
     setCurrentCategory(undefined);
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug, urlCategoryId, categorySlug]);
+  }, [mainCatId, mainCatSlug, subCatId, subCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
@@ -102,7 +97,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => {
-    const subcategories = currentCategory ? categories.filter(cat => cat.parentId === currentCategory.id) : [];
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
 
     return (
       <div className="page-header">
@@ -124,18 +119,6 @@ const CategoryPage: React.FC = () => {
                 <h2 className="root-category__category-title">
                   <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                 </h2>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {/* Ensure that the data structure supports subcategories */}
-                    {subCat.subcategories?.length > 0 ? (
-                      subCat.subcategories.map((subSubCat) => (
-                        <a key={subSubCat.id} href={`/cat/${subSubCat.id}/${subSubCat.slug}`}>{subSubCat.name}</a>
-                      ))
-                    ) : (
-                      <p>No sub-subcategories available for this category.</p>
-                    )}
-                  </div>
-                </div>
               </div>
             ))
           ) : (
@@ -147,23 +130,23 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderSubcategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
-      <div>
-        <h2>Subcategories</h2>
-        <div className="subcategories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id}>
-                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>
-                  <h3>{subCat.name}</h3>
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p>No subcategories available for this category.</p>
-          )}
-        </div>
+      <div className="root-category__categories">
+        {subcategories.length > 0 ? (
+          subcategories.map((subCat) => (
+            <div key={subCat.id} className="root-category__category">
+              <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+              </Link>
+              <h2 className="root-category__category-title">
+                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+              </h2>
+            </div>
+          ))
+        ) : (
+          <p>No subcategories available for this category.</p>
+        )}
       </div>
     );
   };
@@ -185,9 +168,8 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
-        {renderMainCategories()}
-        {renderSubcategories()}
-        {currentCategory && currentCategory.parentId && renderProducts()} {/* Only show products if it's not a main category */}
+        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Distinguish between main and subcategories */}
+        {renderProducts()} {/* Show products only if they're present */}
       </div>
     </div>
   );
