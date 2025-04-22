@@ -260,6 +260,14 @@ const SearchResults = () => {
     return (
         <div className="root__wrapper">
             <div className="root">
+                <div id="trail">
+                    <nav className="breadcrumb">
+                        <ol>
+                            <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+                            <li><span data-no-info="" className="trail__last">{searchQuery || 'All Products'}</span></li>
+                        </ol>
+                    </nav>
+                </div>
                 <div className="page-products">
                     <aside className="page-products__filters">
                         <div id="filters" role="complementary" aria-labelledby="filters-header">
