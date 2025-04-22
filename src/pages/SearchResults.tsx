@@ -21,7 +21,7 @@ const useDebounce = (value, delay) => {
 const MAX_DISPLAY_COUNT = 10;
 
 const SearchResults = () => {
-    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
+    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [availableBrands, setAvailableBrands] = useState({});
@@ -38,7 +38,7 @@ const SearchResults = () => {
     useEffect(() => {
         const results = searchProducts(debouncedSearchQuery);
         setProducts(results);
-        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] }); // Reset vendorIds in filters
         extractAvailableFilters(results);
         extractCategories(results);
         updateCertifiedVendors(results);
@@ -47,7 +47,7 @@ const SearchResults = () => {
     }, [debouncedSearchQuery]);
 
     useEffect(() => {
-        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.certifications);
+        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.vendorIds);
     }, [activeFilters, products]);
 
     const extractAvailableFilters = (results) => {
@@ -108,7 +108,7 @@ const SearchResults = () => {
         setCertifiedVendors(vendorArray);
     };
 
-    const filterProducts = (brands, specs, inStockOnly, results, certifications) => {
+    const filterProducts = (brands, specs, inStockOnly, results, vendorIds) => {
         let filtered = results;
 
         if (inStockOnly) {
@@ -119,11 +119,11 @@ const SearchResults = () => {
             filtered = filtered.filter((product) => brands.includes(product.brand));
         }
 
-        if (certifications.length > 0) {
+        if (vendorIds.length > 0) {
             filtered = filtered.filter(product =>
                 (product.prices || []).some(price => {
                     const vendor = vendors.find(v => v.id === price.vendorId);
-                    return vendor && certifications.includes(vendor.certification);
+                    return vendor && vendorIds.includes(vendor.id); // Filter based on selected vendor IDs
                 })
             );
         }
@@ -196,22 +196,22 @@ const SearchResults = () => {
     };
 
     const handleVendorFilter = (vendor) => {
-        const newCertifications = activeFilters.certifications.includes(vendor.certification)
-            ? activeFilters.certifications.filter(c => c !== vendor.certification)
-            : [...activeFilters.certifications, vendor.certification];
+        const newVendorIds = activeFilters.vendorIds.includes(vendor.id)
+            ? activeFilters.vendorIds.filter(id => id !== vendor.id) // Remove vendor if already selected
+            : [...activeFilters.vendorIds, vendor.id]; // Add vendor if not selected
 
-        setActiveFilters((prev) => ({ ...prev, certifications: newCertifications }));
+        setActiveFilters((prev) => ({ ...prev, vendorIds: newVendorIds }));
     };
 
     const handleResetFilters = () => {
-        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
     };
 
     const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
 
     const renderAppliedFilters = () => {
         return (
-            (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.certifications.length > 0) && (
+            (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.vendorIds.length > 0) && (
                 <div className="applied-filters">
                     {activeFilters.brands.map((brand) => (
                         <h2 className="applied-filters__filter" key={brand}>
@@ -235,16 +235,16 @@ const SearchResults = () => {
                         </h2>
                       ))
                     )}
-                    {activeFilters.certifications.map((certification) => {
-                      const vendorsWithCertification = certifiedVendors.filter(v => v.certification === certification);
-                      return vendorsWithCertification.map(vendor => (
+                    {activeFilters.vendorIds.map((vendorId) => {
+                      const vendor = certifiedVendors.find(v => v.id === vendorId);
+                      return vendor ? (
                           <h2 className="applied-filters__filter" key={vendor.id}>
                               <span className="applied-filters__label">{vendor.name}</span>
-                              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove certification filter" onClick={() => handleVendorFilter(vendor)}>
+                              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove vendor filter" onClick={() => handleVendorFilter(vendor)}>
                                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                               </svg>
                           </h2>
-                      ));
+                      ) : null;
                     })}
                     <button onClick={handleResetFilters}>
                         <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters">
@@ -325,7 +325,7 @@ const SearchResults = () => {
                                     <ol>
                                         {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
                                             <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} 
-                                                className={activeFilters.certifications.includes(vendor.certification) ? 'selected' : ''}
+                                                className={activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}
                                                 onClick={() => handleVendorFilter(vendor)}>
                                                 <span>{vendor.name}</span>
                                             </li>
@@ -358,7 +358,7 @@ const SearchResults = () => {
                                                     activeFilters.specs, 
                                                     newInStockOnly, 
                                                     products,
-                                                    activeFilters.certifications
+                                                    activeFilters.vendorIds // Changed from certifications to vendorIds
                                                 ); 
                                             }} 
                                         />Άμεσα διαθέσιμα
