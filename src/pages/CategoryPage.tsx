@@ -117,19 +117,21 @@ const CategoryPage: React.FC = () => {
 
   const renderSubcategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-
     return (
-      <div className="subcategories">
+      <div className="root-category__categories">
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => (
-            <div key={subCat.id} className="subcategory">
-              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`}>
-                <h3>{subCat.name}</h3>
+            <div key={subCat.id} className="root-category__category">
+              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
               </Link>
+              <h2 className="root-category__category-title">
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
+              </h2>
             </div>
           ))
         ) : (
-          <p>No subcategories available.</p>
+          <p>No subcategories available for this category.</p>
         )}
       </div>
     );
