@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product, categories } from '@/data/mockData';
+import { Product, categories, mainCategories } from '@/data/mockData';
 
 interface ProductBreadcrumbProps {
   product: Product;
@@ -24,8 +24,16 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    const path = findCategoryPath(category.parentId);
-    path.push(getCategoryPath(category, !categories.some(cat => cat.parentId === categoryId)));
+    const path = findCategoryPath(category.parentId); // Recursive call to get all parent categories
+
+    // After getting parents, we need to check for main categories
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId);
+    if (mainCategory) {
+      path.unshift(getCategoryPath(mainCategory, false)); // Add main category first if it exists
+    }
+    
+    // Push the current category to the path
+    path.push(getCategoryPath(category, true)); // Mark the last category as final
 
     return path;
   };
