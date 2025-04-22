@@ -387,21 +387,29 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 </div>
                             </div>
                             <div class="scroll">
-  <div class="scroll__clip">
-    <div class="scroll__scroller">
-      <div class="merchant-map__pops grid scroll__content">
-        
-        
-
-      </div>
-    </div>
-  </div>
-  
-  <div>
-    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
-  </div>
-</div>
+                                <div class="scroll__clip">
+                                    <div class="scroll__scroller">
+                                        <div class="merchant-map__pops grid scroll__content">
+                                            {vendors.map(vendor => (
+                                                vendor.address.map((addr, index) => (
+                                                    <div className="merchant-map__pop-wrapper" key={`${vendor.id}-${index}`}>
+                                                        <div className="merchant-map__pop pressable" data-id={vendor.id}>
+                                                            <div className="merchant-map__pop-meta">
+                                                                <address itemProp="address" className="ui-kit__tertiary ui-kit__pb-2">{addr}</address>
+                                                                <small className="ui-kit__small ui-kit__muted">Κατάστημα / Παραλαβή</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
+                                    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </div>
