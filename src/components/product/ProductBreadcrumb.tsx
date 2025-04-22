@@ -24,11 +24,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    const parentCategory = categories.find(cat => category.parentId === cat.id);
-    const hasSubcategories = categories.some(cat => cat.parentId === categoryId);
-
-    const path = parentCategory ? findCategoryPath(parentCategory.id) : [];
-    path.push(getCategoryPath(category, !hasSubcategories));
+    const path = findCategoryPath(category.parentId);
+    path.push(getCategoryPath(category, !categories.some(cat => cat.parentId === categoryId)));
 
     return path;
   };
