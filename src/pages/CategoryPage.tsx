@@ -108,11 +108,14 @@ const CategoryPage: React.FC = () => {
         <div className="root-category__footer">
           <div className="root-category__links">
             {subcategories
-              .filter(cat => cat.parentId === subCat.id || cat.parentId === currentCategory?.id)
-              .map(linkedSubCat => (
-                <Link key={linkedSubCat.id} to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>
-                  {linkedSubCat.name}
-                </Link>
+              .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+              .map((linkedSubCat, index, arr) => (
+                <span key={linkedSubCat.id}>
+                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>
+                    {linkedSubCat.name}
+                  </Link>
+                  {index < arr.length - 1 && ', '} {/* Add comma except for the last item */}
+                </span>
               ))}
           </div>
         </div>
