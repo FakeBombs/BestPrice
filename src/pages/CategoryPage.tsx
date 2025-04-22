@@ -81,109 +81,86 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-
-    return (
-      <div className="page-header">
-        <div className="hgroup">
-          <div className="page-header__title-wrapper">
-            <a className="trail__back pressable" title="BestPrice.gr" href="/">
-              <svg aria-hidden="true" className="icon" width={16} height={16}>
-                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-              </svg>
-            </a>
-            <h1>{currentCategory?.name}</h1>
-          </div>
-        </div>
-        <div className="root-category__categories">
-  {mainCategories.map((mainCat) => (
-    <div key={mainCat.id} className="root-category__category">
-      <h2 className="root-category__category-title">{mainCat.name}</h2>
-      {categories
-        .filter(subCat => subCat.parentId === mainCat.id) // Get subcategories for the main category
-        .map((subCat) => (
-          <div key={subCat.id} className="root-category__subcategory">
-            <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover">
-              <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-            </Link>
-            <h3 className="root-category__subcategory-title">
-              <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link>
-            </h3>
-            <div className="root-category__footer">
-              <div className="root-category__links">
-                {categories
-                  .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                  .slice(0, 3)
-                  .map((linkedSubCat, index, arr) => (
-                      <Link key={linkedSubCat.id} to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                      {index < arr.length - 1 && ', '}
-                  ))}
-              </div>
-            </div>
-          </div>
-        ))}
-    </div>
-  ))}
-</div>
-      </div>
-    );
-  };
-
-  const renderSubcategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-    return (
-      <div className="page-header">
-  <div className="hgroup">
-    <div className="page-header__title-wrapper">
-      <a className="trail__back pressable" title="BestPrice.gr" href="/">
-        <svg aria-hidden="true" className="icon" width={16} height={16}>
-          <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-        </svg>
-      </a>
-      <h1>{currentCategory?.name}</h1>
-    </div>
-  </div>
-  <div className="root-category__categories">
-    {subcategories.length > 0 ? (
-      subcategories.map((subCat) => (
-        <div key={subCat.id} className="root-category__category">
-          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-            <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-          </Link>
-          <h2 className="root-category__category-title">
-            <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-          </h2>
-        </div>
-      ))
-    ) : (
-      <p>No subcategories available for this category.</p>
-    )}
-  </div>
-</div>
-    );
-  };
-
-  const renderProducts = () => (
-    <div>
-      <h2>Products</h2>
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      ) : (
-        <p>No products in this category.</p>
-      )}
-    </div>
-  );
+  const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
 
   return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        {renderBreadcrumbs()}
-        {currentCategory?.parentId ? renderSubcategories() : currentCategory ? renderMainCategories() : renderProducts()}
+    <div className="page-header">
+      <div className="hgroup">
+        <div className="page-header__title-wrapper">
+          <a className="trail__back pressable" title="BestPrice.gr" href="/"><svg aria-hidden="true" className="icon" width={16} height={16}><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg></a>
+          <h1>{currentCategory?.name}</h1>
+        </div>
+      </div>
+      <div className="root-category__categories">
+        {mainCategories.map((mainCat) => (
+          <div key={mainCat.id} className="root-category__category">
+            <h2 className="root-category__category-title">{mainCat.name}</h2>
+            {categories
+              .filter(subCat => subCat.parentId === mainCat.id)
+              .map((subCat) => (
+                <div key={subCat.id} className="root-category__subcategory">
+                  <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
+                  <h3 className="root-category__subcategory-title"><Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link></h3>
+                  <div className="root-category__footer">
+                    <div className="root-category__links">
+                      {categories
+                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                        .slice(0, 3)
+                        .map((linkedSubCat, index, arr) => (
+                            <Link key={linkedSubCat.id} to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                            {index < arr.length - 1 && ', '}
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default CategoryPage;
+const renderSubcategories = () => {
+  const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
+  return (
+    <div className="page-header">
+      <div className="hgroup">
+        <div className="page-header__title-wrapper">
+          <a className="trail__back pressable" title="BestPrice.gr" href="/">
+            <svg aria-hidden="true" className="icon" width={16} height={16}>
+              <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+            </svg>
+          </a>
+          <h1>{currentCategory?.name}</h1>
+        </div>
+      </div>
+      <div className="root-category__categories">
+        {subcategories.length > 0 ? (
+          subcategories.map((subCat) => (
+            <div key={subCat.id} className="root-category__category">
+              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+              </Link>
+              <h2 className="root-category__category-title">
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
+              </h2>
+            </div>
+          ))
+        ) : (
+          <p>No subcategories available for this category.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+return (
+  <div className="root__wrapper root-category__root">
+    <div className="root">
+      {renderBreadcrumbs()}
+      {currentCategory && currentCategory.parentId ? renderSubcategories() : renderMainCategories()}
+      {currentCategory && !currentCategory.parentId && renderProducts()}
+    </div>
+  </div>
+);
