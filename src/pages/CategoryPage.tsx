@@ -6,7 +6,7 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatSlug } = useParams<{
+  const { mainCatId, mainCatSlug, subCatSlug, subSubCatSlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
     subCatSlug?: string;
