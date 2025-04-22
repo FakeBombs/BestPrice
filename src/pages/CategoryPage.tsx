@@ -84,28 +84,25 @@ const CategoryPage: React.FC = () => {
     let category = currentCategory;
     while (category) {
       breadcrumbs.unshift(
-        <li key={category.id}>
-          <Link to={`/cat/${category.id}/${category.slug}`}>
-            {category.name}
-          </Link>
-        </li>
+        <li key={category.id}><Link to={`/cat/${category.id}/${category.slug}`}>{category.name}</Link></li>
       );
       category = categories.find(cat => cat.id === category.parentId); // Move up the hierarchy
     }
 
     return (
-      <ol>
-        <li>
-          <Link to="/" rel="home">BestPrice</Link>
-          <span> › </span>
-        </li>
-        {breadcrumbs.map((crumb, index) => (
-          <React.Fragment key={index}>
-            {crumb}
-            {index < breadcrumbs.length - 1 && <span> › </span>}
-          </React.Fragment>
-        ))}
-      </ol>
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={index}>
+                {crumb}
+                {index < breadcrumbs.length - 1 && <span> › </span>}
+            </React.Fragment>
+            ))}
+          </ol>
+        </nav>
+      </div>
     );
   };
 
