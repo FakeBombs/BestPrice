@@ -27,13 +27,12 @@ const SearchResults = () => {
         extractAvailableFilters(results);
         extractCategories(results);
         updateCertifiedVendors(results);
-        const sortedResults = sortProducts(results);
-        setFilteredProducts(sortedResults);
+        setFilteredProducts(sortProducts(results));
     }, [searchQuery]);
 
     useEffect(() => {
         filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.certifications);
-    }, [activeFilters, sortType, products]);
+    }, [activeFilters, products]);
 
     const extractAvailableFilters = (results) => {
         const brandsCount = {};
@@ -97,11 +96,11 @@ const SearchResults = () => {
         let filtered = results;
 
         if (inStockOnly) {
-            filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
+            filtered = filtered.filter(product => product.prices.some(price => price.inStock));
         }
 
         if (brands.length > 0) {
-            filtered = filtered.filter((product) => brands.includes(product.brand));
+            filtered = filtered.filter(product => brands.includes(product.brand));
         }
 
         if (certifications.length > 0) {
@@ -114,15 +113,14 @@ const SearchResults = () => {
         }
 
         if (Object.keys(specs).length > 0) {
-            filtered = filtered.filter((product) => {
+            filtered = filtered.filter(product => {
                 return Object.entries(specs).every(([key, values]) => {
                     return values.includes(product.specifications[key]);
                 });
             });
         }
 
-        filtered = sortProducts(filtered);
-        setFilteredProducts(filtered);
+        setFilteredProducts(sortProducts(filtered));
         extractAvailableFilters(filtered);
         extractCategories(filtered);
         updateCertifiedVendors(filtered);
@@ -132,14 +130,14 @@ const SearchResults = () => {
         switch (sortType) {
             case 'price-asc':
                 return [...products].sort((a, b) => {
-                    const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    const minPriceA = Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity);
+                    const minPriceB = Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity);
                     return minPriceA - minPriceB;
                 });
             case 'price-desc':
                 return [...products].sort((a, b) => {
-                    const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                    const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                    const maxPriceA = Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0);
+                    const maxPriceB = Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0);
                     return maxPriceB - maxPriceA;
                 });
             case 'rating-desc':
@@ -151,50 +149,56 @@ const SearchResults = () => {
                 });
             case 'merchants_desc':
                 return [...products].sort((a, b) => {
-                    const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                    const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
+                    const availableVendorsA = (a.prices || []).filter(price => price.inStock).length;
+                    const availableVendorsB = (b.prices || []).filter(price => price.inStock).length;
                     return availableVendorsB - availableVendorsA;
                 });
         }
     };
 
     const handleBrandFilter = (brand) => {
-        const newBrands = activeFilters.brands.includes(brand)
-            ? activeFilters.brands.filter((b) => b !== brand)
-            : [...activeFilters.brands, brand];
-
-        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+        setActiveFilters((prev) => ({
+            ...prev,
+            brands: prev.brands.includes(brand)
+                ? prev.brands.filter(b => b !== brand)
+                : [...prev.brands, brand]
+        }));
     };
 
     const handleSpecFilter = (specKey, specValue) => {
-        const currentSpecs = { ...activeFilters.specs };
-        const specValues = currentSpecs[specKey] || [];
+        setActiveFilters((prev) => {
+            const currentSpecs = { ...prev.specs };
+            currentSpecs[specKey] = currentSpecs[specKey] || [];
+            const specValues = currentSpecs[specKey];
 
-        if (specValues.includes(specValue)) {
-            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-        } else {
-            currentSpecs[specKey] = [...specValues, specValue];
-        }
+            if (specValues.includes(specValue)) {
+                currentSpecs[specKey] = specValues.filter(v => v !== specValue);
+                if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+            } else {
+                currentSpecs[specKey].push(specValue);
+            }
 
-        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+            return { ...prev, specs: currentSpecs };
+        });
     };
 
     const handleVendorFilter = (vendor) => {
-        const newCertifications = activeFilters.certifications.includes(vendor.certification)
-            ? activeFilters.certifications.filter(c => c !== vendor.certification)
-            : [...activeFilters.certifications, vendor.certification];
-
-        setActiveFilters((prev) => ({ ...prev, certifications: newCertifications }));
-
-        // No need to filter here since handled in effect
+        setActiveFilters((prev) => {
+            const newCertifications = [...prev.certifications];
+            if (newCertifications.includes(vendor.certification)) {
+                newCertifications = newCertifications.filter(c => c !== vendor.certification);
+            } else {
+                newCertifications.push(vendor.certification);
+            }
+            return { ...prev, certifications: newCertifications };
+        });
     };
 
     const renderAppliedFilters = () => {
         return (
             (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.certifications.length > 0) && (
                 <div className="applied-filters">
-                    {activeFilters.brands.map((brand) => (
+                    {activeFilters.brands.map(brand => (
                         <h2 className="applied-filters__filter" key={brand}>
                             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
                                 <span className="applied-filters__label">{brand}</span>
@@ -204,12 +208,16 @@ const SearchResults = () => {
                             </a>
                         </h2>
                     ))}
-                    {activeFilters.certifications.map((certification) => (
+                    {activeFilters.certifications.map(certification => (
                         <h2 className="applied-filters__filter" key={certification}>
-                            <span className="applied-filters__label">{certification}</span>
-                            <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" onClick={() => handleVendorFilter({ certification })}>
-                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                            </svg>
+                            {certifiedVendors.filter(v => v.certification === certification).map(vendor => (
+                                <span key={vendor.id} className="applied-filters__selected-vendor">
+                                    {vendor.name} 
+                                    <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" onClick={() => handleVendorFilter(vendor)}>
+                                        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                                    </svg>
+                                </span>
+                            ))}
                         </h2>
                     ))}
                 </div>
@@ -222,13 +230,14 @@ const SearchResults = () => {
             <div className="root">
                 <div className="page-products">
                     <aside className="page-products__filters">
-                        <div id="filters">
+                        <div id="filters" role="complementary" aria-labelledby="filters-header">
+                            <h2 id="filters-header">Filters</h2>
                             <div className="filters__categories" data-filter-name="categories">
                                 <div className="filters__header">
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
+                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map(item => (
                                         <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
                                                 <span>{item.category} ({item.count})</span>
@@ -237,8 +246,10 @@ const SearchResults = () => {
                                     ))}
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img"><path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/></svg>
+                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)}>
+                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                                            <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                                        </svg>
                                         {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
                                     </div>
                                 )}
@@ -249,7 +260,7 @@ const SearchResults = () => {
                                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                                     <div className="filter-container">
                                         <ol>
-                                            {Object.keys(availableBrands).map((brand) => (
+                                            {Object.keys(availableBrands).map(brand => (
                                                 <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
                                                     <span>{brand} ({availableBrands[brand]})</span>
                                                 </li>
@@ -260,17 +271,20 @@ const SearchResults = () => {
                             )}
 
                             {Object.keys(availableSpecs).length > 0 && (
-                                Object.keys(availableSpecs).map((specKey) => (
+                                Object.keys(availableSpecs).map(specKey => (
                                     <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
                                         <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container"><ol>{Array.from(availableSpecs[specKey]).map((specValue) => (
-                                            <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
-                                        ))}</ol></div>
+                                        <div className="filter-container">
+                                            <ol>{Array.from(availableSpecs[specKey]).map(specValue => (
+                                                <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                                                    <span>{specValue}</span>
+                                                </li>
+                                            ))}</ol>
+                                        </div>
                                     </div>
                                 ))
                             )}
 
-                            {/* Show list of certified vendors */}
                             <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
@@ -284,8 +298,7 @@ const SearchResults = () => {
                                         ))}
                                     </ol>
                                     {certifiedVendors.length > MAX_DISPLAY_COUNT && (
-                                        <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" 
-                                            onClick={() => setShowMoreVendors(prev => !prev)}>
+                                        <div id="filter-store-prompt" className="filters-more-prompt" onClick={() => setShowMoreVendors(prev => !prev)}>
                                             <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
                                                 <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
                                             </svg>
@@ -327,7 +340,7 @@ const SearchResults = () => {
                         </div>
                     </aside>
 
-                    <main className="page-products__main">
+                    <main className="page-products">
                         <header className="page-header">
                             <div className="page-header__title-wrapper">
                                 <div className="page-header__title-main">
@@ -380,7 +393,7 @@ const SearchResults = () => {
                         ) : (
                             <div className="page-products__main-wrapper">
                                 <div className="p__products" data-pagination="">
-                                    {filteredProducts.map((product) => (
+                                    {filteredProducts.map(product => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
