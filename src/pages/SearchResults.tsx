@@ -210,6 +210,8 @@ const SearchResults = () => {
         setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certifications: [] });
     };
 
+    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
+
     const renderAppliedFilters = () => {
         return (
             (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.certifications.length > 0) && (
