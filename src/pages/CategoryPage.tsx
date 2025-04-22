@@ -6,10 +6,9 @@ import ProductCard from '@/components/ProductCard';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatId, subCatSlug } = useParams<{
+  const { mainCatId, mainCatSlug, subCatSlug } = useParams<{
     mainCatId?: string;
     mainCatSlug?: string;
-    subCatId?: string;
     subCatSlug?: string;
   }>(); 
 
@@ -17,27 +16,26 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   
   useEffect(() => {
-    const currentId = subCatId ? subCatId : mainCatId; // Get the current ID to find the category
-    const currentSlug = subCatSlug ? subCatSlug : mainCatSlug;
+    const currentId = subCatSlug ? subCatSlug : mainCatId;
 
-    const foundId = parseInt(currentId || '0', 10); // Parse ID
+    const foundId = parseInt(currentId || '0', 10);
 
     // Find the current category in mainCategories or categories
-    const foundCategory = subCatId
-      ? categories.find(cat => cat.id === foundId && cat.slug === currentSlug)
-      : mainCategories.find(cat => cat.id === foundId && cat.slug === currentSlug);
+    const foundCategory = subCatSlug
+      ? categories.find(cat => cat.slug === currentId && cat.parentId === parseInt(mainCatId!))
+      : mainCategories.find(cat => cat.id === parseInt(mainCatId!));
 
     if (foundCategory) {
       setCurrentCategory(foundCategory);
     } else {
       setCurrentCategory(undefined);
     }
-  }, [mainCatId, mainCatSlug, subCatId, subCatSlug]);
+  }, [mainCatId, mainCatSlug, subCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
 
-    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id); 
+    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
 
     if (!isLeafCategory) {
       setFilteredProducts([]); 
@@ -60,9 +58,9 @@ const CategoryPage: React.FC = () => {
     let category = currentCategory;
     while (category) {
       breadcrumbs.unshift(
-        <li key={category.id}><Link to={`/cat/${category.id}/${category.slug}`}>{category.name}</Link></li>
+        <li key={category.id}><Link to={`/cat/${mainCatId}/${mainCatSlug}.html`}>{category.name}</Link></li>
       );
-      category = categories.find(cat => cat.id === category.parentId); // Move up the hierarchy
+      category = categories.find(cat => cat.id === category.parentId);
     }
 
     return (
@@ -101,11 +99,11 @@ const CategoryPage: React.FC = () => {
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`} className="root-category__cover">
                   <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                 </Link>
                 <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`}>{subCat.name}</Link>
                 </h2>
               </div>
             ))
@@ -119,21 +117,19 @@ const CategoryPage: React.FC = () => {
 
   const renderSubcategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
+
     return (
-      <div className="root-category__categories">
+      <div className="subcategories">
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => (
-            <div key={subCat.id} className="root-category__category">
-              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+            <div key={subCat.id} className="subcategory">
+              <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}.html`}>
+                <h3>{subCat.name}</h3>
               </Link>
-              <h2 className="root-category__category-title">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-              </h2>
             </div>
           ))
         ) : (
-          <p>No subcategories available for this category.</p>
+          <p>No subcategories available.</p>
         )}
       </div>
     );
@@ -156,7 +152,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()} {/* Render breadcrumbs for category hierarchy */}
-        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Render either subcategories or main categories */}
+        {currentCategory?.parentId ? renderSubcategories() : renderMainCategories()} {/* Render based on the category type */}
         {renderProducts()} {/* Show products only if they're present */}
       </div>
     </div>
