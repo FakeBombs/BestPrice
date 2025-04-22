@@ -23,10 +23,9 @@ const SearchResults = () => {
         setActiveFilters({ brands: [], specs: {}, inStockOnly: false, certification: [] });
         extractAvailableFilters(results);
         extractCategories(results);
-
         const sortedResults = sortProducts(results);
         setFilteredProducts(sortedResults);
-        updateCertifiedVendors(sortedResults);
+        updateCertifiedVendors(results); // Updated to pass all results here
     }, [searchQuery]);
 
     useEffect(() => {
@@ -36,7 +35,6 @@ const SearchResults = () => {
     const extractAvailableFilters = (results) => {
         const brandsCount = {};
         const specs = {};
-
         results.forEach((product) => {
             if (product.brand) {
                 brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
@@ -48,7 +46,6 @@ const SearchResults = () => {
                 specs[specKey].add(product.specifications[specKey]);
             });
         });
-
         setAvailableBrands(brandsCount);
         setAvailableSpecs(specs);
     };
@@ -56,7 +53,7 @@ const SearchResults = () => {
     const extractCategories = (results) => {
         const categoryCount = {};
         results.forEach((product) => {
-            (product.categoryIds || []).forEach(categoryId => {  // Safely access categoryIds
+            (product.categoryIds || []).forEach(categoryId => {
                 categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
             });
         });
@@ -77,7 +74,7 @@ const SearchResults = () => {
     };
 
     const updateCertifiedVendors = (results) => {
-        const vendorMap = new Map(); // Use a map to collect unique vendors based on certification
+        const vendorMap = new Map();
         results.forEach(product => {
             (product.vendors || []).forEach(vendorId => {
                 const vendor = vendors.find(v => v.id === vendorId);
@@ -86,23 +83,24 @@ const SearchResults = () => {
                 }
             });
         });
-        setCertifiedVendors(Array.from(vendorMap.values()).sort((a, b) => {
+
+        // Convert the Map to an array and sort by certification type
+        const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
             const levels = { Gold: 3, Silver: 2, Bronze: 1 };
             return levels[b.certification] - levels[a.certification]; // Sort by certification level
-        }));
+        });
+
+        setCertifiedVendors(vendorArray);
     };
 
     const filterProducts = (brands, specs, inStockOnly, results) => {
         let filtered = results;
-
         if (inStockOnly) {
             filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
         }
-
         if (brands.length > 0) {
             filtered = filtered.filter((product) => brands.includes(product.brand));
         }
-
         if (Object.keys(specs).length > 0) {
             filtered = filtered.filter((product) => {
                 return Object.entries(specs).every(([key, values]) => {
@@ -177,7 +175,7 @@ const SearchResults = () => {
 
         setActiveFilters((prev) => ({ ...prev, certification: newCertification }));
         filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products.filter(product =>
-            (product.vendors || []).includes(vendor.id) // Filter products by selected certified vendor
+            (product.vendors || []).includes(vendor.id) 
         ));
     };
 
@@ -210,7 +208,7 @@ const SearchResults = () => {
                                 <div className="filters__header">
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
-                                <ol>
+                                <ol aria-expanded={showMoreCategories}>
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
                                         <li key={item.id}>
                                             <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
@@ -220,11 +218,11 @@ const SearchResults = () => {
                                     ))}
                                 </ol>
                                 {availableCategories.length > 8 && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title="Show all categories">
+                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title={showMoreCategories ? "Show less categories" : "Show all categories"}>
                                         <svg aria-hidden="true" className="icon" width="100%" height="100%">
                                             <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
                                         </svg>
-                                        Show all
+                                        {showMoreCategories ? "Show less" : "Show all"}
                                     </div>
                                 )}
                             </div>
@@ -266,11 +264,11 @@ const SearchResults = () => {
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
                                     <ol>
-                                        {certifiedVendors.map(vendor => (
+                                        {certifiedVendors.length > 0 ? certifiedVendors.map(vendor => (
                                             <li key={vendor.id} onClick={() => handleVendorFilter(vendor)} style={{ cursor: 'pointer' }}>
                                                 <span>{vendor.name} ({vendor.certification})</span>
                                             </li>
-                                        ))}
+                                        )) : <li>No certified vendors found.</li>}
                                     </ol>
                                 </div>
                             </div>
