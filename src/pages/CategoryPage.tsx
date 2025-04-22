@@ -105,41 +105,45 @@ const CategoryPage: React.FC = () => {
     const subcategories = currentCategory ? categories.filter(cat => cat.parentId === currentCategory.id) : [];
 
     return (
-      <div className="page-header">
-        <div className="hgroup">
-          <div className="page-header__title-wrapper">
-            <a className="trail__back pressable" title="BestPrice.gr" href="/">
-              <svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
-            </a>
-            {mainCategories.map((cat) => ( <h1 key={cat.id}>{cat.name}</h1> ))}
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                </Link>
-                <h2 className="root-category__category-title">
-                  <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-                </h2>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {subCat.subcategories && subCat.subcategories.length > 0 ? (
-                      subCat.subcategories.map((subSubCat) => (
-                        <a key={subSubCat.id} href={`/cat/${subSubCat.id}/${subSubCat.slug}`}>{subSubCat.name}</a>
-                      ))
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : null}
-        </div>
+  <div className="page-header">
+    <div className="hgroup">
+      <div className="page-header__title-wrapper">
+        <a className="trail__back pressable" title="BestPrice.gr" href="/">
+          <svg aria-hidden="true" className="icon" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
+        </a>
+        <h1>{currentCategory?.name}</h1>
       </div>
-    );
-  };
+    </div>
+    <div className="root-category__categories">
+      {subcategories.length > 0 ? (
+        subcategories.map((subCat) => (
+          <div key={subCat.id} className="root-category__category">
+            <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+              <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+            </Link>
+            <h2 className="root-category__category-title">
+              <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+            </h2>
+            <div className="root-category__footer">
+              <div className="root-category__links">
+                {/* Use the subCat.subcategories field correctly */}
+                {subCat.subcategories?.length > 0 ? (
+                  subCat.subcategories.map((subSubCat) => (
+                    <a key={subSubCat.id} href={`/cat/${subSubCat.id}/${subSubCat.slug}`}>{subSubCat.name}</a>
+                  ))
+                ) : (
+                  <p>No sub-subcategories available for this category.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No subcategories available for this category.</p>
+      )}
+    </div>
+  </div>
+);
 
   const renderSubcategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
