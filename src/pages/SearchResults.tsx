@@ -74,23 +74,20 @@ const SearchResults = () => {
     };
 
     const updateCertifiedVendors = (results) => {
-        const vendorMap = new Map();
-        results.forEach(product => {
-            (product.vendors || []).forEach(vendorId => {
-                const vendor = vendors.find(v => v.id === vendorId);
-                if (vendor && vendor.certification) {
-                    vendorMap.set(vendor.id, vendor);
-                }
-            });
+    const vendorMap = new Map();
+    results.forEach(product => {
+        product.prices.forEach(price => {
+            const vendor = vendors.find(v => v.id === price.vendorId);
+            if (vendor && vendor.certification) {
+                vendorMap.set(vendor.id, vendor);
+            }
         });
-
-        // Convert the Map to an array and sort by certification type
-        const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
-            const levels = { Gold: 3, Silver: 2, Bronze: 1 };
-            return levels[b.certification] - levels[a.certification]; // Sort by certification level
-        });
-
-        setCertifiedVendors(vendorArray);
+    });
+    const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
+        const levels = { Gold: 3, Silver: 2, Bronze: 1 };
+        return levels[b.certification] - levels[a.certification];
+    });
+    setCertifiedVendors(vendorArray);
     };
 
     const filterProducts = (brands, specs, inStockOnly, results) => {
