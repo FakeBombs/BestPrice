@@ -355,7 +355,7 @@ export const products: Product[] = [
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    categoryIds: [10, 30], // Now includes the smartphone subcategory
+    categoryIds: [10, 102, 103], // Now includes the smartphone subcategory
     description: 'The latest iPhone with stunning design and performance.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
