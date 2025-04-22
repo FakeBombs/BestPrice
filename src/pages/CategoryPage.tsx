@@ -108,7 +108,7 @@ const CategoryPage: React.FC = () => {
         <div className="root-category__footer">
           <div className="root-category__links">
             {subcategories
-              .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+              .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)  // Filter to find subCats of the current subCat
               .map((linkedSubCat, index, arr) => (
                 <span key={linkedSubCat.id}>
                   <Link to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>
