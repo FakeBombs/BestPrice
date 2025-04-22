@@ -217,7 +217,7 @@ const SearchResults = () => {
                         <h2 className="applied-filters__filter" key={brand}>
                             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
                                 <span className="applied-filters__label">{brand}</span>
-                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove filter" onClick={() => handleBrandFilter(brand)}>
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label={`Remove filter of ${brand}`} onClick={() => handleBrandFilter(brand)}>
                                     <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                                 </svg>
                             </a>
@@ -228,7 +228,7 @@ const SearchResults = () => {
                         <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
                             <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
                                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" aria-label={`Remove ${specKey}-${specValue} filter`}>
                                     <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                                 </svg>
                             </a>
@@ -239,10 +239,12 @@ const SearchResults = () => {
                       const vendor = certifiedVendors.find(v => v.id === vendorId);
                       return vendor ? (
                           <h2 className="applied-filters__filter" key={vendor.id}>
-                              <span className="applied-filters__label">{vendor.name}</span>
-                              <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Remove vendor filter" onClick={() => handleVendorFilter(vendor)}>
-                                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                              </svg>
+                              <a data-scroll-to="" data-filter-key={vendor.name} datavalue-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
+                                  <span className="applied-filters__label">{vendor.name}</span>
+                                  <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label={`Remove filter of ${vendor.name}`}>
+                                      <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                                  </svg>
+                              </a>
                           </h2>
                       ) : null;
                     })}
