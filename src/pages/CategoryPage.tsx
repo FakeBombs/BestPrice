@@ -166,7 +166,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-        {subCatSlug ? renderSubcategories() : (currentCategory?.parentId ? renderMainCategories() : renderProducts()))}
+        {currentCategory?.parentId ? renderSubcategories() : currentCategory ? renderMainCategories() : renderProducts()}
       </div>
     </div>
   );
