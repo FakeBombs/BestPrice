@@ -372,6 +372,13 @@ const SearchResults = () => {
                                         <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                                     </div>
                                 </div>
+                                <div className="page-header__title-aside">
+                                    {displayedBrand && (
+                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                                        </a>
+                                    )}
+                                </div>
                             </div>
                             {renderAppliedFilters()}
                             <section className="section">
