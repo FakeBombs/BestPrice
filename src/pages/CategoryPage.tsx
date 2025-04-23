@@ -183,7 +183,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-        {currentCategory && currentCategory.parentId ? renderSubcategories() : (currentCategory ? renderProducts() : renderMainCategories())}
+        {!currentCategory ? renderMainCategories() : (currentCategory.parentId ? renderSubcategories() : renderProducts())}
       </div>
     </div>
   );
