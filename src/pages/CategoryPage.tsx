@@ -14,7 +14,7 @@ const CategoryPage: React.FC = () => {
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
-
+  
   useEffect(() => {
     const currentId = subCatSlug ? subCatSlug : paramMainCatId;
 
