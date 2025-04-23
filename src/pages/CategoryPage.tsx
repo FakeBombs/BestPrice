@@ -103,11 +103,11 @@ const CategoryPage: React.FC = () => {
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => (
                         <div key={subCat.id} className="root-category__category">
-                            <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${subCat.slug}`} className="root-category__cover">
+                            <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
                                 <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                             </Link>
                             <h3 className="root-category__category-title">
-                                <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${subCat.slug}`}>{subCat.name}</Link>
+                                <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
                             </h3>
                             <div className="root-category__footer">
                                 <div className="root-category__links">
@@ -116,7 +116,7 @@ const CategoryPage: React.FC = () => {
                                         .slice(0, 5) // Limit to 5 linked subcategories
                                         .map((linkedSubCat, index, arr) => (
                                             <React.Fragment key={linkedSubCat.id}>
-                                                <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                                                <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
                                                 {index < arr.length - 1 && ', '} {/* Add comma if there are more */}
                                             </React.Fragment>
                                         ))}
