@@ -132,7 +132,8 @@ const CategoryPage: React.FC = () => {
 
   const renderSubcategories = (parentCategory) => {
   const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
-  const basePath = parentCategory ? `/cat/${parentCategory.slug}` : '/cat'; // Base path for links
+  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+  const basePath = mainCategory ? `/cat/${mainCategory.slug}` : '/cat'; // Base path for links
 
   return (
     <div className="root-category__categories">
