@@ -85,7 +85,7 @@ const CategoryPage: React.FC = () => {
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-  return (
+    return (
     <div className="page-header">
       <div className="hgroup">
         <div className="page-header__title-wrapper">
@@ -94,7 +94,7 @@ const CategoryPage: React.FC = () => {
         </div>
       </div>
     </div>
-       <div className="root-category__categories">
+    <div className="root-category__categories">
         {subcategories.length > 0 ? (
   subcategories.map((subCat) => (
     <div key={subCat.id} className="root-category__subcategory">
@@ -122,7 +122,6 @@ const CategoryPage: React.FC = () => {
 ) : (
   <div>No subcategories available.</div> // Optional: Message if there are no subcategories
 )}
-      </div>
   );
 };
 
