@@ -48,13 +48,18 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
- // Render breadcrumbs
+ // Define main category information
+const mainCategory = categories.find(cat => cat.id === currentCategory?.parentId);
+const mainCatId = mainCategory ? mainCategory.id : null;
+const mainCatSlug = mainCategory ? mainCategory.slug : '';
+const mainCatName = mainCategory ? mainCategory.name : '';
+
+// Render breadcrumbs
 const renderBreadcrumbs = () => {
     const breadcrumbs = [];
     let category = currentCategory;
-    
+
     while (category) {
-        // Use the appropriate slug for the current category
         breadcrumbs.unshift(
             <li key={category.id}>
                 <Link to={`/cat/${category.parentId}/${category.slug}`}>
@@ -64,13 +69,15 @@ const renderBreadcrumbs = () => {
         );
         category = categories.find(cat => cat.id === category.parentId);
     }
-    
+
     // Add main category link at the top of the breadcrumb
-    breadcrumbs.unshift(
-        <li key={mainCatId}>
-            <Link to={`/cat/${mainCatId}/${mainCatSlug}`}>{mainCatName}</Link>
-        </li>
-    );
+    if (mainCatId) {
+        breadcrumbs.unshift(
+            <li key={mainCatId}>
+                <Link to={`/cat/${mainCatId}/${mainCatSlug}`}>{mainCatName}</Link>
+            </li>
+        );
+    }
 
     return (
         <div id="trail">
