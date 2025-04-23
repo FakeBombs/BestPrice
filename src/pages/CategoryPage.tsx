@@ -106,7 +106,7 @@ const CategoryPage: React.FC = () => {
                             <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${subCat.slug}`} className="root-category__cover">
                                 <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                             </Link>
-                            <h3 className="root-category__subcategory-title">
+                            <h3 className="root-category__category-title">
                                 <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${subCat.slug}`}>{subCat.name}</Link>
                             </h3>
                             <div className="root-category__footer">
