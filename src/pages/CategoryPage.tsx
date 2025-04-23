@@ -54,7 +54,7 @@ const renderBreadcrumbs = () => {
     if (mainCategory) {
         // Add main category as the first breadcrumb
         breadcrumbs.push(
-            <li key={mainCategory.id}>
+            <li key={mainCategory.slug}>
                 <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
             </li>
         );
@@ -62,15 +62,20 @@ const renderBreadcrumbs = () => {
 
     // Add current category path
     let category = currentCategory;
+    const categoryPath = [];
+
     while (category) {
-        breadcrumbs.push(
-            <li key={category.id}>
+        categoryPath.unshift(
+            <li key={category.slug}>
                 <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
             </li>
         );
-        // Move to the parent category
-        category = categories.find(cat => cat.id === category.parentId);
+        // Move to the parent category using slug match
+        category = categories.find(cat => cat.slug === category.parentSlug);
     }
+
+    // Merge categoryPath into breadcrumbs
+    breadcrumbs.push(...categoryPath);
 
     return (
         <div id="trail">
@@ -92,7 +97,6 @@ const renderBreadcrumbs = () => {
             </nav>
         </div>
     );
-};
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
