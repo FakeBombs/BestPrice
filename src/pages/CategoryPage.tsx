@@ -33,7 +33,6 @@ const CategoryPage: React.FC = () => {
     if (!currentCategory) return;
 
     const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
-
     if (!isLeafCategory) {
       setFilteredProducts([]);
     } else {
@@ -62,7 +61,7 @@ const CategoryPage: React.FC = () => {
     while (category) {
       breadcrumbs.unshift(
         <li key={category.id}>
-          <Link to={`/cat/${category.parentId}/${category.slug}`}>
+          <Link to={`/cat/${category.parentId || ''}/${category.slug}`}>
             {category.name}
           </Link>
         </li>
@@ -70,7 +69,6 @@ const CategoryPage: React.FC = () => {
       category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Add main category link at the top of the breadcrumb
     if (mainCategoryId) {
       breadcrumbs.unshift(
         <li key={mainCategoryId}>
