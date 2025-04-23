@@ -49,36 +49,32 @@ const CategoryPage: React.FC = () => {
   // Render breadcrumbs
 const renderBreadcrumbs = () => {
     const breadcrumbs = [];
-    
-    // Find the main category
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    
+
     if (!mainCategory) return null; // Early return if no main category
-    
-    // Array to hold categories from the current one back to the main category
+
+    // Add the main category breadcrumb if it hasn't been added already
+    breadcrumbs.push(
+        <li key={mainCategory.slug}>
+            <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+        </li>
+    );
+
+    // Collect current category and its parents, ensuring singular appearance of main categories
     let category = currentCategory;
-    const categoryPath = [];
+    const categoryPathSet = new Set(); // To track unique categories by slug
 
-    // Collect current category and its parents
     while (category) {
-        categoryPath.unshift(
-            <li key={category.slug}>
-                <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
-            </li>
-        );
-
-        // Move to parent category
+        if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
+            categoryPathSet.add(category.slug);
+            breadcrumbs.push(
+                <li key={category.slug}>
+                    <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
+                </li>
+            );
+        }
+        // Move to the parent category
         category = categories.find(cat => cat.id === category.parentId);
-    }
-
-    // Only add other breadcrumbs if categoryPath has entries
-    if (categoryPath.length) {
-        breadcrumbs.push(
-            <li key={mainCategory.slug}>
-                <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-            </li>
-        );  
-        breadcrumbs.push(...categoryPath);
     }
 
     return (
