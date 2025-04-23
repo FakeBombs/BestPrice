@@ -97,6 +97,7 @@ const renderBreadcrumbs = () => {
             </nav>
         </div>
     );
+};
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
