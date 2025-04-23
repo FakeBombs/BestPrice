@@ -112,17 +112,7 @@ const CategoryPage: React.FC = () => {
                     </h3>
                     <div className="root-category__footer">
                       <div className="root-category__links">
-                        {categories
-                          .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                          .slice(0, 3)
-                          .map((linkedSubCat, index, arr) => (
-                            <span key={linkedSubCat.id}>
-                              <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
-                                {linkedSubCat.name}
-                              </Link>
-
-                            </span>
-                          ))}
+                        
                       </div>
                     </div>
                   </div>
