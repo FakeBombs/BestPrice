@@ -39,9 +39,9 @@ const CategoryPage: React.FC = () => {
 
   // Build the breadcrumb path
   const buildBreadcrumbs = () => {
-    const breadcrumbs: JSX.Element[] = [];
-
-    // Add main category at the start
+  const breadcrumbs: JSX.Element[] = [];
+  
+  // Add main category at the start
   const mainCategory = mainCategories.find(cat => cat.id === parseInt(mainCatId!));
   if (mainCategory) {
     breadcrumbs.push(
@@ -69,9 +69,6 @@ const CategoryPage: React.FC = () => {
 
   return breadcrumbs;
 };
-
-    return breadcrumbs;
-  };
 
   const renderBreadcrumbs = () => {
     const breadcrumbs = buildBreadcrumbs();
