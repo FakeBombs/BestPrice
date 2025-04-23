@@ -53,13 +53,6 @@ const renderBreadcrumbs = () => {
 
     if (!mainCategory) return null; // Early return if no main category
 
-    // Add the main category breadcrumb if it hasn't been added already
-    breadcrumbs.push(
-        <li key={mainCategory.slug}>
-            <Link to={`/cat/${mainCategory.slug}`} > {mainCategory.name}</Link>
-        </li>
-    );
-
     // Collect current category and its parents, ensuring singular appearance of main categories
     let category = currentCategory;
     const categoryPathSet = new Set(); // To track unique categories by slug
@@ -69,7 +62,7 @@ const renderBreadcrumbs = () => {
             categoryPathSet.add(category.slug);
             breadcrumbs.push(
                 <li key={category.slug}>
-                    <Link to={`/cat/${mainCategory.slug}/${category.slug}`} > {category.name}</Link>
+                    <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
                 </li>
             );
         }
