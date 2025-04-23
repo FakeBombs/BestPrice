@@ -34,7 +34,7 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="/cat/:slug" element={<CategoryPage />} />
+          <Route path="/cat/:catId/:catSlug" element={<CategoryPage />} />
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
