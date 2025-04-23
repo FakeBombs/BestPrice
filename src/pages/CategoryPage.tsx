@@ -45,7 +45,9 @@ const CategoryPage: React.FC = () => {
     const mainCategory = mainCategories.find(cat => cat.id === parseInt(mainCatId!));
     if (mainCategory) {
       breadcrumbs.push(
-        
+        <li key={mainCategory.id}>
+          <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
+        </li>
       );
     }
 
