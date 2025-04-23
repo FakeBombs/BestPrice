@@ -47,39 +47,51 @@ const CategoryPage: React.FC = () => {
   }
 
   // Render breadcrumbs
-  const renderBreadcrumbs = () => {
+const renderBreadcrumbs = () => {
     const breadcrumbs = [];
+  
+    // Add main category to breadcrumbs
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    if (mainCategory) {
+        breadcrumbs.push(
+            <li key={mainCategory.id}>
+                <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+            </li>
+        );
+    }
+
+    // Add current category path
     let category = currentCategory;
     while (category) {
-      breadcrumbs.unshift(
-        <li key={category.id}>
-          <Link to={`/cat/${category.slug}`}>{category.name}</Link>
-        </li>
-      );
-      category = categories.find(cat => cat.id === category.parentId);
+        breadcrumbs.push(
+            <li key={category.id}>
+                <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
+            </li>
+        );
+        category = categories.find(cat => cat.id === category.parentId);
     }
 
     return (
-      <div id="trail">
-        <nav className="breadcrumb">
-          <ol>
-            <li>
-              <Link to="/" rel="home" data-no-info="">
-                <span>BestPrice</span>
-              </Link>
-              <span className="trail__breadcrumb-separator">›</span>
-            </li>
-            {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={index}>
-                {crumb}
-                {index < breadcrumbs.length - 1 && <span> › </span>}
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
-      </div>
+        <div id="trail">
+            <nav className="breadcrumb">
+                <ol>
+                    <li>
+                        <Link to="/" rel="home" data-no-info="">
+                            <span>BestPrice</span>
+                        </Link>
+                        <span className="trail__breadcrumb-separator">›</span>
+                    </li>
+                    {breadcrumbs.map((crumb, index) => (
+                        <React.Fragment key={index}>
+                            {crumb}
+                            {index < breadcrumbs.length - 1 && <span> › </span>}
+                        </React.Fragment>
+                    ))}
+                </ol>
+            </nav>
+        </div>
     );
-  };
+};
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
