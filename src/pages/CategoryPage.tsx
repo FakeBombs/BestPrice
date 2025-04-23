@@ -92,13 +92,12 @@ const CategoryPage: React.FC = () => {
           <h1>{currentCategory?.name}</h1>
         </div>
       </div>
+              {mainCategories.map((mainCat) => (
       <div className="root-category__categories">
-        {mainCategories.map((mainCat) => (
           <div key={mainCat.id} className="root-category__category">
             <h2 className="root-category__category-title">{mainCat.name}</h2>
             {categories
               .filter(subCat => subCat.parentId === mainCat.id) // Filter to only show subcategories of the current mainCat
-              .slice(0, 1)
               .map((subCat) => (
                 <div key={subCat.id} className="root-category__subcategory">
                   <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
@@ -119,8 +118,8 @@ const CategoryPage: React.FC = () => {
                 </div>
               ))}
           </div>
-        ))}
       </div>
+        ))}
     </div>
   );
 };
