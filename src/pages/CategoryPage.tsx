@@ -192,6 +192,7 @@ const CategoryPage: React.FC = () => {
       }
     </div>
   </div>
-);
+  );
+};
 
 export default CategoryPage;
