@@ -40,16 +40,6 @@ const CategoryPage: React.FC = () => {
   // Build the breadcrumb path
   const buildBreadcrumbs = () => {
     const breadcrumbs: JSX.Element[] = [];
-    
-    // Add main category at the start
-    const mainCategory = mainCategories.find(cat => cat.id === parseInt(mainCatId!));
-    if (mainCategory) {
-      breadcrumbs.push(
-        <li key={mainCategory.id}>
-          <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
-        </li>
-      );
-    }
 
     // Add current category and its parents
     let category: Category | undefined = currentCategory;
