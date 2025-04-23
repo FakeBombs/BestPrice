@@ -101,7 +101,7 @@ const CategoryPage: React.FC = () => {
           <div key={mainCat.id} className="root-category__category">
             <h2 className="root-category__category-title">{mainCat.name}</h2>
             {categories
-              .filter(subCat => subCat.parentId === mainCat.id) // Filter to only show relevant subcategories
+              .filter(subCat => subCat.parentId === mainCat.id) // Filter to only show subcategories of the current mainCat
               .map((subCat) => (
                 <div key={subCat.id} className="root-category__subcategory">
                   <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover">
@@ -111,7 +111,19 @@ const CategoryPage: React.FC = () => {
                     <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link>
                   </h3>
                   <div className="root-category__footer">
-                    <div className="root-category__links"></div>
+                    <div className="root-category__links">
+                      {categories
+                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter linked subcategories for the current subCat
+                        .slice(0, 3) // Limit to 3 linked subcategories
+                        .map((linkedSubCat, index, arr) => (
+                          <span key={linkedSubCat.id}>
+                            <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
+                              {linkedSubCat.name}
+                            </Link>
+                            {index < arr.length - 1 && ', '} {/* Add comma if there are more */}
+                          </span>
+                        ))}
+                    </div>
                   </div>
                 </div>
               ))}
