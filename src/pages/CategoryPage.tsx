@@ -1,221 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
-import { categories, mainCategories, products } from '@/data/mockData';
-import ProductCard from '@/components/ProductCard';
+import { Category, mainCategories } from './your-data'; // Replace with your actual import
 
-// Main component
+interface Product {
+  id: number;
+  name: string;
+  // Add other product properties as needed
+}
+
 const CategoryPage: React.FC = () => {
-  const { mainCatId, mainCatSlug, subCatSlug } = useParams<{
-    mainCatId?: string;
-    mainCatSlug?: string;
-    subCatSlug?: string;
-  }>(); 
-
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<Category[] | null>(null);
+  const [products, setProducts] = useState<Product[] | null>(null);
 
   useEffect(() => {
-    const foundCategory = subCatSlug
-      ? categories.find(cat => cat.slug === subCatSlug && cat.parentId === parseInt(mainCatId!))
-      : mainCategories.find(cat => cat.id === parseInt(mainCatId!));
-
-    setCurrentCategory(foundCategory || undefined);
-  }, [mainCatId, subCatSlug]);
-
-  useEffect(() => {
-    if (!currentCategory) return;
-
-    const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
-    );
-
-    setFilteredProducts(productsToDisplay);
-  }, [currentCategory, products]);
-
-  if (!currentCategory) {
-    return <NotFound />;
-  }
-
-  // Build the breadcrumb path
-  const buildBreadcrumbs = () => {
-  const breadcrumbs: JSX.Element[] = [];
-  
-  // Add main category at the start
-  const mainCategory = mainCategories.find(cat => cat.id === parseInt(mainCatId!));
-  if (mainCategory) {
-    breadcrumbs.push(
-      <li key={mainCategory.id}>
-        <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
-      </li>
-    );
-  }
-
-  // Add current category and its parents
-  let category: Category | undefined = currentCategory;
-  const mainCategoryId = mainCategory?.id;
-
-  while (category) {
-    // Skip adding current category if it matches main category
-    if (category.id !== mainCategoryId) {
-      breadcrumbs.push(
-        <li key={category.id}>
-          <Link to={`/cat/${category.parentId ? category.parentId : ''}/${category.slug}`}>{category.name}</Link>
-        </li>
-      );
+    if (!slug) {
+      navigate('/');
+      return;
     }
-    category = categories.find(cat => cat.id === category.parentId);
-  }
 
-  return breadcrumbs;
-};
+    const foundCategory = mainCategories.find((cat) => cat.slug === slug);
 
-  const renderBreadcrumbs = () => {
-    const breadcrumbs = buildBreadcrumbs();
+    if (!foundCategory) {
+      navigate('/404'); // Or however you handle a 404
+      return;
+    }
 
-    return (
-      <div id="trail">
-        <nav className="breadcrumb">
-          <ol>
-            <li>
-              <Link to="/" rel="home" data-no-info="">
-                <span>BestPrice</span>
-              </Link>
-              <span className="trail__breadcrumb-separator">›</span>
-            </li>
-            {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={index}>
-                {crumb}
-                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator"> › </span>}
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
-      </div>
-    );
-  };
+    setCategories([foundCategory]); // Corrected: Initial state
 
-  const renderMainCategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
-    return (
-      <>
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title="BestPrice.gr" href="/">
-                <svg aria-hidden="true" className="icon" width={16} height={16}>
-                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                </svg>
-              </a>
-              <h1>{currentCategory?.name}</h1>
-            </div>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                </Link>
-                <h3 className="root-category__category-title">
-                  <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                </h3>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {categories
-                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                      .slice(0, 5) 
-                      .map((linkedSubCat, index, arr) => (
-                        <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                          {index < arr.length - 1 && ', '}
-                        </React.Fragment>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>No subcategories available.</div>
-          )}
-        </div>
-      </>
-    );
-  };
+    if (foundCategory.parentId) {
+      // Case: Subcategory
+      const parentCategory = mainCategories.find((cat) => cat.id === foundCategory.parentId);
+      if (!parentCategory) {
+        navigate('/404'); // Handle case where parent doesn't exist
+        return;
+      }
+      setCategories([parentCategory, foundCategory]); // Correct rendering of parent
+    } else {
+        // Case: Main Category (no parent) or product list
+      const matchingProducts = // Replace with your data fetching logic
+      products.filter((product) => product.categoryId === foundCategory.id);
+      setProducts(matchingProducts);
+    }
 
-  const renderSubcategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
-    return (
-      <div className="page-header">
-        <div className="hgroup">
-          <div className="page-header__title-wrapper">
-            <a className="trail__back pressable" title="BestPrice.gr" href="/">
-              <svg aria-hidden="true" className="icon" width={16} height={16}>
-                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-              </svg>
-            </a>
-            <h1>{currentCategory?.name}</h1>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                </Link>
-                <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                </h2>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {categories
-                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                      .slice(0, 5) 
-                      .map((linkedSubCat, index, arr) => (
-                        <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                          {index < arr.length - 1 && ', '}
-                        </React.Fragment>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            renderProducts()
-          )}
-        </div>
-      </div>
-    );
-  };
+  }, [slug]);
 
-  const renderProducts = () => (
-    <div>
-      <h2>Products</h2>
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      ) : (
-        <p>No products in this category.</p>
-      )}
-    </div>
-  );
+
 
   return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        {renderBreadcrumbs()}
-        {currentCategory && currentCategory.parentId 
-          ? renderSubcategories() 
-          : (currentCategory 
-              ? renderMainCategories() 
-              : renderProducts()
-            )
-        }
-      </div>
+    <div>
+      {categories && categories.length > 0 ? (
+        categories.map((category) => (
+          <div key={category.id}>
+            <h2>{category.name}</h2>
+            {/* Check for subcategories */}
+            {category.children && category.children.length > 0 ? (
+              <ul>
+                {category.children.map((subCategory) => (
+                  <li key={subCategory.id}>
+                    <Link to={`/cat/${subCategory.slug}`}>{subCategory.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>
+              {/*Show products if no subcategories exists*/}
+                {products?.map((product) => (
+                  <div key={product.id}>
+                    <h3>{product.name}</h3>
+                    {/* Add other product details here */}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <NotFound />
+      )}
     </div>
   );
 };
