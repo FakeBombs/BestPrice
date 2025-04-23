@@ -1,57 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import NotFound from '@/pages/NotFound';
-import { Category, mainCategories } from '@/data/mockData';
-import ProductCard from '@/components/ProductCard';
+import { useParams } from 'react-router-dom';
+import { useMemo } from 'react';
 
-interface Product {
-  id: number;
-  name: string;
-  // Add other product properties as needed
-}
+function CategoryPage({ mockData }) {
+  const { catSlug } = useParams();
+  const category = useMemo(() => {
+    // Find the category matching the slug.  Crucially, filter by slug.
+    return mockData.categories.find(cat => cat.slug === catSlug);
+  }, [mockData, catSlug]);
 
-const CategoryPage: React.FC = () => {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const [categories, setCategories] = useState<Category[] | null>(null);
-  const [products, setProducts] = useState<Product[] | null>(null);
-
-
-  useEffect(() => {
-    // Find the category based on the slug
-    const category = mainCategories.find((c) => c.slug === slug);
-
-    if (!category) {
-      navigate('/404'); // Or use a more specific error handling
-      return; // Crucial: Stop further execution
-    }
-
-    //  Crucial:  Only set products if the category is valid.
-    setCategories([category]);  // set the single category
-    setProducts(category.products); // Correctly set products
-
-
-  }, [slug, navigate]);
-
-
-  if (!categories) {
-    return <div>Loading...</div>; // Or a loading spinner
+  if (!category) {
+    return <div>Category not found</div>; // Important for 404 handling
   }
 
-  if (!products) {
-    return <div>No products found in this category.</div>;
-  }
+  const isMainCategory = !category.parentId;
+
+  const displayContent = useMemo(() => {
+      if (isMainCategory) {
+          const relevantProducts = mockData.products.filter(product => product.categoryId === category.id);
+          return (
+              <div>
+                  <h2>{category.name}</h2>
+                  <ul>
+                      {relevantProducts.map(product => (
+                          <li key={product.id}>{product.name}</li>
+                      ))}
+                  </ul>
+              </div>
+          );
+      } else {
+          // Handle subcategories
+          const relevantProducts = mockData.products.filter(product => product.categoryId === category.id);
+          return (
+              <div>
+                  <h2>{category.name} (Subcategory of {mockData.categories.find(parent => parent.id === category.parentId)?.name})</h2>
+                  <ul>
+                      {relevantProducts.map(product => (
+                          <li key={product.id}>{product.name}</li>
+                      ))}
+                  </ul>
+              </div>
+          );
+
+      }
+  }, [category, mockData]);
 
   return (
     <div>
-      <h1>{categories[0]?.name}</h1>
-      <div>
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {displayContent}
     </div>
   );
-};
+}
+
 
 export default CategoryPage;
