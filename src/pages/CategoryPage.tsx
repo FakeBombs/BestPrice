@@ -41,16 +41,34 @@ const CategoryPage: React.FC = () => {
   const buildBreadcrumbs = () => {
     const breadcrumbs: JSX.Element[] = [];
 
-    // Add current category and its parents
-    let category: Category | undefined = currentCategory;
-    while (category) {
+    // Add main category at the start
+  const mainCategory = mainCategories.find(cat => cat.id === parseInt(mainCatId!));
+  if (mainCategory) {
+    breadcrumbs.push(
+      <li key={mainCategory.id}>
+        <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
+      </li>
+    );
+  }
+
+  // Add current category and its parents
+  let category: Category | undefined = currentCategory;
+  const mainCategoryId = mainCategory?.id;
+
+  while (category) {
+    // Skip adding current category if it matches main category
+    if (category.id !== mainCategoryId) {
       breadcrumbs.push(
         <li key={category.id}>
           <Link to={`/cat/${category.parentId ? category.parentId : ''}/${category.slug}`}>{category.name}</Link>
         </li>
       );
-      category = categories.find(cat => cat.id === category.parentId);
     }
+    category = categories.find(cat => cat.id === category.parentId);
+  }
+
+  return breadcrumbs;
+};
 
     return breadcrumbs;
   };
