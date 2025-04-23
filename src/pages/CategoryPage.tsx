@@ -93,6 +93,7 @@ const CategoryPage: React.FC = () => {
           <h1>{currentCategory?.name}</h1>
         </div>
       </div>
+    </div>
        <div className="root-category__categories">
         {subcategories.length > 0 ? (
   subcategories.map((subCat) => (
@@ -122,7 +123,6 @@ const CategoryPage: React.FC = () => {
   <div>No subcategories available.</div> // Optional: Message if there are no subcategories
 )}
       </div>
-    </div>
   );
 };
 
