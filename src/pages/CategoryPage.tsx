@@ -130,7 +130,7 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  const renderSubcategories = (basePath: string) => {
+  const renderSubcategories = (basePath: string = '') => {
   const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
   return (
     <div className="page-header">
@@ -147,7 +147,8 @@ const CategoryPage: React.FC = () => {
       <div className="root-category__categories">
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => {
-            const currentSubPath = `${basePath}/${subCat.slug}`; // Generate current base path for this subCat
+            // Create base path for the current subcategory
+            const currentSubPath = `${basePath}/${subCat.slug}`;
             return (
               <div key={subCat.id} className="root-category__category">
                 <Link to={`/cat${currentSubPath}`} className="root-category__cover">
@@ -158,11 +159,13 @@ const CategoryPage: React.FC = () => {
                 </h2>
                 <div className="root-category__footer">
                   <div className="root-category__links">
+                    {/* Render linked subcategories using the same currentSubPath */}
                     {categories
                       .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter sub-subcategories
                       .slice(0, 5) // Limit to 5 sub-subcategories
                       .map((linkedSubCat, index, arr) => {
-                        const linkedPath = `${currentSubPath}/${linkedSubCat.slug}`; // Generate path for linked subcategories
+                        // Build the path for linked subcategories
+                        const linkedPath = `${currentSubPath}/${linkedSubCat.slug}`; 
                         return (
                           <React.Fragment key={linkedSubCat.id}>
                             <Link to={`/cat${linkedPath}`}>{linkedSubCat.name}</Link>
