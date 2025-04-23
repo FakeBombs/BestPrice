@@ -46,54 +46,36 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
-  // Render breadcrumbs
+ // Render breadcrumbs
 const renderBreadcrumbs = () => {
     const breadcrumbs = [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
     if (!mainCategory) return null; // Early return if no main category
 
-    // Function to build the breadcrumb trail recursively
-    const buildBreadcrumbTrail = (category) => {
-        // Return early if no category exists
-        if (!category) return;
-
-        const categoryPathSet = new Set(); // Track unique category slugs
-
-        const traverse = (currentCategory) => {
-            if (!currentCategory || categoryPathSet.has(currentCategory.slug)) return;
-
-            categoryPathSet.add(currentCategory.slug);
-
-            // Push the current category to breadcrumbs
-            breadcrumbs.push(
-                <li key={currentCategory.slug}>
-                    <Link to={`/cat/${mainCategory.slug}/${currentCategory.slug}`}>
-                        {currentCategory.name}
-                    </Link>
-                </li>
-            );
-
-            // Recursively traverse to the parent category
-            const parentCategory = categories.find(cat => cat.id === currentCategory.parentId);
-            if (parentCategory && parentCategory.slug !== mainCategory.slug) {
-                traverse(parentCategory);
-            }
-        };
-
-        // Start traversing from the current category
-        traverse(category);
-    };
-
-    // Build breadcrumb trail from the current category
-    buildBreadcrumbTrail(currentCategory);
-
-    // Add the main category at the start
-    breadcrumbs.unshift(
+    // Add the main category breadcrumb if it hasn't been added already
+    breadcrumbs.push(
         <li key={mainCategory.slug}>
-            <Link to={`/cat/${mainCategory.slug}`} > {mainCategory.name}</Link>
+            <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
         </li>
     );
+
+    // Collect current category and its parents, ensuring singular appearance of main categories
+    let category = currentCategory;
+    const categoryPathSet = new Set(); // To track unique categories by slug
+
+    while (category) {
+        if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
+            categoryPathSet.add(category.slug);
+            breadcrumbs.push(
+                <li key={category.slug}>
+                    <Link to={`/cat/${mainCategory.slug}/${category.slug}`} > {category.name}</Link>
+                </li>
+            );
+        }
+        // Move to the parent category
+        category = categories.find(cat => cat.id === category.parentId);
+    }
 
     return (
         <div id="trail">
