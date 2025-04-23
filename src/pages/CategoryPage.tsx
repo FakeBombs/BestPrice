@@ -123,7 +123,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            <div>No subcategories available.</div>
+            renderProducts()
           )}
         </div>
       </>
@@ -170,7 +170,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            <p>No subcategories available for this category.</p>
+            renderProducts()
           )}
         </div>
       </div>
@@ -185,7 +185,7 @@ const CategoryPage: React.FC = () => {
           <ProductCard key={product.id} product={product} />
         ))
       ) : (
-        <p>No products in this category.</p>
+        renderProducts()
       )}
     </div>
   );
