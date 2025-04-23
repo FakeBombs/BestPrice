@@ -113,7 +113,7 @@ const CategoryPage: React.FC = () => {
                                 <div className="root-category__links">
                                     {categories
                                         .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter linked subcategories for the current subCat
-                                        .slice(0, 3) // Limit to 3 linked subcategories
+                                        .slice(0, 5) // Limit to 5 linked subcategories
                                         .map((linkedSubCat, index, arr) => (
                                             <React.Fragment key={linkedSubCat.id}>
                                                 <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
