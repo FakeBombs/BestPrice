@@ -1,55 +1,64 @@
 import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
-import { categories, mainCategories, products } from '@/data/mockData';
+import { useMemo, useState, useEffect } from 'react';
 
-function CategoryPage({ mockData }) {
-  if (!mockData) {
-    return <div>Loading...</div>; // Handle the case where mockData is not yet loaded
+// Assuming your categories data is fetched from an API
+const mockCategories = [
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: '//placehold.co/200x150?text=Technology', parentId: null },
+  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: '//placehold.co/200x150?text=Home+Garden', parentId: null },
+  { id: 3, name: 'Μόδα', slug: 'fashion', image: '//placehold.co/200x150?text=Fashion', parentId: null },
+  { id: 4, name: 'Laptop', slug: 'laptop', image: '//placehold.co/200x150?text=Laptop', parentId: 1 },
+  { id: 5, name: 'Phones', slug: 'phones', image: '//placehold.co/200x150?text=Phones', parentId: 1 },
+  { id: 6, name: 'Gardening Tools', slug: 'gardening-tools', image: '//placehold.co/200x150?text=Gardening+Tools', parentId: 2 },
+  // ... more categories
+];
+
+function CategoryPage() {
+  const { categoryId } = useParams();
+  const [categories, setCategories] = useState(mockCategories);
+  const [currentCategory, setCurrentCategory] = useState<any>(null); // Use any for better flexibility
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+      // Fetch data from API or equivalent
+      // ...API call here...
+      setLoading(false);
+      if (categoryId) {
+        const foundCategory = categories.find((cat) => cat.id === parseInt(categoryId));
+        setCurrentCategory(foundCategory || null);
+      }
+  }, [categoryId, categories]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  const { catSlug } = useParams();
-  const category = useMemo(() => {
-    // Find the category matching the slug.  Crucially, filter by slug.
-    return mockData.categories.find(cat => cat.slug === catSlug);
-  }, [mockData, catSlug]);
-
-  if (!category) {
-    return <div>Category not found</div>; // Important for 404 handling
-  }
-
-  const isMainCategory = !category.parentId;
-
-  const displayContent = useMemo(() => {
-    if (isMainCategory) {
-      // Filter products based on the category ID.
-      const relevantProducts = mockData.products.filter(
-        (product) => product.categoryId === category.id
-      );
+  const renderMainCategories = () => {
+      if (!currentCategory) return null;
+      const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
       return (
-        <div>
-          <h2>{category.name}</h2>
-          {/* Display relevant products */}
-          {relevantProducts.map((product) => (
-            <div key={product.id}>
-              <h3>{product.name}</h3>
-              <p>{product.description}</p> {/* Or other product details */}
-            </div>
-          ))}
-        </div>
+          <>
+              {/* ... your main category display logic here ... */}
+              {subcategories.map(subcat => (
+                  <div key={subcat.id}>
+                      <h2>{subcat.name}</h2>
+                      {/* ...display subcategories here... */}
+                  </div>
+              ))}
+          </>
       );
-    } else {
-      // This is a sub-category
-      return (
-        <div>
-          <h2>{category.name} (Sub-Category of {mockData.categories.find(cat => cat.id === category.parentId)?.name || 'Unknown'})</h2>
-          {/* Display appropriate content for subcategories */}
-          <p>Sub-category content for {category.name}</p>
-        </div>
-      );
-    }
-  }, [category, mockData]); // Important!  Include mockData in the dependency array
+  };
 
-  return <div>{displayContent}</div>;
+
+
+  return (
+      <div>
+          {/* ... your main category display logic here, maybe a title or something ... */}
+          <h2>{currentCategory?.name}</h2>
+          {/* ...rest of your rendering logic... */}
+          {renderMainCategories()}
+      </div>
+  );
 }
 
 export default CategoryPage;
