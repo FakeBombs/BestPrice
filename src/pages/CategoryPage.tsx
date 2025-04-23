@@ -86,7 +86,7 @@ const CategoryPage: React.FC = () => {
             {breadcrumbs.map((crumb, index) => (
               <React.Fragment key={index}>
                 {crumb}
-                {index < breadcrumbs.length - 1 && <span> › </span>}
+                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator"> › </span>}
               </React.Fragment>
             ))}
           </ol>
