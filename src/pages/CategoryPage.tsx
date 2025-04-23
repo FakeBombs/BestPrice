@@ -180,13 +180,18 @@ const CategoryPage: React.FC = () => {
   );
 
   return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        {renderBreadcrumbs()}
-        {!currentCategory ? renderMainCategories() : (currentCategory.parentId ? renderSubcategories() : renderProducts())}
-      </div>
+  <div className="root__wrapper root-category__root">
+    <div className="root">
+      {renderBreadcrumbs()}
+      {currentCategory && currentCategory.parentId 
+        ? renderSubcategories() 
+        : (currentCategory 
+            ? renderMainCategories() 
+            : renderProducts()
+          )
+      }
     </div>
-  );
-};
+  </div>
+);
 
 export default CategoryPage;
