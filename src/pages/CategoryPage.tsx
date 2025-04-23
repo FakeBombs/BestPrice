@@ -184,7 +184,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            <p>No subcategories available for this category.</p>
+            renderProducts()
           )}
         </div>
       </div>
