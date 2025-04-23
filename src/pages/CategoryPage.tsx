@@ -111,19 +111,7 @@ const CategoryPage: React.FC = () => {
                     <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link>
                   </h3>
                   <div className="root-category__footer">
-                    <div className="root-category__links">
-                      {categories
-                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter based on the current subcategory
-                        .slice(0, 1) // Change this to slice(0, 1) to show only the first one
-                        .map((linkedSubCat, index) => (
-                          <span key={linkedSubCat.id}>
-                            <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
-                              {linkedSubCat.name}
-                            </Link>
-                            {index < categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).length - 1 && ', '} {/* Show a comma if there's more than one */}
-                          </span>
-                        ))}
-                    </div>
+                    <div className="root-category__links"></div>
                   </div>
                 </div>
               ))}
