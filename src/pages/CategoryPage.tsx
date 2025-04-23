@@ -50,7 +50,7 @@ const CategoryPage: React.FC = () => {
 const renderBreadcrumbs = () => {
     const breadcrumbs = [];
   
-    // Add main category to breadcrumbs
+    // Add main category to breadcrumbs if it exists
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     if (mainCategory) {
         breadcrumbs.push(
@@ -60,7 +60,7 @@ const renderBreadcrumbs = () => {
         );
     }
 
-    // Add current category path
+    // Traverse the current category and build the full breadcrumb path
     let category = currentCategory;
     while (category) {
         breadcrumbs.push(
