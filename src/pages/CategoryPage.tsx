@@ -53,29 +53,47 @@ const renderBreadcrumbs = () => {
 
     if (!mainCategory) return null; // Early return if no main category
 
-    // Add the main category breadcrumb if it hasn't been added already
-    breadcrumbs.push(
-        <li key={mainCategory.slug}>
-            <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-        </li>
-    );
+    // Function to build the breadcrumb trail recursively
+    const buildBreadcrumbTrail = (category) => {
+        // Return early if no category exists
+        if (!category) return;
 
-    // Collect current category and its parents, ensuring singular appearance of main categories
-    let category = currentCategory;
-    const categoryPathSet = new Set(); // To track unique categories by slug
+        const categoryPathSet = new Set(); // Track unique category slugs
 
-    while (category) {
-        if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
-            categoryPathSet.add(category.slug);
+        const traverse = (currentCategory) => {
+            if (!currentCategory || categoryPathSet.has(currentCategory.slug)) return;
+
+            categoryPathSet.add(currentCategory.slug);
+
+            // Push the current category to breadcrumbs
             breadcrumbs.push(
-                <li key={category.slug}>
-                    <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
+                <li key={currentCategory.slug}>
+                    <Link to={`/cat/${mainCategory.slug}/${currentCategory.slug}`}>
+                        {currentCategory.name}
+                    </Link>
                 </li>
             );
-        }
-        // Move to the parent category
-        category = categories.find(cat => cat.id === category.parentId);
-    }
+
+            // Recursively traverse to the parent category
+            const parentCategory = categories.find(cat => cat.id === currentCategory.parentId);
+            if (parentCategory && parentCategory.slug !== mainCategory.slug) {
+                traverse(parentCategory);
+            }
+        };
+
+        // Start traversing from the current category
+        traverse(category);
+    };
+
+    // Build breadcrumb trail from the current category
+    buildBreadcrumbTrail(currentCategory);
+
+    // Add the main category at the start
+    breadcrumbs.unshift(
+        <li key={mainCategory.slug}>
+            <Link to={`/cat/${mainCategory.slug}`} > {mainCategory.name}</Link>
+        </li>
+    );
 
     return (
         <div id="trail">
