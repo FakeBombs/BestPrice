@@ -87,7 +87,11 @@ const CategoryPage: React.FC = () => {
     <div className="page-header">
       <div className="hgroup">
         <div className="page-header__title-wrapper">
-          <a className="trail__back pressable" title="BestPrice.gr" href="/"><svg aria-hidden="true" className="icon" width={16} height={16}><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg></a>
+          <a className="trail__back pressable" title="BestPrice.gr" href="/">
+            <svg aria-hidden="true" className="icon" width={16} height={16}>
+              <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+            </svg>
+          </a>
           <h1>{currentCategory?.name}</h1>
         </div>
       </div>
@@ -99,15 +103,21 @@ const CategoryPage: React.FC = () => {
               .filter(subCat => subCat.parentId === mainCat.id)
               .map((subCat) => (
                 <div key={subCat.id} className="root-category__subcategory">
-                  <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
-                  <h3 className="root-category__subcategory-title"><Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link></h3>
+                  <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`} className="root-category__cover">
+                    <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                  </Link>
+                  <h3 className="root-category__subcategory-title">
+                    <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${subCat.slug}`}>{subCat.name}</Link>
+                  </h3>
                   <div className="root-category__footer">
                     <div className="root-category__links">
                       {categories
                         .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                         .slice(0, 3)
                         .map((linkedSubCat, index, arr) => (
-                            <Link key={linkedSubCat.id} to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                            <Link key={linkedSubCat.id} to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
+                              {linkedSubCat.name}
+                            </Link>
                             {index < arr.length - 1 && ', '}
                         ))}
                     </div>
@@ -164,3 +174,6 @@ return (
     </div>
   </div>
 );
+};
+
+export default CategoryPage;
