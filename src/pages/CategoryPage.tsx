@@ -81,54 +81,50 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  const renderMainCategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
-    return (
-      <>
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title="BestPrice.gr" href="/">
-                <svg aria-hidden="true" className="icon" width={16} height={16}>
-                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                </svg>
-              </a>
-              <h1>{currentCategory?.name}</h1>
-            </div>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                </Link>
-                <h3 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                </h3>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {categories
-                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter linked subcategories for the current subCat
-                      .slice(0, 5) // Limit to 5 linked subcategories
-                      .map((linkedSubCat, index, arr) => (
+  const renderSubcategories = (parentCategory) => {
+  const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
+  const basePath = parentCategory ? `/cat/${parentCategory.slug}` : '/cat'; // Base path for links
+
+  return (
+    <div className="root-category__categories">
+      {subcategories.length > 0 ? (
+        subcategories.map((subCat) => {
+          // Create the path for the current subcategory
+          const currentSubPath = `${basePath}/${subCat.slug}`;
+          return (
+            <div key={subCat.id} className="root-category__category">
+              <Link to={currentSubPath} className="root-category__cover">
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+              </Link>
+              <h2 className="root-category__category-title">
+                <Link to={currentSubPath}>{subCat.name}</Link>
+              </h2>
+              <div className="root-category__footer">
+                <div className="root-category__links">
+                  {categories
+                    .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter for linked subcategories
+                    .slice(0, 5) // Limit to 5 linked subcategories
+                    .map((linkedSubCat, index, arr) => {
+                      // Build full path for linked subcategories
+                      const linkedPath = `${currentSubPath}/${linkedSubCat.slug}`;
+                      return (
                         <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${mainCatSlug}/${subCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                          {index < arr.length - 1 && ', '} {/* Add comma if there are more */}
+                          <Link to={linkedPath}>{linkedSubCat.name}</Link>
+                          {index < arr.length - 1 && ', '}
                         </React.Fragment>
-                      ))}
-                  </div>
+                      );
+                    })}
                 </div>
               </div>
-            ))
-          ) : (
-            renderProducts()
-          )}
-        </div>
-      </>
-    );
-  };
+            </div>
+          );
+        })
+      ) : (
+        renderProducts() // Fallback to render products if no subcategories
+      )}
+    </div>
+  );
+};
 
   const renderSubcategories = (basePath: string = '') => {
   const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
@@ -204,7 +200,7 @@ const CategoryPage: React.FC = () => {
       <div className="root">
         {renderBreadcrumbs()}
         {currentCategory && currentCategory.parentId 
-          ? renderSubcategories(`/${mainCatSlug}`) 
+          ? renderSubcategories(currentCategory) 
           : (currentCategory 
               ? renderMainCategories() 
               : renderProducts()
