@@ -56,7 +56,7 @@ const renderBreadcrumbs = () => {
     // Add the main category breadcrumb if it hasn't been added already
     breadcrumbs.push(
         <li key={mainCategory.slug}>
-            <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+            <Link to={`/cat/${mainCategory.slug}`} > {mainCategory.name}</Link>
         </li>
     );
 
