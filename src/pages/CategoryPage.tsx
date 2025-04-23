@@ -84,6 +84,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => {
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
   return (
     <div className="page-header">
       <div className="hgroup">
