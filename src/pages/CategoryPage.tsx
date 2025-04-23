@@ -84,51 +84,51 @@ const CategoryPage: React.FC = () => {
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
-        <>
-            <div className="page-header">
-                <div className="hgroup">
-                    <div className="page-header__title-wrapper">
-                        <a className="trail__back pressable" title="BestPrice.gr" href="/">
-                            <svg aria-hidden="true" className="icon" width={16} height={16}>
-                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                            </svg>
-                        </a>
-                        <h1>{currentCategory?.name}</h1>
-                    </div>
+      <>
+        <div className="page-header">
+          <div className="hgroup">
+            <div className="page-header__title-wrapper">
+              <a className="trail__back pressable" title="BestPrice.gr" href="/">
+                <svg aria-hidden="true" className="icon" width={16} height={16}>
+                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+                </svg>
+              </a>
+              <h1>{currentCategory?.name}</h1>
+            </div>
+          </div>
+        </div>
+        <div className="root-category__categories">
+          {subcategories.length > 0 ? (
+            subcategories.map((subCat) => (
+              <div key={subCat.id} className="root-category__category">
+                <Link to={`/cat/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
+                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                </Link>
+                <h3 className="root-category__category-title">
+                  <Link to={`/cat/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
+                </h3>
+                <div className="root-category__footer">
+                  <div className="root-category__links">
+                    {categories
+                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter linked subcategories for the current subCat
+                      .slice(0, 5) // Limit to 5 linked subcategories
+                      .map((linkedSubCat, index, arr) => (
+                        <React.Fragment key={linkedSubCat.id}>
+                          <Link to={`/cat/${mainCatSlug}/${subCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                          {index < arr.length - 1 && ', '} {/* Add comma if there are more */}
+                        </React.Fragment>
+                      ))}
+                  </div>
                 </div>
-            </div>
-            <div className="root-category__categories">
-                {subcategories.length > 0 ? (
-                    subcategories.map((subCat) => (
-                        <div key={subCat.id} className="root-category__category">
-                            <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                            </Link>
-                            <h3 className="root-category__category-title">
-                                <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                            </h3>
-                            <div className="root-category__footer">
-                                <div className="root-category__links">
-                                    {categories
-                                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id) // Filter linked subcategories for the current subCat
-                                        .slice(0, 5) // Limit to 5 linked subcategories
-                                        .map((linkedSubCat, index, arr) => (
-                                            <React.Fragment key={linkedSubCat.id}>
-                                                <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                                                {index < arr.length - 1 && ', '} {/* Add comma if there are more */}
-                                            </React.Fragment>
-                                        ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <div>No subcategories available.</div> // Optional: Message if there are no subcategories
-                )}
-            </div>
-        </>
+              </div>
+            ))
+          ) : (
+            renderProducts()
+          )}
+        </div>
+      </>
     );
-};
+  };
 
   const renderSubcategories = (parentCategory) => {
   const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
