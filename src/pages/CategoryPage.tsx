@@ -102,7 +102,7 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => (
-                        <div key={subCat.id} className="root-category__subcategory">
+                        <div key={subCat.id} className="root-category__category">
                             <Link to={`/cat/${subCat.parentId}/${subCat.parentSlug}/${subCat.slug}`} className="root-category__cover">
                                 <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                             </Link>
