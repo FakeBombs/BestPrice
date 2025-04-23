@@ -120,7 +120,7 @@ const CategoryPage: React.FC = () => {
                               <Link to={`/cat/${mainCat.id}/${mainCat.slug}/${linkedSubCat.slug}`}>
                                 {linkedSubCat.name}
                               </Link>
-                              {index < arr.length - 1 && ', '}
+
                             </span>
                           ))}
                       </div>
