@@ -49,21 +49,17 @@ const CategoryPage: React.FC = () => {
   // Render breadcrumbs
 const renderBreadcrumbs = () => {
     const breadcrumbs = [];
+    
+    // Find the main category
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     
-    // Check for main category existence
-    if (mainCategory) {
-        breadcrumbs.push(
-            <li key={mainCategory.slug}>
-                <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-            </li>
-        );
-    }
-
-    // Collecting current category path
+    if (!mainCategory) return null; // Early return if no main category
+    
+    // Array to hold categories from the current one back to the main category
     let category = currentCategory;
     const categoryPath = [];
-  
+
+    // Collect current category and its parents
     while (category) {
         categoryPath.unshift(
             <li key={category.slug}>
@@ -71,12 +67,19 @@ const renderBreadcrumbs = () => {
             </li>
         );
 
-        // Use `parentId` to find parent category in the categories array
+        // Move to parent category
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Combine the main category breadcrumb with the rest
-    breadcrumbs.push(...categoryPath);
+    // Only add other breadcrumbs if categoryPath has entries
+    if (categoryPath.length) {
+        breadcrumbs.push(
+            <li key={mainCategory.slug}>
+                <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+            </li>
+        );  
+        breadcrumbs.push(...categoryPath);
+    }
 
     return (
         <div id="trail">
