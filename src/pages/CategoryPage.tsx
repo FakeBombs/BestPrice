@@ -91,7 +91,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
     return (
       <>
         <div className="page-header">
@@ -116,6 +116,19 @@ const CategoryPage: React.FC = () => {
                 <h3 className="root-category__category-title">
                   <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
                 </h3>
+                <div className="root-category__footer">
+                  <div className="root-category__links">
+                    {categories
+                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                      .slice(0, 5) 
+                      .map((linkedSubCat, index, arr) => (
+                        <React.Fragment key={linkedSubCat.id}>
+                          <Link to={`/cat/${subCat.parentId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                          {index < arr.length - 1 && ', '}
+                        </React.Fragment>
+                      ))}
+                  </div>
+                </div>
               </div>
             ))
           ) : (
@@ -127,7 +140,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderSubcategories = () => {
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
     return (
       <div className="page-header">
         <div className="hgroup">
@@ -150,6 +163,19 @@ const CategoryPage: React.FC = () => {
                 <h2 className="root-category__category-title">
                   <Link to={`/cat/${mainCatId}/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
                 </h2>
+                <div className="root-category__footer">
+                  <div className="root-category__links">
+                    {categories
+                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                      .slice(0, 5) 
+                      .map((linkedSubCat, index, arr) => (
+                        <React.Fragment key={linkedSubCat.id}>
+                          <Link to={`/cat/${mainCatId}/${mainCatSlug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                          {index < arr.length - 1 && ', '}
+                        </React.Fragment>
+                      ))}
+                  </div>
+                </div>
               </div>
             ))
           ) : (
