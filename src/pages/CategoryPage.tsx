@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
-import { Category, mainCategories } from './your-data'; // Replace with your actual import
+import { Category, mainCategories } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
 
 interface Product {
   id: number;
