@@ -419,7 +419,7 @@ export const products: Product[] = [
     title: 'MacBook Pro 16-inch',
     brand: 'Apple',
     model: 'MacBook Pro',
-    categoryIds: [11],
+    categoryIds: [12],
     description: 'High-performance laptop for professionals.',
     image: '//placehold.co/400x400?text=MacBook+Pro',
     images: ['//placehold.co/400x400?text=MacBook+Pro'],
