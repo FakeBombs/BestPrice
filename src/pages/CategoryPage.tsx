@@ -51,14 +51,13 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
- // Render breadcrumbs
-const renderBreadcrumbs = () => {
+ const renderBreadcrumbs = () => {
   const breadcrumbs = [];
   const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
+  
   if (!mainCategory) return null;
 
-  // Initialize breadcrumbs with the main category
+  // Start with the main category
   breadcrumbs.push(
     <li key={mainCategory.slug}>
       <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
@@ -67,21 +66,32 @@ const renderBreadcrumbs = () => {
 
   // Create a Set to keep track of slugged categories
   const categoryPathSet = new Set();
-  
-  let category = currentCategory; // Use currentCategory instead of uninitialized subcategory
 
-  // Traverse through each category to build the breadcrumb path
+  // Use currentCategory to add to breadcrumbs
+  let category = currentCategory;
+
+  // Build the breadcrumb trail from currentCategory up to the main category
+  const categoryTrail = [];
+  
   while (category) {
-    if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
-      categoryPathSet.add(category.slug);
+    categoryTrail.push(category);  // Push the category to create the trail
+    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+  }
+
+  // Reverse the order so we can start from mainCategory and go to currentCategory
+  categoryTrail.reverse();
+
+  // Add categories to breadcrumbs
+  categoryTrail.forEach(cat => {
+    if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
+      categoryPathSet.add(cat.slug);
       breadcrumbs.push(
-        <li key={category.slug}>
-          <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
+        <li key={cat.slug}>
+          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
         </li>
       );
     }
-    category = categories.find(cat => cat.id === category.parentId);
-  }
+  });
 
   // Render Breadcrumbs
   return (
