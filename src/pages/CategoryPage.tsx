@@ -52,46 +52,43 @@ const CategoryPage: React.FC = () => {
   }
 
  const renderBreadcrumbs = () => {
-  const breadcrumbs = [];
+  const breadcrumbs: JSX.Element[] = [];
   const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-  
+
   if (!mainCategory) return null;
 
-  // Start with the main category
+  // Start by adding the main category
   breadcrumbs.push(
     <li key={mainCategory.slug}>
       <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
     </li>
   );
 
-  // Create a Set to keep track of slugged categories
-  const categoryPathSet = new Set();
-
-  // Use currentCategory to add to breadcrumbs
+  // Store the full path slugs for accurate URL creation
   let category = currentCategory;
+  const categoryTrail: string[] = [];
 
-  // Build the breadcrumb trail from currentCategory up to the main category
-  const categoryTrail = [];
-  
+  // Build the breadcrumb trail from the currentCategory to the main category
   while (category) {
-    categoryTrail.push(category);  // Push the category to create the trail
-    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+    categoryTrail.push(category.slug); // Store slug for URL creation
+    category = categories.find(cat => cat.id === category.parentId); // Move up the category tree
   }
 
-  // Reverse the order so we can start from mainCategory and go to currentCategory
+  // Reverse the order of the trail to start from the main category and move down
   categoryTrail.reverse();
 
-  // Add categories to breadcrumbs
-  categoryTrail.forEach(cat => {
-    if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
-      categoryPathSet.add(cat.slug);
-      breadcrumbs.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
-        </li>
-      );
-    }
-  });
+  // Build breadcrumbs with correct URLs
+  let basePath = `/cat/${mainCategory.slug}`;
+  for (let i = 1; i < categoryTrail.length; i++) {
+    const catSlug = categoryTrail[i];
+    basePath += `/${catSlug}`;
+
+    breadcrumbs.push(
+      <li key={catSlug}>
+        <Link to={basePath}>{catSlug}</Link>
+      </li>
+    );
+  }
 
   // Render Breadcrumbs
   return (
