@@ -37,7 +37,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }, [pathname]);
 
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
+  const [currentCategoryId, setCurrentCategoryId] = useState(2); // Default to Technology
   const { t } = useTranslation();
 
   const sitemapToggle = () => {
