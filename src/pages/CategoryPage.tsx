@@ -31,7 +31,7 @@ const CategoryPage: React.FC = () => {
     if (!currentCategory) return;
 
     console.log('Current Category:', currentCategory);
-    console.log('All Products:', products);
+    console.log("All Products Parent IDs:", products.map(product => product.parentId));
 
     const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
     if (!isLeafCategory) {
