@@ -30,6 +30,22 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     if (!currentCategory) return;
 
+    console.log('Current Category:', currentCategory);
+    console.log('All Products:', products);
+
+    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
+    if (!isLeafCategory) {
+        setFilteredProducts([]); 
+    } else {
+        const productsToDisplay = products.filter(product => 
+            product.categoryIds.includes(currentCategory.id)
+        );
+
+        console.log('Filtered Products:', productsToDisplay); // Log filtered results
+        setFilteredProducts(productsToDisplay);
+    }
+}, [currentCategory, products]);
+
     const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
 
     if (!isLeafCategory) {
