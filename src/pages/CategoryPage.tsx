@@ -52,43 +52,46 @@ const CategoryPage: React.FC = () => {
   }
 
  const renderBreadcrumbs = () => {
-  const breadcrumbs: JSX.Element[] = [];
+  const breadcrumbs = [];
   const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
+  
   if (!mainCategory) return null;
 
-  // Start by adding the main category
+  // Start with the main category
   breadcrumbs.push(
     <li key={mainCategory.slug}>
       <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
     </li>
   );
 
-  // Store the full path slugs for accurate URL creation
-  let category = currentCategory;
-  const categoryTrail: string[] = [];
+  // Create a Set to keep track of slugged categories
+  const categoryPathSet = new Set();
 
-  // Build the breadcrumb trail from the currentCategory to the main category
+  // Use currentCategory to add to breadcrumbs
+  let category = currentCategory;
+
+  // Build the breadcrumb trail from currentCategory up to the main category
+  const categoryTrail = [];
+  
   while (category) {
-    categoryTrail.push(category.slug); // Store slug for URL creation
-    category = categories.find(cat => cat.id === category.parentId); // Move up the category tree
+    categoryTrail.push(category);  // Push the category to create the trail
+    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
   }
 
-  // Reverse the order of the trail to start from the main category and move down
+  // Reverse the order so we can start from mainCategory and go to currentCategory
   categoryTrail.reverse();
 
-  // Build breadcrumbs with correct URLs
-  let basePath = `/cat/${mainCategory.slug}`;
-  for (let i = 1; i < categoryTrail.length; i++) {
-    const catSlug = categoryTrail[i];
-    basePath += `/${catSlug}`;
-
-    breadcrumbs.push(
-      <li key={catSlug}>
-        <Link to={basePath}>{catSlug}</Link>
-      </li>
-    );
-  }
+  // Add categories to breadcrumbs
+  categoryTrail.forEach(cat => {
+    if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
+      categoryPathSet.add(cat.slug);
+      breadcrumbs.push(
+        <li key={cat.slug}>
+          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
+        </li>
+      );
+    }
+  });
 
   // Render Breadcrumbs
   return (
