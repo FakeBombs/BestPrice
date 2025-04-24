@@ -52,12 +52,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   // Get subcategories of the main category
   const subCategories = categories.filter(cat => cat.parentId === currentCategoryId);
 
-  // Get brands for the current category (mock brands just for the demo)
-  const brands = [
-    { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
-    { id: 2, name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' }
-  ]; // This array could be generated based on actual category products
-
   // Define a mock array of popular search queries
   const popularSearchQueries = [
     { query: 'iphone 16' },
