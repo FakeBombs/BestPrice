@@ -31,9 +31,11 @@ const CategoryPage: React.FC = () => {
     if (!currentCategory) return;
 
     console.log('Current Category:', currentCategory);
-    console.log("All Products Parent IDs:", products.map(product => product.parentId));
+    console.log('All Products:', products);
 
     const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
+    console.log("Is Leaf Category:", isLeafCategory);
+
     if (!isLeafCategory) {
         setFilteredProducts([]); 
     } else {
@@ -42,7 +44,7 @@ const CategoryPage: React.FC = () => {
         );
 
         console.log('Filtered Products:', productsToDisplay); // Log filtered results
-        setFilteredProducts(productsToDisplay);
+        setFilteredProducts(productsToDisplay); // Set filtered products
     }
 }, [currentCategory, products]);
 
