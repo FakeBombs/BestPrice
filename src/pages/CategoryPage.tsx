@@ -195,16 +195,16 @@ const renderBreadcrumbs = () => {
 
   const renderProducts = () => (
     <div>
-      <h2>Products</h2>
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      ) : (
-        renderProducts()
-      )}
+        <h2>Products</h2>
+        {filteredProducts.length > 0 ? (
+            filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+            ))
+        ) : (
+            <p>No products available.</p> // Use a message for no products instead of recursion
+        )}
     </div>
-  );
+);
 
   return (
     <div className="root__wrapper root-category__root">
