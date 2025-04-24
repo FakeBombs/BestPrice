@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLocation } from 'react-router-dom';
-import { mainCategories, categories, Category, Brands } from '@/data/mockData';
+import { mainCategories, categories, Category, Brand, brands } from '@/data/mockData'; // Adjust the path as needed
 
 // Define the custom hooks to add classes/IDs
 function useBodyAttributes(classNames, id) {
@@ -35,9 +35,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top on route change
   }, [pathname]);
-  
+
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  const [currentCategoryId, setCurrentCategoryId] = useState(1); // Change as needed for demo
+  const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
   const { t } = useTranslation();
 
   const sitemapToggle = () => {
@@ -52,7 +52,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   // Get subcategories of the main category
   const subCategories = categories.filter(cat => cat.parentId === currentCategoryId);
 
-  // Define a mock array of popular search queries
+  // Define popular search queries
   const popularSearchQueries = [
     { query: 'iphone 16' },
     { query: 'iphone 15' },
@@ -84,7 +84,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                           <div className="sitemap-desktop__col" key={sub.id}>
                             <div className="sitemap-desktop__sub">
                               <Link to={`/cat/${sub.slug}?bpref=sitemap`}>
-                                <img className="sitemap-desktop__sub-image" width="96" height="96" alt={sub.name} src={sub.image}/>
+                                <img className="sitemap-desktop__sub-image" width="96" height="96" alt={sub.name} src={sub.image} />
                               </Link>
                               <div className="sitemap-desktop__sub-main">
                                 <div className="sitemap-desktop__sub-title">
@@ -106,7 +106,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         {popularSearchQueries.map((search, index) => (
                           <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`}>
                             <svg className="icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" role="img">
-                              <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="..."/>
+                              <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="..."/> {/* SVG path here */}
                             </svg>
                             {search.query}
                           </Link>
@@ -115,7 +115,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       <div className="sitemap-desktop__brands">
                         {brands.map(brand => (
                           <Link className="sitemap-desktop__brands-brand pressable" key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html?bpref=sitemap`}>
-                            <img alt={brand.name} src={brand.logo}/>
+                            <img alt={brand.name} src={brand.logo} />
                           </Link>
                         ))}
                       </div>
