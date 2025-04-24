@@ -38,7 +38,7 @@ const CategoryPage: React.FC = () => {
         setFilteredProducts([]); 
     } else {
         const productsToDisplay = products.filter(product => 
-            product.parentId === currentCategory.id // Changed to check against parentId
+            product.parentId === currentCategory.id
         );
 
         console.log('Filtered Products:', productsToDisplay); // Log filtered results
