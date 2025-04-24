@@ -211,8 +211,11 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderProducts = () => (
-    <div>
-      <h2>Products</h2>
+    <div className="page-products">
+      <aside className="page-products__filters"></aside>
+      <main className="page-products__main">
+        <div className="page-products__main-wrapper">
+          <div className="p__products" data-pagination="">
       {filteredProducts.length > 0 ? (
         filteredProducts.map(product => (
           <ProductCard key={product.id} product={product} />
@@ -220,6 +223,9 @@ const CategoryPage: React.FC = () => {
       ) : (
         <p>No products available.</p>
       )}
+          </div>
+        </div>
+      </main>
     </div>
   );
 
