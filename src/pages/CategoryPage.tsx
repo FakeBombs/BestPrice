@@ -33,19 +33,13 @@ const CategoryPage: React.FC = () => {
     console.log('Current Category:', currentCategory);
     console.log('All Products:', products);
 
-    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
-    console.log("Is Leaf Category:", isLeafCategory);
+    // Instead of checking for leaf categories, you can directly filter products
+    const productsToDisplay = products.filter(product => 
+        product.categoryIds.includes(currentCategory.id) // Match against categoryIds
+    );
 
-    if (!isLeafCategory) {
-        setFilteredProducts([]); 
-    } else {
-        const productsToDisplay = products.filter(product => 
-            product.parentId === currentCategory.id
-        );
-
-        console.log('Filtered Products:', productsToDisplay); // Log filtered results
-        setFilteredProducts(productsToDisplay); // Set filtered products
-    }
+    console.log('Filtered Products:', productsToDisplay); 
+    setFilteredProducts(productsToDisplay);
 }, [currentCategory, products]);
 
   if (!currentCategory) {
