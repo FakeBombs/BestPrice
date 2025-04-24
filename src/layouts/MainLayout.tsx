@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLocation } from 'react-router-dom';
-import { mainCategories, categories, Category, Brand } from '@/data/mockData';
+import { mainCategories, categories, Category, Brands } from '@/data/mockData';
 
 // Define the custom hooks to add classes/IDs
 function useBodyAttributes(classNames, id) {
