@@ -149,65 +149,58 @@ const renderBreadcrumbs = () => {
   };
 
   const renderSubcategories = (parentCategory) => {
-  const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
-  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-  
-  // Construct the base path based on the presence of a parent category
-  const basePath = parentCategory && parentCategory.slug 
-    ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
-    : `/cat/${mainCategory.slug}`; // Base path for links
+    const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-  return (
-    <div className="root-category__categories">
-      {subcategories.length > 0 ? (
-        subcategories.map((subCat) => {
-          const currentSubPath = `${basePath}/${subCat.slug}`;
-          return (
-            <div key={subCat.id} className="root-category__category">
-              <Link to={currentSubPath} className="root-category__cover">
-                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-              </Link>
-              <h2 className="root-category__category-title">
-                <Link to={currentSubPath}>{subCat.name}</Link>
-              </h2>
-              <div className="root-category__footer">
-                <div className="root-category__links">
-                  {categories
-                    .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                    .slice(0, 5)
-                    .map((linkedSubCat, index, arr) => {
-                      const linkedPath = `${currentSubPath}/${linkedSubCat.slug}`;
-                      return (
-                        <React.Fragment key={linkedSubCat.id}>
-                          <Link to={linkedPath}>{linkedSubCat.name}</Link>
-                          {index < arr.length - 1 && ', '}
-                        </React.Fragment>
-                      );
-                    })}
-                </div>
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        renderProducts() // Fallback to render products if no subcategories
-      )}
-    </div>
-  );
+    const basePath = parentCategory?.slug 
+        ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
+        : `/cat/${mainCategory.slug}`;
+
+    return (
+        <div className="root-category__categories">
+            {subcategories.length > 0 ? (
+                subcategories.map((subCat) => (
+                    <div key={subCat.id} className="root-category__category">
+                        <Link to={`${basePath}/${subCat.slug}`} className="root-category__cover">
+                            <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                        </Link>
+                        <h2 className="root-category__category-title">
+                            <Link to={`${basePath}/${subCat.slug}`}>{subCat.name}</Link>
+                        </h2>
+                        <div className="root-category__footer">
+                            <div className="root-category__links">
+                                {categories
+                                    .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                                    .slice(0, 5)
+                                    .map((linkedSubCat, index, arr) => (
+                                        <React.Fragment key={linkedSubCat.id}>
+                                            <Link to={`${basePath}/${subCat.slug}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                                            {index < arr.length - 1 && ', '}
+                                        </React.Fragment>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                renderProducts() // Ensure this does not lead to infinite recursion
+            )}
+        </div>
+    );
 };
 
   const renderProducts = () => (
     <div>
-      <h2>Products</h2>
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      ) : (
-        renderProducts()
-      )}
+        <h2>Products</h2>
+        {filteredProducts.length > 0 ? (
+            filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+            ))
+        ) : (
+            <p>No products available.</p> // Use a message for no products instead of recursion
+        )}
     </div>
-  );
+);
 
   return (
     <div className="root__wrapper root-category__root">
