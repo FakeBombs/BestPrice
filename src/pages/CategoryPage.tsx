@@ -51,60 +51,60 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
-  // Render breadcrumbs
-  const renderBreadcrumbs = () => {
-    const breadcrumbs = [];
-    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+ // Render breadcrumbs
+const renderBreadcrumbs = () => {
+  const breadcrumbs = [];
+  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-    if (!mainCategory) return null;
+  if (!mainCategory) return null;
 
-   // Initialize breadcrumbs with the main category
-const breadcrumbs = [
-  <li key={mainCategory.slug}>
-    <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-  </li>
-];
+  // Initialize breadcrumbs with the main category
+  breadcrumbs.push(
+    <li key={mainCategory.slug}>
+      <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+    </li>
+  );
 
-// Create a Set to keep track of slugged categories
-const categoryPathSet = new Set();
+  // Create a Set to keep track of slugged categories
+  const categoryPathSet = new Set();
+  
+  let category = currentCategory; // Use currentCategory instead of uninitialized subcategory
 
-// Get the subcategories
-let category = subcategory;  // Adjust this if you have a specific starting category
-
-while (category) {
-  if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
-    categoryPathSet.add(category.slug);
-    // Prepend the subcategory to breadcrumbs for correct order
-    breadcrumbs.push(
-      <li key={category.slug}>
-        <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
-      </li>
-    );
+  // Traverse through each category to build the breadcrumb path
+  while (category) {
+    if (!categoryPathSet.has(category.slug) && category.slug !== mainCategory.slug) {
+      categoryPathSet.add(category.slug);
+      breadcrumbs.push(
+        <li key={category.slug}>
+          <Link to={`/cat/${mainCategory.slug}/${category.slug}`}>{category.name}</Link>
+        </li>
+      );
+    }
+    category = categories.find(cat => cat.id === category.parentId);
   }
-  category = categories.find(cat => cat.id === category.parentId);
-}
-    // Render Breadcrumbs
-    return (
-      <div id="trail">
-        <nav className="breadcrumb">
-    <ol>
-      <li>
-        <Link to="/" rel="home">
-          <span>BestPrice</span>
-        </Link>
-        <span className="trail__breadcrumb-separator">›</span>
-      </li>
-      {breadcrumbs.map((crumb, index) => (
-        <React.Fragment key={index}>
-          {crumb}
-          {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-        </React.Fragment>
-      ))}
-    </ol>
-        </nav>
-      </div>
-    );
-  };
+
+  // Render Breadcrumbs
+  return (
+    <div id="trail">
+      <nav className="breadcrumb">
+        <ol>
+          <li>
+            <Link to="/" rel="home">
+              <span>BestPrice</span>
+            </Link>
+            <span className="trail__breadcrumb-separator">›</span>
+          </li>
+          {breadcrumbs.map((crumb, index) => (
+            <React.Fragment key={index}>
+              {crumb}
+              {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+            </React.Fragment>
+          ))}
+        </ol>
+      </nav>
+    </div>
+  );
+};
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
