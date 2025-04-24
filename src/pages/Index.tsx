@@ -130,67 +130,67 @@ const Index = () => {
                       <img alt="Deals icon" className="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
                     </div><h2 className="h-categories__label">{t('deals')}</h2>
                 </Link>
-                <Link to="/cat/806/mobile-phones.html?bpref=home-categories" className="h-categories__category" title="Κινητά">
+                <Link to="/cat/mobile-phones.html?bpref=home-categories" className="h-categories__category" title="Κινητά">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Κινητά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/806-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/806-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Κινητά</h2>
                 </Link>
-                <Link to="/hub/25/iphone.html?bpref=home-categories" className="h-categories__category" title="iPhone">
+                <Link to="/hub/iphone.html?bpref=home-categories" className="h-categories__category" title="iPhone">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="iPhone στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/misc/hub25-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/misc/hub25-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">iPhone</h2>
                 </Link>
-                <Link to="/cat/3048/thleoraseis.html?bpref=home-categories" className="h-categories__category" title="Τηλεοράσεις">
+                <Link to="/cat/thleoraseis.html?bpref=home-categories" className="h-categories__category" title="Τηλεοράσεις">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Τηλεοράσεις στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/3048-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/3048-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Τηλεοράσεις</h2>
                 </Link>
-                <Link to="/cat/2442/air-condition.html?bpref=home-categories" className="h-categories__category" title="Κλιματιστικά">
+                <Link to="/cat/air-condition.html?bpref=home-categories" className="h-categories__category" title="Κλιματιστικά">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Κλιματιστικά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2442-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2442-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Κλιματιστικά</h2>
                 </Link>
-                <Link to="/cat/6280/smartwatches.html?bpref=home-categories" className="h-categories__category" title="Smartwatches">
+                <Link to="/cat/smartwatches.html?bpref=home-categories" className="h-categories__category" title="Smartwatches">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Smartwatches στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6280-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6280-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Smartwatches</h2>
                 </Link>
-                <Link to="/cat/6385/gynaikeia-sneakers.html?bpref=home-categories" className="h-categories__category" title="Γυναικεία Sneakers">
+                <Link to="/cat/gynaikeia-sneakers.html?bpref=home-categories" className="h-categories__category" title="Γυναικεία Sneakers">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Γυναικεία Sneakers στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6385-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6385-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Γυναικεία Sneakers</h2>
                 </Link>
-                <Link to="/cat/3056/gialia-iliou.html?bpref=home-categories" className="h-categories__category" title="Γυαλιά Ηλίου">
+                <Link to="/cat/gialia-iliou.html?bpref=home-categories" className="h-categories__category" title="Γυαλιά Ηλίου">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Γυαλιά Ηλίου στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/3056-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/3056-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Γυαλιά Ηλίου</h2>
                 </Link>
-                <Link to="/cat/2613/kartes-grafikwn.html?bpref=home-categories" className="h-categories__category" title="GPU">
+                <Link to="/cat/graphic-cards.html?bpref=home-categories" className="h-categories__category" title="GPU">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="GPU στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2613-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2613-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">GPU</h2>
                 </Link>
-                <Link to="/cat/2591/laptops.html?bpref=home-categories" className="h-categories__category" title="Laptops">
+                <Link to="/cat/laptops.html?bpref=home-categories" className="h-categories__category" title="Laptops">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Laptops στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2591-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2591-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Laptops</h2>
                 </Link>
-                <Link to="/cat/6025/kremes-prosopou.html?bpref=home-categories" className="h-categories__category" title="Κρέμες Προσώπου">
+                <Link to="/cat/kremes-prosopou.html?bpref=home-categories" className="h-categories__category" title="Κρέμες Προσώπου">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Κρέμες Προσώπου στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6025-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6025-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Κρέμες Προσώπου</h2>
                 </Link>
-                <Link to="/cat/2485/psigeia.html?bpref=home-categories" className="h-categories__category" title="Ψυγεία">
+                <Link to="/cat/psigeia.html?bpref=home-categories" className="h-categories__category" title="Ψυγεία">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Ψυγεία στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2485-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2485-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Ψυγεία</h2>
                 </Link>
-                <Link to="/cat/2492/plyntiria-rouxwn.html?bpref=home-categories" className="h-categories__category" title="Πλυντήρια Ρούχων">
+                <Link to="/cat/plyntiria-rouxwn.html?bpref=home-categories" className="h-categories__category" title="Πλυντήρια Ρούχων">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Πλυντήρια Ρούχων στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2492-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2492-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Πλυντήρια Ρούχων</h2>
                 </Link>
-                <Link to="/cat/6846/skoupes-stick.html?bpref=home-categories" className="h-categories__category" title="Σκούπες Stick">
+                <Link to="/cat/skoupes-stick.html?bpref=home-categories" className="h-categories__category" title="Σκούπες Stick">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Σκούπες Stick στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6846-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6846-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Σκούπες Stick</h2></Link><Link to="/cat/3446/tablets.html?bpref=home-categories" className="h-categories__category" title="Tablets"><div className="h-categories__cover"><img width="125" height="125" alt="Tablets στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/3446-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/3446-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Tablets</h2></Link><Link to="/cat/7124/antiiliaka.html?bpref=home-categories" className="h-categories__category" title="Αντηλιακά"><div className="h-categories__cover"><img width="125" height="125" alt="Αντηλιακά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/7124-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/7124-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Αντηλιακά</h2></Link><Link to="/cat/6670/andrika-sneakers.html?bpref=home-categories" className="h-categories__category" title="Ανδρικά Sneakers"><div className="h-categories__cover"><img width="125" height="125" alt="Ανδρικά Sneakers στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6670-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6670-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Ανδρικά Sneakers</h2></Link><Link to="/cat/6843/skoupes-robot.html?bpref=home-categories" className="h-categories__category" title="Σκούπες Ρομπότ"><div className="h-categories__cover"><img width="125" height="125" alt="Σκούπες Ρομπότ στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/6843-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/6843-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Σκούπες Ρομπότ</h2></Link><Link to="/cat/2421/xortokoptika.html?bpref=home-categories" className="h-categories__category" title="Χορτοκοπτικά"><div className="h-categories__cover"><img width="125" height="125" alt="Χορτοκοπτικά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/2421-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/2421-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Χορτοκοπτικά</h2></Link><Link to="/cat/848/andrika-rologia.html?bpref=home-categories" className="h-categories__category" title="Ανδρικά Ρολόγια"><div className="h-categories__cover"><img width="125" height="125" alt="Ανδρικά Ρολόγια στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/848-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/848-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Ανδρικά Ρολόγια</h2></Link><Link to="/cat/5925/pasxalines-lampades.html?bpref=home-categories" className="h-categories__category" title="Λαμπάδες"><div className="h-categories__cover"><img width="125" height="125" alt="Λαμπάδες στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/5925-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/5925-1@2x.webp 2x" className="h-categories__image"/></div><h2 className="h-categories__label">Λαμπάδες</h2></Link>
               </div>
