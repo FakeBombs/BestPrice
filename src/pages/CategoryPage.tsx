@@ -43,18 +43,6 @@ const CategoryPage: React.FC = () => {
     }
 }, [currentCategory, products]); 
 
-    const isLeafCategory = categories.some(cat => cat.parentId === currentCategory.id);
-
-    if (!isLeafCategory) {
-      setFilteredProducts([]); 
-    } else {
-      const productsToDisplay = products.filter(product => 
-        product.categoryIds.includes(currentCategory.id)
-      );
-      setFilteredProducts(productsToDisplay);
-    }
-  }, [currentCategory, products]); 
-
   if (!currentCategory) {
     return <NotFound />;
   }
@@ -204,16 +192,16 @@ const renderBreadcrumbs = () => {
 
   const renderProducts = () => (
     <div>
-        <h2>Products</h2>
-        {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
-            ))
-        ) : (
-            <p>No products available.</p> // Use a message for no products instead of recursion
-        )}
+      <h2>Products</h2>
+      {filteredProducts.length > 0 ? (
+        filteredProducts.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))
+      ) : (
+        renderProducts()
+      )}
     </div>
-);
+  );
 
   return (
     <div className="root__wrapper root-category__root">
