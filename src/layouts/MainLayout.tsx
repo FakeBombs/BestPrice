@@ -67,6 +67,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
   const sidebarRef = useRef<HTMLDivElement | null>(null); // Ref to track mouse position
+  const navbarRef = useRef<HTMLDivElement | null>(null); // Reference for Navbar
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -97,22 +98,21 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   useEffect(() => {
-    // Function to handle clicks outside the sidebar
-    const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-        // Close the sitemap if the click was outside
-        setIsSitemapVisible(false);
+    const handleClickNavbar = (event: MouseEvent) => {
+      if (navbarRef.current && navbarRef.current.contains(event.target as Node) && isSitemapVisible) {
+        setIsSitemapVisible(false); // Close the sitemap if clicking on Navbar
+        document.documentElement.classList.remove('has-sitemap'); // Remove class
       }
     };
 
-    // Attach event listener
-    document.addEventListener('mousedown', handleClickOutside);
+    // Attach event listener to the document
+    document.addEventListener('mousedown', handleClickNavbar);
 
     // Cleanup the event listener on component unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickNavbar);
     };
-  }, [sidebarRef]);
+  }, [isSitemapVisible]); // Dependency on isSitemapVisible
 
   const handleMouseLeave = (event: React.MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.relatedTarget as Node)) {
@@ -137,7 +137,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} />
+      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
