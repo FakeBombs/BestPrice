@@ -187,7 +187,7 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title={parentCat ? parentCat.name : 'Back'} href={parentCategoryHref}>
+              <a className="trail__back pressable" title={parentCat ? parentCat.name : mainCategory.name} href={parentCategoryHref}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
