@@ -257,6 +257,11 @@ export const categories: Category[] = [
   { id: 213, name: 'Αξεσουάρ Server', slug: 'server-accessories', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2667_SX400Y400/1476456876/server-accessories.webp' },
   { id: 214, name: 'Βάσεις Desktop', slug: 'desktop-stands', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5602_SX400Y400/1629455514/vaseis-desktop.webp' },
   { id: 215, name: 'Barebones', slug: 'barebones', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6751_SX400Y400/1629455526/barebones.webp' },
+
+  // Subcategories of Οθόνες PC, Αξεσουάρ of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 209, name: 'Οθόνες Υπολογιστών', slug: 'computer-monitors', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
+  { id: 210, name: 'Αξεσουάρ Οθονών', slug: 'monitor-accessories', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2624_SX400Y400/1473673319/monitor-accessories.webp' },
+  { id: 211, name: 'Public Displays', slug: 'public-displays', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8114_SX400Y400/1629455539/public-displays.webp' },
 ];
 
 export interface Vendor {
