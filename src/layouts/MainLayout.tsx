@@ -74,14 +74,21 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }, [pathname]);
 
   const sitemapToggle = () => {
-    const hasSitemap = !isSitemapVisible;
-    document.documentElement.classList.toggle('has-sitemap', hasSitemap);
-    setIsSitemapVisible(hasSitemap);
+  const hasSitemap = !isSitemapVisible;
+  
+  // Add or remove the class based on sitemap visibility
+  if (hasSitemap) {
+    document.documentElement.classList.add('has-sitemap'); // Add the class when opening
+  } else {
+    document.documentElement.classList.remove('has-sitemap'); // Remove the class when closing
+  }
 
-    if (hasSitemap) {
-      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
-    }
-  };
+  setIsSitemapVisible(hasSitemap);
+  
+  if (hasSitemap) {
+    setCurrentCategoryId(1); // Reset to default category when opening the sitemap
+  }
+};
 
   const handleMouseEnter = (id: number) => {
     if (isSitemapVisible) {
