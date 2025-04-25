@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -169,9 +169,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       <div className="sitemap-desktop__queries links">
                         {popularSearchQueries.map((search, index) => (
                           <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`} onClick={sitemapToggle}>
-                            <svg className="icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" role="img">
-                              <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="..."/> {/* SVG path here */}
-                            </svg>
+                            <svg className="icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M15.787 14.7585L11.6596 10.6311C12.5554 9.51127 13.0908 8.09091 13.0908 6.54545C13.0908 2.93055 10.1605 0 6.54542 0C2.93053 0 0 2.93055 0 6.54545C0 10.1604 2.93053 13.0909 6.54542 13.0909C8.09086 13.0909 9.51122 12.5553 10.631 11.6595L14.7585 15.7869C14.9005 15.9289 15.0866 16 15.2726 16C15.4588 16 15.645 15.9289 15.787 15.7869C16.071 15.5031 16.071 15.0424 15.787 14.7585ZM6.54542 11.6364C3.7338 11.6364 1.45454 9.35709 1.45454 6.54545C1.45454 3.73382 3.7338 1.45455 6.54542 1.45455C9.35722 1.45455 11.6363 3.73382 11.6363 6.54545C11.6363 9.35709 9.35722 11.6364 6.54542 11.6364Z"/></svg>
                             {search.query}
                           </Link>
                         ))}
