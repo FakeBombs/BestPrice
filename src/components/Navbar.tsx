@@ -9,15 +9,15 @@ import NotificationButton from '@/components/NotificationButton';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavbarProps {
-  onSitemapToggle: () => void; // To toggle the sitemap
-  onRemoveSitemap: () => void; // To remove the sitemap class
-  isSitemapVisible: boolean; // Prop to control sitemap visibility
+  onSitemapToggle: () => void;
+  onRemoveSitemap: () => void;
+  isSitemapVisible: boolean;
+  onMouseEnter: (id: number) => void; // New prop for mouse enter functionality
 }
 
 const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
-  ({ onSitemapToggle, onRemoveSitemap, isSitemapVisible }, ref) => {
+  ({ onSitemapToggle, onRemoveSitemap, isSitemapVisible, onMouseEnter }, ref) => {
     const { t } = useTranslation();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Handle click events to close sitemap on navbar clicks (except the sitemap button)
     const handleNavbarClick = (event: React.MouseEvent) => {
