@@ -62,7 +62,7 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
@@ -74,20 +74,21 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     window.scrollTo(0, 0); // Scroll to top on route change
   }, [pathname]);
 
+  const removeSitemapClass = () => {
+    setIsSitemapVisible(false);
+    document.documentElement.classList.remove('has-sitemap');
+  };
+
+  // Refine the sitemapToggle function
   const sitemapToggle = () => {
-    const hasSitemap = !isSitemapVisible;
-  
-    // Add or remove the class based on sitemap visibility
-    if (hasSitemap) {
+    const newSitemapState = !isSitemapVisible;
+    setIsSitemapVisible(newSitemapState);
+
+    if (newSitemapState) {
       document.documentElement.classList.add('has-sitemap');
+      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
     } else {
       document.documentElement.classList.remove('has-sitemap');
-    }
-
-    setIsSitemapVisible(hasSitemap);
-    
-    if (hasSitemap) {
-      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
     }
   };
 
@@ -102,13 +103,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    // Check if click is outside thenavbar and sitemap
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
       (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
     ) {
-      setIsSitemapVisible(false);
-      document.documentElement.classList.remove('has-sitemap');
+      removeSitemapClass();
     }
   };
 
@@ -133,7 +132,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
+      <Navbar onSitemapRemove={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
