@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavbarProps {
   onSitemapToggle: () => void;
+  isSitemapVisible: boolean; // Prop to control sitemap visibility
 }
 
 const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSitemapVisible }, ref) => {
@@ -73,4 +74,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
   </header>
     </div>;
 };
+
+Navbar.displayName = 'Navbar'; // Required for forwardRef
+
 export default Navbar;
