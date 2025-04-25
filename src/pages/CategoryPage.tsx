@@ -176,6 +176,18 @@ const CategoryPage: React.FC = () => {
       : `/cat/${mainCategory.slug}`;
 
     return (
+      <div className="page-header">
+          <div className="hgroup">
+            <div className="page-header__title-wrapper">
+              <a className="trail__back pressable" title="BestPrice.gr" href="/">
+                <svg aria-hidden="true" className="icon" width={16} height={16}>
+                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+                </svg>
+              </a>
+              <h1>{currentCategory?.name}</h1>
+            </div>
+          </div>
+      </div>
       <div className="root-category__categories">
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => (
