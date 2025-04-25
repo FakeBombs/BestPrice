@@ -66,8 +66,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
-  const sidebarRef = useRef<HTMLDivElement | null>(null); // Ref to track mouse position
-  const navbarRef = useRef<HTMLDivElement | null>(null); // Reference for Navbar
+  const sidebarRef = useRef<HTMLDivElement | null>(null); // Ref for sitemap
+  const navbarRef = useRef<HTMLDivElement | null>(null); // Ref for Navbar
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    // Check if click is outside the navbar and sitemap
+    // Check if click is outside thenavbar and sitemap
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
       (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
@@ -119,7 +119,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     };
   }, []);
 
-  // Find the main category based on currentCategoryId
   const mainCategory = mainCategories.find(cat => cat.id === currentCategoryId);
   const subCategories = categories.filter(cat => cat.parentId === currentCategoryId);
 
