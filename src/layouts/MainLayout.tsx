@@ -66,6 +66,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
+  const [lastSelectedCategoryId, setLastSelectedCategoryId] = useState(1); // Keep track of the last selected category
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -79,11 +80,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   const handleMouseEnter = (id: number) => {
-    setCurrentCategoryId(id);
+    setLastSelectedCategoryId(currentCategoryId); // Save the currently selected category
+    setCurrentCategoryId(id); // Set the hovered category
   };
 
   const handleMouseLeave = () => {
-    setCurrentCategoryId(1); // Reset to default category when mouse leaves
+    setCurrentCategoryId(lastSelectedCategoryId); // Reset to the last selected category when mouse leaves
   };
 
   // Find the main category based on currentCategoryId
