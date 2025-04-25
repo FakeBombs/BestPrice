@@ -123,11 +123,11 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title="BestPrice" href="/">
+              <Link className="trail__back pressable" title="BestPrice" to="/">
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
-              </a>
+              </Link>
               <h1>{currentCategory?.name}</h1>
             </div>
           </div>
@@ -187,11 +187,11 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title={parentCat ? parentCat.name : mainCategory.name} href={parentCategoryHref}>
+              <Link className="trail__back pressable" title={parentCat ? parentCat.name : mainCategory.name} to={parentCategoryHref}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
-              </a>
+              </Link>
               <h1>{parentCategory.name || currentCategory?.name}</h1> {/* Show parentCategory name or fallback */} 
             </div>
           </div>
