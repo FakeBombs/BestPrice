@@ -195,7 +195,7 @@ const CategoryPage: React.FC = () => {
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </a>
-              <h1>{parentCategoryName || currentCategory?.name}</h1>
+              <h1>{parentCategoryName || parentCategory.name || currentCategory?.name}</h1> {/* Use currentCategory name as a fallback */}
             </div>
           </div>
         </div>
