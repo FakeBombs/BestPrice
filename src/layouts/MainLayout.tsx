@@ -66,7 +66,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
-  const [lastSelectedCategoryId, setLastSelectedCategoryId] = useState(1); // Keep track of the last selected category
   const sidebarRef = useRef<HTMLDivElement | null>(null); // Ref to track mouse position
   const { t } = useTranslation();
 
@@ -78,16 +77,21 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     const hasSitemap = !isSitemapVisible;
     document.documentElement.classList.toggle('has-sitemap', hasSitemap);
     setIsSitemapVisible(hasSitemap);
+
+    if (hasSitemap) {
+      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
+    }
   };
 
   const handleMouseEnter = (id: number) => {
-    setLastSelectedCategoryId(currentCategoryId); // Save the currently selected category
-    setCurrentCategoryId(id); // Set the hovered category
+    if (isSitemapVisible) {
+      setCurrentCategoryId(id); // Set the hovered category if the sitemap is visible
+    }
   };
 
   const handleMouseLeave = (event: React.MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.relatedTarget as Node)) {
-      setCurrentCategoryId(lastSelectedCategoryId); // Reset to the last selected category if leaving the entire sidebar
+      // Do nothing if mouse is leaving to a child element
     }
   };
 
