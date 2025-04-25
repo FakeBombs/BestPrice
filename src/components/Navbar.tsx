@@ -73,7 +73,8 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
         </div>}
   </header>
     </div>;
-};
+  );
+});
 
 Navbar.displayName = 'Navbar'; // Required for forwardRef
 
