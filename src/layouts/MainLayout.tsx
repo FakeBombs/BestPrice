@@ -95,17 +95,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         {subCategories.map((sub) => (
                           <div className="sitemap-desktop__col" key={sub.id}>
                             <div className="sitemap-desktop__sub">
-                              <Link to={`/cat/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
+                              <Link to={`/cat/${mainCategory?.slug}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
                                 <img className="sitemap-desktop__sub-image" width="96" height="96" alt={sub.name} src={sub.image} />
                               </Link>
                               <div className="sitemap-desktop__sub-main">
                                 <div className="sitemap-desktop__sub-title">
-                                  <Link to={`/cat/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>{sub.name}</Link>
+                                  <Link to={`/cat/${mainCategory?.slug}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>{sub.name}</Link>
                                 </div>
                                 <ul className="sitemap-desktop__sub-list">
                                   {categories.filter(item => item.parentId === sub.id).slice(0, 6).map(subItem => (
                                     <li key={subItem.id}>
-                                      <Link to={`/cat/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>{subItem.name}</Link>
+                                      <Link to={`/cat/${mainCategory?.slug}/${sub.slug}/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>{subItem.name}</Link>
                                     </li>
                                   ))}
                                 </ul>
