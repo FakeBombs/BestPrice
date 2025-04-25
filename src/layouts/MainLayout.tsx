@@ -74,11 +74,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     window.scrollTo(0, 0); // Scroll to top on route change
   }, [pathname]);
 
-  const removeSitemapClass = () => {
-    setIsSitemapVisible(false);
-    document.documentElement.classList.remove('has-sitemap');
-  };
-
   const sitemapToggle = () => {
     const hasSitemap = !isSitemapVisible;
 
@@ -106,7 +101,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    // Check if click is outside the navbar and sitemap logic...
+    // Check if click is outside the navbar and sitemap
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
       (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
