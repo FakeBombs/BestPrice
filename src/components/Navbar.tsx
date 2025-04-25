@@ -18,6 +18,7 @@ interface NavbarProps {
 const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
   ({ onSitemapToggle, onRemoveSitemap, isSitemapVisible, onMouseEnter }, ref) => {
     const { t } = useTranslation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Handle click events to close sitemap on navbar clicks (except the sitemap button)
     const handleNavbarClick = (event: React.MouseEvent) => {
