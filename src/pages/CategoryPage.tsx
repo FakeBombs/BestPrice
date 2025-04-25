@@ -176,11 +176,8 @@ const CategoryPage: React.FC = () => {
       ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
       : `/cat/${mainCategory.slug}`;
 
-    // Finding the parent category name for the title and back link
+    // Finding the parent category name for the back link
     const parentCat = categories.find(cat => cat.id === parentCategory.parentId);
-    const parentCategoryName = parentCat ? parentCat.name : '';
-
-    // Constructing the href for the parent category back link
     const parentCategoryHref = parentCat 
       ? `/cat/${mainCategory.slug}/${parentCat.slug}` 
       : `/cat/${mainCategory.slug}`;
@@ -190,12 +187,12 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title={parentCategoryName} href={parentCategoryHref}>
+              <a className="trail__back pressable" title={parentCat ? parentCat.name : 'Back'} href={parentCategoryHref}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </a>
-              <h1>{parentCategoryName || parentCategory.name || currentCategory?.name}</h1> {/* Use currentCategory name as a fallback */}
+              <h1>{parentCategory.name || currentCategory?.name}</h1> {/* Show parentCategory name or fallback */} 
             </div>
           </div>
         </div>
@@ -227,7 +224,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            renderProducts()
+            renderProducts() // Consider displaying products if no subcategories exist
           )}
         </div>
       </>
