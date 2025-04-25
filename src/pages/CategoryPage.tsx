@@ -170,62 +170,66 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (parentCategory) => {
     const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    
-    // Build the href for the back link that correctly includes the main category and the parent category slugs
+
+    // Constructing the base path for subcategories
     const basePath = parentCategory?.slug 
       ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
       : `/cat/${mainCategory.slug}`;
 
-    // Adjust the href for the parent category (go one level up in the hierarchy)
-    const parentCategoryHref = parentCategory.parentId 
-      ? `/cat/${mainCategory.slug}/${categories.find(cat => cat.id === parentCategory.parentId)?.slug}`
+    // Finding the parent category name for the title and back link
+    const parentCat = categories.find(cat => cat.id === parentCategory.parentId);
+    const parentCategoryName = parentCat ? parentCat.name : '';
+
+    // Constructing the href for the parent category back link
+    const parentCategoryHref = parentCat 
+      ? `/cat/${mainCategory.slug}/${parentCat.slug}` 
       : `/cat/${mainCategory.slug}`;
 
     return (
       <>
-      <div className="page-header">
+        <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title={parentCategory?.name} href={parentCategoryHref}>
+              <a className="trail__back pressable" title={parentCategoryName} href={parentCategoryHref}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </a>
-              <h1>{currentCategory?.name}</h1>
+              <h1>{parentCategoryName || currentCategory?.name}</h1>
             </div>
           </div>
-      </div>
-      <div className="root-category__categories">
-        {subcategories.length > 0 ? (
-          subcategories.map((subCat) => (
-            <div key={subCat.id} className="root-category__category">
-              <Link to={`${basePath}/${subCat.slug}`} className="root-category__cover">
-                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-              </Link>
-              <h2 className="root-category__category-title">
-                <Link to={`${basePath}/${subCat.slug}`}>{subCat.name}</Link>
-              </h2>
-              <div className="root-category__footer">
-                <div className="root-category__links">
-                  {categories
-                    .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                    .slice(0, 5)
-                    .map((linkedSubCat, index, arr) => (
-                      <React.Fragment key={linkedSubCat.id}>
-                        <Link to={`${basePath}/${subCat.slug}/${linkedSubCat.slug}`}>
-                          {linkedSubCat.name}
-                        </Link>
-                        {index < arr.length - 1 && ', '}
-                      </React.Fragment>
-                    ))}
+        </div>
+        <div className="root-category__categories">
+          {subcategories.length > 0 ? (
+            subcategories.map((subCat) => (
+              <div key={subCat.id} className="root-category__category">
+                <Link to={`${basePath}/${subCat.slug}`} className="root-category__cover">
+                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                </Link>
+                <h2 className="root-category__category-title">
+                  <Link to={`${basePath}/${subCat.slug}`}>{subCat.name}</Link>
+                </h2>
+                <div className="root-category__footer">
+                  <div className="root-category__links">
+                    {categories
+                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                      .slice(0, 5)
+                      .map((linkedSubCat, index, arr) => (
+                        <React.Fragment key={linkedSubCat.id}>
+                          <Link to={`${basePath}/${subCat.slug}/${linkedSubCat.slug}`}>
+                            {linkedSubCat.name}
+                          </Link>
+                          {index < arr.length - 1 && ', '}
+                        </React.Fragment>
+                      ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          renderProducts()
-        )}
-      </div>
+            ))
+          ) : (
+            renderProducts()
+          )}
+        </div>
       </>
     );
 };
