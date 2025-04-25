@@ -89,6 +89,24 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     }
   };
 
+  useEffect(() => {
+    // Function to handle clicks outside the sidebar
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        // Close the sitemap if the click was outside
+        setIsSitemapVisible(false);
+      }
+    };
+
+    // Attach event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [sidebarRef]);
+
   const handleMouseLeave = (event: React.MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.relatedTarget as Node)) {
       // Do nothing if mouse is leaving to a child element
