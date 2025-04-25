@@ -18,7 +18,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="bp-header__outer-wrapper" ref={ref}>
+    <div className="bp-header__outer-wrapper" onClick={onSitemapToggle} ref={ref}>
       <header id="bp-header" className="bp-header root__wrapper">
         <div className="root" id="header-root">
           <div id="nav">
@@ -31,7 +31,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
             </h1>
           </div>
 
-          <div id="user">
+          <div id="user" onClick={onSitemapToggle}>
             {/* Desktop Navigation */}
             <nav className="md:flex items-center space-x-4">
               <ThemeToggle />
@@ -55,7 +55,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
             </div>
 
             {/* Desktop Search */}
-            <SearchBar />
+            <SearchBar onClick={onSitemapToggle} />
           </div>
           
         </div>
