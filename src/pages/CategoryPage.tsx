@@ -170,9 +170,15 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (parentCategory) => {
     const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
+    
+    // Build the href for the back link that correctly includes the main category and the parent category slugs
     const basePath = parentCategory?.slug 
       ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
+      : `/cat/${mainCategory.slug}`;
+
+    // Adjust the href for the parent category (go one level up in the hierarchy)
+    const parentCategoryHref = parentCategory.parentId 
+      ? `/cat/${mainCategory.slug}/${categories.find(cat => cat.id === parentCategory.parentId)?.slug}`
       : `/cat/${mainCategory.slug}`;
 
     return (
@@ -180,7 +186,7 @@ const CategoryPage: React.FC = () => {
       <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <a className="trail__back pressable" title={parentCategory?.name} href={`/cat/${mainCategory.slug}/${parentCategory.slug}`}>
+              <a className="trail__back pressable" title={parentCategory?.name} href={parentCategoryHref}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
@@ -222,7 +228,7 @@ const CategoryPage: React.FC = () => {
       </div>
       </>
     );
-  };
+};
 
   const renderProducts = () => (
     <div className="page-products">
