@@ -100,14 +100,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     setCurrentCategoryId(1); // Reset to default category when mouse leaves
   };
 
+  const removeSitemapClass = () => {
+    document.documentElement.classList.remove('has-sitemap');
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
-    // Check if click is outside the navbar and sitemap
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
       (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
     ) {
       setIsSitemapVisible(false);
-      document.documentElement.classList.remove('has-sitemap');
+      removeSitemapClass(); // Call the function here
     }
   };
 
