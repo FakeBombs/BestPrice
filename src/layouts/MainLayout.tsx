@@ -126,7 +126,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       </div>
                       <div className="sitemap-desktop__brands">
                         {brands.map(brand => (
-                          <Link className="sitemap-desktop__brands-brand pressable" key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}.html?bpref=sitemap`} onClick={sitemapToggle}>
+                          <Link className="sitemap-desktop__brands-brand pressable" key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}?bpref=sitemap`} onClick={sitemapToggle}>
                             <img alt={brand.name} src={brand.logo} />
                           </Link>
                         ))}
