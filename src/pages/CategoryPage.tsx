@@ -242,7 +242,7 @@ const CategoryPage: React.FC = () => {
           <ProductCard key={product.id} product={product} />
         ))
       ) : (
-        <p>No products available.</p>
+        <NotFound />
       )}
           </div>
         </div>
