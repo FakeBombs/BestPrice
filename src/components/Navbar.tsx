@@ -14,14 +14,18 @@ interface NavbarProps {
   isSitemapVisible: boolean; // Prop to control sitemap visibility
 }
 
-const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, onRemoveSitemap, isSitemapVisible }, ref) => {
-  const { t } = useTranslation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
+  ({ onSitemapToggle, onRemoveSitemap, isSitemapVisible }, ref) => {
+    const { t } = useTranslation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Handle click events to remove sitemap class
-  const handleNavbarClick = () => {
-    onRemoveSitemap(); // Remove has-sitemap class
-  };
+    // Handle click events to close sitemap on navbar clicks (except the sitemap button)
+    const handleNavbarClick = (event: React.MouseEvent) => {
+      // Prevent closing if clicking on the sitemap toggle button
+      if (event.currentTarget.id !== 'sitemap-toggle') {
+        onRemoveSitemap();
+      }
+    };
 
   return (
     <div className="bp-header__outer-wrapper" onClick={handleNavbarClick} ref={ref}>
