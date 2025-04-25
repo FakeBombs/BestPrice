@@ -52,6 +52,36 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
+  const sortProducts = (products) => {
+        switch (sortType) {
+            case 'price-asc':
+                return [...products].sort((a, b) => {
+                    const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    return minPriceA - minPriceB;
+                });
+            case 'price-desc':
+                return [...products].sort((a, b) => {
+                    const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                    const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                    return maxPriceB - maxPriceA;
+                });
+            case 'rating-desc':
+            default:
+                return [...products].sort((a, b) => {
+                    const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
+                    const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
+                    return averageRatingB - averageRatingA;
+                });
+            case 'merchants_desc':
+                return [...products].sort((a, b) => {
+                    const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
+                    const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
+                    return availableVendorsB - availableVendorsA;
+                });
+        }
+    };
+
  const renderBreadcrumbs = () => {
   const breadcrumbs = [];
   const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
