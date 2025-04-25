@@ -74,6 +74,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     window.scrollTo(0, 0); // Scroll to top on route change
   }, [pathname]);
 
+  const removeSitemapClass = () => {
+    setIsSitemapVisible(false);
+    document.documentElement.classList.remove('has-sitemap');
+  };
+
   const sitemapToggle = () => {
     const hasSitemap = !isSitemapVisible;
 
