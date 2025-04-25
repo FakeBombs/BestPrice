@@ -10,11 +10,23 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavbarProps {
   onSitemapToggle: () => void;
+  isSitemapVisible: boolean; // Add prop to receive current visibility state
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onSitemapToggle }) => {
+const Navbar: React.FC<NavbarProps> = ({ onSitemapToggle, isSitemapVisible }) => {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Function to handle sitemap toggle and class management
+  const handleSitemapToggle = () => {
+    if (isSitemapVisible) {
+      document.documentElement.classList.remove('has-sitemap');
+    } else {
+      document.documentElement.classList.add('has-sitemap');
+    }
+    onSitemapToggle(); // Call original toggle function
+  };
+  
   return <div className="bp-header__outer-wrapper">
     <header id="bp-header" className="bp-header root__wrapper">
       <div className="root" id="header-root">
