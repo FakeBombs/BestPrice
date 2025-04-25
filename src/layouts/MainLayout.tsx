@@ -97,27 +97,37 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     }
   };
 
-  useEffect(() => {
-    const handleClickNavbar = (event: MouseEvent) => {
-      if (navbarRef.current && navbarRef.current.contains(event.target as Node) && isSitemapVisible) {
-        setIsSitemapVisible(false); // Close the sitemap if clicking on Navbar
-        document.documentElement.classList.remove('has-sitemap'); // Remove class
-      }
-    };
+  const handleClickOutside = (event: MouseEvent) => {
+    // Check if click is outside the navbar and sitemap
+    if (
+      (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
+      (sitemapRef.current && !sitemapRef.current.contains(event.target as Node))
+    ) {
+      setIsSitemapVisible(false);
+      document.documentElement.classList.remove('has-sitemap');
+    }
+  };
 
-    // Attach event listener to the document
-    document.addEventListener('mousedown', handleClickNavbar);
+  useEffect(() => {
+    // Attach event listener
+    document.addEventListener('mousedown', handleClickOutside);
 
     // Cleanup the event listener on component unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickNavbar);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isSitemapVisible]); // Dependency on isSitemapVisible
+  }, []);
 
-  const handleMouseLeave = (event: React.MouseEvent) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.relatedTarget as Node)) {
-      // Do nothing if mouse is leaving to a child element
-    }
+  const toggleSitemap = () => {
+    setIsSitemapVisible(prev => {
+      const newState = !prev;
+      if (newState) {
+        document.documentElement.classList.add('has-sitemap');
+      } else {
+        document.documentElement.classList.remove('has-sitemap');
+      }
+      return newState;
+    });
   };
 
   // Find the main category based on currentCategoryId
@@ -137,15 +147,15 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} />
+      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
             <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={sitemapToggle}></div>
-            <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
+            <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }} ref={sidebarRef}>
               <div className="root__wrapper">
                 <div className="root">
-                  <div className="sitemap sitemap-desktop" ref={sidebarRef} onMouseLeave={handleMouseLeave}>
+                  <div className="sitemap sitemap-desktop" onMouseLeave={handleMouseLeave}>
                     <div className="sitemap-desktop__sidebar">
                       <div className="sitemap-desktop__sidebar-extra">
                         <Link to="/deals" className="sitemap-desktop__item" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave} onClick={sitemapToggle}>
