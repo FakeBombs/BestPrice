@@ -116,7 +116,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }}>
               <div className="root__wrapper">
                 <div className="root">
-                  <div className="sitemap sitemap-desktop">
+                  <div className="sitemap sitemap-desktop" ref={sidebarRef} onMouseLeave={handleMouseLeave}>
                     <div className="sitemap-desktop__sidebar">
                       <div className="sitemap-desktop__sidebar-extra">
                         <Link to="/deals" className="sitemap-desktop__item" onMouseEnter={() => handleMouseEnter(0)} onMouseLeave={handleMouseLeave} onClick={sitemapToggle}>
