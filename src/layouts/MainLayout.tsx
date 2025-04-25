@@ -126,7 +126,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
+      <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} onMouseEnter={handleMouseEnter} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
