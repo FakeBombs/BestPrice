@@ -16,6 +16,7 @@ const CategoryPage: React.FC = () => {
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
