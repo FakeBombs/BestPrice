@@ -75,21 +75,21 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }, [pathname]);
 
   const sitemapToggle = () => {
-  const hasSitemap = !isSitemapVisible;
+    const hasSitemap = !isSitemapVisible;
   
-  // Add or remove the class based on sitemap visibility
-  if (hasSitemap) {
-    document.documentElement.classList.add('has-sitemap'); // Add the class when opening
-  } else {
-    document.documentElement.classList.remove('has-sitemap'); // Remove the class when closing
-  }
+    // Add or remove the class based on sitemap visibility
+    if (hasSitemap) {
+      document.documentElement.classList.add('has-sitemap'); // Add the class when opening
+    } else {
+      document.documentElement.classList.remove('has-sitemap'); // Remove the class when closing
+    }
 
-  setIsSitemapVisible(hasSitemap);
-  
-  if (hasSitemap) {
-    setCurrentCategoryId(1); // Reset to default category when opening the sitemap
-  }
-};
+    setIsSitemapVisible(hasSitemap);
+    
+    if (hasSitemap) {
+      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
+    }
+  };
 
   const handleMouseEnter = (id: number) => {
     if (isSitemapVisible) {
@@ -97,11 +97,15 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     }
   };
 
+  const handleMouseLeave = () => {
+    setCurrentCategoryId(1); // Reset to default category when mouse leaves
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     // Check if click is outside the navbar and sitemap
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
-      (sitemapRef.current && !sitemapRef.current.contains(event.target as Node))
+      (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
     ) {
       setIsSitemapVisible(false);
       document.documentElement.classList.remove('has-sitemap');
@@ -117,18 +121,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const toggleSitemap = () => {
-    setIsSitemapVisible(prev => {
-      const newState = !prev;
-      if (newState) {
-        document.documentElement.classList.add('has-sitemap');
-      } else {
-        document.documentElement.classList.remove('has-sitemap');
-      }
-      return newState;
-    });
-  };
 
   // Find the main category based on currentCategoryId
   const mainCategory = mainCategories.find(cat => cat.id === currentCategoryId);
