@@ -13,7 +13,7 @@ interface NavbarProps {
   isSitemapVisible: boolean; // Prop to control sitemap visibility
 }
 
-const Navbar = forwardRef<HTMLDivElement, NavbarProps>( ({ onSitemapRemove, isSitemapVisible }, ref) => {
+const Navbar = forwardRef<HTMLDivElement, NavbarProps>( ({ onSitemapToggle, onSitemapRemove, isSitemapVisible }, ref) => {
     const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
