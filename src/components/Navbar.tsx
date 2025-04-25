@@ -56,7 +56,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
           </div>
 
           <div className="search__wrapper">
-            <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" onClick={onSitemapToggle}>
+            <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" id="sitemap-toggle" onClick={(e) => { e.stopPropagation(); onSitemapToggle(); }}>
               <div className="sitemap-button__lines">
                 <div></div>
                 <div></div>
