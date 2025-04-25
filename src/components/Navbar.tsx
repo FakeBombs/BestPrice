@@ -16,7 +16,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  return <div className="bp-header__outer-wrapper">
+  return <div className="bp-header__outer-wrapper" ref={ref}>
     <header id="bp-header" className="bp-header root__wrapper">
       <div className="root" id="header-root">
         <div id="nav">
