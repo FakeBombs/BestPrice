@@ -270,6 +270,20 @@ export const categories: Category[] = [
   { id: 215, name: 'Εφαρμογές Software', slug: 'software-applications', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2645_SX400Y400/1500371799/software-center.webp' },
   { id: 216, name: 'Επεξεργασία Εικόνας - Ήχου', slug: 'image-sound-editing', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2643_SX400Y400/1500371799/multimedia-software.webp' },
   { id: 217, name: 'Εμπορική Διαχείριση', slug: 'commercial-management', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3412_SX400Y400/1500371799/software-emporikis-diaxeirisis.webp' },
+
+  // Subcategories of Laptops, Αξεσουάρ of Main Category Τεχνολογία
+  { id: 218, name: 'Laptops', slug: 'laptops', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
+  { id: 219, name: 'MacBook', slug: 'macbook', parentId: 12, image: 'https://bbpcdn.pstatic.gr/bpimg25/2mcWYF/1TPQrK_SX400Y400/1741187648/apple-macbook-air-13-2025.webp' },
+  { id: 220, name: 'Τσάντες Laptop', slug: 'laptop-bags', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2600_SX400Y400/1629455497/tsantes-laptop.webp' },
+  { id: 221, name: 'Καλύμματα Laptop', slug: 'laptop-skins', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8500_SX400Y400/1645720206/kalymmata-laptop.webp' },
+  { id: 222, name: 'Φορτιστές Laptop', slug: 'laptop-chargers', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2597_SX400Y400/1629455497/fortistes-laptop.webp' },
+  { id: 223, name: 'Μπαταρίες Laptop', slug: 'laptop-batteries', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2596_SX400Y400/1629455497/mpataries-laptop.webp' },
+  { id: 224, name: 'Βάσεις Laptop', slug: 'laptop-stands', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2599_SX400Y400/1629455497/vaseis-cooler-laptop.webp' },
+  { id: 225, name: 'Docking Stations Laptop', slug: 'laptop-docking-stations', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8074_SX400Y400/1629455538/docking-stations-laptop.webp' },
+  { id: 226, name: 'Αυτοκόλλητα Laptop', slug: 'laptop-stickers', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2601_SX400Y400/1629455497/skin-laptop.webp' },
+  { id: 227, name: 'Ανταλλακτικά Laptop', slug: 'laptop-parts', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3548_SX400Y400/1741768397/antallaktika-laptop.webp' },
+  { id: 228, name: 'Κάρτες PCMCIA', slug: 'pcmcia-cards', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3482_SX400Y400/1629455502/pcmcia-cards.webp' },
+  { id: 229, name: 'Διάφορα Είδη Laptop', slug: 'misc-laptop-items', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2604_SX400Y400/1629455497/diafora-laptop.webp' },
 ];
 
 export interface Vendor {
