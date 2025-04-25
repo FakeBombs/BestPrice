@@ -176,6 +176,7 @@ const CategoryPage: React.FC = () => {
       : `/cat/${mainCategory.slug}`;
 
     return (
+      <>
       <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
@@ -219,6 +220,7 @@ const CategoryPage: React.FC = () => {
           renderProducts()
         )}
       </div>
+      </>
     );
   };
 
