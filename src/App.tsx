@@ -42,9 +42,9 @@ function App() {
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="brands" element={<Brands />} />
-          <Route path="/b/:brandId/:brandName.html" element={<BrandPage />} />
+          <Route path="/b/:brandId/:brandName" element={<BrandPage />} />
           <Route path="m" element={<Stores />} />
-          <Route path="m/:vendorId/:vendorName.html" element={<VendorPage />} />
+          <Route path="m/:vendorId/:vendorName" element={<VendorPage />} />
           <Route path="deals" element={<Deals />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="login" element={<LoginPage />} />
