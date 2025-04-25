@@ -83,11 +83,12 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const handleMouseEnter = (id: number) => {
-    if (isSitemapVisible) setCurrentCategoryId(id);
+ const handleMouseEnter = (id: number) => {
+    setCurrentCategoryId(id);
   };
 
-  const handleMouseLeave = () => setCurrentCategoryId(1);
+  // Handle mouse leave to keep current category when hovered outside
+  const handleMouseLeave = () => {};
 
   // Function to remove class
   const removeSitemapClass = () => {
