@@ -60,19 +60,21 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(({ onSitemapToggle, isSit
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && <div className="md:hidden border-t p-4">
-          <SearchBar className="mb-4" />
-          <nav className="flex flex-col space-y-4">
-            <div className="flex items-center justify-between">
-              <Link to="/account" className="text-sm font-medium">
-                My Account
-              </Link>
-              <ThemeToggle />
-            </div>
-          </nav>
-        </div>}
-  </header>
-    </div>;
+      {isMenuOpen && (
+          <div className="md:hidden border-t p-4">
+            <SearchBar className="mb-4" />
+            <nav className="flex flex-col space-y-4">
+              <div className="flex items-center justify-between">
+                <Link to="/account" className="text-sm font-medium">
+                  My Account
+                </Link>
+                <ThemeToggle />
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
+    </div>
   );
 });
 
