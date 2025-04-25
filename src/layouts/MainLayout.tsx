@@ -62,7 +62,7 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-const MainLayout = ({ children }: { children: ReactNode }) => {
+const MainLayout = ({ children }: MainLayoutProps) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
@@ -74,21 +74,19 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
     window.scrollTo(0, 0); // Scroll to top on route change
   }, [pathname]);
 
-  const removeSitemapClass = () => {
-    setIsSitemapVisible(false);
-    document.documentElement.classList.remove('has-sitemap');
-  };
-
-  // Refine the sitemapToggle function
   const sitemapToggle = () => {
-    const newSitemapState = !isSitemapVisible;
-    setIsSitemapVisible(newSitemapState);
+    const hasSitemap = !isSitemapVisible;
 
-    if (newSitemapState) {
+    if (hasSitemap) {
       document.documentElement.classList.add('has-sitemap');
-      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
     } else {
       document.documentElement.classList.remove('has-sitemap');
+    }
+
+    setIsSitemapVisible(hasSitemap);
+
+    if (hasSitemap) {
+      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
     }
   };
 
@@ -103,11 +101,13 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
+    // Check if click is outside the navbar and sitemap logic...
     if (
       (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
       (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
     ) {
-      removeSitemapClass();
+      setIsSitemapVisible(false);
+      document.documentElement.classList.remove('has-sitemap');
     }
   };
 
