@@ -238,9 +238,10 @@ const CategoryPage: React.FC = () => {
       <main className="page-products__main">
         <header className="page-header">
           <div className="page-header__title-wrapper">
-          <div class="products-wrapper">
-            <div class="products-wrapper__header"><div class="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
-            <ScrollableSlider></ScrollableSlider>
+            <div class="products-wrapper">
+              <div class="products-wrapper__header"><div class="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
+              <ScrollableSlider></ScrollableSlider>
+            </div>
           </div>
           <div className="page-header__sorting">
             <div className="tabs">
