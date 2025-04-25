@@ -79,9 +79,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   
     // Add or remove the class based on sitemap visibility
     if (hasSitemap) {
-      document.documentElement.classList.add('has-sitemap'); // Add the class when opening
+      document.documentElement.classList.add('has-sitemap');
     } else {
-      document.documentElement.classList.remove('has-sitemap'); // Remove the class when closing
+      document.documentElement.classList.remove('has-sitemap');
     }
 
     setIsSitemapVisible(hasSitemap);
@@ -113,10 +113,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   useEffect(() => {
-    // Attach event listener
     document.addEventListener('mousedown', handleClickOutside);
-
-    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -124,8 +121,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   // Find the main category based on currentCategoryId
   const mainCategory = mainCategories.find(cat => cat.id === currentCategoryId);
-
-  // Get subcategories of the main category
   const subCategories = categories.filter(cat => cat.parentId === currentCategoryId);
 
   // Define popular search queries
