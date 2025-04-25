@@ -62,59 +62,49 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
-  const sidebarRef = useRef<HTMLDivElement | null>(null); // Ref for sitemap
-  const navbarRef = useRef<HTMLDivElement | null>(null); // Ref for Navbar
+  const [currentCategoryId, setCurrentCategoryId] = useState(1);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const navbarRef = useRef<HTMLDivElement | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top on route change
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   const sitemapToggle = () => {
-    const hasSitemap = !isSitemapVisible;
-
-    if (hasSitemap) {
+    setIsSitemapVisible((prev) => !prev);
+    if (!isSitemapVisible) {
       document.documentElement.classList.add('has-sitemap');
     } else {
       document.documentElement.classList.remove('has-sitemap');
     }
-
-    setIsSitemapVisible(hasSitemap);
-
-    if (hasSitemap) {
-      setCurrentCategoryId(1); // Reset to default category when opening the sitemap
-    }
   };
 
   const handleMouseEnter = (id: number) => {
-    if (isSitemapVisible) {
-      setCurrentCategoryId(id); // Set the hovered category if the sitemap is visible
-    }
+    if (isSitemapVisible) setCurrentCategoryId(id);
   };
 
-  const handleMouseLeave = () => {
-    setCurrentCategoryId(1); // Reset to default category when mouse leaves
-  };
+  const handleMouseLeave = () => setCurrentCategoryId(1);
 
+  // Function to remove class
   const removeSitemapClass = () => {
+    setIsSitemapVisible(false);
     document.documentElement.classList.remove('has-sitemap');
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
-      (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
-    ) {
-      setIsSitemapVisible(false);
-      removeSitemapClass(); // Call the function here
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        (navbarRef.current && !navbarRef.current.contains(event.target as Node)) &&
+        (sidebarRef.current && !sidebarRef.current.contains(event.target as Node))
+      ) {
+        removeSitemapClass(); // Call the removal function
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -135,11 +125,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
+      <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
-            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={sitemapToggle}></div>
+            <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={removeSitemapClass}></div>
             <div className="sitemap-desktop__wrapper" style={{ zIndex: 2147483525 }} ref={sidebarRef}>
               <div className="root__wrapper">
                 <div className="root">
