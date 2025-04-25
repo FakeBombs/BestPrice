@@ -247,7 +247,16 @@ export const categories: Category[] = [
   { id: 205, name: 'Καλώδια Δικτύου', slug: 'network-cables', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2636_SX400Y400/1629455497/kalodia-diktyou.webp' },
   { id: 206, name: 'Κάρτες Δικτύου', slug: 'network-cards', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2628_SX400Y400/1629455497/kartes-diktyou.webp' },
   { id: 207, name: 'Κεραίες WiFi', slug: 'wifi-antennas', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2635_SX400Y400/1629455497/keraies-wifi.webp' },
-  { id: 208, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3045_SX400Y400/1629455499/bluetooth-adapters.webp' }
+  { id: 208, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3045_SX400Y400/1629455499/bluetooth-adapters.webp' },
+
+  // Subcategories of Desktops & Servers of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 209, name: 'Desktop PC', slug: 'desktop-pc', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2589_SX400Y400/1629455497/desktop-pc.webp' },
+  { id: 210, name: 'All in One PC', slug: 'all-in-one-pc', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6749_SX400Y400/1629455526/all-in-one-pc.webp' },
+  { id: 211, name: 'Mini PC', slug: 'mini-pc', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6750_SX400Y400/1629455526/mini-pc.webp' },
+  { id: 212, name: 'Servers', slug: 'servers', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2666_SX400Y400/1476456876/servers.webp' },
+  { id: 213, name: 'Αξεσουάρ Server', slug: 'server-accessories', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2667_SX400Y400/1476456876/server-accessories.webp' },
+  { id: 214, name: 'Βάσεις Desktop', slug: 'desktop-stands', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5602_SX400Y400/1629455514/vaseis-desktop.webp' },
+  { id: 215, name: 'Barebones', slug: 'barebones', parentId: 175, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6751_SX400Y400/1629455526/barebones.webp' },
 ];
 
 export interface Vendor {
