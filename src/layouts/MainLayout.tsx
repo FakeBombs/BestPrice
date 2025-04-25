@@ -54,11 +54,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   // Define popular search queries
   const popularSearchQueries = [
-    { query: 'iphone 16' },
-    { query: 'iphone 15' },
-    { query: 's25 ultra' },
-    { query: 'ipad air' },
-    { query: 'galaxy z flip' }
+    { query: 'Apple' },
+    { query: 'Sony' },
+    { query: 'Mac' },
+    { query: 'iPad Air' },
+    { query: 'Galaxy' }
   ];
 
   return (
