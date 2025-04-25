@@ -235,15 +235,34 @@ const CategoryPage: React.FC = () => {
     <div className="page-products">
       <aside className="page-products__filters"></aside>
       <main className="page-products__main">
+        <header className="page-header">
+          <div className="page-header__title-wrapper">
+          <div class="products-wrapper">
+            <div class="products-wrapper__header"><div class="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
+            <ScrollableSlider></ScrollableSlider>
+          </div>
+          <div className="page-header__sorting">
+            <div className="tabs">
+              <div className="tabs-wrapper">
+                <nav>
+                  <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                  <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
+                  <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
+                  <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </header>
         <div className="page-products__main-wrapper">
           <div className="p__products" data-pagination="">
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      ) : (
-        <NotFound />
-      )}
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+                <p>No products available for this category</p>
+            )}
           </div>
         </div>
       </main>
