@@ -284,6 +284,17 @@ export const categories: Category[] = [
   { id: 227, name: 'Ανταλλακτικά Laptop', slug: 'laptop-parts', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3548_SX400Y400/1741768397/antallaktika-laptop.webp' },
   { id: 228, name: 'Κάρτες PCMCIA', slug: 'pcmcia-cards', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3482_SX400Y400/1629455502/pcmcia-cards.webp' },
   { id: 229, name: 'Διάφορα Είδη Laptop', slug: 'misc-laptop-items', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2604_SX400Y400/1629455497/diafora-laptop.webp' },
+
+  // Subcategories of Ανταλλακτικά Laptop of a Subcategory Laptops, Αξεσουάρ of Main Category Τεχνολογία
+  { id: 230, name: 'Οθόνες Laptop', slug: 'laptop-screens', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9052_SX400Y400/1741768318/othones-laptop.webp' },
+  { id: 231, name: 'Πληκτρολόγια Laptop', slug: 'laptop-keyboards', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9053_SX400Y400/1741706878/pliktrologia-laptop.webp' },
+  { id: 232, name: 'Καλωδιοταινίες Laptop', slug: 'laptop-cables', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9054_SX400Y400/1741706916/kalodiotainies-laptop.webp' },
+  { id: 233, name: 'Ανεμιστηράκια Laptop', slug: 'laptop-fans', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9055_SX400Y400/1741706848/anemistirakia-laptop.webp' },
+  { id: 234, name: 'Βύσματα Τροφοδοσίας Laptop', slug: 'laptop-power-connectors', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9056_SX400Y400/1741706826/vusmata-trofodosias-laptop.webp' },
+  { id: 235, name: 'Πλαίσια Laptop', slug: 'laptop-frames', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9057_SX400Y400/1741768278/plaisia-laptop.webp' },
+  { id: 236, name: 'Μεντεσέδες Laptop', slug: 'laptop-hinges', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9058_SX400Y400/1741706864/mentesedes-laptop.webp' },
+  { id: 237, name: 'LCD Inverters Laptop', slug: 'laptop-lcd-inverters', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9059_SX400Y400/1741707023/lcd-inverters-laptop.webp' },
+  { id: 238, name: 'Διάφορα Ανταλλακτικά Laptop', slug: 'misc-laptop-parts', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9060_SX400Y400/1741768360/diafora-antallaktika-laptop.webp' },
 ];
 
 export interface Vendor {
