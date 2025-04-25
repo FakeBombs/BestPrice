@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
 import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
+import ScrollableSlider from '@/components/ScrollableSlider';
 
 // Main component
 const CategoryPage: React.FC = () => {
