@@ -67,6 +67,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(1); // Default to Technology
   const [lastSelectedCategoryId, setLastSelectedCategoryId] = useState(1); // Keep track of the last selected category
+  const [isHovering, setIsHovering] = useState(false); // State to track hovering
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -80,12 +81,18 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   };
 
   const handleMouseEnter = (id: number) => {
-    setLastSelectedCategoryId(currentCategoryId); // Save the currently selected category
-    setCurrentCategoryId(id); // Set the hovered category
+    if (!isHovering) { // Only change if not currently hovering over a subcategory
+      setLastSelectedCategoryId(currentCategoryId); // Save the currently selected category
+      setCurrentCategoryId(id); // Set the hovered category
+    }
+    setIsHovering(true); // Set hovering to true
   };
 
   const handleMouseLeave = () => {
-    setCurrentCategoryId(lastSelectedCategoryId); // Reset to the last selected category when mouse leaves
+    if (isHovering) {
+      setIsHovering(false); // Reset hovering state
+      setCurrentCategoryId(lastSelectedCategoryId); // Reset to the last selected category
+    }
   };
 
   // Find the main category based on currentCategoryId
