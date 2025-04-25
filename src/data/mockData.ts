@@ -262,6 +262,14 @@ export const categories: Category[] = [
   { id: 209, name: 'Οθόνες Υπολογιστών', slug: 'computer-monitors', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
   { id: 210, name: 'Αξεσουάρ Οθονών', slug: 'monitor-accessories', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2624_SX400Y400/1473673319/monitor-accessories.webp' },
   { id: 211, name: 'Public Displays', slug: 'public-displays', parentId: 176, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8114_SX400Y400/1629455539/public-displays.webp' },
+
+  // Subcategories of Software of a Subcategory Υπολογιστές of Main Category Τεχνολογία
+  { id: 212, name: 'Antivirus, Security', slug: 'antivirus-security', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2639_SX400Y400/1500371799/antivirus-security.webp' },
+  { id: 213, name: 'Εφαρμογές Γραφείου', slug: 'office-applications', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2642_SX400Y400/1500371799/office-software.webp' },
+  { id: 214, name: 'Λειτουργικά Συστήματα', slug: 'operating-systems', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2638_SX400Y400/1500371799/leitoyrgika-systhmata.webp' },
+  { id: 215, name: 'Εφαρμογές Software', slug: 'software-applications', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2645_SX400Y400/1500371799/software-center.webp' },
+  { id: 216, name: 'Επεξεργασία Εικόνας - Ήχου', slug: 'image-sound-editing', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2643_SX400Y400/1500371799/multimedia-software.webp' },
+  { id: 217, name: 'Εμπορική Διαχείριση', slug: 'commercial-management', parentId: 177, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3412_SX400Y400/1500371799/software-emporikis-diaxeirisis.webp' },
 ];
 
 export interface Vendor {
