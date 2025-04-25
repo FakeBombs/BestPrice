@@ -135,7 +135,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div>
-      <Navbar onSitemapRemove={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
+      <Navbar onSitemapToggle={sitemapToggle} ref={navbarRef} isSitemapVisible={isSitemapVisible} />
       <div id="root" className="clr">
         {isSitemapVisible && (
           <>
