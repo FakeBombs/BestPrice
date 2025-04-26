@@ -301,8 +301,8 @@ export const categories: Category[] = [
   { id: 240, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8570_SX400Y400/1658920132/kalodia-hdmi.webp' },
   { id: 241, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvb-t', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3266_SX400Y400/1629455500/dvb.webp' },
   { id: 242, name: 'Projectors, Αξεσουάρ', slug: 'projectors-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3470_SX400Y400/1629455502/projectors-aksesouar.webp' },
-  { id: 243, name: 'TV Box', slug: 'tv-boxes', parentIds: [13, 239], image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
-  { id: 244, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentIds: [13, 239], image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
+  { id: 243, name: 'TV Box', slug: 'tv-boxes', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
+  { id: 244, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
   { id: 245, name: 'Φορητές Τηλεοράσεις', slug: 'portable-tvs', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7033_SX400Y400/1476269663/forhtes-thleoraseis.webp' },
   { id: 246, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3489_SX400Y400/1472545123/portable-dvd.webp' },
   { id: 247, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-blu-ray-players-recorders', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3439_SX400Y400/1472046462/dvd-blu-ray-players-recorders.webp' },
@@ -316,6 +316,8 @@ export const categories: Category[] = [
   { id: 253, name: 'Καλώδια, Αντάπτορες', slug: 'cables-adapters', parentId: 239, image: 'https://abpcdn.pstatic.gr/P/bpimg128/734_SX400Y400/1472030248/cables.webp' },
   { id: 254, name: 'Γυαλιά 3D', slug: '3d-glasses', parentId: 239, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5755_SX400Y400/1472030248/3d-glasses.webp' },
   { id: 255, name: 'Διάφορα Είδη Τηλεοράσεως', slug: 'various-tv-items', parentId: 239, image: 'https://abpcdn.pstatic.gr/P/bpimg128/735_SX400Y400/1472030248/diafora-eidh-tv.webp' },
+  { id: 243, name: 'TV Box', slug: 'tv-boxes', parentId: 239, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
+  { id: 244, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 239, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
 ];
 
 export interface Vendor {
