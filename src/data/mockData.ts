@@ -297,16 +297,16 @@ export const categories: Category[] = [
   { id: 238, name: 'Διάφορα Ανταλλακτικά Laptop', slug: 'misc-laptop-parts', parentId: 227, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9060_SX400Y400/1741768360/diafora-antallaktika-laptop.webp' },
 
   // Subcategories of Εικόνα of Main Category Τεχνολογία
-  { id: 239, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'televisions-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9052_SX400Y400/1741768318/othones-laptop.webp' },
-  { id: 240, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9053_SX400Y400/1741706878/pliktrologia-laptop.webp' },
-  { id: 241, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvb-t', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9054_SX400Y400/1741706916/kalodiotainies-laptop.webp' },
-  { id: 242, name: 'Projectors, Αξεσουάρ', slug: 'projectors-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9055_SX400Y400/1741706848/anemistirakia-laptop.webp' },
-  { id: 243, name: 'TV Box', slug: 'tv-boxes', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9056_SX400Y400/1741706826/vusmata-trofodosias-laptop.webp' },
-  { id: 244, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9057_SX400Y400/1741768278/plaisia-laptop.webp' },
-  { id: 245, name: 'Φορητές Τηλεοράσεις', slug: 'portable-tvs', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9058_SX400Y400/1741706864/mentesedes-laptop.webp' },
-  { id: 246, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9059_SX400Y400/1741707023/lcd-inverters-laptop.webp' },
-  { id: 247, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-blu-ray-players-recorders', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9060_SX400Y400/1741768360/diafora-antallaktika-laptop.webp' },
-  { id: 248, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9060_SX400Y400/1741768360/diafora-antallaktika-laptop.webp' },
+  { id: 239, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'televisions-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2999_SX400Y400/1629455498/tv.webp' },
+  { id: 240, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8570_SX400Y400/1658920132/kalodia-hdmi.webp' },
+  { id: 241, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvb-t', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3266_SX400Y400/1629455500/dvb.webp' },
+  { id: 242, name: 'Projectors, Αξεσουάρ', slug: 'projectors-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3470_SX400Y400/1629455502/projectors-aksesouar.webp' },
+  { id: 243, name: 'TV Box', slug: 'tv-boxes', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
+  { id: 244, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
+  { id: 245, name: 'Φορητές Τηλεοράσεις', slug: 'portable-tvs', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7033_SX400Y400/1476269663/forhtes-thleoraseis.webp' },
+  { id: 246, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3489_SX400Y400/1472545123/portable-dvd.webp' },
+  { id: 247, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-blu-ray-players-recorders', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3439_SX400Y400/1472046462/dvd-blu-ray-players-recorders.webp' },
+  { id: 248, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8825_SX400Y400/1694781436/kalodia-displayport.webp' },
 ];
 
 export interface Vendor {
