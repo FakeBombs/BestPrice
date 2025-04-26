@@ -351,7 +351,7 @@ export const categories: Category[] = [
   { id: 280, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6333_SX400Y400/1629455522/aksesouar-tablet.webp' },
   { id: 118, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/815_SX400Y400/1629455539/grafides-afis.webp' },
 
-  // Subcategories of Tablets, Αξεσουάρ of Main Category Τεχνολογία
+  // Subcategories of Video Games of Main Category Τεχνολογία
   { id: 281, name: 'Κονσόλες', slug: 'consoles', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/876_SX400Y400/1472718489/video-game-consoles.webp' },
   { id: 282, name: 'Ηλεκτρονικά Παιχνίδια', slug: 'electronic-games', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6488_SX400Y400/1472718489/ilektronika-paixnidia.webp' },
   { id: 283, name: 'Gaming Controllers', slug: 'gaming-controllers', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3440_SX400Y400/1472718489/xeiristiria-gamepads.webp' },
@@ -367,6 +367,27 @@ export const categories: Category[] = [
   { id: 189, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2613_SX400Y400/1629455497/kartes-grafikwn.webp' },
   { id: 293, name: 'Gaming Ποντίκια', slug: 'gaming-mice', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8493_SX400Y400/1640098609/gaming-pontikia.webp' },
   { id: 294, name: 'Gaming Πληκτρολόγια', slug: 'gaming-keyboards', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8501_SX400Y400/1646043267/gaming-pliktrologia.webp' },
+
+  // Subcategories of Ηλεκτρονικά Παιχνίδια of a Subcategory Video Games of Main Category Τεχνολογία
+  { id: 295, name: 'PS5 Games', slug: 'ps5-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8273_SX400Y400/1629455541/ps5-games.webp' },
+  { id: 296, name: 'PS4 Games', slug: 'ps4-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6041_SX400Y400/1629455519/playstation-4-games.webp' },
+  { id: 297, name: 'Xbox Series Games', slug: 'xbox-series-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8274_SX400Y400/1629455541/xbox-series-games.webp' },
+  { id: 298, name: 'PC Games', slug: 'pc-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/889_SX400Y400/1629455541/pc-games.webp' },
+  { id: 299, name: 'Xbox One Games', slug: 'xbox-one-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6143_SX400Y400/1629455520/xbox-one-games.webp' },
+  { id: 300, name: 'Nintendo Switch Games', slug: 'nintendo-switch-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7070_SX400Y400/1484917102/nintendo-switch-games.webp' },
+  { id: 301, name: 'PS3 Games', slug: 'ps3-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/891_SX400Y400/1629455542/playstation-3-games.webp' },
+  { id: 302, name: 'Playstation 2 Games', slug: 'playstation-2-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/890_SX400Y400/1629455541/playstation-2-games.webp' },
+  { id: 303, name: 'Μεταχειρισμένα Παιχνίδια', slug: 'used-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6471_SX400Y400/1629455523/metaxeirismena-paixnidia.webp' },
+  { id: 304, name: 'Xbox 360 Games', slug: 'xbox-360-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/886_SX400Y400/1629455541/xbox-360-games.webp' },
+  { id: 305, name: 'Nintendo Wii Games', slug: 'nintendo-wii-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/888_SX400Y400/1629455541/nintendo-wii-games.webp' },
+  { id: 306, name: 'Nintendo Wii U Games', slug: 'nintendo-wii-u-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5942_SX400Y400/1629455518/nintendo-wii-u-games.webp' },
+  { id: 307, name: 'Nintendo 3DS Games', slug: 'nintendo-3ds-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5501_SX400Y400/1629455514/3ds-games.webp' },
+  { id: 308, name: 'Nintendo DS Series Games', slug: 'nintendo-ds-series-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/887_SX400Y400/1629455541/nintendo-ds-series-games.webp' },
+  { id: 309, name: 'PSP Games', slug: 'psp-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/892_SX400Y400/1629455541/psp-games.webp' },
+  { id: 310, name: 'PS Vita Games', slug: 'ps-vita-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5871_SX400Y400/1629455516/ps-vita-games.webp' },
+  { id: 311, name: 'GameCube Games', slug: 'gamecube-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/896_SX400Y400/1629455541/gamecube-games.webp' },
+  { id: 312, name: 'GameBoy Games', slug: 'gameboy-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2996_SX400Y400/1629455498/gameboy-games.webp' },
+  { id: 313, name: 'Συλλεκτικά Video Games', slug: 'collectible-video-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2998_SX400Y400/1629455498/syllektika-video-games.webp' },
 ];
 
 export interface Vendor {
