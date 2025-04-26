@@ -400,6 +400,19 @@ export const categories: Category[] = [
   { id: 321, name: 'MP3, MP4 Players & Αξεσουάρ', slug: 'mp3-mp4-players-accessories', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/713_SX400Y400/1629455531/mp3-players.webp' },
   { id: 322, name: 'Ηχεία Εγκαταστάσεων', slug: 'installation-speakers', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8569_SX400Y400/1663747970/ixeia-egkatastaseon.webp' },
   { id: 323, name: 'Αυτοενισχυόμενα Ηχεία', slug: 'powered-speakers', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8576_SX400Y400/1663748150/aytoenisxyomena-ixeia.webp' },
+
+  // Subcategories of Home Audio of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 324, name: 'Ενισχυτές, Προενισχυτές', slug: 'amplifiers-preamplifiers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/705_SX400Y400/1472048939/enisxites-hxou.webp' },
+  { id: 325, name: 'Συστήματα Hi-Fi', slug: 'hi-fi-systems', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/709_SX400Y400/1472048939/hifi-systems.webp' },
+  { id: 326, name: 'Φορητά Ηχεία Bluetooth', slug: 'portable-bluetooth-speakers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/820_SX400Y400/1629455540/forita-hxeia.webp' },
+  { id: 327, name: 'Ηχεία Hi-Fi', slug: 'hi-fi-speakers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/708_SX400Y400/1472048939/speakers.webp' },
+  { id: 328, name: 'Subwoofer', slug: 'subwoofer', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5868_SX400Y400/1472048939/subwoofer.webp' },
+  { id: 329, name: 'Ραδιόφωνα, Δέκτες', slug: 'radios-receivers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3344_SX400Y400/1472048939/radio.webp' },
+  { id: 330, name: 'CD Players, Recorders', slug: 'cd-players-recorders', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/707_SX400Y400/1472048939/cd-players-recorders.webp' },
+  { id: 331, name: 'Παρελκόμενα Hi-Fi', slug: 'hi-fi-accessories', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6321_SX400Y400/1472048939/hifi-accessories.webp' },
+  { id: 332, name: 'Docking Stations', slug: 'docking-stations', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5802_SX400Y400/1472048939/docking-stations.webp' },
+  { id: 333, name: 'Soundbar', slug: 'soundbar', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
+  { id: 334, name: 'Ηχεία Υπολογιστή', slug: 'computer-speakers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2559_SX400Y400/1629455496/ixeia-ypologisti.webp' },
 ];
 
 export interface Vendor {
