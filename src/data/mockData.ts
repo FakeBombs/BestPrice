@@ -330,6 +330,15 @@ export const categories: Category[] = [
   { id: 263, name: 'Diseqc', slug: 'diseqc', parentId: 241, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3275_SX400Y400/1476270386/diseqc.webp' },
   { id: 264, name: 'Μίκτες, Πολυδιακόπτες, Διακλαδωτές', slug: 'mixers-multiswitches-splitters', parentId: 241, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3277_SX400Y400/1476270386/miktes-polydiakoptes-diakladotes.webp' },
   { id: 265, name: 'Αξεσουάρ Συστημάτων Λήψης', slug: 'reception-system-accessories', parentId: 241, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3279_SX400Y400/1476270387/aksesouar-systhmatwn-lipsis.webp' },
+
+  // Subcategories of Smartwatches, Wearables of Main Category Τεχνολογία
+  { id: 266, name: 'Smartwatches', slug: 'smartwatches', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6280_SX400Y400/1629455522/smartwatches.webp' },
+  { id: 267, name: 'Λουράκια Smartwatch', slug: 'smartwatch-straps', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8542_SX400Y400/1651758591/loyrakia-smartwatch.webp' },
+  { id: 268, name: 'Φορτιστές Smartwatch', slug: 'smartwatch-chargers', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8544_SX400Y400/1651758568/fortistes-smartwatch.webp' },
+  { id: 269, name: 'Προστασία Οθόνης Smartwatch', slug: 'smartwatch-screen-protection', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8545_SX400Y400/1652786347/prostasia-othonis-smartwatch.webp' },
+  { id: 270, name: 'Θήκες Smartwatch', slug: 'smartwatch-cases', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8546_SX400Y400/1652789665/thikes-smartwatch.webp' },
+  { id: 271, name: 'Ζώνες Καρδιακών Παλμών', slug: 'heart-rate-straps', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7168_SX400Y400/1505746144/zones-kardiakon-palmon.webp' },
+  { id: 272, name: 'Αξεσουάρ Wearables', slug: 'wearables-accessories', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6470_SX400Y400/1629455523/aksesouar-wearables.webp' },
 ];
 
 export interface Vendor {
