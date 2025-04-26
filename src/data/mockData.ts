@@ -869,7 +869,7 @@ export const products: Product[] = [
     title: 'Smart TV Stick',
     brand: 'Amazon',
     model: 'Fire Stick 4K',
-    categoryIds: [13],
+    categoryIds: [244],
     description: 'Stream all your favorites in 4K resolution.',
     image: '//placehold.co/400x400?text=Smart+TV+Stick',
     images: ['//placehold.co/400x400?text=Smart+TV+Stick'],
