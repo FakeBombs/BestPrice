@@ -130,7 +130,7 @@ const Index = () => {
                       <img alt="Deals icon" className="h-categories__image" src="//bp.pstatic.gr/images/flame.svg"/>
                     </div><h2 className="h-categories__label">{t('deals')}</h2>
                 </Link>
-                <Link to="/cat/mobile-phones.html?bpref=home-categories" className="h-categories__category" title="Κινητά">
+                <Link to="/cat/technology/mobile-phones/mobiles?bpref=home-categories" className="h-categories__category" title="Κινητά">
                   <div className="h-categories__cover">
                     <img width="125" height="125" alt="Κινητά στο BestPrice" src="//bp.pstatic.gr/pages/home/assets/cats/806-1.webp" srcSet="//bp.pstatic.gr/pages/home/assets/cats/806-1@2x.webp 2x" className="h-categories__image"/>
                   </div><h2 className="h-categories__label">Κινητά</h2>
