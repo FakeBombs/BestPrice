@@ -350,6 +350,23 @@ export const categories: Category[] = [
   { id: 279, name: 'Ανταλλακτικά Tablet', slug: 'tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6332_SX400Y400/1629455522/antallaktika-tablet.webp' },
   { id: 280, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6333_SX400Y400/1629455522/aksesouar-tablet.webp' },
   { id: 118, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/815_SX400Y400/1629455539/grafides-afis.webp' },
+
+  // Subcategories of Tablets, Αξεσουάρ of Main Category Τεχνολογία
+  { id: 281, name: 'Κονσόλες', slug: 'consoles', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/876_SX400Y400/1472718489/video-game-consoles.webp' },
+  { id: 282, name: 'Ηλεκτρονικά Παιχνίδια', slug: 'electronic-games', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6488_SX400Y400/1472718489/ilektronika-paixnidia.webp' },
+  { id: 283, name: 'Gaming Controllers', slug: 'gaming-controllers', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3440_SX400Y400/1472718489/xeiristiria-gamepads.webp' },
+  { id: 284, name: 'Τιμονιέρες', slug: 'steering-wheels', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8247_SX400Y400/1629455540/timonieres.webp' },
+  { id: 285, name: 'Joysticks', slug: 'joysticks', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8248_SX400Y400/1629455540/joysticks.webp' },
+  { id: 286, name: 'Διάφορα Gaming', slug: 'various-gaming', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5940_SX400Y400/1472718489/diafora-gaming.webp' },
+  { id: 287, name: 'Ανταλλακτικά Κονσολών', slug: 'console-parts', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6360_SX400Y400/1472718489/antallaktika-konsolwn.webp' },
+  { id: 288, name: 'VR Headsets', slug: 'vr-headsets', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6665_SX400Y400/1629455525/vr-headsets.webp' },
+  { id: 289, name: 'Φιγούρες Χαρακτήρων', slug: 'character-figures', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7068_SX400Y400/1484062068/character-figures.webp' },
+  { id: 290, name: 'Game TimeCards', slug: 'game-timecards', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3558_SX400Y400/1472718489/timecards.webp' },
+  { id: 291, name: 'Gaming Headsets', slug: 'gaming-headsets', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8066_SX400Y400/1629455538/gaming-headsets.webp' },
+  { id: 292, name: 'Καρέκλες Gaming', slug: 'gaming-chairs', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7869_SX400Y400/1629455537/karekles-gaming.webp' },
+  { id: 189, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2613_SX400Y400/1629455497/kartes-grafikwn.webp' },
+  { id: 293, name: 'Gaming Ποντίκια', slug: 'gaming-mice', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8493_SX400Y400/1640098609/gaming-pontikia.webp' },
+  { id: 294, name: 'Gaming Πληκτρολόγια', slug: 'gaming-keyboards', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8501_SX400Y400/1646043267/gaming-pliktrologia.webp' },
 ];
 
 export interface Vendor {
