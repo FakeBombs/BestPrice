@@ -4,7 +4,7 @@ export interface Category {
   name: string;           
   slug: string;           
   parentId?: number;      
-  image: string;          
+  image: string;
 }
 
 // Main categories
@@ -388,6 +388,18 @@ export const categories: Category[] = [
   { id: 311, name: 'GameCube Games', slug: 'gamecube-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/896_SX400Y400/1629455541/gamecube-games.webp' },
   { id: 312, name: 'GameBoy Games', slug: 'gameboy-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2996_SX400Y400/1629455498/gameboy-games.webp' },
   { id: 313, name: 'Συλλεκτικά Video Games', slug: 'collectible-video-games', parentId: 282, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2998_SX400Y400/1629455498/syllektika-video-games.webp' },
+
+  // Subcategories of Ήχος of Main Category Τεχνολογία
+  { id: 314, name: 'Home Audio', slug: 'home-audio', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/704_SX400Y400/1629455531/home-audio.webp' },
+  { id: 315, name: 'Επαγγελματικός Ήχος', slug: 'professional-sound', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3280_SX400Y400/1629455501/dj.webp' },
+  { id: 316, name: 'Ακουστικά, Αξεσουάρ', slug: 'headphones-accessories', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2557_SX400Y400/1629455496/akoustika-aksesouar.webp' },
+  { id: 317, name: 'Karaoke', slug: 'karaoke', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3304_SX400Y400/1476430484/karaoke.webp' },
+  { id: 318, name: 'Συσκευές Πικάπ, Αξεσουάρ', slug: 'turntables-accessories', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3289_SX400Y400/1476430484/pickup-aksesouar.webp' },
+  { id: 319, name: 'Home Cinema', slug: 'home-cinema', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/692_SX400Y400/1629455530/home-cinema.webp' },
+  { id: 320, name: 'Φορητές Συσκευές', slug: 'portable-devices', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/719_SX400Y400/1629455532/portable.webp' },
+  { id: 321, name: 'MP3, MP4 Players & Αξεσουάρ', slug: 'mp3-mp4-players-accessories', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/713_SX400Y400/1629455531/mp3-players.webp' },
+  { id: 322, name: 'Ηχεία Εγκαταστάσεων', slug: 'installation-speakers', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8569_SX400Y400/1663747970/ixeia-egkatastaseon.webp' },
+  { id: 323, name: 'Αυτοενισχυόμενα Ηχεία', slug: 'powered-speakers', parentId: 17, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8576_SX400Y400/1663748150/aytoenisxyomena-ixeia.webp' },
 ];
 
 export interface Vendor {
