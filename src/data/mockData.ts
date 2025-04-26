@@ -339,6 +339,17 @@ export const categories: Category[] = [
   { id: 270, name: 'Θήκες Smartwatch', slug: 'smartwatch-cases', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8546_SX400Y400/1652789665/thikes-smartwatch.webp' },
   { id: 271, name: 'Ζώνες Καρδιακών Παλμών', slug: 'heart-rate-straps', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7168_SX400Y400/1505746144/zones-kardiakon-palmon.webp' },
   { id: 272, name: 'Αξεσουάρ Wearables', slug: 'wearables-accessories', parentId: 14, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6470_SX400Y400/1629455523/aksesouar-wearables.webp' },
+
+  // Subcategories of Tablets, Αξεσουάρ of Main Category Τεχνολογία
+  { id: 273, name: 'Tablets', slug: 'tablets', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
+  { id: 274, name: 'iPad', slug: 'ipad', parentId: 15, image: 'https://bbpcdn.pstatic.gr/bpimg11/2mcVPd/1TPIUd_SX400Y400/1741158661/apple-ipad-11-2025-wifi-128gb.webp' },
+  { id: 275, name: 'Θήκες Tablet', slug: 'tablet-cases', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5943_SX400Y400/1629455518/thikes-tablet.webp' },
+  { id: 276, name: 'Βάσεις Tablet', slug: 'tablet-stands', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6246_SX400Y400/1629455521/vaseis-tablet.webp' },
+  { id: 277, name: 'Προστασία Οθόνης Tablet', slug: 'tablet-screen-protection', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5951_SX400Y400/1629455518/screen-protectors-tablets.webp' },
+  { id: 278, name: 'E-Book Readers', slug: 'e-book-readers', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3203_SX400Y400/1629455500/ebook-readers.webp' },
+  { id: 279, name: 'Ανταλλακτικά Tablet', slug: 'tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6332_SX400Y400/1629455522/antallaktika-tablet.webp' },
+  { id: 280, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6333_SX400Y400/1629455522/aksesouar-tablet.webp' },
+  { id: 118, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/815_SX400Y400/1629455539/grafides-afis.webp' },
 ];
 
 export interface Vendor {
