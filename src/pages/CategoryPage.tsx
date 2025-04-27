@@ -19,86 +19,90 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    // First find the main category
-    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    if (!foundMainCategory) {
-      setCurrentCategory(undefined);
-      return;
-    }
+    // Find the deepest valid category in the path
+    const findDeepestValidCategory = () => {
+      // Start with main category
+      const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+      if (!mainCategory) return null;
 
-    let currentFound = foundMainCategory;
+      let result = mainCategory;
+      let currentParentId = mainCategory.id;
 
-    // Helper function to find child category
-    const findChildCategory = (parentId: number, slug: string) => {
-      return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
+      // Try to find subcategory
+      if (subCatSlug) {
+        const sub = categories.find(cat => 
+          cat.slug === subCatSlug && 
+          cat.parentId === currentParentId
+        );
+        if (sub) {
+          result = sub;
+          currentParentId = sub.id;
+        } else {
+          return result;
+        }
+      }
+
+      // Try to find sub-subcategory
+      if (subSubCatSlug) {
+        const subSub = categories.find(cat => 
+          cat.slug === subSubCatSlug && 
+          cat.parentId === currentParentId
+        );
+        if (subSub) {
+          result = subSub;
+          currentParentId = subSub.id;
+        } else {
+          return result;
+        }
+      }
+
+      // Try to find extra sub-subcategory
+      if (extraSubSubCatSlug) {
+        const extraSub = categories.find(cat => 
+          cat.slug === extraSubSubCatSlug && 
+          cat.parentId === currentParentId
+        );
+        if (extraSub) {
+          result = extraSub;
+        }
+        // Even if we don't find the extra level, return the last valid category
+        return result;
+      }
+
+      return result;
     };
 
-    // Build the category path step by step
-    const categoryPath = [currentFound];
-
-    // Find subcategory if it exists
-    if (subCatSlug) {
-      const subCategory = findChildCategory(currentFound.id, subCatSlug);
-      if (!subCategory) {
-        setCurrentCategory(undefined);
-        return;
-      }
-      currentFound = subCategory;
-      categoryPath.push(currentFound);
-    }
-
-    // Find sub-subcategory if it exists
-    if (subSubCatSlug && currentFound) {
-      const subSubCategory = findChildCategory(currentFound.id, subSubCatSlug);
-      if (!subSubCategory) {
-        setCurrentCategory(undefined);
-        return;
-      }
-      currentFound = subSubCategory;
-      categoryPath.push(currentFound);
-    }
-
-    // Find extra sub-subcategory if it exists
-    if (extraSubSubCatSlug && currentFound) {
-      const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
-      // Even if we don't find the extra level, we'll keep the current category
-      if (extraSubCategory) {
-        currentFound = extraSubCategory;
-        categoryPath.push(currentFound);
-      }
-    }
-
-    setCurrentCategory(currentFound);
+    const deepestCategory = findDeepestValidCategory();
+    setCurrentCategory(deepestCategory || undefined);
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
 
-    // Filter products directly based on current category ID and all parent category IDs
-    const getAllParentIds = (category) => {
-      const parentIds = [category.id];
-      let currentCat = category;
-      
-      while (currentCat.parentId) {
-        parentIds.push(currentCat.parentId);
-        const parentCategory = categories.find(cat => cat.id === currentCat.parentId);
-        if (!parentCategory) break;
-        currentCat = parentCategory;
+    // Get all category IDs in the hierarchy
+    const getCategoryHierarchyIds = (category) => {
+      const ids = new Set([category.id]);
+      let current = category;
+
+      while (current.parentId) {
+        ids.add(current.parentId);
+        const parent = categories.find(cat => cat.id === current.parentId);
+        if (!parent) break;
+        current = parent;
       }
-      
-      return parentIds;
+
+      return Array.from(ids);
     };
 
-    const categoryIds = getAllParentIds(currentCategory);
-    // Include products from current category AND all parent categories
+    const hierarchyIds = getCategoryHierarchyIds(currentCategory);
     const productsToDisplay = products.filter(product => 
-      product.categoryIds.some(id => categoryIds.includes(id))
+      product.categoryIds.some(id => hierarchyIds.includes(id))
     );
 
     setFilteredProducts(productsToDisplay);
   }, [currentCategory]);
 
-  // Only show NotFound if we have no main category
+  // Only show NotFound if we don't have a main category slug
   if (!mainCatSlug) {
     return <NotFound />;
   }
@@ -356,7 +360,7 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
-        {renderBreadcrumbs()}
+        {currentCategory && renderBreadcrumbs()}
         {currentCategory && currentCategory.parentId 
           ? renderSubcategories(currentCategory) 
           : (currentCategory 
