@@ -442,28 +442,31 @@ const SearchResults = () => {
             return (
                 <div key={parentId}>
                     {subcategories.map(item => {
-                        let fullSlug = parentCategory ? parentCategory.slug : '';
+                        let fullSlug = '';
                         let currentCategory = item;
 
-                        // Traverse to build the full slug path
+                        // Build up slugs array including the main category slug
                         const slugs = [];
+                        if (parentCategory) {
+                            slugs.push(parentCategory.slug); // Add main category slug first
+                        }
                         while (currentCategory.parentId !== null) {
                             const parent = categories.find(cat => cat.id === currentCategory.parentId);
                             if (parent) {
-                                slugs.unshift(parent.slug); // Push to the front to keep order
+                                slugs.push(parent.slug); // Add the parent's slug
                                 currentCategory = parent;
                             } else {
                                 break;
                             }
                         }
-                        slugs.push(item.slug); // Add the current item's slug at the end
+                        slugs.push(item.slug); // Add the current item's slug
 
                         fullSlug = slugs.join('/'); // Join all slugs to form the full path
 
                         return (
                             <Link 
                                 key={item.id} 
-                                to={`/cat/${fullSlug}`} // Construct the URL containing all slugs
+                                to={`/cat/${fullSlug}`} // Construct the final URL
                                 className="categories__category"
                             >
                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
