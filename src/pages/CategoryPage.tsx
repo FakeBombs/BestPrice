@@ -19,55 +19,31 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    // Find the deepest valid category in the path
-    const findDeepestValidCategory = () => {
-      // Start with main category
-      const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-      if (!mainCategory) return null;
-
-      let result = mainCategory;
-      let currentParentId = mainCategory.id;
-
-      // Try to find subcategory
-      if (subCatSlug) {
-        const sub = categories.find(cat => 
-          cat.slug === subCatSlug && 
-          cat.parentId === currentParentId
-        );
-        if (!sub) return result;
-        result = sub;
-        currentParentId = sub.id;
-      }
-
-      // Try to find sub-subcategory
-      if (subSubCatSlug) {
-        const subSub = categories.find(cat => 
-          cat.slug === subSubCatSlug && 
-          cat.parentId === currentParentId
-        );
-        if (!subSub) return result;
-        result = subSub;
-        currentParentId = subSub.id;
-      }
-
-      // Try to find extra sub-subcategory
-      if (extraSubSubCatSlug) {
-        const extraSub = categories.find(cat => 
-          cat.slug === extraSubSubCatSlug && 
-          cat.parentId === currentParentId
-        );
-        // For the fourth level, we ALWAYS return the last valid category,
-        // whether we found the extra level or not
-        if (extraSub) {
-          result = extraSub;
-        }
-      }
-
-      return result;
+    // Get all slugs in the path
+    const slugs = [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug].filter(Boolean);
+    
+    // Find any category that matches the last slug in our path
+    const findCategoryBySlug = (slug: string) => {
+      return categories.find(cat => cat.slug === slug) || 
+             mainCategories.find(cat => cat.slug === slug);
     };
 
-    const deepestCategory = findDeepestValidCategory();
-    setCurrentCategory(deepestCategory || undefined);
+    // Find the deepest category that exists in our path
+    let foundCategory = null;
+    for (let i = slugs.length - 1; i >= 0; i--) {
+      const category = findCategoryBySlug(slugs[i]);
+      if (category) {
+        foundCategory = category;
+        break;
+      }
+    }
+
+    // If we found nothing but have a main category slug, use that
+    if (!foundCategory && mainCatSlug) {
+      foundCategory = mainCategories.find(cat => cat.slug === mainCatSlug) || null;
+    }
+
+    setCurrentCategory(foundCategory || undefined);
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
@@ -78,12 +54,23 @@ const CategoryPage: React.FC = () => {
       const ids = new Set([category.id]);
       let current = category;
 
+      // Add all parent IDs
       while (current.parentId) {
         ids.add(current.parentId);
         const parent = categories.find(cat => cat.id === current.parentId);
         if (!parent) break;
         current = parent;
       }
+
+      // Add all child IDs
+      const addChildIds = (parentId) => {
+        const children = categories.filter(cat => cat.parentId === parentId);
+        children.forEach(child => {
+          ids.add(child.id);
+          addChildIds(child.id);
+        });
+      };
+      addChildIds(category.id);
 
       return Array.from(ids);
     };
@@ -96,7 +83,7 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(productsToDisplay);
   }, [currentCategory]);
 
-  // Only show NotFound if we don't have a main category slug
+  // Only show NotFound if we have no main category slug
   if (!mainCatSlug) {
     return <NotFound />;
   }
