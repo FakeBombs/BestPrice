@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'; 
-import NotFound from '@/pages/NotFound';
 import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
@@ -39,19 +38,15 @@ const CategoryPage: React.FC = () => {
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
-    if (!currentCategory) return;
+    if (currentCategory) {
+      // Filter products directly based on current category ID
+      const productsToDisplay = products.filter(product => 
+        product.categoryIds.includes(currentCategory.id)
+      );
 
-    // Filter products directly based on current category ID
-    const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
-    );
-
-    setFilteredProducts(productsToDisplay);
+      setFilteredProducts(productsToDisplay);
+    }
   }, [currentCategory, products]);
-
-  if (!currentCategory) {
-    return <NotFound />;
-  }
 
   const sortProducts = (products) => {
     switch (sortType) {
@@ -89,27 +84,22 @@ const CategoryPage: React.FC = () => {
   
     if (!mainCategory) return null;
 
-    // Start with the main category
     breadcrumbs.push(
       <li key={mainCategory.slug}>
         <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
       </li>
     );
 
-    // Create a Set to keep track of slugged categories
     const categoryTrail = [];
-
-    // Build the breadcrumb trail from currentCategory up to the main category
     let category = currentCategory;
     
     while (category) {
-      categoryTrail.unshift(category);  // Prepend to create the trail
-      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+      categoryTrail.unshift(category);
+      category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Add categories to breadcrumbs (excluding current category)
     categoryTrail.forEach((cat, index) => {
-      if (index !== categoryTrail.length - 1) { // Exclude current category
+      if (index !== categoryTrail.length - 1) {
         breadcrumbs.push(
           <li key={cat.slug}>
             <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
@@ -118,7 +108,6 @@ const CategoryPage: React.FC = () => {
       }
     });
 
-    // Render Breadcrumbs
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -195,16 +184,14 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (currentCategory) => {
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     
-    // Collect all parent categories leading up to the main category
     const categoryPath = [];
     let category = currentCategory;
 
     while (category) {
-        categoryPath.unshift(category); // Prepend to maintain the order
+        categoryPath.unshift(category);
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Create an array of slugs and filter out any undefined slugs
     const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
     
     return (
@@ -224,8 +211,7 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {categories.filter(cat => cat.parentId === currentCategory?.id).length > 0 ? (
                     categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => {
-                        // Construct the paths ensuring all parts of the slug are included
-                        const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/'); // Ensure all slugs are included in the path
+                        const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/');
 
                         return (
                             <div key={subCat.id} className="root-category__category">
@@ -241,7 +227,7 @@ const CategoryPage: React.FC = () => {
                                             .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => {
-                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/');
                                                 return (
                                                     <React.Fragment key={linkedSubCat.id}>
                                                         <Link to={linkedSubCatPath}>
@@ -262,7 +248,7 @@ const CategoryPage: React.FC = () => {
             </div>
         </>
     );
-};
+  };
 
   const renderProducts = () => (
     <div className="page-products">
@@ -272,7 +258,7 @@ const CategoryPage: React.FC = () => {
           <div className="page-header__title-wrapper">
             <div className="products-wrapper">
               <div className="products-wrapper__header"><div className="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
-              <ScrollableSlider></ScrollableSlider>
+              <ScrollableSlider />
             </div>
           </div>
           <div className="page-header__sorting">
@@ -309,10 +295,7 @@ const CategoryPage: React.FC = () => {
         {renderBreadcrumbs()}
         {currentCategory && currentCategory.parentId 
           ? renderSubcategories(currentCategory) 
-          : (currentCategory 
-              ? renderMainCategories() 
-              : renderProducts()
-            )
+          : renderMainCategories()
         }
       </div>
     </div>
