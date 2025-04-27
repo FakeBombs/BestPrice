@@ -71,12 +71,12 @@ const SearchResults = () => {
     const extractCategories = (results) => {
     const categoryCount = {};
     results.forEach((product) => {
-        (product.categoryIds || []).forEach(categoryId => {
+        (product.categoryIds || []).forEach((categoryId) => {
             categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
         });
     });
 
-    const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+    const filteredCategories = Object.entries(categoryCount).map(([id, count]) => {
         const categoryData = categories.find(cat => cat.id === parseInt(id));
         return {
             id: categoryData ? categoryData.id : '',
@@ -86,37 +86,37 @@ const SearchResults = () => {
             image: categoryData ? categoryData.image : '',
             parentId: categoryData ? categoryData.parentId : null,
         };
-    }).filter(cat => cat.id && cat.parentId);
+    }).filter(cat => cat.id && cat.count > 0); // Ensure categories have products
 
-    setAvailableCategories(categoriesArray);
-    };
+    setAvailableCategories(filteredCategories);
+};
 
-    const renderCategoryLinks = (categoriesList) => {
-      return categoriesList.map((item) => {
-        // Create the slugs array by traversing through the hierarchy
-        const slugs = [item.slug];
-        let currentCat = categories.find(cat => cat.id === item.id);
-        while (currentCat && currentCat.parentId) {
-            const parentCategory = categories.find(cat => cat.id === currentCat.parentId);
-            if (parentCategory) {
-                slugs.unshift(parentCategory.slug);
-                currentCat = parentCategory;
-            } else {
-                break;
-            }
-        }
+const buildSlugPath = (category) => {
+    const slugs = [];
+    let currentCategory = category;
 
-        const finalSlugPath = `/cat/${slugs.join('/')}`;
-        
+    while (currentCategory) {
+        // Adding the slug to the beginning of the array
+        slugs.unshift(currentCategory.slug);
+        // Move to the parent category
+        currentCategory = categories.find(cat => cat.id === currentCategory.parentId);
+    }
+
+    return `/cat/${slugs.join('/')}`;
+};
+
+const renderCategoryLinks = (categoriesList) => {
+    return categoriesList.map((item) => {
+        const slugPath = buildSlugPath(item); // Create correct slug path based on hierarchy
         return (
             <li key={item.id}>
-                <Link to={finalSlugPath} className="filters__link">
+                <Link to={slugPath} className="filters__link">
                     <span>{item.category} ({item.count})</span>
                 </Link>
             </li>
         );
-      });
-    };
+    });
+};
 
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
@@ -438,8 +438,7 @@ const SearchResults = () => {
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
-                                            // Create the slugs array similarly here
-                                            <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
+                                            <Link key={item.id} to={buildSlugPath(item)} className="categories__category">
                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
