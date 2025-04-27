@@ -436,30 +436,34 @@ const SearchResults = () => {
                                 <ScrollableSlider>
     <div className="categories categories--scrollable scroll__content">
         {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
-            // Fetch all subcategories belonging to each main category
             const subcategories = availableCategories.filter(item => item.parentId === parentId);
             const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
+
             return (
                 <div key={parentId}>
                     {subcategories.map(item => {
                         let fullSlug = parentCategory ? parentCategory.slug : '';
                         let currentCategory = item;
 
-                        // Traverse parent categories to build the full path
+                        // Traverse to build the full slug path
+                        const slugs = [];
                         while (currentCategory.parentId !== null) {
                             const parent = categories.find(cat => cat.id === currentCategory.parentId);
                             if (parent) {
-                                fullSlug = `${parent.slug}/${fullSlug}`;
+                                slugs.unshift(parent.slug); // Push to the front to keep order
                                 currentCategory = parent;
                             } else {
                                 break;
                             }
                         }
+                        slugs.push(item.slug); // Add the current item's slug at the end
+
+                        fullSlug = slugs.join('/'); // Join all slugs to form the full path
 
                         return (
                             <Link 
                                 key={item.id} 
-                                to={`/cat/${fullSlug}${item.slug ? '/' + item.slug : ''}`} 
+                                to={`/cat/${fullSlug}`} // Construct the URL containing all slugs
                                 className="categories__category"
                             >
                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
