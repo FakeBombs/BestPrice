@@ -263,13 +263,13 @@ const SearchResults = () => {
         const slugs = [];
         let currentCat = categories.find(cat => cat.id === category.id);
     
-        // Build path by moving up through parent categories
+        // Move up to find the main category
         while (currentCat) {
             slugs.unshift(currentCat.slug);
             currentCat = categories.find(cat => cat.id === currentCat.parentId);
         }
-    
-        return `/cat/${slugs.join('/')}`; // Construct URL accordingly
+
+        return `/cat/${slugs.join('/')}`; // Ensure to prepend with '/cat/'
     };
 
     return (
@@ -428,9 +428,9 @@ const SearchResults = () => {
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => (
                                             <Link key={item.id} to={buildSlugPath(item)} className="categories__category">
-                                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
-                                                <h2 className="categories__title">{item.category}</h2>
-                                                <div className="categories__cnt">{item.count} προϊόντα</div>
+                                               <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
+                                               <h2 className="categories__title">{item.category}</h2>
+                                               <div className="categories__cnt">{item.count} προϊόντα</div>
                                             </Link>
                                         ))}
                                     </div>
