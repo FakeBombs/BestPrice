@@ -194,7 +194,7 @@ const CategoryPage: React.FC = () => {
 
   const renderSubcategories = (currentCategory) => {
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    
+
     // Collect all parent categories leading up to the main category
     const categoryPath = [];
     let category = currentCategory;
@@ -206,7 +206,10 @@ const CategoryPage: React.FC = () => {
 
     // Create an array of slugs and filter out any undefined slugs
     const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
-    
+
+    // Fetch products for the current category
+    const products = getProductsForCategory(currentCategory.id); // Implement this function to retrieve products based on ID
+
     return (
         <>
             <div className="page-header">
@@ -257,7 +260,7 @@ const CategoryPage: React.FC = () => {
                         );
                     })
                 ) : (
-                    renderProducts()
+                    products.length > 0 ? renderProducts(products) : <div>No products available for this category</div>
                 )}
             </div>
         </>
