@@ -413,6 +413,31 @@ export const categories: Category[] = [
   { id: 332, name: 'Docking Stations', slug: 'docking-stations', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5802_SX400Y400/1472048939/docking-stations.webp' },
   { id: 333, name: 'Soundbar', slug: 'soundbar', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
   { id: 334, name: 'Ηχεία Υπολογιστή', slug: 'computer-speakers', parentId: 314, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2559_SX400Y400/1629455496/ixeia-ypologisti.webp' },
+
+  // Subcategories of Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 335, name: 'Ηχεία PA', slug: 'pa-speakers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/705_SX400Y400/1472048939/enisxites-hxou.webp' },
+  { id: 336, name: 'Επαγγελματικά Μικρόφωνα, Αξεσουάρ', slug: 'professional-microphones-accessories', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/709_SX400Y400/1472048939/hifi-systems.webp' },
+  { id: 337, name: 'Επαγγελματικός Φωτισμός', slug: 'professional-lighting', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/820_SX400Y400/1629455540/forita-hxeia.webp' },
+  { id: 338, name: 'Ανταλλακτικά Ηχείων', slug: 'speaker-parts', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/708_SX400Y400/1472048939/speakers.webp' },
+  { id: 339, name: 'Εξοπλισμός DJ & Αξεσουάρ', slug: 'dj-equipment-accessories', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5868_SX400Y400/1472048939/subwoofer.webp' },
+  { id: 340, name: 'Κονσόλες, Μίκτες Ήχου', slug: 'consoles-mixers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3344_SX400Y400/1472048939/radio.webp' },
+  { id: 341, name: 'Επαγγελματικές Κάρτες Ήχου', slug: 'professional-sound-cards', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/707_SX400Y400/1472048939/cd-players-recorders.webp' },
+  { id: 342, name: 'Ηχομονωτικά', slug: 'soundproofing', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6321_SX400Y400/1472048939/hifi-accessories.webp' },
+  { id: 343, name: 'Μηχανήματα Καπνού & Ατμόσφαιρας', slug: 'fog-machines-atmosphere', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5802_SX400Y400/1472048939/docking-stations.webp' },
+  { id: 344, name: 'Τσάντες, Θήκες', slug: 'bags-cases', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
+  { id: 345, name: 'Βάσεις Ηχείων', slug: 'speaker-stands', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2559_SX400Y400/1629455496/ixeia-ypologisti.webp' },
+  { id: 346, name: 'Επαγγελματικοί Ενισχυτές, Προενισχυτές', slug: 'professional-amplifiers-preamplifiers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/705_SX400Y400/1472048939/enisxites-hxou.webp' },
+  { id: 347, name: 'Ψηφιακοί Επεξεργαστές, Equalizers', slug: 'digital-processors-equalizers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/709_SX400Y400/1472048939/hifi-systems.webp' },
+  { id: 348, name: 'Ψηφιακά Συστήματα Εγγραφής', slug: 'digital-recording-systems', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/820_SX400Y400/1629455540/forita-hxeia.webp' },
+  { id: 349, name: 'Monitor Controllers', slug: 'monitor-controllers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/708_SX400Y400/1472048939/speakers.webp' },
+  { id: 350, name: 'Συνεδριακά Συστήματα', slug: 'conference-systems', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5868_SX400Y400/1472048939/subwoofer.webp' },
+  { id: 351, name: 'Bundles', slug: 'bundles', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3344_SX400Y400/1472048939/radio.webp' },
+  { id: 352, name: 'Τηλεβόες, Κόρνες', slug: 'megaphones-horns', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/707_SX400Y400/1472048939/cd-players-recorders.webp' },
+  { id: 353, name: 'Καλώδια Ήχου', slug: 'audio-cables', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6321_SX400Y400/1472048939/hifi-accessories.webp' },
+  { id: 354, name: 'Βύσματα Ήχου', slug: 'audio-connectors', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5802_SX400Y400/1472048939/docking-stations.webp' },
+  { id: 355, name: 'Αντάπτορες, Προεκτάσεις Ήχου', slug: 'audio-adapters-extensions', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
+  { id: 356, name: 'Διάφορα Επαγγελματικού Ήχου', slug: 'various-professional-sound', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2559_SX400Y400/1629455496/ixeia-ypologisti.webp' },
+  { id: 322, name: 'Ηχεία Εγκαταστάσεων', slug: 'installation-speakers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8569_SX400Y400/1663747970/ixeia-egkatastaseon.webp' },
 ];
 
 export interface Vendor {
