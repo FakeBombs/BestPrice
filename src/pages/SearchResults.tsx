@@ -69,27 +69,27 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
-    const categoryCount = {};
-    results.forEach((product) => {
-        (product.categoryIds || []).forEach(categoryId => {
-            categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+        const categoryCount = {};
+        results.forEach((product) => {
+            (product.categoryIds || []).forEach(categoryId => {
+                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+            });
         });
-    });
 
-    const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-        const categoryData = categories.find(cat => cat.id === parseInt(id));
-        return {
-            id: categoryData ? categoryData.id : '',
-            category: categoryData ? categoryData.name : '',
-            slug: categoryData ? categoryData.slug : '',
-            count,
-            image: categoryData ? categoryData.image : '',
-            parentId: categoryData ? categoryData.parentId : null,
-        };
-    }).filter(cat => cat.id && cat.parentId);  // Only include subcategories (parentId should not be null)
+        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+            const categoryData = categories.find(cat => cat.id === parseInt(id));
+            return {
+                id: categoryData ? categoryData.id : '',
+                category: categoryData ? categoryData.name : '',
+                slug: categoryData ? categoryData.slug : '',
+                count,
+                image: categoryData ? categoryData.image : '',
+                parentId: categoryData ? categoryData.parentId : null,
+            };
+        }).filter(cat => cat.id && cat.parentId); // Only include subcategories
 
-    setAvailableCategories(categoriesArray);
-};
+        setAvailableCategories(categoriesArray);
+    };
 
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
@@ -218,7 +218,7 @@ const SearchResults = () => {
                             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
                                 <span className="applied-filters__label">{brand}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove filter of ${brand}`} onClick={() => handleBrandFilter(brand)}>
-                                    <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                    <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                 </svg>
                             </a>
                         </h2>
@@ -229,7 +229,7 @@ const SearchResults = () => {
                             <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
                                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove ${specKey}-${specValue} filter`}>
-                                    <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                    <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                 </svg>
                             </a>
                         </h2>
@@ -239,10 +239,10 @@ const SearchResults = () => {
                       const vendor = certifiedVendors.find(v => v.id === vendorId);
                       return vendor ? (
                           <h2 className="applied-filters__filter" key={vendor.id}>
-                              <a data-scroll-to="" data-filter-key={vendor.name} datavalue-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
+                              <a data-scroll-to="" data-filter-key={vendor.name} data-value-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
                                   <span className="applied-filters__label">{vendor.name}</span>
                                   <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove filter of ${vendor.name}`}>
-                                      <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                      <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                   </svg>
                               </a>
                           </h2>
@@ -265,8 +265,15 @@ const SearchResults = () => {
                 <div id="trail">
                     <nav className="breadcrumb">
                         <ol>
-                            <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                            <li><span data-no-info="" className="trail__last">{searchQuery || 'All Products'}</span></li>
+                            <li>
+                                <Link to="/" rel="home" data-no-info="">
+                                    <span>BestPrice</span>
+                                </Link>
+                                <span className="trail__breadcrumb-separator">›</span>
+                            </li>
+                            <li>
+                                <span data-no-info="" className="trail__last">{searchQuery || 'All Products'}</span>
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -274,27 +281,27 @@ const SearchResults = () => {
                     <aside className="page-products__filters">
                         <div id="filters" role="complementary" aria-labelledby="filters-header">
                             <div className="filters__categories" data-filter-name="categories">
-                            <div className="filters__header">
-                                <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
-                            </div>
-                            <ol aria-expanded={showMoreCategories}>
-                                {availableCategories.filter(item => item.parentId).slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
-                                    <li key={item.id}>
-                                        <Link to={`/cat/${mainCategories.find(cat => cat.id === item.parentId).slug}/${item.slug}`} className="filters__link">
-                                            <span>{item.category} ({item.count})</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ol>
-                            {availableCategories.length > MAX_DISPLAY_COUNT && (
-                                <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
-                                    <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
-                                        <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
-                                    </svg>
-                                    {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                                <div className="filters__header">
+                                    <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
-                            )}
-                        </div>
+                                <ol aria-expanded={showMoreCategories}>
+                                    {availableCategories.filter(item => item.parentId).slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
+                                        <li key={item.id}>
+                                            <Link to={`/cat/${item.slug}`} className="filters__link">
+                                                <span>{item.category} ({item.count})</span>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ol>
+                                {availableCategories.length > MAX_DISPLAY_COUNT && (
+                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
+                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                                            <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                                        </svg>
+                                        {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                                    </div>
+                                )}
+                            </div>
 
                             {Object.keys(availableBrands).length > 0 && (
                                 <div className="filter-brand default-list" data-filter-name data-type data-key>
@@ -328,7 +335,6 @@ const SearchResults = () => {
                                 ))
                             )}
 
-                            {/* Show list of certified vendors */}
                             <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                                 <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                                 <div className="filter-container">
@@ -413,8 +419,8 @@ const SearchResults = () => {
                                 </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.filter(item => item.parentId).map((item) => (  // Filter out main categories
-                                            <Link key={item.id} to={`/cat/${mainCategories.find(cat => cat.id === item.parentId).slug}/${item.slug}`} className="categories__category">
+                                        {availableCategories.filter(item => item.parentId).map((item) => (
+                                            <Link key={item.id} to={`/cat/${item.slug}`} className="categories__category">
                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
