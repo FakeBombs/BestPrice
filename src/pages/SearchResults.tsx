@@ -69,27 +69,27 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
-        const categoryCount = {};
-        results.forEach((product) => {
-            (product.categoryIds || []).forEach(categoryId => {
-                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
-            });
+    const categoryCount = {};
+    results.forEach((product) => {
+        (product.categoryIds || []).forEach(categoryId => {
+            categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
         });
+    });
 
-        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-            const categoryData = categories.find(cat => cat.id === parseInt(id));
-            return {
-                id: categoryData ? categoryData.id : '',
-                category: categoryData ? categoryData.name : '',
-                slug: categoryData ? categoryData.slug : '',
-                count,
-                image: categoryData ? categoryData.image : '',
-                parentId: categoryData ? categoryData.parentId : null,
-            };
-        }).filter(cat => cat.id && cat.parentId);
+    const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+        const categoryData = categories.find(cat => cat.id === parseInt(id));
+        return {
+            id: categoryData ? categoryData.id : '',
+            category: categoryData ? categoryData.name : '',
+            slug: categoryData ? categoryData.slug : '',
+            count,
+            image: categoryData ? categoryData.image : '',
+            parentId: categoryData ? categoryData.parentId : null,
+        };
+    }).filter(cat => cat.id && cat.parentId);  // Only include subcategories (parentId should not be null)
 
-        setAvailableCategories(categoriesArray);
-    };
+    setAvailableCategories(categoriesArray);
+};
 
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
@@ -274,27 +274,27 @@ const SearchResults = () => {
                     <aside className="page-products__filters">
                         <div id="filters" role="complementary" aria-labelledby="filters-header">
                             <div className="filters__categories" data-filter-name="categories">
-                                <div className="filters__header">
-                                    <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
-                                </div>
-                                <ol aria-expanded={showMoreCategories}>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
-                                        <li key={item.id}>
-                                            <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
-                                                <span>{item.category} ({item.count})</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ol>
-                                {availableCategories.length > MAX_DISPLAY_COUNT && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
-                                            <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
-                                        </svg>
-                                        {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
-                                    </div>
-                                )}
+                            <div className="filters__header">
+                                <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                             </div>
+                            <ol aria-expanded={showMoreCategories}>
+                                {availableCategories.filter(item => item.parentId).slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
+                                    <li key={item.id}>
+                                        <Link to={`/cat/${mainCategories.find(cat => cat.id === item.parentId).slug}/${item.slug}`} className="filters__link">
+                                            <span>{item.category} ({item.count})</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ol>
+                            {availableCategories.length > MAX_DISPLAY_COUNT && (
+                                <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
+                                    <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                                        <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                                    </svg>
+                                    {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                                </div>
+                            )}
+                        </div>
 
                             {Object.keys(availableBrands).length > 0 && (
                                 <div className="filter-brand default-list" data-filter-name data-type data-key>
@@ -413,8 +413,8 @@ const SearchResults = () => {
                                 </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.map((item) => (
-                                            <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
+                                        {availableCategories.filter(item => item.parentId).map((item) => (  // Filter out main categories
+                                            <Link key={item.id} to={`/cat/${mainCategories.find(cat => cat.id === item.parentId).slug}/${item.slug}`} className="categories__category">
                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                 <h2 className="categories__title">{item.category}</h2>
                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
