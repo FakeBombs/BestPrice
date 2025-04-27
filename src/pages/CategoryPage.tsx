@@ -206,6 +206,9 @@ const CategoryPage: React.FC = () => {
         category = categories.find(cat => cat.id === category.parentId);
     }
 
+    // Create a slug array for building paths
+    const slugs = categoryPath.map(cat => cat.slug);
+    
     return (
         <>
             <div className="page-header">
@@ -223,9 +226,9 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => {
-                        // Ensure we have the necessary parent slug and full path for the subcategory
-                        const parentSlug = categoryPath.length > 1 ? categoryPath[categoryPath.length - 2].slug : ''; // Second to last for parent
-                        const subCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}`; // Full path including subcategory
+                        // Construct the path for this subcategory
+                        const parentSlug = slugs[slugs.length - 1]; // Last is the current category slug
+                        const subCatPath = `/cat/${mainCategory.slug}/${slugs[slugs.length - 2]}/${subCat.slug}`; // Full path including subcategory
 
                         return (
                             <div key={subCat.id} className="root-category__category">
@@ -240,14 +243,18 @@ const CategoryPage: React.FC = () => {
                                         {categories
                                             .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                                             .slice(0, 5)
-                                            .map((linkedSubCat, index, arr) => (
-                                                <React.Fragment key={linkedSubCat.id}>
-                                                    <Link to={`/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}/${linkedSubCat.slug}`}>
-                                                        {linkedSubCat.name}
-                                                    </Link>
-                                                    {index < arr.length - 1 && ', '}
-                                                </React.Fragment>
-                                            ))}
+                                            .map((linkedSubCat, index, arr) => {
+                                                // Use the updated slugs for proper path creation
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs[slugs.length - 2]}/${subCat.slug}/${linkedSubCat.slug}`;
+                                                return (
+                                                    <React.Fragment key={linkedSubCat.id}>
+                                                        <Link to={linkedSubCatPath}>
+                                                            {linkedSubCat.name}
+                                                        </Link>
+                                                        {index < arr.length - 1 && ', '}
+                                                    </React.Fragment>
+                                                );
+                                            })}
                                     </div>
                                 </div>
                             </div>
