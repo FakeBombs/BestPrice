@@ -28,41 +28,40 @@ const CategoryPage: React.FC = () => {
 
     let foundCategory = foundMainCategory;
 
-    // Validate each subcategory in order
+    const checkCategory = (slug, parentId) => {
+        return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
+    };
+
     if (subCatSlug) {
-        const subCat = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory.id);
-        if (subCat) foundCategory = subCat; 
-        else {
+        foundCategory = checkCategory(subCatSlug, foundMainCategory.id);
+        if (!foundCategory) {
             setCurrentCategory(undefined);
             return;
         }
     }
 
     if (subSubCatSlug) {
-        const subSubCat = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory.id);
-        if (subSubCat) foundCategory = subSubCat;
-        else {
+        foundCategory = checkCategory(subSubCatSlug, foundCategory.id);
+        if (!foundCategory) {
             setCurrentCategory(undefined);
             return;
         }
     }
 
     if (extraSubSubCatSlug) {
-        const extraSubSubCat = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory.id);
-        if (extraSubSubCat) foundCategory = extraSubSubCat;
-        else {
+        foundCategory = checkCategory(extraSubSubCatSlug, foundCategory.id);
+        if (!foundCategory) {
             setCurrentCategory(undefined);
             return;
         }
     }
 
     setCurrentCategory(foundCategory);
-}, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
+  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
 
-    // Filter products directly based on current category ID
     const productsToDisplay = products.filter(product => 
       product.categoryIds.includes(currentCategory.id)
     );
@@ -110,27 +109,22 @@ const CategoryPage: React.FC = () => {
   
     if (!mainCategory) return null;
 
-    // Start with the main category
     breadcrumbs.push(
       <li key={mainCategory.slug}>
         <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
       </li>
     );
 
-    // Create a Set to keep track of slugged categories
     const categoryTrail = [];
-
-    // Build the breadcrumb trail from currentCategory up to the main category
     let category = currentCategory;
     
     while (category) {
-      categoryTrail.unshift(category);  // Prepend to create the trail
-      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+      categoryTrail.unshift(category);
+      category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Add categories to breadcrumbs (excluding current category)
     categoryTrail.forEach((cat, index) => {
-      if (index !== categoryTrail.length - 1) { // Exclude current category
+      if (index !== categoryTrail.length - 1) {
         breadcrumbs.push(
           <li key={cat.slug}>
             <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
@@ -139,7 +133,6 @@ const CategoryPage: React.FC = () => {
       }
     });
 
-    // Render Breadcrumbs
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -216,16 +209,14 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (currentCategory) => {
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     
-    // Collect all parent categories leading up to the main category
     const categoryPath = [];
     let category = currentCategory;
 
     while (category) {
-        categoryPath.unshift(category); // Prepend to maintain the order
+        categoryPath.unshift(category);
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Create an array of slugs and filter out any undefined slugs
     const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
 
     return (
@@ -277,9 +268,8 @@ const CategoryPage: React.FC = () => {
                         );
                     })
                 ) : (
-                    // Adjusted logic here to display products or a message
                     (currentCategory && currentCategory.products && currentCategory.products.length > 0) ? (
-                        renderProducts(currentCategory.products) // Ensure this function can take products from currentCategory directly
+                        renderProducts() 
                     ) : (
                         <div>No products available for this category</div>
                     )
@@ -287,8 +277,7 @@ const CategoryPage: React.FC = () => {
             </div>
         </>
     );
-};
-
+  };
 
   const renderProducts = () => (
     <div className="page-products">
