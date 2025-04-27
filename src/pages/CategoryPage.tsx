@@ -18,26 +18,33 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
 
+  // Use effect to find the main category
   useEffect(() => {
-    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug || cat.id.toString() === mainCatSlug);
+    if (!foundMainCategory) {
+      setCurrentCategory(undefined);
+      return;
+    }
+
     let foundCategory: Category | undefined = foundMainCategory;
 
     // Traverse through each level of categories to find the correct one based on slugs
     if (subCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory?.id);
+      foundCategory = categories.find(cat => (cat.slug === subCatSlug || cat.id.toString() === subCatSlug) && cat.parentId === foundMainCategory?.id);
     }
     
     if (subSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
+      foundCategory = categories.find(cat => (cat.slug === subSubCatSlug || cat.id.toString() === subSubCatSlug) && cat.parentId === foundCategory?.id);
     }
     
     if (extraSubSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
+      foundCategory = categories.find(cat => (cat.slug === extraSubSubCatSlug || cat.id.toString() === extraSubSubCatSlug) && cat.parentId === foundCategory?.id);
     }
 
     setCurrentCategory(foundCategory || foundMainCategory);
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
+  // Use effect to get filtered products
   useEffect(() => {
     if (!currentCategory) return;
 
@@ -48,48 +55,19 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(productsToDisplay);
   }, [currentCategory, products]);
 
+  // Render Not Found page if category is missing
   if (!currentCategory) {
     return <NotFound />;
   }
 
-  const sortProducts = (products) => {
-    switch (sortType) {
-        case 'price-asc':
-            return [...products].sort((a, b) => {
-                const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                return minPriceA - minPriceB;
-            });
-        case 'price-desc':
-            return [...products].sort((a, b) => {
-                const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                return maxPriceB - maxPriceA;
-            });
-        case 'rating-desc':
-        default:
-            return [...products].sort((a, b) => {
-                const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                return averageRatingB - averageRatingA;
-            });
-        case 'merchants_desc':
-            return [...products].sort((a, b) => {
-                const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
-                return availableVendorsB - availableVendorsA;
-            });
-    }
-  };
-
   const renderBreadcrumbs = () => {
     const breadcrumbs = [];
-    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug || cat.id.toString() === mainCatSlug);
   
     if (!mainCategory) return null;
 
     breadcrumbs.push(
-      <li key={mainCategory.slug}>
+      <li key={mainCategory.id}>
         <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
       </li>
     );
@@ -105,7 +83,7 @@ const CategoryPage: React.FC = () => {
     categoryTrail.forEach((cat, index) => {
       if (index !== categoryTrail.length - 1) {
         breadcrumbs.push(
-          <li key={cat.slug}>
+          <li key={cat.id}>
             <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
           </li>
         );
@@ -171,7 +149,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderSubcategories = (currentCategory) => {
-    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug || cat.id.toString() === mainCatSlug);
     
     const categoryPath = [];
     let category = currentCategory;
@@ -181,8 +159,6 @@ const CategoryPage: React.FC = () => {
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    const slugs = categoryPath.map(cat => `${cat.id}/${cat.slug}`).filter(Boolean);
-    
     return (
         <>
             <div className="page-header">
