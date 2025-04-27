@@ -434,28 +434,45 @@ const SearchResults = () => {
                                     </hgroup>
                                 </header>
                                 <ScrollableSlider>
-                                    <div className="categories categories--scrollable scroll__content">
-                                        {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
-                                            // Fetch all subcategories belonging to each main category
-                                            const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                            const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
-                                            return (
-                                                <div key={parentId}>
-                                                    {subcategories.map(item => (
-                                                        parentCategory ? (
-                                                            // Construct URL with main category slug and subcategory slug
-                                                            <Link key={item.id} to={`/cat/${parentCategory.slug}/${item.slug}`} className="categories__category">
-                                                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
-                                                                <h2 className="categories__title">{item.category}</h2>
-                                                                <div className="categories__cnt">{item.count} προϊόντα</div>
-                                                            </Link>
-                                                        ) : null // Prevent accessing if parentCategory is undefined
-                                                    ))}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </ScrollableSlider>
+    <div className="categories categories--scrollable scroll__content">
+        {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
+            // Fetch all subcategories belonging to each main category
+            const subcategories = availableCategories.filter(item => item.parentId === parentId);
+            const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
+            return (
+                <div key={parentId}>
+                    {subcategories.map(item => {
+                        let fullSlug = parentCategory ? parentCategory.slug : '';
+                        let currentCategory = item;
+
+                        // Traverse parent categories to build the full path
+                        while (currentCategory.parentId !== null) {
+                            const parent = categories.find(cat => cat.id === currentCategory.parentId);
+                            if (parent) {
+                                fullSlug = `${parent.slug}/${fullSlug}`;
+                                currentCategory = parent;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        return (
+                            <Link 
+                                key={item.id} 
+                                to={`/cat/${fullSlug}${item.slug ? '/' + item.slug : ''}`} 
+                                className="categories__category"
+                            >
+                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
+                                <h2 className="categories__title">{item.category}</h2>
+                                <div className="categories__cnt">{item.count} προϊόντα</div>
+                            </Link>
+                        );
+                    })}
+                </div>
+            );
+        })}
+    </div>
+</ScrollableSlider>
                             </section>
 
                             <div className="page-header__sorting">
