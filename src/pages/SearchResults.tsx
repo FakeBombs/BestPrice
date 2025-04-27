@@ -287,11 +287,14 @@ const SearchResults = () => {
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
-                                    {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
+                                    {/* Group parent categories */}
+                                    {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
+                                        // Fetch all subcategories by parentId, not just those with products
                                         const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                        const parentCategory = categories.find(cat => cat.id === parentId); // Check the parent category
+                                        const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
                                         return (
                                             <div key={parentId}>
+                                                {/* Map over all subcategories */}
                                                 {subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => (
                                                     parentCategory ? (
                                                         <li key={item.id}>
@@ -431,9 +434,10 @@ const SearchResults = () => {
                                 </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
-                                        {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
+                                        {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
+                                            // Fetch all subcategories by parentId
                                             const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                            const parentCategory = categories.find(cat => cat.id === parentId); // Check the parent category
+                                            const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
                                             return (
                                                 <div key={parentId}>
                                                     {subcategories.map(item => (
