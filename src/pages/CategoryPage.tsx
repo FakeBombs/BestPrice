@@ -7,10 +7,12 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 
 // Main component
 const CategoryPage: React.FC = () => {
-  const { mainCatSlug, subCatSlug, subSubCatSlug } = useParams<{
+  const { mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug } = useParams<{
     mainCatSlug?: string;
     subCatSlug?: string;
     subSubCatSlug?: string;
+    extraSubSubCatSlug?: string;
+    anotherSubSubCatSlug?: string;
   }>(); 
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -21,22 +23,30 @@ const CategoryPage: React.FC = () => {
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     let foundCategory: Category | undefined = foundMainCategory;
 
-    // Traverse through each level of categories based on slugs to find the correct one
+    // Traverse through each level of categories to find the correct one based on slugs
     if (subCatSlug) {
       foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory?.id);
     }
-
+    
     if (subSubCatSlug) {
       foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
     }
+    
+    if (extraSubSubCatSlug) {
+      foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
+    }
+
+    if (anotherSubSubCatSlug) {
+      foundCategory = categories.find(cat => cat.slug === anotherSubSubCatSlug && cat.parentId === foundCategory?.id);
+    }
 
     setCurrentCategory(foundCategory || foundMainCategory);
-  }, [mainCatSlug, subCatSlug, subSubCatSlug]);
+  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
 
-    // Filter products based on current category ID
+    // Filter products directly based on current category ID
     const productsToDisplay = products.filter(product => 
       product.categoryIds.includes(currentCategory.id)
     );
@@ -199,6 +209,9 @@ const CategoryPage: React.FC = () => {
         category = categories.find(cat => cat.id === category.parentId);
     }
 
+    // Create an array of slugs and filter out any undefined slugs
+    const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
+    
     return (
         <>
             <div className="page-header">
@@ -215,68 +228,66 @@ const CategoryPage: React.FC = () => {
             </div>
             <div className="root-category__categories">
                 {categories.filter(cat => cat.parentId === currentCategory?.id).length > 0 ? (
-                    categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => (
-                        <div key={subCat.id} className="root-category__category">
-                            <Link to={`/cat/${mainCatSlug}/${subCat.slug}`} className="root-category__cover">
-                                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                            </Link>
-                            <h2 className="root-category__category-title">
-                                <Link to={`/cat/${mainCatSlug}/${subCat.slug}`}>{subCat.name}</Link>
-                            </h2>
-                            <div className="root-category__footer">
-                                <div className="root-category__links">
-                                    {categories
-                                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                                        .slice(0, 5)
-                                        .map((linkedSubCat, index, arr) => (
-                                            <React.Fragment key={linkedSubCat.id}>
-                                                <Link to={`/cat/${mainCatSlug}/${subCat.slug}/${linkedSubCat.slug}`}>
-                                                    {linkedSubCat.name}
-                                                </Link>
-                                                {index < arr.length - 1 && ', '}
-                                            </React.Fragment>
-                                        ))}
+                    categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => {
+                        // Construct the paths ensuring all parts of the slug are included
+                        const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/'); // Ensure all slugs are included in the path
+
+                        return (
+                            <div key={subCat.id} className="root-category__category">
+                                <Link to={subCatPath} className="root-category__cover">
+                                    <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                                </Link>
+                                <h2 className="root-category__category-title">
+                                    <Link to={subCatPath}>{subCat.name}</Link>
+                                </h2>
+                                <div className="root-category__footer">
+                                    <div className="root-category__links">
+                                        {categories
+                                            .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                                            .slice(0, 5)
+                                            .map((linkedSubCat, index, arr) => {
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
+                                                return (
+                                                    <React.Fragment key={linkedSubCat.id}>
+                                                        <Link to={linkedSubCatPath}>
+                                                            {linkedSubCat.name}
+                                                        </Link>
+                                                        {index < arr.length - 1 && ', '}
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
+                        );
+                    })
                 ) : (
                     renderProducts()
                 )}
             </div>
         </>
     );
-  };
+};
 
-  const renderProducts = () => (
+const renderProducts = () => (
     <div className="page-products">
       <aside className="page-products__filters"></aside>
       <main className="page-products__main">
         <header className="page-header">
           <div className="page-header__title-wrapper">
             <div className="products-wrapper">
-              <div className="products-wrapper__header">
-                <div className="products-wrapper__title">Selected Offers</div>
-              </div>
-              <ScrollableSlider />
+              <div className="products-wrapper__header"><div className="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
+              <ScrollableSlider></ScrollableSlider>
             </div>
           </div>
           <div className="page-header__sorting">
             <div className="tabs">
               <div className="tabs-wrapper">
                 <nav>
-                  <a data-type="rating-desc" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                    <div className="tabs__content">Most Popular</div>
-                  </a>
-                  <a data-type="price-asc" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                    <div className="tabs__content">Cheapest</div>
-                  </a>
-                  <a data-type="price-desc" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                    <div className="tabs__content">Most Expensive</div>
-                  </a>
-                  <a data-type="merchants_desc" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                    <div className="tabs__content">Number of Merchants</div>
-                  </a>
+                  <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                  <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
+                  <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
+                  <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                 </nav>
               </div>
             </div>
@@ -289,13 +300,13 @@ const CategoryPage: React.FC = () => {
                 <ProductCard key={product.id} product={product} />
               ))
             ) : (
-              <p>No products available for this category</p>
+                <p>No products available for this category</p>
             )}
           </div>
         </div>
       </main>
     </div>
-  );
+);
 
   return (
     <div className="root__wrapper root-category__root">
