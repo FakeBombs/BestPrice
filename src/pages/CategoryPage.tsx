@@ -33,14 +33,18 @@ const CategoryPage: React.FC = () => {
       return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
     };
 
+    // Build the category path step by step
+    const categoryPath = [currentFound];
+
     // Find subcategory if it exists
     if (subCatSlug) {
-      const subCategory = findChildCategory(foundMainCategory.id, subCatSlug);
+      const subCategory = findChildCategory(currentFound.id, subCatSlug);
       if (!subCategory) {
         setCurrentCategory(undefined);
         return;
       }
       currentFound = subCategory;
+      categoryPath.push(currentFound);
     }
 
     // Find sub-subcategory if it exists
@@ -51,16 +55,17 @@ const CategoryPage: React.FC = () => {
         return;
       }
       currentFound = subSubCategory;
+      categoryPath.push(currentFound);
     }
 
     // Find extra sub-subcategory if it exists
     if (extraSubSubCatSlug && currentFound) {
       const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
-      if (!extraSubCategory) {
-        setCurrentCategory(undefined);
-        return;
+      // Even if we don't find the extra level, we'll keep the current category
+      if (extraSubCategory) {
+        currentFound = extraSubCategory;
+        categoryPath.push(currentFound);
       }
-      currentFound = extraSubCategory;
     }
 
     setCurrentCategory(currentFound);
@@ -85,6 +90,7 @@ const CategoryPage: React.FC = () => {
     };
 
     const categoryIds = getAllParentIds(currentCategory);
+    // Include products from current category AND all parent categories
     const productsToDisplay = products.filter(product => 
       product.categoryIds.some(id => categoryIds.includes(id))
     );
