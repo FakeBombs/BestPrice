@@ -27,48 +27,55 @@ const CategoryPage: React.FC = () => {
     }
 
     let currentFound = foundMainCategory;
-    let parentCategory = null;
+    let lastValidCategory = foundMainCategory;
 
     // Helper function to find child category
     const findChildCategory = (parentId: number, slug: string) => {
       return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
     };
 
-    // Build the category path step by step
-    const categoryPath = [currentFound];
-
     // Find subcategory if it exists
     if (subCatSlug) {
       const subCategory = findChildCategory(currentFound.id, subCatSlug);
       if (!subCategory) {
-        setCurrentCategory(undefined);
+        // Only set undefined if we're not trying to access a fourth level
+        if (!extraSubSubCatSlug) {
+          setCurrentCategory(undefined);
+          return;
+        }
+        // For fourth level access, keep the last valid category
+        setCurrentCategory(lastValidCategory);
         return;
       }
       currentFound = subCategory;
-      categoryPath.push(currentFound);
+      lastValidCategory = currentFound;
     }
 
     // Find sub-subcategory if it exists
     if (subSubCatSlug) {
       const subSubCategory = findChildCategory(currentFound.id, subSubCatSlug);
       if (!subSubCategory) {
-        setCurrentCategory(undefined);
+        // Only set undefined if we're not trying to access a fourth level
+        if (!extraSubSubCatSlug) {
+          setCurrentCategory(undefined);
+          return;
+        }
+        // For fourth level access, keep the last valid category
+        setCurrentCategory(lastValidCategory);
         return;
       }
       currentFound = subSubCategory;
-      parentCategory = currentFound; // Store the parent before trying fourth level
-      categoryPath.push(currentFound);
+      lastValidCategory = currentFound;
     }
 
-    // Special handling for the fourth level
+    // Find extra sub-subcategory if it exists
     if (extraSubSubCatSlug) {
       const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
       if (extraSubCategory) {
         currentFound = extraSubCategory;
-        categoryPath.push(currentFound);
       } else {
-        // If the fourth level doesn't exist, use the parent category (third level)
-        currentFound = parentCategory || currentFound;
+        // For fourth level, always use the last valid category
+        currentFound = lastValidCategory;
       }
     }
 
@@ -350,16 +357,16 @@ const CategoryPage: React.FC = () => {
     </div>
   );
 
-  // Modify renderContent to handle fourth level specially
+  // Modify renderContent to always show products for fourth level
   const renderContent = () => {
-    if (!currentCategory) {
-      return <NotFound />;
+    // For fourth level URLs, show products if we have any valid category
+    if (extraSubSubCatSlug && currentCategory) {
+      return renderProducts();
     }
 
-    // Special handling for fourth level URLs
-    if (extraSubSubCatSlug) {
-      // Always show products for fourth level URLs, regardless of whether the category exists
-      return renderProducts();
+    // For all other cases, show NotFound if no category
+    if (!currentCategory) {
+      return <NotFound />;
     }
 
     // Check if we're showing a category that has child categories
