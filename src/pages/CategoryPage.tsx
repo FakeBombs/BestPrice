@@ -207,10 +207,6 @@ const CategoryPage: React.FC = () => {
     // Create an array of slugs and filter out any undefined slugs
     const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
     
-    // Filter subcategories and check for products
-    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id);
-    const products = getProductsForCategory(currentCategory.id); // Implement this function based on your data structure
-
     return (
         <>
             <div className="page-header">
@@ -226,8 +222,9 @@ const CategoryPage: React.FC = () => {
                 </div>
             </div>
             <div className="root-category__categories">
-                {subcategories.length > 0 ? (
-                    subcategories.map((subCat) => {
+                {categories.filter(cat => cat.parentId === currentCategory?.id).length > 0 ? (
+                    categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => {
+                        // Construct the paths ensuring all parts of the slug are included
                         const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/'); // Ensure all slugs are included in the path
 
                         return (
@@ -260,12 +257,7 @@ const CategoryPage: React.FC = () => {
                         );
                     })
                 ) : (
-                    // Check if there are products available
-                    products && products.length > 0 ? (
-                        renderProducts(products) // Rendering products if available
-                    ) : (
-                        <div>No products available for this category</div> // Render message if no products found
-                    )
+                    renderProducts()
                 )}
             </div>
         </>
