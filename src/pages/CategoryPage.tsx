@@ -195,64 +195,69 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (parentCategory) => {
     const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
-    // Finding the full path for the parent category in the hierarchy
+    
+    // Keeping track of the full path
     const fullPath = [];
     let category = parentCategory;
 
+    // Build the full path from current category up to the main category
     while (category) {
-      fullPath.unshift(category);  // Prepend to create the trail of categories
-      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+        fullPath.unshift(category);  // Prepend the current category
+        category = categories.find(cat => cat.id === category.parentId);  // Find the parent category
     }
 
     return (
-      <>
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              <Link className="trail__back pressable" title={fullPath[fullPath.length - 2]?.name || mainCategory.name} to={fullPath.length > 1 ? `/cat/${mainCategory.slug}/${fullPath[fullPath.length - 2].slug}` : `/cat/${mainCategory.slug}`}>
-                <svg aria-hidden="true" className="icon" width={16} height={16}>
-                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                </svg>
-              </Link>
-              <h1>{parentCategory.name}</h1> 
-            </div>
-          </div>
-        </div>
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`} className="root-category__cover">
-                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                </Link>
-                <h2 className="root-category__category-title">
-                  <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`}>{subCat.name}</Link>
-                </h2>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {categories
-                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                      .slice(0, 5)
-                      .map((linkedSubCat, index, arr) => (
-                        <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
-                            {linkedSubCat.name}
-                          </Link>
-                          {index < arr.length - 1 && ', '}
-                        </React.Fragment>
-                      ))}
-                  </div>
+        <>
+            <div className="page-header">
+                <div className="hgroup">
+                    <div className="page-header__title-wrapper">
+                        <Link className="trail__back pressable" title={fullPath[fullPath.length - 2]?.name || mainCategory.name} 
+                              to={fullPath.length > 1 ? `/cat/${mainCategory.slug}/${fullPath[fullPath.length - 2].slug}` : `/cat/${mainCategory.slug}`}>
+                            <svg aria-hidden="true" className="icon" width={16} height={16}>
+                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
+                            </svg>
+                        </Link>
+                        <h1>{parentCategory.name}</h1>
+                    </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            renderProducts() 
-          )}
-        </div>
-      </>
+            </div>
+            <div className="root-category__categories">
+                {subcategories.length > 0 ? (
+                    subcategories.map((subCat) => {
+                        const subCatPath = `/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`; // Includes all parent categories
+                        return (
+                            <div key={subCat.id} className="root-category__category">
+                                <Link to={subCatPath} className="root-category__cover">
+                                    <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                                </Link>
+                                <h2 className="root-category__category-title">
+                                    <Link to={subCatPath}>{subCat.name}</Link>
+                                </h2>
+                                <div className="root-category__footer">
+                                    <div className="root-category__links">
+                                        {categories
+                                            .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                                            .slice(0, 5)
+                                            .map((linkedSubCat, index, arr) => (
+                                                <React.Fragment key={linkedSubCat.id}>
+                                                    <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
+                                                        {linkedSubCat.name}
+                                                    </Link>
+                                                    {index < arr.length - 1 && ', '}
+                                                </React.Fragment>
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    renderProducts()
+                )}
+            </div>
+        </>
     );
-  };
+};
 
   const renderProducts = () => (
     <div className="page-products">
