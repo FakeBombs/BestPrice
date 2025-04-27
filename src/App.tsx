@@ -34,8 +34,7 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="/cat/:mainCatId/:mainCatSlug?" component={CategoryPage} />
-          <Route path="/cat/:subCatId/:subCatSlug?" component={CategoryPage} />
+          <Route path="/cat/:id/:slug?" component={CategoryPage} />
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
