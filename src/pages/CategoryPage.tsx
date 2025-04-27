@@ -206,7 +206,7 @@ const CategoryPage: React.FC = () => {
 
     // Create an array of slugs and filter out any undefined slugs
     const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
-    
+
     return (
         <>
             <div className="page-header">
@@ -224,8 +224,7 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {categories.filter(cat => cat.parentId === currentCategory?.id).length > 0 ? (
                     categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => {
-                        // Construct the paths ensuring all parts of the slug are included
-                        const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/'); // Ensure all slugs are included in the path
+                        const subCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`.replace(/\/+/g, '/');
 
                         return (
                             <div key={subCat.id} className="root-category__category">
@@ -241,7 +240,7 @@ const CategoryPage: React.FC = () => {
                                             .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => {
-                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/');
                                                 return (
                                                     <React.Fragment key={linkedSubCat.id}>
                                                         <Link to={linkedSubCatPath}>
@@ -257,7 +256,12 @@ const CategoryPage: React.FC = () => {
                         );
                     })
                 ) : (
-                    renderProducts()
+                    // Adjusted logic here to display products or a message
+                    (currentCategory && currentCategory.products && currentCategory.products.length > 0) ? (
+                        renderProducts(currentCategory.products) // Ensure this function can take products from currentCategory directly
+                    ) : (
+                        <div>No products available for this category</div>
+                    )
                 )}
             </div>
         </>
