@@ -94,12 +94,14 @@ const CategoryPage: React.FC = () => {
   
     if (!mainCategory) return null;
 
-    // Start with the main category
-    breadcrumbs.push(
-      <li key={mainCategory.slug}>
-        <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-      </li>
-    );
+    // Only add the main category link if we're NOT rendering main categories
+    if (!(currentCategory && !currentCategory.parentId)) {
+      breadcrumbs.push(
+        <li key={mainCategory.slug}>
+          <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+        </li>
+      );
+    }
 
     // Create a Set to keep track of slugged categories
     const categoryTrail = [];
