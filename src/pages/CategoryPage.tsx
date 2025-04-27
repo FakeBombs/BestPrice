@@ -19,41 +19,51 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
+    // First find the main category
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    let foundCategory: Category | undefined = foundMainCategory;
-    let parentId = foundMainCategory?.id;
-
-    // Traverse through each level of categories to find the correct one based on slugs
-    if (subCatSlug && parentId) {
-      const subCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === parentId);
-      if (subCategory) {
-        foundCategory = subCategory;
-        parentId = subCategory.id;
-      } else {
-        foundCategory = undefined;
-      }
-    }
-    
-    if (subSubCatSlug && parentId) {
-      const subSubCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === parentId);
-      if (subSubCategory) {
-        foundCategory = subSubCategory;
-        parentId = subSubCategory.id;
-      } else {
-        foundCategory = undefined;
-      }
-    }
-    
-    if (extraSubSubCatSlug && parentId) {
-      const extraSubCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === parentId);
-      if (extraSubCategory) {
-        foundCategory = extraSubCategory;
-      } else {
-        foundCategory = undefined;
-      }
+    if (!foundMainCategory) {
+      setCurrentCategory(undefined);
+      return;
     }
 
-    setCurrentCategory(foundCategory);
+    let currentFound = foundMainCategory;
+
+    // Helper function to find child category
+    const findChildCategory = (parentId: number, slug: string) => {
+      return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
+    };
+
+    // Find subcategory if it exists
+    if (subCatSlug) {
+      const subCategory = findChildCategory(foundMainCategory.id, subCatSlug);
+      if (!subCategory) {
+        setCurrentCategory(undefined);
+        return;
+      }
+      currentFound = subCategory;
+    }
+
+    // Find sub-subcategory if it exists
+    if (subSubCatSlug && currentFound) {
+      const subSubCategory = findChildCategory(currentFound.id, subSubCatSlug);
+      if (!subSubCategory) {
+        setCurrentCategory(undefined);
+        return;
+      }
+      currentFound = subSubCategory;
+    }
+
+    // Find extra sub-subcategory if it exists
+    if (extraSubSubCatSlug && currentFound) {
+      const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
+      if (!extraSubCategory) {
+        setCurrentCategory(undefined);
+        return;
+      }
+      currentFound = extraSubCategory;
+    }
+
+    setCurrentCategory(currentFound);
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
