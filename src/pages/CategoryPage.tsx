@@ -196,28 +196,26 @@ const CategoryPage: React.FC = () => {
     const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-    // Constructing the base path for subcategories
-    const basePath = parentCategory?.slug 
-      ? `/cat/${mainCategory.slug}/${parentCategory.slug}`
-      : `/cat/${mainCategory.slug}`;
+    // Finding the full path for the parent category in the hierarchy
+    const fullPath = [];
+    let category = parentCategory;
 
-    // Finding the parent category name for the back link
-    const parentCat = categories.find(cat => cat.id === parentCategory.parentId);
-    const parentCategoryHref = parentCat 
-      ? `/cat/${mainCategory.slug}/${parentCat.slug}` 
-      : `/cat/${mainCategory.slug}`;
+    while (category) {
+      fullPath.unshift(category);  // Prepend to create the trail of categories
+      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+    }
 
     return (
       <>
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <Link className="trail__back pressable" title={parentCat ? parentCat.name : mainCategory.name} to={parentCategoryHref}>
+              <Link className="trail__back pressable" title={fullPath[fullPath.length - 2]?.name || mainCategory.name} to={fullPath.length > 1 ? `/cat/${mainCategory.slug}/${fullPath[fullPath.length - 2].slug}` : `/cat/${mainCategory.slug}`}>
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </Link>
-              <h1>{parentCategory.name || currentCategory?.name}</h1> 
+              <h1>{parentCategory.name}</h1> 
             </div>
           </div>
         </div>
@@ -225,11 +223,11 @@ const CategoryPage: React.FC = () => {
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id} className="root-category__category">
-                <Link to={`${basePath}/${subCat.slug}`} className="root-category__cover">
+                <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`} className="root-category__cover">
                   <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                 </Link>
                 <h2 className="root-category__category-title">
-                  <Link to={`${basePath}/${subCat.slug}`}>{subCat.name}</Link>
+                  <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`}>{subCat.name}</Link>
                 </h2>
                 <div className="root-category__footer">
                   <div className="root-category__links">
@@ -238,7 +236,7 @@ const CategoryPage: React.FC = () => {
                       .slice(0, 5)
                       .map((linkedSubCat, index, arr) => (
                         <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`${basePath}/${subCat.slug}/${linkedSubCat.slug}`}>
+                          <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
                             {linkedSubCat.name}
                           </Link>
                           {index < arr.length - 1 && ', '}
