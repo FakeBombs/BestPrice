@@ -54,99 +54,99 @@ const CategoryPage: React.FC = () => {
   }
 
   const sortProducts = (products) => {
-        switch (sortType) {
-            case 'price-asc':
-                return [...products].sort((a, b) => {
-                    const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    return minPriceA - minPriceB;
-                });
-            case 'price-desc':
-                return [...products].sort((a, b) => {
-                    const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                    const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                    return maxPriceB - maxPriceA;
-                });
-            case 'rating-desc':
-            default:
-                return [...products].sort((a, b) => {
-                    const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                    const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                    return averageRatingB - averageRatingA;
-                });
-            case 'merchants_desc':
-                return [...products].sort((a, b) => {
-                    const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                    const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
-                    return availableVendorsB - availableVendorsA;
-                });
-        }
-    };
-
- const renderBreadcrumbs = () => {
-  const breadcrumbs = [];
-  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-  
-  if (!mainCategory) return null;
-
-  // Start with the main category
-  breadcrumbs.push(
-    <li key={mainCategory.slug}>
-      <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-    </li>
-  );
-
-  // Create a Set to keep track of slugged categories
-  const categoryPathSet = new Set();
-
-  // Use currentCategory to add to breadcrumbs
-  let category = currentCategory;
-
-  // Build the breadcrumb trail from currentCategory up to the main category
-  const categoryTrail = [];
-  
-  while (category) {
-    categoryTrail.push(category);  // Push the category to create the trail
-    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
-  }
-
-  // Reverse the order so we can start from mainCategory and go to currentCategory
-  categoryTrail.reverse();
-
-  // Add categories to breadcrumbs
-  categoryTrail.forEach(cat => {
-    if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
-      categoryPathSet.add(cat.slug);
-      breadcrumbs.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
-        </li>
-      );
+    switch (sortType) {
+        case 'price-asc':
+            return [...products].sort((a, b) => {
+                const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                return minPriceA - minPriceB;
+            });
+        case 'price-desc':
+            return [...products].sort((a, b) => {
+                const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                return maxPriceB - maxPriceA;
+            });
+        case 'rating-desc':
+        default:
+            return [...products].sort((a, b) => {
+                const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
+                const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
+                return averageRatingB - averageRatingA;
+            });
+        case 'merchants_desc':
+            return [...products].sort((a, b) => {
+                const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
+                const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
+                return availableVendorsB - availableVendorsA;
+            });
     }
-  });
+  };
 
-  // Render Breadcrumbs
-  return (
-    <div id="trail">
-      <nav className="breadcrumb">
-        <ol>
-          <li>
-            <Link to="/" rel="home">
-              <span>BestPrice</span>
-            </Link>
-            <span className="trail__breadcrumb-separator">›</span>
+  const renderBreadcrumbs = () => {
+    const breadcrumbs = [];
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+  
+    if (!mainCategory) return null;
+
+    // Start with the main category
+    breadcrumbs.push(
+      <li key={mainCategory.slug}>
+        <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+      </li>
+    );
+
+    // Create a Set to keep track of slugged categories
+    const categoryPathSet = new Set();
+
+    // Use currentCategory to add to breadcrumbs
+    let category = currentCategory;
+
+    // Build the breadcrumb trail from currentCategory up to the main category
+    const categoryTrail = [];
+    
+    while (category) {
+      categoryTrail.push(category);  // Push the category to create the trail
+      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+    }
+
+    // Reverse the order so we can start from mainCategory and go to the first subcategory (excluded)
+    categoryTrail.reverse();
+
+    // Add categories to breadcrumbs (excluding current category)
+    categoryTrail.forEach(cat => {
+      if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
+        categoryPathSet.add(cat.slug);
+        breadcrumbs.push(
+          <li key={cat.slug}>
+            <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
           </li>
-          {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
-              {crumb}
-              {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-            </React.Fragment>
-          ))}
-        </ol>
-      </nav>
-    </div>
-  );
-};
+        );
+      }
+    });
+
+    // Render Breadcrumbs
+    return (
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            <li>
+              <Link to="/" rel="home">
+                <span>BestPrice</span>
+              </Link>
+              <span className="trail__breadcrumb-separator">›</span>
+            </li>
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={index}>
+                {crumb}
+                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+              </React.Fragment>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    );
+  };
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
@@ -224,7 +224,7 @@ const CategoryPage: React.FC = () => {
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </Link>
-              <h1>{parentCategory.name || currentCategory?.name}</h1> {/* Show parentCategory name or fallback */} 
+              <h1>{parentCategory.name || currentCategory?.name}</h1>
             </div>
           </div>
         </div>
@@ -261,7 +261,7 @@ const CategoryPage: React.FC = () => {
         </div>
       </>
     );
-};
+  };
 
   const renderProducts = () => (
     <div className="page-products">
@@ -269,8 +269,8 @@ const CategoryPage: React.FC = () => {
       <main className="page-products__main">
         <header className="page-header">
           <div className="page-header__title-wrapper">
-            <div class="products-wrapper">
-              <div class="products-wrapper__header"><div class="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
+            <div className="products-wrapper">
+              <div className="products-wrapper__header"><div className="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
               <ScrollableSlider></ScrollableSlider>
             </div>
           </div>
