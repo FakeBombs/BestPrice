@@ -27,6 +27,7 @@ interface Product {
   numReviews: number;
   description: string;
   image: string;
+  categoryIds: number[];
 }
 
 // Updated props to match actual URL pattern
@@ -51,8 +52,8 @@ const CategoryPage: React.FC = () => {
       // First try to find by ID since it's unique
       const categoryById = categories.find(cat => cat.id === parseInt(categoryId));
       
-      // Verify that the found category matches the slug for SEO purposes
-      if (categoryById && categoryById.slug === slug) {
+      // If we found a category and either the slug matches or no slug is provided
+      if (categoryById && (!slug || categoryById.slug === slug)) {
         return categoryById;
       }
       
@@ -103,7 +104,7 @@ const CategoryPage: React.FC = () => {
         {breadcrumbPath.map((cat, index) => (
           <React.Fragment key={cat.id}>
             <span> / </span>
-            <Link to={`/category/${cat.id}`}>{cat.name}</Link>
+            <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
           </React.Fragment>
         ))}
       </div>
@@ -157,6 +158,7 @@ const CategoryPage: React.FC = () => {
 
   const renderSubcategories = (currentCategory) => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory.id);
+    const parentCategory = categories.find(cat => cat.id === currentCategory.parentId);
     
     return (
       <>
@@ -166,7 +168,7 @@ const CategoryPage: React.FC = () => {
               <Link 
                 className="trail__back pressable" 
                 title={currentCategory.name} 
-                to={`/cat/${currentCategory.parentId}/${currentCategory.slug}`}
+                to={parentCategory ? `/cat/${parentCategory.id}/${parentCategory.slug}` : '/'}
               >
                 <svg aria-hidden="true" className="icon" width={16} height={16}>
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
