@@ -279,12 +279,12 @@ const SearchResults = () => {
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => {
-                                        const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
-                                        const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Use the slug of the main category
+                                        const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
+                                        const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
                                         return (
                                             <li key={item.id}>
-                                                <Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link"> {/* Updated Link */}
-                                                    <span>{item.name} ({item.count})</span>
+                                                <Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link">
+                                                    <span>{item.category} ({item.count})</span>
                                                 </Link>
                                             </li>
                                         );
