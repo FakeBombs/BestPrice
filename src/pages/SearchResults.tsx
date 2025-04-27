@@ -437,7 +437,7 @@ const SearchResults = () => {
     <div className="categories categories--scrollable scroll__content">
         {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
             const subcategories = availableCategories.filter(item => item.parentId === parentId);
-            const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
+            const mainCategory = categories.find(cat => cat.id === parentId); // Get the main category
 
             return (
                 <div key={parentId}>
@@ -445,15 +445,14 @@ const SearchResults = () => {
                         let fullSlug = [];
                         let currentCategory = item;
 
-                        // Find the main category slug
-                        const mainCategory = categories.find(cat => cat.id === currentCategory.parentId);
+                        // Get the main category slug directly
                         const mainCatSlug = mainCategory ? mainCategory.slug : '';
 
-                        // Build up slugs array for subcategories
-                        const slugs = [];
-                        slugs.push(mainCatSlug); // Add main category slug first
+                        // Start with the main category slug
+                        fullSlug.push(mainCatSlug);
 
-                        // Collecting slug for the current category’s subcategories
+                        // Collecting slug for current category and its parents
+                        const slugs = [];
                         while (currentCategory.parentId !== null) {
                             const parent = categories.find(cat => cat.id === currentCategory.parentId);
                             if (parent) {
@@ -463,15 +462,16 @@ const SearchResults = () => {
                                 break;
                             }
                         }
-
+                        
+                        slugs.reverse(); // Reverse to maintain parent order
                         slugs.push(item.slug); // Add the current item's slug
-
-                        fullSlug = slugs.reverse().join('/'); // Reverse to maintain order and join all slugs
+                        
+                        fullSlug = [...fullSlug, ...slugs]; // Combine the main category slug with subcategory slugs
 
                         return (
                             <Link 
                                 key={item.id} 
-                                to={`/cat/${fullSlug}`} // Construct the final URL
+                                to={`/cat/${fullSlug.join('/')}`} // Correct final URL
                                 className="categories__category"
                             >
                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
