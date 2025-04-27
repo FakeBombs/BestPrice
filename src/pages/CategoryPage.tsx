@@ -89,64 +89,65 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderBreadcrumbs = () => {
-    const breadcrumbs = [];
-    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-  
-    if (!mainCategory) return null;
+  const breadcrumbs = [];
+  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-    // Only add the main category link if we're NOT rendering main categories
-    if (!(currentCategory && !currentCategory.parentId)) {
+  if (!mainCategory) return null;
+
+  // Add the main category link if there's a current category with a parent
+  if (!(currentCategory && !currentCategory.parentId)) {
+    breadcrumbs.push(
+      <li key={mainCategory.slug}>
+        <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+      </li>
+    );
+  }
+
+  // Create a Set to keep track of slugged categories
+  const categoryTrail = [];
+
+  // Build the breadcrumb trail from currentCategory up to the main category
+  let category = currentCategory;
+
+  while (category) {
+    categoryTrail.unshift(category);  // Prepend to create the trail
+    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+  }
+
+  // Add categories to breadcrumbs (excluding current category)
+  categoryTrail.forEach((cat, index) => {
+    if (index !== categoryTrail.length - 1) { // Exclude current category
       breadcrumbs.push(
-        <li key={mainCategory.slug}>
-          <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
+        <li key={cat.slug}>
+          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
         </li>
       );
     }
-
-    // Create a Set to keep track of slugged categories
-    const categoryTrail = [];
-
-    // Build the breadcrumb trail from currentCategory up to the main category
-    let category = currentCategory;
-    
-    while (category) {
-      categoryTrail.unshift(category);  // Prepend to create the trail
-      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
-    }
-
-    // Add categories to breadcrumbs (excluding current category)
-    categoryTrail.forEach((cat, index) => {
-      if (index !== categoryTrail.length - 1) { // Exclude current category
-        breadcrumbs.push(
-          <li key={cat.slug}>
-            <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
-          </li>
-        );
-      }
-    });
+  });
 
     // Render Breadcrumbs
-    return (
-      <div id="trail">
-        <nav className="breadcrumb">
-          <ol>
-            <li>
-              <Link to="/" rel="home">
-                <span>BestPrice</span>
-              </Link>
-              <span className="trail__breadcrumb-separator">›</span>
-            </li>
-            {breadcrumbs.map((crumb, index) => (
-              <React.Fragment key={index}>
-                {crumb}
-                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
-      </div>
-    );
-  };
+  return (
+    <div id="trail">
+      <nav className="breadcrumb">
+        <ol>
+          <li>
+            <Link to="/" rel="home">
+              <span>BestPrice</span>
+            </Link>
+            {/* Only show the separator if there are additional breadcrumbs */}
+            {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
+          </li>
+          {breadcrumbs.map((crumb, index) => (
+            <React.Fragment key={index}>
+              {crumb}
+              {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+            </React.Fragment>
+          ))}
+        </ol>
+      </nav>
+    </div>
+  );
+};
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
