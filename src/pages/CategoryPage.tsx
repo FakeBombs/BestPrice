@@ -195,7 +195,7 @@ const CategoryPage: React.FC = () => {
   const renderSubcategories = (currentCategory) => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
+    
     // Collect all parent categories leading up to the main category
     const categoryPath = [];
     let category = currentCategory;
@@ -205,9 +205,9 @@ const CategoryPage: React.FC = () => {
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Create an array of slugs
-    const slugs = categoryPath.map(cat => cat.slug).filter(Boolean); // filter(Boolean) removes any undefined slugs
-
+    // Create an array of slugs, filter out any undefined slugs
+    const slugs = categoryPath.map(cat => cat.slug).filter(Boolean);
+    
     return (
         <>
             <div className="page-header">
@@ -225,9 +225,10 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => {
-                        // Construct the paths to avoid undefined segments
-                        const parentSlug = slugs.length > 1 ? slugs[slugs.length - 2] : ''; // Use previous slug if available
-                        const subCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}`.replace(/\/+/g, '/'); // Clean up any double slashes
+                        // Construct the paths ensuring all parts are included
+                        const subCatSlug = subCat.slug || '';
+                        const audioSlug = slugs.length > 1 ? slugs[slugs.length - 2] : ''; // Get the slug of the audio category if available
+                        const subCatPath = `/cat/${mainCategory.slug}/${audioSlug}/${subCatSlug}`.replace(/\/+/g, '/'); // Clean up any double slashes
 
                         return (
                             <div key={subCat.id} className="root-category__category">
@@ -243,7 +244,7 @@ const CategoryPage: React.FC = () => {
                                             .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => {
-                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${audioSlug}/${subCatSlug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
                                                 return (
                                                     <React.Fragment key={linkedSubCat.id}>
                                                         <Link to={linkedSubCatPath}>
