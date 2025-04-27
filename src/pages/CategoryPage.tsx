@@ -70,8 +70,8 @@ const CategoryPage: React.FC = () => {
     if (!currentCategory) return;
 
     // Filter products directly based on current category ID and all parent category IDs
-    const getAllParentIds = (category: Category): number[] => {
-      const parentIds: number[] = [category.id];
+    const getAllParentIds = (category) => {
+      const parentIds = [category.id];
       let currentCat = category;
       
       while (currentCat.parentId) {
@@ -92,10 +92,8 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(productsToDisplay);
   }, [currentCategory]);
 
-  // Check if the URL path is valid but no products are found
-  const isValidPath = mainCatSlug && (!subCatSlug || (subCatSlug && currentCategory));
-
-  if (!isValidPath) {
+  // Only show NotFound if we have no main category
+  if (!mainCatSlug) {
     return <NotFound />;
   }
 
