@@ -27,6 +27,7 @@ const CategoryPage: React.FC = () => {
     }
 
     let currentFound = foundMainCategory;
+    let parentCategory = null;
 
     // Helper function to find child category
     const findChildCategory = (parentId: number, slug: string) => {
@@ -55,18 +56,20 @@ const CategoryPage: React.FC = () => {
         return;
       }
       currentFound = subSubCategory;
+      parentCategory = currentFound; // Store the parent before trying fourth level
       categoryPath.push(currentFound);
     }
 
-    // Find extra sub-subcategory if it exists
+    // Special handling for the fourth level
     if (extraSubSubCatSlug) {
       const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
       if (extraSubCategory) {
         currentFound = extraSubCategory;
         categoryPath.push(currentFound);
+      } else {
+        // If the fourth level doesn't exist, use the parent category (third level)
+        currentFound = parentCategory || currentFound;
       }
-      // If we're at the fourth level but didn't find the category,
-      // we'll still use the current category (third level)
     }
 
     setCurrentCategory(currentFound);
@@ -347,14 +350,23 @@ const CategoryPage: React.FC = () => {
     </div>
   );
 
-  // Determine what to render based on the URL structure and current category
+  // Modify renderContent to handle fourth level specially
   const renderContent = () => {
     if (!currentCategory) {
       return <NotFound />;
     }
 
-    // If we're at the fourth level, always show products
+    // Special handling for fourth level URLs
     if (extraSubSubCatSlug) {
+      // Always show products for fourth level URLs, regardless of whether the category exists
+      return renderProducts();
+    }
+
+    // Check if we're showing a category that has child categories
+    const hasChildCategories = categories.some(cat => cat.parentId === currentCategory.id);
+
+    // If this category has no children, show products
+    if (!hasChildCategories) {
       return renderProducts();
     }
 
