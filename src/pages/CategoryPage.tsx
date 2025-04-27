@@ -192,18 +192,18 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  const renderSubcategories = (parentCategory) => {
-    const subcategories = categories.filter(cat => cat.parentId === parentCategory?.id) || [];
+  const renderSubcategories = (currentCategory) => {
+    const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    
-    // Keeping track of the full path
-    const fullPath = [];
-    let category = parentCategory;
 
-    // Build the full path from current category up to the main category
+    // Build the full category path for breadcrumbs
+    const categoryPath = [];
+    let category = currentCategory;
+
+    // Collect all parent categories leading up to the main category
     while (category) {
-        fullPath.unshift(category);  // Prepend the current category
-        category = categories.find(cat => cat.id === category.parentId);  // Find the parent category
+        categoryPath.unshift(category); // Prepend to maintain order
+        category = categories.find(cat => cat.id === category.parentId);
     }
 
     return (
@@ -211,20 +211,20 @@ const CategoryPage: React.FC = () => {
             <div className="page-header">
                 <div className="hgroup">
                     <div className="page-header__title-wrapper">
-                        <Link className="trail__back pressable" title={fullPath[fullPath.length - 2]?.name || mainCategory.name} 
-                              to={fullPath.length > 1 ? `/cat/${mainCategory.slug}/${fullPath[fullPath.length - 2].slug}` : `/cat/${mainCategory.slug}`}>
+                        <Link className="trail__back pressable" title={mainCategory.name} to={`/cat/${mainCategory.slug}`}>
                             <svg aria-hidden="true" className="icon" width={16} height={16}>
                                 <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                             </svg>
                         </Link>
-                        <h1>{parentCategory.name}</h1>
+                        <h1>{currentCategory.name}</h1>
                     </div>
                 </div>
             </div>
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => {
-                        const subCatPath = `/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}`; // Includes all parent categories
+                        // Construct the full path for this subcategory
+                        const subCatPath = `/cat/${mainCategory.slug}/${categoryPath[categoryPath.length - 2].slug}/${subCat.slug}`; // Including the direct parent category slug
                         return (
                             <div key={subCat.id} className="root-category__category">
                                 <Link to={subCatPath} className="root-category__cover">
@@ -240,7 +240,7 @@ const CategoryPage: React.FC = () => {
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => (
                                                 <React.Fragment key={linkedSubCat.id}>
-                                                    <Link to={`/cat/${mainCatSlug}/${fullPath[fullPath.length - 1].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
+                                                    <Link to={`/cat/${mainCategory.slug}/${categoryPath[categoryPath.length - 2].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
                                                         {linkedSubCat.name}
                                                     </Link>
                                                     {index < arr.length - 1 && ', '}
