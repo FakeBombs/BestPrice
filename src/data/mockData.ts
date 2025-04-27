@@ -9,13 +9,13 @@ export interface Category {
 
 // Main categories
 export const mainCategories: Category[] = [
-  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: '//placehold.co/200x150?text=Technology' },
-  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: '//placehold.co/200x150?text=Home+Garden' },
-  { id: 3, name: 'Μόδα', slug: 'fashion', image: '//placehold.co/200x150?text=Fashion' },
-  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: '//placehold.co/200x150?text=Health+Beauty' },
-  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', image: '//placehold.co/200x150?text=Children+Baby' },
-  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', image: '//placehold.co/200x150?text=Hobby+Sports' },
-  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', image: '//placehold.co/200x150?text=Auto+Moto' }
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', parentId: null, image: '//placehold.co/200x150?text=Technology' },
+  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', parentId: null, image: '//placehold.co/200x150?text=Home+Garden' },
+  { id: 3, name: 'Μόδα', slug: 'fashion', parentId: null, image: '//placehold.co/200x150?text=Fashion' },
+  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', parentId: null, image: '//placehold.co/200x150?text=Health+Beauty' },
+  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', parentId: null, image: '//placehold.co/200x150?text=Children+Baby' },
+  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', parentId: null, image: '//placehold.co/200x150?text=Hobby+Sports' },
+  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', parentId: null, image: '//placehold.co/200x150?text=Auto+Moto' }
 ];
 
 // Subcategories and nested categories
