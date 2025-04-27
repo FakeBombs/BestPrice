@@ -69,15 +69,33 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     if (!currentCategory) return;
 
-    // Filter products directly based on current category ID
+    // Filter products directly based on current category ID and all parent category IDs
+    const getAllParentIds = (category: Category): number[] => {
+      const parentIds: number[] = [category.id];
+      let currentCat = category;
+      
+      while (currentCat.parentId) {
+        parentIds.push(currentCat.parentId);
+        const parentCategory = categories.find(cat => cat.id === currentCat.parentId);
+        if (!parentCategory) break;
+        currentCat = parentCategory;
+      }
+      
+      return parentIds;
+    };
+
+    const categoryIds = getAllParentIds(currentCategory);
     const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
+      product.categoryIds.some(id => categoryIds.includes(id))
     );
 
     setFilteredProducts(productsToDisplay);
-  }, [currentCategory, products]);
+  }, [currentCategory]);
 
-  if (!currentCategory) {
+  // Check if the URL path is valid but no products are found
+  const isValidPath = mainCatSlug && (!subCatSlug || (subCatSlug && currentCategory));
+
+  if (!isValidPath) {
     return <NotFound />;
   }
 
