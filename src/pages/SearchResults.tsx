@@ -259,19 +259,6 @@ const SearchResults = () => {
         );
     };
 
-    const buildSlugPath = (category) => {
-        const slugs = [];
-        let currentCat = categories.find(cat => cat.id === category.id);
-    
-        // Move up to find the main category
-        while (currentCat) {
-            slugs.unshift(currentCat.slug);
-            currentCat = categories.find(cat => cat.id === currentCat.parentId);
-        }
-
-        return `/cat/${slugs.join('/')}`; // Ensure to prepend with '/cat/'
-    };
-
     return (
         <div className="root__wrapper">
             <div className="root">
@@ -291,13 +278,17 @@ const SearchResults = () => {
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
-                                        <li key={item.id}>
-                                            <Link to={buildSlugPath(item)} className="filters__link">
-                                                <span>{item.category} ({item.count})</span>
-                                            </Link>
-                                        </li>
-                                    ))}
+                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => {
+                                        const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
+                                        const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Use the slug of the main category
+                                        return (
+                                            <li key={item.id}>
+                                                <Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link"> {/* Updated Link */}
+                                                    <span>{item.name} ({item.count})</span>
+                                                </Link>
+                                            </li>
+                                        );
+                                    })}
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
                                     <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
@@ -426,13 +417,18 @@ const SearchResults = () => {
                                 </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.map((item) => (
-                                            <Link key={item.id} to={buildSlugPath(item)} className="categories__category">
-                                               <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
-                                               <h2 className="categories__title">{item.category}</h2>
-                                               <div className="categories__cnt">{item.count} προϊόντα</div>
-                                            </Link>
-                                        ))}
+                                        {availableCategories.map((item) => {
+                                            const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
+                                            const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Use the slug of the main category
+
+                                            return (
+                                                <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category"> {/* Updated Link */}
+                                                    <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.name}`} />
+                                                    <h2 className="categories__title">{item.name}</h2>
+                                                    <div className="categories__cnt">{item.count} προϊόντα</div>
+                                                </Link>
+                                            );
+                                        })}
                                     </div>
                                 </ScrollableSlider>
                             </section>
