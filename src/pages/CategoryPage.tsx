@@ -202,7 +202,7 @@ const CategoryPage: React.FC = () => {
 
     // Collect all parent categories leading up to the main category
     while (category) {
-        categoryPath.unshift(category); // Prepend to maintain order
+        categoryPath.unshift(category); // Prepend to maintain the order
         category = categories.find(cat => cat.id === category.parentId);
     }
 
@@ -223,8 +223,10 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => {
-                        // Construct the full path for this subcategory
-                        const subCatPath = `/cat/${mainCategory.slug}/${categoryPath[categoryPath.length - 2].slug}/${subCat.slug}`; // Including the direct parent category slug
+                        // Ensure we have the necessary parent slug and full path for the subcategory
+                        const parentSlug = categoryPath.length > 1 ? categoryPath[categoryPath.length - 2].slug : ''; // Second to last for parent
+                        const subCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}`; // Full path including subcategory
+
                         return (
                             <div key={subCat.id} className="root-category__category">
                                 <Link to={subCatPath} className="root-category__cover">
@@ -240,7 +242,7 @@ const CategoryPage: React.FC = () => {
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => (
                                                 <React.Fragment key={linkedSubCat.id}>
-                                                    <Link to={`/cat/${mainCategory.slug}/${categoryPath[categoryPath.length - 2].slug}/${subCat.slug}/${linkedSubCat.slug}`}>
+                                                    <Link to={`/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}/${linkedSubCat.slug}`}>
                                                         {linkedSubCat.name}
                                                     </Link>
                                                     {index < arr.length - 1 && ', '}
