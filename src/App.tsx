@@ -34,7 +34,16 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="/cat/:id/:slug?" component={CategoryPage} />
+          {/* Route for main category */}
+          <Route path="/cat/:mainCatSlug" element={<CategoryPage />} />
+          {/* Route for first-level subcategory */}
+          <Route path="/cat/:mainCatSlug/:subCatSlug" element={<CategoryPage />} />
+          {/* Route for second-level subcategory */}
+          <Route path="/cat/:mainCatSlug/:subCatSlug/:subSubCatSlug" element={<CategoryPage />} />
+          {/* Route for third-level subcategory */}
+          <Route path="/cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug" element={<CategoryPage />} />
+          {/* Route for fourth-level subcategory */}
+          <Route path="/cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug/:anotherSubSubCatSlug" element={<CategoryPage />} />
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
