@@ -19,24 +19,33 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    let foundCategory: Category | undefined = foundMainCategory;
+  const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-    // Traverse through each level of categories to find the correct one based on slugs
-    if (subCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory?.id);
-    }
-    
-    if (subSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
-    }
-    
-    if (extraSubSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
-    }
+  if (!foundMainCategory) {
+    setCurrentCategory(undefined); // If main category not found, set to undefined
+    return;
+  }
 
-    setCurrentCategory(foundCategory || foundMainCategory);
-  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
+  let foundCategory: Category | undefined = foundMainCategory;
+
+  if (subCatSlug) {
+    // Find first subcategory
+    foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory.id);
+  }
+  
+  if (subSubCatSlug && foundCategory) {
+    // Find second subcategory
+    foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory.id);
+  }
+  
+  if (extraSubSubCatSlug && foundCategory) {
+    // Find third subcategory
+    foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory.id);
+  }
+
+  // Only set the current category if all levels found or fallback to foundMainCategory
+  setCurrentCategory(foundCategory || foundMainCategory);
+}, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
