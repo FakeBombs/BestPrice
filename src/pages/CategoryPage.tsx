@@ -19,49 +19,9 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-
-    if (!foundMainCategory) {
-      setCurrentCategory(undefined);
-      return;
-    }
-
-    let foundCategory = foundMainCategory;
-
-    const checkCategory = (slug, parentId) => {
-      return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
-    };
-
-    if (subCatSlug) {
-      foundCategory = checkCategory(subCatSlug, foundMainCategory.id);
-      if (!foundCategory) {
-        setCurrentCategory(undefined);
-        return;
-      }
-    }
-
-    if (subSubCatSlug) {
-      foundCategory = checkCategory(subSubCatSlug, foundCategory.id);
-      if (!foundCategory) {
-        setCurrentCategory(undefined);
-        return;
-      }
-    }
-
-    if (extraSubSubCatSlug) {
-      foundCategory = checkCategory(extraSubSubCatSlug, foundCategory.id);
-      if (!foundCategory) {
-        setCurrentCategory(undefined);
-        return;
-      }
-    }
-
-    setCurrentCategory(foundCategory);
-  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
-
-  useEffect(() => {
     if (!currentCategory) return;
 
+    // Collect products for the current category
     const productsToDisplay = products.filter(product => 
       product.categoryIds.includes(currentCategory.id)
     );
@@ -69,9 +29,16 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(productsToDisplay);
   }, [currentCategory]);
 
-  if (!currentCategory) {
-    return <NotFound />;
-  }
+  useEffect(() => {
+    if (!currentCategory) return;
+
+    // Collect products for the current category
+    const productsToDisplay = products.filter(product => 
+      product.categoryIds.includes(currentCategory.id)
+    );
+
+    setFilteredProducts(productsToDisplay);
+  }, [currentCategory]);
 
   const sortProducts = (products) => {
     switch (sortType) {
@@ -323,10 +290,7 @@ const CategoryPage: React.FC = () => {
         {renderBreadcrumbs()}
         {currentCategory && currentCategory.parentId 
           ? renderSubcategories(currentCategory) 
-          : (currentCategory 
-              ? renderMainCategories() 
-              : renderProducts()
-            )
+          : renderMainCategories()
         }
       </div>
     </div>
