@@ -442,36 +442,33 @@ const SearchResults = () => {
             return (
                 <div key={parentId}>
                     {subcategories.map(item => {
-                        let fullSlug = [];
+                        // Initialize array with the main category slug
+                        const fullSlug = [mainCategory ? mainCategory.slug : ''];
+
+                        // Traverse up the parent categories to build the slug for subcategories
                         let currentCategory = item;
+                        const subSlugs = [];
 
-                        // Get the main category slug directly
-                        const mainCatSlug = mainCategory ? mainCategory.slug : '';
-
-                        // Start with the main category slug
-                        fullSlug.push(mainCatSlug);
-
-                        // Collecting slug for current category and its parents
-                        const slugs = [];
                         while (currentCategory.parentId !== null) {
                             const parent = categories.find(cat => cat.id === currentCategory.parentId);
                             if (parent) {
-                                slugs.push(parent.slug); // Add the parent's slug
+                                subSlugs.push(parent.slug); // Collecting subcategory slugs
                                 currentCategory = parent;
                             } else {
                                 break;
                             }
                         }
                         
-                        slugs.reverse(); // Reverse to maintain parent order
-                        slugs.push(item.slug); // Add the current item's slug
+                        subSlugs.reverse(); // Reverse to maintain correct order
+                        subSlugs.push(item.slug); // Include the current item's slug
                         
-                        fullSlug = [...fullSlug, ...slugs]; // Combine the main category slug with subcategory slugs
+                        // Combine main category slug with subcategory slugs
+                        const finalSlug = [...fullSlug, ...subSlugs];
 
                         return (
                             <Link 
                                 key={item.id} 
-                                to={`/cat/${fullSlug.join('/')}`} // Correct final URL
+                                to={`/cat/${finalSlug.join('/')}`} // Construct the final URL correctly
                                 className="categories__category"
                             >
                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
