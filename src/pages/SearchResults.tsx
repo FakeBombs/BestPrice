@@ -442,14 +442,18 @@ const SearchResults = () => {
             return (
                 <div key={parentId}>
                     {subcategories.map(item => {
-                        let fullSlug = '';
+                        let fullSlug = [];
                         let currentCategory = item;
 
-                        // Build up slugs array including the main category slug
+                        // Find the main category slug
+                        const mainCategory = categories.find(cat => cat.id === currentCategory.parentId);
+                        const mainCatSlug = mainCategory ? mainCategory.slug : '';
+
+                        // Build up slugs array for subcategories
                         const slugs = [];
-                        if (parentCategory) {
-                            slugs.push(parentCategory.slug); // Add main category slug first
-                        }
+                        slugs.push(mainCatSlug); // Add main category slug first
+
+                        // Collecting slug for the current category’s subcategories
                         while (currentCategory.parentId !== null) {
                             const parent = categories.find(cat => cat.id === currentCategory.parentId);
                             if (parent) {
@@ -459,9 +463,10 @@ const SearchResults = () => {
                                 break;
                             }
                         }
+
                         slugs.push(item.slug); // Add the current item's slug
 
-                        fullSlug = slugs.join('/'); // Join all slugs to form the full path
+                        fullSlug = slugs.reverse().join('/'); // Reverse to maintain order and join all slugs
 
                         return (
                             <Link 
