@@ -69,29 +69,29 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
-    const categoryCount = {};
-    const validCategoryIds = new Set();
-    results.forEach((product) => {
-        (product.categoryIds || []).forEach(categoryId => {
-            categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
-            validCategoryIds.add(categoryId); // Track the categories of products
+        const categoryCount = {};
+        const validCategoryIds = new Set();
+        results.forEach((product) => {
+            (product.categoryIds || []).forEach(categoryId => {
+                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+                validCategoryIds.add(categoryId); // Track the categories of products
+            });
         });
-    });
 
-    const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-        const categoryData = categories.find(cat => cat.id === parseInt(id));
-        return {
-            id: categoryData ? categoryData.id : '',
-            category: categoryData ? categoryData.name : '',
-            slug: categoryData ? categoryData.slug : '',
-            count,
-            image: categoryData ? categoryData.image : '',
-            parentId: categoryData ? categoryData.parentId : null,
-        };
-    }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
+        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+            const categoryData = categories.find(cat => cat.id === parseInt(id));
+            return {
+                id: categoryData ? categoryData.id : '',
+                category: categoryData ? categoryData.name : '',
+                slug: categoryData ? categoryData.slug : '',
+                count,
+                image: categoryData ? categoryData.image : '',
+                parentId: categoryData ? categoryData.parentId : null,
+            };
+        }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
 
-    setAvailableCategories(categoriesArray);
-};
+        setAvailableCategories(categoriesArray);
+    };
 
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
@@ -241,7 +241,7 @@ const SearchResults = () => {
                       const vendor = certifiedVendors.find(v => v.id === vendorId);
                       return vendor ? (
                           <h2 className="applied-filters__filter" key={vendor.id}>
-                              <a data-scroll-to="" data-filter-key={vendor.name} data-value-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
+                              <a data-scrollto="" data-filter-key={vendor.name} data-value-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
                                   <span className="applied-filters__label">{vendor.name}</span>
                                   <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove filter of ${vendor.name}`}>
                                       <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
@@ -288,21 +288,21 @@ const SearchResults = () => {
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
                                     {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
-                                    const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                    return (
-                                        <div key={parentId}>
-                                            {subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => {
-                                            const parentCategory = categories.find(cat => cat.id === parentId);
-                return parentCategory ? (
-                    <li key={item.id}>
-                        <Link to={`/cat/${parentCategory.slug}/${item.slug}`} className="filters__link">
-                            <span>{item.category} ({item.count})</span>
-                        </Link>
-                    </li>
-                ) : null; // Avoid accessing if parentCategory is undefined
-            })}
-        </div>
-    );
+                                        const subcategories = availableCategories.filter(item => item.parentId === parentId);
+                                        const parentCategory = categories.find(cat => cat.id === parentId); // Check the parent category
+                                        return (
+                                            <div key={parentId}>
+                                                {subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => (
+                                                    parentCategory ? (
+                                                        <li key={item.id}>
+                                                            <Link to={`/cat/${parentCategory.slug}/${item.slug}`} className="filters__link">
+                                                                <span>{item.category} ({item.count})</span>
+                                                            </Link>
+                                                        </li>
+                                                    ) : null // Avoid accessing if parentCategory is undefined
+                                                ))}
+                                            </div>
+                                        );
                                     })}
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
@@ -388,7 +388,7 @@ const SearchResults = () => {
                                                     activeFilters.specs, 
                                                     newInStockOnly, 
                                                     products,
-                                                    activeFilters.vendorIds // Changed from certifications to vendorIds
+                                                    activeFilters.vendorIds
                                                 ); 
                                             }} 
                                         />Άμεσα διαθέσιμα
@@ -433,13 +433,20 @@ const SearchResults = () => {
                                     <div className="categories categories--scrollable scroll__content">
                                         {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
                                             const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                            return subcategories.map(item => (
-                                                <Link key={item.id} to={`/cat/${categories.find(cat => cat.id === parentId).slug}/${item.slug}`} className="categories__category">
-                                                    <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
-                                                    <h2 className="categories__title">{item.category}</h2>
-                                                    <div className="categories__cnt">{item.count} προϊόντα</div>
-                                                </Link>
-                                            ));
+                                            const parentCategory = categories.find(cat => cat.id === parentId); // Check the parent category
+                                            return (
+                                                <div key={parentId}>
+                                                    {subcategories.map(item => (
+                                                        parentCategory ? (
+                                                            <Link key={item.id} to={`/cat/${parentCategory.slug}/${item.slug}`} className="categories__category">
+                                                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
+                                                                <h2 className="categories__title">{item.category}</h2>
+                                                                <div className="categories__cnt">{item.count} προϊόντα</div>
+                                                            </Link>
+                                                        ) : null // Avoid accessing if parentCategory is undefined
+                                                    ))}
+                                                </div>
+                                            );
                                         })}
                                     </div>
                                 </ScrollableSlider>
