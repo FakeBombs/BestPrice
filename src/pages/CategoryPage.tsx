@@ -49,37 +49,33 @@ const CategoryPage: React.FC = () => {
     setFilteredProducts(productsToDisplay);
   }, [currentCategory, products]);
 
-  if (!currentCategory) {
-    return <NotFound />;
-  }
-
   const sortProducts = (products) => {
     switch (sortType) {
-        case 'price-asc':
-            return [...products].sort((a, b) => {
-                const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                return minPriceA - minPriceB;
-            });
-        case 'price-desc':
-            return [...products].sort((a, b) => {
-                const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                return maxPriceB - maxPriceA;
-            });
-        case 'rating-desc':
-        default:
-            return [...products].sort((a, b) => {
-                const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                return averageRatingB - averageRatingA;
-            });
-        case 'merchants_desc':
-            return [...products].sort((a, b) => {
-                const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
-                return availableVendorsB - availableVendorsA;
-            });
+      case 'price-asc':
+        return [...products].sort((a, b) => {
+          const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+          const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+          return minPriceA - minPriceB;
+        });
+      case 'price-desc':
+        return [...products].sort((a, b) => {
+          const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+          const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+          return maxPriceB - maxPriceA;
+        });
+      case 'rating-desc':
+      default:
+        return [...products].sort((a, b) => {
+          const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
+          const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
+          return averageRatingB - averageRatingA;
+        });
+      case 'merchants_desc':
+        return [...products].sort((a, b) => {
+          const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
+          const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
+          return availableVendorsB - availableVendorsA;
+        });
     }
   };
 
@@ -262,7 +258,7 @@ const CategoryPage: React.FC = () => {
             </div>
         </>
     );
-};
+  };
 
   const renderProducts = () => (
     <div className="page-products">
@@ -307,12 +303,13 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-        {currentCategory && currentCategory.parentId 
-          ? renderSubcategories(currentCategory) 
-          : (currentCategory 
-              ? renderMainCategories() 
-              : renderProducts()
+        {currentCategory 
+          ? ( 
+              currentCategory.parentId 
+              ? renderSubcategories(currentCategory) 
+              : renderMainCategories()
             )
+          : renderProducts() // Show products if the currentCategory is not defined
         }
       </div>
     </div>
