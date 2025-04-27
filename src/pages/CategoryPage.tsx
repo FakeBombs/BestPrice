@@ -19,31 +19,57 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
 
   useEffect(() => {
-    // Get all slugs in the path
-    const slugs = [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug].filter(Boolean);
-    
-    // Find any category that matches the last slug in our path
-    const findCategoryBySlug = (slug: string) => {
-      return categories.find(cat => cat.slug === slug) || 
-             mainCategories.find(cat => cat.slug === slug);
+    // First find the main category
+    const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    if (!foundMainCategory) {
+      setCurrentCategory(undefined);
+      return;
+    }
+
+    let currentFound = foundMainCategory;
+
+    // Helper function to find child category
+    const findChildCategory = (parentId: number, slug: string) => {
+      return categories.find(cat => cat.slug === slug && cat.parentId === parentId);
     };
 
-    // Find the deepest category that exists in our path
-    let foundCategory = null;
-    for (let i = slugs.length - 1; i >= 0; i--) {
-      const category = findCategoryBySlug(slugs[i]);
-      if (category) {
-        foundCategory = category;
-        break;
+    // Build the category path step by step
+    const categoryPath = [currentFound];
+
+    // Find subcategory if it exists
+    if (subCatSlug) {
+      const subCategory = findChildCategory(currentFound.id, subCatSlug);
+      if (!subCategory) {
+        setCurrentCategory(undefined);
+        return;
       }
+      currentFound = subCategory;
+      categoryPath.push(currentFound);
     }
 
-    // If we found nothing but have a main category slug, use that
-    if (!foundCategory && mainCatSlug) {
-      foundCategory = mainCategories.find(cat => cat.slug === mainCatSlug) || null;
+    // Find sub-subcategory if it exists
+    if (subSubCatSlug) {
+      const subSubCategory = findChildCategory(currentFound.id, subSubCatSlug);
+      if (!subSubCategory) {
+        setCurrentCategory(undefined);
+        return;
+      }
+      currentFound = subSubCategory;
+      categoryPath.push(currentFound);
     }
 
-    setCurrentCategory(foundCategory || undefined);
+    // Find extra sub-subcategory if it exists
+    if (extraSubSubCatSlug) {
+      const extraSubCategory = findChildCategory(currentFound.id, extraSubSubCatSlug);
+      if (extraSubCategory) {
+        currentFound = extraSubCategory;
+        categoryPath.push(currentFound);
+      }
+      // If we're at the fourth level but didn't find the category,
+      // we'll still use the current category (third level)
+    }
+
+    setCurrentCategory(currentFound);
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
@@ -53,25 +79,14 @@ const CategoryPage: React.FC = () => {
     const getCategoryHierarchyIds = (category) => {
       const ids = new Set([category.id]);
       let current = category;
-
-      // Add all parent IDs
+      
       while (current.parentId) {
         ids.add(current.parentId);
         const parent = categories.find(cat => cat.id === current.parentId);
         if (!parent) break;
         current = parent;
       }
-
-      // Add all child IDs
-      const addChildIds = (parentId) => {
-        const children = categories.filter(cat => cat.parentId === parentId);
-        children.forEach(child => {
-          ids.add(child.id);
-          addChildIds(child.id);
-        });
-      };
-      addChildIds(category.id);
-
+      
       return Array.from(ids);
     };
 
@@ -335,10 +350,10 @@ const CategoryPage: React.FC = () => {
   // Determine what to render based on the URL structure and current category
   const renderContent = () => {
     if (!currentCategory) {
-      return renderProducts();
+      return <NotFound />;
     }
 
-    // If we're at the fourth level (extraSubSubCatSlug exists)
+    // If we're at the fourth level, always show products
     if (extraSubSubCatSlug) {
       return renderProducts();
     }
@@ -351,12 +366,11 @@ const CategoryPage: React.FC = () => {
     return renderMainCategories();
   };
 
-  // Always try to render content
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
         {currentCategory && renderBreadcrumbs()}
-        {currentCategory ? renderProducts() : <NotFound />}
+        {renderContent()}
       </div>
     </div>
   );
