@@ -20,23 +20,31 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    
+    if (!foundMainCategory) {
+        return setCurrentCategory(undefined); // Not found, avoid further searches
+    }
+
+    // Now check for subcategories
     let foundCategory: Category | undefined = foundMainCategory;
 
-    // Traverse through each level of categories to find the correct one based on slugs
     if (subCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory?.id);
-    }
-    
-    if (subSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
-    }
-    
-    if (extraSubSubCatSlug) {
-      foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
+        foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory.id);
+        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
     }
 
-    setCurrentCategory(foundCategory || foundMainCategory);
-  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
+    if (subSubCatSlug) {
+        foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
+        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
+    }
+
+    if (extraSubSubCatSlug) {
+        foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
+        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
+    }
+    
+    setCurrentCategory(foundCategory);
+}, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
   useEffect(() => {
     if (!currentCategory) return;
