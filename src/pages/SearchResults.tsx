@@ -70,9 +70,11 @@ const SearchResults = () => {
 
     const extractCategories = (results) => {
         const categoryCount = {};
+        const validCategoryIds = new Set();
         results.forEach((product) => {
             (product.categoryIds || []).forEach(categoryId => {
                 categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+                validCategoryIds.add(categoryId); // Track the categories of products
             });
         });
 
@@ -86,7 +88,7 @@ const SearchResults = () => {
                 image: categoryData ? categoryData.image : '',
                 parentId: categoryData ? categoryData.parentId : null,
             };
-        }).filter(cat => cat.id && cat.parentId); // Only include subcategories
+        }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
 
         setAvailableCategories(categoriesArray);
     };
@@ -285,13 +287,16 @@ const SearchResults = () => {
                                     <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
-                                    {availableCategories.filter(item => item.parentId).slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
-                                        <li key={item.id}>
-                                            <Link to={`/cat/${item.slug}`} className="filters__link">
-                                                <span>{item.category} ({item.count})</span>
-                                            </Link>
-                                        </li>
-                                    ))}
+                                    {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
+                                        const subcategories = availableCategories.filter(item => item.parentId === parentId);
+                                        return subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => (
+                                            <li key={item.id}>
+                                                <Link to={`/cat/${categories.find(cat => cat.id === parentId).slug}/${item.slug}`} className="filters__link">
+                                                    <span>{item.category} ({item.count})</span>
+                                                </Link>
+                                            </li>
+                                        ));
+                                    })}
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
                                     <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
@@ -419,13 +424,16 @@ const SearchResults = () => {
                                 </header>
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.filter(item => item.parentId).map((item) => (
-                                            <Link key={item.id} to={`/cat/${item.slug}`} className="categories__category">
-                                                <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
-                                                <h2 className="categories__title">{item.category}</h2>
-                                                <div className="categories__cnt">{item.count} προϊόντα</div>
-                                            </Link>
-                                        ))}
+                                        {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
+                                            const subcategories = availableCategories.filter(item => item.parentId === parentId);
+                                            return subcategories.map(item => (
+                                                <Link key={item.id} to={`/cat/${categories.find(cat => cat.id === parentId).slug}/${item.slug}`} className="categories__category">
+                                                    <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
+                                                    <h2 className="categories__title">{item.category}</h2>
+                                                    <div className="categories__cnt">{item.count} προϊόντα</div>
+                                                </Link>
+                                            ));
+                                        })}
                                     </div>
                                 </ScrollableSlider>
                             </section>
