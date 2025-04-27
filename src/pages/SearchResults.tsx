@@ -69,29 +69,29 @@ const SearchResults = () => {
     };
 
     const extractCategories = (results) => {
-        const categoryCount = {};
-        const validCategoryIds = new Set();
-        results.forEach((product) => {
-            (product.categoryIds || []).forEach(categoryId => {
-                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
-                validCategoryIds.add(categoryId); // Track the categories of products
-            });
+    const categoryCount = {};
+    const validCategoryIds = new Set();
+    results.forEach((product) => {
+        (product.categoryIds || []).forEach(categoryId => {
+            categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+            validCategoryIds.add(categoryId); // Track the categories of products
         });
+    });
 
-        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-            const categoryData = categories.find(cat => cat.id === parseInt(id));
-            return {
-                id: categoryData ? categoryData.id : '',
-                category: categoryData ? categoryData.name : '',
-                slug: categoryData ? categoryData.slug : '',
-                count,
-                image: categoryData ? categoryData.image : '',
-                parentId: categoryData ? categoryData.parentId : null,
-            };
-        }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
+    const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+        const categoryData = categories.find(cat => cat.id === parseInt(id));
+        return {
+            id: categoryData ? categoryData.id : '',
+            category: categoryData ? categoryData.name : '',
+            slug: categoryData ? categoryData.slug : '',
+            count,
+            image: categoryData ? categoryData.image : '',
+            parentId: categoryData ? categoryData.parentId : null,
+        };
+    }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
 
-        setAvailableCategories(categoriesArray);
-    };
+    setAvailableCategories(categoriesArray);
+};
 
     const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
@@ -288,14 +288,21 @@ const SearchResults = () => {
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
                                     {Array.from(new Set(availableCategories.filter(item => item.parentId).map(item => item.parentId))).map(parentId => {
-                                        const subcategories = availableCategories.filter(item => item.parentId === parentId);
-                                        return subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => (
-                                            <li key={item.id}>
-                                                <Link to={`/cat/${categories.find(cat => cat.id === parentId).slug}/${item.slug}`} className="filters__link">
-                                                    <span>{item.category} ({item.count})</span>
-                                                </Link>
-                                            </li>
-                                        ));
+                                    const subcategories = availableCategories.filter(item => item.parentId === parentId);
+                                    return (
+                                        <div key={parentId}>
+                                            {subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => {
+                                            const parentCategory = categories.find(cat => cat.id === parentId);
+                return parentCategory ? (
+                    <li key={item.id}>
+                        <Link to={`/cat/${parentCategory.slug}/${item.slug}`} className="filters__link">
+                            <span>{item.category} ({item.count})</span>
+                        </Link>
+                    </li>
+                ) : null; // Avoid accessing if parentCategory is undefined
+            })}
+        </div>
+    );
                                     })}
                                 </ol>
                                 {availableCategories.length > MAX_DISPLAY_COUNT && (
