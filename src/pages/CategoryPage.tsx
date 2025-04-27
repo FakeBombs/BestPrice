@@ -34,12 +34,9 @@ const CategoryPage: React.FC = () => {
           cat.slug === subCatSlug && 
           cat.parentId === currentParentId
         );
-        if (sub) {
-          result = sub;
-          currentParentId = sub.id;
-        } else {
-          return result;
-        }
+        if (!sub) return result;
+        result = sub;
+        currentParentId = sub.id;
       }
 
       // Try to find sub-subcategory
@@ -48,12 +45,9 @@ const CategoryPage: React.FC = () => {
           cat.slug === subSubCatSlug && 
           cat.parentId === currentParentId
         );
-        if (subSub) {
-          result = subSub;
-          currentParentId = subSub.id;
-        } else {
-          return result;
-        }
+        if (!subSub) return result;
+        result = subSub;
+        currentParentId = subSub.id;
       }
 
       // Try to find extra sub-subcategory
@@ -62,11 +56,11 @@ const CategoryPage: React.FC = () => {
           cat.slug === extraSubSubCatSlug && 
           cat.parentId === currentParentId
         );
+        // For the fourth level, we ALWAYS return the last valid category,
+        // whether we found the extra level or not
         if (extraSub) {
           result = extraSub;
         }
-        // Even if we don't find the extra level, return the last valid category
-        return result;
       }
 
       return result;
@@ -375,7 +369,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {currentCategory && renderBreadcrumbs()}
-        {renderContent()}
+        {currentCategory ? renderProducts() : <NotFound />}
       </div>
     </div>
   );
