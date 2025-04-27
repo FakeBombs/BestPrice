@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { searchProducts, categories, vendors, brands } from '@/data/mockData'; 
+import { searchProducts, categories, vendors, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
@@ -38,7 +38,7 @@ const SearchResults = () => {
     useEffect(() => {
         const results = searchProducts(debouncedSearchQuery);
         setProducts(results);
-        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] }); // Reset vendorIds in filters
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
         extractAvailableFilters(results);
         extractCategories(results);
         updateCertifiedVendors(results);
@@ -74,7 +74,7 @@ const SearchResults = () => {
         results.forEach((product) => {
             (product.categoryIds || []).forEach(categoryId => {
                 categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
-                validCategoryIds.add(categoryId); // Track the categories of products
+                validCategoryIds.add(categoryId); 
             });
         });
 
@@ -88,7 +88,7 @@ const SearchResults = () => {
                 image: categoryData ? categoryData.image : '',
                 parentId: categoryData ? categoryData.parentId : null,
             };
-        }).filter(cat => cat.id && validCategoryIds.has(cat.id)); // Only include categories for products
+        }).filter(cat => cat.id && validCategoryIds.has(cat.id));
 
         setAvailableCategories(categoriesArray);
     };
@@ -125,7 +125,7 @@ const SearchResults = () => {
             filtered = filtered.filter(product =>
                 (product.prices || []).some(price => {
                     const vendor = vendors.find(v => v.id === price.vendorId);
-                    return vendor && vendorIds.includes(vendor.id); // Filter based on selected vendor IDs
+                    return vendor && vendorIds.includes(vendor.id);
                 })
             );
         }
@@ -199,8 +199,8 @@ const SearchResults = () => {
 
     const handleVendorFilter = (vendor) => {
         const newVendorIds = activeFilters.vendorIds.includes(vendor.id)
-            ? activeFilters.vendorIds.filter(id => id !== vendor.id) // Remove vendor if already selected
-            : [...activeFilters.vendorIds, vendor.id]; // Add vendor if not selected
+            ? activeFilters.vendorIds.filter(id => id !== vendor.id)
+            : [...activeFilters.vendorIds, vendor.id];
 
         setActiveFilters((prev) => ({ ...prev, vendorIds: newVendorIds }));
     };
@@ -297,12 +297,13 @@ const SearchResults = () => {
                                                 {/* Map over all subcategories */}
                                                 {subcategories.slice(0, showMoreCategories ? subcategories.length : MAX_DISPLAY_COUNT).map(item => (
                                                     parentCategory ? (
+                                                        // Create URL with both main category and subcategory slug
                                                         <li key={item.id}>
                                                             <Link to={`/cat/${parentCategory.slug}/${item.slug}`} className="filters__link">
                                                                 <span>{item.category} ({item.count})</span>
                                                             </Link>
                                                         </li>
-                                                    ) : null // Avoid accessing if parentCategory is undefined
+                                                    ) : null // Prevent accessing if parentCategory is undefined
                                                 ))}
                                             </div>
                                         );
@@ -435,19 +436,20 @@ const SearchResults = () => {
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {Array.from(new Set(availableCategories.map(item => item.parentId))).map(parentId => {
-                                            // Fetch all subcategories by parentId
+                                            // Fetch all subcategories belonging to each main category
                                             const subcategories = availableCategories.filter(item => item.parentId === parentId);
                                             const parentCategory = categories.find(cat => cat.id === parentId); // Get the main category
                                             return (
                                                 <div key={parentId}>
                                                     {subcategories.map(item => (
                                                         parentCategory ? (
+                                                            // Construct URL with main category slug and subcategory slug
                                                             <Link key={item.id} to={`/cat/${parentCategory.slug}/${item.slug}`} className="categories__category">
                                                                 <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                                 <h2 className="categories__title">{item.category}</h2>
                                                                 <div className="categories__cnt">{item.count} προϊόντα</div>
                                                             </Link>
-                                                        ) : null // Avoid accessing if parentCategory is undefined
+                                                        ) : null // Prevent accessing if parentCategory is undefined
                                                     ))}
                                                 </div>
                                             );
