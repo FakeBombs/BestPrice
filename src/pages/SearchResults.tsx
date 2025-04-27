@@ -85,7 +85,6 @@ const SearchResults = () => {
                 count,
                 image: categoryData ? categoryData.image : '',
                 parentId: categoryData ? categoryData.parentId : null,
-                mainCatSlug: categoryData ? categories.find(cat => cat.id === categoryData.parentId)?.slug : '', // Get main category slug
             };
         }).filter(cat => cat.id && cat.parentId);
 
@@ -270,8 +269,7 @@ const SearchResults = () => {
             currentCat = categories.find(cat => cat.id === currentCat.parentId);
         }
     
-        const mainCatSlug = slugs[0]; // The first slug should correspond to the main category
-        return `/cat/${mainCatSlug}/${slugs.slice(1).join('/')}`; // Construct URL accordingly
+        return `/cat/${slugs.join('/')}`; // Construct URL accordingly
     };
 
     return (
