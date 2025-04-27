@@ -22,27 +22,40 @@ const CategoryPage: React.FC = () => {
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     
     if (!foundMainCategory) {
-        return setCurrentCategory(undefined); // Not found, avoid further searches
+        setCurrentCategory(undefined);
+        return;
     }
 
-    // Now check for subcategories
-    let foundCategory: Category | undefined = foundMainCategory;
+    let foundCategory = foundMainCategory;
 
+    // Validate each subcategory in order
     if (subCatSlug) {
-        foundCategory = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory.id);
-        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
+        const subCat = categories.find(cat => cat.slug === subCatSlug && cat.parentId === foundMainCategory.id);
+        if (subCat) foundCategory = subCat; 
+        else {
+            setCurrentCategory(undefined);
+            return;
+        }
     }
 
     if (subSubCatSlug) {
-        foundCategory = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory?.id);
-        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
+        const subSubCat = categories.find(cat => cat.slug === subSubCatSlug && cat.parentId === foundCategory.id);
+        if (subSubCat) foundCategory = subSubCat;
+        else {
+            setCurrentCategory(undefined);
+            return;
+        }
     }
 
     if (extraSubSubCatSlug) {
-        foundCategory = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory?.id);
-        if (!foundCategory) return setCurrentCategory(undefined); // Not found, reset category
+        const extraSubSubCat = categories.find(cat => cat.slug === extraSubSubCatSlug && cat.parentId === foundCategory.id);
+        if (extraSubSubCat) foundCategory = extraSubSubCat;
+        else {
+            setCurrentCategory(undefined);
+            return;
+        }
     }
-    
+
     setCurrentCategory(foundCategory);
 }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug]);
 
