@@ -196,19 +196,18 @@ const CategoryPage: React.FC = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-    // Build the full category path for breadcrumbs
+    // Collect all parent categories leading up to the main category
     const categoryPath = [];
     let category = currentCategory;
 
-    // Collect all parent categories leading up to the main category
     while (category) {
         categoryPath.unshift(category); // Prepend to maintain the order
         category = categories.find(cat => cat.id === category.parentId);
     }
 
-    // Create a slug array for building paths
-    const slugs = categoryPath.map(cat => cat.slug);
-    
+    // Create an array of slugs
+    const slugs = categoryPath.map(cat => cat.slug).filter(Boolean); // filter(Boolean) removes any undefined slugs
+
     return (
         <>
             <div className="page-header">
@@ -226,9 +225,9 @@ const CategoryPage: React.FC = () => {
             <div className="root-category__categories">
                 {subcategories.length > 0 ? (
                     subcategories.map((subCat) => {
-                        // Construct the path for this subcategory
-                        const parentSlug = slugs[slugs.length - 1]; // Last is the current category slug
-                        const subCatPath = `/cat/${mainCategory.slug}/${slugs[slugs.length - 2]}/${subCat.slug}`; // Full path including subcategory
+                        // Construct the paths to avoid undefined segments
+                        const parentSlug = slugs.length > 1 ? slugs[slugs.length - 2] : ''; // Use previous slug if available
+                        const subCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}`.replace(/\/+/g, '/'); // Clean up any double slashes
 
                         return (
                             <div key={subCat.id} className="root-category__category">
@@ -244,8 +243,7 @@ const CategoryPage: React.FC = () => {
                                             .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                                             .slice(0, 5)
                                             .map((linkedSubCat, index, arr) => {
-                                                // Use the updated slugs for proper path creation
-                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${slugs[slugs.length - 2]}/${subCat.slug}/${linkedSubCat.slug}`;
+                                                const linkedSubCatPath = `/cat/${mainCategory.slug}/${parentSlug}/${subCat.slug}/${linkedSubCat.slug}`.replace(/\/+/g, '/'); // Clean path
                                                 return (
                                                     <React.Fragment key={linkedSubCat.id}>
                                                         <Link to={linkedSubCatPath}>
