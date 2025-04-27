@@ -97,26 +97,19 @@ const CategoryPage: React.FC = () => {
     );
 
     // Create a Set to keep track of slugged categories
-    const categoryPathSet = new Set();
-
-    // Use currentCategory to add to breadcrumbs
-    let category = currentCategory;
+    const categoryTrail = [];
 
     // Build the breadcrumb trail from currentCategory up to the main category
-    const categoryTrail = [];
+    let category = currentCategory;
     
     while (category) {
-      categoryTrail.push(category);  // Push the category to create the trail
+      categoryTrail.unshift(category);  // Prepend to create the trail
       category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
     }
 
-    // Reverse the order so we can start from mainCategory and go to the first subcategory (excluded)
-    categoryTrail.reverse();
-
     // Add categories to breadcrumbs (excluding current category)
-    categoryTrail.forEach(cat => {
-      if (!categoryPathSet.has(cat.slug) && cat.slug !== mainCategory.slug) {
-        categoryPathSet.add(cat.slug);
+    categoryTrail.forEach((cat, index) => {
+      if (index !== categoryTrail.length - 1) { // Exclude current category
         breadcrumbs.push(
           <li key={cat.slug}>
             <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
@@ -224,7 +217,7 @@ const CategoryPage: React.FC = () => {
                   <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
                 </svg>
               </Link>
-              <h1>{parentCategory.name || currentCategory?.name}</h1>
+              <h1>{parentCategory.name || currentCategory?.name}</h1> 
             </div>
           </div>
         </div>
@@ -256,7 +249,7 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            renderProducts() // Consider displaying products if no subcategories exist
+            renderProducts() 
           )}
         </div>
       </>
