@@ -464,6 +464,16 @@ export const categories: Category[] = [
   { id: 372, name: 'Μηχανές για Φυσαλίδες', slug: 'bubble-machines', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3308_SX400Y400/1476454635/bubble-machines.webp' },
   { id: 373, name: 'Μηχανές Χιονιού', slug: 'snow-machines', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3310_SX400Y400/1476454634/snow-machines.webp' },
   { id: 374, name: 'Αξεσουάρ Μηχανημάτων Καπνού & Ατμόσφαιρας', slug: 'smoke-and-atmosphere-accessories', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3311_SX400Y400/1476454635/aksesouar-mixanimaton-kapnou-atmosfairas.webp' },
+
+  // Subcategories of Ακουστικά, Αξεσουάρ of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 375, name: 'Headphones', slug: 'headphones', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8068_SX400Y400/1629455538/headphones.webp' },
+  { id: 376, name: 'Ακουστικά Ψείρες', slug: 'earbuds', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8069_SX400Y400/1629455538/akoystika-pseires.webp' },
+  { id: 377, name: 'Ενισχυτές Ακουστικών', slug: 'headphone-amplifiers', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8070_SX400Y400/1629455538/enisxytes-akoystikon.webp' },
+  { id: 378, name: 'Μαξιλαράκια Ακουστικών', slug: 'headphone-pads', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8917_SX400Y400/1718796336/maksilarakia-akoystikon.webp' },
+  { id: 379, name: 'Βάσεις Ακουστικών', slug: 'headphone-stands', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8918_SX400Y400/1718796125/vaseis-akoystikon.webp' },
+  { id: 380, name: 'Αξεσουάρ, Ανταλλακτικά Ακουστικών', slug: 'headphone-accessories', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8071_SX400Y400/1718796548/aksesoyar-antallaktika-akoystikon.webp' },
+  { id: 381, name: 'Gaming Headsets', slug: 'gaming-headsets', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8066_SX400Y400/1629455538/gaming-headsets.webp' },
+  { id: 382, name: 'Ακουστικά Υπολογιστή', slug: 'computer-headphones', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8072_SX400Y400/1629455538/akoystika-ypologisti.webp' },
 ];
 
 export interface Vendor {
