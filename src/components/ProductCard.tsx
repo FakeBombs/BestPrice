@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
-import { Product, getBestPrice, getVendorById } from '@/data/mockData';
+import { Product, getBestPrice, getVendorById, categories } from '@/data/mockData';
 
 interface ProductCardProps {
   product: Product;
