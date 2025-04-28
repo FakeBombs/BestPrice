@@ -36,32 +36,20 @@ const ProductCard = ({
 
   return (
     <div className={className}>
-      <Link to={`/item/${product.id}/${productSlug}`} className="p__cover">
-        <picture>
-          <img src={product.image} alt={product.title} />
-        </picture>
-      </Link>
+      <Link to={`/item/${product.id}/${productSlug}`} className="p__cover"><picture><img src={product.image} alt={product.title} /></picture></Link>
       <div className="p__main">
         <div className="p__meta">
           <div className="p__category">{categoryName}</div>
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
           <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
           <span className="text-xs text-muted-foreground">({product.reviews})</span>
-          <h3 className="p__title p__title--lines p__title--lines-2">
-            <Link to={`/item/${product.id}/${productSlug}`} title={product.title}>{product.title}</Link>
-          </h3>
+          <h3 className="p__title p__title--lines p__title--lines-2"><Link to={`/item/${product.id}/${productSlug}`} title={product.title}>{product.title}</Link></h3>
         </div>
       </div>
       {bestPrice && (
         <div className="p__footer">
-          <div className="p__price-merchants">
-            <a className="p__price" href={`/item/${product.id}/${productSlug}`}>
-              <div className="p__price--current">${bestPrice.price.toFixed(2)}</div>
-            </a>
-          </div>
-          <div className="p__merchants">
-            {vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}
-          </div>
+          <div className="p__price-merchants"><Link className="p__price" to={`/item/${product.id}/${productSlug}`}><div className="p__price--current">${bestPrice.price.toFixed(2)}</div></Link></div>
+          <div className="p__merchants">{vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}</div>
         </div>
       )}
     </div>
