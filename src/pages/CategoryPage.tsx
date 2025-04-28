@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'; 
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
 import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
