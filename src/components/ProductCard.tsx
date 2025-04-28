@@ -27,26 +27,29 @@ const ProductCard = ({
   
   return (
     <div className={className}>
-      <Link to={`/item/${product.id}/${productSlug}.html`}>
+      <Link to={`/item/${product.id}/${productSlug}`} className="p__cover">
         <picture>
           <img src={product.image} alt={product.title} />
         </picture>
-        <div className="p-4">
-          <div className="flex items-center space-x-1 mb-2">
+      </Link>
+      <div className="p__main">
+        <div className="p__meta">
+          <div class="p__category">Τηλεοράσεις</div>
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
             <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
             <span className="text-xs text-muted-foreground">({product.reviews})</span>
-          </div>
-          <h3 className="font-medium line-clamp-2 mb-2">{product.title}</h3>
-          
-          {bestPrice && <div className="mt-2">
-              <div className="price-tag">${bestPrice.price.toFixed(2)}</div>
-              <div className="text-sm text-muted-foreground mt-1">
-                from {vendorCount} {vendorCount === 1 ? 'vendor' : 'vendors'}
-              </div>
-            </div>}
+            <h3 class="p__title p__title--lines p__title--lines-2"><Link to={`/item/${product.id}/${productSlug}`} title={product.title}>{product.title}</Link></h3>
         </div>
-      </Link>
+      </div>
+      {bestPrice && <div className="p__footer">
+        <div className="p__price-merchants">
+          <a class="p__price" href={`/item/${product.id}/${productSlug}`}>
+            <div class="p__price--current">${bestPrice.price.toFixed(2)}</div>
+          </a>
+        </div>
+        <div className="p__merchants">Σε {vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}</div>
+      </div>}
+      </div>
     </div>
   );
 };
