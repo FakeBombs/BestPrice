@@ -21,7 +21,7 @@ export const mainCategories: Category[] = [
 // Subcategories and nested categories
 export const categories: Category[] = [
   // Subcategories of Τεχνολογία
-  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: '/dist/images/categories/mobile.webp' },
+  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: '/dist/images/categories/mobile-phones.webp' },
   { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2544_SX400Y400/1476345319/ypologistes.webp' },
   { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2590_SX400Y400/1475756993/laptops-accessories.webp' },
   { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6992_SX400Y400/1473176060/eikona.webp' },
