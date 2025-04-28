@@ -4,12 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import { Product, getBestPrice, getVendorById, categories } from '@/data/mockData';
 
-// Convert categories array to an object for quick access
-const categoryLookup = categories.reduce((acc, category) => {
-  acc[category.id] = category.name; // Map ID to the name
-  return acc;
-}, {});
-
 interface ProductCardProps {
   product: Product;
   className?: string; // Adding this to allow custom classes
@@ -30,6 +24,12 @@ const ProductCard = ({
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices.filter(p => p.inStock).length;
   const productSlug = formatProductSlug(product.title);
+
+  // Convert categories array to an object for quick access
+  const categoryLookup = categories.reduce((acc, category) => {
+    acc[category.id] = category.name; // Map ID to the name
+    return acc;
+  }, {});
 
   // Assuming you want to display the first category only
   const firstCategoryId = product.categoryIds[0];
