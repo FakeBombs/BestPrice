@@ -485,6 +485,11 @@ export const categories: Category[] = [
   { id: 389, name: 'Ανταλλακτικά Πικάπ', slug: 'turntable-parts', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8928_SX400Y400/1720092923/antallaktika-pikap.webp' },
   { id: 390, name: 'Αποθήκευση, Μεταφορά Δίσκων Πικάπ', slug: 'turntable-storage', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8929_SX400Y400/1720093106/apothikeysi-metafora-diskon-pikap.webp' },
   { id: 391, name: 'Ενισχυτές Πικάπ', slug: 'turntable-amplifiers', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8930_SX400Y400/1720093321/enisxytes-pikap.webp' },
+
+  // Subcategories of Home Cinema of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 392, name: 'Σετ Home Cinema', slug: 'set-home-cinema', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/697_SX400Y400/1472046462/set-home-cinema.webp' },
+  { id: 393, name: 'Soundbar', slug: 'soundbar', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
+  { id: 394, name: 'Subwoofer', slug: 'subwoofer', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5868_SX400Y400/1472048939/subwoofer.webp' },
 ];
 
 export interface Vendor {
