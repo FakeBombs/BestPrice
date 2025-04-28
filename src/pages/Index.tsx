@@ -115,9 +115,9 @@ const Index = () => {
                     {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.slug}?bpref=home-verticals`}>{t(category.name)}</Link> ))}
                   </div>
                   <div className="h-header__more pressable">
-                    <svg aria-hidden="true" className="icon" width="12" height="12"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg>
+                    <svg aria-hidden="true" className="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><rect width="12" height="2" rx="1"/><rect y="5" width="12" height="2" rx="1"/><rect y="10" width="12" height="2" rx="1"/></svg>
                     <span className="h-header__more-label">Όλες</span>
-                    <svg aria-hidden="true" className="icon" width="20" height="20"><use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-right-20"></use></svg>
+                    <svg aria-hidden="true" className="icon" width="20" height="20" viewBox="0 0 20 20" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M16.25 10C16.2503 10.2726 16.1925 10.5421 16.0804 10.7906C15.9684 11.039 15.8046 11.2607 15.6 11.4409L6.30667 19.6167C5.99871 19.8751 5.60187 20.0028 5.20101 19.9724C4.80015 19.942 4.42708 19.756 4.16158 19.4541C3.89607 19.1523 3.75921 18.7585 3.78025 18.3571C3.80129 17.9556 3.97856 17.5783 4.27417 17.3059L12.4008 10.1567C12.4231 10.1371 12.441 10.113 12.4533 10.086C12.4655 10.059 12.4718 10.0297 12.4718 10C12.4718 9.97036 12.4655 9.94104 12.4533 9.91402C12.441 9.887 12.4231 9.86291 12.4008 9.84336L4.27417 2.69419C3.97856 2.42174 3.80129 2.04444 3.78025 1.64298C3.75921 1.24152 3.89607 0.847761 4.16158 0.545899C4.42708 0.244037 4.80015 0.0580321 5.20101 0.0276573C5.60187 -0.0027174 5.99871 0.124949 6.30667 0.383358L15.5967 8.55669C15.8017 8.73714 15.9661 8.95917 16.0787 9.20803C16.1913 9.45688 16.2497 9.72686 16.25 10Z"/></svg>
                   </div>
                 </div>
                 
