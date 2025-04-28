@@ -212,7 +212,7 @@ const CategoryPage: React.FC = () => {
         <div className="sections"></div>
         <div class="p__products-section">
           <div class="alerts">
-            <button data-url="/cat/3296/players.html?bpref=root-category" data-title={currentCategory?.name} data-max-price="0" class="alerts__button pressable">
+            <button data-url="/cat/3296/players.html?bpref=root-category" data-title={currentCategory?.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
               <svg aria-hidden="true" class="icon" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
               <span class="alerts__label">Ειδοποίηση</span>
             </button>
@@ -294,7 +294,7 @@ const CategoryPage: React.FC = () => {
             <div className="sections"></div>
             <div class="p__products-section">
               <div class="alerts">
-                <button data-url="/cat/3296/players.html?bpref=root-category" data-title={currentCategory.name} data-max-price="0" class="alerts__button pressable">
+                <button data-url="/cat/3296/players.html?bpref=root-category" data-title={currentCategory.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
                   <svg aria-hidden="true" class="icon" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                   <span class="alerts__label">Ειδοποίηση</span>
                 </button>
