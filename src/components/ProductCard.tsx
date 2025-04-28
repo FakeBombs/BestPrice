@@ -51,7 +51,7 @@ const ProductCard = ({
         </a>
       </div>
       <div className="p__merchants">
-        Σε {vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}
+        {vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}
       </div>
     </div>
   )}
