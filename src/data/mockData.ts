@@ -88,14 +88,14 @@ export const categories: Category[] = [
   { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '/dist/images/cat/korean-cosmetics.webp' },
 
   // Subcategories of Παιδικά - Βρεφικά
-  { id: 69, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2140_SX400Y400/1629455494/paidiki-vrefiki-moda.webp' },
-  { id: 70, name: 'Παιδικά Παιχνίδια', slug: 'childrens-toys', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/875_SX400Y400/1480341862/paidika-paixnidia.webp' },
-  { id: 71, name: 'Σχολικά Είδη', slug: 'school-supplies', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6964_SX400Y400/1629455530/sxolika-eidh.webp' },
-  { id: 72, name: 'Βρεφικά Παιχνίδια', slug: 'baby-toys', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3349_SX400Y400/1629455501/vrefika-paixnidia.webp' },
-  { id: 73, name: 'Βρεφικά Είδη', slug: 'baby-products', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7214_SX400Y400/1629455533/brefika.webp' },
-  { id: 74, name: 'Παιδικά Λευκά Είδη', slug: 'childrens-linens', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7215_SX400Y400/1629455533/paidika-leuka-eidh.webp' },
-  { id: 75, name: 'Βαπτιστικά', slug: 'christening-items', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5858_SX400Y400/1629455516/baptistika.webp' },
-  { id: 76, name: 'Παιδικά Ρολόγια', slug: 'childrens-watches', parentId: 5, image: 'https://abpcdn.pstatic.gr/P/bpimg128/850_SX400Y400/1629455541/paidika-rologia.webp' },
+  { id: 50, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 5, image: '/dist/images/cat/childrens-baby-fashion.webp' },
+  { id: 70, name: 'Παιδικά Παιχνίδια', slug: 'childrens-toys', parentId: 5, image: '/dist/images/cat/childrens-toys.webp' },
+  { id: 71, name: 'Σχολικά Είδη', slug: 'school-supplies', parentId: 5, image: '/dist/images/cat/school-supplies.webp' },
+  { id: 72, name: 'Βρεφικά Παιχνίδια', slug: 'baby-toys', parentId: 5, image: '/dist/images/cat/baby-toys.webp' },
+  { id: 73, name: 'Βρεφικά Είδη', slug: 'baby-products', parentId: 5, image: '/dist/images/cat/baby-products.webp' },
+  { id: 74, name: 'Παιδικά Λευκά Είδη', slug: 'childrens-linens', parentId: 5, image: '/dist/images/cat/childrens-linens.webp' },
+  { id: 75, name: 'Βαπτιστικά', slug: 'christening-items', parentId: 5, image: '/dist/images/cat/christening-items.webp' },
+  { id: 76, name: 'Παιδικά Ρολόγια', slug: 'childrens-watches', parentId: 5, image: '/dist/images/cat/childrens-watches.webp' },
 
   // Subcategories of Hobby, Αθλητισμός
   { id: 77, name: 'Αθλήματα', slug: 'sports', parentId: 6, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3060_SX400Y400/1472725127/athlimata.webp' },
