@@ -61,7 +61,7 @@ export const categories: Category[] = [
   { id: 43, name: 'Ανδρική Μόδα', slug: 'mens-fashion', parentId: 3, image: '/dist/images/cat/mens-fashion.webp' },
   { id: 44, name: 'Ρολόγια', slug: 'watches', parentId: 3, image: '/dist/images/cat/watches.webp' },
   { id: 45, name: 'Κοσμήματα', slug: 'jewelry', parentId: 3, image: '/dist/images/cat/jewelry.webp' },
-  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 3, image: '/dist/images/cat/optics.webp' },
+  { id: 46, name: 'Οπτικά', slug: 'opticals', parentId: 3, image: '/dist/images/cat/opticals.webp' },
   { id: 47, name: 'Converse All Star', slug: 'converse-all-star', parentId: 3, image: '/dist/images/cat/converse-all-star.webp' },
   { id: 48, name: 'Ομπρέλες Βροχής', slug: 'rain-umbrellas', parentId: 3, image: '/dist/images/cat/rain-umbrellas.webp' },
   { id: 49, name: 'Αξεσουάρ Παπουτσιών', slug: 'shoe-accessories', parentId: 3, image: '/dist/images/cat/shoe-accessories.webp' },
@@ -84,7 +84,7 @@ export const categories: Category[] = [
   { id: 64, name: 'Προϊόντα Κάνναβης', slug: 'cannabis-products', parentId: 4, image: '/dist/images/cat/cannabis-products.webp' },
   { id: 65, name: 'Ορθοπεδικά', slug: 'orthopedic', parentId: 4, image: '/dist/images/cat/orthopedic.webp' },
   { id: 66, name: 'Βοηθήματα Ασθενών', slug: 'patient-aids', parentId: 4, image: '/dist/images/cat/patient-aids.webp' },
-  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 4, image: '/dist/images/cat/optics.webp' },
+  { id: 46, name: 'Οπτικά', slug: 'opticals', parentId: 4, image: '/dist/images/cat/opticals.webp' },
   { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '/dist/images/cat/korean-cosmetics.webp' },
 
   // Subcategories of Παιδικά - Βρεφικά
