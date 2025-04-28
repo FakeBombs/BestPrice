@@ -27,12 +27,12 @@ export const categories: Category[] = [
   { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: '/dist/images/cat/image.webp' },
   { id: 14, name: 'Smartwatches, Wearables', slug: 'smartwatches-wearables', parentId: 1, image: '/dist/images/cat/smartwatches-wearables.webp' },
   { id: 15, name: 'Tablets, Αξεσουάρ', slug: 'tablets-accessories', parentId: 1, image: '/dist/images/cat/tablets-accessories.webp' },
-  { id: 16, name: 'Video Games', slug: 'video-games', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/894_SX400Y400/1473260108/video-games.webp' },
-  { id: 17, name: 'Ήχος', slug: 'audio', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6993_SX400Y400/1473176050/hxos.webp' },
-  { id: 18, name: 'Φωτογραφία, Video', slug: 'photography-video', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3000_SX400Y400/1629455498/photo-video.webp' },
-  { id: 19, name: 'Ηλεκτρονικά', slug: 'electronics', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/680_SX400Y400/1473176128/consumer-electronics.webp' },
-  { id: 20, name: 'Τηλεφωνία', slug: 'telephony', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/797_SX400Y400/1473176102/telephony.webp' },
-  { id: 21, name: 'Gadgets', slug: 'gadgets', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/703_SX400Y400/1473176113/gadgets.webp' },
+  { id: 16, name: 'Video Games', slug: 'video-games', parentId: 1, image: '/dist/images/cat/video-games.webp' },
+  { id: 17, name: 'Ήχος', slug: 'audio', parentId: 1, image: '/dist/images/cat/audio.webp' },
+  { id: 18, name: 'Φωτογραφία, Video', slug: 'photo-video', parentId: 1, image: '/dist/images/cat/photo-video.webp' },
+  { id: 19, name: 'Ηλεκτρονικά', slug: 'consumer-electronics', parentId: 1, image: '/dist/images/cat/consumer-electronics.webp' },
+  { id: 20, name: 'Τηλεφωνία', slug: 'telephony', parentId: 1, image: '/dist/images/cat/telephony.webp' },
+  { id: 21, name: 'Gadgets', slug: 'gadgets', parentId: 1, image: '/dist/images/cat/gadgets.webp' },
 
   // Subcategories of Σπίτι & Κήπος
   { id: 22, name: 'Οικιακές Συσκευές', slug: 'home-appliances', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2483_SX400Y400/1473176668/home-appliances.webp' },
