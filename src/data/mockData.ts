@@ -38,7 +38,7 @@ export const categories: Category[] = [
   { id: 22, name: 'Οικιακές Συσκευές', slug: 'home-appliances', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2483_SX400Y400/1473176668/home-appliances.webp' },
   { id: 23, name: 'Εργαλεία', slug: 'tools', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3499_SX400Y400/1474901528/tools.webp' },
   { id: 24, name: 'Έπιπλα', slug: 'furniture', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2186_SX400Y400/1629455494/epipla.webp' },
-  { id: 25, name: 'Κήπος', slug: 'garden', parentId: 2, image: 'https://www.bestprice.gr/cat/2400/khpos.html?bpref=root-category' },
+  { id: 25, name: 'Κήπος', slug: 'garden', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2400_SX400Y400/1629455495/khpos.webp' },
   { id: 26, name: 'Είδη Σπιτιού', slug: 'home-items', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6990_SX400Y400/1473176080/eidh-spitiou.webp' },
   { id: 27, name: 'Λευκά Είδη', slug: 'home-linens', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2268_SX400Y400/1629455494/leuka-eidh.webp' },
   { id: 28, name: 'Φωτισμός', slug: 'lighting', parentId: 2, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6092_SX400Y400/1477319884/fotistika.webp' },
