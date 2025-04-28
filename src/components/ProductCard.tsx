@@ -24,6 +24,10 @@ const ProductCard = ({
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices.filter(p => p.inStock).length;
   const productSlug = formatProductSlug(product.title);
+
+  // Assuming you want to display the first category only
+  const firstCategoryId = product.categoryIds[0];
+  const categoryName = firstCategoryId ? categories[firstCategoryId] : 'Άγνωστη Κατηγορία'; // Fallback if no category
   
   return (
     <div className={className}>
@@ -34,7 +38,7 @@ const ProductCard = ({
   </Link>
   <div className="p__main">
     <div className="p__meta">
-      <div className="p__category">Τηλεοράσεις</div>
+      <div className="p__category">{categoryName}</div>
       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
       <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
       <span className="text-xs text-muted-foreground">({product.reviews})</span>
