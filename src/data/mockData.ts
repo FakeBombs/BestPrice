@@ -57,16 +57,16 @@ export const categories: Category[] = [
   { id: 41, name: 'Είδη Κατοικιδίων', slug: 'pet-items', parentId: 2, image: '/dist/images/cat/pet-items.webp' },
 
   // Subcategories of Μόδα
-  { id: 42, name: 'Γυναικεία Μόδα', slug: 'womens-fashion', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2069_SX400Y400/1503657549/woman.webp' },
-  { id: 43, name: 'Ανδρική Μόδα', slug: 'mens-fashion', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2108_SX400Y400/1701084742/man.webp' },
-  { id: 44, name: 'Ρολόγια', slug: 'watches', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/847_SX400Y400/1473068668/watches.webp' },
-  { id: 45, name: 'Κοσμήματα', slug: 'jewelry', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/826_SX400Y400/1473068668/jewelry.webp' },
-  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3135_SX400Y400/1503996767/optika.webp' },
-  { id: 47, name: 'Converse All Star', slug: 'converse-all-star', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6305_SX400Y400/1629455522/converse-all-star.webp' },
-  { id: 48, name: 'Ομπρέλες Βροχής', slug: 'rain-umbrellas', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3488_SX400Y400/1629455502/ompreles-vroxis.webp' },
-  { id: 49, name: 'Αξεσουάρ Παπουτσιών', slug: 'shoe-accessories', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6241_SX400Y400/1629455522/aksesouar-papoutsiwn.webp' },
-  { id: 50, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 3, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2140_SX400Y400/1629455494/paidiki-vrefiki-moda.webp' },
-  { id: 51, name: 'Sneakers', slug: 'sneakers', parentId: 3, image: 'https://bbpcdn.pstatic.gr/bpnr/hubs-image-1_SX400Y400/1710432442892/sneakers-ta-pio-trendy-papoytsia-gia-kathe-styl-kai-peristash.webp' },
+  { id: 42, name: 'Γυναικεία Μόδα', slug: 'womens-fashion', parentId: 3, image: '/dist/images/cat/womens-fashion.webp' },
+  { id: 43, name: 'Ανδρική Μόδα', slug: 'mens-fashion', parentId: 3, image: '/dist/images/cat/mens-fashion.webp' },
+  { id: 44, name: 'Ρολόγια', slug: 'watches', parentId: 3, image: '/dist/images/cat/watches.webp' },
+  { id: 45, name: 'Κοσμήματα', slug: 'jewelry', parentId: 3, image: '/dist/images/cat/jewelry.webp' },
+  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 3, image: '/dist/images/cat/optics.webp' },
+  { id: 47, name: 'Converse All Star', slug: 'converse-all-star', parentId: 3, image: '/dist/images/cat/converse-all-star.webp' },
+  { id: 48, name: 'Ομπρέλες Βροχής', slug: 'rain-umbrellas', parentId: 3, image: '/dist/images/cat/rain-umbrellas.webp' },
+  { id: 49, name: 'Αξεσουάρ Παπουτσιών', slug: 'shoe-accessories', parentId: 3, image: '/dist/images/cat/shoe-accessories.webp' },
+  { id: 50, name: 'Παιδική, Βρεφική Μόδα', slug: 'childrens-baby-fashion', parentId: 3, image: '/dist/images/cat/childrens-baby-fashion.webp' },
+  { id: 51, name: 'Sneakers', slug: 'sneakers', parentId: 3, image: '/dist/images/cat/sneakers.webp' },
 
   // Subcategories of Υγεία & Ομορφιά
   { id: 52, name: 'Περιποίηση', slug: 'grooming', parentId: 4, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6055_SX400Y400/1629455519/care.webp' },
