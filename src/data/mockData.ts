@@ -438,6 +438,12 @@ export const categories: Category[] = [
   { id: 355, name: 'Αντάπτορες, Προεκτάσεις Ήχου', slug: 'audio-adapters-extensions', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/9042_SX400Y400/1741250574/antaptores-proektaseis-ixou.webp' },
   { id: 356, name: 'Διάφορα Επαγγελματικού Ήχου', slug: 'various-professional-sound', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5556_SX400Y400/1476430484/various-sound-systems.webp' },
   { id: 322, name: 'Ηχεία Εγκαταστάσεων', slug: 'installation-speakers', parentId: 315, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8569_SX400Y400/1663747970/ixeia-egkatastaseon.webp' },
+
+  // Subcategories of Επαγγελματικά Μικρόφωνα, Αξεσουάρ of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 357, name: 'Επαγγελματικά Μικρόφωνα', slug: 'professional-microphones', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3339_SX400Y400/1476441478/epaggelmatika-mirkofona.webp' },
+  { id: 358, name: 'Δέκτες', slug: 'receivers', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5947_SX400Y400/1476441478/mic-receivers.webp' },
+  { id: 359, name: 'Κάψες', slug: 'capsules', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6214_SX400Y400/1476441478/microphone-capsules.webp' },
+  { id: 360, name: 'Αξεσουάρ Μικροφώνων', slug: 'microphone-accessories', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3342_SX400Y400/1476441478/microphone-accessories.webp' },
 ];
 
 export interface Vendor {
