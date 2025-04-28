@@ -17,6 +17,9 @@ const CategoryPage: React.FC = () => {
     anotherSubSubCatSlug?: string;
   }>(); 
 
+  const { toast } = useToast();
+  const { user } = useAuth();
+  
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
