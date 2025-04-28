@@ -452,6 +452,12 @@ export const categories: Category[] = [
   { id: 364, name: 'Par Cans', slug: 'par-cans', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3336_SX400Y400/1476452309/par-cans.webp' },
   { id: 365, name: 'Μπάλες από Καθρέπτη', slug: 'mirror-balls', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3337_SX400Y400/1476452309/mirror-balls.webp' },
   { id: 366, name: 'Κονσόλες Φωτισμού', slug: 'lighting-consoles', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3338_SX400Y400/1476452309/konsoles-fotismou.webp' },
+
+  // Subcategories of Εξοπλισμός DJ & Αξεσουάρ of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 367, name: 'DJ Controllers', slug: 'dj-controllers', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3297_SX400Y400/1476435992/dj-controllers.webp' },
+  { id: 368, name: 'Εξοπλισμός Midi Υπολογιστή', slug: 'midi-computer-equipment', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8491_SX400Y400/1639663690/eksoplismos-midi-ypologisti.webp' },
+  { id: 369, name: 'DJ CD / MP3 Players', slug: 'dj-cd-mp3-players', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8877_SX400Y400/1715927792/dj-cd-mp3-players.webp' },
+  { id: 370, name: 'DJ Αξεσουάρ', slug: 'dj-accessories', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8879_SX400Y400/1716447834/dj-aksesoyar.webp' },
 ];
 
 export interface Vendor {
