@@ -84,7 +84,7 @@ export const categories: Category[] = [
   { id: 64, name: 'Προϊόντα Κάνναβης', slug: 'cannabis-products', parentId: 4, image: '/dist/images/cat/cannabis-products.webp' },
   { id: 65, name: 'Ορθοπεδικά', slug: 'orthopedic', parentId: 4, image: '/dist/images/cat/orthopedic.webp' },
   { id: 66, name: 'Βοηθήματα Ασθενών', slug: 'patient-aids', parentId: 4, image: '/dist/images/cat/patient-aids.webp' },
-  { id: 67, name: 'Οπτικά', slug: 'opticals', parentId: 4, image: '/dist/images/cat/opticals.webp' },
+  { id: 46, name: 'Οπτικά', slug: 'optics', parentId: 4, image: '/dist/images/cat/optics.webp' },
   { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '/dist/images/cat/korean-cosmetics.webp' },
 
   // Subcategories of Παιδικά - Βρεφικά
