@@ -88,6 +88,18 @@ const CategoryPage: React.FC = () => {
     }
   };
 
+  const handlePriceAlert = () => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to set a price alert",
+      });
+      return;
+    }
+
+    setIsPriceAlertModalOpen(true);
+  };
+
   const renderBreadcrumbs = () => {
   const breadcrumbs = [];
   const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
