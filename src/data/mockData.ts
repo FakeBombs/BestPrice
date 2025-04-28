@@ -21,12 +21,12 @@ export const mainCategories: Category[] = [
 // Subcategories and nested categories
 export const categories: Category[] = [
   // Subcategories of Τεχνολογία
-  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: '/dist/images/categories/mobile-phones.webp' },
-  { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/categories/computers.webp' },
-  { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/categories/laptops-accessories.webp' },
-  { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: '/dist/images/categories/image.webp' },
-  { id: 14, name: 'Smartwatches, Wearables', slug: 'smartwatches-wearables', parentId: 1, image: '/dist/images/categories/smartwatches-wearables.webp' },
-  { id: 15, name: 'Tablets, Αξεσουάρ', slug: 'tablets-accessories', parentId: 1, image: '/dist/images/categories/tablets-accessories.webp' },
+  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: '/dist/images/cat/mobile-phones.webp' },
+  { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/cat/computers.webp' },
+  { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/cat/laptops-accessories.webp' },
+  { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: '/dist/images/cat/image.webp' },
+  { id: 14, name: 'Smartwatches, Wearables', slug: 'smartwatches-wearables', parentId: 1, image: '/dist/images/cat/smartwatches-wearables.webp' },
+  { id: 15, name: 'Tablets, Αξεσουάρ', slug: 'tablets-accessories', parentId: 1, image: '/dist/images/cat/tablets-accessories.webp' },
   { id: 16, name: 'Video Games', slug: 'video-games', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/894_SX400Y400/1473260108/video-games.webp' },
   { id: 17, name: 'Ήχος', slug: 'audio', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6993_SX400Y400/1473176050/hxos.webp' },
   { id: 18, name: 'Φωτογραφία, Video', slug: 'photography-video', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3000_SX400Y400/1629455498/photo-video.webp' },
