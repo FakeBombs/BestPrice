@@ -444,6 +444,14 @@ export const categories: Category[] = [
   { id: 358, name: 'Δέκτες', slug: 'receivers', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5947_SX400Y400/1476441478/mic-receivers.webp' },
   { id: 359, name: 'Κάψες', slug: 'capsules', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6214_SX400Y400/1476441478/microphone-capsules.webp' },
   { id: 360, name: 'Αξεσουάρ Μικροφώνων', slug: 'microphone-accessories', parentId: 336, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3342_SX400Y400/1476441478/microphone-accessories.webp' },
+
+  // Subcategories of Επαγγελματικός Φωτισμός of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 361, name: 'Φωτορυθμικά', slug: 'lighting-effects', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3332_SX400Y400/1476452309/led.webp' },
+  { id: 362, name: 'Laser', slug: 'lasers', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3333_SX400Y400/1476452309/laser.webp' },
+  { id: 363, name: 'Κεφαλές Laser', slug: 'laser-heads', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6213_SX400Y400/1476430485/laser-probes.webp' },
+  { id: 364, name: 'Par Cans', slug: 'par-cans', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3336_SX400Y400/1476452309/par-cans.webp' },
+  { id: 365, name: 'Μπάλες από Καθρέπτη', slug: 'mirror-balls', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3337_SX400Y400/1476452309/mirror-balls.webp' },
+  { id: 366, name: 'Κονσόλες Φωτισμού', slug: 'lighting-consoles', parentId: 337, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3338_SX400Y400/1476452309/konsoles-fotismou.webp' },
 ];
 
 export interface Vendor {
