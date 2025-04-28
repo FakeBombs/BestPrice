@@ -196,6 +196,7 @@ const CategoryPage: React.FC = () => {
             renderProducts()
           )}
         </div>
+        <div className="sections"></div>
       </>
     );
   };
@@ -268,6 +269,7 @@ const CategoryPage: React.FC = () => {
                     renderProducts()
                 )}
             </div>
+            <div className="sections"></div>
         </>
     );
 };
