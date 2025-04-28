@@ -197,6 +197,15 @@ const CategoryPage: React.FC = () => {
           )}
         </div>
         <div className="sections"></div>
+        <div class="p__products-section">
+          <div class="alerts">
+            <button data-url="/cat/3296/players.html?bpref=root-category" data-title="Εξοπλισμός DJ &amp; Αξεσουάρ" data-max-price="0" class="alerts__button pressable">
+              <svg aria-hidden="true" class="icon" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+              <span class="alerts__label">Ειδοποίηση</span>
+            </button>
+            <div class="alerts__prompt"> σε <span class="alerts__title">Εξοπλισμός DJ &amp; Αξεσουάρ</span></div>
+          </div>
+        </div>
       </>
     );
   };
@@ -270,6 +279,15 @@ const CategoryPage: React.FC = () => {
                 )}
             </div>
             <div className="sections"></div>
+            <div class="p__products-section">
+              <div class="alerts">
+                <button data-url="/cat/3296/players.html?bpref=root-category" data-title="Εξοπλισμός DJ &amp; Αξεσουάρ" data-max-price="0" class="alerts__button pressable">
+                  <svg aria-hidden="true" class="icon" width="20" height="20"><use xlink:href="/public/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                  <span class="alerts__label">Ειδοποίηση</span>
+                </button>
+                <div class="alerts__prompt"> σε <span class="alerts__title">Εξοπλισμός DJ &amp; Αξεσουάρ</span></div>
+              </div>
+            </div>
         </>
     );
 };
