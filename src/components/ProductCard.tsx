@@ -4,6 +4,12 @@ import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import { Product, getBestPrice, getVendorById, categories } from '@/data/mockData';
 
+// Convert categories array to an object for quick access
+const categoryLookup = categories.reduce((acc, category) => {
+  acc[category.id] = category.name; // Map ID to the name
+  return acc;
+}, {});
+
 interface ProductCardProps {
   product: Product;
   className?: string; // Adding this to allow custom classes
