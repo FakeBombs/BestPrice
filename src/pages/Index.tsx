@@ -99,36 +99,38 @@ const Index = () => {
   return (
     <div className="h-promos__wrapper root__wrapper">
       <div className="h-promos__slides" data-count="2">
-        <div className="h-promos__slide-wrapper" data-id="bp-credits-club"><div className="h-promos__slide">
-          <a href="/credits-club?bpref=home-promo" data-promo="home" className="promo promo-credits-club" onclick="(e) => { e.preventDefault(); e.stopPropagation(); }" data-listener-added="true">
-            <div className="promo-credits-club__info">
-              <img className="promo-credits-club__illustration" src="//bp.pstatic.gr/promosHome/bp-credits-club/./assets/illustration.svg" width="125" height="55" alt="BP Credits Club" loading="eager"/>
+        <div className="h-promos__slide-wrapper" data-id="bp-credits-club">
+          <div className="h-promos__slide">
+            <a href="/credits-club?bpref=home-promo" data-promo="home" className="promo promo-credits-club" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} data-listener-added="true">
+              <div className="promo-credits-club__info">
+                <img className="promo-credits-club__illustration" src="//bp.pstatic.gr/promosHome/bp-credits-club/./assets/illustration.svg" width="125" height="55" alt="BP Credits Club" loading="eager" />
                 <div className="promo-credits-club__cta">Γίνε μέλος ›</div>
-            </div>
-          </a>
+              </div>
+            </a>
+          </div>
         </div>
-      </div>
-      <div className="h-promos__slide-wrapper" data-id="garden-furniture-v2">
-        <div className="h-promos__slide">
-          <div className="promo promo__garden-furniture-v2">
-            <div className="promo__garden-furniture-v2__content">
-              <div className="promo__garden-furniture-v2__title-container">
-                <h2 className="promo__garden-furniture-v2__title">Έπιπλα</h2>
-                <h5 className="promo__garden-furniture-v2__subtitle">για μπαλκόνι &amp; κήπο</h5>
-              </div>
-              <div className="promo__garden-furniture-v2__items">
-                <a href="/cat/6284/set-epipla-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Σετ</a>
-                <a href="/cat/2404/karekles-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Καρέκλες</a>
-                <a href="/cat/3556/trapezia-kipou-verantas.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Τραπέζια</a>
-                <a href="/cat/5533/ntoulapes-kipou-verantas.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Ντουλάπες</a>
-                <a href="/cat/2403/epipla-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Έπιπλα κήπου</a>
-              </div>
+
+    <div className="h-promos__slide-wrapper" data-id="garden-furniture-v2">
+      <div className="h-promos__slide">
+        <div className="promo promo__garden-furniture-v2">
+          <div className="promo__garden-furniture-v2__content">
+            <div className="promo__garden-furniture-v2__title-container">
+              <h2 className="promo__garden-furniture-v2__title">Έπιπλα</h2>
+              <h5 className="promo__garden-furniture-v2__subtitle">για μπαλκόνι & κήπο</h5>
+            </div>
+            <div className="promo__garden-furniture-v2__items">
+              <a href="/cat/6284/set-epipla-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Σετ</a>
+              <a href="/cat/2404/karekles-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Καρέκλες</a>
+              <a href="/cat/3556/trapezia-kipou-verantas.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Τραπέζια</a>
+              <a href="/cat/5533/ntoulapes-kipou-verantas.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Ντουλάπες</a>
+              <a href="/cat/2403/epipla-kipou.html?bpref=home-promo" className="promo__garden-furniture-v2__cta">Έπιπλα κήπου</a>
             </div>
           </div>
-      </div>
-        </div>
-        </div>
-    </div>
+        </div> {/* End of promo__garden-furniture-v2 */}
+      </div> {/* End of h-promos__slide */}
+    </div> {/* End of h-promos__slide-wrapper */}
+  </div> {/* End of h-promos__slides */}
+</div> {/* End of h-promos__wrapper */}
     <div className="root__wrapper">
         <div className="root">
           <div className="sections">
