@@ -474,6 +474,17 @@ export const categories: Category[] = [
   { id: 380, name: 'Αξεσουάρ, Ανταλλακτικά Ακουστικών', slug: 'headphone-accessories', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8071_SX400Y400/1718796548/aksesoyar-antallaktika-akoystikon.webp' },
   { id: 381, name: 'Gaming Headsets', slug: 'gaming-headsets', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8066_SX400Y400/1629455538/gaming-headsets.webp' },
   { id: 382, name: 'Ακουστικά Υπολογιστή', slug: 'computer-headphones', parentId: 316, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8072_SX400Y400/1629455538/akoystika-ypologisti.webp' },
+
+  // Subcategories of Συσκευές Πικάπ, Αξεσουάρ of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 383, name: 'Πικάπ', slug: 'turntables', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3290_SX400Y400/1476437680/pickup.webp' },
+  { id: 384, name: 'Slipmat', slug: 'slipmats', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8923_SX400Y400/1720091602/slipmat.webp' },
+  { id: 385, name: 'Κεφάλες Πικάπ', slug: 'turntable-cartridges', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8924_SX400Y400/1720091902/kefales-pikap.webp' },
+  { id: 386, name: 'Συντήρηση, Καθαρισμός Πικάπ', slug: 'turntable-maintenance', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8925_SX400Y400/1720092170/suntirisi-katharismos-pikap.webp' },
+  { id: 387, name: 'Ρυθμιστικά Πικάπ', slug: 'turntable-adjustments', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8926_SX400Y400/1720092391/rythmistika-pikap.webp' },
+  { id: 388, name: 'Βελόνες Πικάπ', slug: 'turntable-needles', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8927_SX400Y400/1720092621/velones-pikap.webp' },
+  { id: 389, name: 'Ανταλλακτικά Πικάπ', slug: 'turntable-parts', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8928_SX400Y400/1720092923/antallaktika-pikap.webp' },
+  { id: 390, name: 'Αποθήκευση, Μεταφορά Δίσκων Πικάπ', slug: 'turntable-storage', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8929_SX400Y400/1720093106/apothikeysi-metafora-diskon-pikap.webp' },
+  { id: 391, name: 'Ενισχυτές Πικάπ', slug: 'turntable-amplifiers', parentId: 318, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8930_SX400Y400/1720093321/enisxytes-pikap.webp' },
 ];
 
 export interface Vendor {
