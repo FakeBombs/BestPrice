@@ -425,7 +425,7 @@ const SearchResults = () => {
                                                 <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category"> {/* Updated Link */}
                                                     <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.name}`} />
                                                     <h2 className="categories__title">{item.category}</h2>
-                                                    <div className="categories__cnt">{item.count} προϊόντα</div>
+                                                    <div className="categories__cnt">{item.count} {item.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
                                                 </Link>
                                             );
                                         })}
