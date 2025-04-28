@@ -490,6 +490,12 @@ export const categories: Category[] = [
   { id: 392, name: 'Σετ Home Cinema', slug: 'set-home-cinema', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/697_SX400Y400/1472046462/set-home-cinema.webp' },
   { id: 393, name: 'Soundbar', slug: 'soundbar', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5876_SX400Y400/1472046463/soundbar.webp' },
   { id: 394, name: 'Subwoofer', slug: 'subwoofer', parentId: 319, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5868_SX400Y400/1472048939/subwoofer.webp' },
+
+  // Subcategories of Φορητές Συσκευές of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 395, name: 'Φορητά Ράδιο CD', slug: 'portable-radio-cd-players', parentId: 320, image: 'https://abpcdn.pstatic.gr/P/bpimg128/720_SX400Y400/1472545123/radio-cd-players.webp' },
+  { id: 396, name: 'Φορητά Ραδιόφωνα', slug: 'portable-radios', parentId: 320, image: 'https://abpcdn.pstatic.gr/P/bpimg128/721_SX400Y400/1472545123/forhta-radiofona.webp' },
+  { id: 397, name: 'Δημοσιογραφικά, Καταγραφικά Ήχου', slug: 'audio-recorders', parentId: 320, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3428_SX400Y400/1472545123/audio-recorders.webp' },
+  { id: 398, name: 'Φορητά CD Players', slug: 'portable-cd-players', parentId: 320, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5803_SX400Y400/1472545124/portable-cd-players.webp' },
 ];
 
 export interface Vendor {
