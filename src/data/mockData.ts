@@ -22,8 +22,8 @@ export const mainCategories: Category[] = [
 export const categories: Category[] = [
   // Subcategories of Τεχνολογία
   { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-phones', parentId: 1, image: '/dist/images/categories/mobile-phones.webp' },
-  { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2544_SX400Y400/1476345319/ypologistes.webp' },
-  { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2590_SX400Y400/1475756993/laptops-accessories.webp' },
+  { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/categories/computers.webp' },
+  { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/categories/laptops-accessories.webp' },
   { id: 13, name: 'Εικόνα', slug: 'image', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6992_SX400Y400/1473176060/eikona.webp' },
   { id: 14, name: 'Smartwatches, Wearables', slug: 'smartwatches-wearables', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6991_SX400Y400/1473176071/wearables.webp' },
   { id: 15, name: 'Tablets, Αξεσουάρ', slug: 'tablets-accessories', parentId: 1, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6161_SX400Y400/1629455521/tablets-accessories.webp' },
