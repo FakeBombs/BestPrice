@@ -458,6 +458,12 @@ export const categories: Category[] = [
   { id: 368, name: 'Εξοπλισμός Midi Υπολογιστή', slug: 'midi-computer-equipment', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8491_SX400Y400/1639663690/eksoplismos-midi-ypologisti.webp' },
   { id: 369, name: 'DJ CD / MP3 Players', slug: 'dj-cd-mp3-players', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8877_SX400Y400/1715927792/dj-cd-mp3-players.webp' },
   { id: 370, name: 'DJ Αξεσουάρ', slug: 'dj-accessories', parentId: 339, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8879_SX400Y400/1716447834/dj-aksesoyar.webp' },
+
+  // Subcategories of Μηχανήματα Καπνού & Ατμόσφαιρας of a Subcategory Επαγγελματικός Ήχος of a Subcategory Ήχος of Main Category Τεχνολογία
+  { id: 371, name: 'Μηχανές Καπνού', slug: 'smoke-machines', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3307_SX400Y400/1476454635/smoke-machines.webp' },
+  { id: 372, name: 'Μηχανές για Φυσαλίδες', slug: 'bubble-machines', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3308_SX400Y400/1476454635/bubble-machines.webp' },
+  { id: 373, name: 'Μηχανές Χιονιού', slug: 'snow-machines', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3310_SX400Y400/1476454634/snow-machines.webp' },
+  { id: 374, name: 'Αξεσουάρ Μηχανημάτων Καπνού & Ατμόσφαιρας', slug: 'smoke-and-atmosphere-accessories', parentId: 343, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3311_SX400Y400/1476454635/aksesouar-mixanimaton-kapnou-atmosfairas.webp' },
 ];
 
 export interface Vendor {
