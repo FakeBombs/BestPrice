@@ -16,9 +16,7 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
 
       <div className="item-meta">
         <div className="item-badges">
-          <div className="p__badges-drop">
-            <div className="p__badge p__badge--drop drop drop--10">-11%</div>
-          </div>
+          <div className="p__badges-drop"><div className="p__badge p__badge--drop drop drop--10">-11%</div></div>
           <div className="p__badge p__badge--sales p__badge--sales p__badge--sales-first">#1 Best Seller</div>
         </div>
         
@@ -29,10 +27,10 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
           </hgroup>
           <div className="item-actions">
             <div className="item-actions__action item-actions__action--shortlist">
-              <svg aria-hidden="true" className="icon" width="16" height="16"><use xlink:href="/public/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
+              <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
             </div>
             <div className="item-actions__action item-actions__action--options">
-              <svg aria-hidden="true" className="icon" width="100%" height="100%"><use xlink:href="/public/dist/images/icons/actions.svg#icon-more-vertical"></use></svg>
+              <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/actions.svg#icon-more-vertical"></use></svg>
             </div>
           </div>
           <div className="item-links">
@@ -41,11 +39,11 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
                 <div className="simple-rating">
                   <div className="simple-rating__inner">
                     <div className="simple-rating__stars">
-                      <svg aria-hidden="true" className="icon" width="80" height="16"><use xlink:href="/public/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                      <svg aria-hidden="true" className="icon" width="80" height="16"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                     </div>
                     <div className="simple-rating__rated">
                       <div className="simple-rating__stars">
-                        <svg aria-hidden="true" className="icon" width="80" height="16"><use xlink:href="/public/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                        <svg aria-hidden="true" className="icon" width="80" height="16"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                       </div>
                     </div>
                   </div>
