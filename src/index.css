@@ -1544,9 +1544,10 @@ html {scroll-behavior: smooth}
 .h-content__cover {
     background-position: 50%;
     background-size: cover;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px;
     height: 10rem;
     left: -1px;
+    overflow: auto;
     position: relative;
     top: -1px;
     width: 100%;
