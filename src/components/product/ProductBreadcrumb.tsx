@@ -34,20 +34,21 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     // Recursively find the category path
     const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
-    // Find the main category based on the current category's parent chain
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId) || 
-                         (childPath.length > 0 && mainCategories.find(mainCat => mainCat.id === categories.find(cat => cat.slug === childPath[0].key).parentId));
+    // Find the main category by climbing up the hierarchy
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId)) || {};
 
-    // If main category is found and is at the top of the hierarchy, include it in the path
-    const mainSlug = mainCategory ? mainCategory.slug : '';
-
-    // Construct full category path, ensuring the main category is included first
+    // If the main category is found, include its slug
+    const mainSlug = mainCategory.slug || '';
+    
+    // Create an array and ensure the main category is the first item
     const fullPath = [
-      ...(childPath.length ? [getCategoryPath(mainSlug, categories.find(cat => cat.id === category.parentId)!, false)] : []), // Add main category if parent exists
-      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0]),
+      ...childPath, // Add all upstream categories
+      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0]), // Also add the current category
     ];
 
-    return fullPath;
+    // Prepend the main category to the path
+    const mainCategoryPath = getCategoryPath(mainSlug, mainCategory, false);
+    return [mainCategoryPath, ...fullPath]; // Return with the main category as the first item
   };
 
   // Get the breadcrumb path using the first category id of the product
