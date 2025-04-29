@@ -134,7 +134,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                         <img src={selectedVendor.logo} alt={`${selectedVendor.name} logo`} title={selectedVendor.name} />
                         {selectedVendor.certification && (
                             <span className="merchant-logo--certification" data-certification={selectedVendor.certification.toLowerCase()}>
-                                <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                                <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
                             </span>
                         )}
                     </div>
@@ -144,7 +144,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
             {selectedVendor.certification && (
             <div className={`merchant-certified--wrapper merchant-certified--${selectedVendor.certification.toLowerCase()} root__wrapper`}>
                 <div className="root merchant-certified">
-                    <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                    <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
                     <span className="hide-tablet">Certified Store (<Link to="/certification">{selectedVendor.certification}</Link>)</span>
                     <span className="hide-mobile">{selectedVendor.name} is a certified store (<b data-certification={selectedVendor.certification.toLowerCase()}>{selectedVendor.certification}</b>)</span>
                 </div>
@@ -166,7 +166,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <a className="id__rating" href="https://www.myshop.com/m/1234/myshop.html#merchant-reviews">
                                                     <span className="rating rating-all" data-total="4.8">
                                                         <svg aria-hidden="true" className="icon" style={{ clip: 'rect(0, 4.8em, auto, auto)' }} width="100%" height="100%">
-                                                            <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
+                                                            <use xlinkHref="/public/dist/images/icons/stars.svg#icon-stars-all"></use>
                                                         </svg>
                                                     </span>
                                                 </a>
@@ -178,19 +178,19 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 </li>
                                                 <li data-type="social" style={{ display: 'flex' }}>
                                                     <span className="social-links">
-                                                        <a className="pressable new-icon" data-tooltip="Facebook" rel="external nofollow noopener" target="_blank" href="https://facebook.com">
+                                                        <a className="pressable new-icon" data-tooltip="Facebook" rel="external nofollow noopener" target="_blank" href="https://facebook.com/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use href="/dist/images/icons/social.svg#icon-facebook"></use>
+                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-facebook"></use>
                                                             </svg>
                                                         </a>
-                                                        <a className="pressable new-icon" data-tooltip="Instagram" rel="external nofollow noopener" target="_blank" href="https://instagram.com">
+                                                        <a className="pressable new-icon" data-tooltip="Instagram" rel="external nofollow noopener" target="_blank" href="https://instagram.com/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use href="/dist/images/icons/social.svg#icon-instagram"></use>
+                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-instagram"></use>
                                                             </svg>
                                                         </a>
-                                                        <a className="pressable new-icon" data-tooltip="LinkedIn" rel="external nofollow noopener" target="_blank" href="https://www.linkedin.com/company">
+                                                        <a className="pressable new-icon" data-tooltip="LinkedIn" rel="external nofollow noopener" target="_blank" href="https://www.linkedin.com/company/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use ref="/dist/images/icons/social.svg#icon-linkedin"></use>
+                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-linkedin"></use>
                                                             </svg>
                                                         </a>
                                                     </span>
@@ -203,14 +203,14 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <li data-type="url" itemProp="url" content={selectedVendor.url}>
                                                     <a className="ui-kit__text" target="_blank" href={selectedVendor.url} rel="external nofollow noopener">
                                                         <svg aria-hidden="true" className="icon" width="16" height="16">
-                                                            <use href="/dist/images/icons/icons.svg#icon-world-16"></use>
+                                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-world-16"></use>
                                                         </svg>
                                                         {selectedVendor.url}
                                                     </a>
                                                 </li>
                                                 <li data-type="telephone">
                                                     <svg aria-hidden="true" className="icon icon--outline" width="14" height="14">
-                                                        <use href="/dist/images/icons/icons.svg#icon-phone-14"></use>
+                                                        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-phone-14"></use>
                                                     </svg>
                                                     <span className="ui-kit__text">
                                                         <a href={`tel:${selectedVendor.telephone.join(',')}`}>{selectedVendor.telephone.join(', ')}</a>
@@ -218,7 +218,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 </li>
                                                 <li data-type="address">
                                                     <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}.html#merchant-map`}>
-                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
+                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
                                                         <span className="ui-kit__text">{Array.isArray(selectedVendor.address) && selectedVendor.address.length > 0 ? selectedVendor.address[0] : 'No locations available'}</span>
                                                     </a>
                                                 </li>
@@ -286,7 +286,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <div className="p__actions" data-js="">
                                                     <div className="p__action" role="button" aria-label="All product actions">
                                                         <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                                            <use href="/dist/images/icons/actions.svg#icon-more-vertical"></use>
+                                                            <use xlinkHref="/public/dist/images/icons/actions.svg#icon-more-vertical"></use>
                                                         </svg>
                                                     </div>
                                                 </div>
@@ -320,10 +320,10 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 </div>
                                 <div>
                                     <button aria-label="Scroll arrow previous" disabled="" className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{ left: 0 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
+                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                     </button>
                                     <button aria-label="Scroll arrow next" className="scroll__arrow scroll__arrow--next" style={{ right: -18.4 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg>
+                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg>
                                     </button>
                                 </div>
                             </div>
