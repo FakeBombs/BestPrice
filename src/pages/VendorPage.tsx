@@ -223,7 +223,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                     </a>
                                                 </li>
                                                 <li data-type="storesCount">
-                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}.html#merchant-map`}>
+                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}#merchant-map`}>
                                                         <small className="ui-kit__small ui-kit__muted">{additionalAddresses > 0 ? `${additionalAddresses} more stores available` : 'No more stores'}</small>
                                                     </a>
                                                 </li>
@@ -286,7 +286,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <div className="p__actions" data-js="">
                                                     <div className="p__action" role="button" aria-label="All product actions">
                                                         <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                                            <use xlinkHref="/public/dist/images/icons/actions.svg#icon-more-vertical"></use>
+                                                            <use href="/dist/images/icons/actions.svg#icon-more-vertical"></use>
                                                         </svg>
                                                     </div>
                                                 </div>
@@ -320,10 +320,10 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 </div>
                                 <div>
                                     <button aria-label="Scroll arrow previous" disabled="" className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{ left: 0 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
+                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                     </button>
                                     <button aria-label="Scroll arrow next" className="scroll__arrow scroll__arrow--next" style={{ right: -18.4 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg>
+                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg>
                                     </button>
                                 </div>
                             </div>
