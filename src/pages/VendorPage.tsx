@@ -166,7 +166,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <a className="id__rating" href="https://www.myshop.com/m/1234/myshop.html#merchant-reviews">
                                                     <span className="rating rating-all" data-total="4.8">
                                                         <svg aria-hidden="true" className="icon" style={{ clip: 'rect(0, 4.8em, auto, auto)' }} width="100%" height="100%">
-                                                            <use xlinkHref="/public/dist/images/icons/stars.svg#icon-stars-all"></use>
+                                                            <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
                                                         </svg>
                                                     </span>
                                                 </a>
@@ -180,17 +180,17 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                     <span className="social-links">
                                                         <a className="pressable new-icon" data-tooltip="Facebook" rel="external nofollow noopener" target="_blank" href="https://facebook.com/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-facebook"></use>
+                                                                <use href="/dist/images/icons/social.svg#icon-facebook"></use>
                                                             </svg>
                                                         </a>
                                                         <a className="pressable new-icon" data-tooltip="Instagram" rel="external nofollow noopener" target="_blank" href="https://instagram.com/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-instagram"></use>
+                                                                <use href="/dist/images/icons/social.svg#icon-instagram"></use>
                                                             </svg>
                                                         </a>
                                                         <a className="pressable new-icon" data-tooltip="LinkedIn" rel="external nofollow noopener" target="_blank" href="https://www.linkedin.com/company/myshop">
                                                             <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use xlinkHref="/public/dist/images/icons/social.svg#icon-linkedin"></use>
+                                                                <use href="/dist/images/icons/social.svg#icon-linkedin"></use>
                                                             </svg>
                                                         </a>
                                                     </span>
@@ -203,14 +203,14 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 <li data-type="url" itemProp="url" content={selectedVendor.url}>
                                                     <a className="ui-kit__text" target="_blank" href={selectedVendor.url} rel="external nofollow noopener">
                                                         <svg aria-hidden="true" className="icon" width="16" height="16">
-                                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-world-16"></use>
+                                                            <use href="/dist/images/icons/icons.svg#icon-world-16"></use>
                                                         </svg>
                                                         {selectedVendor.url}
                                                     </a>
                                                 </li>
                                                 <li data-type="telephone">
                                                     <svg aria-hidden="true" className="icon icon--outline" width="14" height="14">
-                                                        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-phone-14"></use>
+                                                        <use href="/dist/images/icons/icons.svg#icon-phone-14"></use>
                                                     </svg>
                                                     <span className="ui-kit__text">
                                                         <a href={`tel:${selectedVendor.telephone.join(',')}`}>{selectedVendor.telephone.join(', ')}</a>
@@ -218,7 +218,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                 </li>
                                                 <li data-type="address">
                                                     <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}.html#merchant-map`}>
-                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
+                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
                                                         <span className="ui-kit__text">{Array.isArray(selectedVendor.address) && selectedVendor.address.length > 0 ? selectedVendor.address[0] : 'No locations available'}</span>
                                                     </a>
                                                 </li>
