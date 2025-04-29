@@ -7,20 +7,17 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (slug: string, category: any, isFinal: boolean) => {
-    const categorySlug = category.slug;
-    const categoryTitle = category.name;
-
-    const path = `/cat/${slug}/${categorySlug}`.replace(/\/+/g, '/');
+  const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
+    const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
 
     return (
-      <li key={categorySlug}>
+      <li key={slug}>
         <Link 
           to={path} 
-          title={isFinal ? `All products in the category ${categoryTitle}` : `All products and subcategories in ${categoryTitle}`} 
+          title={isFinal ? `All products in the category ${title}` : `All products and subcategories in ${title}`} 
           data-no-info=""
         >
-          <span>{categoryTitle}</span>
+          <span>{title}</span>
         </Link>
       </li>
     );
@@ -38,18 +35,21 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
 
     // Prepare the list for breadcrumbs
     const breadcrumbPath = [];
-    
+
     // If main category exists, add it to the path
     if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, mainCategory, false));
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
     }
 
-    // Add all ancestors (if any)
-    breadcrumbPath.push(...childPath);
+    // Add all ancestors
+    childPath.forEach((subCategory) => {
+      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
+    });
 
     // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category, categoryId === product.categoryIds[0]));
-
+    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
+    
     return breadcrumbPath;
   };
 
