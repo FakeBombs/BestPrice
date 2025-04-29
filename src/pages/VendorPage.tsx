@@ -134,7 +134,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                         <img src={selectedVendor.logo} alt={`${selectedVendor.name} logo`} title={selectedVendor.name} />
                         {selectedVendor.certification && (
                             <span className="merchant-logo--certification" data-certification={selectedVendor.certification.toLowerCase()}>
-                                <svg aria-hidden="true" className="icon" width="22" height="22"><use xlinkHref={`/public/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                                <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
                             </span>
                         )}
                     </div>
