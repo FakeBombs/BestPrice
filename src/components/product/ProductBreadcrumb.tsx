@@ -7,14 +7,12 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
-    const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
-
+  const getCategoryPath = (path: string, title: string, isFinal: boolean) => {
     return (
-      <li key={slug}>
+      <li key={path}>
         <Link 
           to={path} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`} 
+          title={isFinal ? `All products in the category ${title}` : `All products and subcategories in ${title}`} 
           data-no-info=""
         >
           <span>{title}</span>
@@ -23,37 +21,42 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     );
   };
 
-  const findCategoryPath = (categoryId: number): React.ReactNode[] => {
+  const findCategoryPath = (categoryId: number): { path: string; title: string }[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    // Recursively find the category path
-    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
+    // Gather path parts
+    const pathParts: { path: string; title: string }[] = [];
 
-    // Find the main category
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
+    // Find main category's slug
+    const mainCategory = mainCategories.find(mainCat => 
+      mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId)
+    );
 
-    // Prepare the list for breadcrumbs
-    const breadcrumbPath = [];
-
-    // If main category exists, add it to the path
+    // Build path starting from main category
     if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
+      const mainPath = `/cat/${mainCategory.slug}`;
+      pathParts.push({ path: mainPath, title: mainCategory.name }); // Main Category
     }
 
-    // Add all ancestors
-    childPath.forEach((subCategory) => {
-      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
-    });
+    // Build ancestor paths
+    const buildPath = (catId: number, parentSlug: string) => {
+      const subCategory = categories.find(cat => cat.id === catId);
+      if (subCategory) {
+        const currentSlug = subCategory.slug;
+        const fullPath = `${parentSlug}/${currentSlug}`;
+        pathParts.push({ path: fullPath, title: subCategory.name }); // Push current subcategory
+        // Continue if there is a parent
+        if (subCategory.parentId) {
+          buildPath(subCategory.parentId, parentSlug);
+        }
+      }
+    };
 
-    // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
-    
-    return breadcrumbPath;
+    buildPath(categoryId, mainCategory.slug); // Starting point of recursive function
+    return pathParts.reverse(); // Reverse the order to go from root to current category
   };
 
-  // Get the breadcrumb path using the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
@@ -66,7 +69,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       </li>
       {categoryPath.map((category, index) => (
         <React.Fragment key={index}>
-          {category}
+          {getCategoryPath(category.path, category.title, index === categoryPath.length - 1)}
           {index < categoryPath.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
         </React.Fragment>
       ))}
