@@ -11,9 +11,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const categorySlug = category.slug;
     const categoryTitle = category.name;
 
-    const path = isFinal 
-      ? `/cat/${mainSlug}/${categorySlug}` 
-      : `/cat/${mainSlug}/${categorySlug}`;
+    // Construct the path correctly with the main category slug
+    const path = `/cat/${mainSlug}/${categorySlug}`.replace(/\/+/g, '/');
 
     return (
       <li key={categorySlug}>
@@ -28,28 +27,29 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     );
   };
 
-  const findCategoryPath = (categoryId: number, slugs: string[] = []): React.ReactNode[] => {
+  const findCategoryPath = (categoryId: number): React.ReactNode[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
-
-    // To handle the relationship with main categories
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId);
     
-    const childPath = findCategoryPath(category.parentId, [...slugs, category.slug]); // Build the slug path recursively
+    // Determine the main category based on parentId
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId) || {};
 
-    // In case there's a main category
-    const mainSlug = mainCategory ? mainCategory.slug : '';
+    // Recursively find the category path
+    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
-    // Create full category path including main category
+    // Include the main category slug as the first item
+    const mainSlug = mainCategory.slug || '';
+
+    // Construct full category path
     const fullPath = [
-      ...childPath, // Path leading to this category
-      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0])
+      ...childPath,
+      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0]),
     ];
 
     return fullPath;
   };
 
-  // Get the breadcrumb path starting from the first category id of the product
+  // Get the breadcrumb path using the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
