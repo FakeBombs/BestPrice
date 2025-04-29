@@ -7,53 +7,50 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
-    const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
-
+  const getCategoryPath = (mainSlug: string, subCategorySlug: string, title: string, isFinal: boolean) => {
+    const path = `/cat/${mainSlug}/${subCategorySlug}`.replace(/\/+/g, '/');
     return (
-      <li key={slug}>
-        <Link 
-          to={path} 
-          title={isFinal ? `All products in the category ${title}` : `All products and subcategories in ${title}`} 
-          data-no-info=""
-        >
+      <li key={subCategorySlug}>
+        <Link to={path} title={isFinal ? `Product page for ${title}` : `Browse ${title}`} data-no-info="">
           <span>{title}</span>
         </Link>
       </li>
     );
   };
 
-  const findCategoryPath = (categoryId: number): React.ReactNode[] => {
+  const findCategoryPath = (categoryId: number): { slug: string; title: string; isMain: boolean }[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    // Recursively find the category path
-    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
+    // Store the path
+    const path: { slug: string; title: string; isMain: boolean }[] = [];
 
     // Find the main category
     const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
 
-    // Prepare the list for breadcrumbs
-    const breadcrumbPath = [];
-
-    // If main category exists, add it to the path
     if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
+      path.push({ slug: mainCategory.slug, title: mainCategory.name, isMain: true });
     }
 
-    // Add all ancestors
-    childPath.forEach((subCategory) => {
-      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
-    });
+    const buildPath = (catId: number, parentSlug: string) => {
+      const subCategory = categories.find(cat => cat.id === catId);
+      if (subCategory) {
+        path.push({ slug: subCategory.slug, title: subCategory.name, isMain: false });
+        // If there's a parent, continue going up the chain
+        if (subCategory.parentId) {
+          const parentMainCategory = categories.find(cat => cat.id === subCategory.parentId);
+          if (parentMainCategory) {
+            buildPath(parentMainCategory.id, `${parentSlug}/${subCategory.slug}`);
+          }
+        }
+      }
+    };
 
-    // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
-    
-    return breadcrumbPath;
+    buildPath(categoryId, mainCategory.slug);
+    return path.reverse(); // Reverse to get the correct order from root to the final category
   };
 
-  // Get the breadcrumb path using the first category id of the product
+  // Get the breadcrumb paths using the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
@@ -64,12 +61,16 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         </Link>
         <span className="trail__breadcrumb-separator">›</span>
       </li>
-      {categoryPath.map((category, index) => (
-        <React.Fragment key={index}>
-          {category}
-          {index < categoryPath.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-        </React.Fragment>
-      ))}
+      {categoryPath.map((category, index) => {
+        const isFinal = index === categoryPath.length - 1;
+        const fullPath = `/cat/${categoryPath.slice(0, index + 1).map(cat => cat.slug).join('/')}`; // Create full path for the link
+        return (
+          <React.Fragment key={index}>
+            {getCategoryPath(category.slug, fullPath, category.title, isFinal)}
+            {index < categoryPath.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+          </React.Fragment>
+        );
+      })}
       <li>
         <span className="trail__breadcrumb-separator">›</span>
         <span className="trail__last truncate max-w-[200px]">{product.title}</span>
