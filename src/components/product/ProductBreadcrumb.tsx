@@ -31,7 +31,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
     // Find the main category
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? 
+        categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
 
     // Prepare the list for breadcrumbs
     const breadcrumbPath = [];
@@ -41,10 +42,10 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
     }
 
-    // Add all ancestors
+    // Add all ancestors with correct slugs
     childPath.forEach((subCategory) => {
       const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCategory.props.children.props.children, subCategory.props.children.props.children, false));
     });
 
     // Add the current category as the last breadcrumb
