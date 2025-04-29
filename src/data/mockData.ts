@@ -121,10 +121,10 @@ export const categories: Category[] = [
   { id: 94, name: 'Ανδρικά Αθλητικά Παπούτσια', slug: 'mens-sports-shoes', parentId: 6, image: '/dist/images/cat/mens-sports-shoes.webp' },
 
   // Subcategories of Μηχανοκίνηση
-  { id: 95, name: 'Αυτοκίνητο', slug: 'car', parentId: 7, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3209_SX400Y400/1472474823/auto-products.webp' },
-  { id: 96, name: 'Μοτοσυκλέτα', slug: 'motorcycle', parentId: 7, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3210_SX400Y400/1472474823/moto-products.webp' },
-  { id: 97, name: 'Σκάφος', slug: 'boat', parentId: 7, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3211_SX400Y400/1472474823/boat-equipment.webp' },
-  { id: 98, name: 'Είδη Φορτηγού', slug: 'truck-items', parentId: 7, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6018_SX400Y400/1472474824/truck-accessories.webp' },
+  { id: 95, name: 'Αυτοκίνητο', slug: 'auto-products', parentId: 7, image: '/dist/images/cat/auto-products.webp' },
+  { id: 96, name: 'Μοτοσυκλέτα', slug: 'moto-products', parentId: 7, image: '/dist/images/cat/moto-products.webp' },
+  { id: 97, name: 'Σκάφος', slug: 'boat-equipment', parentId: 7, image: '/dist/images/cat/boat-equipment.webp' },
+  { id: 98, name: 'Είδη Φορτηγού', slug: 'truck-accessories', parentId: 7, image: '/dist/images/cat/truck-accessories.webp' },
 
   // Subcategories of Κινητή Τηλεφωνία of Main Category Τεχνολογία
   { id: 99, name: 'Κινητά', slug: 'mobiles', parentId: 10, image: 'https://abpcdn.pstatic.gr/P/bpimg128/806_SX400Y400/1629455538/mobile-phones.webp' },
