@@ -7,11 +7,13 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (category: any, slugs: string[], isFinal: boolean) => {
+  const getCategoryPath = (mainSlug: string, category: any, isFinal: boolean) => {
     const categorySlug = category.slug;
     const categoryTitle = category.name;
 
-    const path = `/cat/${slugs.join('/')}/${categorySlug}`.replace(/\/+/g, '/');
+    const path = isFinal 
+      ? `/cat/${mainSlug}/${categorySlug}` 
+      : `/cat/${mainSlug}/${categorySlug}`;
 
     return (
       <li key={categorySlug}>
@@ -33,17 +35,21 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     // To handle the relationship with main categories
     const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId);
     
-    const path = findCategoryPath(category.parentId, [...slugs, category.slug]); // Build the slug path recursively
+    const childPath = findCategoryPath(category.parentId, [...slugs, category.slug]); // Build the slug path recursively
 
-    // If there's a main category, add it at the start
-    if (mainCategory) {
-      path.unshift(getCategoryPath(mainCategory, [], false)); // Add main category, mark as not final
-    }
+    // In case there's a main category
+    const mainSlug = mainCategory ? mainCategory.slug : '';
 
-    return [...path, getCategoryPath(category, slugs, categoryId === product.categoryIds[0])]; // Add current category path
+    // Create full category path including main category
+    const fullPath = [
+      ...childPath, // Path leading to this category
+      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0])
+    ];
+
+    return fullPath;
   };
 
-  // Assuming product has categoryIds and we want the first one for the breadcrumb
+  // Get the breadcrumb path starting from the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
