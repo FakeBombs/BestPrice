@@ -7,14 +7,13 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
-    const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
-
+  const getCategoryPath = (slug: string, title: string, isFinal: boolean): JSX.Element => {
+    const path = slug ? `/cat/${slug}` : '';
     return (
       <li key={slug}>
         <Link 
           to={path} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`} 
+          title={isFinal ? `All products in the category ${title}` : `All products and subcategories in ${title}`} 
           data-no-info=""
         >
           <span>{title}</span>
@@ -23,37 +22,29 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     );
   };
 
-  const findCategoryPath = (categoryId: number): React.ReactNode[] => {
+  const findCategoryPath = (categoryId: number): { slug: string; title: string }[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    // Recursively find the category path
-    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
+    const pathParts: { slug: string; title: string }[] = [];
 
-    // Find the main category
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
+    // Find the ancestors
+    const traverseCategories = (catId: number) => {
+      const currentCategory = categories.find(cat => cat.id === catId);
+      if (currentCategory) {
+        pathParts.unshift({ slug: currentCategory.slug, title: currentCategory.name });
+        if (currentCategory.parentId) {
+          traverseCategories(currentCategory.parentId);
+        }
+      }
+    };
 
-    // Prepare the list for breadcrumbs
-    const breadcrumbPath = [];
-
-    // If main category exists, add it to the path
-    if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
-    }
-
-    // Add all ancestors
-    childPath.forEach((subCategory) => {
-      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
-    });
-
-    // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
+    // Begin traversing from the product's category
+    traverseCategories(categoryId);
     
-    return breadcrumbPath;
+    return pathParts;
   };
 
-  // Get the breadcrumb path using the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
@@ -66,7 +57,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       </li>
       {categoryPath.map((category, index) => (
         <React.Fragment key={index}>
-          {category}
+          {getCategoryPath(category.slug, category.title, index === categoryPath.length - 1)}
           {index < categoryPath.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
         </React.Fragment>
       ))}
