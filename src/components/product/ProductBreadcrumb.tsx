@@ -7,35 +7,28 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (category: any, isFinal: boolean) => {
+  const getCategoryPath = (category: any, slugs: string[]) => {
     const categorySlug = category.slug;
     const categoryTitle = category.name;
 
+    const path = `/cat/${slugs.join('/')}/${categorySlug}`.replace(/\/+/g, '/');
+
     return (
       <li key={categorySlug}>
-        <Link to={`/cat/${category.id}/${categorySlug}`} title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info="">
+        <Link to={path} title={`Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info="">
           <span>{categoryTitle}</span>
         </Link>
       </li>
     );
   };
 
-  const findCategoryPath = (categoryId: number) => {
+  const findCategoryPath = (categoryId: number, slugs: string[] = []) => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    const path = findCategoryPath(category.parentId); // Recursive call to get all parent categories
+    const path = findCategoryPath(category.parentId, [...slugs, category.slug]); // Build the slug path recursively
 
-    // After getting parents, we need to check for main categories
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId);
-    if (mainCategory) {
-      path.unshift(getCategoryPath(mainCategory, false)); // Add main category first if it exists
-    }
-    
-    // Push the current category to the path
-    path.push(getCategoryPath(category, true)); // Mark the last category as final
-
-    return path;
+    return [...path, getCategoryPath(category, slugs)]; // Add current category path
   };
 
   // Assuming product has categoryIds and we want the first one for the breadcrumb
