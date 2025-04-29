@@ -18,7 +18,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       <li key={categorySlug}>
         <Link 
           to={path} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} 
+          title={isFinal ? `All products in the category ${categoryTitle}` : `All products and subcategories in ${categoryTitle}`} 
           data-no-info=""
         >
           <span>{categoryTitle}</span>
@@ -30,19 +30,20 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   const findCategoryPath = (categoryId: number): React.ReactNode[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
-    
-    // Determine the main category based on parentId
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId) || {};
 
     // Recursively find the category path
     const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
-    // Include the main category slug as the first item
-    const mainSlug = mainCategory.slug || '';
+    // Find the main category based on the current category's parent chain
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId) || 
+                         (childPath.length > 0 && mainCategories.find(mainCat => mainCat.id === categories.find(cat => cat.slug === childPath[0].key).parentId));
 
-    // Construct full category path
+    // If main category is found and is at the top of the hierarchy, include it in the path
+    const mainSlug = mainCategory ? mainCategory.slug : '';
+
+    // Construct full category path, ensuring the main category is included first
     const fullPath = [
-      ...childPath,
+      ...(childPath.length ? [getCategoryPath(mainSlug, categories.find(cat => cat.id === category.parentId)!, false)] : []), // Add main category if parent exists
       getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0]),
     ];
 
