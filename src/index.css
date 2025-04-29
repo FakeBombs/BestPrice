@@ -1404,3 +1404,179 @@ html {scroll-behavior: smooth}
         transform: translateZ(0)
     }
 }
+
+.h-content__posts {
+    display: flex;
+    width: 100%
+}
+.h-content__post {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.02);
+    color: inherit;
+    flex: none;
+    margin-right: 1rem;
+    padding: 0!important;
+    position: relative;
+    text-decoration: none;
+    text-decoration: none!important;
+    transition: all .25s ease-in-out;
+    transition-property: border,box-shadow;
+    width: calc(58.82353% - .41176rem)
+}
+[data-theme=dark] .h-content__post {
+    background: #26282c;
+    border: 0;
+    box-shadow: inset 0 0 0 1px #26282c;
+    transition: all .18s ease-in-out
+}
+.h-content__post[href] {color: inherit}
+@media (hover: hover) {
+    .h-content__post[href]:hover {
+        border-color:#c3c4c7;
+        text-decoration: none
+    }
+
+    [data-theme=dark] .h-content__post[href]:hover {
+        border: 0;
+        border-color: transparent;
+        box-shadow: inset 0 0 0 1px #444
+    }
+}
+.h-content__post:last-child {margin-right: 0}
+@media only screen and (min-width: 20em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(55.55556% - .44444rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 23em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(52.63158% - .47368rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 25.8em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(44.44444% - .55556rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 35.5em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(35.71429% - .64286rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 48em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(31.25% - .6875rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 64em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(23.80952% - .7619rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 80em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1rem;
+        padding: 0!important;
+        width: calc(16.66667% - .83333rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+@media only screen and (min-width: 120em) {
+    .h-content__post {
+        flex:none;
+        margin-right: 1.5rem;
+        padding: 0!important;
+        width: calc(16.66667% - 1.25rem)
+    }
+
+    .h-content__post:last-child {
+        margin-right: 0
+    }
+}
+.h-content__cover {
+    background-position: 50%;
+    background-size: cover;
+    border-radius: 6px 6px 0 0;
+    height: 10rem;
+    left: -1px;
+    position: relative;
+    top: -1px;
+    width: 100%;
+    width: calc(100% + 2px)
+}
+.h-content__meta {padding: 1.5rem}
+.h-content__meta h4 {
+    font-weight: 400;
+    line-height: 1.3;
+    margin: 0
+}
+.h-content__badge {
+    background: #fff;
+    border-radius: 4px;
+    color: #555;
+    font-size: .85rem;
+    font-variant-numeric: tabular-nums;
+    left: 10px;
+    padding: .4rem .5rem;
+    position: absolute;
+    top: 10px;
+    -webkit-user-select: none;
+    user-select: none;
+    z-index: 2
+}
+.h-content__title {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical
+}
