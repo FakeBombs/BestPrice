@@ -7,7 +7,7 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (category: any, slugs: string[]) => {
+  const getCategoryPath = (category: any, slugs: string[], isFinal: boolean) => {
     const categorySlug = category.slug;
     const categoryTitle = category.name;
 
@@ -15,20 +15,32 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
 
     return (
       <li key={categorySlug}>
-        <Link to={path} title={`Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} data-no-info="">
+        <Link 
+          to={path} 
+          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${categoryTitle}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${categoryTitle}`} 
+          data-no-info=""
+        >
           <span>{categoryTitle}</span>
         </Link>
       </li>
     );
   };
 
-  const findCategoryPath = (categoryId: number, slugs: string[] = []) => {
+  const findCategoryPath = (categoryId: number, slugs: string[] = []): React.ReactNode[] => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
+    // To handle the relationship with main categories
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === category.parentId);
+    
     const path = findCategoryPath(category.parentId, [...slugs, category.slug]); // Build the slug path recursively
 
-    return [...path, getCategoryPath(category, slugs)]; // Add current category path
+    // If there's a main category, add it at the start
+    if (mainCategory) {
+      path.unshift(getCategoryPath(mainCategory, [], false)); // Add main category, mark as not final
+    }
+
+    return [...path, getCategoryPath(category, slugs, categoryId === product.categoryIds[0])]; // Add current category path
   };
 
   // Assuming product has categoryIds and we want the first one for the breadcrumb
