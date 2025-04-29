@@ -291,15 +291,13 @@ const Index = () => {
                 <Link to="/blog?bpref=home-content-more" className="h-header__more"><span className="h-header__more-label">Περισσότερα άρθρα</span><svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-right-20"></use></svg></Link>
               </div>
               <div className="h-content__placeholder" data-intersected="">
-                <div className="scroll scroll--no-scrolling">
-                  <div className="scroll__clip" style={{overflow: "hidden"}}>
-                    <div className="scroll__scroller">
+                <ScrollableSlider>
                       <div className="scroll__content">
                         <div className="h-content__posts scroll__child">
-                          <Link target="_blank" className="h-content__post" to="/blog/292/protaseis-pasxalines-lampades-paidikes?bpref=home-content">
+                          <Link target="_blank" className="h-content__post" to="/blog/542/ta-kinhta-me-thn-kalyterh-kamera?bpref=home-content">
                             <div className="h-content__badge">Νέο</div>
-                            <div className="h-content__cover"><img src="//bbpcdn.pstatic.gr/bpimg130/blog2902_SX640/1709715959/image.webp"/></div>
-                            <div className="h-content__meta"><h4 className="h-content__title">Πάσχα 2025: Προτάσεις για αγορά λαμπάδας</h4></div>
+                            <div className="h-content__cover"><img src="//bbpcdn.pstatic.gr/bpimg130/blog2973_SX640/1720707149/image.webp"/></div>
+                            <div className="h-content__meta"><h4 className="h-content__title">Τα κινητά με την καλύτερη κάμερα (2025)</h4></div>
                           </Link>
                           <Link target="_blank" className="h-content__post" to="/blog/762/kalytera-android-kinhta?bpref=home-content">
                             <div className="h-content__badge">Νέο</div>
@@ -324,9 +322,7 @@ const Index = () => {
                           </Link>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
+                </ScrollableSlider>
               </div>
               <Link className="h-button--more-mobile button button--outline" to="/blog?bpref=home-content-more">Περισσότερα άρθρα <svg aria-hidden="true" className="icon" width="8" height="8"><use href="/dist/images/icons/icons.svg#icon-right-8"></use></svg></Link>
             </div>
