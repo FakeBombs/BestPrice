@@ -27,29 +27,29 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     const category = categories.find(cat => cat.id === categoryId);
     if (!category) return [];
 
-    const breadcrumbPath: React.ReactNode[] = [];
+    // Recursively find the category path
+    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
-    // Recursively find all parent categories
-    const getParentCategories = (catId: number) => {
-      const cat = categories.find(c => c.id === catId);
-      if (!cat) return;
-      // Get parent category recursively
-      if (cat.parentId) {
-        getParentCategories(cat.parentId);
-      }
-      // Ensuring we get the main category slug 
-      const mainCategory = mainCategories.find(mainCat => mainCat.id === (cat.parentId ? 
-        categories.find(c => c.id === cat.parentId)?.parentId : cat.parentId));
-      if (mainCategory) {
-        breadcrumbPath.push(getCategoryPath(mainCategory.slug, cat.slug, cat.name, false));
-      }
-    };
+    // Find the main category
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
 
-    getParentCategories(categoryId);
+    // Prepare the list for breadcrumbs
+    const breadcrumbPath = [];
+
+    // If main category exists, add it to the path
+    if (mainCategory) {
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
+    }
+
+    // Add all ancestors
+    childPath.forEach((subCategory) => {
+      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
+    });
 
     // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(category.slug, category.slug, category.name, true));
-
+    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
+    
     return breadcrumbPath;
   };
 
