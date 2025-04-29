@@ -14,7 +14,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       <li key={slug}>
         <Link 
           to={path} 
-          title={isFinal ? `All products in the category ${title}` : `All products and subcategories in ${title}`} 
+          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`} 
           data-no-info=""
         >
           <span>{title}</span>
