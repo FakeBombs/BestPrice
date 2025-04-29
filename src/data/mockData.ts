@@ -177,12 +177,12 @@ export const categories: Category[] = [
   { id: 144, name: 'Αδιάβροχες Θήκες Κινητών', slug: 'waterproof-mobile-cases', parentId: 101, image: '/dist/images/cat/waterproof-mobile-cases.webp' },
   
   //Subcategories of Καλώδια Φόρτισης, Μεταφοράς Δεδομένων (Charging and Data Transfer Cables)
-  { id: 145, name: 'Καλώδια USB Type-C', slug: 'usb-type-c-cables', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8854_SX400Y400/1714383272/kalodia-usb-type-c.webp' },
-  { id: 146, name: 'Καλώδια Lightning', slug: 'lightning-cables', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8855_SX400Y400/1714381743/kalodia-lightning.webp' },
-  { id: 147, name: 'Καλώδια micro USB', slug: 'micro-usb-cables', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8856_SX400Y400/1714382762/kalodia-micro-usb.webp' },
-  { id: 148, name: 'Καλώδια Multi Port', slug: 'multi-port-cables', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8857_SX400Y400/1714384923/kalodia-multi-port.webp' },
-  { id: 149, name: 'Καλώδια 30-Pin', slug: '30-pin-cables', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8858_SX400Y400/1714382229/kalodia-30-pin.webp' },
-  { id: 150, name: 'Αντάπτορες, Προεκτάσεις Κινητών', slug: 'mobile-adapters-extensions', parentId: 111, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8867_SX400Y400/1714385821/antaptores-proektaseis-kiniton.webp' },
+  { id: 145, name: 'Καλώδια USB Type-C', slug: 'usb-type-c-cables', parentId: 111, image: '/dist/images/cat/usb-type-c-cables.webp' },
+  { id: 146, name: 'Καλώδια Lightning', slug: 'lightning-cables', parentId: 111, image: '/dist/images/cat/lightning-cables.webp' },
+  { id: 147, name: 'Καλώδια micro USB', slug: 'micro-usb-cables', parentId: 111, image: '/dist/images/cat/micro-usb-cables.webp' },
+  { id: 148, name: 'Καλώδια Multi Port', slug: 'multi-port-cables', parentId: 111, image: '/dist/images/cat/multi-port-cables.webp' },
+  { id: 149, name: 'Καλώδια 30-Pin', slug: '30-pin-cables', parentId: 111, image: '/dist/images/cat/30-pin-cables.webp' },
+  { id: 150, name: 'Αντάπτορες, Προεκτάσεις Κινητών', slug: 'mobile-adapters-extensions', parentId: 111, image: '/dist/images/cat/mobile-adapters-extensions.webp' },
   
   //Subcategories of Ανταλλακτικά Κινητών (Mobile Spare Parts)
   { id: 151, name: 'Οθόνες Κινητών', slug: 'mobile-screens', parentId: 113, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6710_SX400Y400/1477059091/othones-kinitwn.webp' },
