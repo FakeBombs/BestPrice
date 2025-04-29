@@ -115,9 +115,7 @@ const CategoryPage: React.FC = () => {
   // Add the main category link if there's a current category with a parent
   if (!(currentCategory && !currentCategory.parentId)) {
     breadcrumbs.push(
-      <li key={mainCategory.slug}>
-        <Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link>
-      </li>
+      <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
     );
   }
 
@@ -136,9 +134,7 @@ const CategoryPage: React.FC = () => {
   categoryTrail.forEach((cat, index) => {
     if (index !== categoryTrail.length - 1) { // Exclude current category
       breadcrumbs.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link>
-        </li>
+        <li key={cat.slug}><Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link></li>
       );
     }
   });
@@ -149,9 +145,7 @@ const CategoryPage: React.FC = () => {
       <nav className="breadcrumb">
         <ol>
           <li>
-            <Link to="/" rel="home">
-              <span>BestPrice</span>
-            </Link>
+            <Link to="/" rel="home"><span>BestPrice</span></Link>
             {/* Only show the separator if there are additional breadcrumbs */}
             {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
           </li>
@@ -174,11 +168,7 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <Link className="trail__back pressable" title="BestPrice" to="/">
-                <svg aria-hidden="true" className="icon" width={16} height={16}>
-                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                </svg>
-              </Link>
+              <Link className="trail__back pressable" title="BestPrice" to="/"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg></Link>
               <h1>{currentCategory?.name}</h1>
             </div>
           </div>
@@ -248,11 +238,7 @@ const CategoryPage: React.FC = () => {
             <div className="page-header">
                 <div className="hgroup">
                     <div className="page-header__title-wrapper">
-                        <Link className="trail__back pressable" title={mainCategory.name} to={`/cat/${mainCategory.slug}`}>
-                            <svg aria-hidden="true" className="icon" width={16} height={16}>
-                                <use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use>
-                            </svg>
-                        </Link>
+                        <Link className="trail__back pressable" title={mainCategory.name} to={`/cat/${mainCategory.slug}`}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg></Link>
                         <h1>{currentCategory.name}</h1>
                     </div>
                 </div>
