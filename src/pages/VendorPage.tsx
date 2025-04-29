@@ -217,7 +217,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                     </span>
                                                 </li>
                                                 <li data-type="address">
-                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}.html#merchant-map`}>
+                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}#merchant-map`}>
                                                         <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
                                                         <span className="ui-kit__text">{Array.isArray(selectedVendor.address) && selectedVendor.address.length > 0 ? selectedVendor.address[0] : 'No locations available'}</span>
                                                     </a>
