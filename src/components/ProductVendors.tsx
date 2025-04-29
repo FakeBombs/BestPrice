@@ -84,7 +84,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="/to/181077790/samsung-galaxy-a56-5g-dual-sim-awesome-pink.html?from=2160473294&amp;seq=1">
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
                 </a>
-                <a data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid="79" href="/m/79/plaisio.html">
+                <a data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid="79" href={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
                   <svg aria-hidden="true" className="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M0 6C0 9.312 2.688 12 6 12C9.312 12 12 9.312 12 6C12 2.688 9.312 0 6 0C2.688 0 0 2.688 0 6ZM5 10V6H7V10H5ZM5 5V3H7V5H5Z"/></svg>
                   <em>{vendor.name}</em>
                 </a>
@@ -144,8 +144,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
               <div className="prices__buttons">
                 <div className="prices__button">
                   <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" className="button" disabled={!priceInfo.inStock}>
-                    <span>Δες το στο κατάστημα</span>
-                    <svg aria-hidden="true" className="icon" width="12" height="12" viewBox="0 0 12 12" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M3.41 0L2 1.41L6.58 6L2 10.59L3.41 12L9.41 6L3.41 0Z"/></svg>
+                    <span>Δες το στο κατάστημα</span><svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-right-12"></use></svg>
                   </a>
                 </div>
               </div>
