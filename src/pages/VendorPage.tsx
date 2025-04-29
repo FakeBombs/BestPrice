@@ -411,8 +411,8 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-                                    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
+                                    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
+                                    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
                                 </div>
                             </div>
                         </section>
