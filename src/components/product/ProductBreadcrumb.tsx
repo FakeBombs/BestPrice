@@ -7,12 +7,11 @@ interface ProductBreadcrumbProps {
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (mainSlug: string, category: any, isFinal: boolean) => {
+  const getCategoryPath = (slug: string, category: any, isFinal: boolean) => {
     const categorySlug = category.slug;
     const categoryTitle = category.name;
 
-    // Construct the path correctly with the main category slug
-    const path = `/cat/${mainSlug}/${categorySlug}`.replace(/\/+/g, '/');
+    const path = `/cat/${slug}/${categorySlug}`.replace(/\/+/g, '/');
 
     return (
       <li key={categorySlug}>
@@ -34,21 +33,24 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     // Recursively find the category path
     const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
 
-    // Find the main category by climbing up the hierarchy
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId)) || {};
+    // Find the main category
+    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
 
-    // If the main category is found, include its slug
-    const mainSlug = mainCategory.slug || '';
+    // Prepare the list for breadcrumbs
+    const breadcrumbPath = [];
     
-    // Create an array and ensure the main category is the first item
-    const fullPath = [
-      ...childPath, // Add all upstream categories
-      getCategoryPath(mainSlug, category, categoryId === product.categoryIds[0]), // Also add the current category
-    ];
+    // If main category exists, add it to the path
+    if (mainCategory) {
+      breadcrumbPath.push(getCategoryPath(mainCategory.slug, mainCategory, false));
+    }
 
-    // Prepend the main category to the path
-    const mainCategoryPath = getCategoryPath(mainSlug, mainCategory, false);
-    return [mainCategoryPath, ...fullPath]; // Return with the main category as the first item
+    // Add all ancestors (if any)
+    breadcrumbPath.push(...childPath);
+
+    // Add the current category as the last breadcrumb
+    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category, categoryId === product.categoryIds[0]));
+
+    return breadcrumbPath;
   };
 
   // Get the breadcrumb path using the first category id of the product
