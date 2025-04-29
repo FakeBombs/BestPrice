@@ -93,7 +93,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 <div className="prices__merchant-props">
                   <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}>
                     <span className="rating rating-all" data-total="150">
-                      <svg aria-hidden="true" class="icon" style="clip: rect(0, 4.7em, auto, auto)" width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                      <svg aria-hidden="true" class="icon" style={{ clipPath: 'rect(0, 4.7em, auto, auto)' }} width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                       <svg aria-hidden="true" class="icon" width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                     </span>
                   </Link>
