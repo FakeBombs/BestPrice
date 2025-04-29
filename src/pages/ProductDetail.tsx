@@ -218,7 +218,7 @@ const ProductDetail = () => {
                     <div className="item-price-button__label">Από <strong>${bestPrice.price.toFixed(2)}</strong> σε {product.prices.length} καταστήματα</div>
                     <svg width="17" height="20" viewBox="0 0 17 20" role="img" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
                   </div>
-                  <ProductHighlights specifications={product.specifications} />
+                  <ProductHighlights specifications={product.specifications} product={product} />
                 </div>
                 <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div>
               </div>
