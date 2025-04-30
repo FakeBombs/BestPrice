@@ -86,7 +86,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                       <h2 className="minfo__title">{popupContent.name}</h2>
                       <div className="minfo__header-props" data-id="2614">
                         <div className="simple-rating simple-rating--with-link pressable">
-                          <a className="simple-rating__inner" href="/m/2614/nok-shop/reviews">
+                          <Link className="simple-rating__inner" to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}>
                             <div className="simple-rating__stars">
                               <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                               <div className="simple-rating__rated" style={{ width: '97.1429%' }}>
@@ -94,8 +94,8 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                               </div>
                             </div>
                             <div className="simple-rating__avg">4.9</div>
-                          </a>
-                          <a href="/m/2614/nok-shop/review?src=minfo" className="simple-rating__new">Αξιολόγησέ το</a>
+                          </Link>
+                          <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/review?src=minfo`} className="simple-rating__new">Αξιολόγησέ το</Link>
                         </div>
                         {popupContent.certification && (
                         <div className="minfo__badge-container">
@@ -121,7 +121,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                       </div>
                       <div className="minfo__lists">
                         <div className="minfo__list">
-                          <h3 className="minfo__list-header"><a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</a></h3>
+                          <h3 className="minfo__list-header"><Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}#merchant-shipping-payment`}>ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</Link></h3>
                           <ul>
                             <li className="minfo__yes">Πιστωτική κάρτα<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg></li>
                             <li className="minfo__yes">Αντικαταβολή<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg></li>
@@ -129,7 +129,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                           </ul>
                         </div>
                         <div className="minfo__list">
-                          <h3 className="minfo__list-header"><a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΕΠΙΠΛΕΟΝ ΥΠΗΡΕΣΙΕΣ</a></h3>
+                          <h3 className="minfo__list-header"><Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}#merchant-shipping-payment`}>ΕΠΙΠΛΕΟΝ ΥΠΗΡΕΣΙΕΣ</Link></h3>
                           <ul>
                             <li>Δωρεάν επιστροφή<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
                             <li>Δωροκάρτες<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
@@ -138,7 +138,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                         </div>
                       </div>
                       <div className="minfo__actions">
-                        <a href="/m/2614/nok-shop.html" className="button button--outline">Μάθε περισσότερα</a>
+                        <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}`} className="button button--outline">Μάθε περισσότερα</Link>
                         <a href="https://www.bestprice.gr/to/178853855/xiaomi-g27qi-ips-gaming-monitor-27-qhd-2560x1440-180hz-me-xrono-apokrishs-1ms-gtg.html?ct=5hiVxC-1IRAiO-dM1Bz,fW7D0yGwl9J&from=2160152175&seq=4&bpref=itemPage&vid=fOWCgL2PMiP" rel="nofollow noreferrer noopener" className="button minfo__product-link">Αγόρασε το προϊόν</a>
                       </div>
                     </div>
