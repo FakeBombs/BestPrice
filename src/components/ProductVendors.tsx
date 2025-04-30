@@ -104,8 +104,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                             <div data-certification={popupContent.certification.toLowerCase()} className="minfo__certification-wrapper pressable">Πιστοποίηση: {popupContent.certification}</div>
                           </div>
                         </div>
-                          ) : (
-                        )}
+                          ) : null}
                       </div>
                     </header>
                     <div className="minfo__tabs">
