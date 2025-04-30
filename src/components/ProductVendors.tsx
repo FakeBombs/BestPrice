@@ -73,7 +73,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
       {isPopupVisible && popupContent && (
         <div className="popup-placeholder minfo__popup--placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0px', maxWidth: '98vw', position: 'absolute', top: '0px' }}>
           <div className="popup-flex-center popup-flex-center--top" style={{ zIndex: 2147483571 }}>
-            <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}></div>
+            <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}  onClick={closePopup}></div>
             <div className="minfo__popup popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483571 }}>
               <div className="popup-body">
                 <div role="button" className="close-button__wrapper pressable popup-close" onClick={closePopup}>
