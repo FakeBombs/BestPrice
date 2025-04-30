@@ -72,124 +72,112 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
 
       {isPopupVisible && (
         <div className="popup-placeholder minfo__popup--placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0px', maxWidth: '98vw', position: 'absolute', top: '0px' }}>
-    <div className="popup-flex-center popup-flex-center--top" style={{ zIndex: 2147483571 }}>
-        <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}></div>
-        <div className="minfo__popup popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483571 }}>
-            <div className="popup-body">
+          <div className="popup-flex-center popup-flex-center--top" style={{ zIndex: 2147483571 }}>
+            <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}></div>
+            <div className="minfo__popup popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483571 }}>
+              <div className="popup-body">
                 <div role="button" className="close-button__wrapper pressable popup-close" onClick={closePopup}>
-                    <div className="close-button">
-                        <svg className="icon" aria-hidden="true" width="12" height="12">
-                            <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
-                        </svg>
-                    </div>
+                  <div className="close-button"><svg className="icon" aria-hidden="true" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></div>
                 </div>
                 <div className="minfo minfo--info">
-                    <aside className="minfo__aside">
-                        <div className="minfo__screen" style={{ backgroundImage: "url('//bbpcdn.pstatic.gr/bpimg129/ms_2614_SX500C500x480/1745728733/image.webp')" }}></div>
-                    </aside>
-                    <main className="minfo__main">
-                        <header className="minfo__header">
-                            <h2 className="minfo__title">Nok-Shop</h2>
-                            <div className="minfo__header-props" data-id="2614">
-                                <div className="simple-rating simple-rating--with-link pressable">
-                                    <a className="simple-rating__inner" href="/m/2614/nok-shop/reviews">
-                                        <div className="simple-rating__stars">
-                                            <svg height="16" width="80" className="icon" aria-hidden="true">
-                                                <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
-                                            </svg>
-                                            <div className="simple-rating__rated" style={{ width: '97.1429%' }}>
-                                                <svg height="16" width="80" className="icon" aria-hidden="true">
-                                                    <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div className="simple-rating__avg">4.9</div>
-                                    </a>
-                                    <a href="/m/2614/nok-shop/review?src=minfo" className="simple-rating__new">Αξιολόγησέ το</a>
-                                </div>
-                                <div className="minfo__badge-container">
-                                    <div className="tooltip__anchor minfo__certification">
-                                        <svg className="icon" aria-hidden="true" width="22" height="22">
-                                            <use href="/dist/images/icons/certification.svg#icon-gold-22"></use>
-                                        </svg>
-                                        <div data-certification="gold" className="minfo__certification-wrapper pressable">Πιστοποίηση: Gold</div>
-                                    </div>
-                                </div>
+                  <aside className="minfo__aside"><div className="minfo__screen" style={{ backgroundImage: "url('//bbpcdn.pstatic.gr/bpimg129/ms_2614_SX500C500x480/1745728733/image.webp')" }}></div></aside>
+                  <main className="minfo__main">
+                    <header className="minfo__header">
+                      <h2 className="minfo__title">{vendor.name}</h2>
+                      <div className="minfo__header-props" data-id="2614">
+                        <div className="simple-rating simple-rating--with-link pressable">
+                          <a className="simple-rating__inner" href="/m/2614/nok-shop/reviews">
+                            <div className="simple-rating__stars">
+                              <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                              <div className="simple-rating__rated" style={{ width: '97.1429%' }}>
+                                <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                              </div>
                             </div>
-                        </header>
-                        <div className="minfo__tabs">
-                            <div className="minfo__tab minfo__tab--info minfo__tab--selected">Πληροφορίες</div>
-                            <div className="minfo__tab minfo__tab--pops">Χάρτης (2)</div>
+                            <div className="simple-rating__avg">4.9</div>
+                          </a>
+                          <a href="/m/2614/nok-shop/review?src=minfo" className="simple-rating__new">Αξιολόγησέ το</a>
                         </div>
-                        <div className="minfo__view minfo__view--info" style={{ height: '348px' }}>
-                            <div className="minfo__buttons">
-                                <div className="minfo__button pressable">
-                                    <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true">
-                                        <use href="/dist/images/icons/icons.svg#icon-pin-14"></use>
-                                    </svg>
-                                    <div className="minfo__button-label">Εθνάρχου Μακαρίου 32, Περιστέρι</div>
-                                </div>
-                                <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
-                            </div>
-                            <div className="minfo__lists">
-                                <div className="minfo__list">
-                                    <h3 className="minfo__list-header">
-                                        <a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</a>
-                                    </h3>
-                                    <ul>
-                                        <li className="minfo__yes">Πιστωτική κάρτα
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-full-16"></use>
-                                            </svg>
-                                        </li>
-                                        <li className="minfo__yes">Αντικαταβολή
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-full-16"></use>
-                                            </svg>
-                                        </li>
-                                        <li>PayPal
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
-                                            </svg>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="minfo__list">
-                                    <h3 className="minfo__list-header">
-                                        <a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΕΠΙΠΛΕΟΝ ΥΠΗΡΕΣΙΕΣ</a>
-                                    </h3>
-                                    <ul>
-                                        <li>Δωρεάν επιστροφή
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
-                                            </svg>
-                                        </li>
-                                        <li>Δωροκάρτες
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
-                                            </svg>
-                                        </li>
-                                        <li>Συλλογή πόντων
-                                            <svg className="icon" aria-hidden="true" width="16" height="16">
-                                                <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
-                                            </svg>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="minfo__actions">
-                                <a href="/m/2614/nok-shop.html" className="button button--outline">Μάθε περισσότερα</a>
-                                <a href="https://www.bestprice.gr/to/178853855/xiaomi-g27qi-ips-gaming-monitor-27-qhd-2560x1440-180hz-me-xrono-apokrishs-1ms-gtg.html?ct=5hiVxC-1IRAiO-dM1Bz,fW7D0yGwl9J&from=2160152175&seq=4&bpref=itemPage&vid=fOWCgL2PMiP" rel="nofollow noreferrer noopener" className="button minfo__product-link">Αγόρασε το προϊόν</a>
-                            </div>
+                        <div className="minfo__badge-container">
+                          <div className="tooltip__anchor minfo__certification">
+                            <svg className="icon" aria-hidden="true" width="22" height="22"><use href="/dist/images/icons/certification.svg#icon-gold-22"></use></svg>
+                            <div data-certification="gold" className="minfo__certification-wrapper pressable">Πιστοποίηση: Gold</div>
+                          </div>
                         </div>
-                        <div hidden className="minfo__view minfo__view--pops" style={{ height: '348px' }}>
-                            <div className="minfo__map"></div>
-                        </div>
-                    </main>
-                </div>
+                      </div>
+                    </header>
+            <div className="minfo__tabs">
+              <div className="minfo__tab minfo__tab--info minfo__tab--selected">Πληροφορίες</div>
+              <div className="minfo__tab minfo__tab--pops">Χάρτης (2)</div>
             </div>
+            <div className="minfo__view minfo__view--info" style={{ height: '348px' }}>
+              <div className="minfo__buttons">
+                <div className="minfo__button pressable">
+                  <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true">
+                    <use href="/dist/images/icons/icons.svg#icon-pin-14"></use>
+                  </svg>
+                  <div className="minfo__button-label">Εθνάρχου Μακαρίου 32, Περιστέρι</div>
+                </div>
+                <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
+              </div>
+              <div className="minfo__lists">
+                <div className="minfo__list">
+                  <h3 className="minfo__list-header">
+                    <a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</a>
+                  </h3>
+                  <ul>
+                    <li className="minfo__yes">Πιστωτική κάρτα
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-full-16"></use>
+                      </svg>
+                    </li>
+                    <li className="minfo__yes">Αντικαταβολή
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-full-16"></use>
+                      </svg>
+                    </li>
+                    <li>PayPal
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
+                      </svg>
+                    </li>
+                  </ul>
+                </div>
+                <div className="minfo__list">
+                  <h3 className="minfo__list-header">
+                    <a href="/m/2614/nok-shop.html#merchant-shipping-payment">ΕΠΙΠΛΕΟΝ ΥΠΗΡΕΣΙΕΣ</a>
+                  </h3>
+                  <ul>
+                    <li>Δωρεάν επιστροφή
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
+                      </svg>
+                    </li>
+                    <li>Δωροκάρτες
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
+                      </svg>
+                    </li>
+                    <li>Συλλογή πόντων
+                      <svg className="icon" aria-hidden="true" width="16" height="16">
+                        <use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use>
+                      </svg>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="minfo__actions">
+                <a href="/m/2614/nok-shop.html" className="button button--outline">Μάθε περισσότερα</a>
+                <a href="https://www.bestprice.gr/to/178853855/xiaomi-g27qi-ips-gaming-monitor-27-qhd-2560x1440-180hz-me-xrono-apokrishs-1ms-gtg.html?ct=5hiVxC-1IRAiO-dM1Bz,fW7D0yGwl9J&from=2160152175&seq=4&bpref=itemPage&vid=fOWCgL2PMiP" rel="nofollow noreferrer noopener" className="button minfo__product-link">Αγόρασε το προϊόν</a>
+              </div>
+            </div>
+            <div hidden className="minfo__view minfo__view--pops" style={{ height: '348px' }}>
+              <div className="minfo__map"></div>
+            </div>
+          </main>
         </div>
+      </div>
     </div>
+  </div>
 </div>
       )}
       
