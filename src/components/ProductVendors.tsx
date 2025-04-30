@@ -15,6 +15,19 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
   // Sort prices from lowest to highest
   const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
 
+  // State to control popup visibility
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  // Function to open the popup
+  const openPopup = () => {
+    setIsPopupVisible(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+    setIsPopupVisible(false);
+  };
+
   return (
     <div className="mt-6">
       <header class="section__header">
@@ -71,19 +84,6 @@ interface VendorPriceCardProps {
 const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
   const vendor = getVendorById(priceInfo.vendorId);
   const vendorAddress = Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
-
-  // State to control popup visibility
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-
-  // Function to open the popup
-  const openPopup = () => {
-    setIsPopupVisible(true);
-  };
-
-  // Function to close the popup
-  const closePopup = () => {
-    setIsPopupVisible(false);
-  };
   
   if (!vendor) return null;
   
