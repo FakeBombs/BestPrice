@@ -239,15 +239,15 @@ export const categories: Category[] = [
   { id: 196, name: 'Κάρτες Τηλεόρασης, Video', slug: 'tv-cards', parentId: 170, image: '/dist/images/cat/tv-cards.webp' },
 
   // Subcategories of Δικτυακά of a Subcategory Υπολογιστές of Main Category Τεχνολογία
-  { id: 197, name: 'WiFi Extenders', slug: 'wifi-extenders', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8318_SX400Y400/1629455541/wifi-extenders.webp' },
-  { id: 198, name: 'Routers', slug: 'routers', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2627_SX400Y400/1629455497/routers.webp' },
-  { id: 199, name: 'Access Points', slug: 'access-points', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2630_SX400Y400/1629455497/access-points.webp' },
-  { id: 200, name: 'USB Adapters Δικτύου', slug: 'usb-network-adapters', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7071_SX400Y400/1485272372/usb-adapters-diktyou.webp' },
-  { id: 201, name: 'Powerline', slug: 'powerline', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2631_SX400Y400/1629455497/powerline.webp' },
-  { id: 202, name: 'Καλώδια Δικτύου', slug: 'network-cables', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2636_SX400Y400/1629455497/kalodia-diktyou.webp' },
-  { id: 203, name: 'Κάρτες Δικτύου', slug: 'network-cards', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2628_SX400Y400/1629455497/kartes-diktyou.webp' },
-  { id: 204, name: 'Κεραίες WiFi', slug: 'wifi-antennas', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2635_SX400Y400/1629455497/keraies-wifi.webp' },
-  { id: 205, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3045_SX400Y400/1629455499/bluetooth-adapters.webp' },
+  { id: 197, name: 'WiFi Extenders', slug: 'wifi-extenders', parentId: 171, image: '/dist/images/cat/wifi-extenders.webp' },
+  { id: 198, name: 'Routers', slug: 'routers', parentId: 171, image: '/dist/images/cat/routers.webp' },
+  { id: 199, name: 'Access Points', slug: 'access-points', parentId: 171, image: '/dist/images/cat/access-points.webp' },
+  { id: 200, name: 'USB Adapters Δικτύου', slug: 'usb-network-adapters', parentId: 171, image: '/dist/images/cat/usb-network-adapters.webp' },
+  { id: 201, name: 'Powerline', slug: 'powerline', parentId: 171, image: '/dist/images/cat/powerline.webp' },
+  { id: 202, name: 'Καλώδια Δικτύου', slug: 'network-cables', parentId: 171, image: '/dist/images/cat/network-cables.webp' },
+  { id: 203, name: 'Κάρτες Δικτύου', slug: 'network-cards', parentId: 171, image: '/dist/images/cat/network-cards.webp' },
+  { id: 204, name: 'Κεραίες WiFi', slug: 'wifi-antennas', parentId: 171, image: '/dist/images/cat/wifi-antennas.webp' },
+  { id: 205, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 171, image: '/dist/images/cat/bluetooth-adapter.webp' },
 
   // Subcategories of Desktops & Servers of a Subcategory Υπολογιστές of Main Category Τεχνολογία
   { id: 206, name: 'Desktop PC', slug: 'desktop-pc', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2589_SX400Y400/1629455497/desktop-pc.webp' },
