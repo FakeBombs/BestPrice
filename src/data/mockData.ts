@@ -320,16 +320,16 @@ export const categories: Category[] = [
   { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-stick', parentId: 243, image: '/dist/images/cat/smart-tv-stick.webp' },
 
   // Subcategories of Δορυφορική, Cable & DVB-T of a Subcategory Εικόνα of Main Category Τεχνολογία
-  { id: 260, name: 'Ψηφιακοί Δέκτες Mpeg-4', slug: 'digital-receivers-mpeg4', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3267_SX400Y400/1476270386/psifiakoi-dektes-mpeg4.webp' },
-  { id: 261, name: 'Δορυφορικοί Αποκωδικοποιητές', slug: 'satellite-decoders', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8949_SX400Y400/1722611560/doriforikoi-apokodikopoiites.webp' },
-  { id: 262, name: 'Επίγειες Κεραίες', slug: 'terrestrial-antennas', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/731_SX400Y400/1476270386/epigeies-keraies.webp' },
-  { id: 263, name: 'Ενισχυτές Κεραιών Τηλεοράσεων', slug: 'tv-antenna-amplifiers', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6361_SX400Y400/1476270386/enisxytes-keraiwn-thleorasewn.webp' },
-  { id: 264, name: 'Δορυφορικά Πιάτα, Αξεσουάρ', slug: 'satellite-dishes-accessories', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3268_SX400Y400/1476270386/doryforika-piata.webp' },
-  { id: 265, name: 'LNBs', slug: 'lnbs', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3274_SX400Y400/1476270386/lnbs.webp' },
-  { id: 266, name: 'Καλώδια, Βύσματα', slug: 'cables-connectors', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3273_SX400Y400/1476270386/cables.webp' },
-  { id: 267, name: 'Diseqc', slug: 'diseqc', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3275_SX400Y400/1476270386/diseqc.webp' },
-  { id: 268, name: 'Μίκτες, Πολυδιακόπτες, Διακλαδωτές', slug: 'mixers-multiswitches-splitters', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3277_SX400Y400/1476270386/miktes-polydiakoptes-diakladotes.webp' },
-  { id: 269, name: 'Αξεσουάρ Συστημάτων Λήψης', slug: 'reception-system-accessories', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3279_SX400Y400/1476270387/aksesouar-systhmatwn-lipsis.webp' },
+  { id: 260, name: 'Ψηφιακοί Δέκτες Mpeg-4', slug: 'digital-receivers-mpeg4', parentId: 245, image: '/dist/images/cat/digital-receivers-mpeg4.webp' },
+  { id: 261, name: 'Δορυφορικοί Αποκωδικοποιητές', slug: 'satellite-decoders', parentId: 245, image: '/dist/images/cat/satellite-decoders.webp' },
+  { id: 262, name: 'Επίγειες Κεραίες', slug: 'terrestrial-antennas', parentId: 245, image: '/dist/images/cat/terrestrial-antennas.webp' },
+  { id: 263, name: 'Ενισχυτές Κεραιών Τηλεοράσεων', slug: 'tv-antenna-amplifiers', parentId: 245, image: '/dist/images/cat/tv-antenna-amplifiers.webp' },
+  { id: 264, name: 'Δορυφορικά Πιάτα, Αξεσουάρ', slug: 'satellite-dishes-accessories', parentId: 245, image: '/dist/images/cat/satellite-dishes-accessories.webp' },
+  { id: 265, name: 'LNBs', slug: 'lnbs', parentId: 245, image: '/dist/images/cat/lnbs.webp' },
+  { id: 266, name: 'Καλώδια, Βύσματα', slug: 'cables-connectors', parentId: 245, image: '/dist/images/cat/cables-connectors.webp' },
+  { id: 267, name: 'Diseqc', slug: 'diseqc', parentId: 245, image: '/dist/images/cat/diseqc.webp' },
+  { id: 268, name: 'Μίκτες, Πολυδιακόπτες, Διακλαδωτές', slug: 'mixers-multiswitches-splitters', parentId: 245, image: '/dist/images/cat/mixers-multiswitches-splitters.webp' },
+  { id: 269, name: 'Αξεσουάρ Συστημάτων Λήψης', slug: 'reception-system-accessories', parentId: 245, image: '/dist/images/cat/reception-system-accessories.webp' },
 
 
 
