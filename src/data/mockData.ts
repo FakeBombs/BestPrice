@@ -264,12 +264,12 @@ export const categories: Category[] = [
   { id: 215, name: 'Public Displays', slug: 'public-displays', parentId: 173, image: '/dist/images/cat/public-displays.webp' },
 
   // Subcategories of Software of a Subcategory Υπολογιστές of Main Category Τεχνολογία
-  { id: 216, name: 'Antivirus, Security', slug: 'antivirus-security', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2639_SX400Y400/1500371799/antivirus-security.webp' },
-  { id: 217, name: 'Εφαρμογές Γραφείου', slug: 'office-applications', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2642_SX400Y400/1500371799/office-software.webp' },
-  { id: 218, name: 'Λειτουργικά Συστήματα', slug: 'operating-systems', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2638_SX400Y400/1500371799/leitoyrgika-systhmata.webp' },
-  { id: 219, name: 'Εφαρμογές Software', slug: 'software-applications', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2645_SX400Y400/1500371799/software-center.webp' },
-  { id: 220, name: 'Επεξεργασία Εικόνας - Ήχου', slug: 'image-sound-editing', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2643_SX400Y400/1500371799/multimedia-software.webp' },
-  { id: 221, name: 'Εμπορική Διαχείριση', slug: 'commercial-management', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3412_SX400Y400/1500371799/software-emporikis-diaxeirisis.webp' },
+  { id: 216, name: 'Antivirus, Security', slug: 'antivirus-security', parentId: 174, image: '/dist/images/cat/antivirus-security.webp' },
+  { id: 217, name: 'Εφαρμογές Γραφείου', slug: 'office-applications', parentId: 174, image: '/dist/images/cat/office-applications.webp' },
+  { id: 218, name: 'Λειτουργικά Συστήματα', slug: 'operating-systems', parentId: 174, image: '/dist/images/cat/operating-systems.webp' },
+  { id: 219, name: 'Εφαρμογές Software', slug: 'software-applications', parentId: 174, image: '/dist/images/cat/software-applications.webp' },
+  { id: 220, name: 'Επεξεργασία Εικόνας - Ήχου', slug: 'multimedia-software', parentId: 174, image: '/dist/images/cat/multimedia-software.webp' },
+  { id: 221, name: 'Εμπορική Διαχείριση', slug: 'commercial-management', parentId: 174, image: '/dist/images/cat/commercial-management.webp' },
 
   // Subcategories of Laptops, Αξεσουάρ of Main Category Τεχνολογία
   { id: 222, name: 'Laptops', slug: 'laptops', parentId: 12, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2591_SX400Y400/1629455496/laptops.webp' },
