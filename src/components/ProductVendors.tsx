@@ -12,18 +12,16 @@ interface ProductVendorsProps {
 
 const ProductVendors = ({ product }: ProductVendorsProps) => {
   const { t } = useTranslation();
-  // Sort prices from lowest to highest
   const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
 
-  // State to control popup visibility
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupContent, setPopupContent] = useState(''); // State for dynamic popup content
 
-  // Function to open the popup
-  const openPopup = () => {
+  const openPopup = (content: string) => {
+    setPopupContent(content); // Update content based on vendor or other needs
     setIsPopupVisible(true);
   };
 
-  // Function to close the popup
   const closePopup = () => {
     setIsPopupVisible(false);
   };
@@ -69,9 +67,20 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
       
       <div className="prices" data-merchants={product.prices.length}>
         {sortedPrices.map((priceInfo) => (
-          <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} />
+          <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={openPopup} />
         ))}
       </div>
+
+      {isPopupVisible && (
+        <div className="popup">
+          <div className="popup-content">
+            <span className="close" onClick={closePopup}>&times;</span>
+            <h2>Popup Title</h2>
+            <p>This is your popup content!</p>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };
@@ -79,9 +88,10 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
 interface VendorPriceCardProps {
   priceInfo: ProductPrice;
   product: Product;
+  openPopup: (content: string) => void; // Accept the openPopup function
 }
 
-const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
+const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps) => {
   const vendor = getVendorById(priceInfo.vendorId);
   const vendorAddress = Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
   
@@ -181,7 +191,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 <span>Ασφάλιση Αγοράς</span>
               </Link>
               )}
-              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={openPopup}><div className="dotted-link">{vendorAddress}</div></Link>
+              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={() => openPopup(vendor.address[0] || '')}><div className="dotted-link">{vendorAddress}</div></Link>
               <div class="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
               <div class="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div class="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
               <div class="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
@@ -197,17 +207,6 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
         </div>
       </CardContent>
     </Card>
-
-    {isPopupVisible && (
-        <div className="popup">
-          <div className="popup-content">
-            <span className="close" onClick={closePopup}>&times;</span>
-            <h2>Popup Title</h2>
-            <p>This is your popup content!</p>
-          </div>
-        </div>
-      )}
-    
   );
 };
 
