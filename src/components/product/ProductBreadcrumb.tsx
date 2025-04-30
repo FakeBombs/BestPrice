@@ -9,12 +9,11 @@ interface ProductBreadcrumbProps {
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
     const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
-
     return (
       <li key={slug}>
         <Link 
           to={path} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`} 
+          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`}
           data-no-info=""
         >
           <span>{title}</span>
@@ -24,36 +23,30 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   };
 
   const findCategoryPath = (categoryId: number): React.ReactNode[] => {
-    const category = categories.find(cat => cat.id === categoryId);
-    if (!category) return [];
+    const breadcrumbs: React.ReactNode[] = [];
+    const addCategoryToBreadcrumb = (id: number) => {
+      const category = categories.find(cat => cat.id === id);
+      if (!category) return;
 
-    // Recursively find the category path
-    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
+      // Adding the category to the breadcrumbs
+      breadcrumbs.unshift(getCategoryPath(mainCategories.find(mainCat => mainCat.id === category.parentId)?.slug, category.slug, category.name, false));
+      
+      if (category.parentId) {
+        addCategoryToBreadcrumb(category.parentId);  // Recur to add parent categories
+      }
+    };
 
-    // Find the main category
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
-
-    // Prepare the list for breadcrumbs
-    const breadcrumbPath = [];
-
-    // If main category exists, add it to the path
-    if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
-    }
-
-    // Add all ancestors
-    childPath.forEach((subCategory) => {
-      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
-    });
-
-    // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
+    addCategoryToBreadcrumb(categoryId);
     
-    return breadcrumbPath;
+    // Lastly add the current product category as the last breadcrumb
+    const currentCategory = categories.find(cat => cat.id === categoryId);
+    if (currentCategory) {
+      breadcrumbs.push(getCategoryPath(mainCategories.find(mainCat => mainCat.id === currentCategory.parentId)?.slug, currentCategory.slug, currentCategory.name, true));
+    }
+    
+    return breadcrumbs;
   };
 
-  // Get the breadcrumb path using the first category id of the product
   const categoryPath = findCategoryPath(product.categoryIds[0]);
 
   return (
