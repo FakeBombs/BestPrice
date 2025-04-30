@@ -297,16 +297,16 @@ export const categories: Category[] = [
   { id: 242, name: 'Διάφορα Ανταλλακτικά Laptop', slug: 'misc-laptop-parts', parentId: 231, image: '/dist/images/cat/misc-laptop-parts.webp' },
 
   // Subcategories of Εικόνα of Main Category Τεχνολογία
-  { id: 243, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'televisions-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2999_SX400Y400/1629455498/tv.webp' },
-  { id: 244, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8570_SX400Y400/1658920132/kalodia-hdmi.webp' },
-  { id: 245, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvb-t', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3266_SX400Y400/1629455500/dvb.webp' },
-  { id: 246, name: 'Projectors, Αξεσουάρ', slug: 'projectors-accessories', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3470_SX400Y400/1629455502/projectors-aksesouar.webp' },
-  { id: 247, name: 'TV Box', slug: 'tv-boxes', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
-  { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
-  { id: 249, name: 'Φορητές Τηλεοράσεις', slug: 'portable-tvs', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/7033_SX400Y400/1476269663/forhtes-thleoraseis.webp' },
-  { id: 250, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3489_SX400Y400/1472545123/portable-dvd.webp' },
-  { id: 251, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-blu-ray-players-recorders', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3439_SX400Y400/1472046462/dvd-blu-ray-players-recorders.webp' },
-  { id: 252, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8825_SX400Y400/1694781436/kalodia-displayport.webp' },
+  { id: 243, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'televisions-accessories', parentId: 13, image: '/dist/images/cat/televisions-accessories.webp' },
+  { id: 244, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: '/dist/images/cat/hdmi-cables.webp' },
+  { id: 245, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvb-t', parentId: 13, image: '/dist/images/cat/satellite-cable-dvb-t.webp' },
+  { id: 246, name: 'Projectors, Αξεσουάρ', slug: 'projectors-accessories', parentId: 13, image: '/dist/images/cat/projectors-accessories.webp' },
+  { id: 247, name: 'TV Box', slug: 'tv-box', parentId: 13, image: '/dist/images/cat/tv-box.webp' },
+  { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-stick', parentId: 13, image: '/dist/images/cat/smart-tv-stick.webp' },
+  { id: 249, name: 'Φορητές Τηλεοράσεις', slug: 'portable-tvs', parentId: 13, image: '/dist/images/cat/portable-tvs.webp' },
+  { id: 250, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: '/dist/images/cat/portable-dvd-players.webp' },
+  { id: 251, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-blu-ray-players-recorders', parentId: 13, image: '/dist/images/cat/dvd-blu-ray-players-recorders.webp' },
+  { id: 252, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: '/dist/images/cat/displayport-cables.webp' },
 
   // Subcategories of Τηλεοράσεις, Αξεσουάρ of a Subcategory Εικόνα of Main Category Τεχνολογία
   { id: 253, name: 'Τηλεοράσεις', slug: 'televisions', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3048_SX400Y400/1629455499/thleoraseis.webp' },
@@ -316,7 +316,7 @@ export const categories: Category[] = [
   { id: 257, name: 'Καλώδια, Αντάπτορες', slug: 'cables-adapters', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/734_SX400Y400/1472030248/cables.webp' },
   { id: 258, name: 'Γυαλιά 3D', slug: '3d-glasses', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5755_SX400Y400/1472030248/3d-glasses.webp' },
   { id: 259, name: 'Διάφορα Είδη Τηλεοράσεως', slug: 'various-tv-items', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/735_SX400Y400/1472030248/diafora-eidh-tv.webp' },
-  { id: 247, name: 'TV Box', slug: 'tv-boxes', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3043_SX400Y400/1472046462/tv-box.webp' },
+  { id: 247, name: 'TV Box', slug: 'tv-box', parentId: 243, image: '/dist/images/cat/tv-box.webp' },
   { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
 
   // Subcategories of Δορυφορική, Cable & DVB-T of a Subcategory Εικόνα of Main Category Τεχνολογία
