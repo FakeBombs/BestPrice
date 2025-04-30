@@ -97,13 +97,15 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                           </Link>
                           <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/review?src=minfo`} className="simple-rating__new">Αξιολόγησέ το</Link>
                         </div>
-                        {popupContent.certification && (
+                        {popupContent.certification ? (
                         <div className="minfo__badge-container">
                           <div className="tooltip__anchor minfo__certification">
                             <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${popupContent.certification.toLowerCase()}-22`}></use></svg>
                             <div data-certification={popupContent.certification.toLowerCase()} className="minfo__certification-wrapper pressable">Πιστοποίηση: {popupContent.certification}</div>
                           </div>
                         </div>
+                          ) : (
+                        // Show something else if the vendor doesnt have address to show
                         )}
                       </div>
                     </header>
