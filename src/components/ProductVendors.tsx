@@ -16,8 +16,8 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState(''); // State for dynamic popup content
 
-  const openPopup = (content: string) => {
-    setPopupContent(content); // Update content based on vendor or other needs
+  const openPopup = (vendor) => {
+    setPopupContent(vendor); // Store the entire vendor object in the state
     setIsPopupVisible(true);
   };
 
@@ -70,7 +70,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
         ))}
       </div>
 
-      {isPopupVisible && (
+      {isPopupVisible && popupContent && (
         <div className="popup-placeholder minfo__popup--placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0px', maxWidth: '98vw', position: 'absolute', top: '0px' }}>
           <div className="popup-flex-center popup-flex-center--top" style={{ zIndex: 2147483571 }}>
             <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}></div>
@@ -83,7 +83,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                   <aside className="minfo__aside"><div className="minfo__screen" style={{ backgroundImage: "url('//bbpcdn.pstatic.gr/bpimg129/ms_2614_SX500C500x480/1745728733/image.webp')" }}></div></aside>
                   <main className="minfo__main">
                     <header className="minfo__header">
-                      <h2 className="minfo__title">{vendor.name}</h2>
+                      <h2 className="minfo__title">{popupContent.name}</h2>
                       <div className="minfo__header-props" data-id="2614">
                         <div className="simple-rating simple-rating--with-link pressable">
                           <a className="simple-rating__inner" href="/m/2614/nok-shop/reviews">
@@ -113,7 +113,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                       <div className="minfo__buttons">
                         <div className="minfo__button pressable">
                           <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-pin-14"></use></svg>
-                          <div className="minfo__button-label">Εθνάρχου Μακαρίου 32, Περιστέρι</div>
+                          <div className="minfo__button-label">{popupContent.address[0] || ''}</div>
                         </div>
                         <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
                       </div>
@@ -261,7 +261,7 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
                 <span>Ασφάλιση Αγοράς</span>
               </Link>
               )}
-              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={(e) => { e.preventDefault(); openPopup(vendor.address[0] || ''); }}><div className="dotted-link">{vendorAddress}</div></Link>
+              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={(e) => { e.preventDefault(); openPopup(vendor); }}><div className="dotted-link">{vendorAddress}</div></Link>
               <div class="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
               <div class="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div class="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
               <div class="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
