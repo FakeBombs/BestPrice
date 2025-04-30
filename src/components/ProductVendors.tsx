@@ -105,7 +105,6 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                           </div>
                         </div>
                           ) : (
-                        // Show something else if the vendor doesnt have address to show
                         )}
                       </div>
                     </header>
@@ -115,10 +114,16 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                     </div>
                     <div className="minfo__view minfo__view--info" style={{ height: '348px' }}>
                       <div className="minfo__buttons">
+                        {popupContent.address ? (
                         <div className="minfo__button pressable">
                           <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-pin-14"></use></svg>
                           <div className="minfo__button-label">{popupContent.address[0] || ''}</div>
                         </div>
+                          ) : (
+                        <div class="minfo__button minfo__button--disabled">
+                          <svg width="18" height="18" class="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
+                          <div class="minfo__button-label">Μόνο Ηλεκτρονικό κατάστημα</div></div>
+                        )}
                         <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
                       </div>
                       <div className="minfo__lists">
