@@ -19,22 +19,10 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
   const openPopup = (vendor) => {
     setPopupContent(vendor); // Store the entire vendor object in the state
     setIsPopupVisible(true);
-    const html = document.documentElement;
-    html.classList.add('has-popup has-popup-modal body-scroll-lock');
-    // Set CSS variable
-    html.style.setProperty('--scroll-bar-size', '10px');
-    // Set margin-right inline style
-    html.style.marginRight = '0';
   };
 
   const closePopup = () => {
     setIsPopupVisible(false);
-    const html = document.documentElement;
-    html.classList.remove('has-popup has-popup-modal body-scroll-lock');
-    // Remove or reset the CSS variable
-    html.style.removeProperty('--scroll-bar-size');
-    // Reset margin-right
-    html.style.marginRight = '';
   };
 
   return (
