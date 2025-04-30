@@ -71,6 +71,19 @@ interface VendorPriceCardProps {
 const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
   const vendor = getVendorById(priceInfo.vendorId);
   const vendorAddress = Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
+
+  // State to control popup visibility
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  // Function to open the popup
+  const openPopup = () => {
+    setIsPopupVisible(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+    setIsPopupVisible(false);
+  };
   
   if (!vendor) return null;
   
@@ -168,7 +181,7 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
                 <span>Ασφάλιση Αγοράς</span>
               </Link>
               )}
-              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`}><div className="dotted-link">{vendorAddress}</div></Link>
+              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={openPopup}><div className="dotted-link">{vendorAddress}</div></Link>
               <div class="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
               <div class="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div class="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
               <div class="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
@@ -184,6 +197,17 @@ const VendorPriceCard = ({ priceInfo, product }: VendorPriceCardProps) => {
         </div>
       </CardContent>
     </Card>
+
+    {isPopupVisible && (
+        <div className="popup">
+          <div className="popup-content">
+            <span className="close" onClick={closePopup}>&times;</span>
+            <h2>Popup Title</h2>
+            <p>This is your popup content!</p>
+          </div>
+        </div>
+      )}
+    
   );
 };
 
