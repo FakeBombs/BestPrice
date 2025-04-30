@@ -309,15 +309,15 @@ export const categories: Category[] = [
   { id: 252, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: '/dist/images/cat/displayport-cables.webp' },
 
   // Subcategories of Τηλεοράσεις, Αξεσουάρ of a Subcategory Εικόνα of Main Category Τεχνολογία
-  { id: 253, name: 'Τηλεοράσεις', slug: 'televisions', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3048_SX400Y400/1629455499/thleoraseis.webp' },
-  { id: 254, name: 'Βάσεις Τηλεοράσεων', slug: 'tv-stands', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/732_SX400Y400/1472030248/vaseis-tileoraseon.webp' },
-  { id: 255, name: 'Τηλεχειριστήρια Τηλεόρασης', slug: 'tv-remote-controls', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/733_SX400Y400/1475743187/tilexeiristiria-tileorasis.webp' },
-  { id: 256, name: 'Καλώδια Κεραίας', slug: 'aerial-cables', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8607_SX400Y400/1675953190/kalodia-keraias.webp' },
-  { id: 257, name: 'Καλώδια, Αντάπτορες', slug: 'cables-adapters', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/734_SX400Y400/1472030248/cables.webp' },
-  { id: 258, name: 'Γυαλιά 3D', slug: '3d-glasses', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5755_SX400Y400/1472030248/3d-glasses.webp' },
-  { id: 259, name: 'Διάφορα Είδη Τηλεοράσεως', slug: 'various-tv-items', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/735_SX400Y400/1472030248/diafora-eidh-tv.webp' },
+  { id: 253, name: 'Τηλεοράσεις', slug: 'televisions', parentId: 243, image: '/dist/images/cat/televisions.webp' },
+  { id: 254, name: 'Βάσεις Τηλεοράσεων', slug: 'tv-stands', parentId: 243, image: '/dist/images/cat/tv-stands.webp' },
+  { id: 255, name: 'Τηλεχειριστήρια Τηλεόρασης', slug: 'tv-remote-controls', parentId: 243, image: '/dist/images/cat/tv-remote-controls.webp' },
+  { id: 256, name: 'Καλώδια Κεραίας', slug: 'aerial-cables', parentId: 243, image: '/dist/images/cat/aerial-cables.webp' },
+  { id: 257, name: 'Καλώδια, Αντάπτορες', slug: 'cables-adapters', parentId: 243, image: '/dist/images/cat/cables-adapters.webp' },
+  { id: 258, name: 'Γυαλιά 3D', slug: '3d-glasses', parentId: 243, image: '/dist/images/cat/3d-glasses.webp' },
+  { id: 259, name: 'Διάφορα Είδη Τηλεοράσεως', slug: 'various-tv-items', parentId: 243, image: '/dist/images/cat/various-tv-items.webp' },
   { id: 247, name: 'TV Box', slug: 'tv-box', parentId: 243, image: '/dist/images/cat/tv-box.webp' },
-  { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-sticks', parentId: 243, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8257_SX400Y400/1629455540/smart-tv-stick.webp' },
+  { id: 248, name: 'Smart TV Stick', slug: 'smart-tv-stick', parentId: 243, image: '/dist/images/cat/smart-tv-stick.webp' },
 
   // Subcategories of Δορυφορική, Cable & DVB-T of a Subcategory Εικόνα of Main Category Τεχνολογία
   { id: 260, name: 'Ψηφιακοί Δέκτες Mpeg-4', slug: 'digital-receivers-mpeg4', parentId: 245, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3267_SX400Y400/1476270386/psifiakoi-dektes-mpeg4.webp' },
