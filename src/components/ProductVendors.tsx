@@ -97,12 +97,14 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                           </a>
                           <a href="/m/2614/nok-shop/review?src=minfo" className="simple-rating__new">Αξιολόγησέ το</a>
                         </div>
+                        {popupContent.certification && (
                         <div className="minfo__badge-container">
                           <div className="tooltip__anchor minfo__certification">
-                            <svg className="icon" aria-hidden="true" width="22" height="22"><use href="/dist/images/icons/certification.svg#icon-gold-22"></use></svg>
-                            <div data-certification="gold" className="minfo__certification-wrapper pressable">Πιστοποίηση: Gold</div>
+                            <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${popupContent.certification.toLowerCase()}-22`}></use></svg>
+                            <div data-certification={popupContent.certification.toLowerCase()} className="minfo__certification-wrapper pressable">Πιστοποίηση: {popupContent.certification}</div>
                           </div>
                         </div>
+                        )}
                       </div>
                     </header>
                     <div className="minfo__tabs">
