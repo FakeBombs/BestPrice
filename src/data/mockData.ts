@@ -250,13 +250,13 @@ export const categories: Category[] = [
   { id: 205, name: 'Bluetooth Adapter', slug: 'bluetooth-adapter', parentId: 171, image: '/dist/images/cat/bluetooth-adapter.webp' },
 
   // Subcategories of Desktops & Servers of a Subcategory Υπολογιστές of Main Category Τεχνολογία
-  { id: 206, name: 'Desktop PC', slug: 'desktop-pc', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2589_SX400Y400/1629455497/desktop-pc.webp' },
-  { id: 207, name: 'All in One PC', slug: 'all-in-one-pc', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6749_SX400Y400/1629455526/all-in-one-pc.webp' },
-  { id: 208, name: 'Mini PC', slug: 'mini-pc', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6750_SX400Y400/1629455526/mini-pc.webp' },
-  { id: 209, name: 'Servers', slug: 'servers', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2666_SX400Y400/1476456876/servers.webp' },
-  { id: 210, name: 'Αξεσουάρ Server', slug: 'server-accessories', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2667_SX400Y400/1476456876/server-accessories.webp' },
-  { id: 211, name: 'Βάσεις Desktop', slug: 'desktop-stands', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5602_SX400Y400/1629455514/vaseis-desktop.webp' },
-  { id: 212, name: 'Barebones', slug: 'barebones', parentId: 172, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6751_SX400Y400/1629455526/barebones.webp' },
+  { id: 206, name: 'Desktop PC', slug: 'desktop-pc', parentId: 172, image: '/dist/images/cat/desktop-pc.webp' },
+  { id: 207, name: 'All in One PC', slug: 'all-in-one-pc', parentId: 172, image: '/dist/images/cat/all-in-one-pc.webp' },
+  { id: 208, name: 'Mini PC', slug: 'mini-pc', parentId: 172, image: '/dist/images/cat/mini-pc.webp' },
+  { id: 209, name: 'Servers', slug: 'servers', parentId: 172, image: '/dist/images/cat/servers.webp' },
+  { id: 210, name: 'Αξεσουάρ Server', slug: 'server-accessories', parentId: 172, image: '/dist/images/cat/server-accessories.webp' },
+  { id: 211, name: 'Βάσεις Desktop', slug: 'desktop-stands', parentId: 172, image: '/dist/images/cat/desktop-stands.webp' },
+  { id: 212, name: 'Barebones', slug: 'barebones', parentId: 172, image: '/dist/images/cat/barebones.webp' },
 
   // Subcategories of Οθόνες PC, Αξεσουάρ of a Subcategory Υπολογιστές of Main Category Τεχνολογία
   { id: 213, name: 'Οθόνες Υπολογιστών', slug: 'computer-monitors', parentId: 173, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
