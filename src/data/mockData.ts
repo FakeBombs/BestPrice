@@ -259,9 +259,9 @@ export const categories: Category[] = [
   { id: 212, name: 'Barebones', slug: 'barebones', parentId: 172, image: '/dist/images/cat/barebones.webp' },
 
   // Subcategories of Οθόνες PC, Αξεσουάρ of a Subcategory Υπολογιστές of Main Category Τεχνολογία
-  { id: 213, name: 'Οθόνες Υπολογιστών', slug: 'computer-monitors', parentId: 173, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2621_SX400Y400/1473673319/othones-ypologiston.webp' },
-  { id: 214, name: 'Αξεσουάρ Οθονών', slug: 'monitor-accessories', parentId: 173, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2624_SX400Y400/1473673319/monitor-accessories.webp' },
-  { id: 215, name: 'Public Displays', slug: 'public-displays', parentId: 173, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8114_SX400Y400/1629455539/public-displays.webp' },
+  { id: 213, name: 'Οθόνες Υπολογιστών', slug: 'computer-monitors', parentId: 173, image: '/dist/images/cat/computer-monitors.webp' },
+  { id: 214, name: 'Αξεσουάρ Οθονών', slug: 'monitor-accessories', parentId: 173, image: '/dist/images/cat/monitor-accessories.webp' },
+  { id: 215, name: 'Public Displays', slug: 'public-displays', parentId: 173, image: '/dist/images/cat/public-displays.webp' },
 
   // Subcategories of Software of a Subcategory Υπολογιστές of Main Category Τεχνολογία
   { id: 216, name: 'Antivirus, Security', slug: 'antivirus-security', parentId: 174, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2639_SX400Y400/1500371799/antivirus-security.webp' },
