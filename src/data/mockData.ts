@@ -226,17 +226,17 @@ export const categories: Category[] = [
   { id: 185, name: 'Καλώδια USB', slug: 'usb-cables', parentId: 169, image: '/dist/images/cat/usb-cables.webp' },
 
   // Subcategories of Hardware of a Subcategory Υπολογιστές of Main Category Τεχνολογία
-  { id: 186, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2613_SX400Y400/1629455497/kartes-grafikwn.webp' },
-  { id: 187, name: 'Μητρικές Κάρτες', slug: 'motherboards', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2611_SX400Y400/1629455497/motherboards.webp' },
-  { id: 188, name: 'CPU', slug: 'cpu', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2606_SX400Y400/1629455497/epeksergastes.webp' },
-  { id: 189, name: 'Σκληροί Δίσκοι', slug: 'hard-disks', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2610_SX400Y400/1490180355/skliroi-diskoi.webp' },
-  { id: 190, name: 'RAM', slug: 'ram', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2609_SX400Y400/1629455497/mnimes-ram.webp' },
-  { id: 191, name: 'Κουτιά Υπολογιστών', slug: 'computer-cases', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2607_SX400Y400/1629455497/koutia-ypologiston.webp' },
-  { id: 192, name: 'Τροφοδοτικά Υπολογιστών', slug: 'power-supplies', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2608_SX400Y400/1629455497/trofodotika-ypologiston.webp' },
-  { id: 193, name: 'Cooling PC', slug: 'cooling-pc', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8396_SX400Y400/1629455541/cooling-pc.webp' },
-  { id: 194, name: 'Optical Drives', slug: 'optical-drives', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2617_SX400Y400/1629455497/optical-drives.webp' },
-  { id: 195, name: 'Tuning Parts', slug: 'tuning-parts', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2619_SX400Y400/1629455497/tuning-parts.webp' },
-  { id: 196, name: 'Κάρτες Τηλεόρασης, Video', slug: 'tv-cards', parentId: 170, image: 'https://abpcdn.pstatic.gr/P/bpimg128/2615_SX400Y400/1629455497/kartes-thleorasis.webp' },
+  { id: 186, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 170, image: '/dist/images/cat/graphics-cards.webp' },
+  { id: 187, name: 'Μητρικές Κάρτες', slug: 'motherboards', parentId: 170, image: '/dist/images/cat/motherboards.webp' },
+  { id: 188, name: 'CPU', slug: 'cpu', parentId: 170, image: '/dist/images/cat/cpu.webp' },
+  { id: 189, name: 'Σκληροί Δίσκοι', slug: 'hard-disks', parentId: 170, image: '/dist/images/cat/hard-disks.webp' },
+  { id: 190, name: 'RAM', slug: 'ram', parentId: 170, image: '/dist/images/cat/ram.webp' },
+  { id: 191, name: 'Κουτιά Υπολογιστών', slug: 'computer-cases', parentId: 170, image: '/dist/images/cat/computer-cases.webp' },
+  { id: 192, name: 'Τροφοδοτικά Υπολογιστών', slug: 'power-supplies', parentId: 170, image: '/dist/images/cat/power-supplies.webp' },
+  { id: 193, name: 'Cooling PC', slug: 'cooling-pc', parentId: 170, image: '/dist/images/cat/cooling-pc.webp' },
+  { id: 194, name: 'Optical Drives', slug: 'optical-drives', parentId: 170, image: '/dist/images/cat/optical-drives.webp' },
+  { id: 195, name: 'Tuning Parts', slug: 'tuning-parts', parentId: 170, image: '/dist/images/cat/tuning-parts.webp' },
+  { id: 196, name: 'Κάρτες Τηλεόρασης, Video', slug: 'tv-cards', parentId: 170, image: '/dist/images/cat/tv-cards.webp' },
 
   // Subcategories of Δικτυακά of a Subcategory Υπολογιστές of Main Category Τεχνολογία
   { id: 197, name: 'WiFi Extenders', slug: 'wifi-extenders', parentId: 171, image: 'https://abpcdn.pstatic.gr/P/bpimg128/8318_SX400Y400/1629455541/wifi-extenders.webp' },
