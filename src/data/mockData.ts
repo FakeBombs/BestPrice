@@ -782,7 +782,9 @@ for (let category of mockData.mainCategories) {
 
 for (let category of mockData.categories) {
   category.id = String(category.id);
-  category.parentId = String(category.parentId);
+  if (category.parentId !== undefined) {
+    category.parentId = String(category.parentId);
+  }
   category.slug = category.slug || formatSlug(category.name);
   category.image = category.image || category.imageUrl;
 }
@@ -794,8 +796,8 @@ for (let product of mockData.products) {
   product.image = product.image || product.imageUrl;
   product.reviews = product.reviews || product.reviewCount;
   product.slug = product.slug || formatSlug(product.name);
-  product.model = product.model || "";
-  product.category = getCategoryById(String(product.categoryId))?.name || "";
+  product.model = product.model || ""; // Add model property
+  product.category = getCategoryById(String(product.categoryId))?.name || ""; // Add category property
   
   // Convert categoryIds if they exist or create them
   if (!product.categoryIds) {
