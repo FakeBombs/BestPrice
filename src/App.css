@@ -655,3 +655,39 @@ li.minfo__yes .icon {
         height:auto!important
     }
 }
+
+/* Search Dropdown Styles */
+.search-bar {
+  position: relative;
+}
+
+.search-bar .search__input-wrapper {
+  position: relative;
+  z-index: 10;
+}
+
+.search-bar .search__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Ensure proper z-indexing */
+.bp-header__outer-wrapper {
+  position: relative;
+  z-index: 20;
+}
+
+/* Fix for command component */
+.search-bar [cmdk-input-wrapper] {
+  border: none;
+  padding: 0;
+}
