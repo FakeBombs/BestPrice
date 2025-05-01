@@ -1,3 +1,5 @@
+
+// Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
     {
@@ -485,4 +487,89 @@ export const mockData = {
         ]
       }
   ]
+};
+
+// Export individual items for easier imports
+export const { mainCategories, categories, products } = mockData;
+
+// Add vendors array export since it's used in Footer.tsx
+export const vendors = [
+  { id: 1, name: "TechStore", certification: "Certified", address: "123 Tech St" },
+  { id: 2, name: "ElectroMart", certification: "Premium", address: "456 Digital Ave" },
+  { id: 3, name: "GadgetWorld", certification: "Standard", address: "789 Gadget Blvd" }
+];
+
+// Add brands array export since it's used in Footer.tsx
+export const brands = [
+  { id: 1, name: "TechMaster" },
+  { id: 2, name: "PowerTech" },
+  { id: 3, name: "AudioSonic" },
+  { id: 4, name: "FashionHub" },
+  { id: 5, name: "GlamourStyle" }
+];
+
+// Add utility functions
+export const getProductById = (id: number) => {
+  return mockData.products.find(product => product.id === id);
+};
+
+export const getCategoryById = (id: number) => {
+  return mockData.categories.find(category => category.id === id) ||
+         mockData.mainCategories.find(category => category.id === id);
+};
+
+export const getVendorById = (id: number) => {
+  return vendors.find(vendor => vendor.id === id);
+};
+
+export const getBestPrice = (productId: number) => {
+  // Mock function to return a best price
+  return 749.99;
+};
+
+// Add types for components
+export interface Product {
+  id: number;
+  categoryId: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  rating: number;
+  reviewCount: number;
+  brand: string;
+  sku: string;
+  images: string[];
+  highlights: string[];
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  parentId?: number;
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+}
+
+export interface ProductPrice {
+  vendorId: number;
+  price: number;
+  inStock: boolean;
+  shippingCost?: number;
+}
+
+// Function to search products
+export const searchProducts = (query: string) => {
+  if (!query) return [];
+  const lowerQuery = query.toLowerCase();
+  return mockData.products.filter(
+    product => 
+      product.name.toLowerCase().includes(lowerQuery) || 
+      product.description.toLowerCase().includes(lowerQuery)
+  );
 };
