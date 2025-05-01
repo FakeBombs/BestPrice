@@ -16,7 +16,9 @@ export const SingleCategoryView = ({ category }: SingleCategoryViewProps) => {
   useEffect(() => {
     if (category) {
       // Find child categories
-      const children = mockData.categories.filter(cat => String(cat.parentId) === String(category.id));
+      const children = mockData.categories.filter(cat => 
+        String(cat.parentId) === String(category.id)
+      );
       setChildCategories(children);
       
       // Find products in this category

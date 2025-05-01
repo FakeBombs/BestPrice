@@ -8,6 +8,7 @@ interface ProductBreadcrumbProps {
   product: any;
 }
 
+// Updated interface to ensure parentId exists
 interface CategoryWithParentId {
   id: string;
   parentId?: string;
@@ -25,12 +26,13 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     if (product && product.categoryId) {
       const crumbs: CategoryWithParentId[] = [];
       
-      // Find the product's category with string IDs
-      const category = mockData.categories.find(c => String(c.id) === String(product.categoryId)) ||
-                        mockData.mainCategories.find(c => String(c.id) === String(product.categoryId));
+      // Find the product's category
+      const categoryFromMain = mockData.mainCategories.find(c => String(c.id) === String(product.categoryId));
+      const categoryFromCategories = mockData.categories.find(c => String(c.id) === String(product.categoryId));
+      const category = categoryFromMain || categoryFromCategories;
       
       if (category) {
-        // Create a copy with explicitly added parentId property for main categories
+        // Create a copy with explicitly added properties
         const categoryWithStringId: CategoryWithParentId = {
           ...category,
           id: String(category.id),
@@ -43,8 +45,10 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         // If it's a subcategory, find its parent(s)
         let currentCat = categoryWithStringId;
         while (currentCat.parentId) {
-          const parentCat = mockData.categories.find(c => String(c.id) === String(currentCat.parentId)) || 
-                          mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
+          const parentFromMain = mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
+          const parentFromCategories = mockData.categories.find(c => String(c.id) === String(currentCat.parentId));
+          const parentCat = parentFromMain || parentFromCategories;
+          
           if (parentCat) {
             const parentWithStringId: CategoryWithParentId = {
               ...parentCat,

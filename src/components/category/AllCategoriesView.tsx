@@ -10,7 +10,9 @@ const AllCategoriesView = () => {
   useEffect(() => {
     // Organize the categories
     const result = mockData.mainCategories.map(mainCat => {
-      const subCategories = mockData.categories.filter(cat => String(cat.parentId) === String(mainCat.id));
+      const subCategories = mockData.categories.filter(cat => 
+        String(cat.parentId) === String(mainCat.id)
+      );
       return {
         ...mainCat,
         subCategories

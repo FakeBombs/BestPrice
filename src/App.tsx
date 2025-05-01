@@ -1,5 +1,5 @@
 
-import { useState, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import './App.css'
 
@@ -30,8 +30,11 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-// Fix the AdminLayoutWrapper to properly accept children prop
-const AdminLayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+interface AdminLayoutWrapperProps {
+  children: ReactNode;
+}
+
+const AdminLayoutWrapper = ({ children }: AdminLayoutWrapperProps) => (
   <AdminLayout>{children}</AdminLayout>
 );
 

@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 
 interface CategoryCardProps {
   category: {
-    id: number;
+    id: string | number;
     name: string;
-    image: string;
+    image?: string;
+    imageUrl?: string;
     productCount?: number;
   };
   size?: "small" | "medium" | "large";
@@ -22,6 +23,9 @@ const CategoryCard = ({ category, size = "medium" }: CategoryCardProps) => {
     large: "h-36 w-36",
   };
 
+  // Use image if available, otherwise fall back to imageUrl
+  const imageSource = category.image || category.imageUrl;
+
   return (
     <Link
       to={`/cat/${category.id}/${formatSlug(category.name)}`}
@@ -29,11 +33,13 @@ const CategoryCard = ({ category, size = "medium" }: CategoryCardProps) => {
     >
       <div className="p-3 flex flex-col items-center">
         <div className={`${sizeClasses[size]} flex items-center justify-center mb-2`}>
-          <img
-            src={category.image}
-            alt={category.name}
-            className="max-h-full max-w-full object-contain"
-          />
+          {imageSource && (
+            <img
+              src={imageSource}
+              alt={category.name}
+              className="max-h-full max-w-full object-contain"
+            />
+          )}
         </div>
         <h3 className="text-center text-sm font-medium">{category.name}</h3>
         {category.productCount !== undefined && (

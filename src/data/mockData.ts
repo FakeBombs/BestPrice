@@ -692,9 +692,9 @@ for (let product of mockData.products) {
   product.slug = formatSlug(product.name);
   
   // Convert categoryIds if they exist or create them
-  if (product.categoryIds) {
-    product.categoryIds = product.categoryIds.map(id => String(id));
-  } else {
+  if (!product.categoryIds) {
     product.categoryIds = [String(product.categoryId)];
+  } else {
+    product.categoryIds = product.categoryIds.map(id => String(id));
   }
 }
