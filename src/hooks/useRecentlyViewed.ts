@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Product, getProductById } from '@/data/mockData';
 
@@ -11,19 +12,19 @@ export const useRecentlyViewed = () => {
   useEffect(() => {
     const storedIds = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
     const products = storedIds
-      .map((id: number) => getProductById(id))
+      .map((id: string) => getProductById(id))
       .filter(Boolean); // Filter out any null/undefined values
     
     setRecentlyViewed(products);
   }, []);
 
   // Add a product to recently viewed
-  const addToRecentlyViewed = (productId: number) => { // Change to number
+  const addToRecentlyViewed = (productId: string) => {
     // Get current list from localStorage
     const storedIds = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
     
     // Remove the product if it's already in the list
-    const filteredIds = storedIds.filter((id: number) => id !== productId);
+    const filteredIds = storedIds.filter((id: string) => id !== productId);
     
     // Add the product to the beginning of the list
     const updatedIds = [productId, ...filteredIds].slice(0, MAX_RECENT_PRODUCTS);
@@ -33,7 +34,7 @@ export const useRecentlyViewed = () => {
     
     // Update state
     const products = updatedIds
-      .map((id: number) => getProductById(id)) // Change to number
+      .map((id: string) => getProductById(id))
       .filter(Boolean);
     
     setRecentlyViewed(products);

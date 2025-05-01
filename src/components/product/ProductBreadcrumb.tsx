@@ -1,24 +1,34 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mockData } from '../../data/mockData';
+import { mockData, formatSlug } from '../../data/mockData';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../ui/breadcrumb';
 
 interface ProductBreadcrumbProps {
   product: any;
 }
 
+interface CategoryWithParentId {
+  id: string;
+  parentId?: string;
+  name: string;
+  description: string;
+  imageUrl?: string;
+  image?: string;
+  slug?: string;
+}
+
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const [breadcrumbs, setBreadcrumbs] = useState<any[]>([]);
+  const [breadcrumbs, setBreadcrumbs] = useState<CategoryWithParentId[]>([]);
 
   useEffect(() => {
     if (product && product.categoryId) {
-      const crumbs = [];
+      const crumbs: CategoryWithParentId[] = [];
       
       // Find the product's category
       const category = mockData.categories.find(c => c.id === product.categoryId);
       if (category) {
-        crumbs.push(category);
+        crumbs.push(category as CategoryWithParentId);
         
         // If it's a subcategory, find its parent(s)
         let currentCat = category;
@@ -26,7 +36,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           const parentCat = mockData.categories.find(c => c.id === currentCat.parentId) || 
                            mockData.mainCategories.find(c => c.id === currentCat.parentId);
           if (parentCat) {
-            crumbs.unshift(parentCat);
+            crumbs.unshift(parentCat as CategoryWithParentId);
             currentCat = parentCat;
           } else {
             break;

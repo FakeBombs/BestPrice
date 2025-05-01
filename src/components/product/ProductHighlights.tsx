@@ -1,3 +1,4 @@
+
 import { Product } from '@/data/mockData';
 
 interface ProductHighlightsProps {
@@ -7,7 +8,7 @@ interface ProductHighlightsProps {
 
 const ProductHighlights = ({ specifications, product }: ProductHighlightsProps) => {
   const productId = product.id;
-  const productTitle = product.title.toLowerCase().replace(/\s+/g, '-'); // Convert title to lowercase and replace spaces
+  const productTitle = (product.title || product.name).toLowerCase().replace(/\s+/g, '-'); // Convert title to lowercase and replace spaces
   
   return (
     <div className="item-header__content">

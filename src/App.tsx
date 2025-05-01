@@ -1,6 +1,6 @@
 
 import { useState, ReactNode } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import './App.css'
 
 import MainLayout from './layouts/MainLayout'
@@ -35,7 +35,7 @@ interface AdminLayoutWrapperProps {
 }
 
 // Create a wrapper component for AdminLayout that accepts children
-const AdminLayoutWrapper = ({ children }: AdminLayoutWrapperProps) => (
+const AdminLayoutWrapper: React.FC<AdminLayoutWrapperProps> = ({ children }) => (
   <AdminLayout>{children}</AdminLayout>
 );
 
@@ -64,7 +64,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
         
-        <Route path="/admin" element={<AdminLayoutWrapper />}>
+        <Route path="/admin" element={<AdminLayoutWrapper children={<Outlet />} />}>
           <Route index element={<Navigate to="/admin/products" replace />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="categories" element={<AdminCategoriesPage />} />

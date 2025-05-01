@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductSpecTable from '@/components/ProductSpecTable';
 import UserReviews from '@/components/UserReviews';
@@ -26,7 +27,7 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
           </div>
         </TabsContent>
         <TabsContent value="reviews" className="p-4 border rounded-lg mt-4">
-          <UserReviews productId={product.id} rating={product.rating} reviewCount={product.reviews} />
+          <UserReviews productId={product.id} rating={product.rating} reviewCount={product.reviews || 0} />
         </TabsContent>
       </Tabs>
     </div>

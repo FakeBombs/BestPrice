@@ -1,3 +1,4 @@
+
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -545,7 +546,7 @@ export const getVendorById = (id: string) => {
   return vendors.find(vendor => vendor.id === id);
 };
 
-// Add the getBestPrice function that was causing errors
+// Add the getBestPrice function
 export const getBestPrice = (product: Product) => {
   if (!product.prices || product.prices.length === 0) {
     return null;
@@ -651,3 +652,47 @@ export const formatSlug = (text: string): string => {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 };
+
+// Add grouped brands for BrandPage
+export const groupedBrands = () => {
+  // Group brands by first letter
+  const groups: Record<string, typeof brands> = {};
+  brands.forEach(brand => {
+    const firstLetter = brand.name.charAt(0).toUpperCase();
+    if (!groups[firstLetter]) {
+      groups[firstLetter] = [];
+    }
+    groups[firstLetter].push(brand);
+  });
+  return groups;
+};
+
+// Update the raw mockData objects to use string IDs
+// This needs to match our interfaces defined above
+for (let category of mockData.mainCategories) {
+  category.id = String(category.id);
+  category.slug = formatSlug(category.name);
+  category.image = category.imageUrl; // Add image property based on imageUrl
+}
+
+for (let category of mockData.categories) {
+  category.id = String(category.id);
+  category.parentId = String(category.parentId);
+  category.slug = formatSlug(category.name);
+  category.image = category.imageUrl; // Add image property based on imageUrl
+}
+
+for (let product of mockData.products) {
+  product.id = String(product.id);
+  product.categoryId = String(product.categoryId);
+  product.title = product.name; // Add title property based on name
+  product.image = product.imageUrl; // Add image property based on imageUrl
+  product.reviews = product.reviewCount; // Add reviews property based on reviewCount
+  
+  // Convert categoryIds if they exist
+  if (product.categoryIds) {
+    product.categoryIds = product.categoryIds.map(id => String(id));
+  } else {
+    product.categoryIds = [product.categoryId]; // Ensure categoryIds exists
+  }
+}
