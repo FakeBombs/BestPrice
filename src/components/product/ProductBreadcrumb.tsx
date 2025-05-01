@@ -28,15 +28,26 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       // Find the product's category
       const category = mockData.categories.find(c => c.id === product.categoryId);
       if (category) {
-        crumbs.push(category as CategoryWithParentId);
+        // Convert to string IDs if needed
+        const categoryWithStringId: CategoryWithParentId = {
+          ...category,
+          id: String(category.id),
+          parentId: category.parentId ? String(category.parentId) : undefined,
+        };
+        crumbs.push(categoryWithStringId);
         
         // If it's a subcategory, find its parent(s)
         let currentCat = category;
         while (currentCat.parentId) {
           const parentCat = mockData.categories.find(c => c.id === currentCat.parentId) || 
-                           mockData.mainCategories.find(c => c.id === currentCat.parentId);
+                          mockData.mainCategories.find(c => c.id === currentCat.parentId);
           if (parentCat) {
-            crumbs.unshift(parentCat as CategoryWithParentId);
+            const parentWithStringId: CategoryWithParentId = {
+              ...parentCat,
+              id: String(parentCat.id),
+              parentId: parentCat.parentId ? String(parentCat.parentId) : undefined,
+            };
+            crumbs.unshift(parentWithStringId);
             currentCat = parentCat;
           } else {
             break;
@@ -48,7 +59,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     }
   }, [product]);
 
-  const formatSlug = (name: string) => {
+  const getSlug = (name: string) => {
     return name.toLowerCase().replace(/\s+/g, '-');
   };
 
@@ -66,7 +77,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           <React.Fragment key={crumb.id}>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
+                <Link to={`/cat/${crumb.id}/${getSlug(crumb.name)}`}>
                   {crumb.name}
                 </Link>
               </BreadcrumbLink>

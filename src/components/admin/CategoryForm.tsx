@@ -25,7 +25,7 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
   const [formData, setFormData] = useState<Partial<Category>>({
     id: '',
     name: '',
-    parentId: undefined,
+    parentId: '',
     image: '',
   });
   

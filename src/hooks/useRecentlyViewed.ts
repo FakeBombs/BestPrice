@@ -39,9 +39,16 @@ export const useRecentlyViewed = () => {
     
     setRecentlyViewed(products);
   };
+  
+  // Adding a simplified version to support the existing code
+  const addProduct = (product: Product) => {
+    if (!product || !product.id) return;
+    addToRecentlyViewed(product.id);
+  };
 
   return {
     recentlyViewed,
-    addToRecentlyViewed
+    addToRecentlyViewed,
+    addProduct
   };
 };

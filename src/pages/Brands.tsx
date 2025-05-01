@@ -1,8 +1,22 @@
 
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { brands, groupedBrands } from '@/data/mockData';
+import { brands } from '@/data/mockData';
 import { useDocumentAttributes } from '@/hooks/useDocumentAttributes';
+
+// Define the groupedBrands function locally if it's missing from mockData
+const groupBrands = () => {
+  // Group brands by first letter
+  const groups: Record<string, typeof brands> = {};
+  brands.forEach(brand => {
+    const firstLetter = brand.name.charAt(0).toUpperCase();
+    if (!groups[firstLetter]) {
+      groups[firstLetter] = [];
+    }
+    groups[firstLetter].push(brand);
+  });
+  return groups;
+};
 
 const Brands = () => {
   const [groupedBrandsData, setGroupedBrandsData] = useState<Record<string, any[]>>({});
@@ -10,10 +24,10 @@ const Brands = () => {
   
   useEffect(() => {
     // Group brands by first letter
-    setGroupedBrandsData(groupedBrands());
+    setGroupedBrandsData(groupBrands());
     
     // Set first letter with brands as active
-    const letters = Object.keys(groupedBrands()).sort();
+    const letters = Object.keys(groupBrands()).sort();
     if (letters.length > 0) {
       setActiveLetter(letters[0]);
     }

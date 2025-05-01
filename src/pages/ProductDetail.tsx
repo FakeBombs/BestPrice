@@ -7,17 +7,17 @@ import ProductEssentialInfo from "../components/product/ProductEssentialInfo";
 import ProductVendors from "../components/ProductVendors";
 import ProductTabsSection from "../components/product/ProductTabsSection";
 import ProductRelatedSections from "../components/product/ProductRelatedSections";
-import { mockData } from "../data/mockData";
+import { mockData, getProductById } from "../data/mockData";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string, slug: string }>();
   const [product, setProduct] = useState<any | null>(null);
-  const { addProduct } = useRecentlyViewed();
-
+  const { recentlyViewed, addProduct } = useRecentlyViewed();
+  
   useEffect(() => {
     if (id) {
-      const foundProduct = mockData.products.find(p => p.id.toString() === id);
+      const foundProduct = getProductById(id);
       if (foundProduct) {
         setProduct(foundProduct);
         addProduct(foundProduct);
@@ -28,6 +28,15 @@ export default function ProductDetail() {
   if (!product) {
     return <div className="container mx-auto p-4">Loading...</div>;
   }
+
+  // Get related products for the related sections, using empty arrays as fallbacks
+  const similarProducts = mockData.products.filter(p => 
+    p.id !== product.id && p.categoryId === product.categoryId
+  ).slice(0, 5) || [];
+  
+  const categoryDeals = mockData.products.filter(p => 
+    p.categoryId === product.categoryId
+  ).slice(0, 5) || [];
 
   return (
     <div className="container mx-auto px-4">
@@ -46,7 +55,12 @@ export default function ProductDetail() {
       
       <ProductTabsSection product={product} />
       
-      <ProductRelatedSections productId={product.id} />
+      <ProductRelatedSections 
+        productId={product.id}
+        similarProducts={similarProducts}
+        categoryDeals={categoryDeals}
+        recentlyViewed={recentlyViewed}
+      />
     </div>
   );
 }

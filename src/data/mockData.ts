@@ -534,16 +534,16 @@ export const brands = [
 
 // Add utility functions used in components
 export const getProductById = (id: string) => {
-  return mockData.products.find(product => product.id === id);
+  return mockData.products.find(product => String(product.id) === id);
 };
 
 export const getCategoryById = (id: string) => {
-  return mockData.categories.find(category => category.id === id) ||
-         mockData.mainCategories.find(category => category.id === id);
+  return mockData.categories.find(category => String(category.id) === id) ||
+         mockData.mainCategories.find(category => String(category.id) === id);
 };
 
 export const getVendorById = (id: string) => {
-  return vendors.find(vendor => vendor.id === id);
+  return vendors.find(vendor => String(vendor.id) === id);
 };
 
 // Add the getBestPrice function
@@ -639,7 +639,7 @@ export const getCategories = () => {
 // Add the getProductsByCategory function
 export const getProductsByCategory = (categoryId: string) => {
   return mockData.products.filter(product => 
-    product.categoryId === categoryId || 
+    String(product.categoryId) === categoryId || 
     (product.categoryIds && product.categoryIds.includes(categoryId))
   );
 };
@@ -693,6 +693,6 @@ for (let product of mockData.products) {
   if (product.categoryIds) {
     product.categoryIds = product.categoryIds.map(id => String(id));
   } else {
-    product.categoryIds = [product.categoryId]; // Ensure categoryIds exists
+    product.categoryIds = [String(product.categoryId)]; // Ensure categoryIds exists
   }
 }

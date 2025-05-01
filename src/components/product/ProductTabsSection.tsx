@@ -9,6 +9,10 @@ interface ProductTabsSectionProps {
 }
 
 const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
+  // Convert number to string if needed for compatibility
+  const productId = typeof product.id === 'number' ? String(product.id) : product.id;
+  const reviewCount = product.reviews || product.reviewCount || 0;
+  
   return (
     <div className="mt-12">
       <Tabs defaultValue="specifications">
@@ -27,7 +31,7 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
           </div>
         </TabsContent>
         <TabsContent value="reviews" className="p-4 border rounded-lg mt-4">
-          <UserReviews productId={product.id} rating={product.rating} reviewCount={product.reviews || 0} />
+          <UserReviews productId={productId} rating={product.rating} reviewCount={reviewCount} />
         </TabsContent>
       </Tabs>
     </div>

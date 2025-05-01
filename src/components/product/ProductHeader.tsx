@@ -1,64 +1,60 @@
 
-import { Star, Heart, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Product } from '@/data/mockData';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { Star } from "lucide-react";
+import { Product } from "@/data/mockData";
 
 interface ProductHeaderProps {
   product: Product;
-  onAddToFavorites: () => void;
-  onShareProduct: () => void;
 }
 
-const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHeaderProps) => {
+const ProductHeader = ({ product }: ProductHeaderProps) => {
+  // Determine if we should use name or title property
+  const productTitle = product.title || product.name;
+  const reviewCount = product.reviews || product.reviewCount || 0;
+
   return (
-    <>
-      <div className="item-meta">
-        <div className="item-badges">
-          <div className="p__badges-drop"><div className="p__badge p__badge--drop drop drop--10">-11%</div></div>
-          <div className="p__badge p__badge--sales p__badge--sales p__badge--sales-first">#1 Best Seller</div>
+    <div className="mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+        <div className="flex-1">
+          {/* Product title */}
+          <h1 
+            itemProp="name" 
+            content={productTitle} 
+            className="text-2xl md:text-3xl font-bold"
+          >
+            {productTitle}
+          </h1>
+          <meta itemProp="brand" content={product.brand} />
+          
+          {/* Brand & SKU info */}
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-2">
+            <span className="font-medium">{product.brand}</span>
+            {product.model && (
+              <>
+                <span className="inline-block mx-1">•</span>
+                <span>Model: {product.model}</span>
+              </>
+            )}
+            {product.sku && (
+              <>
+                <span className="inline-block mx-1">•</span>
+                <span>SKU: {product.sku}</span>
+              </>
+            )}
+          </div>
         </div>
         
-        <div className="item-title-actions">
-          <hgroup className="item-hgroup">
-            <h1 itemProp="name" content={product.title || product.name} className="item-title">{product.title || product.name}</h1>
-            <meta itemProp="url" content={`/item/${product.id}/${product.title || product.name}`}/>
-          </hgroup>
-          <div className="item-actions">
-            <div className="item-actions__action item-actions__action--shortlist">
-              <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
-            </div>
-            <div className="item-actions__action item-actions__action--options">
-              <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/actions.svg#icon-more-vertical"></use></svg>
-            </div>
+        {/* Rating */}
+        <div className="flex items-center mt-2 md:mt-0">
+          <div className="flex items-center">
+            <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+            <span className="ml-1 font-medium">{product.rating.toFixed(1)}</span>
           </div>
-          <div className="item-links">
-            <div className="item-rating">
-              <a href={`/item/${product.id}/${product.title || product.name}`}>
-                <div className="simple-rating">
-                  <div className="simple-rating__inner">
-                    <div className="simple-rating__stars">
-                      <svg aria-hidden="true" className="icon" width="80" height="16"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                    </div>
-                    <div className="simple-rating__rated">
-                      <div className="simple-rating__stars">
-                        <svg aria-hidden="true" className="icon" width="80" height="16"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="simple-rating__total">({product.reviews || product.reviewCount || 0})</div>
-                </div>
-              </a>
-              
-              <a data-review-src="cluster-header" className="item-link__review dotted-link" href={`/item/${product.id}/${product.title || product.name}/review`}>Αξιολόγησέ το</a>
-            </div>
-            <a className="item-link__qna dotted-link" href={`/item/${product.id}/${product.title || product.name}`}>Κάνε ερώτηση</a>
-            <a className="item-link__graph dotted-link" href={`/item/${product.id}/${product.title || product.name}`}>Γράφημα τιμής</a>
-          </div>
+          <span className="text-sm text-muted-foreground ml-1">
+            ({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})
+          </span>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
