@@ -36,10 +36,17 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         const categoryWithStringId: CategoryWithParentId = {
           ...category,
           id: String(category.id),
-          parentId: category.parentId ? String(category.parentId) : undefined,
+          name: category.name,
+          description: category.description,
           slug: formatSlug(category.name),
           image: category.imageUrl
         };
+        
+        // Add parentId only if it exists in the original category
+        if ('parentId' in category) {
+          categoryWithStringId.parentId = String(category.parentId);
+        }
+        
         crumbs.push(categoryWithStringId);
         
         // If it's a subcategory, find its parent(s)
@@ -53,10 +60,17 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
             const parentWithStringId: CategoryWithParentId = {
               ...parentCat,
               id: String(parentCat.id),
-              parentId: parentCat.parentId ? String(parentCat.parentId) : undefined,
+              name: parentCat.name,
+              description: parentCat.description,
               slug: formatSlug(parentCat.name),
               image: parentCat.imageUrl
             };
+            
+            // Add parentId only if it exists in the original category
+            if ('parentId' in parentCat) {
+              parentWithStringId.parentId = String(parentCat.parentId);
+            }
+            
             crumbs.unshift(parentWithStringId);
             currentCat = parentWithStringId;
           } else {

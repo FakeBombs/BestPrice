@@ -30,11 +30,8 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-interface AdminLayoutWrapperProps {
-  children: ReactNode;
-}
-
-const AdminLayoutWrapper = ({ children }: AdminLayoutWrapperProps) => (
+// Fixed: Ensure AdminLayoutWrapper properly defines props
+const AdminLayoutWrapper: React.FC<{children: ReactNode}> = ({ children }) => (
   <AdminLayout>{children}</AdminLayout>
 );
 
@@ -52,7 +49,7 @@ function App() {
           <Route path="account/*" element={<AccountPage />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="cat/:id/:slug" element={<CategoryPage />} />
+          <Route path="cat/:categoryId/:categorySlug" element={<Categories />} />
           <Route path="brands" element={<Brands />} />
           <Route path="brand/:id/:name" element={<BrandPage />} />
           <Route path="stores" element={<Stores />} />

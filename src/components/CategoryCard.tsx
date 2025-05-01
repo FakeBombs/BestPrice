@@ -8,6 +8,7 @@ interface CategoryCardProps {
     image?: string;
     imageUrl?: string;
     productCount?: number;
+    slug?: string;
   };
   size?: "small" | "medium" | "large";
 }
@@ -23,12 +24,15 @@ const CategoryCard = ({ category, size = "medium" }: CategoryCardProps) => {
     large: "h-36 w-36",
   };
 
+  // Use slug if available, otherwise format the name
+  const slug = category.slug || formatSlug(category.name);
+  
   // Use image if available, otherwise fall back to imageUrl
   const imageSource = category.image || category.imageUrl;
 
   return (
     <Link
-      to={`/cat/${category.id}/${formatSlug(category.name)}`}
+      to={`/cat/${category.id}/${slug}`}
       className="block rounded-lg overflow-hidden border border-gray-200 hover:border-primary transition"
     >
       <div className="p-3 flex flex-col items-center">
