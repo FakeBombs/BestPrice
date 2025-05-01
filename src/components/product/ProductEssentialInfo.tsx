@@ -1,55 +1,90 @@
+
+import React, { useState } from 'react';
+import { Star, Heart, Share, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Product, ProductPrice, getVendorById } from '@/data/mockData';
-import { useTranslation } from '@/hooks/useTranslation';
+import ProductHighlights from './ProductHighlights';
+import ProductImageGallery from '../ProductImageGallery';
+import PriceHistoryChart from '../PriceHistoryChart';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface ProductEssentialInfoProps {
-  product: Product;
-  bestPrice: ProductPrice | undefined;
-  onNotifyMe: () => void;
-};
+  product: any;
+}
 
-const ProductVendors = ({ product }: ProductVendorsProps) => {
-  // Sort prices from lowest to highest
-  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
-};
-
-const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssentialInfoProps) => {
-  const bestVendor = bestPrice ? getVendorById(bestPrice.vendorId) : null;
+const ProductEssentialInfo: React.FC<ProductEssentialInfoProps> = ({ product }) => {
   const { t } = useTranslation();
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('6m');
+  const [showPriceHistory, setShowPriceHistory] = useState(false);
   
+  const togglePriceHistory = () => {
+    setShowPriceHistory(!showPriceHistory);
+  };
+
   return (
-  <>
-    <div className="product-overview__section">
-      <div className="product-overview__section-title">Η καλύτερη τιμή</div>
-      <div className="product-overview__price">{bestPrice && (<span>${bestPrice.price.toFixed(2)}</span>)}</div>
-      <div className="product-overview__link" data-type="share">Μοιράσου την προσφορά</div>
-      <div className="product-overview__link" data-type="notify" onClick={onNotifyMe}>Ειδοποίηση για πτώση τιμής</div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="product-gallery">
+        <ProductImageGallery images={product.images || []} />
+      </div>
       
-      {bestVendor && (
-        <div className="text-sm">
-          Best price from <span className="font-medium">{bestVendor.name}</span>
-          {bestPrice.shippingCost > 0 
-            ? ` + $${bestPrice.shippingCost.toFixed(2)} shipping` 
-            : ' with free shipping'}
+      <div className="product-info space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-gray-500">
+            Brand: <span className="font-medium">{product.brand}</span>
+          </div>
+          <div className="text-sm text-gray-500">
+            SKU: <span className="font-medium">{product.sku || product.id}</span>
+          </div>
         </div>
-      )}
-    </div>
-    
-    <div class="product-overview__section"><div class="product-overview__section-title">Διατίθεται από</div><div class="product-overview__merchants">{product.prices.length} καταστήματα</div></div>
-    <div className="product-overview__section">
-      <div class="product-overview__section-title">Πτώση τιμής</div>
-      <div class="item-mini-graph__placeholder" data-intersected=""></div>
-      <div className="mt-4 text-sm text-muted-foreground flex items-center">
-        Last price update: {new Date().toLocaleDateString()}
+        
+        <div className="price-section">
+          <div className="text-2xl font-bold">${product.price.toFixed(2)}</div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={togglePriceHistory}>
+              Price History
+            </Button>
+            <Button variant="outline" size="sm">
+              <Info className="h-4 w-4 mr-1" /> Price Alert
+            </Button>
+          </div>
+        </div>
+        
+        {showPriceHistory && (
+          <div className="price-history-chart">
+            <PriceHistoryChart 
+              productId={product.id} 
+              basePrice={product.price} 
+              timeRange={timeRange}
+              setTimeRange={setTimeRange}
+            />
+          </div>
+        )}
+        
+        <div className="rating flex items-center gap-1">
+          <div className="flex">
+            {[1, 2, 3, 4, 5].map(star => (
+              <Star
+                key={star}
+                className={`h-4 w-4 ${star <= product.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+              />
+            ))}
+          </div>
+          <span className="text-sm">({product.reviewCount || 0} reviews)</span>
+        </div>
+        
+        <ProductHighlights product={product} />
+        
+        <div className="action-buttons flex gap-2 pt-4">
+          <Button variant="outline" className="flex items-center">
+            <Heart className="h-4 w-4 mr-2" />
+            {t('Add to Wishlist')}
+          </Button>
+          <Button variant="outline" className="flex items-center">
+            <Share className="h-4 w-4 mr-2" />
+            {t('Share')}
+          </Button>
+        </div>
       </div>
     </div>
-    <div className="product-overview__button">
-      <button className="item-actions__button">
-        <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg>
-        <span className="item-actions__label">Λίστα Αγορών</span>
-      </button>
-    </div>
-  </>
   );
 };
 

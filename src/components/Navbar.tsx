@@ -24,13 +24,13 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
     // Handle click events to close sitemap on navbar clicks (except the sitemap button)
     const handleNavbarClick = (event: React.MouseEvent) => {
       // Prevent closing if clicking on the sitemap toggle button
-      if (event.currentTarget.id !== 'sitemap-toggle') {
+      if ((event.currentTarget as HTMLElement).id !== 'sitemap-toggle') {
         onRemoveSitemap();
       }
     };
 
   return (
-    <div className="bp-header__outer-wrapper" onClick={handleNavbarClick} ref={ref}>
+    <div className="bp-header__outer-wrapper" ref={ref}>
       <header id="bp-header" className="bp-header root__wrapper">
         <div className="root" id="header-root">
           <div id="nav">
@@ -54,7 +54,13 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
           </div>
 
           <div className="search__wrapper">
-            <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" id="sitemap-toggle" onClick={(e) => { e.stopPropagation(); onSitemapToggle(); }}>
+            <div 
+              className="sitemap-button sitemap-button--desktop pressable" 
+              aria-label="Sitemap button" 
+              role="button" 
+              id="sitemap-toggle" 
+              onClick={(e) => { e.stopPropagation(); onSitemapToggle(); }}
+            >
               <div className="sitemap-button__lines">
                 <div></div>
                 <div></div>
@@ -63,7 +69,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
             </div>
 
             {/* Desktop Search */}
-            <SearchBar className="" />
+            <SearchBar />
           </div>
           
         </div>

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mockData } from '@/data/mockData';
+import { mockData } from '../../data/mockData';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../ui/breadcrumb';
 
 interface ProductBreadcrumbProps {
@@ -46,15 +46,19 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     <Breadcrumb className="mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
+          <BreadcrumbLink asChild>
+            <Link to="/">Home</Link>
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         
         {breadcrumbs.map((crumb, index) => (
           <React.Fragment key={crumb.id}>
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
-                {crumb.name}
+              <BreadcrumbLink asChild>
+                <Link to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
+                  {crumb.name}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

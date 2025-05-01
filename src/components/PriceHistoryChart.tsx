@@ -55,7 +55,7 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({ productId, basePr
             <Button
               key={range}
               variant={timeRange === range ? 'default' : 'outline'}
-              onClick={() => setTimeRange(range as '1m' | '3m' | '6m' | '1y')}
+              onClick={() => setTimeRange(range)}
             >
               {range.toUpperCase()}
             </Button>

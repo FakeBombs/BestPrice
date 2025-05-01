@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mockData } from '@/data/mockData';
+import { mockData } from '../../data/mockData';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../../components/ui/breadcrumb';
 
 interface CategoryBreadcrumbProps {
@@ -41,7 +41,9 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
     <Breadcrumb className="mt-4 mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
+          <BreadcrumbLink asChild>
+            <Link to="/">Home</Link>
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         
@@ -51,8 +53,10 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
               {index === breadcrumbs.length - 1 ? (
                 <span>{crumb.name}</span>
               ) : (
-                <BreadcrumbLink as={Link} to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
-                  {crumb.name}
+                <BreadcrumbLink asChild>
+                  <Link to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
+                    {crumb.name}
+                  </Link>
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
