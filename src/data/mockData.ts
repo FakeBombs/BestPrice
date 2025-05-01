@@ -704,6 +704,20 @@ export interface Brand {
   logo?: string;
 }
 
+export interface Vendor {
+  id: string;
+  name: string;
+  certification: string;
+  address: string[];
+  telephone: string[];
+  productCount: number;
+  categoryCount: number;
+  paymentMethods: string[];
+  url: string; // Adding this for filtering by vendor URL
+  logo: string;
+  rating: number;
+}
+
 export interface ProductPrice {
   vendorId: string;
   price: number;
@@ -776,6 +790,7 @@ export const groupedBrands = () => {
 };
 
 // Update the mockData objects to use string IDs and add missing properties
+// This section is where the TypeScript errors were occurring - here we properly convert IDs to strings
 for (let category of mockData.mainCategories) {
   category.id = String(category.id);
   category.slug = category.slug || formatSlug(category.name);
@@ -805,5 +820,15 @@ for (let product of mockData.products) {
     product.categoryIds = [String(product.categoryId)];
   } else {
     product.categoryIds = product.categoryIds.map(id => String(id));
+  }
+  
+  // Add mock price data for vendors if not available
+  if (!product.prices) {
+    product.prices = vendors.slice(0, Math.floor(Math.random() * 3) + 1).map(vendor => ({
+      vendorId: vendor.id,
+      price: product.price * (0.9 + Math.random() * 0.2), // Random price around the base price
+      inStock: Math.random() > 0.2, // 80% chance to be in stock
+      shippingCost: Math.random() > 0.5 ? 0 : Math.floor(Math.random() * 10) + 5 // 50% chance of shipping cost
+    }));
   }
 }

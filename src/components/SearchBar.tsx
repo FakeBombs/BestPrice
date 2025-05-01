@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { VoiceSearchButton } from './VoiceSearchButton';  // Import using named export
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import SearchDropdown from './SearchDropdown';
-import { Product } from '@/data/mockData';
+import { Product, searchProducts } from '@/data/mockData';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface SearchBarProps {
   className?: string;
@@ -16,9 +17,11 @@ interface SearchBarProps {
 export const SearchBar = ({ className = "" }: SearchBarProps) => {
   const [query, setQuery] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [liveResults, setLiveResults] = useState<Product[]>([]);
   const { recentlyViewed } = useRecentlyViewed();
   const searchBarRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
+  const debouncedQuery = useDebounce(query, 300);
   
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -34,6 +37,21 @@ export const SearchBar = ({ className = "" }: SearchBarProps) => {
     };
   }, []);
 
+  // Search live as the user types
+  useEffect(() => {
+    if (debouncedQuery.trim()) {
+      const results = searchProducts(debouncedQuery);
+      setLiveResults(results);
+      
+      // Navigate to search results page if user is typing
+      if (debouncedQuery.length > 1) {
+        navigate(`/search?q=${encodeURIComponent(debouncedQuery)}`);
+      }
+    } else {
+      setLiveResults([]);
+    }
+  }, [debouncedQuery, navigate]);
+
   // Handle search form submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,9 +66,11 @@ export const SearchBar = ({ className = "" }: SearchBarProps) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
     
-    // Hide dropdown when typing
+    // Hide recent items dropdown, show live results
     if (newQuery.trim()) {
       setDropdownVisible(false);
+    } else {
+      setDropdownVisible(true);
     }
   };
 
@@ -95,8 +115,8 @@ export const SearchBar = ({ className = "" }: SearchBarProps) => {
       </div>
       
       <SearchDropdown 
-        items={recentlyViewed.slice(0, 5)} 
-        visible={dropdownVisible}
+        items={dropdownVisible ? recentlyViewed.slice(0, 5) : []} 
+        visible={dropdownVisible && recentlyViewed.length > 0}
         onSelect={handleProductSelect}
         onClose={() => setDropdownVisible(false)}
       />

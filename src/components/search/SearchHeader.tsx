@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface SearchHeaderProps {
   query: string;
@@ -7,6 +8,16 @@ interface SearchHeaderProps {
 }
 
 const SearchHeader = ({ query, resultsCount }: SearchHeaderProps) => {
+  const [searchParams] = useSearchParams();
+  const currentSort = searchParams.get('o') || '';
+  
+  // Function to get the URL with the sort parameter
+  const getSortUrl = (sortOption: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('o', sortOption);
+    return `/search?${params.toString()}`;
+  };
+  
   return (
     <div className="page-header">
       <div className="page-header__title-wrapper">
@@ -22,15 +33,34 @@ const SearchHeader = ({ query, resultsCount }: SearchHeaderProps) => {
         <div className="tabs">
           <div className="tabs-wrapper">
             <nav>
-              <a href={`/search?q=${query}`} rel="nofollow" className="current">
+              <Link 
+                to={getSortUrl('')} 
+                rel="nofollow" 
+                className={currentSort === '' ? 'current' : ''}
+              >
                 <div className="tabs__content">Σχετικότερα</div>
-              </a>
-              <a href={`/search?q=${query}&amp;o=2`} rel="nofollow">
+              </Link>
+              <Link 
+                to={getSortUrl('price_asc')} 
+                rel="nofollow"
+                className={currentSort === 'price_asc' ? 'current' : ''}
+              >
                 <div className="tabs__content">Φθηνότερα</div>
-              </a>
-              <a href={`/search?q=${query}&amp;o=1`} rel="nofollow">
+              </Link>
+              <Link 
+                to={getSortUrl('price_desc')} 
+                rel="nofollow"
+                className={currentSort === 'price_desc' ? 'current' : ''}
+              >
                 <div className="tabs__content">Ακριβότερα</div>
-              </a>
+              </Link>
+              <Link 
+                to={getSortUrl('stores')} 
+                rel="nofollow"
+                className={currentSort === 'stores' ? 'current' : ''}
+              >
+                <div className="tabs__content">Αριθμός Καταστημάτων</div>
+              </Link>
             </nav>
           </div>
         </div>

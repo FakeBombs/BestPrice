@@ -1,35 +1,50 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface FilterOptionsProps {
   query: string;
+  inStockOnly?: boolean;
+  isCertified?: boolean;
 }
 
-const FilterOptions = ({ query }: FilterOptionsProps) => {
+const FilterOptions = ({ query, inStockOnly = false, isCertified = false }: FilterOptionsProps) => {
   return (
-    <div className="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+    <div className="filter-limit default-list" data-filter-name="limit">
       <div className="filter__header">
         <h4>Εμφάνιση μόνο</h4>
       </div>
       <div className="filter-container">
         <ol>
           <li data-filter="certified">
-            <a title="Πιστοποιημένα καταστήματα" rel="nofollow" href={`/search?q=${query}&certified=1`}>
+            <Link 
+              title="Πιστοποιημένα καταστήματα" 
+              to={`/search?q=${encodeURIComponent(query)}&certified=${isCertified ? '0' : '1'}`}
+              className={isCertified ? 'active' : ''}
+            >
               <svg aria-hidden="true" className="icon" width="16" height="16">
                 <use xlinkHref="//www.bestprice.gr/public/dist/images/icons/icons.svg#icon-certified-16"></use>
               </svg>
               <span>Πιστοποιημένα καταστήματα</span>
-            </a>
+            </Link>
           </li>
-          <li id="filter-nearby" className="nearby-location is-set">
-            <a title="Κοντά μου" rel="nofollow" href={`/search?q=${query}&nearby=1`}>Κοντά μου (20 χλμ)</a>
+          <li id="filter-nearby" className="nearby-location">
+            <Link title="Κοντά μου" to={`/search?q=${encodeURIComponent(query)}&nearby=1`}>
+              Κοντά μου (20 χλμ)
+            </Link>
             <div className="filter-nearby__options">Επιλογές</div>
           </li>
           <li data-filter="in-stock">
-            <a title="Άμεσα διαθέσιμα" rel="nofollow" href={`/search?q=${query}&instock=1`}><span>Άμεσα διαθέσιμα</span></a>
+            <Link 
+              title="Άμεσα διαθέσιμα" 
+              to={`/search?q=${encodeURIComponent(query)}&instock=${inStockOnly ? '0' : '1'}`}
+              className={inStockOnly ? 'active' : ''}
+            >
+              <span>Άμεσα διαθέσιμα</span>
+            </Link>
           </li>
           <li data-filter="boxnow">
-            <a title="Παράδοση" rel="nofollow" href={`/search?q=${query}&boxnow=1`}>
+            <Link title="Παράδοση" to={`/search?q=${encodeURIComponent(query)}&boxnow=1`}>
               <svg aria-hidden="true" className="icon" width="24" height="24">
                 <use xlinkHref="//www.bestprice.gr/public/dist/images/icons/partners.svg#icon-boxnow"></use>
               </svg>
@@ -39,7 +54,7 @@ const FilterOptions = ({ query }: FilterOptionsProps) => {
                 </svg>
               </span>
               <span>Παράδοση</span>
-            </a>
+            </Link>
           </li>
         </ol>
       </div>

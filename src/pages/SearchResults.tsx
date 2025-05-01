@@ -1,36 +1,51 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { searchProducts, getCategories, formatSlug } from '@/data/mockData';
+import { searchProducts, getCategories, vendors, brands } from '@/data/mockData';
 import Sidebar from '@/components/search/Sidebar';
 import ProductCard from '@/components/ProductCard';
 import SearchHeader from '@/components/search/SearchHeader';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useProductFilters } from '@/hooks/useProductFilters';
 
-interface SearchResultsProps {}
-
-const SearchResults: React.FC<SearchResultsProps> = () => {
-  const [searchParams] = useSearchParams();
+const SearchResults: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
+  const storeFilter = searchParams.get('store') || '';
+  const vendorFilter = searchParams.get('vendor') || '';
+  const brandFilter = searchParams.get('brand') || '';
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sortOption, setSortOption] = useState('relevance');
 
-  // Retrieve categories for filtering
-  const allCategories = getCategories();
+  // Get sort order from query params or default to 'relevance'
+  const sortParam = searchParams.get('o') || 'relevance';
   
-  // Add missing properties to categories for TypeScript compatibility
-  const categoriesWithProperties = allCategories.map(category => ({
-    ...category,
-    slug: category.slug || formatSlug(category.name),
-    image: category.image || category.imageUrl
-  }));
-
   useEffect(() => {
     const fetchResults = async () => {
       setLoading(true);
       try {
         const data = await searchProducts(query);
-        setResults(data);
+        
+        // Apply vendor filter if present
+        let filteredData = data;
+        if (storeFilter) {
+          const vendorDomain = storeFilter;
+          filteredData = filteredData.filter(product => 
+            product.prices?.some(price => {
+              const vendor = vendors.find(v => v.id === price.vendorId);
+              return vendor?.url.includes(vendorDomain);
+            })
+          );
+        }
+        
+        // Apply brand filter if present
+        if (brandFilter) {
+          filteredData = filteredData.filter(product => 
+            product.brand.toLowerCase() === brandFilter.toLowerCase()
+          );
+        }
+        
+        setResults(filteredData);
       } catch (error) {
         console.error('Error searching products:', error);
         setResults([]);
@@ -40,15 +55,20 @@ const SearchResults: React.FC<SearchResultsProps> = () => {
     };
 
     fetchResults();
-  }, [query]);
+  }, [query, storeFilter, brandFilter, vendorFilter]);
 
-  const handleSortChange = (option) => {
-    setSortOption(option);
-    // Implement sorting logic here
+  // Apply filters and sorting
+  const { filteredResults } = useProductFilters({ initialProducts: results });
+
+  const handleSortChange = (value: string) => {
+    // Update the URL with the new sort parameter
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('o', value);
+    setSearchParams(newParams);
   };
 
   // Get the total count
-  const totalResults = results.length;
+  const totalResults = filteredResults.length;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -65,21 +85,14 @@ const SearchResults: React.FC<SearchResultsProps> = () => {
               {loading ? 'Searching...' : `${totalResults} results`}
             </p>
             
-            <div className="flex items-center space-x-2">
-              <label htmlFor="sort" className="text-sm text-gray-600">Sort by:</label>
-              <select
-                id="sort"
-                value={sortOption}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="border rounded p-1 text-sm"
-              >
-                <option value="relevance">Relevance</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="rating">Rating</option>
-                <option value="newest">Newest</option>
-              </select>
-            </div>
+            <Tabs defaultValue={sortParam} onValueChange={handleSortChange}>
+              <TabsList>
+                <TabsTrigger value="relevance">Σχετικότερα</TabsTrigger>
+                <TabsTrigger value="price_asc">Φθηνότερα</TabsTrigger>
+                <TabsTrigger value="price_desc">Ακριβότερα</TabsTrigger>
+                <TabsTrigger value="stores">Αριθμός Καταστημάτων</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
           
           {loading ? (
@@ -98,7 +111,7 @@ const SearchResults: React.FC<SearchResultsProps> = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {results.map((product) => (
+              {filteredResults.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
