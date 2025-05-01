@@ -156,8 +156,8 @@ export function AdPostForm({ onSubmit }: AdPostFormProps) {
               </SelectTrigger>
               <SelectContent>
                 {adType === 'product' && products.map(product => (
-                  <SelectItem key={product.id} value={product.id}>
-                    {product.title}
+                  <SelectItem key={String(product.id)} value={String(product.id)}>
+                    {product.name}
                   </SelectItem>
                 ))}
                 {adType === 'store' && vendors.map(vendor => (

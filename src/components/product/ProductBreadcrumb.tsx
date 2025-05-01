@@ -41,7 +41,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         crumbs.push(categoryWithStringId);
         
         // If it's a subcategory, find its parent(s)
-        let currentCat = category;
+        let currentCat = categoryWithStringId;
         while (currentCat.parentId) {
           const parentCat = mockData.categories.find(c => String(c.id) === String(currentCat.parentId)) || 
                           mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
@@ -55,7 +55,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
               image: parentCat.imageUrl
             };
             crumbs.unshift(parentWithStringId);
-            currentCat = parentCat;
+            currentCat = parentWithStringId;
           } else {
             break;
           }
