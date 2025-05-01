@@ -1,44 +1,62 @@
 
-import ProductCarousel from '@/components/ProductCarousel';
-import SimilarProductsSlider from '@/components/SimilarProductsSlider';
-import { Product, getCategoryById } from '@/data/mockData';
+import React from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Product } from '@/data/mockData';
+import ProductCarousel from '../ProductCarousel';
 
 interface ProductRelatedSectionsProps {
+  productId: string | number;
   similarProducts: Product[];
   categoryDeals: Product[];
   recentlyViewed: Product[];
-  productId: string;
 }
 
-const ProductRelatedSections = ({ 
-  similarProducts, 
-  categoryDeals, 
+const ProductRelatedSections = ({
+  productId,
+  similarProducts,
+  categoryDeals,
   recentlyViewed,
-  productId
 }: ProductRelatedSectionsProps) => {
-  const category = categoryDeals.length > 0 && categoryDeals[0].categoryIds && categoryDeals[0].categoryIds[0] 
-    ? getCategoryById(categoryDeals[0].categoryIds[0])?.name 
-    : 'this category';
-    
+  // Convert productId to string for comparison
+  const productIdStr = String(productId);
+  
+  // Filter out the current product from recentlyViewed
+  const filteredRecentlyViewed = recentlyViewed.filter(p => String(p.id) !== productIdStr);
+
   return (
-    <>
-      {/* Similar Products */}
-      <SimilarProductsSlider title="Similar Products" products={similarProducts} />
-      
-      {/* Deals in this Category */}
-      <ProductCarousel 
-        title={`Deals in ${category}`} 
-        products={categoryDeals} 
-        emptyMessage="No deals found in this category"
-      />
-      
-      {/* Recently Viewed Products */}
-      <ProductCarousel 
-        title="Recently Viewed" 
-        products={recentlyViewed.filter(p => p.id !== productId)} 
-        emptyMessage="No recently viewed products"
-      />
-    </>
+    <div className="my-12">
+      <Tabs defaultValue="similar" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsTrigger value="similar">Similar Products</TabsTrigger>
+          <TabsTrigger value="deals">Category Deals</TabsTrigger>
+          <TabsTrigger value="viewed">Recently Viewed</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="similar">
+          {similarProducts.length > 0 ? (
+            <ProductCarousel products={similarProducts} />
+          ) : (
+            <p className="text-center text-muted-foreground py-10">No similar products found.</p>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="deals">
+          {categoryDeals.length > 0 ? (
+            <ProductCarousel products={categoryDeals} />
+          ) : (
+            <p className="text-center text-muted-foreground py-10">No deals available for this category.</p>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="viewed">
+          {filteredRecentlyViewed.length > 0 ? (
+            <ProductCarousel products={filteredRecentlyViewed} />
+          ) : (
+            <p className="text-center text-muted-foreground py-10">No recently viewed products.</p>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 

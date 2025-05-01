@@ -15,7 +15,7 @@ export const useRecentlyViewed = () => {
       .map((id: string) => getProductById(id))
       .filter(Boolean); // Filter out any null/undefined values
     
-    setRecentlyViewed(products);
+    setRecentlyViewed(products as Product[]);
   }, []);
 
   // Add a product to recently viewed
@@ -37,7 +37,7 @@ export const useRecentlyViewed = () => {
       .map((id: string) => getProductById(id))
       .filter(Boolean);
     
-    setRecentlyViewed(products);
+    setRecentlyViewed(products as Product[]);
   };
   
   // Adding a simplified version to support the existing code

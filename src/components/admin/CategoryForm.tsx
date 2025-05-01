@@ -42,7 +42,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
     name: category?.name || '',
     description: category?.description || '',
     imageUrl: category?.imageUrl || '',
-    parentId: category?.parentId || '',
+    parentId: category?.parentId ? String(category.parentId) : '',
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,7 +51,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
       name: category?.name || "",
       description: category?.description || "",
       imageUrl: category?.imageUrl || "",
-      parentId: category?.parentId || "",
+      parentId: category?.parentId ? String(category.parentId) : "",
     },
   })
 
@@ -61,7 +61,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
         name: category.name,
         description: category.description,
         imageUrl: category.imageUrl || '',
-        parentId: category.parentId || '',
+        parentId: category.parentId ? String(category.parentId) : '',
       });
     }
   }, [category]);
@@ -83,7 +83,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
   const handleUpdate = () => {
     const updatedCategory = {
       ...formData,
-      parentId: formData.parentId !== "" ? String(formData.parentId) : null, // Convert to string here
+      parentId: formData.parentId !== "" ? formData.parentId : null, // Use string here
     };
     onSubmit(updatedCategory);
     toast({

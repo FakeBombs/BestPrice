@@ -545,7 +545,7 @@ export const getVendorById = (id: string) => {
   return vendors.find(vendor => String(vendor.id) === id);
 };
 
-// Add the getBestPrice function
+// Update the getBestPrice function
 export const getBestPrice = (product: Product) => {
   if (!product.prices || product.prices.length === 0) {
     return null;
@@ -635,12 +635,12 @@ export const getCategories = () => {
   return [...mockData.mainCategories, ...mockData.categories];
 };
 
-// Add the getProductsByCategory function
+// Update the getProductsByCategory function to handle string IDs
 export const getProductsByCategory = (categoryId: string) => {
   return mockData.products.filter(product => 
     String(product.categoryId) === categoryId || 
-    (product.categoryIds && product.categoryIds.includes(categoryId))
-  );
+    (product.categoryIds && product.categoryIds.some(cid => String(cid) === categoryId))
+  ).slice(0, 5) || [];
 };
 
 // Convert string to slug

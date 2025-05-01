@@ -42,6 +42,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           const parentCat = mockData.categories.find(c => String(c.id) === String(currentCat.parentId)) || 
                           mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
           if (parentCat) {
+            // Make sure to add parentId property to mainCategories items which might not have it
             const parentWithStringId: CategoryWithParentId = {
               ...parentCat,
               id: String(parentCat.id),
