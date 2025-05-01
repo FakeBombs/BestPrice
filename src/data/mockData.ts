@@ -508,7 +508,7 @@ export const brands = [
   { id: 5, name: "GlamourStyle" }
 ];
 
-// Add utility functions
+// Add utility functions used in components
 export const getProductById = (id: number) => {
   return mockData.products.find(product => product.id === id);
 };
@@ -573,3 +573,26 @@ export const searchProducts = (query: string) => {
       product.description.toLowerCase().includes(lowerQuery)
   );
 };
+
+// Add functions required by Index.tsx
+export const fetchFeaturedProducts = () => {
+  // Return a subset of products as featured
+  return mockData.products.slice(0, 5);
+};
+
+export const fetchDeals = () => {
+  // Return a subset of products as deals
+  return mockData.products.slice(5, 10);
+};
+
+export const fetchNewArrivals = () => {
+  // Return a subset of products as new arrivals
+  return mockData.products.slice(10, 15);
+};
+
+export const getCategories = () => {
+  // Return all categories
+  return [...mockData.mainCategories, ...mockData.categories];
+};
+
+// Let's also fix the CategoryBreadcrumb.tsx file to correctly use the mockData export

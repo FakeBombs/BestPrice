@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -36,6 +35,12 @@ const Footer: React.FC = () => {
     };
     
     const { t } = useTranslation();
+    
+    // Function to format category ID for links
+    const formatCategoryId = (id: number) => {
+        return id.toString();
+    };
+  
   return (
     <div id="footer-wrapper">
       <div id="back-to-top" className="pressable" onClick={handleClick} style={{display: "flex"}}>Επιστροφή στην κορυφή<svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg></div>
@@ -67,7 +72,7 @@ const Footer: React.FC = () => {
               <div className="footer__section-scroller">
                 <div className="footer__section-content">
                   <ul>
-                    {mainCategories.map(category => ( <li><Link key={category.id} to={`/cat/${category.slug}`}>{t(category.name)}</Link></li> ))}
+                    {mainCategories.map(category => ( <li key={category.id}><Link to={`/cat/${category.id}`}>{t(category.name)}</Link></li> ))}
                     <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">{t('gifts')}</Link></li>
                     <li><Link to="/give">BestPrice Give</Link></li>

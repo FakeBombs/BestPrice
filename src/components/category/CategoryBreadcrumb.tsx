@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mockData } from '@/data/mockData';
+import { categories, mainCategories } from '@/data/mockData';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../../components/ui/breadcrumb';
 
 interface CategoryBreadcrumbProps {
@@ -19,8 +19,8 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
       // If it's a subcategory, find its parent(s)
       let currentCat = category;
       while (currentCat.parentId) {
-        const parentCat = mockData.categories.find(c => c.id === currentCat.parentId) || 
-                         mockData.mainCategories.find(c => c.id === currentCat.parentId);
+        const parentCat = categories.find(c => c.id === currentCat.parentId) || 
+                         mainCategories.find(c => c.id === currentCat.parentId);
         if (parentCat) {
           crumbs.unshift(parentCat);
           currentCat = parentCat;
@@ -41,7 +41,7 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
     <Breadcrumb className="mt-4 mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
+          <BreadcrumbLink>
             <Link to="/">Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -53,7 +53,7 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
               {index === breadcrumbs.length - 1 ? (
                 <span>{crumb.name}</span>
               ) : (
-                <BreadcrumbLink asChild>
+                <BreadcrumbLink>
                   <Link to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
                     {crumb.name}
                   </Link>
