@@ -32,7 +32,7 @@ export const useRecentlyViewed = () => {
     // Save to localStorage
     localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updatedIds));
     
-    // Update state
+    // Update state with the products
     const products = updatedIds
       .map((id: string) => getProductById(id))
       .filter(Boolean);

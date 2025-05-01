@@ -25,14 +25,18 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
     if (product && product.categoryId) {
       const crumbs: CategoryWithParentId[] = [];
       
-      // Find the product's category
-      const category = mockData.categories.find(c => String(c.id) === String(product.categoryId));
+      // Find the product's category with string IDs
+      const category = mockData.categories.find(c => String(c.id) === String(product.categoryId)) ||
+                        mockData.mainCategories.find(c => String(c.id) === String(product.categoryId));
+      
       if (category) {
-        // Convert to string IDs if needed
+        // Convert to CategoryWithParentId type with string IDs
         const categoryWithStringId: CategoryWithParentId = {
           ...category,
           id: String(category.id),
           parentId: category.parentId ? String(category.parentId) : undefined,
+          slug: formatSlug(category.name),
+          image: category.imageUrl
         };
         crumbs.push(categoryWithStringId);
         
@@ -47,6 +51,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
               ...parentCat,
               id: String(parentCat.id),
               parentId: parentCat.parentId ? String(parentCat.parentId) : undefined,
+              slug: formatSlug(parentCat.name),
+              image: parentCat.imageUrl
             };
             crumbs.unshift(parentWithStringId);
             currentCat = parentCat;

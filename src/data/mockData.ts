@@ -555,7 +555,7 @@ export const getBestPrice = (product: Product) => {
   );
 };
 
-// Update Product interface to match actual usage in components
+// Update the Product interface to match actual usage in components
 export interface Product {
   id: string | number;
   categoryId: string | number;
@@ -577,6 +577,7 @@ export interface Product {
   model?: string;
   specifications?: Record<string, string>;
   category?: string;       // Add for backward compatibility
+  slug?: string;           // Add slug property
 }
 
 export interface Category {
@@ -687,6 +688,7 @@ for (let product of mockData.products) {
   product.title = product.name; // Add title property based on name
   product.image = product.imageUrl; // Add image property based on imageUrl
   product.reviews = product.reviewCount; // Add reviews property based on reviewCount
+  product.slug = formatSlug(product.name); // Add slug property
   
   // Convert categoryIds if they exist
   if (product.categoryIds) {

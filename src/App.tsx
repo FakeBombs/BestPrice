@@ -30,8 +30,8 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-// Fix the AdminLayoutWrapper component to properly accept children
-const AdminLayoutWrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
+// Fix the AdminLayoutWrapper to properly accept children prop
+const AdminLayoutWrapper = ({ children }: { children: ReactNode }) => (
   <AdminLayout>{children}</AdminLayout>
 );
 
@@ -60,7 +60,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
         
-        <Route path="/admin" element={<AdminLayoutWrapper children={<Outlet />} />}>
+        <Route path="/admin" element={<AdminLayoutWrapper><Outlet /></AdminLayoutWrapper>}>
           <Route index element={<Navigate to="/admin/products" replace />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="categories" element={<AdminCategoriesPage />} />

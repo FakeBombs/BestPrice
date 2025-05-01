@@ -22,6 +22,17 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
   // Filter reviews for this product
   const productReviews = mockReviews.filter(review => review.productId === productIdString);
   
+  // Handlers for review actions
+  const handleVote = (reviewId: string, isHelpful: boolean) => {
+    console.log('Vote recorded:', reviewId, isHelpful ? 'helpful' : 'not helpful');
+    // Implementation would go here in a real app
+  };
+  
+  const handleWriteReview = () => {
+    console.log('Write review for product:', product.id);
+    // Implementation would go here in a real app
+  };
+  
   return (
     <div className="my-8">
       <Tabs defaultValue="description" className="w-full">
@@ -74,7 +85,11 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
         
         <TabsContent value="reviews" className="pt-6">
           {productReviews.length > 0 ? (
-            <ReviewsList reviews={productReviews} />
+            <ReviewsList 
+              reviews={productReviews} 
+              onVote={handleVote} 
+              onWriteReview={handleWriteReview}
+            />
           ) : (
             <p className="text-muted-foreground">No reviews available for this product yet.</p>
           )}

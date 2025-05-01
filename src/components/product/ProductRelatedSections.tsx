@@ -34,7 +34,10 @@ const ProductRelatedSections = ({
         
         <TabsContent value="similar">
           {similarProducts.length > 0 ? (
-            <ProductCarousel products={similarProducts} />
+            <ProductCarousel 
+              title="Similar Products" 
+              products={similarProducts} 
+            />
           ) : (
             <p className="text-center text-muted-foreground py-10">No similar products found.</p>
           )}
@@ -42,7 +45,10 @@ const ProductRelatedSections = ({
         
         <TabsContent value="deals">
           {categoryDeals.length > 0 ? (
-            <ProductCarousel products={categoryDeals} />
+            <ProductCarousel 
+              title="Category Deals" 
+              products={categoryDeals} 
+            />
           ) : (
             <p className="text-center text-muted-foreground py-10">No deals available for this category.</p>
           )}
@@ -50,7 +56,10 @@ const ProductRelatedSections = ({
         
         <TabsContent value="viewed">
           {filteredRecentlyViewed.length > 0 ? (
-            <ProductCarousel products={filteredRecentlyViewed} />
+            <ProductCarousel 
+              title="Recently Viewed" 
+              products={filteredRecentlyViewed} 
+            />
           ) : (
             <p className="text-center text-muted-foreground py-10">No recently viewed products.</p>
           )}
