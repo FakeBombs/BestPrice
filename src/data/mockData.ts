@@ -663,7 +663,7 @@ export const getBestPrice = (product: Product) => {
   );
 };
 
-// Update the Product interface to match actual usage in components
+// Update the Product interface to match actual usage in components and accept both string and number types
 export interface Product {
   id: string | number;
   categoryId: string | number;
