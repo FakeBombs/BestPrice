@@ -6,24 +6,42 @@ import ProductHighlights from './ProductHighlights';
 import ProductImageGallery from '../ProductImageGallery';
 import PriceHistoryChart from '../PriceHistoryChart';
 import { useTranslation } from '../../hooks/useTranslation';
+import { Product } from '@/data/mockData';
 
 interface ProductEssentialInfoProps {
-  product: any;
+  product: Product;
 }
 
 const ProductEssentialInfo: React.FC<ProductEssentialInfoProps> = ({ product }) => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('6m');
   const [showPriceHistory, setShowPriceHistory] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(product.image || product.imageUrl || (product.images && product.images.length > 0 ? product.images[0] : ''));
   
   const togglePriceHistory = () => {
     setShowPriceHistory(!showPriceHistory);
   };
 
+  // Create specifications for ProductHighlights if they don't exist
+  const specifications: Record<string, string> = product.specifications || {
+    'Brand': product.brand,
+    'Model': product.model || 'N/A',
+    'SKU': product.sku || product.id,
+    ...(product.highlights ? product.highlights.reduce((acc, highlight, index) => {
+      acc[`Feature ${index + 1}`] = highlight;
+      return acc;
+    }, {} as Record<string, string>) : {})
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="product-gallery">
-        <ProductImageGallery images={product.images || []} />
+        <ProductImageGallery 
+          mainImage={selectedImage}
+          images={product.images || [product.image || product.imageUrl].filter(Boolean)}
+          title={product.title || product.name}
+          onImageChange={setSelectedImage}
+        />
       </div>
       
       <div className="product-info space-y-4">
@@ -68,10 +86,13 @@ const ProductEssentialInfo: React.FC<ProductEssentialInfoProps> = ({ product }) 
               />
             ))}
           </div>
-          <span className="text-sm">({product.reviewCount || 0} reviews)</span>
+          <span className="text-sm">({product.reviewCount || product.reviews || 0} reviews)</span>
         </div>
         
-        <ProductHighlights product={product} />
+        <ProductHighlights 
+          product={product} 
+          specifications={specifications}
+        />
         
         <div className="action-buttons flex gap-2 pt-4">
           <Button variant="outline" className="flex items-center">

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Card, 
@@ -12,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Category, categories } from "@/data/mockData"; // Removed rootCategories since it's no longer used
+import { Category, categories } from "@/data/mockData";
 
 interface CategoryFormProps {
   category?: Category;
@@ -24,7 +25,6 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
   const [formData, setFormData] = useState<Partial<Category>>({
     id: '',
     name: '',
-    slug: '',
     parentId: undefined,
     image: '',
   });
@@ -36,7 +36,7 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
         name: category.name,
         slug: category.slug,
         parentId: category.parentId,
-        image: category.image,
+        image: category.image || category.imageUrl,
       });
     }
   }, [category]);
@@ -95,15 +95,15 @@ export default function CategoryForm({ category, onSave, onCancel }: CategoryFor
           <div className="space-y-2">
             <Label htmlFor="parentId">Βασική Κατηγορία *</Label>
             <Select 
-              value={formData.parentId?.toString() || ''}
-              onValueChange={(value) => handleChange('parentId', Number(value))}
+              value={formData.parentId || ''}
+              onValueChange={(value) => handleChange('parentId', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Επιλέξτε βασική κατηγορία" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id.toString()}>
+                  <SelectItem key={cat.id} value={cat.id}>
                     {cat.name}
                   </SelectItem>
                 ))}

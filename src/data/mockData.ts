@@ -494,7 +494,7 @@ export const { mainCategories, categories, products } = mockData;
 // Add vendors array export
 export const vendors = [
   { 
-    id: 1, 
+    id: "1", 
     name: "TechStore", 
     certification: "Certified", 
     address: "123 Tech St",
@@ -503,7 +503,7 @@ export const vendors = [
     rating: 4.8
   },
   { 
-    id: 2, 
+    id: "2", 
     name: "ElectroMart", 
     certification: "Premium", 
     address: "456 Digital Ave",
@@ -512,7 +512,7 @@ export const vendors = [
     rating: 4.6
   },
   { 
-    id: 3, 
+    id: "3", 
     name: "GadgetWorld", 
     certification: "Standard", 
     address: "789 Gadget Blvd",
@@ -524,24 +524,24 @@ export const vendors = [
 
 // Add brands array export
 export const brands = [
-  { id: 1, name: "TechMaster" },
-  { id: 2, name: "PowerTech" },
-  { id: 3, name: "AudioSonic" },
-  { id: 4, name: "FashionHub" },
-  { id: 5, name: "GlamourStyle" }
+  { id: "1", name: "TechMaster", logo: "/dist/images/brands/techmaster-logo.png" },
+  { id: "2", name: "PowerTech", logo: "/dist/images/brands/powertech-logo.png" },
+  { id: "3", name: "AudioSonic", logo: "/dist/images/brands/audiosonic-logo.png" },
+  { id: "4", name: "FashionHub", logo: "/dist/images/brands/fashionhub-logo.png" },
+  { id: "5", name: "GlamourStyle", logo: "/dist/images/brands/glamourstyle-logo.png" }
 ];
 
 // Add utility functions used in components
-export const getProductById = (id: number) => {
+export const getProductById = (id: string) => {
   return mockData.products.find(product => product.id === id);
 };
 
-export const getCategoryById = (id: number) => {
+export const getCategoryById = (id: string) => {
   return mockData.categories.find(category => category.id === id) ||
          mockData.mainCategories.find(category => category.id === id);
 };
 
-export const getVendorById = (id: number) => {
+export const getVendorById = (id: string) => {
   return vendors.find(vendor => vendor.id === id);
 };
 
@@ -557,9 +557,9 @@ export const getBestPrice = (product: Product) => {
 
 // Update Product interface to match actual usage in components
 export interface Product {
-  id: number;
-  categoryId: number;
-  categoryIds?: number[];  // Add for backward compatibility
+  id: string;
+  categoryId: string;
+  categoryIds?: string[];  // Add for backward compatibility
   name: string;
   title?: string;          // Add for backward compatibility
   description: string;
@@ -576,25 +576,27 @@ export interface Product {
   highlights?: string[];
   model?: string;
   specifications?: Record<string, string>;
+  category?: string;       // Add for backward compatibility
 }
 
 export interface Category {
-  id: number;
+  id: string;
   name: string;
   description: string;
   imageUrl?: string;
   image?: string;
-  parentId?: number;
+  parentId?: string;
   slug?: string;
 }
 
 export interface Brand {
-  id: number;
+  id: string;
   name: string;
+  logo?: string;
 }
 
 export interface ProductPrice {
-  vendorId: number;
+  vendorId: string;
   price: number;
   inStock: boolean;
   shippingCost?: number;
@@ -633,10 +635,19 @@ export const getCategories = () => {
   return [...mockData.mainCategories, ...mockData.categories];
 };
 
-// Add the getProductsByCategory function that's causing the build error
-export const getProductsByCategory = (categoryId: number) => {
+// Add the getProductsByCategory function
+export const getProductsByCategory = (categoryId: string) => {
   return mockData.products.filter(product => 
     product.categoryId === categoryId || 
     (product.categoryIds && product.categoryIds.includes(categoryId))
   );
+};
+
+// Convert string to slug
+export const formatSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
 };

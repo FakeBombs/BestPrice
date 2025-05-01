@@ -2,20 +2,12 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
-import { Product, getBestPrice, getVendorById, categories } from '@/data/mockData';
+import { Product, getBestPrice, getVendorById, categories, formatSlug } from '@/data/mockData';
 
 interface ProductCardProps {
   product: Product;
   className?: string;
 }
-
-const formatProductSlug = (title: string): string => {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-};
 
 const ProductCard = ({
   product,
@@ -24,11 +16,11 @@ const ProductCard = ({
   const bestPrice = getBestPrice(product);
   const vendorCount = product.prices ? product.prices.filter(p => p.inStock).length : 0;
   const productTitle = product.title || product.name;
-  const productSlug = formatProductSlug(productTitle);
+  const productSlug = formatSlug(productTitle);
   const productImage = product.image || product.imageUrl || '';
 
   // Convert categories array to an object for quick access
-  const categoryLookup = categories.reduce((acc: Record<number, string>, category) => {
+  const categoryLookup = categories.reduce((acc: Record<string, string>, category) => {
     acc[category.id] = category.name; // Map ID to the name
     return acc;
   }, {});

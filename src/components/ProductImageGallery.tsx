@@ -4,19 +4,19 @@ import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ProductImageGalleryProps {
-  mainImage: string;
-  images: string[];
-  title: string;
-  onImageChange: (image: string) => void;
+  mainImage?: string;
+  images?: string[];
+  title?: string;
+  onImageChange?: (image: string) => void;
 }
 
 const ProductImageGallery = ({ 
   mainImage, 
-  images, 
-  title,
-  onImageChange 
+  images = [],
+  title = "Product Image",
+  onImageChange = () => {}
 }: ProductImageGalleryProps) => {
-  const [currentImage, setCurrentImage] = useState<string>(mainImage);
+  const [currentImage, setCurrentImage] = useState<string>(mainImage || (images && images.length > 0 ? images[0] : ''));
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleImageChange = (image: string, index: number) => {
@@ -35,11 +35,20 @@ const ProductImageGallery = ({
     handleImageChange(images[newIndex], newIndex);
   };
 
+  // If no images are provided, return a placeholder
+  if (!images || images.length === 0) {
+    return (
+      <div className="border rounded-lg overflow-hidden bg-white aspect-square flex items-center justify-center">
+        <div className="text-gray-400">No images available</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="relative border rounded-lg overflow-hidden bg-white aspect-square">
         <img 
-          src={currentImage} 
+          src={currentImage || images[0]} 
           alt={title} 
           className="w-full h-full object-contain"
         />

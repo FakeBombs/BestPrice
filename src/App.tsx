@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 
@@ -30,6 +30,15 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
+interface AdminLayoutWrapperProps {
+  children: ReactNode;
+}
+
+// Create a wrapper component for AdminLayout that accepts children
+const AdminLayoutWrapper = ({ children }: AdminLayoutWrapperProps) => (
+  <AdminLayout>{children}</AdminLayout>
+);
+
 function App() {
   return (
     <Router>
@@ -55,7 +64,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
         
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminLayoutWrapper />}>
           <Route index element={<Navigate to="/admin/products" replace />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="categories" element={<AdminCategoriesPage />} />

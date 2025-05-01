@@ -1,3 +1,4 @@
+
 import { Star, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/data/mockData';
@@ -13,7 +14,6 @@ interface ProductHeaderProps {
 const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHeaderProps) => {
   return (
     <>
-
       <div className="item-meta">
         <div className="item-badges">
           <div className="p__badges-drop"><div className="p__badge p__badge--drop drop drop--10">-11%</div></div>
@@ -22,8 +22,8 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
         
         <div className="item-title-actions">
           <hgroup className="item-hgroup">
-            <h1 itemprop="name" content={product.title} className="item-title">{product.title}</h1>
-            <meta itemprop="url" content="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html"/>
+            <h1 itemProp="name" content={product.title || product.name} className="item-title">{product.title || product.name}</h1>
+            <meta itemProp="url" content={`/item/${product.id}/${product.title || product.name}`}/>
           </hgroup>
           <div className="item-actions">
             <div className="item-actions__action item-actions__action--shortlist">
@@ -35,7 +35,7 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
           </div>
           <div className="item-links">
             <div className="item-rating">
-              <a href="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html#reviews">
+              <a href={`/item/${product.id}/${product.title || product.name}`}>
                 <div className="simple-rating">
                   <div className="simple-rating__inner">
                     <div className="simple-rating__stars">
@@ -47,14 +47,14 @@ const ProductHeader = ({ product, onAddToFavorites, onShareProduct }: ProductHea
                       </div>
                     </div>
                   </div>
-                  <div className="simple-rating__total">({product.reviews})</div>
+                  <div className="simple-rating__total">({product.reviews || product.reviewCount || 0})</div>
                 </div>
               </a>
               
-              <a data-review-src="cluster-header" className="item-link__review dotted-link" href="/item/2160473294/samsung-galaxy-a56-8gb-256gb/review">Αξιολόγησέ το</a>
+              <a data-review-src="cluster-header" className="item-link__review dotted-link" href={`/item/${product.id}/${product.title || product.name}/review`}>Αξιολόγησέ το</a>
             </div>
-            <a className="item-link__qna dotted-link" href="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html#qna">Κάνε ερώτηση</a>
-            <a className="item-link__graph dotted-link" href="/item/2160473294/samsung-galaxy-a56-8gb-256gb.html#graph">Γράφημα τιμής</a>
+            <a className="item-link__qna dotted-link" href={`/item/${product.id}/${product.title || product.name}`}>Κάνε ερώτηση</a>
+            <a className="item-link__graph dotted-link" href={`/item/${product.id}/${product.title || product.name}`}>Γράφημα τιμής</a>
           </div>
         </div>
       </div>
