@@ -86,8 +86,8 @@ const ProductTabsSection = ({ product }: ProductTabsSectionProps) => {
         <TabsContent value="reviews" className="pt-6">
           {productReviews.length > 0 ? (
             <ReviewsList 
-              reviews={productReviews} 
-              onVote={handleVote} 
+              reviews={productReviews}
+              onVote={handleVote}
               onWriteReview={handleWriteReview}
             />
           ) : (

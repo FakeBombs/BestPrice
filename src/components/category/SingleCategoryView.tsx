@@ -16,12 +16,12 @@ export const SingleCategoryView = ({ category }: SingleCategoryViewProps) => {
   useEffect(() => {
     if (category) {
       // Find child categories
-      const children = mockData.categories.filter(cat => cat.parentId === category.id);
+      const children = mockData.categories.filter(cat => String(cat.parentId) === String(category.id));
       setChildCategories(children);
       
       // Find products in this category
       const categoryProducts = mockData.products.filter(product => 
-        product.categoryId === category.id
+        String(product.categoryId) === String(category.id)
       ).slice(0, 12); // Limit to 12 products for display
       
       setProducts(categoryProducts);

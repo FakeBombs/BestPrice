@@ -3,17 +3,14 @@ import { mockData } from "../../data/mockData";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-interface AllCategoriesViewProps {
-  // Define props if necessary
-}
-
-export const AllCategoriesView = ({}: AllCategoriesViewProps) => {
+// No props required for AllCategoriesView
+const AllCategoriesView = () => {
   const [organizedCategories, setOrganizedCategories] = useState<any[]>([]);
 
   useEffect(() => {
     // Organize the categories
     const result = mockData.mainCategories.map(mainCat => {
-      const subCategories = mockData.categories.filter(cat => cat.parentId === mainCat.id);
+      const subCategories = mockData.categories.filter(cat => String(cat.parentId) === String(mainCat.id));
       return {
         ...mainCat,
         subCategories

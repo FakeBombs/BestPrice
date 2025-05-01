@@ -1,3 +1,4 @@
+
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -559,25 +560,25 @@ export const getBestPrice = (product: Product) => {
 export interface Product {
   id: string | number;
   categoryId: string | number;
-  categoryIds?: string[] | number[];  // Add for backward compatibility
+  categoryIds?: string[] | number[];
   name: string;
-  title?: string;          // Add for backward compatibility
+  title?: string;
   description: string;
   price: number;
-  prices?: ProductPrice[];  // Add array of prices from vendors
-  imageUrl?: string;       // Legacy property
-  image?: string;          // New property
-  images?: string[];       // Add array of images
+  prices?: ProductPrice[];
+  imageUrl?: string;
+  image?: string;
+  images?: string[];
   rating: number;
-  reviewCount?: number;    // Legacy property
-  reviews?: number;        // New property
+  reviewCount?: number;
+  reviews?: number;
   brand: string;
   sku?: string;
   highlights?: string[];
   model?: string;
   specifications?: Record<string, string>;
-  category?: string;       // Add for backward compatibility
-  slug?: string;           // Add slug property
+  category?: string;
+  slug?: string;
 }
 
 export interface Category {
@@ -667,33 +668,33 @@ export const groupedBrands = () => {
   return groups;
 };
 
-// Update the raw mockData objects to use string IDs
+// Update the raw mockData objects to use string IDs and add missing properties
 // This needs to match our interfaces defined above
 for (let category of mockData.mainCategories) {
   category.id = String(category.id);
   category.slug = formatSlug(category.name);
-  category.image = category.imageUrl; // Add image property based on imageUrl
+  category.image = category.imageUrl;
 }
 
 for (let category of mockData.categories) {
   category.id = String(category.id);
   category.parentId = String(category.parentId);
   category.slug = formatSlug(category.name);
-  category.image = category.imageUrl; // Add image property based on imageUrl
+  category.image = category.imageUrl;
 }
 
 for (let product of mockData.products) {
   product.id = String(product.id);
   product.categoryId = String(product.categoryId);
-  product.title = product.name; // Add title property based on name
-  product.image = product.imageUrl; // Add image property based on imageUrl
-  product.reviews = product.reviewCount; // Add reviews property based on reviewCount
-  product.slug = formatSlug(product.name); // Add slug property
+  product.title = product.name;
+  product.image = product.imageUrl;
+  product.reviews = product.reviewCount;
+  product.slug = formatSlug(product.name);
   
-  // Convert categoryIds if they exist
+  // Convert categoryIds if they exist or create them
   if (product.categoryIds) {
     product.categoryIds = product.categoryIds.map(id => String(id));
   } else {
-    product.categoryIds = [String(product.categoryId)]; // Ensure categoryIds exists
+    product.categoryIds = [String(product.categoryId)];
   }
 }

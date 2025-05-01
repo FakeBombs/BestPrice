@@ -1,10 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   getCategories, 
   getProductsByCategory, 
   getCategoryById 
-} from '@/data/mockData'; // Removed imports related to root categories
+} from '@/data/mockData';
 import AllCategoriesView from '@/components/category/AllCategoriesView';
 import SingleCategoryView from '@/components/category/SingleCategoryView';
 
@@ -26,7 +27,7 @@ const Categories = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   // If categoryId is provided, we're viewing a specific category
-  const category = categoryId ? getCategoryById(Number(categoryId)) : null;
+  const category = categoryId ? getCategoryById(categoryId) : null;
 
   // Redirect legacy URLs to new format
   useEffect(() => {
@@ -39,7 +40,7 @@ const Categories = () => {
   useEffect(() => {
     if (category) {
       // Fetch products for a specific category
-      const categoryProducts = getProductsByCategory(category.id);
+      const categoryProducts = getProductsByCategory(String(category.id));
       setProducts(categoryProducts);
       setFilteredProducts(categoryProducts);
     } else {
@@ -56,15 +57,15 @@ const Categories = () => {
     switch (value) {
       case 'price-asc':
         sorted.sort((a, b) => {
-          const aPrice = Math.min(...(a.prices.map(p => p.price) || [Infinity]));
-          const bPrice = Math.min(...(b.prices.map(p => p.price) || [Infinity]));
+          const aPrice = Math.min(...(a.prices?.map(p => p.price) || [Infinity]));
+          const bPrice = Math.min(...(b.prices?.map(p => p.price) || [Infinity]));
           return aPrice - bPrice;
         });
         break;
       case 'price-desc':
         sorted.sort((a, b) => {
-          const aPrice = Math.min(...(a.prices.map(p => p.price) || [Infinity]));
-          const bPrice = Math.min(...(b.prices.map(p => p.price) || [Infinity]));
+          const aPrice = Math.min(...(a.prices?.map(p => p.price) || [Infinity]));
+          const bPrice = Math.min(...(b.prices?.map(p => p.price) || [Infinity]));
           return bPrice - aPrice;
         });
         break;
@@ -72,7 +73,7 @@ const Categories = () => {
         sorted.sort((a, b) => b.rating - a.rating);
         break;
       case 'reviews-desc':
-        sorted.sort((a, b) => b.reviews - a.reviews);
+        sorted.sort((a, b) => (b.reviews || b.reviewCount || 0) - (a.reviews || a.reviewCount || 0));
         break;
       default:
         break;
@@ -88,7 +89,7 @@ const Categories = () => {
     }
     
     const filtered = products.filter(product => 
-      product.prices.some(price => vendors.includes(price.vendorId))
+      product.prices?.some(price => vendors.includes(Number(price.vendorId)))
     );
     
     setFilteredProducts(filtered);
@@ -96,7 +97,7 @@ const Categories = () => {
   
   const handlePriceRangeFilter = (min: number, max: number) => {
     const filtered = products.filter(product => {
-      const minPrice = Math.min(...(product.prices.map(p => p.price) || [Infinity]));
+      const minPrice = Math.min(...(product.prices?.map(p => p.price) || [Infinity]));
       return minPrice >= min && minPrice <= max;
     });
     
@@ -110,7 +111,7 @@ const Categories = () => {
     }
     
     const filtered = products.filter(product => 
-      product.prices.some(price => price.inStock)
+      product.prices?.some(price => price.inStock)
     );
     
     setFilteredProducts(filtered);
@@ -121,18 +122,11 @@ const Categories = () => {
     return (
       <SingleCategoryView 
         category={category} 
-        products={filteredProducts}
-        onSortChange={handleSortChange}
-        onVendorFilter={handleVendorFilter}
-        onPriceRangeFilter={handlePriceRangeFilter}
-        onInStockOnly={handleInStockOnly}
       />
     );
   } else {
     return (
-      <AllCategoriesView 
-        categories={getCategories()} 
-      />
+      <AllCategoriesView />
     );
   }
 };
