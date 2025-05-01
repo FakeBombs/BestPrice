@@ -9,6 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      brands: {
+        Row: {
+          created_at: string | null
+          id: string
+          logo: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          category_type: Database["public"]["Enums"]["category_type"]
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          parent_id: string | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          category_type?: Database["public"]["Enums"]["category_type"]
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          parent_id?: string | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          category_type?: Database["public"]["Enums"]["category_type"]
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          parent_id?: string | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           content: string
@@ -160,6 +228,150 @@ export type Database = {
         }
         Relationships: []
       }
+      product_categories: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          primary_category: boolean | null
+          product_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          primary_category?: boolean | null
+          product_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          primary_category?: boolean | null
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_categories_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_prices: {
+        Row: {
+          created_at: string | null
+          id: string
+          in_stock: boolean | null
+          price: number
+          product_id: string | null
+          shipping_cost: number | null
+          updated_at: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          in_stock?: boolean | null
+          price: number
+          product_id?: string | null
+          shipping_cost?: number | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          in_stock?: boolean | null
+          price?: number
+          product_id?: string | null
+          shipping_cost?: number | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_prices_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_prices_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          brand: string | null
+          created_at: string | null
+          description: string | null
+          highlights: string[] | null
+          id: string
+          image_url: string | null
+          images: string[] | null
+          model: string | null
+          name: string
+          price: number
+          rating: number | null
+          review_count: number | null
+          sku: string | null
+          slug: string
+          specifications: Json | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string | null
+          description?: string | null
+          highlights?: string[] | null
+          id?: string
+          image_url?: string | null
+          images?: string[] | null
+          model?: string | null
+          name: string
+          price: number
+          rating?: number | null
+          review_count?: number | null
+          sku?: string | null
+          slug: string
+          specifications?: Json | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string | null
+          description?: string | null
+          highlights?: string[] | null
+          id?: string
+          image_url?: string | null
+          images?: string[] | null
+          model?: string | null
+          name?: string
+          price?: number
+          rating?: number | null
+          review_count?: number | null
+          sku?: string | null
+          slug?: string
+          specifications?: Json | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -274,6 +486,54 @@ export type Database = {
         }
         Relationships: []
       }
+      vendors: {
+        Row: {
+          address: string[] | null
+          category_count: number | null
+          certification: string | null
+          created_at: string | null
+          id: string
+          logo: string | null
+          name: string
+          payment_methods: string[] | null
+          product_count: number | null
+          rating: number | null
+          telephone: string[] | null
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          address?: string[] | null
+          category_count?: number | null
+          certification?: string | null
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name: string
+          payment_methods?: string[] | null
+          product_count?: number | null
+          rating?: number | null
+          telephone?: string[] | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          address?: string[] | null
+          category_count?: number | null
+          certification?: string | null
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name?: string
+          payment_methods?: string[] | null
+          product_count?: number | null
+          rating?: number | null
+          telephone?: string[] | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       wallets: {
         Row: {
           balance: number
@@ -306,10 +566,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      format_slug: {
+        Args: { input: string }
+        Returns: string
+      }
+      import_mock_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      category_type: "main" | "sub"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -424,6 +691,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      category_type: ["main", "sub"],
+    },
   },
 } as const

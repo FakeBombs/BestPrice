@@ -3,15 +3,16 @@ import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import CategoryFilters from './CategoryFilters';
 import FilterOptions from './FilterOptions';
-import BrandFilterSection from './BrandFilterSection';
-import StoreFilterSection from './StoreFilterSection';
-import { brands, vendors } from '@/data/mockData';
+import { Brand } from '@/services/brandService';
+import { Vendor } from '@/services/vendorService';
 
 interface SidebarProps {
   query: string;
+  brands: Brand[];
+  vendors: Vendor[];
 }
 
-const Sidebar = ({ query }: SidebarProps) => {
+const Sidebar = ({ query, brands, vendors }: SidebarProps) => {
   const [searchParams] = useSearchParams();
   
   // Get the current filters

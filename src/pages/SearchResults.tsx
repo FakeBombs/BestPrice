@@ -1,12 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { searchProducts, getCategories, vendors, brands } from '@/data/mockData';
 import Sidebar from '@/components/search/Sidebar';
 import ProductCard from '@/components/ProductCard';
 import SearchHeader from '@/components/search/SearchHeader';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProductFilters } from '@/hooks/useProductFilters';
+import { searchProducts } from '@/services/productService';
+import { getBrands } from '@/services/brandService';
+import { getVendors } from '@/services/vendorService';
+import { Product } from '@/services/productService';
+import { Brand } from '@/services/brandService';
+import { Vendor } from '@/services/vendorService';
 
 const SearchResults: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,27 +19,36 @@ const SearchResults: React.FC = () => {
   const storeFilter = searchParams.get('store') || '';
   const vendorFilter = searchParams.get('vendor') || '';
   const brandFilter = searchParams.get('brand') || '';
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Product[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Get sort order from query params or default to 'relevance'
   const sortParam = searchParams.get('o') || 'relevance';
   
   useEffect(() => {
-    const fetchResults = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await searchProducts(query);
+        // Fetch all necessary data
+        const [productsData, brandsData, vendorsData] = await Promise.all([
+          searchProducts(query),
+          getBrands(),
+          getVendors()
+        ]);
+        
+        setBrands(brandsData);
+        setVendors(vendorsData);
         
         // Apply vendor filter if present
-        let filteredData = data;
+        let filteredData = productsData;
         if (storeFilter) {
-          const vendorDomain = storeFilter;
           filteredData = filteredData.filter(product => {
             if (!product.prices) return false;
             return product.prices.some(price => {
-              const vendor = vendors.find(v => v.id === price.vendorId);
-              return vendor?.url.includes(vendorDomain);
+              const vendor = price.vendor;
+              return vendor?.url.includes(storeFilter);
             });
           });
         }
@@ -42,7 +56,7 @@ const SearchResults: React.FC = () => {
         // Apply brand filter if present
         if (brandFilter) {
           filteredData = filteredData.filter(product => 
-            product.brand.toLowerCase() === brandFilter.toLowerCase()
+            product.brand?.toLowerCase() === brandFilter.toLowerCase()
           );
         }
         
@@ -55,7 +69,7 @@ const SearchResults: React.FC = () => {
       }
     };
 
-    fetchResults();
+    fetchData();
   }, [query, storeFilter, brandFilter, vendorFilter]);
 
   // Apply filters and sorting
@@ -77,7 +91,11 @@ const SearchResults: React.FC = () => {
       
       <div className="flex flex-col md:flex-row gap-6 mt-6">
         <aside className="md:w-1/4">
-          <Sidebar query={query} />
+          <Sidebar 
+            query={query} 
+            brands={brands}
+            vendors={vendors}
+          />
         </aside>
         
         <main className="md:w-3/4">

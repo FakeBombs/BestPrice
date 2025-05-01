@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/hooks/useAuth';
 import { Facebook, Twitter } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import useSupabaseAuth from '@/hooks/useSupabaseAuth';
+import { toast } from '@/hooks/use-toast';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -14,37 +15,40 @@ interface LoginFormProps {
 }
 
 const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
-  const { login, socialLogin, isLoading } = useAuth();
+  const { login } = useSupabaseAuth();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setIsLoading(true);
     
     try {
-      const success = await login(email, password);
-      if (success) {
-        onSuccess();
-      }
-    } catch (err) {
+      await login(email, password);
+      toast({
+        title: "Login successful",
+        description: "You have been successfully logged in.",
+      });
+      onSuccess();
+    } catch (err: any) {
       console.error("Login error:", err);
-      setError("Login failed. Please check your credentials and try again.");
+      toast({
+        title: "Login failed",
+        description: err.message || "Please check your credentials and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
   
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter') => {
-    setError(null);
-    
-    try {
-      await socialLogin(provider);
-      // Note: We don't call onSuccess here because socialLogin will redirect the user
-    } catch (err) {
-      console.error(`${provider} login error:`, err);
-      setError(`${provider} login failed. Please try again.`);
-    }
+    toast({
+      title: "Social Login",
+      description: `${provider} login is not implemented yet.`,
+    });
   };
   
   const handleForgotPassword = () => {
@@ -58,12 +62,6 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
   
   return (
     <div className="space-y-4">
-      {error && (
-        <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-          {error}
-        </div>
-      )}
-      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t('email')}</Label>
@@ -96,7 +94,7 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
             required
           />
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
       </form>

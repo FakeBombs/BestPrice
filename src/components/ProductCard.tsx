@@ -2,7 +2,8 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
-import { Product, getBestPrice, getVendorById, categories, formatSlug } from '@/data/mockData';
+import { Product, getBestPrice } from '@/services/productService';
+import { formatPrice } from '@/utils/formatters';
 
 interface ProductCardProps {
   product: Product;
@@ -14,20 +15,15 @@ const ProductCard = ({
   className = "p p--row p--force-ratio" // Default class as requested
 }: ProductCardProps) => {
   const bestPrice = getBestPrice(product);
-  const vendorCount = product.prices ? product.prices.filter(p => p.inStock).length : 0;
+  const vendorCount = product.prices ? product.prices.filter(p => p.in_stock).length : 0;
   const productTitle = product.title || product.name;
-  const productSlug = formatSlug(productTitle);
-  const productImage = product.image || product.imageUrl || '';
-
-  // Convert categories array to an object for quick access
-  const categoryLookup = categories.reduce((acc: Record<string, string>, category) => {
-    acc[String(category.id)] = category.name; // Map ID to the name
-    return acc;
-  }, {});
-
-  // Assuming you want to display the first category only
-  const firstCategoryId = product.categoryIds?.[0] || product.categoryId;
-  const categoryName = firstCategoryId ? categoryLookup[String(firstCategoryId)] : 'Άγνωστη Κατηγορία';
+  const productSlug = product.slug;
+  const productImage = product.image_url || '';
+  
+  // Get the category name if available
+  const categoryName = product.categories && product.categories.length > 0 
+    ? product.categories[0]?.name 
+    : 'Άγνωστη Κατηγορία';
 
   return (
     <div className={className}>
@@ -39,7 +35,7 @@ const ProductCard = ({
           <div className="p__category">{categoryName}</div>
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
           <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
-          <span className="text-xs text-muted-foreground">({product.reviews || product.reviewCount || 0})</span>
+          <span className="text-xs text-muted-foreground">({product.review_count || 0})</span>
           <h3 className="p__title p__title--lines p__title--lines-2">
             <Link to={`/item/${product.id}/${productSlug}`} title={productTitle}>{productTitle}</Link>
           </h3>
@@ -49,7 +45,7 @@ const ProductCard = ({
         <div className="p__footer">
           <div className="p__price-merchants">
             <Link className="p__price" to={`/item/${product.id}/${productSlug}`}>
-              <div className="p__price--current">${bestPrice.price.toFixed(2)}</div>
+              <div className="p__price--current">{formatPrice(bestPrice.price)}</div>
             </Link>
           </div>
           <div className="p__merchants">{vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}</div>

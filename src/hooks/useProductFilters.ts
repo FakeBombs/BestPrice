@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
-import { Product, vendors } from '@/data/mockData';
 import { useSearchParams } from 'react-router-dom';
+import { Product } from '@/services/productService';
 
 interface UseProductFiltersProps {
   initialProducts: Product[];
@@ -24,7 +24,7 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     if (filteredVendors.length > 0) {
       filtered = filtered.filter(product => 
         product.prices?.some(price => 
-          filteredVendors.includes(price.vendorId)
+          filteredVendors.includes(price.vendor_id)
         )
       );
     }
@@ -32,7 +32,7 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     // Apply in-stock filter
     if (inStockOnly) {
       filtered = filtered.filter(product => 
-        product.prices?.some(price => price.inStock)
+        product.prices?.some(price => price.in_stock)
       );
     }
     

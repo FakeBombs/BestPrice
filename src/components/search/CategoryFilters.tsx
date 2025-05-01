@@ -1,22 +1,60 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getMainCategories, getSubcategories, Category } from '@/services/categoryService';
 
 interface CategoryFiltersProps {
   query: string;
 }
 
-const CategoryFilters = ({ query }: CategoryFiltersProps) => {
-  return (
-    <div className="filters__categories" data-filter-name="categories">
-      <div className="filters__header">
-        <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+const CategoryFilters: React.FC<CategoryFiltersProps> = ({ query }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const mainCategories = await getMainCategories();
+        setCategories(mainCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
+  
+  if (loading) {
+    return (
+      <div className="filter-category filter-collapsed default-list">
+        <div className="filter__header"><h4>Κατηγορίες</h4></div>
+        <div className="filter-container">
+          <p className="text-center py-2">Loading...</p>
+        </div>
       </div>
-      <ol>
-        <li><a data-c="2" href={`/cat/3446/tablets.html?q=${query}`}><span>Tablets</span></a></li>
-        <li><a data-c="2" href={`/cat/5951/screen-protectors-tablets.html?q=${query}`}><span>Προστασία Οθόνης Tablet</span></a></li>
-        <li><a data-c="3" href={`/cat/5943/thikes-tablet.html?q=${query}`}><span>Θήκες Tablet</span></a></li>
-        <li><a data-c="1" href={`/cat/815/grafides-afis.html?q=${query}`}><span>Γραφίδες Αφής</span></a></li>
-      </ol>
+    );
+  }
+  
+  return (
+    <div className="filter-category filter-collapsed default-list">
+      <div className="filter__header"><h4>Κατηγορίες</h4></div>
+      <div className="filter-container">
+        <ol>
+          {categories.map(category => (
+            <li key={category.id}>
+              <Link 
+                to={`/cat/${category.id}/${category.slug}`}
+                className="flex items-center justify-between"
+              >
+                <span>{category.name}</span>
+                <span className="text-xs text-gray-500">›</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 };

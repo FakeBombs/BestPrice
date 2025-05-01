@@ -12,12 +12,12 @@ import {
   DollarSign,
   CreditCard 
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import useSupabaseAuth from "@/hooks/useSupabaseAuth";
 
 const AdminSidebar = () => {
-  const { logout } = useAuth();
+  const { logout } = useSupabaseAuth();
   
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
