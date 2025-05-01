@@ -1,3 +1,4 @@
+
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -545,6 +546,13 @@ export const getVendorById = (id: string) => {
   return vendors.find(vendor => String(vendor.id) === id);
 };
 
+// Add the missing getProductsByBrand function
+export const getProductsByBrand = (brandId: string) => {
+  return mockData.products.filter(product => 
+    String(product.brand) === brandId || String(product.brand) === getProductById(brandId)?.brand
+  );
+};
+
 // Update the getBestPrice function
 export const getBestPrice = (product: Product) => {
   if (!product.prices || product.prices.length === 0) {
@@ -615,20 +623,20 @@ export const searchProducts = (query: string) => {
   );
 };
 
-// Add functions required by Index.tsx
+// Modify the Promise-returning functions to return actual promises
 export const fetchFeaturedProducts = () => {
   // Return a subset of products as featured
-  return mockData.products.slice(0, 5);
+  return Promise.resolve(mockData.products.slice(0, 5));
 };
 
 export const fetchDeals = () => {
   // Return a subset of products as deals
-  return mockData.products.slice(5, 10);
+  return Promise.resolve(mockData.products.slice(5, 10));
 };
 
 export const fetchNewArrivals = () => {
   // Return a subset of products as new arrivals
-  return mockData.products.slice(10, 15);
+  return Promise.resolve(mockData.products.slice(10, 15));
 };
 
 export const getCategories = () => {

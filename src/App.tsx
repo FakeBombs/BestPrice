@@ -30,9 +30,11 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-// Create a proper React functional component with children prop
-const AdminLayoutWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => (
-  <AdminLayout>{children}</AdminLayout>
+// Fix the AdminLayoutWrapper component to match the props expected by AdminLayout
+const AdminLayoutWrapper = () => (
+  <AdminLayout>
+    <Outlet />
+  </AdminLayout>
 );
 
 function App() {
@@ -60,7 +62,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
         
-        <Route path="/admin" element={<AdminLayoutWrapper><Outlet /></AdminLayoutWrapper>}>
+        <Route path="/admin" element={<AdminLayoutWrapper />}>
           <Route index element={<Navigate to="/admin/products" replace />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="categories" element={<AdminCategoriesPage />} />

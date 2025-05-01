@@ -5,8 +5,8 @@ import {
   Product, 
   Brand, 
   categories, 
-  formatSlug, 
-  getProductsByBrand 
+  formatSlug,
+  getProductsByBrand
 } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,12 +14,6 @@ import ProductCard from '@/components/ProductCard';
 import { Filter } from 'lucide-react';
 
 interface BrandPageProps {}
-
-// Add this missing function to fetch products by brand
-function getProductsByBrand(brandId: string): Product[] {
-  // This is a mock implementation, replace with actual logic based on your data structure
-  return []; // Placeholder
-}
 
 const BrandPage: React.FC<BrandPageProps> = () => {
   const { id, name } = useParams<{ id: string; name: string }>();

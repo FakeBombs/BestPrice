@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { SingleCategoryView } from '../components/category/SingleCategoryView';
+import SingleCategoryView from '../components/category/SingleCategoryView';
 import { RootCategoryView } from '../components/category/RootCategoryView';
 import CategoryBreadcrumb from '../components/category/CategoryBreadcrumb';
 import { mockData } from '../data/mockData';
@@ -41,7 +41,13 @@ export default function CategoryPage() {
       {isRootCategory ? (
         <RootCategoryView category={category} />
       ) : (
-        <SingleCategoryView category={category} />
+        <SingleCategoryView 
+          category={category}
+          onSortChange={() => {}}
+          onVendorFilter={() => {}}
+          onPriceRangeFilter={() => {}}
+          onInStockOnly={() => {}}
+        />
       )}
     </div>
   );

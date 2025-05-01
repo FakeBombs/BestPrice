@@ -1,12 +1,13 @@
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import CategoryBreadcrumb from "@/components/category/CategoryBreadcrumb";
-import ProductCard from "@/components/ProductCard";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getProductsByCategory, formatSlug } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 export interface SingleCategoryViewProps {
   category: any;
@@ -16,146 +17,126 @@ export interface SingleCategoryViewProps {
   onInStockOnly: (inStockOnly: boolean) => void;
 }
 
-const SingleCategoryView: React.FC<SingleCategoryViewProps> = ({ 
+const SingleCategoryView = ({
   category,
   onSortChange,
   onVendorFilter,
   onPriceRangeFilter,
   onInStockOnly
-}) => {
-  const { t } = useTranslation();
-  const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+}: SingleCategoryViewProps) => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [inStock, setInStock] = useState(false);
 
-  // In a real implementation, these would be loaded dynamically
-  const products = [];
-  const vendors = [
-    { id: 1, name: "Vendor 1" },
-    { id: 2, name: "Vendor 2" },
-    { id: 3, name: "Vendor 3" }
-  ];
+  useEffect(() => {
+    if (category) {
+      setLoading(true);
+      const categoryProducts = getProductsByCategory(String(category.id));
+      setProducts(categoryProducts);
+      setLoading(false);
+    }
+  }, [category]);
 
-  // Handle filter checkbox changes
-  const handleVendorFilterChange = (vendorId: number) => {
-    // In a real implementation, you would update a state with selected vendors
-    // and then call the parent's onVendorFilter method
-    onVendorFilter([vendorId]);
+  const handleSortChange = (value: string) => {
+    onSortChange(value);
   };
 
-  // Handle price range change
   const handlePriceRangeChange = (values: number[]) => {
-    setPriceRange(values);
+    setMinPrice(values[0]);
+    setMaxPrice(values[1]);
     onPriceRangeFilter(values[0], values[1]);
   };
 
-  // Handle in-stock only toggle
   const handleInStockChange = (checked: boolean) => {
-    setInStockOnly(checked);
+    setInStock(checked);
     onInStockOnly(checked);
   };
 
   return (
-    <div>
-      <CategoryBreadcrumb category={category} />
-      
-      <h1 className="text-2xl font-bold mb-6">{category.name}</h1>
-      <p className="text-gray-600 mb-6">{category.description}</p>
-
+    <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-6">
-        {/* Filters - Mobile toggle */}
-        <div className="md:hidden mb-4">
-          <Button
-            variant="outline"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="w-full"
-          >
-            {isFilterOpen ? "Hide Filters" : "Show Filters"}
-          </Button>
-        </div>
-
-        {/* Filters - Sidebar */}
-        <div className={`${isFilterOpen ? 'block' : 'hidden'} md:block md:w-1/4`}>
-          <div className="border rounded-lg p-4 space-y-6">
-            <div>
-              <h3 className="font-medium mb-2">Price Range</h3>
-              <Slider 
-                defaultValue={[priceRange[0], priceRange[1]]} 
-                max={1000} 
-                step={10}
-                onValueChange={handlePriceRangeChange}
-                className="my-4"
-              />
-              <div className="flex justify-between">
-                <span>${priceRange[0]}</span>
-                <span>${priceRange[1]}</span>
+        {/* Left sidebar filters */}
+        <div className="w-full md:w-1/4 space-y-6">
+          <div className="bg-white rounded-lg border p-4">
+            <h3 className="text-lg font-medium mb-4">Filters</h3>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Sort By</h4>
+                <Select onValueChange={handleSortChange} defaultValue="relevance">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select sorting" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="relevance">Relevance</SelectItem>
+                    <SelectItem value="price-low">Price: Low to High</SelectItem>
+                    <SelectItem value="price-high">Price: High to Low</SelectItem>
+                    <SelectItem value="rating">Customer Rating</SelectItem>
+                    <SelectItem value="newest">Newest First</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Price Range</h4>
+                <div className="px-2">
+                  <Slider
+                    defaultValue={[minPrice, maxPrice]}
+                    max={1000}
+                    step={10}
+                    onValueChange={handlePriceRangeChange}
+                    className="my-6"
+                  />
+                  <div className="flex justify-between text-sm">
+                    <span>${minPrice}</span>
+                    <span>${maxPrice}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Availability</h4>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="in-stock" 
+                    checked={inStock} 
+                    onCheckedChange={(checked) => handleInStockChange(!!checked)}
+                  />
+                  <Label htmlFor="in-stock">In Stock Only</Label>
+                </div>
               </div>
             </div>
-
-            <div>
-              <h3 className="font-medium mb-2">Vendors</h3>
-              <div className="space-y-2">
-                {vendors.map(vendor => (
-                  <div key={vendor.id} className="flex items-center space-x-2">
-                    <Checkbox id={`vendor-${vendor.id}`} onCheckedChange={(checked) => {
-                      if (checked) handleVendorFilterChange(vendor.id);
-                    }} />
-                    <label htmlFor={`vendor-${vendor.id}`} className="text-sm">
-                      {vendor.name}
-                    </label>
-                  </div>
+          </div>
+        </div>
+        
+        {/* Main content - Product grid */}
+        <div className="w-full md:w-3/4">
+          <div className="bg-white rounded-lg border p-4">
+            <h1 className="text-2xl font-bold mb-6">{category.name}</h1>
+            <p className="text-gray-600 mb-6">{category.description}</p>
+            
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-4 text-gray-500">Loading products...</p>
+              </div>
+            ) : products.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-            </div>
-
-            <div>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="in-stock"
-                  checked={inStockOnly}
-                  onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
-                />
-                <label htmlFor="in-stock" className="text-sm">
-                  In Stock Only
-                </label>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-lg text-gray-500">No products found in this category.</p>
+                <Button className="mt-4" asChild>
+                  <Link to="/categories">Browse All Categories</Link>
+                </Button>
               </div>
-            </div>
+            )}
           </div>
-        </div>
-
-        {/* Products */}
-        <div className="md:w-3/4">
-          <div className="mb-4 flex justify-between items-center">
-            <div className="text-sm text-gray-500">
-              {products.length} products
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">Sort by:</span>
-              <Select defaultValue="popular" onValueChange={onSortChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Popular" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popular">Popular</SelectItem>
-                  <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                  <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-8 border rounded">
-              <p>No products found in this category.</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
