@@ -1,27 +1,58 @@
 
-import { Link } from 'react-router-dom';
-import { RootCategory, Category } from '@/data/mockData';
-import RootCategoryCard from '@/components/RootCategoryCard';
-import CategoryCard from '@/components/CategoryCard';
-import CategoryBreadcrumb from './CategoryBreadcrumb';
+import { mockData } from "../../data/mockData";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 interface AllCategoriesViewProps {
-  rootCategories: RootCategory[];
-  categories: Category[];
+  // Define props if necessary
 }
 
-const AllCategoriesView = ({ rootCategories, categories }: AllCategoriesViewProps) => {
+export const AllCategoriesView = ({}: AllCategoriesViewProps) => {
+  const [organizedCategories, setOrganizedCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Organize the categories
+    const result = mockData.mainCategories.map(mainCat => {
+      const subCategories = mockData.categories.filter(cat => cat.parentId === mainCat.id);
+      return {
+        ...mainCat,
+        subCategories
+      };
+    });
+
+    setOrganizedCategories(result);
+  }, []);
+
+  const formatSlug = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-');
+  };
+
   return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        <div className="root-category__categories">
-              {rootCategories.map((rootCat) => (
-                <div className="root-category__category" key={rootCat.id}>
-                  <RootCategoryCard key={rootCat.id} category={rootCat} />
-                </div>
-              ))}
+    <div className="py-6">
+      <h1 className="text-2xl font-bold mb-6">All Categories</h1>
+      
+      {organizedCategories.map(mainCat => (
+        <div key={mainCat.id} className="mb-8">
+          <Link 
+            to={`/cat/${mainCat.id}/${formatSlug(mainCat.name)}`} 
+            className="text-xl font-semibold hover:text-primary transition mb-3 block"
+          >
+            {mainCat.name}
+          </Link>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {mainCat.subCategories.map((subCat: any) => (
+              <Link
+                key={subCat.id}
+                to={`/cat/${subCat.id}/${formatSlug(subCat.name)}`}
+                className="p-2 border rounded hover:bg-gray-50 hover:border-primary transition text-center"
+              >
+                {subCat.name}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 };

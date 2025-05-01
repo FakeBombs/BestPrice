@@ -1,62 +1,64 @@
 
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Breadcrumb, 
-  BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbList, 
-  BreadcrumbSeparator 
-} from '@/components/ui/breadcrumb';
-import { RootCategory, Category } from '@/data/mockData';
+import { mockData } from '../../data/mockData';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../../components/ui/breadcrumb';
 
 interface CategoryBreadcrumbProps {
-  category?: Category;
-  rootCategory?: RootCategory;
+  category: any;
 }
 
-const formatCategorySlug = (name: string): string => {
-  return name
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-};
+const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
+  const [breadcrumbs, setBreadcrumbs] = useState<any[]>([]);
 
-const CategoryBreadcrumb = ({ category, rootCategory }: CategoryBreadcrumbProps) => {
+  useEffect(() => {
+    if (category) {
+      const crumbs = [];
+      crumbs.push(category);
+
+      // If it's a subcategory, find its parent(s)
+      let currentCat = category;
+      while (currentCat.parentId) {
+        const parentCat = mockData.categories.find(c => c.id === currentCat.parentId) || 
+                         mockData.mainCategories.find(c => c.id === currentCat.parentId);
+        if (parentCat) {
+          crumbs.unshift(parentCat);
+          currentCat = parentCat;
+        } else {
+          break;
+        }
+      }
+
+      setBreadcrumbs(crumbs);
+    }
+  }, [category]);
+
+  const formatSlug = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-');
+  };
+
   return (
-    <Breadcrumb>
+    <Breadcrumb className="mt-4 mb-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/">BestPrice</Link>
-          </BreadcrumbLink>
+          <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        {rootCategory && (
-          <>
+        
+        {breadcrumbs.map((crumb, index) => (
+          <React.Fragment key={crumb.id}>
             <BreadcrumbItem>
-              {!category ? (
-                <span className="font-medium">{rootCategory.name}</span>
+              {index === breadcrumbs.length - 1 ? (
+                <span>{crumb.name}</span>
               ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={`/categories/root/${rootCategory.slug}`}>
-                    {rootCategory.name}
-                  </Link>
+                <BreadcrumbLink as={Link} to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
+                  {crumb.name}
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-          </>
-        )}
-        
-        {category && (
-          <>
-            {!rootCategory && <BreadcrumbSeparator />}
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <span className="font-medium">{category.name}</span>
-            </BreadcrumbItem>
-          </>
-        )}
+            {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+          </React.Fragment>
+        ))}
       </BreadcrumbList>
     </Breadcrumb>
   );
