@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const PaymentMethod = {
@@ -70,7 +71,7 @@ const PaymentMethodsComponent = ({ paymentMethods }) => {
 
     return (
       <section>
-        <h2 class="ui-kit__secondary">Χαρακτηριστικά καταστήματος</h2>
+        <h2 className="ui-kit__secondary">Χαρακτηριστικά καταστήματος</h2>
         <div className="merchant__shipping-options">
             {renderList(PaymentMethods, "Τρόποι πληρωμής")}
             {renderList(shippingMethods, "Αποστολή, μεταφορικά")}

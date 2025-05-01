@@ -1,23 +1,20 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product, ProductPrice, getVendorById } from '@/data/mockData';
-import TopVendorAd from './ads/TopVendorAd';
-import { useTranslation } from '@/hooks/useTranslation';
 
 interface ProductVendorsProps {
   product: Product;
 }
 
 const ProductVendors = ({ product }: ProductVendorsProps) => {
-  const { t } = useTranslation();
   const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
-
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [popupContent, setPopupContent] = useState(''); // State for dynamic popup content
+  const [popupContent, setPopupContent] = useState<any>(null);
 
-  const openPopup = (vendor) => {
-    setPopupContent(vendor); // Store the entire vendor object in the state
+  const openPopup = (vendor: any) => {
+    setPopupContent(vendor);
     setIsPopupVisible(true);
   };
 
@@ -27,18 +24,18 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
 
   return (
     <div className="mt-6">
-      <header class="section__header">
-        <hgroup class="section__hgroup">
-          <h2 class="section__title">
+      <header className="section__header">
+        <hgroup className="section__hgroup">
+          <h2 className="section__title">
             Καταστήματα <small><span>({product.prices.length})</span></small>
-            <div class="price-filters__clear undefined dotted-link">{t('clearFilters')}</div>
+            <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
           </h2>
         </hgroup>
-        <div class="section__side">
-          <label data-type="priceFull" data-always-available="" class="price-filters__filter">
+        <div className="section__side">
+          <label data-type="priceFull" data-always-available="" className="price-filters__filter">
             <input type="checkbox"/>
-            <svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
-            <span class="price-filters__label">{t('finalPrice')}</span>
+            <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
+            <span className="price-filters__label">Τελική τιμή</span>
           </label>
         </div>
       </header>
@@ -49,10 +46,10 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
             <div className="scroll__scroller">
               <div data-count="7" className="price-filters scroll__content">
                 <label data-type="in-stock" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Διαθέσιμα</span></label>
-                <label data-type="nearby" data-always-available="" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span className="price-filters__label">Κοντά μου</span></label>
-                <label data-type="certified" data-tooltip="Εμφάνιση μόνο προϊόντων που παρέχονται από πιστοποιημένα καταστήματα" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span className="price-filters__label">Πιστοποιημένα</span></label>
-                <label data-type="boxnow" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Παράδοση με <svg aria-hidden="true" class="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
-                <label data-type="coupons" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" class="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span className="price-filters__label">Κουπόνια</span></label>
+                <label data-type="nearby" data-always-available="" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span className="price-filters__label">Κοντά μου</span></label>
+                <label data-type="certified" data-tooltip="Εμφάνιση μόνο προϊόντων που παρέχονται από πιστοποιημένα καταστήματα" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span className="price-filters__label">Πιστοποιημένα</span></label>
+                <label data-type="boxnow" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Παράδοση με <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
+                <label data-type="coupons" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span className="price-filters__label">Κουπόνια</span></label>
                 <label data-type="color" data-options="[&quot;pink&quot;,&quot;grey&quot;,&quot;graphite&quot;,&quot;black&quot;,&quot;green&quot;]" className="price-filters__filter is-inline"><input type="checkbox"/><span className="price-filters__label">Χρώμα</span></label>
                 <label data-type="authorized" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Επίσημοι μεταπωλητές</span></label>
               </div>
@@ -61,10 +58,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
         </div>
       </div>
       
-      {/* Insert the sponsored ad at the top */}
-      <TopVendorAd productId={product.id} />
-      
-      <div className="prices" data-merchants={product.prices.length}>
+      <div className="prices" data-merchants={product.prices.length.toString()}>
         {sortedPrices.map((priceInfo) => (
           <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={openPopup} />
         ))}
@@ -119,9 +113,9 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                           <div className="minfo__button-label">{popupContent.address[0] || ''}</div>
                         </div>
                           ) : (
-                        <div class="minfo__button minfo__button--disabled">
-                          <svg width="18" height="18" class="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
-                          <div class="minfo__button-label">Μόνο Ηλεκτρονικό κατάστημα</div></div>
+                        <div className="minfo__button minfo__button--disabled">
+                          <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
+                          <div className="minfo__button-label">Μόνο Ηλεκτρονικό κατάστημα</div></div>
                         )}
                         <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
                       </div>
@@ -166,12 +160,12 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
 interface VendorPriceCardProps {
   priceInfo: ProductPrice;
   product: Product;
-  openPopup: (content: string) => void; // Accept the openPopup function
+  openPopup: (content: any) => void;
 }
 
 const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps) => {
   const vendor = getVendorById(priceInfo.vendorId);
-  const vendorAddress = Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
+  const vendorAddress = vendor && Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
   
   if (!vendor) return null;
   
@@ -188,14 +182,14 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
                 </a>
                 <Link data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                  <svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
+                  <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
                   <em>{vendor.name}</em>
                 </Link>
                 <div className="prices__merchant-props">
                   <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}>
                     <span className="rating rating-all" data-total="150">
-                      <svg aria-hidden="true" class="icon" style={{ clipPath: 'rect(0, 4.7em, auto, auto)' }} width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                      <svg aria-hidden="true" class="icon" width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                      <svg aria-hidden="true" className="icon" style={{ clipPath: 'rect(0, 4.7em, auto, auto)' }} width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
+                      <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                     </span>
                   </Link>
                 </div>
@@ -224,11 +218,11 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
                   <span className="prices__group-variations-label">4  παραλλαγές</span>
                   <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
-                <div class="product-report__trigger-wrapper">
-                  <div class="product-report__trigger pressable">
-                    <div class="product-report__trigger-prompt">
-                      <div class="product-report__trigger-prompt-label">Αντιμετώπισες πρόβλημα με το προϊόν;</div>
-                      <svg class="icon" aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M2 7L5 4L2 1L3 0L7 4L3 8L2 7Z"/></svg>
+                <div className="product-report__trigger-wrapper">
+                  <div className="product-report__trigger pressable">
+                    <div className="product-report__trigger-prompt">
+                      <div className="product-report__trigger-prompt-label">Αντιμετώπισες πρόβλημα με το προϊόν;</div>
+                      <svg className="icon" aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M2 7L5 4L2 1L3 0L7 4L3 8L2 7Z"/></svg>
                     </div>
                   </div>
                 </div>
@@ -247,7 +241,7 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
               <div className="prices__buttons">
                 <div className="prices__button">
                   <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" className="button" disabled={!priceInfo.inStock}>
-                    <span>Δες το στο κατάστημα</span><svg aria-hidden="true" class="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-right-12"></use></svg>
+                    <span>Δες το στο κατάστημα</span><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-right-12"></use></svg>
                   </a>
                 </div>
               </div>
@@ -261,24 +255,24 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
             <div className="prices__footer-items">
               <div data-tooltip="Με την αγορά κερδίζεις 0,5 BestPrice Credit" data-tooltip-no-border="" data-is_certified="false" className="prices__footer-item prices__footer-item--loyalty loyalty-actions popup-anchor" data-listener-added="true">
                 <span>0,5</span>
-                <svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-white-credits-16"></use></svg>
+                <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-white-credits-16"></use></svg>
               </div>
               {vendor.certification && (
-              <Link data-tooltip="Απόκτησε δωρεάν Ασφάλιση Αγοράς" href="/programma-asfaleias-agoron?bpref=cluster-footer" class="prices__footer-item prices__footer-item--certification popup-anchor">
+              <Link data-tooltip="Απόκτησε δωρεάν Ασφάλιση Αγοράς" href="/programma-asfaleias-agoron?bpref=cluster-footer" className="prices__footer-item prices__footer-item--certification popup-anchor">
                 <svg aria-hidden="true" className="icon" width="17" height="17"><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
                 <span>Ασφάλιση Αγοράς</span>
               </Link>
               )}
               <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={(e) => { e.preventDefault(); openPopup(vendor); }}><div className="dotted-link">{vendorAddress}</div></Link>
-              <div class="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
-              <div class="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div class="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
-              <div class="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
-                <div class="prices__boxnow-logo">
+              <div className="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
+              <div className="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div className="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
+              <div className="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
+                <div className="prices__boxnow-logo">
                   <img src="https://www.bestprice.gr/images/logos/BoxNow/logo.svg" alt="BOX NOW logo" width="27" height="20"/>
                 </div>
               </div>
-              <a class="prices__footer-item" data-tooltip-left="" href="/blog/928/eurobank-epistrofi" target="_blank" data-tooltip-no-border="" data-tooltip="Το κατάστημα συμμετέχει στο πρόγραμμα επιβράβευσης €πιστροφή της Eurobank" data-adman="69482">
-                <div class="prices__epistrofi-logo"><img src="https://www.bestprice.gr/images/logos/Epistrofi/logo.svg" alt="Επιτροοφή logo" width="94" height="20"/></div>
+              <a className="prices__footer-item" data-tooltip-left="" href="/blog/928/eurobank-epistrofi" target="_blank" data-tooltip-no-border="" data-tooltip="Το κατάστημα συμμετέχει στο πρόγραμμα επιβράβευσης €πιστροφή της Eurobank" data-adman="69482">
+                <div className="prices__epistrofi-logo"><img src="https://www.bestprice.gr/images/logos/Epistrofi/logo.svg" alt="Επιτροοφή logo" width="94" height="20"/></div>
               </a>
             </div>
           </div>

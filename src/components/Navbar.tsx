@@ -1,3 +1,4 @@
+
 import React, { forwardRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -62,7 +63,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
             </div>
 
             {/* Desktop Search */}
-            <SearchBar onClick={handleNavbarClick} />
+            <SearchBar className="" />
           </div>
           
         </div>

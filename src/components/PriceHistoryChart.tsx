@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Button } from '@/components/ui/button';
@@ -50,11 +51,11 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({ productId, basePr
       <CardHeader>
         <CardTitle>Price History</CardTitle>
         <div>
-          {['1m', '3m', '6m', '1y'].map(range => (
+          {(['1m', '3m', '6m', '1y'] as const).map((range) => (
             <Button
               key={range}
               variant={timeRange === range ? 'default' : 'outline'}
-              onClick={() => setTimeRange(range)}
+              onClick={() => setTimeRange(range as '1m' | '3m' | '6m' | '1y')}
             >
               {range.toUpperCase()}
             </Button>
