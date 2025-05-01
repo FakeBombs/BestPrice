@@ -72,9 +72,10 @@ declare global {
 
 interface VoiceSearchButtonProps {
   onSearchComplete?: (query: string) => void;
+  onVoiceInput?: (text: string) => void;
 }
 
-export const VoiceSearchButton = ({ onSearchComplete }: VoiceSearchButtonProps) => {
+export const VoiceSearchButton = ({ onSearchComplete, onVoiceInput }: VoiceSearchButtonProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
@@ -169,6 +170,10 @@ export const VoiceSearchButton = ({ onSearchComplete }: VoiceSearchButtonProps) 
   const performSearch = (query: string) => {
     const finalQuery = query.trim();
     if (finalQuery) {
+      if (onVoiceInput) {
+        onVoiceInput(finalQuery);
+      }
+      
       if (onSearchComplete) {
         onSearchComplete(finalQuery);
       } else {
@@ -190,6 +195,7 @@ export const VoiceSearchButton = ({ onSearchComplete }: VoiceSearchButtonProps) 
       onClick={toggleListening}
       title="Search by voice"
       aria-label="Search by voice"
+      type="button"
     >
       {isListening ? (
         <MicOff className="h-5 w-5 text-red-500" />
@@ -199,3 +205,6 @@ export const VoiceSearchButton = ({ onSearchComplete }: VoiceSearchButtonProps) 
     </Button>
   );
 };
+
+// Add a default export that exports the same component
+export default VoiceSearchButton;
