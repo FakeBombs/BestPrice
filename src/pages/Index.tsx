@@ -1,171 +1,122 @@
 
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  fetchFeaturedProducts, 
-  fetchDeals, 
-  fetchNewArrivals, 
-  getCategories,
-  formatSlug
-} from '@/data/mockData';
+import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, formatSlug } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import CategoryCard from '@/components/CategoryCard';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowRight, Tag, Star, TrendingUp } from 'lucide-react';
+import ScrollableSlider from '@/components/ScrollableSlider';
+import TopVendorAd from '@/components/ads/TopVendorAd';
 
 const Index = () => {
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
-  const [deals, setDeals] = useState<any[]>([]);
-  const [newArrivals, setNewArrivals] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [deals, setDeals] = useState([]);
+  const [newArrivals, setNewArrivals] = useState([]);
+  
+  // Create an array of root categories to display
+  const rootCategories = [
+    { id: '1', name: 'Electronics', image: '/dist/images/cat/electronics.webp', slug: 'electronics' },
+    { id: '2', name: 'Fashion', image: '/dist/images/cat/fashion.webp', slug: 'fashion' },
+    { id: '3', name: 'Home & Garden', image: '/dist/images/cat/home-garden.webp', slug: 'home-garden' },
+    { id: '4', name: 'Health & Beauty', image: '/dist/images/cat/health-beauty.webp', slug: 'health-beauty' },
+    { id: '5', name: 'Sports & Outdoors', image: '/dist/images/cat/sports.webp', slug: 'sports-outdoors' }
+  ];
+  
+  // Fetch data on component mount
   useEffect(() => {
-    // Fetch all data
-    setIsLoading(true);
-    Promise.all([
-      fetchFeaturedProducts(),
-      fetchDeals(),
-      fetchNewArrivals()
-    ]).then(([featured, dealsData, arrivals]) => {
-      setFeaturedProducts(featured);
-      setDeals(dealsData);
-      setNewArrivals(arrivals);
-      setIsLoading(false);
-    });
-
-    // Fetch categories
-    const allCategories = getCategories();
-    // Filter for main categories (top-level)
-    const mainCats = allCategories.filter(cat => !cat.parentId);
-    setCategories(mainCats);
+    const loadData = async () => {
+      try {
+        const featured = await fetchFeaturedProducts();
+        setFeaturedProducts(featured);
+        
+        const dealsData = await fetchDeals();
+        setDeals(dealsData);
+        
+        const newItems = await fetchNewArrivals();
+        setNewArrivals(newItems);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+    
+    loadData();
   }, []);
 
-  // Loading skeleton
-  const LoadingSkeleton = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {Array(4).fill(0).map((_, i) => (
-        <div key={i} className="border rounded-lg p-4">
-          <Skeleton className="h-48 w-full mb-4" />
-          <Skeleton className="h-4 w-2/3 mb-2" />
-          <Skeleton className="h-4 w-full mb-2" />
-          <div className="flex justify-between mt-4">
-            <Skeleton className="h-6 w-1/4" />
-            <Skeleton className="h-6 w-1/4" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const ProductSection = ({ 
-    title, 
-    icon, 
-    products, 
-    viewAllLink,
-    isLoading 
-  }: { 
-    title: string; 
-    icon: React.ReactNode;
-    products: any[]; 
-    viewAllLink: string;
-    isLoading: boolean;
-  }) => (
-    <section className="mb-12">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          {icon}
-          {title}
-        </h2>
-        <Link to={viewAllLink} className="text-primary flex items-center">
-          View All <ArrowRight className="ml-1 h-4 w-4" />
-        </Link>
-      </div>
-      
-      {isLoading ? (
-        <LoadingSkeleton />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.slice(0, 4).map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
-    </section>
-  );
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Hero Banner */}
-      <div className="relative rounded-lg overflow-hidden mb-12">
-        <div className="bg-gradient-to-r from-primary to-purple-700 h-96 flex items-center">
-          <div className="container mx-auto px-6">
-            <div className="max-w-lg">
-              <h1 className="text-4xl font-bold text-white mb-4">
-                Find the Best Deals on Products You Love
-              </h1>
-              <p className="text-white/90 mb-6">
-                Compare prices across multiple stores and find the best deals on electronics, home goods, and more.
-              </p>
-              <Button size="lg">Shop Now</Button>
-            </div>
+    <div className="container mx-auto px-4">
+      {/* Main Hero Banner */}
+      <section className="mb-8">
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 h-96">
+          <div className="absolute inset-0 bg-black opacity-20"></div>
+          <div className="relative z-10 h-full flex flex-col justify-center items-center text-white text-center p-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Find the Best Deals Online</h1>
+            <p className="text-xl mb-8">Compare prices from hundreds of stores in one place</p>
+            <Link to="/categories" className="bg-white text-blue-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-opacity-90 transition">
+              Start Shopping
+            </Link>
           </div>
-        </div>
-      </div>
-
-      {/* Categories */}
-      <section className="mb-12">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Categories</h2>
-          <Link to="/categories" className="text-primary flex items-center">
-            View All <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {categories.slice(0, 6).map(category => {
-            const categorySlug = category.slug || formatSlug(category.name);
-            
-            return (
-              <Link 
-                key={category.id} 
-                to={`/cat/${category.id}/${categorySlug}`}
-                className="block"
-              >
-                <CategoryCard category={category} />
-              </Link>
-            );
-          })}
         </div>
       </section>
-
+      
+      {/* Top Categories */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold mb-6">Top Categories</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {rootCategories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              id={category.id}
+              name={category.name}
+              imageUrl={category.image}
+              slug={category.slug}
+            />
+          ))}
+        </div>
+        <div className="mt-6 text-center">
+          <Link to="/categories" className="text-blue-600 font-medium hover:underline">
+            View All Categories
+          </Link>
+        </div>
+      </section>
+      
       {/* Featured Products */}
-      <ProductSection 
-        title="Featured Products" 
-        icon={<Star className="h-6 w-6 text-yellow-500" />}
-        products={featuredProducts} 
-        viewAllLink="/search?featured=true" 
-        isLoading={isLoading}
-      />
-
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
+        <ScrollableSlider>
+          {featuredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </ScrollableSlider>
+      </section>
+      
+      {/* Vendor Ad */}
+      <section className="mb-12">
+        <TopVendorAd />
+      </section>
+      
       {/* Deals */}
-      <ProductSection 
-        title="Top Deals" 
-        icon={<Tag className="h-6 w-6 text-red-500" />}
-        products={deals} 
-        viewAllLink="/deals" 
-        isLoading={isLoading}
-      />
-
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold mb-6">Hot Deals</h2>
+        <ScrollableSlider>
+          {deals.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </ScrollableSlider>
+        <div className="mt-6 text-center">
+          <Link to="/deals" className="text-blue-600 font-medium hover:underline">
+            View All Deals
+          </Link>
+        </div>
+      </section>
+      
       {/* New Arrivals */}
-      <ProductSection 
-        title="New Arrivals" 
-        icon={<TrendingUp className="h-6 w-6 text-green-500" />}
-        products={newArrivals} 
-        viewAllLink="/search?sort=newest" 
-        isLoading={isLoading}
-      />
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
+        <ScrollableSlider>
+          {newArrivals.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </ScrollableSlider>
+      </section>
     </div>
   );
 };

@@ -195,7 +195,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                         </a>
                                                     </span>
                                                 </li>
-                                                <li><span class="id__status id__status--ready id__status--open"><span class="status-dot"></span><span class="ui-kit__small">Ανοιχτό μέχρι τις 21:00</span></span></li>
+                                                <li><span className="id__status id__status--ready id__status--open"><span className="status-dot"></span><span className="ui-kit__small">Ανοιχτό μέχρι τις 21:00</span></span></li>
                                             </ul>
                                         </div>
                                         <div>
@@ -319,7 +319,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <button aria-label="Scroll arrow previous" disabled="" className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{ left: 0 }}>
+                                    <button aria-label="Scroll arrow previous" disabled={true} className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{ left: 0 }}>
                                         <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                     </button>
                                     <button aria-label="Scroll arrow next" className="scroll__arrow scroll__arrow--next" style={{ right: -18.4 }}>
@@ -353,8 +353,8 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     <div className="categories__cnt">99 products</div>
                                 </a>
                             </div>
-                            <div id="popular-categories" class="popular-categories">
-                                <div class="expand popular-categories__view-wrapper">
+                            <div id="popular-categories" className="popular-categories">
+                                <div className="expand popular-categories__view-wrapper">
                                     <Link className="button popular-categories__view-all" rel="nofollow" to={`/search?store=${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
                                         <span>Δες όλα τα προϊόντα<span className="hide-mobile"> του καταστήματος</span></span>
                                     </Link>
@@ -393,10 +393,10 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     {/* Map content will go here */}
                                 </div>
                             </div>
-                            <div class="scroll">
-                                <div class="scroll__clip">
-                                    <div class="scroll__scroller">
-                                        <div class="merchant-map__pops grid scroll__content">
+                            <div className="scroll">
+                                <div className="scroll__clip">
+                                    <div className="scroll__scroller">
+                                        <div className="merchant-map__pops grid scroll__content">
                                             {selectedVendor.address.map((addr, index) => (
                                                 <div className="merchant-map__pop-wrapper" key={`${selectedVendor.id}-${index}`}>
                                                     <div className="merchant-map__pop pressable" data-id={selectedVendor.id}>
@@ -411,8 +411,8 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-                                    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
+                                    <button aria-label="Scroll arrow previous" disabled={true} className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
+                                    <button aria-label="Scroll arrow next" className="scroll__arrow scroll__arrow--next"><svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
                                 </div>
                             </div>
                         </section>

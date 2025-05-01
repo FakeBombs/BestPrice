@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -6,31 +5,41 @@ export const mockData = {
       id: 1,
       name: "Electronics",
       description: "Explore the latest gadgets and electronic devices.",
-      imageUrl: "/dist/images/categories/electronics.jpg"
+      imageUrl: "/dist/images/categories/electronics.jpg",
+      slug: "electronics",
+      image: "/dist/images/categories/electronics.jpg"
     },
     {
       id: 2,
       name: "Clothing & Apparel",
       description: "Discover trendy clothing and apparel for all occasions.",
-      imageUrl: "/dist/images/categories/clothing.jpg"
+      imageUrl: "/dist/images/categories/clothing.jpg",
+      slug: "clothing-apparel",
+      image: "/dist/images/categories/clothing.jpg"
     },
     {
       id: 3,
       name: "Home & Garden",
       description: "Find everything you need for your home and garden.",
-      imageUrl: "/dist/images/categories/home-garden.jpg"
+      imageUrl: "/dist/images/categories/home-garden.jpg",
+      slug: "home-garden",
+      image: "/dist/images/categories/home-garden.jpg"
     },
     {
       id: 4,
       name: "Books & Media",
       description: "Explore a wide range of books, movies, and music.",
-      imageUrl: "/dist/images/categories/books-media.jpg"
+      imageUrl: "/dist/images/categories/books-media.jpg",
+      slug: "books-media",
+      image: "/dist/images/categories/books-media.jpg"
     },
     {
       id: 5,
       name: "Sports & Outdoors",
       description: "Gear up for your favorite sports and outdoor activities.",
-      imageUrl: "/dist/images/categories/sports-outdoors.jpg"
+      imageUrl: "/dist/images/categories/sports-outdoors.jpg",
+      slug: "sports-outdoors",
+      image: "/dist/images/categories/sports-outdoors.jpg"
     }
   ],
   categories: [
@@ -39,119 +48,154 @@ export const mockData = {
       parentId: 1,
       name: "Smartphones",
       description: "The latest smartphones with advanced features.",
-      imageUrl: "/dist/images/subcategories/smartphones.jpg"
+      imageUrl: "/dist/images/subcategories/smartphones.jpg",
+      slug: "smartphones",
+      image: "/dist/images/subcategories/smartphones.jpg"
     },
     {
       id: 102,
       parentId: 1,
       name: "Laptops",
       description: "High-performance laptops for work and play.",
-      imageUrl: "/dist/images/subcategories/laptops.jpg"
+      imageUrl: "/dist/images/subcategories/laptops.jpg",
+      slug: "laptops",
+      image: "/dist/images/subcategories/laptops.jpg"
     },
     {
       id: 103,
       parentId: 1,
       name: "Headphones",
       description: "Premium headphones for an immersive audio experience.",
-      imageUrl: "/dist/images/subcategories/headphones.jpg"
+      imageUrl: "/dist/images/subcategories/headphones.jpg",
+      slug: "headphones",
+      image: "/dist/images/subcategories/headphones.jpg"
     },
     {
       id: 201,
       parentId: 2,
       name: "Men's Fashion",
       description: "Stylish clothing for men.",
-      imageUrl: "/dist/images/subcategories/mens-fashion.jpg"
+      imageUrl: "/dist/images/subcategories/mens-fashion.jpg",
+      slug: "mens-fashion",
+      image: "/dist/images/subcategories/mens-fashion.jpg"
     },
     {
       id: 202,
       parentId: 2,
       name: "Women's Fashion",
       description: "Trendy clothing for women.",
-      imageUrl: "/dist/images/subcategories/womens-fashion.jpg"
+      imageUrl: "/dist/images/subcategories/womens-fashion.jpg",
+      slug: "womens-fashion",
+      image: "/dist/images/subcategories/womens-fashion.jpg"
     },
     {
       id: 301,
       parentId: 3,
       name: "Furniture",
       description: "Comfortable and stylish furniture for your home.",
-      imageUrl: "/dist/images/subcategories/furniture.jpg"
+      imageUrl: "/dist/images/subcategories/furniture.jpg",
+      slug: "furniture",
+      image: "/dist/images/subcategories/furniture.jpg"
     },
     {
       id: 302,
       parentId: 3,
       name: "Gardening Tools",
       description: "Essential tools for maintaining your garden.",
-      imageUrl: "/dist/images/subcategories/gardening-tools.jpg"
+      imageUrl: "/dist/images/subcategories/gardening-tools.jpg",
+      slug: "gardening-tools",
+      image: "/dist/images/subcategories/gardening-tools.jpg"
     },
     {
       id: 401,
       parentId: 4,
       name: "Fiction Books",
       description: "Engaging fiction books for all ages.",
-      imageUrl: "/dist/images/subcategories/fiction-books.jpg"
+      imageUrl: "/dist/images/subcategories/fiction-books.jpg",
+      slug: "fiction-books",
+      image: "/dist/images/subcategories/fiction-books.jpg"
     },
     {
       id: 402,
       parentId: 4,
       name: "Movies",
       description: "A wide selection of movies for entertainment.",
-      imageUrl: "/dist/images/subcategories/movies.jpg"
+      imageUrl: "/dist/images/subcategories/movies.jpg",
+      slug: "movies",
+      image: "/dist/images/subcategories/movies.jpg"
     },
     {
       id: 501,
       parentId: 5,
       name: "Running Shoes",
       description: "High-quality running shoes for athletes.",
-      imageUrl: "/dist/images/subcategories/running-shoes.jpg"
+      imageUrl: "/dist/images/subcategories/running-shoes.jpg",
+      slug: "running-shoes",
+      image: "/dist/images/subcategories/running-shoes.jpg"
     },
      {
         id: 104,
         parentId: 1,
         name: "Smartwatches",
         description: "Stay connected with these smartwatches.",
-        imageUrl: "/dist/images/subcategories/smartwatches.jpg"
+        imageUrl: "/dist/images/subcategories/smartwatches.jpg",
+        slug: "smartwatches",
+        image: "/dist/images/subcategories/smartwatches.jpg"
       },
       {
         id: 203,
         parentId: 2,
         name: "Kids' Clothing",
         description: "Fashionable clothing for kids.",
-        imageUrl: "/dist/images/subcategories/kids-clothing.jpg"
+        imageUrl: "/dist/images/subcategories/kids-clothing.jpg",
+        slug: "kids-clothing",
+        image: "/dist/images/subcategories/kids-clothing.jpg"
       },
       {
         id: 303,
         parentId: 3,
         name: "Home Decor",
         description: "Stylish decorations to enhance your home.",
-        imageUrl: "/dist/images/subcategories/home-decor.jpg"
+        imageUrl: "/dist/images/subcategories/home-decor.jpg",
+        slug: "home-decor",
+        image: "/dist/images/subcategories/home-decor.jpg"
       },
       {
         id: 403,
         parentId: 4,
         name: "Music",
         description: "Explore various genres of music.",
-        imageUrl: "/dist/images/subcategories/music.jpg"
+        imageUrl: "/dist/images/subcategories/music.jpg",
+        slug: "music",
+        image: "/dist/images/subcategories/music.jpg"
       },
       {
         id: 502,
         parentId: 5,
         name: "Camping Gear",
         description: "Essential gear for camping and hiking.",
-        imageUrl: "/dist/images/subcategories/camping-gear.jpg"
+        imageUrl: "/dist/images/subcategories/camping-gear.jpg",
+        slug: "camping-gear",
+        image: "/dist/images/subcategories/camping-gear.jpg"
       }
   ],
   products: [
     {
       id: 1,
       categoryId: 101,
+      categoryIds: [101],
       name: "Awesome SmartPhone",
+      title: "Awesome SmartPhone",
       description: "A high-end smartphone with advanced features.",
       price: 799.99,
       imageUrl: "/dist/images/products/smartphone1.jpg",
+      image: "/dist/images/products/smartphone1.jpg",
       rating: 4.5,
       reviewCount: 120,
+      reviews: 120,
       brand: "TechMaster",
       sku: "TM-SP-001",
+      slug: "awesome-smartphone",
       images: [
         "/dist/images/products/smartphone1.jpg",
         "/dist/images/products/smartphone2.jpg",
@@ -171,10 +215,13 @@ export const mockData = {
       description: "A powerful laptop for professionals and gamers.",
       price: 1299.99,
       imageUrl: "/dist/images/products/laptop1.jpg",
+      image: "/dist/images/products/laptop1.jpg",
       rating: 4.8,
       reviewCount: 210,
+      reviews: 210,
       brand: "PowerTech",
       sku: "PT-LP-002",
+      slug: "incredible-laptop",
       images: [
         "/dist/images/products/laptop1.jpg",
         "/dist/images/products/laptop2.jpg",
@@ -194,10 +241,13 @@ export const mockData = {
       description: "Noise-canceling headphones for an immersive experience.",
       price: 249.99,
       imageUrl: "/dist/images/products/headphones1.jpg",
+      image: "/dist/images/products/headphones1.jpg",
       rating: 4.6,
       reviewCount: 150,
+      reviews: 150,
       brand: "AudioSonic",
       sku: "AS-HP-003",
+      slug: "amazing-headphones",
       images: [
         "/dist/images/products/headphones1.jpg",
         "/dist/images/products/headphones2.jpg",
@@ -217,10 +267,13 @@ export const mockData = {
       description: "A fashionable shirt for men.",
       price: 49.99,
       imageUrl: "/dist/images/products/mens-shirt1.jpg",
+      image: "/dist/images/products/mens-shirt1.jpg",
       rating: 4.2,
       reviewCount: 80,
+      reviews: 80,
       brand: "FashionHub",
       sku: "FH-MS-004",
+      slug: "stylish-men-shirt",
       images: [
         "/dist/images/products/mens-shirt1.jpg",
         "/dist/images/products/mens-shirt2.jpg",
@@ -240,10 +293,13 @@ export const mockData = {
       description: "A beautiful dress for women.",
       price: 79.99,
       imageUrl: "/dist/images/products/womens-dress1.jpg",
+      image: "/dist/images/products/womens-dress1.jpg",
       rating: 4.7,
       reviewCount: 180,
+      reviews: 180,
       brand: "GlamourStyle",
       sku: "GS-WD-005",
+      slug: "elegant-women-dress",
       images: [
         "/dist/images/products/womens-dress1.jpg",
         "/dist/images/products/womens-dress2.jpg",
@@ -263,10 +319,13 @@ export const mockData = {
       description: "A cozy sofa for your living room.",
       price: 599.99,
       imageUrl: "/dist/images/products/sofa1.jpg",
+      image: "/dist/images/products/sofa1.jpg",
       rating: 4.3,
       reviewCount: 95,
+      reviews: 95,
       brand: "HomeComfort",
       sku: "HC-SF-006",
+      slug: "comfortable-sofa",
       images: [
         "/dist/images/products/sofa1.jpg",
         "/dist/images/products/sofa2.jpg",
@@ -286,10 +345,13 @@ export const mockData = {
       description: "Essential tools for gardening.",
       price: 39.99,
       imageUrl: "/dist/images/products/gardening-tools1.jpg",
+      image: "/dist/images/products/gardening-tools1.jpg",
       rating: 4.0,
       reviewCount: 60,
+      reviews: 60,
       brand: "GreenThumb",
       sku: "GT-GS-007",
+      slug: "gardening-tool-set",
       images: [
         "/dist/images/products/gardening-tools1.jpg",
         "/dist/images/products/gardening-tools2.jpg",
@@ -309,10 +371,13 @@ export const mockData = {
       description: "An engaging fiction book.",
       price: 19.99,
       imageUrl: "/dist/images/products/fiction-book1.jpg",
+      image: "/dist/images/products/fiction-book1.jpg",
       rating: 4.9,
       reviewCount: 250,
+      reviews: 250,
       brand: "StoryTime",
       sku: "ST-FB-008",
+      slug: "bestselling-fiction-book",
       images: [
         "/dist/images/products/fiction-book1.jpg",
         "/dist/images/products/fiction-book2.jpg",
@@ -332,10 +397,13 @@ export const mockData = {
       description: "A must-see movie for entertainment.",
       price: 14.99,
       imageUrl: "/dist/images/products/movie1.jpg",
+      image: "/dist/images/products/movie1.jpg",
       rating: 4.5,
       reviewCount: 140,
+      reviews: 140,
       brand: "CineWorld",
       sku: "CW-MV-009",
+      slug: "popular-movie",
       images: [
         "/dist/images/products/movie1.jpg",
         "/dist/images/products/movie2.jpg",
@@ -355,10 +423,13 @@ export const mockData = {
       description: "Top-notch running shoes for athletes.",
       price: 89.99,
       imageUrl: "/dist/images/products/running-shoes1.jpg",
+      image: "/dist/images/products/running-shoes1.jpg",
       rating: 4.6,
       reviewCount: 170,
+      reviews: 170,
       brand: "RunFast",
       sku: "RF-RS-010",
+      slug: "high-quality-running-shoes",
       images: [
         "/dist/images/products/running-shoes1.jpg",
         "/dist/images/products/running-shoes2.jpg",
@@ -378,10 +449,13 @@ export const mockData = {
         description: "A feature-rich smartwatch to keep you connected.",
         price: 349.99,
         imageUrl: "/dist/images/products/smartwatch1.jpg",
+        image: "/dist/images/products/smartwatch1.jpg",
         rating: 4.7,
         reviewCount: 190,
+        reviews: 190,
         brand: "SmartTime",
         sku: "ST-SW-011",
+        slug: "advanced-smartwatch",
         images: [
           "/dist/images/products/smartwatch1.jpg",
           "/dist/images/products/smartwatch2.jpg",
@@ -401,10 +475,13 @@ export const mockData = {
         description: "A stylish and comfortable outfit for kids.",
         price: 29.99,
         imageUrl: "/dist/images/products/kids-clothing1.jpg",
+        image: "/dist/images/products/kids-clothing1.jpg",
         rating: 4.4,
         reviewCount: 110,
+        reviews: 110,
         brand: "TinyTrend",
         sku: "TT-KC-012",
+        slug: "cute-kids-outfit",
         images: [
           "/dist/images/products/kids-clothing1.jpg",
           "/dist/images/products/kids-clothing2.jpg",
@@ -424,10 +501,13 @@ export const mockData = {
         description: "A set of decorations to enhance your home's ambiance.",
         price: 59.99,
         imageUrl: "/dist/images/products/home-decor1.jpg",
+        image: "/dist/images/products/home-decor1.jpg",
         rating: 4.8,
         reviewCount: 220,
+        reviews: 220,
         brand: "CozyHome",
         sku: "CH-HD-013",
+        slug: "elegant-home-decor-set",
         images: [
           "/dist/images/products/home-decor1.jpg",
           "/dist/images/products/home-decor2.jpg",
@@ -447,10 +527,13 @@ export const mockData = {
         description: "A collection of classic songs for music lovers.",
         price: 12.99,
         imageUrl: "/dist/images/products/music1.jpg",
+        image: "/dist/images/products/music1.jpg",
         rating: 4.9,
         reviewCount: 260,
+        reviews: 260,
         brand: "MelodyMaster",
         sku: "MM-MA-014",
+        slug: "timeless-music-album",
         images: [
           "/dist/images/products/music1.jpg",
           "/dist/images/products/music2.jpg",
@@ -470,10 +553,13 @@ export const mockData = {
         description: "Essential gear for a comfortable camping experience.",
         price: 129.99,
         imageUrl: "/dist/images/products/camping-gear1.jpg",
+        image: "/dist/images/products/camping-gear1.jpg",
         rating: 4.7,
         reviewCount: 200,
+        reviews: 200,
         brand: "OutdoorAdventures",
         sku: "OA-CG-015",
+        slug: "durable-camping-gear-set",
         images: [
           "/dist/images/products/camping-gear1.jpg",
           "/dist/images/products/camping-gear2.jpg",
@@ -498,7 +584,11 @@ export const vendors = [
     id: "1", 
     name: "TechStore", 
     certification: "Certified", 
-    address: "123 Tech St",
+    address: ["123 Tech St"],
+    telephone: ["123-456-7890"],
+    productCount: Math.floor(Math.random() * 1000) + 100,
+    categoryCount: Math.floor(Math.random() * 20) + 5,
+    paymentMethods: ["Credit Card", "PayPal", "Bank Transfer"],
     url: "https://techstore.com",
     logo: "/dist/images/vendors/techstore-logo.png",
     rating: 4.8
@@ -507,7 +597,11 @@ export const vendors = [
     id: "2", 
     name: "ElectroMart", 
     certification: "Premium", 
-    address: "456 Digital Ave",
+    address: ["456 Digital Ave"],
+    telephone: ["123-456-7890"],
+    productCount: Math.floor(Math.random() * 1000) + 100,
+    categoryCount: Math.floor(Math.random() * 20) + 5,
+    paymentMethods: ["Credit Card", "PayPal", "Bank Transfer"],
     url: "https://electromart.com",
     logo: "/dist/images/vendors/electromart-logo.png",
     rating: 4.6
@@ -516,7 +610,11 @@ export const vendors = [
     id: "3", 
     name: "GadgetWorld", 
     certification: "Standard", 
-    address: "789 Gadget Blvd",
+    address: ["789 Gadget Blvd"],
+    telephone: ["123-456-7890"],
+    productCount: Math.floor(Math.random() * 1000) + 100,
+    categoryCount: Math.floor(Math.random() * 20) + 5,
+    paymentMethods: ["Credit Card", "PayPal", "Bank Transfer"],
     url: "https://gadgetworld.com",
     logo: "/dist/images/vendors/gadgetworld-logo.png",
     rating: 4.9
@@ -676,27 +774,26 @@ export const groupedBrands = () => {
 };
 
 // Update the mockData objects to use string IDs and add missing properties
-// This needs to match our interfaces defined above
 for (let category of mockData.mainCategories) {
   category.id = String(category.id);
-  category.slug = formatSlug(category.name);
-  category.image = category.imageUrl;
+  category.slug = category.slug || formatSlug(category.name);
+  category.image = category.image || category.imageUrl;
 }
 
 for (let category of mockData.categories) {
   category.id = String(category.id);
   category.parentId = String(category.parentId);
-  category.slug = formatSlug(category.name);
-  category.image = category.imageUrl;
+  category.slug = category.slug || formatSlug(category.name);
+  category.image = category.image || category.imageUrl;
 }
 
 for (let product of mockData.products) {
   product.id = String(product.id);
   product.categoryId = String(product.categoryId);
-  product.title = product.name;
-  product.image = product.imageUrl;
-  product.reviews = product.reviewCount;
-  product.slug = formatSlug(product.name);
+  product.title = product.title || product.name;
+  product.image = product.image || product.imageUrl;
+  product.reviews = product.reviews || product.reviewCount;
+  product.slug = product.slug || formatSlug(product.name);
   
   // Convert categoryIds if they exist or create them
   if (!product.categoryIds) {

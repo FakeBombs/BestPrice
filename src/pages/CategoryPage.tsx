@@ -7,28 +7,28 @@ import CategoryBreadcrumb from '../components/category/CategoryBreadcrumb';
 import { mockData } from '../data/mockData';
 
 export default function CategoryPage() {
-  const { id } = useParams<{ id: string, slug: string }>();
+  const { categoryId, categorySlug } = useParams<{ categoryId: string, categorySlug: string }>();
   const [category, setCategory] = useState<any>(null);
   const [isRootCategory, setIsRootCategory] = useState(false);
 
   useEffect(() => {
-    if (id) {
+    if (categoryId) {
       // First try to find in mainCategories
-      const rootCategory = mockData.mainCategories.find(cat => cat.id.toString() === id);
+      const rootCategory = mockData.mainCategories.find(cat => cat.id.toString() === categoryId);
       
       if (rootCategory) {
         setCategory(rootCategory);
         setIsRootCategory(true);
       } else {
         // If not in mainCategories, search in categories
-        const subCategory = mockData.categories.find(cat => cat.id.toString() === id);
+        const subCategory = mockData.categories.find(cat => cat.id.toString() === categoryId);
         if (subCategory) {
           setCategory(subCategory);
           setIsRootCategory(false);
         }
       }
     }
-  }, [id]);
+  }, [categoryId]);
 
   if (!category) {
     return <div>Loading...</div>;

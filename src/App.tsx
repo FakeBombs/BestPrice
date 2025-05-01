@@ -31,11 +31,13 @@ import WalletPage from './pages/WalletPage'
 import React from 'react'
 
 // AdminLayoutWrapper component to match the props expected by AdminLayout
-const AdminLayoutWrapper = () => (
-  <AdminLayout>
-    <Outlet />
-  </AdminLayout>
-);
+const AdminLayoutWrapper = () => {
+  return (
+    <AdminLayout>
+      <Outlet />
+    </AdminLayout>
+  );
+};
 
 function App() {
   return (
