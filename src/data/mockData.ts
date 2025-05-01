@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -664,8 +663,14 @@ export const getBestPrice = (product: Product) => {
   );
 };
 
-// Define interfaces BEFORE using them, and make them accept both string and number types
-// Update the Product interface to match actual usage in components
+// Define interfaces BEFORE using them
+export interface ProductPrice {
+  vendorId: string;
+  price: number;
+  inStock: boolean;
+  shippingCost?: number;
+}
+
 export interface Product {
   id: string | number;
   categoryId: string | number;
@@ -718,13 +723,6 @@ export interface Vendor {
   url: string;
   logo: string;
   rating: number;
-}
-
-export interface ProductPrice {
-  vendorId: string;
-  price: number;
-  inStock: boolean;
-  shippingCost?: number;
 }
 
 // Function to search products
@@ -792,14 +790,14 @@ export const groupedBrands = () => {
 };
 
 // Process all data to ensure consistent types and add missing properties
-// This section is where the TypeScript errors were occurring - convert IDs to strings and set up prices
-for (let category of mockData.mainCategories) {
+// This is where we normalize all data to match our interfaces
+for (let category of mockData.mainCategories as Category[]) {
   category.id = String(category.id);
   category.slug = category.slug || formatSlug(category.name);
   category.image = category.image || category.imageUrl;
 }
 
-for (let category of mockData.categories) {
+for (let category of mockData.categories as Category[]) {
   category.id = String(category.id);
   if (category.parentId !== undefined) {
     category.parentId = String(category.parentId);
@@ -808,7 +806,7 @@ for (let category of mockData.categories) {
   category.image = category.image || category.imageUrl;
 }
 
-for (let product of mockData.products) {
+for (let product of mockData.products as Product[]) {
   product.id = String(product.id);
   product.categoryId = String(product.categoryId);
   product.title = product.title || product.name;

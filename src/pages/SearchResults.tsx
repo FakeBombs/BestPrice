@@ -30,12 +30,13 @@ const SearchResults: React.FC = () => {
         let filteredData = data;
         if (storeFilter) {
           const vendorDomain = storeFilter;
-          filteredData = filteredData.filter(product => 
-            product.prices && product.prices.some(price => {
+          filteredData = filteredData.filter(product => {
+            if (!product.prices) return false;
+            return product.prices.some(price => {
               const vendor = vendors.find(v => v.id === price.vendorId);
               return vendor?.url.includes(vendorDomain);
-            })
-          );
+            });
+          });
         }
         
         // Apply brand filter if present
