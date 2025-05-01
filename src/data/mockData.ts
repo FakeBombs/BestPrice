@@ -206,7 +206,9 @@ export const mockData = {
         "128GB Internal Storage",
         "48MP Camera",
         "5G Connectivity"
-      ]
+      ],
+      model: "",
+      category: ""
     },
     {
       id: 2,
