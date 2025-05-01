@@ -681,9 +681,9 @@ export interface Product {
   brand: string;
   sku?: string;
   highlights?: string[];
-  model?: string; // Added missing property
+  model?: string;
   specifications?: Record<string, string>;
-  category?: string; // Added missing property
+  category?: string;
   slug?: string;
 }
 
@@ -797,8 +797,8 @@ for (let product of mockData.products) {
   product.image = product.image || product.imageUrl;
   product.reviews = product.reviews || product.reviewCount;
   product.slug = product.slug || formatSlug(product.name);
-  product.model = product.model || ""; // Add model property
-  product.category = getCategoryById(String(product.categoryId))?.name || ""; // Add category property
+  product.model = product.model || ""; // Add model property with default value
+  product.category = getCategoryById(String(product.categoryId))?.name || ""; // Add category property with actual category name
   
   // Convert categoryIds if they exist or create them
   if (!product.categoryIds) {
