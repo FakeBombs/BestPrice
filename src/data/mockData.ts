@@ -1,3 +1,4 @@
+
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -663,7 +664,8 @@ export const getBestPrice = (product: Product) => {
   );
 };
 
-// Update the Product interface to match actual usage in components and accept both string and number types
+// Define interfaces BEFORE using them, and make them accept both string and number types
+// Update the Product interface to match actual usage in components
 export interface Product {
   id: string | number;
   categoryId: string | number;
@@ -713,7 +715,7 @@ export interface Vendor {
   productCount: number;
   categoryCount: number;
   paymentMethods: string[];
-  url: string; // Adding this for filtering by vendor URL
+  url: string;
   logo: string;
   rating: number;
 }
@@ -789,8 +791,8 @@ export const groupedBrands = () => {
   return groups;
 };
 
-// Update the mockData objects to use string IDs and add missing properties
-// This section is where the TypeScript errors were occurring - here we properly convert IDs to strings
+// Process all data to ensure consistent types and add missing properties
+// This section is where the TypeScript errors were occurring - convert IDs to strings and set up prices
 for (let category of mockData.mainCategories) {
   category.id = String(category.id);
   category.slug = category.slug || formatSlug(category.name);

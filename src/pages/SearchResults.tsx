@@ -31,7 +31,7 @@ const SearchResults: React.FC = () => {
         if (storeFilter) {
           const vendorDomain = storeFilter;
           filteredData = filteredData.filter(product => 
-            product.prices?.some(price => {
+            product.prices && product.prices.some(price => {
               const vendor = vendors.find(v => v.id === price.vendorId);
               return vendor?.url.includes(vendorDomain);
             })

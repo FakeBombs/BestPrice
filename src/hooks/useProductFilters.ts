@@ -39,7 +39,10 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     // Apply price range filter
     if (priceRange) {
       filtered = filtered.filter(product => {
-        const minProductPrice = Math.min(...(product.prices?.map(p => p.price) || [product.price]));
+        const minProductPrice = product.prices?.length 
+          ? Math.min(...product.prices.map(p => p.price)) 
+          : product.price;
+        
         return minProductPrice >= priceRange.min && minProductPrice <= priceRange.max;
       });
     }
@@ -47,8 +50,13 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     // Apply sorting
     filtered = filtered.sort((a, b) => {
       // Get the minimum price for each product
-      const aPrice = Math.min(...(a.prices?.map(p => p.price) || [a.price]));
-      const bPrice = Math.min(...(b.prices?.map(p => p.price) || [b.price]));
+      const aPrice = a.prices?.length 
+        ? Math.min(...a.prices.map(p => p.price)) 
+        : a.price;
+      
+      const bPrice = b.prices?.length 
+        ? Math.min(...b.prices.map(p => p.price)) 
+        : b.price;
       
       // Get the vendor count for each product
       const aVendorCount = a.prices?.length || 0;

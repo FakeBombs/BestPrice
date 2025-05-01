@@ -21,13 +21,13 @@ const ProductCard = ({
 
   // Convert categories array to an object for quick access
   const categoryLookup = categories.reduce((acc: Record<string, string>, category) => {
-    acc[category.id] = category.name; // Map ID to the name
+    acc[String(category.id)] = category.name; // Map ID to the name
     return acc;
   }, {});
 
   // Assuming you want to display the first category only
   const firstCategoryId = product.categoryIds?.[0] || product.categoryId;
-  const categoryName = firstCategoryId ? categoryLookup[firstCategoryId] : 'Άγνωστη Κατηγορία';
+  const categoryName = firstCategoryId ? categoryLookup[String(firstCategoryId)] : 'Άγνωστη Κατηγορία';
 
   return (
     <div className={className}>
