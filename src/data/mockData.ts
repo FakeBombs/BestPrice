@@ -1,3 +1,4 @@
+
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -680,9 +681,9 @@ export interface Product {
   brand: string;
   sku?: string;
   highlights?: string[];
-  model?: string;
+  model?: string; // Added missing property
   specifications?: Record<string, string>;
-  category?: string;
+  category?: string; // Added missing property
   slug?: string;
 }
 
