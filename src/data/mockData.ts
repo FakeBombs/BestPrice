@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -492,14 +491,38 @@ export const mockData = {
 // Export individual items for easier imports
 export const { mainCategories, categories, products } = mockData;
 
-// Add vendors array export since it's used in Footer.tsx
+// Add vendors array export
 export const vendors = [
-  { id: 1, name: "TechStore", certification: "Certified", address: "123 Tech St" },
-  { id: 2, name: "ElectroMart", certification: "Premium", address: "456 Digital Ave" },
-  { id: 3, name: "GadgetWorld", certification: "Standard", address: "789 Gadget Blvd" }
+  { 
+    id: 1, 
+    name: "TechStore", 
+    certification: "Certified", 
+    address: "123 Tech St",
+    url: "https://techstore.com",
+    logo: "/dist/images/vendors/techstore-logo.png",
+    rating: 4.8
+  },
+  { 
+    id: 2, 
+    name: "ElectroMart", 
+    certification: "Premium", 
+    address: "456 Digital Ave",
+    url: "https://electromart.com",
+    logo: "/dist/images/vendors/electromart-logo.png",
+    rating: 4.6
+  },
+  { 
+    id: 3, 
+    name: "GadgetWorld", 
+    certification: "Standard", 
+    address: "789 Gadget Blvd",
+    url: "https://gadgetworld.com",
+    logo: "/dist/images/vendors/gadgetworld-logo.png",
+    rating: 4.9
+  }
 ];
 
-// Add brands array export since it's used in Footer.tsx
+// Add brands array export
 export const brands = [
   { id: 1, name: "TechMaster" },
   { id: 2, name: "PowerTech" },
@@ -522,33 +545,47 @@ export const getVendorById = (id: number) => {
   return vendors.find(vendor => vendor.id === id);
 };
 
-export const getBestPrice = (productId: number) => {
-  // Mock function to return a best price
-  return 749.99;
+// Add the getBestPrice function that was causing errors
+export const getBestPrice = (product: Product) => {
+  if (!product.prices || product.prices.length === 0) {
+    return null;
+  }
+  return product.prices.reduce((lowest, current) => 
+    current.price < lowest.price ? current : lowest
+  );
 };
 
-// Add types for components
+// Update Product interface to match actual usage in components
 export interface Product {
   id: number;
   categoryId: number;
+  categoryIds?: number[];  // Add for backward compatibility
   name: string;
+  title?: string;          // Add for backward compatibility
   description: string;
   price: number;
-  imageUrl: string;
+  prices?: ProductPrice[];  // Add array of prices from vendors
+  imageUrl?: string;       // Legacy property
+  image?: string;          // New property
+  images?: string[];       // Add array of images
   rating: number;
-  reviewCount: number;
+  reviewCount?: number;    // Legacy property
+  reviews?: number;        // New property
   brand: string;
-  sku: string;
-  images: string[];
-  highlights: string[];
+  sku?: string;
+  highlights?: string[];
+  model?: string;
+  specifications?: Record<string, string>;
 }
 
 export interface Category {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
+  image?: string;
   parentId?: number;
+  slug?: string;
 }
 
 export interface Brand {
@@ -569,8 +606,9 @@ export const searchProducts = (query: string) => {
   const lowerQuery = query.toLowerCase();
   return mockData.products.filter(
     product => 
-      product.name.toLowerCase().includes(lowerQuery) || 
-      product.description.toLowerCase().includes(lowerQuery)
+      (product.name?.toLowerCase().includes(lowerQuery) || 
+       product.title?.toLowerCase().includes(lowerQuery) ||
+       product.description?.toLowerCase().includes(lowerQuery))
   );
 };
 
@@ -595,4 +633,10 @@ export const getCategories = () => {
   return [...mockData.mainCategories, ...mockData.categories];
 };
 
-// Let's also fix the CategoryBreadcrumb.tsx file to correctly use the mockData export
+// Add the getProductsByCategory function that's causing the build error
+export const getProductsByCategory = (categoryId: number) => {
+  return mockData.products.filter(product => 
+    product.categoryId === categoryId || 
+    (product.categoryIds && product.categoryIds.includes(categoryId))
+  );
+};

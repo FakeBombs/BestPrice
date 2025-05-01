@@ -18,11 +18,12 @@ interface PriceAlertModalProps {
 const PriceAlertModal = ({ isOpen, onClose, product, currentPrice }: PriceAlertModalProps) => {
   const { toast } = useToast();
   const [targetPrice, setTargetPrice] = useState(Math.floor(currentPrice * 0.9));
+  const productTitle = product.title || product.name;
   
   const handleSetAlert = () => {
     toast({
       title: "Price Alert Set",
-      description: `We'll notify you when ${product.title} drops below $${targetPrice}`,
+      description: `We'll notify you when ${productTitle} drops below $${targetPrice}`,
     });
     onClose();
   };
@@ -36,7 +37,7 @@ const PriceAlertModal = ({ isOpen, onClose, product, currentPrice }: PriceAlertM
         <div className="py-4">
           <div className="mb-4">
             <Label className="text-base">Product</Label>
-            <p className="text-sm text-muted-foreground mt-1">{product.title}</p>
+            <p className="text-sm text-muted-foreground mt-1">{productTitle}</p>
           </div>
           
           <div className="mb-6">

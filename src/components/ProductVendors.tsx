@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +8,8 @@ interface ProductVendorsProps {
 }
 
 const ProductVendors = ({ product }: ProductVendorsProps) => {
-  const sortedPrices = [...product.prices].sort((a, b) => a.price - b.price);
+  const prices = product.prices || [];
+  const sortedPrices = [...prices].sort((a, b) => a.price - b.price);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<any>(null);
 
@@ -27,7 +27,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
       <header className="section__header">
         <hgroup className="section__hgroup">
           <h2 className="section__title">
-            Καταστήματα <small><span>({product.prices.length})</span></small>
+            Καταστήματα <small><span>({prices.length})</span></small>
             <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
           </h2>
         </hgroup>
@@ -58,7 +58,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
         </div>
       </div>
       
-      <div className="prices" data-merchants={product.prices.length.toString()}>
+      <div className="prices" data-merchants={prices.length.toString()}>
         {sortedPrices.map((priceInfo) => (
           <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={openPopup} />
         ))}
@@ -87,7 +87,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                                 <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                               </div>
                             </div>
-                            <div className="simple-rating__avg">4.9</div>
+                            <div className="simple-rating__avg">{popupContent.rating || 4.9}</div>
                           </Link>
                           <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/review?src=minfo`} className="simple-rating__new">Αξιολόγησέ το</Link>
                         </div>
@@ -110,7 +110,7 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                         {popupContent.address ? (
                         <div className="minfo__button pressable">
                           <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-pin-14"></use></svg>
-                          <div className="minfo__button-label">{popupContent.address[0] || ''}</div>
+                          <div className="minfo__button-label">{popupContent.address}</div>
                         </div>
                           ) : (
                         <div className="minfo__button minfo__button--disabled">
@@ -139,7 +139,9 @@ const ProductVendors = ({ product }: ProductVendorsProps) => {
                       </div>
                       <div className="minfo__actions">
                         <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}`} className="button button--outline">Μάθε περισσότερα</Link>
-                        <a href="https://www.bestprice.gr/to/178853855/xiaomi-g27qi-ips-gaming-monitor-27-qhd-2560x1440-180hz-me-xrono-apokrishs-1ms-gtg.html?ct=5hiVxC-1IRAiO-dM1Bz,fW7D0yGwl9J&from=2160152175&seq=4&bpref=itemPage&vid=fOWCgL2PMiP" rel="nofollow noreferrer noopener" className="button minfo__product-link">Αγόρασε το προϊόν</a>
+                        <a href={popupContent.url || "#"} rel="nofollow noreferrer noopener" className="button minfo__product-link">
+                          Αγόρασε το προϊόν
+                        </a>
                       </div>
                     </div>
                     <div hidden className="minfo__view minfo__view--pops" style={{ height: '348px' }}>
@@ -165,11 +167,11 @@ interface VendorPriceCardProps {
 
 const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps) => {
   const vendor = getVendorById(priceInfo.vendorId);
-  const vendorAddress = vendor && Array.isArray(vendor.address) && vendor.address.length > 0 ? vendor.address[0] : '';
+  const productTitle = product.title || product.name;
   
   if (!vendor) return null;
   
-  const totalPrice = priceInfo.price + priceInfo.shippingCost;
+  const totalPrice = priceInfo.price + (priceInfo.shippingCost || 0);
   
   return (
     <Card className={!priceInfo.inStock ? 'opacity-70' : ''}>
@@ -178,7 +180,7 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
           <div className="prices__root">
             <div className="prices__merchant">
               <div className="prices__merchant-meta">
-                <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="/to/181077790/samsung-galaxy-a56-5g-dual-sim-awesome-pink.html?from=2160473294&amp;seq=1">
+                <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="#">
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
                 </a>
                 <Link data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -200,8 +202,8 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
             <div id="p-180878146" className="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid={vendor.id} data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
               <div className="prices__main">
                 <div className="prices__title">
-                  <a data-price="54990" title={product.title} rel="nofollow noopener" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">
-                    <h3>{product.title}</h3>
+                  <a data-price="54990" title={productTitle} rel="nofollow noopener" href="#">
+                    <h3>{productTitle}</h3>
                   </a>
                 </div>
                 <div className="prices__props">
@@ -218,63 +220,9 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
                   <span className="prices__group-variations-label">4  παραλλαγές</span>
                   <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
-                <div className="product-report__trigger-wrapper">
-                  <div className="product-report__trigger pressable">
-                    <div className="product-report__trigger-prompt">
-                      <div className="product-report__trigger-prompt-label">Αντιμετώπισες πρόβλημα με το προϊόν;</div>
-                      <svg className="icon" aria-hidden="true" width="8" height="8" viewBox="0 0 8 8" role="img"><path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M2 7L5 4L2 1L3 0L7 4L3 8L2 7Z"/></svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="prices__price">
-                <div className="prices__price-wrapper">
-                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq">${priceInfo.price.toFixed(2)}</a>
-                </div>
-                <div className="prices__costs">
-                  <div className="prices__cost-label">Μεταφορικά</div>
-                  <div className="prices__cost-value">{priceInfo.shippingCost > 0 ? `+ $${priceInfo.shippingCost.toFixed(2)}` : 'Δωρεάν'}</div>
-                </div>
-              </div>
-
-              <div className="prices__buttons">
-                <div className="prices__button">
-                  <a title={product.title} rel="nofollow" href="/to/180878146/samsung-galaxy-a56-5g-8256gb-awesome-pink.html?from=2160473294&amp;seq=131&amp;bpref=itemPage&amp;vid=gxQGGCNEJhq" className="button" disabled={!priceInfo.inStock}>
-                    <span>Δες το στο κατάστημα</span><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-right-12"></use></svg>
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-center text-sm text-muted-foreground">Rating: {vendor.rating.toFixed(1)}/5.0</div>
               </div>
             </div>
           </div>
-
-          <div className="prices__footer">
-            <div className="prices__footer-items">
-              <div data-tooltip="Με την αγορά κερδίζεις 0,5 BestPrice Credit" data-tooltip-no-border="" data-is_certified="false" className="prices__footer-item prices__footer-item--loyalty loyalty-actions popup-anchor" data-listener-added="true">
-                <span>0,5</span>
-                <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-white-credits-16"></use></svg>
-              </div>
-              {vendor.certification && (
-              <Link data-tooltip="Απόκτησε δωρεάν Ασφάλιση Αγοράς" href="/programma-asfaleias-agoron?bpref=cluster-footer" className="prices__footer-item prices__footer-item--certification popup-anchor">
-                <svg aria-hidden="true" className="icon" width="17" height="17"><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
-                <span>Ασφάλιση Αγοράς</span>
-              </Link>
-              )}
-              <Link className="prices__footer-item" data-mid="11217" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={(e) => { e.preventDefault(); openPopup(vendor); }}><div className="dotted-link">{vendorAddress}</div></Link>
-              <div className="prices__footer-item prices__footer-item--authorized"><svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-authorized-18"></use></svg>Επίσημος μεταπωλητής</div>
-              <div className="prices__footer-item popup-anchor" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα πληρωμής με άτοκες δόσεις μέσω της Klarna"><div className="prices__klarna-logo"><img src="https://www.bestprice.gr/images/logos/Klarna/logo.svg" alt="Klarna logo" width="40" height="20"/></div></div>
-              <div className="prices__footer-item" data-tooltip-left="" data-tooltip-no-border="" data-tooltip="Δυνατότητα παραλαβής δέματος μέσω των αυτόματων μηχανημάτων (lockers) της BOX NOW">
-                <div className="prices__boxnow-logo">
-                  <img src="https://www.bestprice.gr/images/logos/BoxNow/logo.svg" alt="BOX NOW logo" width="27" height="20"/>
-                </div>
-              </div>
-              <a className="prices__footer-item" data-tooltip-left="" href="/blog/928/eurobank-epistrofi" target="_blank" data-tooltip-no-border="" data-tooltip="Το κατάστημα συμμετέχει στο πρόγραμμα επιβράβευσης €πιστροφή της Eurobank" data-adman="69482">
-                <div className="prices__epistrofi-logo"><img src="https://www.bestprice.gr/images/logos/Epistrofi/logo.svg" alt="Επιτροοφή logo" width="94" height="20"/></div>
-              </a>
-            </div>
           </div>
         </div>
       </CardContent>

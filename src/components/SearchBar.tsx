@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { VoiceSearchButton } from './VoiceSearchButton';
+import { VoiceSearchButton } from './VoiceSearchButton';  // Import using named export
 
 interface SearchBarProps {
   className?: string;
@@ -41,8 +41,6 @@ export const SearchBar = ({ className = "" }: SearchBarProps) => {
           <span className="sr-only">Search</span>
         </Button>
       </div>
-      
-      {/* Additional search components like suggestions would go here */}
     </form>
   );
 };

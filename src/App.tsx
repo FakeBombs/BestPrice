@@ -28,6 +28,7 @@ import VendorPage from './pages/VendorPage'
 import Deals from './pages/Deals'
 import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
+import React from 'react'
 
 function App() {
   return (
