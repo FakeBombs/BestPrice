@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
@@ -33,34 +32,10 @@ const SearchHeader = ({ query, resultsCount }: SearchHeaderProps) => {
         <div className="tabs">
           <div className="tabs-wrapper">
             <nav>
-              <Link 
-                to={getSortUrl('')} 
-                rel="nofollow" 
-                className={currentSort === '' ? 'current' : ''}
-              >
-                <div className="tabs__content">Σχετικότερα</div>
-              </Link>
-              <Link 
-                to={getSortUrl('price_asc')} 
-                rel="nofollow"
-                className={currentSort === 'price_asc' ? 'current' : ''}
-              >
-                <div className="tabs__content">Φθηνότερα</div>
-              </Link>
-              <Link 
-                to={getSortUrl('price_desc')} 
-                rel="nofollow"
-                className={currentSort === 'price_desc' ? 'current' : ''}
-              >
-                <div className="tabs__content">Ακριβότερα</div>
-              </Link>
-              <Link 
-                to={getSortUrl('stores')} 
-                rel="nofollow"
-                className={currentSort === 'stores' ? 'current' : ''}
-              >
-                <div className="tabs__content">Αριθμός Καταστημάτων</div>
-              </Link>
+              <Link to={getSortUrl('')} rel="nofollow" className={currentSort === '' ? 'current' : ''}><div className="tabs__content">Σχετικότερα</div></Link>
+              <Link to={getSortUrl('price_asc')} rel="nofollow" className={currentSort === 'price_asc' ? 'current' : ''}><div className="tabs__content">Φθηνότερα</div></Link>
+              <Link to={getSortUrl('price_desc')} rel="nofollow" className={currentSort === 'price_desc' ? 'current' : ''}><div className="tabs__content">Ακριβότερα</div></Link>
+              <Link to={getSortUrl('stores')} rel="nofollow" className={currentSort === 'stores' ? 'current' : ''}><div className="tabs__content">Αριθμός Καταστημάτων</div></Link>
             </nav>
           </div>
         </div>
