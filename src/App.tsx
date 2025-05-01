@@ -30,7 +30,7 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-// Fix the AdminLayoutWrapper component to match the props expected by AdminLayout
+// AdminLayoutWrapper component to match the props expected by AdminLayout
 const AdminLayoutWrapper = () => (
   <AdminLayout>
     <Outlet />
@@ -51,7 +51,7 @@ function App() {
           <Route path="account/*" element={<AccountPage />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="cat/:categoryId/:categorySlug" element={<Categories />} />
+          <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="brand/:id/:name" element={<BrandPage />} />
           <Route path="stores" element={<Stores />} />
