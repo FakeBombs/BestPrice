@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -797,10 +796,9 @@ for (let product of mockData.products) {
   product.image = product.image || product.imageUrl;
   product.reviews = product.reviews || product.reviewCount;
   product.slug = product.slug || formatSlug(product.name);
-  product.model = product.model || ""; // Add model property with default value
-  product.category = getCategoryById(String(product.categoryId))?.name || ""; // Add category property with actual category name
+  product.model = product.model || ""; 
+  product.category = getCategoryById(String(product.categoryId))?.name || "";
   
-  // Convert categoryIds if they exist or create them
   if (!product.categoryIds) {
     product.categoryIds = [String(product.categoryId)];
   } else {
