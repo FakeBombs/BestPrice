@@ -1,7 +1,7 @@
 
 // Import the necessary dependencies and components
 import React from "react";
-import ProductImageGallery from "./ProductImageGallery";
+import ProductImageGallery from "../ProductImageGallery";
 import ProductHighlights from "./ProductHighlights";
 
 interface ProductEssentialInfoProps {

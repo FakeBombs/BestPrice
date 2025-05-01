@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -558,9 +557,9 @@ export const getBestPrice = (product: Product) => {
 
 // Update Product interface to match actual usage in components
 export interface Product {
-  id: string;
-  categoryId: string;
-  categoryIds?: string[];  // Add for backward compatibility
+  id: string | number;
+  categoryId: string | number;
+  categoryIds?: string[] | number[];  // Add for backward compatibility
   name: string;
   title?: string;          // Add for backward compatibility
   description: string;
@@ -581,17 +580,17 @@ export interface Product {
 }
 
 export interface Category {
-  id: string;
+  id: string | number;
   name: string;
   description: string;
   imageUrl?: string;
   image?: string;
-  parentId?: string;
+  parentId?: string | number;
   slug?: string;
 }
 
 export interface Brand {
-  id: string;
+  id: string | number;
   name: string;
   logo?: string;
 }

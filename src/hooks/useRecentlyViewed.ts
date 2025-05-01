@@ -43,7 +43,7 @@ export const useRecentlyViewed = () => {
   // Adding a simplified version to support the existing code
   const addProduct = (product: Product) => {
     if (!product || !product.id) return;
-    addToRecentlyViewed(product.id);
+    addToRecentlyViewed(String(product.id));
   };
 
   return {

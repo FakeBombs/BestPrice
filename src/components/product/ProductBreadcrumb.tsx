@@ -26,7 +26,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       const crumbs: CategoryWithParentId[] = [];
       
       // Find the product's category
-      const category = mockData.categories.find(c => c.id === product.categoryId);
+      const category = mockData.categories.find(c => String(c.id) === String(product.categoryId));
       if (category) {
         // Convert to string IDs if needed
         const categoryWithStringId: CategoryWithParentId = {
@@ -39,8 +39,8 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
         // If it's a subcategory, find its parent(s)
         let currentCat = category;
         while (currentCat.parentId) {
-          const parentCat = mockData.categories.find(c => c.id === currentCat.parentId) || 
-                          mockData.mainCategories.find(c => c.id === currentCat.parentId);
+          const parentCat = mockData.categories.find(c => String(c.id) === String(currentCat.parentId)) || 
+                          mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
           if (parentCat) {
             const parentWithStringId: CategoryWithParentId = {
               ...parentCat,

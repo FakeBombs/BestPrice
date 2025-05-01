@@ -34,8 +34,7 @@ interface AdminLayoutWrapperProps {
   children: ReactNode;
 }
 
-// Create a wrapper component for AdminLayout that accepts children
-const AdminLayoutWrapper: React.FC<AdminLayoutWrapperProps> = ({ children }) => (
+const AdminLayoutWrapper = ({ children }: AdminLayoutWrapperProps) => (
   <AdminLayout>{children}</AdminLayout>
 );
 
