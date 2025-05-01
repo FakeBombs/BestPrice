@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -150,6 +151,7 @@ export default function AdminCategoriesPage() {
       <Dialog open={newCategoryOpen} onOpenChange={setNewCategoryOpen}>
         <DialogContent className="max-w-2xl">
           <CategoryForm
+            categories={categories}
             onSave={handleSaveCategory}
             onCancel={() => setNewCategoryOpen(false)}
           />
@@ -165,6 +167,7 @@ export default function AdminCategoriesPage() {
           {editCategory && (
             <CategoryForm
               category={editCategory}
+              categories={categories}
               onSave={handleSaveCategory}
               onCancel={() => setEditCategory(null)}
             />
@@ -198,4 +201,4 @@ export default function AdminCategoriesPage() {
       </Dialog>
     </div>
   );
-}
+};

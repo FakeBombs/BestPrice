@@ -665,7 +665,7 @@ export const getBestPrice = (product: Product) => {
 export interface Product {
   id: string | number;
   categoryId: string | number;
-  categoryIds?: string[] | number[];
+  categoryIds?: (string | number)[];
   name: string;
   title?: string;
   description: string;
@@ -794,6 +794,8 @@ for (let product of mockData.products) {
   product.image = product.image || product.imageUrl;
   product.reviews = product.reviews || product.reviewCount;
   product.slug = product.slug || formatSlug(product.name);
+  product.model = product.model || "";
+  product.category = getCategoryById(String(product.categoryId))?.name || "";
   
   // Convert categoryIds if they exist or create them
   if (!product.categoryIds) {

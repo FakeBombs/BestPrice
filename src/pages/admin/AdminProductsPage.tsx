@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Table,
@@ -45,11 +44,11 @@ export default function AdminProductsPage() {
   // Filter products based on search query and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = 
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.model.toLowerCase().includes(searchQuery.toLowerCase());
+      product.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.name?.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = !categoryFilter || product.category === categoryFilter;
+    const matchesCategory = !categoryFilter || String(product.categoryId) === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
@@ -110,7 +109,7 @@ export default function AdminProductsPage() {
             <SelectContent>
               <SelectItem value="">Όλες οι κατηγορίες</SelectItem>
               {categories.map(category => (
-                <SelectItem key={category.id} value={category.name}>
+                <SelectItem key={category.id} value={String(category.id)}>
                   {category.name}
                 </SelectItem>
               ))}
@@ -151,23 +150,25 @@ export default function AdminProductsPage() {
             <TableBody>
               {filteredProducts.map((product) => {
                 const bestPrice = getBestPrice(product);
+                const categoryName = categories.find(cat => String(cat.id) === String(product.categoryId))?.name || "";
+                
                 return (
                   <TableRow key={product.id}>
                     <TableCell>
                       <div className="w-12 h-12 rounded-md overflow-hidden border">
                         <img 
                           src={product.image} 
-                          alt={product.title}
+                          alt={product.title || product.name}
                           className="w-full h-full object-cover" 
                         />
                       </div>
                     </TableCell>
                     <TableCell className="font-medium max-w-[200px] truncate">
-                      {product.title}
+                      {product.title || product.name}
                     </TableCell>
-                    <TableCell>{product.category}</TableCell>
+                    <TableCell>{categoryName}</TableCell>
                     <TableCell>
-                      {bestPrice ? `€${bestPrice.price.toFixed(2)}` : '-'}
+                      {bestPrice ? `€${bestPrice.price.toFixed(2)}` : `€${product.price.toFixed(2)}`}
                     </TableCell>
                     <TableCell>{product.rating.toFixed(1)}/5.0</TableCell>
                     <TableCell className="text-right">

@@ -21,8 +21,10 @@ import { useForm } from "react-hook-form"
 
 interface CategoryFormProps {
   category?: Category;
-  categories: Category[];
-  onSubmit: (values: any) => void;
+  categories?: Category[];
+  onSubmit?: (values: any) => void;
+  onSave?: (values: any) => void;
+  onCancel?: () => void;
 }
 
 const formSchema = z.object({
@@ -36,7 +38,7 @@ const formSchema = z.object({
   parentId: z.string().optional(),
 });
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSubmit }) => {
+const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], onSubmit, onSave, onCancel }) => {
   const { toast } = useToast()
   const [formData, setFormData] = useState({
     name: category?.name || '',
@@ -85,7 +87,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
       ...formData,
       parentId: formData.parentId !== "" ? formData.parentId : null, // Use string here
     };
-    onSubmit(updatedCategory);
+    if (onSave) onSave(updatedCategory);
     toast({
       title: "Category updated!",
       description: "Your category has been updated successfully.",
@@ -93,7 +95,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories, onSub
   };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values);
+    const handler = onSubmit || onSave;
+    if (handler) handler(values);
     toast({
       title: "Category created!",
       description: "Your category has been created successfully.",

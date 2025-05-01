@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, formatSlug } from '@/data/mockData';
@@ -64,10 +63,7 @@ const Index = () => {
           {rootCategories.map((category) => (
             <CategoryCard
               key={category.id}
-              id={category.id}
-              name={category.name}
-              imageUrl={category.image}
-              slug={category.slug}
+              category={category}
             />
           ))}
         </div>
@@ -90,7 +86,7 @@ const Index = () => {
       
       {/* Vendor Ad */}
       <section className="mb-12">
-        <TopVendorAd />
+        <TopVendorAd productId="1" />
       </section>
       
       {/* Deals */}

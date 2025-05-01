@@ -52,17 +52,11 @@ const SearchResults: React.FC<SearchResultsProps> = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <SearchHeader query={query} totalResults={totalResults} />
+      <SearchHeader query={query} resultsCount={totalResults} />
       
       <div className="flex flex-col md:flex-row gap-6 mt-6">
         <aside className="md:w-1/4">
-          <Sidebar 
-            categories={categoriesWithProperties}
-            onCategoryChange={() => {}} 
-            onPriceRangeChange={() => {}}
-            onBrandChange={() => {}}
-            onRatingChange={() => {}}
-          />
+          <Sidebar query={query} />
         </aside>
         
         <main className="md:w-3/4">

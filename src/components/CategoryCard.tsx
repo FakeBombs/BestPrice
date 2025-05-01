@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 interface CategoryCardProps {
   category: {
-    id: string | number;
+    id?: string | number;
     name: string;
     image?: string;
     imageUrl?: string;
