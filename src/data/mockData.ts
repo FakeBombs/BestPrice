@@ -341,15 +341,15 @@ export const categories: Category[] = [
   { id: 276, name: 'Αξεσουάρ Wearables', slug: 'wearables-accessories', parentId: 14, image: '/dist/images/cat/wearables-accessories.webp' },
 
   // Subcategories of Tablets, Αξεσουάρ of Main Category Τεχνολογία
-  { id: 277, name: 'Tablets', slug: 'tablets', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3446_SX400Y400/1629455501/tablets.webp' },
-  { id: 278, name: 'iPad', slug: 'ipad', parentId: 15, image: 'https://bbpcdn.pstatic.gr/bpimg11/2mcVPd/1TPIUd_SX400Y400/1741158661/apple-ipad-11-2025-wifi-128gb.webp' },
-  { id: 279, name: 'Θήκες Tablet', slug: 'tablet-cases', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5943_SX400Y400/1629455518/thikes-tablet.webp' },
-  { id: 280, name: 'Βάσεις Tablet', slug: 'tablet-stands', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6246_SX400Y400/1629455521/vaseis-tablet.webp' },
-  { id: 281, name: 'Προστασία Οθόνης Tablet', slug: 'tablet-screen-protection', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/5951_SX400Y400/1629455518/screen-protectors-tablets.webp' },
-  { id: 282, name: 'E-Book Readers', slug: 'e-book-readers', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/3203_SX400Y400/1629455500/ebook-readers.webp' },
-  { id: 283, name: 'Ανταλλακτικά Tablet', slug: 'tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6332_SX400Y400/1629455522/antallaktika-tablet.webp' },
-  { id: 284, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/6333_SX400Y400/1629455522/aksesouar-tablet.webp' },
-  { id: 115, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 15, image: 'https://abpcdn.pstatic.gr/P/bpimg128/815_SX400Y400/1629455539/grafides-afis.webp' },
+  { id: 277, name: 'Tablets', slug: 'tablets', parentId: 15, image: '/dist/images/cat/tablets.webp' },
+  { id: 278, name: 'iPad', slug: 'ipad', parentId: 15, image: '/dist/images/cat/ipad.webp' },
+  { id: 279, name: 'Θήκες Tablet', slug: 'tablet-cases', parentId: 15, image: '/dist/images/cat/tablet-cases.webp' },
+  { id: 280, name: 'Βάσεις Tablet', slug: 'tablet-stands', parentId: 15, image: '/dist/images/cat/tablet-stands.webp' },
+  { id: 281, name: 'Προστασία Οθόνης Tablet', slug: 'tablet-screen-protection', parentId: 15, image: '/dist/images/cat/tablet-screen-protection.webp' },
+  { id: 282, name: 'E-Book Readers', slug: 'e-book-readers', parentId: 15, image: '/dist/images/cat/e-book-readers.webp' },
+  { id: 283, name: 'Ανταλλακτικά Tablet', slug: 'tablet-accessories', parentId: 15, image: '/dist/images/cat/tablet-accessories.webp' },
+  { id: 284, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: '/dist/images/cat/various-tablet-accessories.webp' },
+  { id: 115, name: 'Γραφίδες Αφής', slug: 'touch-pens', parentId: 15, image: '/dist/images/cat/touch-pens.webp' },
 
   // Subcategories of Video Games of Main Category Τεχνολογία
   { id: 285, name: 'Κονσόλες', slug: 'consoles', parentId: 16, image: 'https://abpcdn.pstatic.gr/P/bpimg128/876_SX400Y400/1472718489/video-game-consoles.webp' },
