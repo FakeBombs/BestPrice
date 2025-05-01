@@ -1,354 +1,228 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams, Link, useParams } from 'react-router-dom';
-import { searchProducts, categories, brands } from '@/data/mockData';
+
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { 
+  Product, 
+  Brand, 
+  categories, 
+  formatSlug, 
+  getProductsByBrand 
+} from '@/data/mockData';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductCard from '@/components/ProductCard';
-import ScrollableSlider from '@/components/ScrollableSlider';
+import { Filter } from 'lucide-react';
 
-const BrandPage = () => {
-    const [activeFilters, setActiveFilters] = useState({ vendors: [], specs: {}, inStockOnly: false });
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [availableVendors, setAvailableVendors] = useState([]);
-    const [availableSpecs, setAvailableSpecs] = useState({});
-    const [availableCategories, setAvailableCategories] = useState([]);
-    const [showMoreCategories, setShowMoreCategories] = useState(false);
-    const [sortType, setSortType] = useState('rating-desc');
-    const [searchParams] = useSearchParams();
-    const searchQuery = searchParams.get('q') || '';
-    const { brandId, brandName } = useParams(); // Get brandId and brandName from URL
-    const displayedBrand = brandName ? brands.find((brand) => brand.name.toLowerCase() === brandName.toLowerCase()) : null;
+interface BrandPageProps {}
 
-    // Retrieve products based on the brand specified in the URL
-    useEffect(() => {
-        const results = searchProducts(searchQuery);
-        const brandFilteredResults = results.filter(product => product.brand === (displayedBrand ? displayedBrand.name : ''));
-        setProducts(brandFilteredResults);
-        setActiveFilters({ vendors: [], specs: {}, inStockOnly: false });
-        extractAvailableFilters(brandFilteredResults);
-        extractCategories(brandFilteredResults);
-        
-        const sortedResults = sortProducts(brandFilteredResults);
-        setFilteredProducts(sortedResults);
-    }, [searchQuery, displayedBrand]);
+// Add this missing function to fetch products by brand
+function getProductsByBrand(brandId: string): Product[] {
+  // This is a mock implementation, replace with actual logic based on your data structure
+  return []; // Placeholder
+}
 
-    useEffect(() => {
-        filterProducts(activeFilters.vendors, activeFilters.specs, activeFilters.inStockOnly, products);
-    }, [activeFilters, sortType, products]);
+const BrandPage: React.FC<BrandPageProps> = () => {
+  const { id, name } = useParams<{ id: string; name: string }>();
+  const [brand, setBrand] = useState<Brand | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [activeTab, setActiveTab] = useState('all');
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
+  const [activeSort, setActiveSort] = useState('popular');
+  const [filtersVisible, setFiltersVisible] = useState(false);
 
-    const extractAvailableFilters = (results) => {
-        const vendors = new Set();
-        const specs = {};
+  useEffect(() => {
+    // Fetch brand details
+    const fetchBrand = () => {
+      // Mock implementation - replace with actual API call
+      setBrand({
+        id: id || '1',
+        name: name || 'Brand Name',
+        logo: '/dist/images/brands/default-logo.png'
+      });
+    };
 
-        results.forEach((product) => {
-            if (product.vendor) {
-                vendors.add(product.vendor);
-            }
-            Object.keys(product.specifications).forEach((specKey) => {
-                if (!specs[specKey]) {
-                    specs[specKey] = new Set();
-                }
-                specs[specKey].add(product.specifications[specKey]);
-            });
+    // Fetch products
+    const fetchProducts = () => {
+      // Mock implementation - replace with actual API call
+      if (id) {
+        const brandProducts = getProductsByBrand(id);
+        setProducts(brandProducts);
+      }
+    };
+
+    fetchBrand();
+    fetchProducts();
+  }, [id, name]);
+
+  // Get unique categories from products
+  const uniqueCategories = React.useMemo(() => {
+    const categoryMap = new Map<string, { id: string; name: string }>();
+    
+    products.forEach(product => {
+      const categoryId = String(product.categoryId);
+      const category = categories.find(c => String(c.id) === categoryId);
+      
+      if (category && !categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          id: categoryId,
+          name: category.name
         });
+      }
+    });
+    
+    return Array.from(categoryMap.values());
+  }, [products]);
 
-        setAvailableVendors(Array.from(vendors));
-        setAvailableSpecs(specs);
-    };
+  // Handle category filter changes
+  const handleCategoryFilter = (categoryId: string) => {
+    setCategoryFilters(prev => {
+      if (prev.includes(categoryId)) {
+        return prev.filter(id => id !== categoryId);
+      } else {
+        return [...prev, categoryId];
+      }
+    });
+  };
 
-    const extractCategories = (results) => {
-        const categoryCount = {};
-        results.forEach((product) => {
-            product.categoryIds.forEach(categoryId => {
-                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
-            });
-        });
+  // Filter products based on active filters
+  const filteredProducts = React.useMemo(() => {
+    let result = [...products];
+    
+    // Apply category filters
+    if (categoryFilters.length > 0) {
+      result = result.filter(product => 
+        categoryFilters.includes(String(product.categoryId))
+      );
+    }
+    
+    // Apply tab filters
+    if (activeTab !== 'all') {
+      // Implement specific tab filtering logic here
+      // For example, if activeTab is 'new', filter for new products
+    }
+    
+    // Apply sorting
+    switch (activeSort) {
+      case 'price-asc':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'popular':
+      default:
+        // Default sorting (popular) implementation
+        break;
+    }
+    
+    return result;
+  }, [products, categoryFilters, activeTab, activeSort]);
 
-        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-            const categoryData = categories.find(cat => cat.id === parseInt(id));
+  if (!brand) {
+    return <div className="container mx-auto p-4">Loading...</div>;
+  }
 
-            return {
-                id: categoryData ? categoryData.id : '',
-                category: categoryData ? categoryData.name : '',
-                slug: categoryData ? categoryData.slug : '',
-                count,
-                image: categoryData ? categoryData.image : '',
-                parentId: categoryData ? categoryData.parentId : null,
-            };
-        }).filter(cat => cat.id && cat.parentId); 
-        
-        setAvailableCategories(categoriesArray);
-    };
-
-    const filterProducts = (vendors, specs, inStockOnly, results) => {
-        let filtered = results;
-
-        if (inStockOnly) {
-            filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
-        }
-
-        if (vendors.length > 0) {
-            filtered = filtered.filter((product) => vendors.includes(product.vendor));
-        }
-
-        if (Object.keys(specs).length > 0) {
-            filtered = filtered.filter((product) => {
-                return Object.entries(specs).every(([key, values]) => {
-                    return values.includes(product.specifications[key]);
-                });
-            });
-        }
-
-        filtered = sortProducts(filtered);
-        setFilteredProducts(filtered);
-        extractAvailableFilters(filtered);
-        extractCategories(filtered);
-    };
-
-    const sortProducts = (products) => {
-        switch (sortType) {
-            case 'price-asc':
-                return [...products].sort((a, b) => {
-                    const minPriceA = Math.min(...a.prices.filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    const minPriceB = Math.min(...b.prices.filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    return minPriceA - minPriceB;
-                });
-            case 'price-desc':
-                return [...products].sort((a, b) => {
-                    const maxPriceA = Math.max(...a.prices.filter((p) => p.inStock).map((p) => p.price), 0);
-                    const maxPriceB = Math.max(...b.prices.filter((p) => p.inStock).map((p) => p.price), 0);
-                    return maxPriceB - maxPriceA;
-                });
-            case 'rating-desc':
-            default:
-                return [...products].sort((a, b) => {
-                    const averageRatingA = a.rating / Math.max(a.reviews, 1);
-                    const averageRatingB = b.rating / Math.max(b.reviews, 1);
-                    return averageRatingB - averageRatingA;
-                });
-            case 'merchants_desc':
-                return [...products].sort((a, b) => {
-                    const availableVendorsA = a.prices.filter((price) => price.inStock).length;
-                    const availableVendorsB = b.prices.filter((price) => price.inStock).length;
-                    return availableVendorsB - availableVendorsA;
-                });
-        }
-    };
-
-    const handleVendorFilter = (vendor) => {
-        const newVendors = activeFilters.vendors.includes(vendor)
-            ? activeFilters.vendors.filter((v) => v !== vendor)
-            : [...activeFilters.vendors, vendor];
-
-        setActiveFilters((prev) => ({ ...prev, vendors: newVendors }));
-    };
-
-    const handleSpecFilter = (specKey, specValue) => {
-        const currentSpecs = { ...activeFilters.specs };
-        const specValues = currentSpecs[specKey] || [];
-
-        if (specValues.includes(specValue)) {
-            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
-            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
-        } else {
-            currentSpecs[specKey] = [...specValues, specValue];
-        }
-
-        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
-    };
-
-    const renderAppliedFilters = () => {
-        return (
-            (activeFilters.vendors.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0)) && (
-                <div className="applied-filters">
-                    {activeFilters.vendors.map((vendor) => (
-                        <h2 className="applied-filters__filter" key={vendor}>
-                            <a data-scrollto="" data-filter-key="vendor" data-value-id={vendor} className="pressable" onClick={() => handleVendorFilter(vendor)}>
-                                <span className="applied-filters__label">{vendor}</span>
-                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
-                                    <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                                </svg>
-                            </a>
-                        </h2>
-                    ))}
-
-                    {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
-                        specValues.map((specValue) => (
-                            <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
-                                <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
-                                    <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
-                                    <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12">
-                                        <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
-                                    </svg>
-                                </a>
-                            </h2>
-                        ))
-                    )}
-                </div>
-            )
-        );
-    };
-
-    return (
-        <div className="root__wrapper">
-            <div className="root">
-                <div id="trail">
-                    <nav className="breadcrumb">
-                        <ol>
-                            <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                            <li><span data-no-info="" className="trail__last">{displayedBrand ? displayedBrand.name : 'All Products'}</span></li>
-                        </ol>
-                    </nav>
-                </div>
-                <div className="page-products">
-                    <aside className="page-products__filters">
-                        <div id="filters">
-                            <div className="filters__categories" data-filter-name="categories">
-                                <div className="filters__header">
-                                    <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
-                                </div>
-                                <ol>
-                                    {availableCategories.slice(0, showMoreCategories ? availableCategories.length : 8).map((item) => (
-                                        <li key={item.id}>
-                                            <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
-                                                <span>{item.category} ({item.count})</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ol>
-                                {availableCategories.length > 8 && (
-                                    <div className="filters-more-prompt" onClick={() => setShowMoreCategories((prev) => !prev)} title="Show all categories">
-                                        <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-plus-more"></use>
-                                        </svg>
-                                        Show all
-                                    </div>
-                                )}
-                            </div>
-
-                            {availableVendors.length > 0 && (
-                                <div className="filter-vendor default-list">
-                                    <div className="filter__header"><h4>Vendors</h4></div>
-                                    <div className="filter-container">
-                                        <ol>
-                                            {availableVendors.map((vendor) => (
-                                                <li key={vendor} className={activeFilters.vendors.includes(vendor) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
-                                                    <span>{vendor}</span>
-                                                </li>
-                                            ))}
-                                        </ol>
-                                    </div>
-                                </div>
-                            )}
-
-                            {Object.keys(availableSpecs).length > 0 && (
-                                Object.keys(availableSpecs).map((specKey) => (
-                                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
-                                        <div className="filter__header"><h4>{specKey}</h4></div>
-                                        <div className="filter-container">
-                                            <ol>
-                                                {Array.from(availableSpecs[specKey]).map((specValue) => (
-                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
-                                                        <span>{specValue}</span>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-
-                            <div className="filter-in-stock default-list">
-                                <div className="filter__header"><h4>In Stock</h4></div>
-                                <div className="filter-container">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={activeFilters.inStockOnly}
-                                            onChange={() => {
-                                                const newInStockOnly = !activeFilters.inStockOnly;
-                                                setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly }));
-                                                filterProducts(activeFilters.vendors, activeFilters.specs, newInStockOnly, products);
-                                            }} 
-                                        />
-                                        Show only in-stock products
-                                    </label>
-                                </div>
-                            </div>
-                            <button className="button button--outline" id="filters__scrollback"><svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div></button>
-                        </div>
-                    </aside>
-
-                    <main className="page-products__main">
-                        <header className="page-header">
-                            <div className="page-header__title-wrapper">
-                                <div className="page-header__title-main">
-                                    <h1>{displayedBrand ? displayedBrand.name : 'All Products'}</h1>
-                                    <div className="page-header__count-wrapper">
-                                        <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                                    </div>
-                                </div>
-                                <div className="page-header__title-aside">
-                                    {displayedBrand && (
-                                        <a href={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                            {renderAppliedFilters()}
-                            <section className="section">
-                                <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Κατηγορίες</h2></hgroup></header>
-                                <ScrollableSlider>
-                                    <div className="categories categories--scrollable scroll__content">
-                                        {availableCategories.map((item) => (
-                                            <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
-                                                <img width="200" height="200" className="categories__image" src={item.image} alt={item.category} />
-                                                <h2 className="categories__title">{item.category}</h2>
-                                                <div className="categories__cnt">{item.count} προϊόντα</div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </ScrollableSlider>
-                            </section>
-
-                            <div className="page-header__sorting">
-                                <div className="tabs">
-                                    <div className="tabs-wrapper">
-                                        <nav>
-                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                                                <div className="tabs__content">Δημοφιλέστερα</div>
-                                            </a>
-                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                                                <div className="tabs__content">Φθηνότερα</div>
-                                            </a>
-                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                                                <div className="tabs__content">Ακριβότερα</div>
-                                            </a>
-                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
-                                            </a>
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        {filteredProducts.length === 0 ? (
-                            <p>No products found matching your search.</p> 
-                        ) : (
-                            <div className="page-products__main-wrapper">
-                                <div className="p__products" data-pagination="">
-                                    {filteredProducts.map((product) => (
-                                        <ProductCard key={product.id} product={product} />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </main>
-                </div>
-            </div>
+  return (
+    <div className="container mx-auto p-4">
+      {/* Brand Header */}
+      <div className="flex items-center space-x-4 mb-6">
+        {brand.logo && (
+          <img src={brand.logo} alt={brand.name} className="w-16 h-16 object-contain" />
+        )}
+        <h1 className="text-2xl font-bold">{brand.name}</h1>
+      </div>
+      
+      {/* Tabs and Filters */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList>
+              <TabsTrigger value="all">All Products</TabsTrigger>
+              <TabsTrigger value="new">New Arrivals</TabsTrigger>
+              <TabsTrigger value="popular">Most Popular</TabsTrigger>
+              <TabsTrigger value="deals">Deals</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setFiltersVisible(!filtersVisible)}
+            className="ml-2"
+          >
+            <Filter className="mr-2 h-4 w-4" /> 
+            Filters
+          </Button>
         </div>
-    );
+        
+        {filtersVisible && (
+          <div className="p-4 border rounded-md mb-4">
+            <h3 className="font-medium mb-2">Categories</h3>
+            <div className="flex flex-wrap gap-2">
+              {uniqueCategories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={categoryFilters.includes(category.id) ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleCategoryFilter(category.id)}
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
+            
+            <h3 className="font-medium mb-2 mt-4">Sort By</h3>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={activeSort === 'popular' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveSort('popular')}
+              >
+                Popular
+              </Button>
+              <Button
+                variant={activeSort === 'price-asc' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveSort('price-asc')}
+              >
+                Price: Low to High
+              </Button>
+              <Button
+                variant={activeSort === 'price-desc' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveSort('price-desc')}
+              >
+                Price: High to Low
+              </Button>
+              <Button
+                variant={activeSort === 'rating' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveSort('rating')}
+              >
+                Highest Rated
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard key={String(product.id)} product={product} />
+          ))
+        ) : (
+          <div className="col-span-full text-center p-8">
+            <p className="text-gray-500">No products found for this brand.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default BrandPage;

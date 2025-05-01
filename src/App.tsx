@@ -30,8 +30,8 @@ import SocialProfilePage from './pages/SocialProfilePage'
 import WalletPage from './pages/WalletPage'
 import React from 'react'
 
-// Fixed: Ensure AdminLayoutWrapper properly defines props
-const AdminLayoutWrapper: React.FC<{children: ReactNode}> = ({ children }) => (
+// Create a proper React functional component with children prop
+const AdminLayoutWrapper: React.FC<React.PropsWithChildren<{}>> = ({ children }) => (
   <AdminLayout>{children}</AdminLayout>
 );
 

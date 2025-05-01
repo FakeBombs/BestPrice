@@ -1,4 +1,3 @@
-
 // Export the mock data for use throughout the application
 export const mockData = {
   mainCategories: [
@@ -668,7 +667,7 @@ export const groupedBrands = () => {
   return groups;
 };
 
-// Update the raw mockData objects to use string IDs and add missing properties
+// Update the mockData objects to use string IDs and add missing properties
 // This needs to match our interfaces defined above
 for (let category of mockData.mainCategories) {
   category.id = String(category.id);
