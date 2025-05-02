@@ -28,59 +28,47 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  // Determine the default category ID (first main category)
   const defaultCategoryId = mainCategories.length > 0 ? mainCategories[0].id : null;
 
   useEffect(() => {
-    // If we are not on a category path (e.g., homepage or other page)
     if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
       if (defaultCategoryId !== null) {
-        // Find the default MAIN category
         const defaultCat = mainCategories.find(cat => cat.id === defaultCategoryId);
         setCurrentCategory(defaultCat);
-        setFilteredProducts([]); // Clear products if showing default main category overview
+        setFilteredProducts([]);
       } else {
         setCurrentCategory(undefined);
         setFilteredProducts([]);
       }
-      return; // Exit early
+      return;
     }
 
-    // We are on a category path /cat/...
     const segments = pathSegments.slice(1);
     const lastSegment = segments[segments.length - 1];
-    let matchedCategory = findCategory(lastSegment); // findCategory checks both arrays
+    let matchedCategory = findCategory(lastSegment);
 
     if (matchedCategory) {
-      // We found a category (either main or sub)
       setCurrentCategory(matchedCategory);
 
-      // Filter products ONLY if it's NOT a main category
-      // (assuming main categories show subcats, not products directly)
       if (matchedCategory.parentId !== null || !matchedCategory.isMain) {
           const productsToDisplay = products.filter(p =>
             p.categoryIds?.includes(matchedCategory.id)
           );
           setFilteredProducts(productsToDisplay);
       } else {
-          setFilteredProducts([]); // Clear products for main category view
+          setFilteredProducts([]);
       }
     } else {
-      // No category matched the path segment, fall back to default MAIN category
       if (defaultCategoryId !== null) {
         const defaultCat = mainCategories.find(cat => cat.id === defaultCategoryId);
         setCurrentCategory(defaultCat);
       } else {
-         // If no match and no default, potentially show NotFound or redirect
-         // Setting to undefined might trigger the NotFound check later
         setCurrentCategory(undefined);
       }
       setFilteredProducts([]); // Clear products on fallback
     }
-    // Dependency on location.pathname ensures this runs when the URL changes
-  }, [location.pathname, defaultCategoryId]); // Added location.pathname
+  }, [location.pathname, defaultCategoryId]);
 
-  // Show NotFound if path indicates a category but none was found (and no default fallback happened)
   if (
     pathSegments.length >= 2 &&
     pathSegments[0] === 'cat' &&
@@ -176,40 +164,31 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-
-  // This function renders the view for a MAIN category page
-  // It displays the subcategories belonging to it.
   const renderMainCategories = () => {
-    // Condition: Only render if the currentCategory IS a main category
     if (!currentCategory || currentCategory.parentId !== null || !currentCategory.isMain) {
-      return null; // Don't render if not on a main category page
+      return null; 
     }
 
-    // If we are here, currentCategory IS the main category being viewed.
     const mainCat = currentCategory;
-
-    // Find the direct children (subcategories) of this main category
     const subcategories = categories.filter(cat => cat.parentId === mainCat.id);
 
     return (
       <>
-        {/* Header section for the Main Category Page */}
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              {/* No back button needed here as we are at a main category */}
-              <h1>{mainCat.name}</h1>
+        {subcategories.length > 0 && (
+          <div className="page-header">
+            <div className="hgroup">
+              <div className="page-header__title-wrapper">
+                <h1>{mainCat.name}</h1>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Grid of Subcategories belonging to this Main Category */}
         <div className="root-category__categories">
           {subcategories.length > 0 ? (
             subcategories.map((subCat) => (
               <div key={subCat.id} className="root-category__category">
                 <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-                  {/* Provide a fallback image if subCat.image is null */}
                   <img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} />
                 </Link>
                 <h3 className="root-category__category-title">
@@ -217,14 +196,12 @@ const CategoryPage: React.FC = () => {
                 </h3>
                 <div className="root-category__footer">
                   <div className="root-category__links">
-                    {/* Displaying grandchildren links */}
                     {categories
                       .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                      .slice(0, 5) // Limit to 5 links
+                      .slice(0, 5)
                       .map((linkedSubCat, index, arr) => (
                         <React.Fragment key={linkedSubCat.id}>
                           <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                          {/* Add comma only if it's not the last item */}
                           {index < arr.length - 1 && ', '}
                         </React.Fragment>
                       ))}
@@ -233,15 +210,12 @@ const CategoryPage: React.FC = () => {
               </div>
             ))
           ) : (
-            // Message if a Main Category has NO subcategories
              <p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>
           )}
         </div>
 
-        {/* Sections specific to the main category page */}
         <div className="sections"></div>
         <div className="p__products-section">
-           {/* Price Alert Button for the Main Category */}
           <div className="alerts">
             <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
               <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
@@ -250,55 +224,47 @@ const CategoryPage: React.FC = () => {
             <div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div>
           </div>
         </div>
-        {/* PriceAlertModal is rendered globally at the bottom based on state */}
       </>
     );
   };
 
-  // This function renders the view for a SUBcategory page.
-  // It might display deeper subcategories or products.
   const renderSubcategories = (category: Category) => {
-     // Condition: Only render if the passed category is a SUBcategory
     if (!category || category.parentId === null || category.isMain) {
-        return null; // Don't render if it's a main category or null
+        return null;
     }
 
-    // Find the direct children (sub-subcategories) of this subcategory
     const childCategories = categories.filter(cat => cat.parentId === category.id);
-    const parentCategory = allCategories.find(cat => cat.id === category.parentId); // For back button link
+    const parentCategory = allCategories.find(cat => cat.id === category.parentId);
 
     return (
       <>
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              {/* Back button to the parent category */}
-              {parentCategory && (
-                 <Link className="trail__back pressable" title={`Επιστροφή σε ${parentCategory.name}`} to={`/cat/${parentCategory.id}/${parentCategory.slug}`}>
-                    <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
-                 </Link>
-              )}
-              <h1>{category.name}</h1>
+        {childCategories.length > 0 && (
+          <div className="page-header">
+            <div className="hgroup">
+              <div className="page-header__title-wrapper">
+                {parentCategory && (
+                   <Link className="trail__back pressable" title={`Επιστροφή σε ${parentCategory.name}`} to={`/cat/${parentCategory.id}/${parentCategory.slug}`}>
+                      <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
+                   </Link>
+                )}
+                <h1>{category.name}</h1>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Check if this subcategory has further subcategories */}
         {childCategories.length > 0 ? (
-            // Display grid of child categories (sub-subcategories)
             <div className="root-category__categories">
             {childCategories.map((subCat) => (
                 <div key={subCat.id} className="root-category__category">
                 <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
                     <img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} />
                 </Link>
-                {/* Use h3 or adjust heading level as appropriate */}
                 <h3 className="root-category__category-title">
                     <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                 </h3>
                 <div className="root-category__footer">
                     <div className="root-category__links">
-                    {/* Links to grandchildren (sub-sub-subcategories) */}
                     {categories
                         .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                         .slice(0, 5)
@@ -314,14 +280,11 @@ const CategoryPage: React.FC = () => {
             ))}
             </div>
         ) : (
-            // If no further subcategories, render the products for this category
             renderProducts()
         )}
 
-        {/* Sections specific to the subcategory page */}
         <div className="sections"></div>
         <div className="p__products-section">
-           {/* Price Alert Button for the Subcategory */}
           <div className="alerts">
             <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
               <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
@@ -330,12 +293,10 @@ const CategoryPage: React.FC = () => {
             <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
           </div>
         </div>
-         {/* PriceAlertModal is rendered globally at the bottom based on state */}
       </>
     );
   };
 
-  // This function renders the product list for the current category (usually a leaf subcategory)
   const renderProducts = () => {
     const sortedProducts = sortProducts(filteredProducts);
     const showProductHeader = sortedProducts.length > 0;
