@@ -113,52 +113,69 @@ const handlePriceAlert = () => {
 
 // Render breadcrumbs, with main category included if applicable
 const renderBreadcrumbs = () => {
+  if (!currentCategory) {
+    // show only Home
+    return (
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            <li>
+              <Link to="/" rel="home"><span>BestPrice</span></Link>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    );
+  }
+
   const breadcrumbs = [];
-  if (currentCategory) {
-    // Find main category parent if exists
-    const mainCat = mainCategories.find(
-      (cat) =>
+
+  // Find main category (if currentCategory is nested)
+  const mainCat =
+    mainCategories.find(
+      cat =>
         cat.id.toString() === currentCategory.parentId?.toString() ||
         cat.slug === currentCategory.parentId
+    ) || null;
+
+  if (mainCat) {
+    breadcrumbs.push(
+      <li key={mainCat.slug}>
+        <Link to={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</Link>
+      </li>
     );
-    if (mainCat) {
+  }
+
+  // Build category trail
+  const categoryTrail = [];
+  let category = currentCategory;
+  while (category) {
+    categoryTrail.unshift(category);
+    category = categories.find(cat => cat.id === category.parentId);
+  }
+
+  categoryTrail.forEach((cat, index) => {
+    if (index !== categoryTrail.length - 1) {
       breadcrumbs.push(
-        <li key={mainCat.slug}>
-          <Link to={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</Link>
+        <li key={cat.slug}>
+          <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
         </li>
       );
     }
-    // Build category trail (for nested categories)
-    const categoryTrail = [];
-    let category = currentCategory;
-    while (category) {
-      categoryTrail.unshift(category);
-      category = categories.find(cat => cat.id === category.parentId);
-    }
-    categoryTrail.forEach((cat, index) => {
-      if (index !== categoryTrail.length - 1) {
-        breadcrumbs.push(
-          <li key={cat.slug}>
-            <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
-          </li>
-        );
-      }
-    });
-  }
+  });
+
   return (
     <div id="trail">
       <nav className="breadcrumb">
         <ol>
           <li>
-            <Link to="/" rel="home">
-              <span>BestPrice</span>
-            </Link>
+            <Link to="/" rel="home"><span>BestPrice</span></Link>
             {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
           </li>
-          {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
+          {breadcrumbs.map((crumb, idx) => (
+            <React.Fragment key={idx}>
               {crumb}
-              {index < breadcrumbs.length - 1 && (
+              {idx < breadcrumbs.length - 1 && (
                 <span className="trail__breadcrumb-separator">›</span>
               )}
             </React.Fragment>
