@@ -9,13 +9,13 @@ export interface Category {
 
 // Main categories
 export const mainCategories: Category[] = [
-  { id: 1, name: 'Τεχνολογία', slug: 'technology', parentId: null, image: null },
-  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', parentId: null, image: null },
-  { id: 3, name: 'Μόδα', slug: 'fashion', parentId: null, image: null },
-  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', parentId: null, image: null },
-  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', parentId: null, image: null },
-  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', parentId: null, image: null },
-  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', parentId: null, image: null }
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', parentId: null, image: null, isMain: true },
+  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', parentId: null, image: null, isMain: true },
+  { id: 3, name: 'Μόδα', slug: 'fashion', parentId: null, image: null, isMain: true },
+  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', parentId: null, image: null, isMain: true },
+  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', parentId: null, image: null, isMain: true },
+  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', parentId: null, image: null, isMain: true },
+  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', parentId: null, image: null, isMain: true }
 ];
 
 // Subcategories and nested categories
