@@ -280,7 +280,7 @@ const SearchResults = () => {
                                         const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
                                         const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
                                         return (
-                                            <li key={item.id}><Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link"><span>{item.category} ({item.count})</span></Link></li>
+                                            <li key={item.id}><Link to={`/cat/${item.id}/${item.slug}`} className="filters__link"><span>{item.category} ({item.count})</span></Link></li>
                                         );
                                     })}
                                 </ol>
