@@ -1,94 +1,121 @@
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/integrations/supabase/client';
+import { mockData } from '@/data/mockData';
 
 export interface Brand {
   id: string;
   name: string;
-  logo: string | null;
-  created_at: string;
-  updated_at: string;
+  logo?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export const getBrands = async (): Promise<Brand[]> => {
-  const { data, error } = await supabase
-    .from('brands')
-    .select('*')
-    .order('name');
+export type BrandCreate = Omit<Brand, 'id' | 'created_at' | 'updated_at'>;
+export type BrandUpdate = Partial<BrandCreate>;
 
-  if (error) {
-    console.error("Error fetching brands:", error);
-    throw error;
+// Get all brands
+export const getAllBrands = async (): Promise<Brand[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('brands')
+      .select('*')
+      .order('name');
+      
+    if (error) {
+      console.error("Error fetching brands:", error);
+      return mockData.brands as unknown as Brand[];
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error("Error in getAllBrands:", error);
+    return mockData.brands as unknown as Brand[];
   }
-
-  return data || [];
 };
 
+// Get brand by ID
 export const getBrandById = async (id: string): Promise<Brand | null> => {
-  const { data, error } = await supabase
-    .from('brands')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('brands')
+      .select('*')
+      .eq('id', id)
+      .single();
+      
+    if (error) {
+      console.error("Error fetching brand:", error);
+      return mockData.brands.find(b => String(b.id) === id) as unknown as Brand || null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Error in getBrandById:", error);
+    return mockData.brands.find(b => String(b.id) === id) as unknown as Brand || null;
+  }
+};
 
-  if (error) {
-    console.error("Error fetching brand:", error);
+// Create brand
+export const createBrand = async (brand: BrandCreate): Promise<Brand | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('brands')
+      .insert([{
+        name: brand.name,
+        logo: brand.logo
+      }])
+      .select()
+      .single();
+      
+    if (error) {
+      console.error("Error creating brand:", error);
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Error in createBrand:", error);
     return null;
   }
-
-  return data;
 };
 
-export const createBrand = async (brand: Partial<Brand>): Promise<Brand | null> => {
-  const { data, error } = await supabase
-    .from('brands')
-    .insert([brand])
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error creating brand:", error);
-    throw error;
-  }
-
-  return data;
-};
-
-export const updateBrand = async (id: string, updates: Partial<Brand>): Promise<Brand | null> => {
-  const { data, error } = await supabase
-    .from('brands')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error updating brand:", error);
-    throw error;
-  }
-
-  return data;
-};
-
-export const deleteBrand = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('brands')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error("Error deleting brand:", error);
-    throw error;
-  }
-};
-
-export const groupBrandsByFirstLetter = (brands: Brand[]): Record<string, Brand[]> => {
-  const groups: Record<string, Brand[]> = {};
-  brands.forEach(brand => {
-    const firstLetter = brand.name.charAt(0).toUpperCase();
-    if (!groups[firstLetter]) {
-      groups[firstLetter] = [];
+// Update brand
+export const updateBrand = async (id: string, updates: BrandUpdate): Promise<Brand | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('brands')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+      
+    if (error) {
+      console.error("Error updating brand:", error);
+      return null;
     }
-    groups[firstLetter].push(brand);
-  });
-  return groups;
+    
+    return data;
+  } catch (error) {
+    console.error("Error in updateBrand:", error);
+    return null;
+  }
+};
+
+// Delete brand
+export const deleteBrand = async (id: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('brands')
+      .delete()
+      .eq('id', id);
+      
+    if (error) {
+      console.error("Error deleting brand:", error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error in deleteBrand:", error);
+    return false;
+  }
 };

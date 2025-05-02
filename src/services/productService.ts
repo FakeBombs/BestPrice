@@ -1,26 +1,27 @@
 
-import { supabase } from "@/integrations/supabase/client";
-import { formatSlug } from "@/utils/formatters";
+import { supabase } from '@/integrations/supabase/client';
+import { mockData } from '@/data/mockData';
 
+// Define proper types for our database
 export interface Product {
   id: string;
   name: string;
-  title: string | null;
-  description: string | null;
+  title?: string;
+  description?: string;
   price: number;
-  image_url: string | null;
-  images: string[];
-  brand: string | null;
-  sku: string | null;
-  model: string | null;
+  image_url?: string;
+  images?: string[];
+  brand?: string;
+  sku?: string;
+  model?: string;
   slug: string;
-  highlights: string[];
-  specifications: Record<string, any>;
+  highlights?: string[];
+  specifications?: Record<string, any>;
   rating: number;
   review_count: number;
-  created_at: string;
-  updated_at: string;
-  categories?: { id: string; name: string }[];
+  created_at?: string;
+  updated_at?: string;
+  categories?: Array<{id: string, name: string}>;
   prices?: ProductPrice[];
 }
 
@@ -30,335 +31,309 @@ export interface ProductPrice {
   vendor_id: string;
   price: number;
   in_stock: boolean;
-  shipping_cost: number | null;
-  vendor?: {
-    name: string;
-    url: string;
-    certification: string | null;
-  };
+  shipping_cost?: number;
+  vendor_name?: string;
+  vendor_logo?: string;
 }
 
-export const getProducts = async (limit = 20, page = 1): Promise<Product[]> => {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .range((page - 1) * limit, page * limit - 1)
-    .order('created_at', { ascending: false });
+export type ProductCreate = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
+export type ProductUpdate = Partial<ProductCreate>;
 
-  if (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
-
-  return await enrichProducts(data || []);
-};
-
-export const getProductById = async (id: string): Promise<Product | null> => {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    console.error("Error fetching product:", error);
-    return null;
-  }
-
-  if (data) {
-    return (await enrichProducts([data]))[0];
-  }
-
-  return null;
-};
-
-export const searchProducts = async (query: string): Promise<Product[]> => {
-  if (!query) return [];
-  
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
-    .order('rating', { ascending: false });
-
-  if (error) {
-    console.error("Error searching products:", error);
-    throw error;
-  }
-
-  return await enrichProducts(data || []);
-};
-
-export const getProductsByCategory = async (categoryId: string): Promise<Product[]> => {
-  // First get all child categories
-  const allCategoryIds = await getAllChildCategoryIds(categoryId);
-  allCategoryIds.push(categoryId);
-  
-  // Then get all products in those categories
-  const { data, error } = await supabase
-    .from('product_categories')
-    .select('product_id')
-    .in('category_id', allCategoryIds);
-
-  if (error) {
-    console.error("Error fetching products for category:", error);
-    throw error;
-  }
-
-  const productIds = data.map(pc => pc.product_id);
-  
-  if (productIds.length === 0) {
-    return [];
-  }
-  
-  const { data: products, error: productsError } = await supabase
-    .from('products')
-    .select('*')
-    .in('id', productIds);
-
-  if (productsError) {
-    console.error("Error fetching products by IDs:", productsError);
-    throw productsError;
-  }
-
-  return await enrichProducts(products || []);
-};
-
-const getAllChildCategoryIds = async (parentId: string): Promise<string[]> => {
-  const result: string[] = [];
-  
-  const { data } = await supabase
-    .from('categories')
-    .select('id')
-    .eq('parent_id', parentId);
-    
-  if (!data || data.length === 0) return result;
-  
-  for (const category of data) {
-    result.push(category.id);
-    const childIds = await getAllChildCategoryIds(category.id);
-    result.push(...childIds);
-  }
-  
-  return result;
-};
-
-const enrichProducts = async (products: Product[]): Promise<Product[]> => {
-  if (products.length === 0) return [];
-  
-  // Get all product IDs
-  const productIds = products.map(p => p.id);
-  
-  // Fetch categories for these products
-  const { data: categoryData, error: catError } = await supabase
-    .from('product_categories')
-    .select('product_id, categories(id, name)')
-    .in('product_id', productIds);
-    
-  // Fetch prices for these products
-  const { data: priceData, error: priceError } = await supabase
-    .from('product_prices')
-    .select('*, vendors(id, name, url, certification)')
-    .in('product_id', productIds);
-    
-  if (catError) console.error("Error fetching product categories:", catError);
-  if (priceError) console.error("Error fetching product prices:", priceError);
-  
-  // Organize the data by product ID
-  const categoriesByProduct: Record<string, any[]> = {};
-  const pricesByProduct: Record<string, any[]> = {};
-  
-  categoryData?.forEach(item => {
-    if (!categoriesByProduct[item.product_id]) {
-      categoriesByProduct[item.product_id] = [];
-    }
-    categoriesByProduct[item.product_id].push(item.categories);
-  });
-  
-  priceData?.forEach(item => {
-    if (!pricesByProduct[item.product_id]) {
-      pricesByProduct[item.product_id] = [];
-    }
-    pricesByProduct[item.product_id].push({
-      id: item.id,
-      product_id: item.product_id,
-      vendor_id: item.vendor_id,
-      price: item.price,
-      in_stock: item.in_stock,
-      shipping_cost: item.shipping_cost,
-      vendor: item.vendors
-    });
-  });
-  
-  // Enrich the products with their related data
-  return products.map(product => ({
+// Helper function to convert database records to our Product interface
+const convertDBProductToProduct = (product: any): Product => {
+  return {
     ...product,
-    categories: categoriesByProduct[product.id] || [],
-    prices: pricesByProduct[product.id] || []
-  }));
+    // Ensure specifications is a Record<string, any> and not a Json type
+    specifications: product.specifications ? JSON.parse(JSON.stringify(product.specifications)) : {},
+  };
 };
 
-export const createProduct = async (product: Partial<Product>): Promise<Product | null> => {
-  if (!product.slug && product.name) {
-    product.slug = formatSlug(product.name);
-  }
-  
-  // Handle categories separately
-  const categories = product.categories;
-  delete product.categories;
-  
-  // Handle prices separately
-  const prices = product.prices;
-  delete product.prices;
-  
-  // Insert the product
-  const { data, error } = await supabase
-    .from('products')
-    .insert([product])
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error creating product:", error);
-    throw error;
-  }
-
-  // Add categories if provided
-  if (data && categories && categories.length > 0) {
-    const categoryEntries = categories.map((cat: any) => ({
-      product_id: data.id,
-      category_id: cat.id,
-      primary_category: cat.primary || false
-    }));
-    
-    const { error: catError } = await supabase
-      .from('product_categories')
-      .insert(categoryEntries);
-      
-    if (catError) {
-      console.error("Error adding product categories:", catError);
-    }
-  }
-  
-  // Add prices if provided
-  if (data && prices && prices.length > 0) {
-    const priceEntries = prices.map((price: any) => ({
-      product_id: data.id,
-      vendor_id: price.vendor_id,
-      price: price.price,
-      in_stock: price.in_stock !== undefined ? price.in_stock : true,
-      shipping_cost: price.shipping_cost
-    }));
-    
-    const { error: priceError } = await supabase
-      .from('product_prices')
-      .insert(priceEntries);
-      
-    if (priceError) {
-      console.error("Error adding product prices:", priceError);
-    }
-  }
-
-  return getProductById(data.id);
-};
-
-export const updateProduct = async (id: string, updates: Partial<Product>): Promise<Product | null> => {
-  if (updates.name && !updates.slug) {
-    updates.slug = formatSlug(updates.name);
-  }
-  
-  // Handle categories separately
-  const categories = updates.categories;
-  delete updates.categories;
-  
-  // Handle prices separately
-  const prices = updates.prices;
-  delete updates.prices;
-  
-  const { data, error } = await supabase
-    .from('products')
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("Error updating product:", error);
-    throw error;
-  }
-
-  // Update categories if provided
-  if (categories) {
-    // First delete existing categories
-    await supabase.from('product_categories').delete().eq('product_id', id);
-    
-    // Then add new ones
-    if (categories.length > 0) {
-      const categoryEntries = categories.map((cat: any) => ({
-        product_id: id,
-        category_id: cat.id,
-        primary_category: cat.primary || false
-      }));
-      
-      const { error: catError } = await supabase
-        .from('product_categories')
-        .insert(categoryEntries);
-        
-      if (catError) {
-        console.error("Error updating product categories:", catError);
-      }
-    }
-  }
-  
-  // Update prices if provided
-  if (prices) {
-    // First delete existing prices
-    await supabase.from('product_prices').delete().eq('product_id', id);
-    
-    // Then add new ones
-    if (prices.length > 0) {
-      const priceEntries = prices.map((price: any) => ({
-        product_id: id,
-        vendor_id: price.vendor_id,
-        price: price.price,
-        in_stock: price.in_stock !== undefined ? price.in_stock : true,
-        shipping_cost: price.shipping_cost
-      }));
-      
-      const { error: priceError } = await supabase
-        .from('product_prices')
-        .insert(priceEntries);
-        
-      if (priceError) {
-        console.error("Error updating product prices:", priceError);
-      }
-    }
-  }
-
-  return getProductById(id);
-};
-
-export const deleteProduct = async (id: string): Promise<void> => {
-  // Delete related records first
-  await supabase.from('product_categories').delete().eq('product_id', id);
-  await supabase.from('product_prices').delete().eq('product_id', id);
-  
-  const { error } = await supabase
-    .from('products')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error("Error deleting product:", error);
-    throw error;
-  }
-};
-
+// Get best price for a product
 export const getBestPrice = (product: Product): ProductPrice | null => {
   if (!product.prices || product.prices.length === 0) {
     return null;
   }
-  return product.prices.reduce((lowest, current) => 
-    current.price < lowest.price ? current : lowest
-  );
+  return product.prices
+    .filter(price => price.in_stock)
+    .sort((a, b) => a.price - b.price)[0] || null;
+};
+
+// Get all products
+export const getAllProducts = async (): Promise<Product[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*');
+      
+    if (error) {
+      console.error("Error fetching products:", error);
+      return mockData.products as unknown as Product[];
+    }
+    
+    if (!data || data.length === 0) {
+      return mockData.products as unknown as Product[];
+    }
+    
+    return data.map(convertDBProductToProduct);
+  } catch (error) {
+    console.error("Error in getAllProducts:", error);
+    return mockData.products as unknown as Product[];
+  }
+};
+
+// Get product by ID
+export const getProductById = async (id: string): Promise<Product | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        product_categories!inner (
+          category_id,
+          categories:category_id (id, name)
+        ),
+        prices:product_prices (
+          *,
+          vendors:vendor_id (id, name, logo)
+        )
+      `)
+      .eq('id', id)
+      .single();
+      
+    if (error || !data) {
+      console.error("Error fetching product:", error);
+      const mockProduct = mockData.products.find(p => String(p.id) === id);
+      return mockProduct ? mockProduct as unknown as Product : null;
+    }
+    
+    return {
+      ...convertDBProductToProduct(data),
+      categories: data.product_categories.map(pc => pc.categories),
+      prices: data.prices.map(price => ({
+        ...price,
+        vendor_name: price.vendors?.name,
+        vendor_logo: price.vendors?.logo
+      }))
+    };
+  } catch (error) {
+    console.error("Error in getProductById:", error);
+    const mockProduct = mockData.products.find(p => String(p.id) === id);
+    return mockProduct ? mockProduct as unknown as Product : null;
+  }
+};
+
+// Get products by category ID
+export const getProductsByCategory = async (categoryId: string): Promise<Product[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .select(`
+        products:product_id (*),
+        categories:category_id (*)
+      `)
+      .eq('category_id', categoryId);
+      
+    if (error) {
+      console.error("Error fetching products by category:", error);
+      return mockData.products.filter(p => 
+        String(p.categoryId) === categoryId || 
+        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+      ) as unknown as Product[];
+    }
+    
+    if (!data || data.length === 0) {
+      return mockData.products.filter(p => 
+        String(p.categoryId) === categoryId || 
+        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+      ) as unknown as Product[];
+    }
+    
+    return data.map(item => convertDBProductToProduct(item.products));
+  } catch (error) {
+    console.error("Error in getProductsByCategory:", error);
+    return mockData.products.filter(p => 
+      String(p.categoryId) === categoryId || 
+      (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+    ) as unknown as Product[];
+  }
+};
+
+// Get featured products
+export const getFeaturedProducts = async (): Promise<Product[]> => {
+  try {
+    // Fetch high rated products as featured
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .gte('rating', 4.5)
+      .limit(12);
+      
+    if (error) {
+      console.error("Error fetching featured products:", error);
+      return mockData.products.slice(0, 12) as unknown as Product[];
+    }
+    
+    if (!data || data.length === 0) {
+      return mockData.products.slice(0, 12) as unknown as Product[];
+    }
+    
+    return data.map(convertDBProductToProduct);
+  } catch (error) {
+    console.error("Error in getFeaturedProducts:", error);
+    return mockData.products.slice(0, 12) as unknown as Product[];
+  }
+};
+
+// Create product
+export const createProduct = async (product: ProductCreate): Promise<Product | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([{
+        name: product.name,
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        image_url: product.image_url,
+        images: product.images,
+        brand: product.brand,
+        sku: product.sku,
+        model: product.model,
+        slug: product.slug,
+        highlights: product.highlights,
+        specifications: product.specifications,
+        rating: product.rating,
+        review_count: product.review_count
+      }])
+      .select()
+      .single();
+      
+    if (error) {
+      console.error("Error creating product:", error);
+      return null;
+    }
+    
+    return convertDBProductToProduct(data);
+  } catch (error) {
+    console.error("Error in createProduct:", error);
+    return null;
+  }
+};
+
+// Update product
+export const updateProduct = async (id: string, updates: ProductUpdate): Promise<Product | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+      
+    if (error) {
+      console.error("Error updating product:", error);
+      return null;
+    }
+    
+    return convertDBProductToProduct(data);
+  } catch (error) {
+    console.error("Error in updateProduct:", error);
+    return null;
+  }
+};
+
+// Delete product
+export const deleteProduct = async (id: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id);
+      
+    if (error) {
+      console.error("Error deleting product:", error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error in deleteProduct:", error);
+    return false;
+  }
+};
+
+// Import mock data into Supabase
+export const importMockDataToSupabase = async (): Promise<boolean> => {
+  try {
+    // First import categories
+    for (const category of mockData.mainCategories) {
+      await supabase.from('categories').insert({
+        name: category.name,
+        description: category.description || '',
+        slug: category.slug || category.name.toLowerCase().replace(/\s+/g, '-'),
+        category_type: 'main',
+        image_url: category.imageUrl
+      });
+    }
+    
+    for (const category of mockData.categories) {
+      await supabase.from('categories').insert({
+        name: category.name,
+        description: category.description || '',
+        slug: category.slug || category.name.toLowerCase().replace(/\s+/g, '-'),
+        category_type: 'sub',
+        parent_id: category.parentId ? String(category.parentId) : null,
+        image_url: category.imageUrl
+      });
+    }
+    
+    // Then import products
+    for (const product of mockData.products) {
+      const newProduct = {
+        name: product.name,
+        title: product.title || product.name,
+        description: product.description || '',
+        price: product.price,
+        image_url: product.imageUrl || product.image,
+        images: product.images || [],
+        brand: product.brand || '',
+        sku: product.sku || '',
+        model: product.model || '',
+        slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
+        highlights: product.highlights || [],
+        specifications: product.specs || {},
+        rating: product.rating || 0,
+        review_count: product.reviewCount || 0
+      };
+      
+      const { data } = await supabase.from('products').insert(newProduct).select('id').single();
+      
+      if (data) {
+        // Add category relationship
+        await supabase.from('product_categories').insert({
+          product_id: data.id,
+          category_id: String(product.categoryId),
+          primary_category: true
+        });
+        
+        // Add additional categories if present
+        if (product.categoryIds && product.categoryIds.length > 0) {
+          for (const catId of product.categoryIds) {
+            if (String(catId) !== String(product.categoryId)) {
+              await supabase.from('product_categories').insert({
+                product_id: data.id,
+                category_id: String(catId),
+                primary_category: false
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error importing mock data to Supabase:", error);
+    return false;
+  }
 };
