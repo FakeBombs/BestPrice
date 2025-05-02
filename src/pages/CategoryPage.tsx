@@ -137,7 +137,7 @@ const renderBreadcrumbs = () => {
   // Check if current category is a main category
   const isMainCategory = mainCategory && currentCategory.id === mainCategory.id;
 
-  // If on main category page, show only Home and Main Category
+  // Handle main category page
   if (isMainCategory) {
     return (
       <div id="trail">
@@ -158,54 +158,46 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Build breadcrumb trail: always start with home and main category
-  const breadcrumbItems = [
-    <li key="home">
-      <Link to="/" rel="home"><span>BestPrice</span></Link>
-    </li>,
-  ];
+  // Build breadcrumb trail: always start with Home and Main Category
+  const trailCategories = [];
 
+  // Always include main category
   if (mainCategory) {
-    breadcrumbItems.push(
-      <li key={mainCategory.slug}>
-        <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
-          {mainCategory.name}
-        </Link>
-      </li>
-    );
+    trailCategories.push(mainCategory);
   }
 
-  // Traverse up from current category to main category, excluding current category
-  const trail = [];
+  // Traverse up from current category to main category, excluding current
   let category = currentCategory;
-  while (
-    category &&
-    (!mainCategory || category.id !== mainCategory.id)
-  ) {
-    trail.unshift(category);
+  const ancestors = [];
+  while (category && (!mainCategory || category.id !== mainCategory.id)) {
+    ancestors.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  // Add categories in trail except the current category
-  trail.forEach((cat) => {
-    if (cat.id !== currentCategory.id) {
-      breadcrumbItems.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
-        </li>
-      );
-    }
-  });
+  // Build the full trail: main category + ancestors
+  const fullTrail = [...trailCategories, ...ancestors];
+
+  // Exclude the current category from the trail if it's the last in the list
+  // (since we don't want to include the current category at the end)
+  const breadcrumbsItems = fullTrail.slice(0, -1).map((cat) => (
+    <li key={cat.slug}>
+      <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+    </li>
+  ));
 
   // Render the breadcrumb
   return (
     <div id="trail">
       <nav className="breadcrumb">
         <ol>
-          {breadcrumbItems.reduce((acc, crumb, index) => (
+          <li key="home">
+            <Link to="/" rel="home"><span>BestPrice</span></Link>
+          </li>
+          <span className="trail__breadcrumb-separator">›</span>
+          {breadcrumbsItems.reduce((acc, crumb, index) => (
             <React.Fragment key={index}>
               {acc}
-              {index > 0 && <span className="trail__breadcrumb-separator">›</span>}
+              <span className="trail__breadcrumb-separator">›</span>
               {crumb}
             </React.Fragment>
           ), null)}
