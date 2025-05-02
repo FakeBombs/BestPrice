@@ -408,7 +408,7 @@ const SearchResults = () => {
                                             const mainCatSlug = mainCategory ? mainCategory.slug : '';
 
                                             return (
-                                                <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category">
+                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
                                                     <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.name}`} />
                                                     <h2 className="categories__title">{item.category}</h2>
                                                     <div className="categories__cnt">{item.count} {item.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
@@ -423,18 +423,10 @@ const SearchResults = () => {
                                 <div className="tabs">
                                     <div className="tabs-wrapper">
                                         <nav>
-                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}>
-                                                <div className="tabs__content">Δημοφιλέστερα</div>
-                                            </a>
-                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}>
-                                                <div className="tabs__content">Φθηνότερα</div>
-                                            </a>
-                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}>
-                                                <div className="tabs__content">Ακριβότερα</div>
-                                            </a>
-                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}>
-                                                <div className="tabs__content">Αριθμός καταστημάτων</div>
-                                            </a>
+                                            <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                                            <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
+                                            <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
+                                            <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                                         </nav>
                                     </div>
                                 </div>
