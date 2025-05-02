@@ -40,7 +40,14 @@ const BrandPage: React.FC<BrandPageProps> = () => {
       // Mock implementation - replace with actual API call
       if (id) {
         const brandProducts = getProductsByBrand(id);
-        setProducts(brandProducts);
+        // Convert to valid Product type
+        const validProducts = brandProducts.map(product => ({
+          ...product,
+          // Ensure these required fields exist
+          review_count: product.reviewCount || 0,
+          id: String(product.id)
+        })) as Product[];
+        setProducts(validProducts);
       }
     };
 

@@ -25,6 +25,8 @@ interface CategoryFormProps {
   onSubmit?: (values: CategoryCreate) => void;
   onSave?: (values: Partial<Category>) => void;
   onCancel?: () => void;
+  mode?: 'create' | 'edit';
+  parentId?: string;
 }
 
 const formSchema = z.object({
@@ -35,20 +37,20 @@ const formSchema = z.object({
     message: "Description must be at least 10 characters.",
   }),
   image_url: z.string().url({ message: "Please enter a valid URL." }),
-  parent_id: z.string().optional(),
+  parentId: z.string().optional(),
   category_type: z.enum(['main', 'sub']).default('sub'),
   slug: z.string().min(2, {
     message: "Slug must be at least 2 characters."
   })
 });
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], onSubmit, onSave, onCancel }) => {
+const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], onSubmit, onSave, onCancel, mode = 'create', parentId }) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: category?.name || '',
     description: category?.description || '',
     image_url: category?.image_url || '',
-    parent_id: category?.parent_id ? String(category.parent_id) : '',
+    parentId: category?.parentId ? String(category.parentId) : parentId || '',
     category_type: category?.category_type || 'sub',
     slug: category?.slug || ''
   });
@@ -59,7 +61,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], 
       name: category?.name || "",
       description: category?.description || "",
       image_url: category?.image_url || "",
-      parent_id: category?.parent_id ? String(category.parent_id) : "",
+      parentId: category?.parentId ? String(category.parentId) : parentId || "",
       category_type: (category?.category_type as 'main' | 'sub') || 'sub',
       slug: category?.slug || ""
     },
@@ -71,9 +73,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], 
         name: category.name,
         description: category.description || '',
         image_url: category.image_url || '',
-        parent_id: category.parent_id ? String(category.parent_id) : '',
+        parentId: category.parentId ? String(category.parentId) : '',
         category_type: category.category_type || 'sub',
-        slug: category.slug
+        slug: category.slug || ''
       });
     }
   }, [category]);
@@ -95,7 +97,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], 
   const handleUpdate = () => {
     const updatedCategory = {
       ...formData,
-      parent_id: formData.parent_id !== "" ? formData.parent_id : null,
+      // Convert parentId to parent_id for the API
+      parent_id: formData.parentId !== "" ? formData.parentId : null,
     };
     if (onSave) onSave(updatedCategory);
     toast({
@@ -113,7 +116,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], 
         slug: values.slug || values.name.toLowerCase().replace(/\s+/g, '-'),
         description: values.description,
         image_url: values.image_url,
-        parent_id: values.parent_id || null,
+        parent_id: values.parentId || null,
         category_type: values.category_type
       };
       handler(finalValues);

@@ -1,85 +1,128 @@
 
-import React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import CategoryFilters from './CategoryFilters';
-import FilterOptions from './FilterOptions';
-import { Brand } from '@/services/brandService';
-import { Vendor } from '@/services/vendorService';
+import { useState, useEffect } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
 
-export interface SidebarProps {
-  query: string;
-  brands: Brand[];
-  vendors: Vendor[];
+interface SidebarProps {
+  vendors: string[];
+  selectedVendors: string[];
+  priceRange: {min: number, max: number};
+  inStockOnly: boolean;
+  onVendorChange: (vendors: string[]) => void;
+  onPriceChange: (min: number, max: number) => void;
+  onInStockChange: (inStock: boolean) => void;
 }
 
-const Sidebar = ({ query, brands, vendors }: SidebarProps) => {
-  const [searchParams] = useSearchParams();
+const Sidebar = ({ 
+  vendors = [], 
+  selectedVendors = [], 
+  priceRange = {min: 0, max: 10000},
+  inStockOnly = false,
+  onVendorChange,
+  onPriceChange,
+  onInStockChange
+}: SidebarProps) => {
+  const [currentPriceRange, setCurrentPriceRange] = useState([priceRange.min, priceRange.max]);
+  const [localVendors, setLocalVendors] = useState<string[]>(selectedVendors);
+  const [localInStock, setLocalInStock] = useState(inStockOnly);
   
-  // Get the current filters
-  const currentStore = searchParams.get('store') || '';
-  const currentBrand = searchParams.get('brand') || '';
-  const inStockOnly = searchParams.get('instock') === '1';
-  const isCertified = searchParams.get('certified') === '1';
+  // When vendors change from props, update local state
+  useEffect(() => {
+    setLocalVendors(selectedVendors);
+  }, [selectedVendors]);
   
+  // When price range changes from props, update local state
+  useEffect(() => {
+    setCurrentPriceRange([priceRange.min, priceRange.max]);
+  }, [priceRange]);
+  
+  // When in-stock status changes from props, update local state
+  useEffect(() => {
+    setLocalInStock(inStockOnly);
+  }, [inStockOnly]);
+  
+  // Handle vendor checkbox change
+  const handleVendorChange = (vendor: string, checked: boolean) => {
+    const newVendors = checked 
+      ? [...localVendors, vendor]
+      : localVendors.filter(v => v !== vendor);
+      
+    setLocalVendors(newVendors);
+    onVendorChange(newVendors);
+  };
+  
+  // Handle price range slider change
+  const handlePriceChange = (values: number[]) => {
+    setCurrentPriceRange(values);
+    onPriceChange(values[0], values[1]);
+  };
+  
+  // Handle in-stock checkbox change
+  const handleInStockChange = (checked: boolean) => {
+    setLocalInStock(checked);
+    onInStockChange(checked);
+  };
+
   return (
-    <aside className="page-products__filters">
-      <div id="filters">
-        <CategoryFilters query={query} />
-
-        <div className="filters__header">
-          <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
-        </div>
-
-        <FilterOptions query={query} inStockOnly={inStockOnly} isCertified={isCertified} />
-        
-        {/* Brand Filter */}
-        <div className="filter-brand filter-collapsed default-list" data-filter-name="Κατασκευαστής">
-          <div className="filter__header"><h4>Κατασκευαστής</h4></div>
-          <div className="filter-container">
-            <ol>
-              {brands.map(brand => (
-                <li key={brand.id}>
-                  <Link 
-                    to={`/search?q=${encodeURIComponent(query)}&brand=${encodeURIComponent(brand.name.toLowerCase())}`}
-                    className={currentBrand === brand.name.toLowerCase() ? 'active' : ''}
-                  >
-                    {brand.name}
-                  </Link>
-                </li>
+    <div className="space-y-6">
+      {/* In Stock Filter */}
+      <Card>
+        <CardContent className="pt-6">
+          <h3 className="font-medium mb-4">Availability</h3>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="in-stock" 
+              checked={localInStock}
+              onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
+            />
+            <Label htmlFor="in-stock">In Stock Only</Label>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Price Range Filter */}
+      <Card>
+        <CardContent className="pt-6">
+          <h3 className="font-medium mb-4">Price Range</h3>
+          <Slider 
+            defaultValue={[priceRange.min, priceRange.max]}
+            max={priceRange.max}
+            min={priceRange.min}
+            step={1}
+            value={currentPriceRange}
+            onValueChange={handlePriceChange}
+            className="mb-4"
+          />
+          <div className="flex justify-between text-sm">
+            <div>€{currentPriceRange[0]}</div>
+            <div>€{currentPriceRange[1]}</div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Vendor Filter */}
+      {vendors.length > 0 && (
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="font-medium mb-4">Vendors</h3>
+            <div className="space-y-2">
+              {vendors.map(vendor => (
+                <div key={vendor} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`vendor-${vendor}`}
+                    checked={localVendors.includes(vendor)}
+                    onCheckedChange={(checked) => handleVendorChange(vendor, checked as boolean)}
+                  />
+                  <Label htmlFor={`vendor-${vendor}`}>{vendor}</Label>
+                </div>
               ))}
-            </ol>
-          </div>
-        </div>
-        
-        {/* Store Filter */}
-        <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα">
-          <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
-          <div className="filter-container">
-            <ol>
-              {vendors.map(vendor => {
-                // Extract domain from URL (remove http:// or https://)
-                const domain = vendor.url?.replace(/^https?:\/\//, '').replace(/\/$/, '') || '';
-                
-                return (
-                  <li key={vendor.id}>
-                    <Link 
-                      to={`/search?q=${encodeURIComponent(query)}&store=${encodeURIComponent(domain)}`}
-                      className={currentStore === domain ? 'active' : ''}
-                    >
-                      <span>{vendor.name}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </div>
-        
-        <div className="filters__buttons">
-          <Link to={`/search?q=${encodeURIComponent(query)}`} className="button">Εμφάνιση των προϊόντων</Link>
-        </div>
-      </div>
-    </aside>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 

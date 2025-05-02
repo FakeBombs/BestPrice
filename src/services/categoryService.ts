@@ -72,7 +72,6 @@ export const getMainCategories = async (): Promise<Category[]> => {
   });
 };
 
-// Add the missing getSubcategoriesByParentId function
 export const getSubcategoriesByParentId = async (parentId: string): Promise<Category[]> => {
   // In a real app, this would be an API call
   return new Promise((resolve) => {
@@ -83,6 +82,18 @@ export const getSubcategoriesByParentId = async (parentId: string): Promise<Cate
         image_url: cat.imageUrl || cat.image
       }));
       resolve(subcategories as Category[]);
+    }, 500);
+  });
+};
+
+// Add the missing deleteCategory function
+export const deleteCategory = async (id: string): Promise<boolean> => {
+  // In a real app, this would be an API call to delete the category
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Simulate successful deletion
+      console.log(`Category with ID ${id} would be deleted in a real app`);
+      resolve(true);
     }, 500);
   });
 };

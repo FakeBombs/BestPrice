@@ -4,19 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { getCategoryById, deleteCategory } from '@/services/categoryService';
+import { getCategoryById, deleteCategory, Category } from '@/services/categoryService';
 import { useToast } from '@/components/ui/use-toast';
 import CategoryForm from '@/components/admin/categories/CategoryForm';
-
-interface Category {
-  id: string;
-  name: string;
-  description?: string;
-  image_url?: string;
-  slug: string;
-  parent_id?: string;
-  category_type: 'main' | 'sub';
-}
 
 const AdminEditCategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -31,7 +21,9 @@ const AdminEditCategoryPage = () => {
       try {
         if (categoryId) {
           const data = await getCategoryById(categoryId);
-          setCategory(data);
+          if (data) {
+            setCategory(data);
+          }
         }
       } catch (error) {
         console.error('Error loading category:', error);

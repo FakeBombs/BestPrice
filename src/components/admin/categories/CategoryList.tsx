@@ -8,9 +8,11 @@ import { Category, getAllCategories, getSubcategoriesByParentId } from "@/servic
 interface CategoryListProps {
   onEdit?: (category: Category) => void;
   onDelete?: (categoryId: string) => void;
+  parentId?: string | null;
+  onCategorySelected?: (category: Category) => void;
 }
 
-const CategoryList = ({ onEdit, onDelete }: CategoryListProps) => {
+const CategoryList = ({ onEdit, onDelete, parentId = null, onCategorySelected }: CategoryListProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [subcategories, setSubcategories] = useState<Category[]>([]);
@@ -22,7 +24,7 @@ const CategoryList = ({ onEdit, onDelete }: CategoryListProps) => {
         const allCategories = await getAllCategories();
         // Filter to only get main categories
         const mainCategories = allCategories.filter(
-          cat => cat.category_type === 'main' || !cat.parent_id
+          cat => cat.category_type === 'main' || !cat.parentId
         );
         setCategories(mainCategories);
       } catch (error) {
@@ -54,6 +56,13 @@ const CategoryList = ({ onEdit, onDelete }: CategoryListProps) => {
   
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(prev => prev === categoryId ? null : categoryId);
+    
+    if (onCategorySelected) {
+      const category = categories.find(cat => cat.id === categoryId);
+      if (category) {
+        onCategorySelected(category);
+      }
+    }
   };
   
   if (loading) {

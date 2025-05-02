@@ -1,107 +1,93 @@
-
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
 import { Product } from '@/services/productService';
 
-interface UseProductFiltersProps {
+export interface UseProductFiltersProps {
   initialProducts: Product[];
 }
 
-// Helper function to get the best price for a product
-export const getBestPrice = (product: Product) => {
-  if (!product.prices || product.prices.length === 0) {
-    // Return a default price object using the product's base price
-    return {
-      id: "default",
-      product_id: product.id,
-      vendor_id: "default",
-      price: product.price,
-      in_stock: true
-    };
-  }
-  
-  // Filter for in-stock prices
-  const inStockPrices = product.prices.filter(p => p.in_stock);
-  
-  if (inStockPrices.length === 0) {
-    // If no in-stock prices, return the lowest price overall
-    return product.prices.sort((a, b) => a.price - b.price)[0];
-  }
-  
-  // Return the lowest in-stock price
-  return inStockPrices.sort((a, b) => a.price - b.price)[0];
-};
-
-export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) => {
-  const [searchParams] = useSearchParams();
-  const sortParam = searchParams.get('o') || 'relevance';
-  
-  const [filteredResults, setFilteredResults] = useState<Product[]>(initialProducts);
+export const useProductFilters = (initialProducts: Product[]) => {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [sortParam, setSortParam] = useState<string>('default');
   const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [priceRange, setPriceRange] = useState<{min: number, max: number} | null>(null);
+  const [inStockOnly, setInStockOnly] = useState<boolean>(false);
+  const [priceRange, setPriceRange] = useState<{min: number, max: number}>({min: 0, max: 10000});
   
-  // Apply filters whenever dependencies change
+  // Update products when initialProducts change
   useEffect(() => {
-    let filtered = [...initialProducts];
+    setProducts(initialProducts);
+  }, [initialProducts]);
+  
+  // Apply all filters
+  const filteredResults = useMemo(() => {
+    let results = [...products];
     
     // Apply vendor filter
     if (filteredVendors.length > 0) {
-      filtered = filtered.filter(product => 
-        product.prices?.some(price => 
-          filteredVendors.includes(price.vendor_id)
-        )
-      );
+      results = results.filter(product => {
+        // If product has prices and the prices have vendors
+        if (product.prices && product.prices.length > 0) {
+          return product.prices.some(price => 
+            price.vendor && filteredVendors.includes(price.vendor.name)
+          );
+        }
+        return false;
+      });
     }
     
     // Apply in-stock filter
     if (inStockOnly) {
-      filtered = filtered.filter(product => 
-        product.prices?.some(price => price.in_stock)
-      );
-    }
-    
-    // Apply price range filter
-    if (priceRange) {
-      filtered = filtered.filter(product => {
-        const bestPrice = getBestPrice(product);
-        return bestPrice ? bestPrice.price >= priceRange.min && bestPrice.price <= priceRange.max : false;
+      results = results.filter(product => {
+        if (product.prices && product.prices.length > 0) {
+          return product.prices.some(price => price.in_stock);
+        }
+        // If no price, consider not in stock
+        return false;
       });
     }
     
-    // Apply sorting
-    filtered = filtered.sort((a, b) => {
-      // Get the minimum price for each product
-      const aBestPrice = getBestPrice(a);
-      const bBestPrice = getBestPrice(b);
-      
-      const aPrice = aBestPrice ? aBestPrice.price : a.price;
-      const bPrice = bBestPrice ? bBestPrice.price : b.price;
-      
-      // Get the vendor count for each product
-      const aVendorCount = a.prices?.length || 0;
-      const bVendorCount = b.prices?.length || 0;
-      
-      switch (sortParam) {
-        case 'price_asc':
-          return aPrice - bPrice;
-        case 'price_desc':
-          return bPrice - aPrice;
-        case 'stores': 
-          return bVendorCount - aVendorCount;
-        case 'rating':
-          return b.rating - a.rating;
-        case 'relevance':
-        default:
-          return 0; // Keep original order for relevance
-      }
+    // Apply price filter
+    results = results.filter(product => {
+      const price = product.price || 0;
+      return price >= priceRange.min && price <= priceRange.max;
     });
     
-    setFilteredResults(filtered);
-  }, [initialProducts, sortParam, filteredVendors, inStockOnly, priceRange]);
+    // Apply sorting
+    switch(sortParam) {
+      case 'price-asc':
+        results.sort((a, b) => (a.price || 0) - (b.price || 0));
+        break;
+      case 'price-desc':
+        results.sort((a, b) => (b.price || 0) - (a.price || 0));
+        break;
+      case 'rating':
+        results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'popularity':
+        results.sort((a, b) => ((b.review_count || 0) - (a.review_count || 0)));
+        break;
+      // Default sorting keeps the original order
+      default:
+        break;
+    }
+    
+    return results;
+  }, [products, sortParam, filteredVendors, inStockOnly, priceRange]);
+  
+  // Handlers for filter changes
+  const handleSortChange = (value: string) => {
+    setSortParam(value);
+  };
+  
+  const handleVendorFilter = (vendors: string[]) => {
+    setFilteredVendors(vendors);
+  };
   
   const handlePriceRangeFilter = (min: number, max: number) => {
-    setPriceRange({ min, max });
+    setPriceRange({min, max});
+  };
+  
+  const handleInStockOnly = (value: boolean) => {
+    setInStockOnly(value);
   };
   
   return {
@@ -112,6 +98,9 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     priceRange,
     setFilteredVendors,
     setInStockOnly,
-    handlePriceRangeFilter
+    handlePriceRangeFilter,
+    handleSortChange,
+    handleVendorFilter,
+    handleInStockOnly
   };
 };

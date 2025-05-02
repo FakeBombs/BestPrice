@@ -1,22 +1,24 @@
 
 import { useState, useEffect } from 'react';
-import { categories } from '@/data/mockData'; 
-import { Category } from '@/services/categoryService';
+import { Category, getAllCategories } from '@/services/categoryService'; 
 import { Product } from '@/services/productService';
 import ProductCard from '@/components/ProductCard';
 
 const Deals = () => {
   const [featuredDeals, setFeaturedDeals] = useState<Product[]>([]);
-  const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     // In a real app, you'd fetch deals from the API
     const fetchDeals = async () => {
       try {
-        // Using mockData directly
+        // Get categories
+        const categoriesData = await getAllCategories();
+        setCategories(categoriesData);
+        
+        // Mock empty featured deals for now
         setFeaturedDeals([]);
-        setCategoriesData(categories);
       } catch (error) {
         console.error('Error fetching deals:', error);
       } finally {
@@ -48,13 +50,13 @@ const Deals = () => {
       {/* Deals by category */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Deals by Category</h2>
-        {categoriesData.slice(0, 4).map(category => (
+        {categories.slice(0, 4).map(category => (
           <div key={category.id} className="mb-8">
             <h3 className="text-lg font-medium mb-3">{category.name} Deals</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {/* We would fetch category-specific deals here in a real app */}
               {/* For now, just displaying empty state */}
-              <div className="col-span-full text-center text-muted-foreground py-8">
+              <div className="col-span-full text-center text-gray-500">
                 No current deals for {category.name}
               </div>
             </div>

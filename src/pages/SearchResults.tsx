@@ -20,7 +20,7 @@ const SearchResults = () => {
     handleVendorFilter,
     handlePriceRangeFilter,
     handleInStockOnly
-  } = useProductFilters(products);
+  } = useProductFilters({ initialProducts: products });
   
   useEffect(() => {
     const fetchResults = async () => {
@@ -43,7 +43,7 @@ const SearchResults = () => {
     <div className="container mx-auto px-4 pt-6 pb-16">
       <SearchHeader 
         query={query}
-        totalResults={filteredResults.length}
+        count={filteredResults.length}
         loading={loading}
       />
       
@@ -51,20 +51,21 @@ const SearchResults = () => {
         {/* Sidebar with filters */}
         <div className="w-full md:w-1/4 lg:w-1/5">
           <Sidebar 
-            onVendorFilter={handleVendorFilter}
-            onPriceRangeFilter={handlePriceRangeFilter}
-            onInStockOnly={handleInStockOnly}
+            vendors={[]}
+            selectedVendors={[]}
+            priceRange={{min: 0, max: 10000}}
+            inStockOnly={false}
+            onVendorChange={handleVendorFilter}
+            onPriceChange={handlePriceRangeFilter}
+            onInStockChange={handleInStockOnly}
           />
         </div>
         
         {/* Search results */}
         <div className="w-full md:w-3/4 lg:w-4/5">
           <ProductResults 
-            filteredResults={filteredResults}
-            onSortChange={handleSortChange}
-            onVendorFilter={handleVendorFilter}
-            onPriceRangeFilter={handlePriceRangeFilter}
-            onInStockOnly={handleInStockOnly}
+            products={filteredResults}
+            onSort={handleSortChange}
           />
         </div>
       </div>
