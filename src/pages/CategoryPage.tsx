@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-import { categories, mainCategories, products, Category } from '@/data/mockData'; // Assuming Category type is exported from mockData or defined elsewhere
+import { categories, mainCategories, products, Category, Product } from '@/data/mockData'; // Assuming Category type is exported from mockData or defined elsewhere
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
@@ -59,7 +59,7 @@ const CategoryPage: React.FC = () => {
       // (assuming main categories show subcats, not products directly)
       if (matchedCategory.parentId !== null || !matchedCategory.isMain) {
           const productsToDisplay = products.filter(p =>
-            p.categoryId?.toString() === matchedCategory.id.toString()
+            p.categoryIds?.includes(matchedCategory.id)
           );
           setFilteredProducts(productsToDisplay);
       } else {
@@ -125,7 +125,6 @@ const CategoryPage: React.FC = () => {
       toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' });
       return;
     }
-    // Ensure currentCategory exists before trying to open modal
     if (currentCategory) {
         setIsPriceAlertModalOpen(true);
     } else {
@@ -350,10 +349,8 @@ const CategoryPage: React.FC = () => {
 
   // This function renders the product list for the current category (usually a leaf subcategory)
   const renderProducts = () => {
-    const sortedProducts = sortProducts(filteredProducts); // Sort the already filtered products
-
-    // Determine if we should show the header/sorting (only if there are products or it's a product-leaf category)
-    const showProductHeader = filteredProducts.length > 0; // Or add more complex logic if needed
+    const sortedProducts = sortProducts(filteredProducts);
+    const showProductHeader = sortedProducts.length > 0;
 
     return (
         <div className="page-products">
@@ -389,7 +386,6 @@ const CategoryPage: React.FC = () => {
                 ) : (
                 // Check if we are in a category context before showing "no products"
                 currentCategory && !currentCategory.isMain && <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
-                // Avoid showing this message on main category pages that correctly show subcategories
                 )}
             </div>
             </div>
