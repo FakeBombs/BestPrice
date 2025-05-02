@@ -170,7 +170,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
                         {subCategories.map((sub) => (
                           <div className="sitemap-desktop__col" key={sub.id}>
                             <div className="sitemap-desktop__sub">
-                              <Link to={`/cat/${mainCategory?.slug}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
+                              <Link to={`/cat/${sub.id}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
                                 <img className="sitemap-desktop__sub-image" width="96" height="96" alt={sub.name} src={sub.image} />
                               </Link>
                               <div className="sitemap-desktop__sub-main">
