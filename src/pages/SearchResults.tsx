@@ -249,9 +249,7 @@ const SearchResults = () => {
                       ) : null;
                     })}
                     <button onClick={handleResetFilters}>
-                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters">
-                            <use xlinkHref="/public/dist/images/icons/icons.svg#icon-refresh"></use>
-                        </svg>
+                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-refresh"></use></svg>
                         Reset Filters
                     </button>
                 </div>
@@ -282,11 +280,7 @@ const SearchResults = () => {
                                         const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
                                         const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
                                         return (
-                                            <li key={item.id}>
-                                                <Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link">
-                                                    <span>{item.category} ({item.count})</span>
-                                                </Link>
-                                            </li>
+                                            <li key={item.id}><Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link"><span>{item.category} ({item.count})</span></Link></li>
                                         );
                                     })}
                                 </ol>
@@ -306,9 +300,7 @@ const SearchResults = () => {
                                     <div className="filter-container">
                                         <ol>
                                             {Object.keys(availableBrands).map((brand) => (
-                                                <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}>
-                                                    <span>{brand} ({availableBrands[brand]})</span>
-                                                </li>
+                                                <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} ({availableBrands[brand]})</span></li>
                                             ))}
                                         </ol>
                                     </div>
@@ -322,9 +314,7 @@ const SearchResults = () => {
                                         <div className="filter-container">
                                             <ol>
                                                 {Array.from(availableSpecs[specKey]).map((specValue) => (
-                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
-                                                        <span>{specValue}</span>
-                                                    </li>
+                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
                                                 ))}
                                             </ol>
                                         </div>
@@ -363,9 +353,7 @@ const SearchResults = () => {
                                 <div className="filter__header"><h4>In Stock</h4></div>
                                 <div className="filter-container">
                                     <label>
-                                        <input 
-                                            type="checkbox" 
-                                            checked={activeFilters.inStockOnly} 
+                                        <input type="checkbox" checked={activeFilters.inStockOnly} 
                                             onChange={() => { 
                                                 const newInStockOnly = !activeFilters.inStockOnly; 
                                                 setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly })); 
@@ -374,7 +362,7 @@ const SearchResults = () => {
                                                     activeFilters.specs, 
                                                     newInStockOnly, 
                                                     products,
-                                                    activeFilters.vendorIds // Changed from certifications to vendorIds
+                                                    activeFilters.vendorIds
                                                 ); 
                                             }} 
                                         />Άμεσα διαθέσιμα
@@ -383,9 +371,7 @@ const SearchResults = () => {
                             </div>
 
                             <button className="button button--outline" id="filters__scrollback">
-                                <svg className="icon" aria-hidden="true" width="12" height="12">
-                                    <use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use>
-                                </svg>
+                                <svg className="icon" aria-hidden="true" width="12" height="12"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-up-12"></use></svg>
                                 <div>Φίλτρα</div>
                             </button>
                         </div>
@@ -419,10 +405,10 @@ const SearchResults = () => {
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => {
                                             const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
-                                            const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Use the slug of the main category
+                                            const mainCatSlug = mainCategory ? mainCategory.slug : '';
 
                                             return (
-                                                <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category"> {/* Updated Link */}
+                                                <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category">
                                                     <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.name}`} />
                                                     <h2 className="categories__title">{item.category}</h2>
                                                     <div className="categories__cnt">{item.count} {item.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
