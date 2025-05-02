@@ -1,80 +1,68 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product, categories, mainCategories } from '@/data/mockData';
+import { Product, categories, mainCategories, Category } from '@/data/mockData'; // Make sure Category type is imported or defined
+
+// Combine main and subcategories for easier lookups
+const allCategories = [...mainCategories, ...categories];
 
 interface ProductBreadcrumbProps {
   product: Product;
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const getCategoryPath = (mainSlug: string, slug: string, title: string, isFinal: boolean) => {
-    const path = `/cat/${mainSlug}/${slug}`.replace(/\/+/g, '/');
+  const pathCategories: Category[] = [];
 
-    return (
-      <li key={slug}>
-        <Link 
-          to={path} 
-          title={isFinal ? `Όλα τα προϊόντα της κατηγορίας ${title}` : `Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας ${title}`} 
-          data-no-info=""
-        >
-          <span>{title}</span>
-        </Link>
-      </li>
-    );
-  };
+  // Find the full path: Start from the product's category and go up
+  // Using the first category ID as the leaf node for the path
+  if (product.categoryIds && product.categoryIds.length > 0) {
+    const leafCategoryId = product.categoryIds[0];
+    let currentCat = allCategories.find(cat => cat.id === leafCategoryId);
 
-  const findCategoryPath = (categoryId: number): React.ReactNode[] => {
-    const category = categories.find(cat => cat.id === categoryId);
-    if (!category) return [];
+    // Loop upwards finding parents until we hit a main category (parentId === null) or dead end
+    while (currentCat) {
+      pathCategories.unshift(currentCat); // Add the category to the beginning of the path array
 
-    // Recursively find the category path
-    const childPath = category.parentId ? findCategoryPath(category.parentId) : []; 
+      if (currentCat.parentId === null) {
+        break; // Found the root (main category), stop.
+      }
 
-    // Find the main category
-    const mainCategory = mainCategories.find(mainCat => mainCat.id === (category.parentId ? categories.find(cat => cat.id === category.parentId)?.parentId : category.parentId));
-
-    // Prepare the list for breadcrumbs
-    const breadcrumbPath = [];
-
-    // If main category exists, add it to the path
-    if (mainCategory) {
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, '', mainCategory.name, false));
+      // Find the parent category
+      const parentCat = allCategories.find(cat => cat.id === currentCat?.parentId);
+      currentCat = parentCat; // Move up to the parent for the next iteration
+                             // If parentCat is not found, currentCat becomes undefined, ending the loop.
     }
-
-    // Add all ancestors
-    childPath.forEach((subCategory) => {
-      const subCatSlug = subCategory.props.children.props.children; // Get slug from the breadcrumb link
-      breadcrumbPath.push(getCategoryPath(mainCategory.slug, subCatSlug, subCategory.props.children.props.children, false));
-    });
-
-    // Add the current category as the last breadcrumb
-    breadcrumbPath.push(getCategoryPath(mainCategory?.slug || '', category.slug, category.name, categoryId === product.categoryIds[0]));
-    
-    return breadcrumbPath;
-  };
-
-  // Get the breadcrumb path using the first category id of the product
-  const categoryPath = findCategoryPath(product.categoryIds[0]);
+  }
+  // At this point, pathCategories contains the hierarchy from Main Category down to the Product's Category
 
   return (
-    <ol>
-      <li>
-        <Link to="/" rel="home" data-no-info="">
-          <span>BestPrice</span>
-        </Link>
-        <span className="trail__breadcrumb-separator">›</span>
-      </li>
-      {categoryPath.map((category, index) => (
-        <React.Fragment key={index}>
-          {category}
-          {index < categoryPath.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-        </React.Fragment>
-      ))}
-      <li>
-        <span className="trail__breadcrumb-separator">›</span>
-        <span className="trail__last truncate max-w-[200px]">{product.title}</span>
-      </li>
-    </ol>
+    // Wrap in a nav element for accessibility
+    <nav className="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        {/* 1. Home Link */}
+        <li>
+          <Link to="/" rel="home">
+            <span>BestPrice</span>
+          </Link>
+        </li>
+
+        {/* 2. Category Path Links */}
+        {pathCategories.map((category) => (
+          <li key={category.id}> {/* Use category ID as the key */}
+            <span className="trail__breadcrumb-separator">›</span>
+            <Link to={`/cat/${category.id}/${category.slug}`} title={`Περισσότερα στην κατηγορία ${category.name}`}>
+              <span>{category.name}</span>
+            </Link>
+          </li>
+        ))}
+
+        {/* 3. Product Title (Not a link) */}
+        <li>
+          <span className="trail__breadcrumb-separator">›</span>
+          {/* Use product.name or product.title depending on your Product type */}
+          <span className="trail__last truncate max-w-[200px]">{product.title}</span>
+        </li>
+      </ol>
+    </nav>
   );
 };
 
