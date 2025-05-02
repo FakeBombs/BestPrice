@@ -175,12 +175,12 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
                               </Link>
                               <div className="sitemap-desktop__sub-main">
                                 <div className="sitemap-desktop__sub-title">
-                                  <Link to={`/cat/${mainCategory?.slug}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>{sub.name}</Link>
+                                  <Link to={`/cat/${sub.id}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>{sub.name}</Link>
                                 </div>
                                 <ul className="sitemap-desktop__sub-list">
                                   {categories.filter(item => item.parentId === sub.id).slice(0, 6).map(subItem => (
                                     <li key={subItem.id}>
-                                      <Link to={`/cat/${mainCategory?.slug}/${sub.slug}/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>{subItem.name}</Link>
+                                      <Link to={`/cat/${subItem.id}/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>{subItem.name}</Link>
                                     </li>
                                   ))}
                                 </ul>
