@@ -77,11 +77,13 @@ export const vendors: Vendor[] = [
 ];
 
 export const mainCategories: Category[] = [
-  { id: '1', name: 'Electronics', description: 'Explore the latest electronics.', imageUrl: '/dist/images/cat/electronics.webp' },
-  { id: '2', name: 'Fashion', description: 'Stay trendy with our fashion collection.', imageUrl: '/dist/images/cat/fashion.webp' },
-  { id: '3', name: 'Home & Garden', description: 'Create your dream home.', imageUrl: '/dist/images/cat/home-garden.webp' },
-  { id: '4', name: 'Health & Beauty', description: 'Take care of your health and beauty.', imageUrl: '/dist/images/cat/health-beauty.webp' },
-  { id: '5', name: 'Sports & Outdoors', description: 'Gear up for your next adventure.', imageUrl: '/dist/images/cat/sports.webp' },
+  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: null, imageUrl: null },
+  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: null, imageUrl: null },
+  { id: 3, name: 'Μόδα', slug: 'fashion', image: null, imageUrl: null },
+  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: null, imageUrl: null },
+  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', image: null, imageUrl: null },
+  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', image: null, imageUrl: null },
+  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', image: null, imageUrl: null }
 ];
 
 export const categories: Category[] = [
