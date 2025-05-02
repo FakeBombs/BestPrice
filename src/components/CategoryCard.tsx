@@ -1,55 +1,29 @@
 
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-interface CategoryCardProps {
-  category: {
-    id?: string | number;
-    name: string;
-    image?: string;
-    imageUrl?: string;
-    productCount?: number;
-    slug?: string;
-  };
-  size?: "small" | "medium" | "large";
+export interface CategoryCardProps {
+  id: string | number;
+  name: string;
+  image: string;
+  slug: string;
+  itemCount?: number;
 }
 
-const CategoryCard = ({ category, size = "medium" }: CategoryCardProps) => {
-  const formatSlug = (name: string) => {
-    return name.toLowerCase().replace(/\s+/g, '-');
-  };
-  
-  const sizeClasses = {
-    small: "h-20 w-20",
-    medium: "h-28 w-28",
-    large: "h-36 w-36",
-  };
-
-  // Use slug if available, otherwise format the name
-  const slug = category.slug || formatSlug(category.name);
-  
-  // Use image if available, otherwise fall back to imageUrl
-  const imageSource = category.image || category.imageUrl;
-
+const CategoryCard: React.FC<CategoryCardProps> = ({ id, name, image, slug, itemCount }) => {
   return (
-    <Link
-      to={`/cat/${category.id}/${slug}`}
-      className="block rounded-lg overflow-hidden border border-gray-200 hover:border-primary transition"
-    >
-      <div className="p-3 flex flex-col items-center">
-        <div className={`${sizeClasses[size]} flex items-center justify-center mb-2`}>
-          {imageSource && (
-            <img
-              src={imageSource}
-              alt={category.name}
-              className="max-h-full max-w-full object-contain"
-            />
-          )}
-        </div>
-        <h3 className="text-center text-sm font-medium">{category.name}</h3>
-        {category.productCount !== undefined && (
-          <p className="text-xs text-muted-foreground">{category.productCount} products</p>
-        )}
+    <Link to={`/cat/${id}/${slug}`} className="category-card block p-4 border rounded-lg hover:shadow-md transition-shadow">
+      <div className="relative pb-[75%] mb-3 bg-gray-100 rounded overflow-hidden">
+        <img 
+          src={image || '/placeholder.svg'}
+          alt={name}
+          className="absolute inset-0 w-full h-full object-contain p-2"
+        />
       </div>
+      <h3 className="font-medium text-center truncate">{name}</h3>
+      {itemCount !== undefined && (
+        <p className="text-sm text-center text-muted-foreground">{itemCount} items</p>
+      )}
     </Link>
   );
 };

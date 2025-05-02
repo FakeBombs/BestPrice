@@ -9,9 +9,10 @@ import { searchProducts, Product } from '@/services/productService';
 interface SearchBarProps {
   initialQuery?: string;
   onSearch?: (query: string) => void;
+  className?: string;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '', onSearch }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '', onSearch, className = '' }) => {
   const [query, setQuery] = useState<string>(initialQuery);
   const [results, setResults] = useState<Product[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -97,7 +98,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '', onSearc
   };
 
   return (
-    <div ref={searchRef} className="search">
+    <div ref={searchRef} className={`search ${className}`}>
       <form 
         className="search__form"
         onSubmit={handleSubmit}
@@ -151,3 +152,5 @@ export const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '', onSearc
     </div>
   );
 };
+
+export default SearchBar;

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink, PackageCheck, PackageX, TruckDelivery } from 'lucide-react';
+import { ExternalLink, PackageCheck, PackageX, Truck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { vendors } from '@/data/mockData';
@@ -92,20 +92,20 @@ const ProductVendors = ({ product, className = "" }: ProductVendorsProps) => {
                   <div className="text-xl font-bold">{formatPrice(price.price)}</div>
                   {(shippingCost > 0) && (
                     <div className="flex items-center text-sm text-muted-foreground gap-1">
-                      <TruckDelivery className="w-4 h-4" />
+                      <Truck className="w-4 h-4" />
                       <span>+ {formatPrice(shippingCost)} shipping</span>
                     </div>
                   )}
                   {(shippingCost === 0) && (
                     <div className="flex items-center text-sm text-green-600 gap-1">
-                      <TruckDelivery className="w-4 h-4" />
+                      <Truck className="w-4 h-4" />
                       <span>Free shipping</span>
                     </div>
                   )}
                 </div>
                 
                 <Button asChild className="gap-1">
-                  <Link to={vendor?.website || "#"} target="_blank" rel="noopener noreferrer">
+                  <Link to={vendor?.url || "#"} target="_blank" rel="noopener noreferrer">
                     <span>Visit Store</span>
                     <ExternalLink className="w-4 h-4" />
                   </Link>
