@@ -39,9 +39,14 @@ const CategoryPage: React.FC = () => {
       if (foundCategory) break;
     }
     if (!foundCategory && segments.length === 1) {
+      // Έλεγξε αν η κατηγορία είναι main category
       foundCategory = mainCategories.find(
         (cat) => cat.id.toString() === segments[0] || cat.slug === segments[0]
       );
+      // Αν βρεθεί, τσέκαρε αν έχει parentId null
+      if (foundCategory && foundCategory.parentId !== null) {
+        foundCategory = undefined; // Απόρριψε αν δεν είναι main category
+      }
     }
     setCurrentCategory(foundCategory);
     if (foundCategory) {
