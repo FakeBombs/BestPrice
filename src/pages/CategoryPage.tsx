@@ -163,6 +163,7 @@ function renderBreadcrumbs() {
 };
 
   const renderMainCategories = () => {
+    const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
       <>
