@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { categories, mainCategories } from '@/data/mockData';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../../components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 
 interface CategoryBreadcrumbProps {
   category: any;
@@ -33,14 +33,13 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
     }
   }, [category]);
   
-  const formatSlug = (name: string) => {
-    return name.toLowerCase().replace(/\s+/g, '-');
-  };
-
   const buildCategoryPath = (breadcrumbs: any[], index: number) => {
     // Start with the main category
-    let path = `/cat/${breadcrumbs[0].slug}`;
+    if (index === 0) {
+      return `/cat/${breadcrumbs[0].id}/${breadcrumbs[0].slug}`;
+    }
     
+    let path = `/cat/${breadcrumbs[0].id}`;
     // Add subsequent slugs up to the current index
     for (let i = 1; i <= index; i++) {
       path += `/${breadcrumbs[i].slug}`;

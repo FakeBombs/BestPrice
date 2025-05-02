@@ -1,3 +1,4 @@
+
 import { products } from '@/data/mockData';
 
 export interface ProductPrice {
@@ -25,7 +26,7 @@ export interface Product {
   sku?: string;
   price: number;
   rating: number;
-  reviewCount?: number; // Changed from review_count to match mockData.ts
+  reviewCount?: number;
   reviews?: number;
   specs?: Record<string, string>;
   specifications?: Record<string, string>;
@@ -41,7 +42,7 @@ export const getBestPrice = (product: Product): ProductPrice | null => {
   }
   
   // Filter in-stock items and sort by price
-  const inStockPrices = product.prices.filter(p => p.in_stock);
+  const inStockPrices = product.prices.filter(p => p.inStock);
   
   if (inStockPrices.length === 0) {
     return null;
@@ -66,7 +67,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(p.id),
           vendorId: String(price.vendorId || ''),
-          in_stock: price.inStock || false,
+          inStock: price.inStock || false,
         })) || [],
         rating: p.rating || 0,
         reviewCount: p.reviewCount || 0,
@@ -101,7 +102,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(product.id),
           vendorId: String(price.vendorId || ''),
-          in_stock: price.inStock || false,
+          inStock: price.inStock || false,
         })) || [],
         rating: product.rating || 0,
         reviewCount: product.reviewCount || 0,
@@ -118,7 +119,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
   // In a real app, this would be an API call filtering by category
   const allProducts = await getAllProducts();
   // Mock filtering by category - in a real app this would be done server-side
-  return allProducts.filter(p => p.categories?.some(c => c.id === categoryId));
+  return allProducts.filter(p => p.categoryId && String(p.categoryId) === categoryId);
 };
 
 export const getProductsByQuery = async (query: string): Promise<Product[]> => {
@@ -148,3 +149,13 @@ export interface SearchFilters {
   inStock?: boolean;
   sortBy?: string;
 }
+
+// Adding the necessary exports referenced in other files
+export const fetchProductById = getProductById;
+export const fetchProductsByCategoryId = getProductsByCategory;
+export const getSimilarProducts = async (productId: string): Promise<Product[]> => {
+  // In a real app, this would find products similar to the given one
+  // For now, just return some other products
+  const allProducts = await getAllProducts();
+  return allProducts.filter(p => p.id !== productId).slice(0, 5);
+};

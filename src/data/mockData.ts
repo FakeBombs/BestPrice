@@ -77,13 +77,13 @@ export const vendors: Vendor[] = [
 ];
 
 export const mainCategories: Category[] = [
-  { id: 1, name: 'Τεχνολογία', slug: 'technology', image: null, imageUrl: null },
-  { id: 2, name: 'Σπίτι & Κήπος', slug: 'home-garden', image: null, imageUrl: null },
-  { id: 3, name: 'Μόδα', slug: 'fashion', image: null, imageUrl: null },
-  { id: 4, name: 'Υγεία & Ομορφιά', slug: 'health-beauty', image: null, imageUrl: null },
-  { id: 5, name: 'Παιδικά - Βρεφικά', slug: 'children-baby', image: null, imageUrl: null },
-  { id: 6, name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', image: null, imageUrl: null },
-  { id: 7, name: 'Μηχανοκίνηση', slug: 'auto-moto', image: null, imageUrl: null }
+  { id: '1', name: 'Τεχνολογία', slug: 'technology', description: 'Technology products', image: null, imageUrl: null },
+  { id: '2', name: 'Σπίτι & Κήπος', slug: 'home-garden', description: 'Home and garden products', image: null, imageUrl: null },
+  { id: '3', name: 'Μόδα', slug: 'fashion', description: 'Fashion items', image: null, imageUrl: null },
+  { id: '4', name: 'Υγεία & Ομορφιά', slug: 'health-beauty', description: 'Health and beauty products', image: null, imageUrl: null },
+  { id: '5', name: 'Παιδικά - Βρεφικά', slug: 'children-baby', description: 'Children and baby products', image: null, imageUrl: null },
+  { id: '6', name: 'Hobby, Αθλητισμός', slug: 'hobby-sports', description: 'Hobby and sports products', image: null, imageUrl: null },
+  { id: '7', name: 'Μηχανοκίνηση', slug: 'auto-moto', description: 'Automotive products', image: null, imageUrl: null }
 ];
 
 export const categories: Category[] = [
@@ -603,21 +603,23 @@ export const getProductsByBrand = (brandId: string): Product[] => {
 };
 
 export const getCategoryById = (categoryId: string): Category | null => {
-  const categoryFromMain = mainCategories.find(cat => cat.id === categoryId);
-  const categoryFromCategories = categories.find(cat => cat.id === categoryId);
+  const categoryFromMain = mainCategories.find(cat => String(cat.id) === String(categoryId));
+  const categoryFromCategories = categories.find(cat => String(cat.id) === String(categoryId));
   return categoryFromMain || categoryFromCategories || null;
 };
 
 export const getProductsByCategory = (categoryId: string): Product[] => {
-  return products.filter(product => String(product.categoryId) === categoryId);
+  return products.filter(product => String(product.categoryId) === String(categoryId));
 };
 
 export const fetchProductById = async (productId: string): Promise<Product | undefined> => {
-  return products.find(product => product.id === productId);
+  return products.find(product => String(product.id) === String(productId));
 };
 
+export const getProductById = fetchProductById;
+
 export const fetchVendorById = async (vendorId: string): Promise<Vendor | undefined> => {
-  return vendors.find(vendor => vendor.id === vendorId);
+  return vendors.find(vendor => String(vendor.id) === String(vendorId));
 };
 
 export const fetchTopCategories = async (): Promise<Category[]> => {
@@ -629,13 +631,13 @@ export const fetchAllCategories = async (): Promise<Category[]> => {
 };
 
 export const fetchCategoryById = async (categoryId: string): Promise<Category | null> => {
-  const categoryFromMain = mainCategories.find(cat => cat.id === categoryId);
-  const categoryFromCategories = categories.find(cat => cat.id === categoryId);
+  const categoryFromMain = mainCategories.find(cat => String(cat.id) === String(categoryId));
+  const categoryFromCategories = categories.find(cat => String(cat.id) === String(categoryId));
   return categoryFromMain || categoryFromCategories || null;
 };
 
 export const fetchProductsByCategoryId = async (categoryId: string): Promise<Product[]> => {
-  return products.filter(product => String(product.categoryId) === categoryId);
+  return products.filter(product => String(product.categoryId) === String(categoryId));
 };
 
 export const fetchBrands = async (): Promise<Brand[]> => {
@@ -673,4 +675,16 @@ export const fetchProductsByQuery = async (query: string): Promise<Product[]> =>
 
 export const getCategories = async (): Promise<Category[]> => {
   return mainCategories.concat(categories);
+};
+
+export const getSimilarProducts = async (productId: string): Promise<Product[]> => {
+  const product = products.find(p => String(p.id) === String(productId));
+  if (!product) return [];
+  
+  return products
+    .filter(p => 
+      p.id !== productId && 
+      p.categoryId === product.categoryId
+    )
+    .slice(0, 5);
 };
