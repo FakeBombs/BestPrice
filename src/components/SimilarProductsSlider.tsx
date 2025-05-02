@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/data/mockData';
+import { Product } from '@/services/productService';
 import ProductCard from '@/components/ProductCard';
 
 interface SimilarProductsSliderProps {

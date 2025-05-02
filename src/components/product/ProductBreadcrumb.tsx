@@ -1,120 +1,67 @@
 
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { mockData, formatSlug } from '../../data/mockData';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '../ui/breadcrumb';
+import { ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Product } from "@/services/productService";
+import { getCategoryById } from "@/services/categoryService";
+import { useEffect, useState } from "react";
 
 interface ProductBreadcrumbProps {
-  product: any;
-}
-
-// Updated interface to ensure parentId exists
-interface CategoryWithParentId {
-  id: string;
-  parentId?: string;
-  name: string;
-  description: string;
-  imageUrl?: string;
-  image?: string;
-  slug?: string;
+  product: Product;
 }
 
 const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
-  const [breadcrumbs, setBreadcrumbs] = useState<CategoryWithParentId[]>([]);
-
+  const [categoryName, setCategoryName] = useState<string>("Category");
+  
   useEffect(() => {
-    if (product && product.categoryId) {
-      const crumbs: CategoryWithParentId[] = [];
-      
-      // Find the product's category
-      const categoryFromMain = mockData.mainCategories.find(c => String(c.id) === String(product.categoryId));
-      const categoryFromCategories = mockData.categories.find(c => String(c.id) === String(product.categoryId));
-      const category = categoryFromMain || categoryFromCategories;
-      
-      if (category) {
-        // Create a copy with explicitly added properties
-        const categoryWithStringId: CategoryWithParentId = {
-          ...category,
-          id: String(category.id),
-          name: category.name,
-          description: category.description,
-          slug: formatSlug(category.name),
-          image: category.imageUrl
-        };
-        
-        // Add parentId only if it exists in the original category
-        if ('parentId' in category) {
-          categoryWithStringId.parentId = String(category.parentId);
-        }
-        
-        crumbs.push(categoryWithStringId);
-        
-        // If it's a subcategory, find its parent(s)
-        let currentCat = categoryWithStringId;
-        while (currentCat.parentId) {
-          const parentFromMain = mockData.mainCategories.find(c => String(c.id) === String(currentCat.parentId));
-          const parentFromCategories = mockData.categories.find(c => String(c.id) === String(currentCat.parentId));
-          const parentCat = parentFromMain || parentFromCategories;
-          
-          if (parentCat) {
-            const parentWithStringId: CategoryWithParentId = {
-              ...parentCat,
-              id: String(parentCat.id),
-              name: parentCat.name,
-              description: parentCat.description,
-              slug: formatSlug(parentCat.name),
-              image: parentCat.imageUrl
-            };
-            
-            // Add parentId only if it exists in the original category
-            if ('parentId' in parentCat) {
-              parentWithStringId.parentId = String(parentCat.parentId);
-            }
-            
-            crumbs.unshift(parentWithStringId);
-            currentCat = parentWithStringId;
-          } else {
-            break;
-          }
+    // Get category name if product has categoryId
+    const fetchCategory = async () => {
+      if (product.categoryId) {
+        const category = await getCategoryById(String(product.categoryId));
+        if (category) {
+          setCategoryName(category.name);
         }
       }
-      
-      setBreadcrumbs(crumbs);
-    }
+    };
+    
+    fetchCategory();
   }, [product]);
-
-  const getSlug = (name: string) => {
-    return name.toLowerCase().replace(/\s+/g, '-');
-  };
-
+  
   return (
-    <Breadcrumb className="mb-6">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/">Home</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
+    <nav className="flex py-4 text-sm text-gray-500" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+        <li className="inline-flex items-center">
+          <Link to="/" className="hover:text-gray-900 dark:hover:text-gray-100">
+            Αρχική
+          </Link>
+        </li>
         
-        {breadcrumbs.map((crumb, index) => (
-          <React.Fragment key={crumb.id}>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to={`/cat/${crumb.id}/${getSlug(crumb.name)}`}>
-                  {crumb.name}
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-          </React.Fragment>
-        ))}
+        <li className="flex items-center">
+          <ChevronRight className="w-4 h-4 mx-1" />
+          <Link to="/categories" className="hover:text-gray-900 dark:hover:text-gray-100">
+            Κατηγορίες
+          </Link>
+        </li>
         
-        <BreadcrumbItem>
-          <span>{product.name}</span>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
+        {product.categoryId && (
+          <li className="flex items-center">
+            <ChevronRight className="w-4 h-4 mx-1" />
+            <Link 
+              to={`/cat/${product.categoryId}/${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
+              className="hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              {categoryName}
+            </Link>
+          </li>
+        )}
+        
+        <li className="flex items-center">
+          <ChevronRight className="w-4 h-4 mx-1" />
+          <span className="text-gray-900 dark:text-gray-100 font-medium">
+            {product.title || product.name}
+          </span>
+        </li>
+      </ol>
+    </nav>
   );
 };
 

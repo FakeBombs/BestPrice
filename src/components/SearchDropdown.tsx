@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product } from '@/data/mockData';
+import { Product } from '@/services/productService';
 import { Command, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 
@@ -28,7 +28,7 @@ const SearchDropdown = ({ items, visible, onSelect, onClose }: SearchDropdownPro
             >
               <div className="h-10 w-10 overflow-hidden rounded-md border">
                 <img 
-                  src={item.image || '/placeholder.svg'} 
+                  src={item.image_url || item.imageUrl || item.image || '/placeholder.svg'} 
                   alt={item.name}
                   className="h-full w-full object-cover"
                 />
@@ -36,7 +36,7 @@ const SearchDropdown = ({ items, visible, onSelect, onClose }: SearchDropdownPro
               <div className="flex flex-col">
                 <span className="font-medium">{item.title || item.name}</span>
                 <span className="text-xs text-muted-foreground">
-                  {item.category || "Product"} • €{item.price.toFixed(2)}
+                  {item.categories?.[0]?.name || "Product"} • €{item.price.toFixed(2)}
                 </span>
               </div>
             </CommandItem>

@@ -1,7 +1,7 @@
 
 import { useRef, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
-import { Product } from '@/data/mockData';
+import { Product } from '@/services/productService';
 import { 
   Carousel, 
   CarouselContent, 

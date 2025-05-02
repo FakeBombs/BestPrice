@@ -1,88 +1,68 @@
 
-import { useEffect, useState } from 'react';
-import { mockData } from '../../data/mockData';
-import CategoryCard from '../CategoryCard';
-import ProductCard from '../ProductCard';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getSubcategoriesByParentId, Category } from '@/services/categoryService';
 
 interface RootCategoryViewProps {
-  category: any;
+  categoryId: string;
+  name: string;
 }
 
-export const RootCategoryView = ({ category }: RootCategoryViewProps) => {
-  const [subCategories, setSubCategories] = useState<any[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+const RootCategoryView = ({ categoryId, name }: RootCategoryViewProps) => {
+  const [subcategories, setSubcategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    if (category) {
-      // Find direct subcategories
-      const directSubCats = mockData.categories.filter(cat => cat.parentId === category.id);
-      setSubCategories(directSubCats);
-      
-      // Find featured products across subcategories
-      const subCategoryIds = [category.id, ...directSubCats.map(cat => cat.id)];
-      const featuredProds = mockData.products
-        .filter(product => subCategoryIds.includes(product.categoryId))
-        .sort((a, b) => b.rating - a.rating)
-        .slice(0, 8);
-      
-      setFeaturedProducts(featuredProds);
-    }
-  }, [category]);
-
-  const formatSlug = (name: string) => {
-    return name.toLowerCase().replace(/\s+/g, '-');
-  };
-
+    const fetchSubcategories = async () => {
+      try {
+        const data = await getSubcategoriesByParentId(categoryId);
+        setSubcategories(data);
+      } catch (error) {
+        console.error('Error fetching subcategories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchSubcategories();
+  }, [categoryId]);
+  
+  if (loading) {
+    return <div>Loading subcategories...</div>;
+  }
+  
+  if (subcategories.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p>No subcategories found for {name}</p>
+        <Link to="/categories" className="mt-4 inline-block text-blue-600 hover:underline">
+          Browse all categories
+        </Link>
+      </div>
+    );
+  }
+  
   return (
-    <div className="py-4">
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="md:w-1/3">
-          <div className="bg-gray-50 p-6 rounded-lg h-full">
-            <h1 className="text-2xl font-bold mb-2">{category.name}</h1>
-            <p className="text-gray-600 mb-6">{category.description || `All products in ${category.name} category and subcategories`}</p>
-            
-            <div className="space-y-2">
-              {subCategories.slice(0, 8).map(subCat => (
-                <Link 
-                  key={subCat.id}
-                  to={`/cat/${subCat.id}/${formatSlug(subCat.name)}`}
-                  className="block p-2 hover:bg-white rounded transition"
-                >
-                  {subCat.name}
-                </Link>
-              ))}
-            </div>
-            
-            {subCategories.length > 8 && (
-              <Link 
-                to={`/categories?parent=${category.id}`}
-                className="mt-4 text-primary hover:underline block"
-              >
-                View all subcategories ({subCategories.length})
-              </Link>
-            )}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {subcategories.map((subcategory) => (
+        <Link 
+          to={`/cat/${subcategory.id}/${subcategory.slug}`}
+          key={subcategory.id}
+          className="group bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-all"
+        >
+          <div className="aspect-square mb-4 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-700">
+            <img
+              src={subcategory.image_url || '/dist/images/placeholder.svg'}
+              alt={subcategory.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
           </div>
-        </div>
-        
-        <div className="md:w-2/3">
-          <h2 className="text-xl font-semibold mb-4">Featured Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featuredProducts.slice(0, 6).map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Browse Subcategories</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {subCategories.slice(0, 12).map(subCat => (
-            <CategoryCard key={subCat.id} category={subCat} />
-          ))}
-        </div>
-      </div>
+          <h3 className="font-medium group-hover:text-primary">{subcategory.name}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+            {subcategory.description || `Browse our ${subcategory.name} collection`}
+          </p>
+        </Link>
+      ))}
     </div>
   );
 };

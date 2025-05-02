@@ -7,6 +7,8 @@ import CategoryPage from './pages/CategoryPage';
 import ProductDetail from './pages/ProductDetail';
 import BrandPage from './pages/BrandPage';
 import Categories from './pages/Categories';
+import Deals from './pages/Deals';
+import Stores from './pages/Stores';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -29,6 +31,8 @@ function App() {
           <Route path="item/:id/:slug" element={<ProductDetail />} />
           <Route path="brand/:id/:name" element={<BrandPage />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="deals" element={<Deals />} />
+          <Route path="stores" element={<Stores />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />

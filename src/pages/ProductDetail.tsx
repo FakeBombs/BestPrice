@@ -54,7 +54,12 @@ export default function ProductDetail() {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2">
-          <ProductEssentialInfo product={product} />
+          <ProductEssentialInfo product={{
+            ...product,
+            description: product.description || '',
+            specifications: product.specifications || {},
+            highlights: product.highlights || []
+          }} />
         </div>
         <div>
           <ProductVendors product={product} />
@@ -65,9 +70,9 @@ export default function ProductDetail() {
       
       <ProductRelatedSections 
         productId={product.id}
-        similarProducts={similarProducts}
-        categoryDeals={categoryDeals}
-        recentlyViewed={recentlyViewed}
+        similarProducts={similarProducts as any[]}
+        categoryDeals={categoryDeals as any[]}
+        recentlyViewed={recentlyViewed as any[]}
       />
     </div>
   );

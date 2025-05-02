@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { VoiceSearchButton } from './VoiceSearchButton';  // Import using named export
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import SearchDropdown from './SearchDropdown';
-import { Product, searchProducts } from '@/data/mockData';
+import { searchProducts } from '@/data/mockData';
+import { Product } from '@/services/productService';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface SearchBarProps {
@@ -41,7 +42,7 @@ export const SearchBar = ({ className = "" }: SearchBarProps) => {
   useEffect(() => {
     if (debouncedQuery.trim()) {
       const results = searchProducts(debouncedQuery);
-      setLiveResults(results);
+      setLiveResults(results as unknown as Product[]);
       
       // Navigate to search results page if user is typing
       if (debouncedQuery.length > 1) {

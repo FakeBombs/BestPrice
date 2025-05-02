@@ -6,9 +6,12 @@ export interface ProductPrice {
   id: string;
   product_id: string;
   vendor_id: string;
+  vendorId?: string;
   price: number;
   shipping_cost?: number;
+  shippingCost?: number;
   in_stock: boolean;
+  inStock?: boolean;
   created_at?: string;
   updated_at?: string;
 }
@@ -22,6 +25,10 @@ export interface ProductCategory {
 export interface Category {
   id: string;
   name: string;
+  description?: string;
+  parentId?: string;
+  imageUrl?: string;
+  slug?: string;
 }
 
 export interface Product {
@@ -31,6 +38,8 @@ export interface Product {
   description?: string;
   price: number;
   image_url?: string;
+  imageUrl?: string;
+  image?: string;
   images?: string[];
   brand?: string;
   sku?: string;
@@ -38,12 +47,15 @@ export interface Product {
   slug: string;
   highlights?: string[];
   specifications?: Record<string, any>;
+  specs?: Record<string, string>;
   rating: number;
   review_count?: number;
+  reviewCount?: number;
   created_at?: string;
   updated_at?: string;
   prices?: ProductPrice[];
   categories?: Category[];
+  categoryId?: number;
 }
 
 export interface SearchFilters {
@@ -75,7 +87,7 @@ export const getBestPrice = (product: Product): ProductPrice | null => {
   }
   
   // Filter for in-stock prices
-  const inStockPrices = product.prices.filter(p => p.in_stock);
+  const inStockPrices = product.prices.filter(p => p.in_stock || p.inStock);
   
   if (inStockPrices.length === 0) {
     // If no in-stock prices, return the lowest price overall
@@ -102,7 +114,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
         id: String(p.id),
         rating: p.rating || 0,
         review_count: p.reviewCount || 0,
-        specifications: p.specifications || {},
+        specifications: p.specifications || p.specs || {},
         slug: p.slug || formatSlug(p.name)
       })) || [];
     }
@@ -115,7 +127,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
       id: String(p.id),
       rating: p.rating || 0,
       review_count: p.reviewCount || 0,
-      specifications: p.specifications || {},
+      specifications: p.specifications || p.specs || {},
       slug: p.slug || formatSlug(p.name)
     })) || [];
   }
@@ -138,7 +150,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
         id: String(mockProduct.id),
         rating: mockProduct.rating || 0,
         review_count: mockProduct.reviewCount || 0,
-        specifications: mockProduct.specifications || {},
+        specifications: mockProduct.specifications || mockProduct.specs || {},
         slug: mockProduct.slug || formatSlug(mockProduct.name)
       } : null;
     }
@@ -152,7 +164,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
       id: String(mockProduct.id),
       rating: mockProduct.rating || 0,
       review_count: mockProduct.reviewCount || 0,
-      specifications: mockProduct.specifications || {},
+      specifications: mockProduct.specifications || mockProduct.specs || {},
       slug: mockProduct.slug || formatSlug(mockProduct.name)
     } : null;
   }
@@ -249,7 +261,7 @@ export const searchProducts = async (filters: SearchFilters): Promise<{ products
           id: String(p.id),
           rating: p.rating || 0,
           review_count: p.reviewCount || 0,
-          specifications: p.specifications || {},
+          specifications: p.specifications || p.specs || {},
           slug: p.slug || formatSlug(p.name)
         })),
         total: filteredProducts.length 
@@ -267,7 +279,7 @@ export const searchProducts = async (filters: SearchFilters): Promise<{ products
         id: String(p.id),
         rating: p.rating || 0,
         review_count: p.reviewCount || 0,
-        specifications: p.specifications || {},
+        specifications: p.specifications || p.specs || {},
         slug: p.slug || formatSlug(p.name)
       })),
       total: mockData.products.length 
@@ -291,7 +303,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
           ...p,
           id: String(p.id),
           review_count: p.reviewCount || 0,
-          specifications: p.specifications || {},
+          specifications: p.specifications || p.specs || {},
           slug: p.slug || formatSlug(p.name)
         })) || [];
     }
@@ -321,7 +333,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
         ...p,
         id: String(p.id),
         review_count: p.reviewCount || 0,
-        specifications: p.specifications || {},
+        specifications: p.specifications || p.specs || {},
         slug: p.slug || formatSlug(p.name)
       })) || [];
   }
@@ -343,7 +355,7 @@ export const getRelatedProducts = async (productId: string, limit = 10): Promise
         ...p,
         id: String(p.id),
         review_count: p.reviewCount || 0,
-        specifications: p.specifications || {},
+        specifications: p.specifications || p.specs || {},
         slug: p.slug || formatSlug(p.name)
       })) || [];
   } catch (error) {
