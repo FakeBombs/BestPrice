@@ -6,7 +6,7 @@ import FilterOptions from './FilterOptions';
 import { Brand } from '@/services/brandService';
 import { Vendor } from '@/services/vendorService';
 
-interface SidebarProps {
+export interface SidebarProps {
   query: string;
   brands: Brand[];
   vendors: Vendor[];
@@ -58,7 +58,7 @@ const Sidebar = ({ query, brands, vendors }: SidebarProps) => {
             <ol>
               {vendors.map(vendor => {
                 // Extract domain from URL (remove http:// or https://)
-                const domain = vendor.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                const domain = vendor.url?.replace(/^https?:\/\//, '').replace(/\/$/, '') || '';
                 
                 return (
                   <li key={vendor.id}>

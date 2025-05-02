@@ -5,57 +5,24 @@ import { mockData } from '@/data/mockData';
 // Initialize the vendors array in mockData if it doesn't exist
 if (!mockData.vendors) {
   mockData.vendors = [
-    { 
-      id: 1, 
-      name: 'BestBuy', 
-      address: ['123 Main St, City'],
-      telephone: ['+1 234 567 8900'],
-      product_count: 1250,
-      category_count: 45,
-      payment_methods: ['Credit Card', 'PayPal', 'Cash'],
-      url: 'https://example.com/bestbuy',
-      logo: '/images/vendors/bestbuy.png',
-      rating: 4.5
-    },
-    { 
-      id: 2, 
-      name: 'TechWorld', 
-      address: ['456 Tech Blvd, Innovation City'],
-      telephone: ['+1 987 654 3210'],
-      product_count: 980,
-      category_count: 32,
-      payment_methods: ['Credit Card', 'Bank Transfer'],
-      url: 'https://example.com/techworld',
-      logo: '/images/vendors/techworld.png',
-      rating: 4.2
-    },
-    { 
-      id: 3, 
-      name: 'ElectroMart', 
-      address: ['789 Digital Ave, Smart Town'],
-      telephone: ['+1 555 123 4567'],
-      product_count: 1500,
-      category_count: 50,
-      payment_methods: ['Credit Card', 'PayPal', 'Apple Pay', 'Google Pay'],
-      url: 'https://example.com/electromart',
-      logo: '/images/vendors/electromart.png',
-      rating: 4.7
-    }
+    { id: '1', name: 'Vendor 1', url: 'https://vendor1.com', logo: '/images/vendors/vendor1.png', rating: 4.5 },
+    { id: '2', name: 'Vendor 2', url: 'https://vendor2.com', logo: '/images/vendors/vendor2.png', rating: 4.2 },
+    { id: '3', name: 'Vendor 3', url: 'https://vendor3.com', logo: '/images/vendors/vendor3.png', rating: 3.9 },
   ];
 }
 
 export interface Vendor {
   id: string;
   name: string;
-  certification?: string;
-  address?: string[];
-  telephone?: string[];
-  product_count?: number;
-  category_count?: number;
-  payment_methods?: string[];
   url?: string;
   logo?: string;
+  telephone?: string[];
+  address?: string[];
+  payment_methods?: string[];
   rating?: number;
+  certification?: string;
+  product_count?: number;
+  category_count?: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -73,19 +40,14 @@ export const getAllVendors = async (): Promise<Vendor[]> => {
       
     if (error) {
       console.error("Error fetching vendors:", error);
-      return mockData.vendors?.map(v => ({
-        ...v,
-        id: String(v.id)
-      })) || [];
+      // Use mockData vendors
+      return mockData.vendors || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllVendors:", error);
-    return mockData.vendors?.map(v => ({
-      ...v,
-      id: String(v.id)
-    })) || [];
+    return mockData.vendors || [];
   }
 };
 
@@ -123,18 +85,7 @@ export const createVendor = async (vendor: VendorCreate): Promise<Vendor | null>
   try {
     const { data, error } = await supabase
       .from('vendors')
-      .insert([{
-        name: vendor.name,
-        certification: vendor.certification,
-        address: vendor.address || [],
-        telephone: vendor.telephone || [],
-        product_count: vendor.product_count || 0,
-        category_count: vendor.category_count || 0,
-        payment_methods: vendor.payment_methods || [],
-        url: vendor.url,
-        logo: vendor.logo,
-        rating: vendor.rating || 0
-      }])
+      .insert([vendor])
       .select()
       .single();
       

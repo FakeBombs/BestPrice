@@ -2,14 +2,14 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
-// Initialize the brands array in mockData if it doesn't exist
+// Ensure the brands array exists in mockData
 if (!mockData.brands) {
   mockData.brands = [
-    { id: 1, name: 'Apple', logo: '/images/brands/apple.png' },
-    { id: 2, name: 'Samsung', logo: '/images/brands/samsung.png' },
-    { id: 3, name: 'Sony', logo: '/images/brands/sony.png' },
-    { id: 4, name: 'LG', logo: '/images/brands/lg.png' },
-    { id: 5, name: 'Microsoft', logo: '/images/brands/microsoft.png' },
+    { id: '1', name: 'Apple', logo: '/images/brands/apple.png' },
+    { id: '2', name: 'Samsung', logo: '/images/brands/samsung.png' },
+    { id: '3', name: 'Sony', logo: '/images/brands/sony.png' },
+    { id: '4', name: 'LG', logo: '/images/brands/lg.png' },
+    { id: '5', name: 'Microsoft', logo: '/images/brands/microsoft.png' },
   ];
 }
 
@@ -35,19 +35,13 @@ export const getAllBrands = async (): Promise<Brand[]> => {
     if (error) {
       console.error("Error fetching brands:", error);
       // Use mockData brands
-      return mockData.brands?.map(b => ({
-        ...b,
-        id: String(b.id)
-      })) || [];
+      return mockData.brands || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllBrands:", error);
-    return mockData.brands?.map(b => ({
-      ...b,
-      id: String(b.id)
-    })) || [];
+    return mockData.brands || [];
   }
 };
 

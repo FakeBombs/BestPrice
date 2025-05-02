@@ -7,36 +7,44 @@ import ProductEssentialInfo from "../components/product/ProductEssentialInfo";
 import ProductVendors from "../components/ProductVendors";
 import ProductTabsSection from "../components/product/ProductTabsSection";
 import ProductRelatedSections from "../components/product/ProductRelatedSections";
-import { mockData, getProductById } from "../data/mockData";
+import { getProductById, getRelatedProducts, Product } from "../services/productService";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string, slug: string }>();
-  const [product, setProduct] = useState<any | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const [categoryDeals, setCategoryDeals] = useState<Product[]>([]);
   const { recentlyViewed, addProduct } = useRecentlyViewed();
   
   useEffect(() => {
-    if (id) {
-      const foundProduct = getProductById(id);
-      if (foundProduct) {
-        setProduct(foundProduct);
-        addProduct(foundProduct);
+    const loadProductData = async () => {
+      if (id) {
+        try {
+          const foundProduct = await getProductById(id);
+          if (foundProduct) {
+            setProduct(foundProduct);
+            addProduct(foundProduct);
+            
+            // Load related products
+            const related = await getRelatedProducts(id, 5);
+            setSimilarProducts(related);
+            
+            // For demo, set category deals to the same related products
+            setCategoryDeals(related);
+          }
+        } catch (error) {
+          console.error("Error loading product:", error);
+        }
       }
-    }
+    };
+    
+    loadProductData();
   }, [id, addProduct]);
 
   if (!product) {
     return <div className="container mx-auto p-4">Loading...</div>;
   }
-
-  // Get related products for the related sections, using empty arrays as fallbacks
-  const similarProducts = mockData.products.filter(p => 
-    p.id !== product.id && p.categoryId === product.categoryId
-  ).slice(0, 5) || [];
-  
-  const categoryDeals = mockData.products.filter(p => 
-    p.categoryId === product.categoryId
-  ).slice(0, 5) || [];
 
   return (
     <div className="container mx-auto px-4">

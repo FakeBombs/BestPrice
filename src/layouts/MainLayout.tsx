@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import i18n from '@/utils/i18n';
 import { useTheme } from '@/components/theme-provider';
 import { Switch } from '@/components/ui/switch';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();

@@ -90,9 +90,6 @@ const SearchResults = () => {
             query={query} 
             brands={brands} 
             vendors={vendors}
-            onInStockOnly={handleInStockOnly}
-            onVendorFilter={handleVendorFilter}
-            onPriceRangeFilter={handlePriceRange}
           />
         </aside>
         

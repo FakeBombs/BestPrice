@@ -1,229 +1,118 @@
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Product, ProductPrice, getVendorById } from '@/data/mockData';
+import { Product } from '@/services/productService';
+import { formatPrice } from '@/utils/formatters';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ShoppingCart, ExternalLink } from 'lucide-react';
 
 interface ProductVendorsProps {
   product: Product;
 }
 
 const ProductVendors = ({ product }: ProductVendorsProps) => {
+  const [showAllVendors, setShowAllVendors] = useState(false);
+  
   const prices = product.prices || [];
+  // Sort by price
   const sortedPrices = [...prices].sort((a, b) => a.price - b.price);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [popupContent, setPopupContent] = useState<any>(null);
+  
+  // Initially show only 5 vendors, show more on button click
+  const displayPrices = showAllVendors ? sortedPrices : sortedPrices.slice(0, 5);
+  const hasMoreVendors = sortedPrices.length > 5;
 
-  const openPopup = (vendor: any) => {
-    setPopupContent(vendor);
-    setIsPopupVisible(true);
-  };
-
-  const closePopup = () => {
-    setIsPopupVisible(false);
-  };
+  if (prices.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Τιμές στα καταστήματα</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground text-center py-4">
+            Δεν υπάρχουν διαθέσιμες τιμές για αυτό το προϊόν.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className="mt-6">
-      <header className="section__header">
-        <hgroup className="section__hgroup">
-          <h2 className="section__title">
-            Καταστήματα <small><span>({prices.length})</span></small>
-            <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
-          </h2>
-        </hgroup>
-        <div className="section__side">
-          <label data-type="priceFull" data-always-available="" className="price-filters__filter">
-            <input type="checkbox"/>
-            <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
-            <span className="price-filters__label">Τελική τιμή</span>
-          </label>
-        </div>
-      </header>
-
-      <div className="filter-wrapper">
-        <div className="scroll">
-          <div className="scroll__clip">
-            <div className="scroll__scroller">
-              <div data-count="7" className="price-filters scroll__content">
-                <label data-type="in-stock" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Διαθέσιμα</span></label>
-                <label data-type="nearby" data-always-available="" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span className="price-filters__label">Κοντά μου</span></label>
-                <label data-type="certified" data-tooltip="Εμφάνιση μόνο προϊόντων που παρέχονται από πιστοποιημένα καταστήματα" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span className="price-filters__label">Πιστοποιημένα</span></label>
-                <label data-type="boxnow" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Παράδοση με <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
-                <label data-type="coupons" className="price-filters__filter"><input type="checkbox"/><svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span className="price-filters__label">Κουπόνια</span></label>
-                <label data-type="color" data-options="[&quot;pink&quot;,&quot;grey&quot;,&quot;graphite&quot;,&quot;black&quot;,&quot;green&quot;]" className="price-filters__filter is-inline"><input type="checkbox"/><span className="price-filters__label">Χρώμα</span></label>
-                <label data-type="authorized" className="price-filters__filter"><input type="checkbox"/><span className="price-filters__label">Επίσημοι μεταπωλητές</span></label>
+    <Card>
+      <CardHeader>
+        <CardTitle>Τιμές σε {prices.length} καταστήματα</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {displayPrices.map((price, index) => (
+            <div 
+              key={price.id} 
+              className={`flex flex-col p-3 rounded-md ${
+                index === 0 ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900' : 
+                'border'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <span className={`font-medium ${index === 0 ? 'text-green-700 dark:text-green-400' : ''}`}>
+                  Vendor {price.vendor_id}
+                </span>
+                <span className={`text-xl font-bold ${index === 0 ? 'text-green-700 dark:text-green-400' : ''}`}>
+                  {formatPrice(price.price)}
+                </span>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="prices" data-merchants={prices.length.toString()}>
-        {sortedPrices.map((priceInfo) => (
-          <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={openPopup} />
-        ))}
-      </div>
-
-      {isPopupVisible && popupContent && (
-        <div className="popup-placeholder minfo__popup--placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0px', maxWidth: '98vw', position: 'absolute', top: '0px' }}>
-          <div className="popup-flex-center popup-flex-center--top" style={{ zIndex: 2147483571 }}>
-            <div className="popup-backdrop open is-modal minfo__popup-backdrop" style={{ zIndex: 2147483571, transitionDuration: '150ms' }}  onClick={closePopup}></div>
-            <div className="minfo__popup popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483571 }}>
-              <div className="popup-body">
-                <div role="button" className="close-button__wrapper pressable popup-close" onClick={closePopup}>
-                  <div className="close-button"><svg className="icon" aria-hidden="true" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></div>
-                </div>
-                <div className="minfo minfo--info">
-                  <aside className="minfo__aside"><div className="minfo__screen" style={{ backgroundImage: "url('//bbpcdn.pstatic.gr/bpimg129/ms_2614_SX500C500x480/1745728733/image.webp')" }}></div></aside>
-                  <main className="minfo__main">
-                    <header className="minfo__header">
-                      <h2 className="minfo__title">{popupContent.name}</h2>
-                      <div className="minfo__header-props" data-id="2614">
-                        <div className="simple-rating simple-rating--with-link pressable">
-                          <Link className="simple-rating__inner" to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}>
-                            <div className="simple-rating__stars">
-                              <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                              <div className="simple-rating__rated" style={{ width: '97.1429%' }}>
-                                <svg height="16" width="80" className="icon" aria-hidden="true"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                              </div>
-                            </div>
-                            <div className="simple-rating__avg">{popupContent.rating || 4.9}</div>
-                          </Link>
-                          <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}/review?src=minfo`} className="simple-rating__new">Αξιολόγησέ το</Link>
-                        </div>
-                        {popupContent.certification ? (
-                        <div className="minfo__badge-container">
-                          <div className="tooltip__anchor minfo__certification">
-                            <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${popupContent.certification.toLowerCase()}-22`}></use></svg>
-                            <div data-certification={popupContent.certification.toLowerCase()} className="minfo__certification-wrapper pressable">Πιστοποίηση: {popupContent.certification}</div>
-                          </div>
-                        </div>
-                          ) : null}
-                      </div>
-                    </header>
-                    <div className="minfo__tabs">
-                      <div className="minfo__tab minfo__tab--info minfo__tab--selected">Πληροφορίες</div>
-                      <div className="minfo__tab minfo__tab--pops">Χάρτης (2)</div>
-                    </div>
-                    <div className="minfo__view minfo__view--info" style={{ height: '348px' }}>
-                      <div className="minfo__buttons">
-                        {popupContent.address ? (
-                        <div className="minfo__button pressable">
-                          <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-pin-14"></use></svg>
-                          <div className="minfo__button-label">{popupContent.address}</div>
-                        </div>
-                          ) : (
-                        <div className="minfo__button minfo__button--disabled">
-                          <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
-                          <div className="minfo__button-label">Μόνο Ηλεκτρονικό κατάστημα</div></div>
-                        )}
-                        <div className="minfo__button-info minfo__sign">Κλειστό (Ανοίγει 10:00)</div>
-                      </div>
-                      <div className="minfo__lists">
-                        <div className="minfo__list">
-                          <h3 className="minfo__list-header"><Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}#merchant-shipping-payment`}>ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</Link></h3>
-                          <ul>
-                            <li className="minfo__yes">Πιστωτική κάρτα<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg></li>
-                            <li className="minfo__yes">Αντικαταβολή<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg></li>
-                            <li>PayPal<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
-                          </ul>
-                        </div>
-                        <div className="minfo__list">
-                          <h3 className="minfo__list-header"><Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}#merchant-shipping-payment`}>ΕΠΙΠΛΕΟΝ ΥΠΗΡΕΣΙΕΣ</Link></h3>
-                          <ul>
-                            <li>Δωρεάν επιστροφή<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
-                            <li>Δωροκάρτες<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
-                            <li>Συλλογή πόντων<svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="minfo__actions">
-                        <Link to={`/m/${popupContent.id}/${popupContent.name.toLowerCase().replace(/\s+/g, '-')}`} className="button button--outline">Μάθε περισσότερα</Link>
-                        <a href={popupContent.url || "#"} rel="nofollow noreferrer noopener" className="button minfo__product-link">
-                          Αγόρασε το προϊόν
-                        </a>
-                      </div>
-                    </div>
-                    <div hidden className="minfo__view minfo__view--pops" style={{ height: '348px' }}>
-                      <div className="minfo__map"></div>
-                    </div>
-                  </main>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      
-    </div>
-  );
-};
-
-interface VendorPriceCardProps {
-  priceInfo: ProductPrice;
-  product: Product;
-  openPopup: (content: any) => void;
-}
-
-const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps) => {
-  const vendor = getVendorById(priceInfo.vendorId);
-  const productTitle = product.title || product.name;
-  
-  if (!vendor) return null;
-  
-  const totalPrice = priceInfo.price + (priceInfo.shippingCost || 0);
-  
-  return (
-    <Card className={!priceInfo.inStock ? 'opacity-70' : ''}>
-      <CardContent className="p-4">
-        <div className="prices__group" data-id="1" data-price="34650" data-hash="8c716c298df6afe61ed05f25374c5d48" data-is-open="" data-mid="11217" data-ts="1744146001" data-domain={vendor.url} data-mrating="4.6029">
-          <div className="prices__root">
-            <div className="prices__merchant">
-              <div className="prices__merchant-meta">
-                <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow" href="#">
-                  <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
-                </a>
-                <Link data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                  <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
-                  <em>{vendor.name}</em>
-                </Link>
-                <div className="prices__merchant-props">
-                  <Link className="merchant__rating" aria-label="Merchant reviews" to={`/m/${vendor.id}/${vendor.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}>
-                    <span className="rating rating-all" data-total="150">
-                      <svg aria-hidden="true" className="icon" style={{ clipPath: 'rect(0, 4.7em, auto, auto)' }} width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                      <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          
-          <div className="prices__products">
-            <div id="p-180878146" className="prices__product" data-is-variation="" data-is-variation-first-visible="yes" data-index="1" data-price="54990" data-mid={vendor.id} data-payment-costs="{&quot;bank&quot;:0,&quot;ondelivery&quot;:0,&quot;cc&quot;:0,&quot;paypal&quot;:0}" data-shipping-cost="0" data-certified="" data-free-return="" data-distance="65.304230506616" data-in-stock="" data-free-shipping="" data-product-id="180878146" data-mobile-friendly="" data-authorized="" data-boxnow="" data-av="0" data-color="pink">
-              <div className="prices__main">
-                <div className="prices__title">
-                  <a data-price="54990" title={productTitle} rel="nofollow noopener" href="#">
-                    <h3>{productTitle}</h3>
-                  </a>
-                </div>
-                <div className="prices__props">
-                  <span data-status="IN_STOCK" className="av">
-                    <small>
-                      {priceInfo.inStock
-                        ? <span>Άμεσα διαθέσιμο</span>
-                        : <span>Out of stock</span>
-                      }
-                    </small>
+              
+              <div className="flex items-center justify-between mt-2">
+                <span className={price.in_stock ? 'text-green-600' : 'text-red-600'}>
+                  {price.in_stock ? 'Άμεσα διαθέσιμο' : 'Μη διαθέσιμο'}
+                </span>
+                
+                {price.shipping_cost !== undefined ? (
+                  <span>
+                    + {formatPrice(price.shipping_cost)} μεταφορικά
                   </span>
-                </div>
-                <div role="button" aria-label="All variations from store" data-id="45" className="prices__group-variations-button prices__group-variations-button--inside">
-                  <span className="prices__group-variations-label">4  παραλλαγές</span>
-                  <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
+                ) : (
+                  <span className="text-muted-foreground text-sm">
+                    Δωρεάν μεταφορικά
+                  </span>
+                )}
+              </div>
+              
+              <div className="flex gap-2 mt-3">
+                <Button 
+                  variant={index === 0 ? "default" : "outline"} 
+                  size="sm"
+                  className="flex-1"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-1" /> Αγορά
+                </Button>
+                
+                <Button variant="outline" size="sm" className="px-2">
+                  <ExternalLink className="h-4 w-4" />
+                  <span className="sr-only">Επίσκεψη καταστήματος</span>
+                </Button>
               </div>
             </div>
-          </div>
-          </div>
+          ))}
+          
+          {hasMoreVendors && !showAllVendors && (
+            <Button 
+              variant="ghost" 
+              className="w-full mt-2" 
+              onClick={() => setShowAllVendors(true)}
+            >
+              Δείτε όλα τα καταστήματα ({prices.length})
+            </Button>
+          )}
+          
+          {showAllVendors && (
+            <Button 
+              variant="ghost" 
+              className="w-full mt-2" 
+              onClick={() => setShowAllVendors(false)}
+            >
+              Εμφάνιση λιγότερων
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

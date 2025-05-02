@@ -1,54 +1,76 @@
 
-import { useState, useEffect } from 'react';
-import { Product, getProductById } from '@/data/mockData';
+import { useState, useEffect, useCallback } from 'react';
+import { Product } from '@/services/productService';
 
-const RECENTLY_VIEWED_KEY = 'recentlyViewedProducts';
-const MAX_RECENT_PRODUCTS = 50;
+const STORAGE_KEY = 'recentlyViewed';
+const MAX_ITEMS = 10;
 
 export const useRecentlyViewed = () => {
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
 
-  // Load recently viewed products from localStorage
+  // Load recently viewed products from localStorage on component mount
   useEffect(() => {
-    const storedIds = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
-    const products = storedIds
-      .map((id: string) => getProductById(id))
-      .filter(Boolean); // Filter out any null/undefined values
-    
-    setRecentlyViewed(products as Product[]);
+    const storedItems = localStorage.getItem(STORAGE_KEY);
+    if (storedItems) {
+      try {
+        const parsedItems = JSON.parse(storedItems);
+        setRecentlyViewed(parsedItems);
+      } catch (error) {
+        console.error('Failed to parse stored recently viewed items:', error);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
   }, []);
 
   // Add a product to recently viewed
-  const addToRecentlyViewed = (productId: string) => {
-    // Get current list from localStorage
-    const storedIds = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || '[]');
-    
-    // Remove the product if it's already in the list
-    const filteredIds = storedIds.filter((id: string) => id !== productId);
-    
-    // Add the product to the beginning of the list
-    const updatedIds = [productId, ...filteredIds].slice(0, MAX_RECENT_PRODUCTS);
-    
-    // Save to localStorage
-    localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updatedIds));
-    
-    // Update state with the products
-    const products = updatedIds
-      .map((id: string) => getProductById(id))
-      .filter(Boolean);
-    
-    setRecentlyViewed(products as Product[]);
-  };
-  
-  // Adding a simplified version to support the existing code
-  const addProduct = (product: Product) => {
-    if (!product || !product.id) return;
-    addToRecentlyViewed(String(product.id));
-  };
+  const addProduct = useCallback((product: Product) => {
+    setRecentlyViewed(prevItems => {
+      // Check if product is already in the list
+      const existingProductIndex = prevItems.findIndex(item => item.id === product.id);
+      
+      let newItems;
+      if (existingProductIndex > -1) {
+        // Remove existing product and add it to the front
+        newItems = [
+          product,
+          ...prevItems.slice(0, existingProductIndex),
+          ...prevItems.slice(existingProductIndex + 1)
+        ];
+      } else {
+        // Add to front, and limit array length
+        newItems = [product, ...prevItems].slice(0, MAX_ITEMS);
+      }
+      
+      // Store in localStorage
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
+      } catch (error) {
+        console.error('Failed to store recently viewed items:', error);
+      }
+      
+      return newItems;
+    });
+  }, []);
+
+  // Remove a product from recently viewed
+  const removeProduct = useCallback((productId: string) => {
+    setRecentlyViewed(prevItems => {
+      const newItems = prevItems.filter(item => item.id !== productId);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
+      return newItems;
+    });
+  }, []);
+
+  // Clear all recently viewed products
+  const clearAll = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    setRecentlyViewed([]);
+  }, []);
 
   return {
     recentlyViewed,
-    addToRecentlyViewed,
-    addProduct
+    addProduct,
+    removeProduct,
+    clearAll
   };
 };

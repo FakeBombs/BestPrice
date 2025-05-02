@@ -1,11 +1,36 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Product, getBestPrice } from '@/services/productService';
+import { Product } from '@/services/productService';
 
 interface UseProductFiltersProps {
   initialProducts: Product[];
 }
+
+// Helper function to get the best price for a product
+export const getBestPrice = (product: Product) => {
+  if (!product.prices || product.prices.length === 0) {
+    // Return a default price object using the product's base price
+    return {
+      id: "default",
+      product_id: product.id,
+      vendor_id: "default",
+      price: product.price,
+      in_stock: true
+    };
+  }
+  
+  // Filter for in-stock prices
+  const inStockPrices = product.prices.filter(p => p.in_stock);
+  
+  if (inStockPrices.length === 0) {
+    // If no in-stock prices, return the lowest price overall
+    return product.prices.sort((a, b) => a.price - b.price)[0];
+  }
+  
+  // Return the lowest in-stock price
+  return inStockPrices.sort((a, b) => a.price - b.price)[0];
+};
 
 export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) => {
   const [searchParams] = useSearchParams();

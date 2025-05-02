@@ -1,16 +1,8 @@
 
-import { useState } from 'react';
-import { Check, ChevronDown } from 'lucide-react';
+import React from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CheckCircle, SortDesc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { vendors } from '@/data/mockData';
-import { Checkbox } from '@/components/ui/checkbox';
 
 interface ProductFilterProps {
   onSortChange: (value: string) => void;
@@ -23,90 +15,53 @@ const ProductFilter = ({
   onSortChange,
   onVendorFilter,
   onPriceRangeFilter,
-  onInStockOnly,
+  onInStockOnly
 }: ProductFilterProps) => {
-  const [sort, setSort] = useState('price-asc');
-  const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  
+  const [isInStockOnly, setIsInStockOnly] = React.useState(false);
+
   const handleSortChange = (value: string) => {
-    setSort(value);
     onSortChange(value);
   };
-  
-  const handleVendorChange = (vendorId: string) => {
-    const updatedVendors = selectedVendors.includes(vendorId)
-      ? selectedVendors.filter(id => id !== vendorId)
-      : [...selectedVendors, vendorId];
-    
-    setSelectedVendors(updatedVendors);
-    onVendorFilter(updatedVendors);
+
+  const handleInStockToggle = () => {
+    const newValue = !isInStockOnly;
+    setIsInStockOnly(newValue);
+    onInStockOnly(newValue);
   };
-  
-  const handleInStockChange = (checked: boolean) => {
-    setInStockOnly(checked);
-    onInStockOnly(checked);
-  };
-  
+
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">
-            Sort
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>
-            <DropdownMenuRadioItem value="price-asc">Price: Low to High</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="price-desc">Price: High to Low</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="rating-desc">Best Rating</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="reviews-desc">Most Reviews</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">
-            Vendors
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56 p-2">
-          {vendors.map((vendor) => (
-            <div key={vendor.id} className="flex items-center space-x-2 p-2">
-              <Checkbox
-                id={`vendor-${vendor.id}`}
-                checked={selectedVendors.includes(vendor.id)}
-                onCheckedChange={() => handleVendorChange(vendor.id)}
-              />
-              <label
-                htmlFor={`vendor-${vendor.id}`}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                {vendor.name}
-              </label>
-            </div>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="in-stock"
-          checked={inStockOnly}
-          onCheckedChange={(checked) => 
-            handleInStockChange(checked as boolean)
-          }
-        />
-        <label
-          htmlFor="in-stock"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+      <div className="flex items-center gap-4">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">Ταξινόμηση:</span>
+        <Select defaultValue="relevance" onValueChange={handleSortChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Relevance" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="relevance">Δημοφιλέστερα</SelectItem>
+            <SelectItem value="price_asc">Φθηνότερα</SelectItem>
+            <SelectItem value="price_desc">Ακριβότερα</SelectItem>
+            <SelectItem value="rating">Καλύτερη βαθμολογία</SelectItem>
+            <SelectItem value="stores">Πλήθος καταστημάτων</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button
+          variant={isInStockOnly ? "default" : "outline"}
+          size="sm"
+          onClick={handleInStockToggle}
+          className="flex items-center gap-1"
         >
-          In Stock Only
-        </label>
+          <CheckCircle className="h-4 w-4" />
+          Άμεσα διαθέσιμα
+        </Button>
+
+        <Button variant="outline" size="sm" className="flex items-center gap-1">
+          <SortDesc className="h-4 w-4" />
+          Φίλτρα
+        </Button>
       </div>
     </div>
   );

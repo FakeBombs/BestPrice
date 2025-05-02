@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import Index from './pages/Index';
 import SearchResults from './pages/SearchResults';
 import CategoryPage from './pages/CategoryPage';
+import ProductDetail from './pages/ProductDetail';
+import BrandPage from './pages/BrandPage';
 import Categories from './pages/Categories';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -24,6 +26,8 @@ function App() {
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
+          <Route path="item/:id/:slug" element={<ProductDetail />} />
+          <Route path="brand/:id/:name" element={<BrandPage />} />
           <Route path="categories" element={<Categories />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />

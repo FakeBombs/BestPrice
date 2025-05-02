@@ -1,37 +1,38 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { 
-  Form, 
+  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { 
-  createCategory, 
-  updateCategory,
-  getAllCategories
-} from '@/services/categoryService';
+import { createCategory, updateCategory, getAllCategories } from '@/services/categoryService';
+import { formatSlug } from '@/data/mockData';
 
-// Formatting function for slugs
-const formatSlug = (input: string): string => {
-  return input
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-')     // Replace spaces with hyphens
-    .replace(/-+/g, '-');     // Remove multiple hyphens
-};
+// Define form validation schema
+const categorySchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  description: z.string().optional(),
+  image_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  parent_id: z.string().optional(),
+  category_type: z.enum(['main', 'sub']),
+  slug: z.string().min(2, 'Slug must be at least 2 characters').max(100),
+});
+
+type CategoryFormValues = z.infer<typeof categorySchema>;
 
 interface Category {
   id: string;
@@ -43,17 +44,7 @@ interface Category {
   category_type: 'main' | 'sub';
 }
 
-export type CategoryCreate = Omit<Category, 'id'>;
-export type CategoryUpdate = Partial<CategoryCreate>;
-
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  description: z.string().optional(),
-  slug: z.string().min(2, { message: "Slug must be at least 2 characters" }),
-  category_type: z.enum(['main', 'sub']),
-  image_url: z.string().optional(),
-  parent_id: z.string().optional()
-});
+type CategoryCreate = Omit<Category, 'id'>;
 
 interface CategoryFormProps {
   category?: Category;
@@ -62,97 +53,108 @@ interface CategoryFormProps {
 }
 
 const CategoryForm = ({ category, mode, parentId }: CategoryFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [parentCategories, setParentCategories] = useState<Category[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  const defaultValues: CategoryCreate = {
-    name: category?.name || '',
-    description: category?.description || '',
-    slug: category?.slug || '',
-    category_type: category?.category_type || 'sub',
-    image_url: category?.image_url || '',
-    parent_id: category?.parent_id || parentId || undefined,
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
-  const form = useForm<CategoryCreate>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  });
-
-  // Monitor name changes to update slug
-  const watchName = form.watch("name");
-  
-  useEffect(() => {
-    if (!form.getValues("slug") || form.getValues("slug") === "") {
-      form.setValue("slug", formatSlug(watchName));
-    }
-  }, [watchName, form]);
-  
-  // Load parent categories
-  useEffect(() => {
-    const loadParentCategories = async () => {
+  React.useEffect(() => {
+    const loadCategories = async () => {
       try {
-        const categories = await getAllCategories();
-        // Main categories can be parents
-        const mainCategories = categories.filter(cat => 
-          cat.category_type === 'main' && 
-          // Don't include the current category as a parent option
-          (!category || cat.id !== category.id)
-        );
-        setParentCategories(mainCategories);
+        const data = await getAllCategories();
+        setCategories(data || []);
       } catch (error) {
-        console.error('Error loading parent categories:', error);
+        console.error('Error loading categories:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load categories.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoadingCategories(false);
       }
     };
-    
-    loadParentCategories();
-  }, [category]);
 
-  const onSubmit = async (data: CategoryCreate) => {
+    loadCategories();
+  }, [toast]);
+
+  // Default form values
+  const defaultValues: CategoryFormValues = {
+    name: category?.name || '',
+    description: category?.description || '',
+    image_url: category?.image_url || '',
+    parent_id: category?.parent_id || parentId || '',
+    category_type: category?.category_type || 'sub',
+    slug: category?.slug || '',
+  };
+
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
+    defaultValues,
+  });
+
+  // Auto-generate slug when name changes
+  React.useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'name') {
+        const generatedSlug = formatSlug(value.name || '');
+        form.setValue('slug', generatedSlug);
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  const onSubmit = async (data: CategoryFormValues) => {
+    setIsSubmitting(true);
+    
     try {
-      setIsSubmitting(true);
-      
-      if (mode === 'edit' && category) {
-        // Update existing category
-        const updated = await updateCategory(category.id, data);
-        
-        if (updated) {
-          toast({
-            title: "Success",
-            description: "Category updated successfully."
-          });
-          navigate('/admin/categories');
-        } else {
-          throw new Error('Failed to update category.');
-        }
-      } else {
+      if (mode === 'create') {
         // Create new category
-        const created = await createCategory(data);
+        const newCategory: CategoryCreate = {
+          ...data,
+          slug: data.slug || formatSlug(data.name),
+        };
         
-        if (created) {
+        const result = await createCategory(newCategory);
+        
+        if (result) {
           toast({
             title: "Success",
             description: "Category created successfully."
           });
           navigate('/admin/categories');
         } else {
-          throw new Error('Failed to create category.');
+          throw new Error("Failed to create category");
+        }
+      } else if (mode === 'edit' && category) {
+        // Update existing category
+        const result = await updateCategory(category.id, data);
+        
+        if (result) {
+          toast({
+            title: "Success",
+            description: "Category updated successfully."
+          });
+          navigate('/admin/categories');
+        } else {
+          throw new Error("Failed to update category");
         }
       }
     } catch (error) {
-      console.error('Error submitting category:', error);
+      console.error('Error saving category:', error);
       toast({
         title: "Error",
-        description: "Failed to save category. Please try again.",
+        description: "Failed to save category.",
         variant: "destructive"
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -161,7 +163,7 @@ const CategoryForm = ({ category, mode, parentId }: CategoryFormProps) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Category name" {...field} />
               </FormControl>
@@ -200,6 +202,20 @@ const CategoryForm = ({ category, mode, parentId }: CategoryFormProps) => {
         
         <FormField
           control={form.control}
+          name="image_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input placeholder="https://example.com/image.jpg" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
           name="category_type"
           render={({ field }) => (
             <FormItem>
@@ -215,7 +231,7 @@ const CategoryForm = ({ category, mode, parentId }: CategoryFormProps) => {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="main">Main Category</SelectItem>
-                  <SelectItem value="sub">Sub Category</SelectItem>
+                  <SelectItem value="sub">Subcategory</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -223,59 +239,50 @@ const CategoryForm = ({ category, mode, parentId }: CategoryFormProps) => {
           )}
         />
         
-        {form.watch("category_type") === 'sub' && (
-          <FormField
-            control={form.control}
-            name="parent_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Parent Category</FormLabel>
-                <Select 
-                  onValueChange={field.onChange} 
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a parent category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {parentCategories.map(cat => (
-                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-        
         <FormField
           control={form.control}
-          name="image_url"
+          name="parent_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://example.com/image.jpg" {...field} />
-              </FormControl>
+              <FormLabel>Parent Category</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={form.watch('category_type') === 'main' || loadingCategories}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a parent category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="">None</SelectItem>
+                  {categories
+                    .filter(cat => cat.category_type === 'main')
+                    .map(cat => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
         
-        <div className="flex justify-end gap-4">
-          <Button 
-            type="button" 
-            variant="outline" 
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            variant="outline"
             onClick={() => navigate('/admin/categories')}
+            className="mr-2"
           >
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {mode === 'create' ? 'Create' : 'Update'} Category
+            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {mode === 'create' ? 'Create Category' : 'Update Category'}
           </Button>
         </div>
       </form>

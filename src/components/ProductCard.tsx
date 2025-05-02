@@ -2,8 +2,9 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
-import { Product, getBestPrice } from '@/services/productService';
+import { Product } from '@/services/productService';
 import { formatPrice } from '@/utils/formatters';
+import { getBestPrice } from '@/hooks/useProductFilters';
 
 interface ProductCardProps {
   product: Product;

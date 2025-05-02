@@ -1,31 +1,21 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { mockData } from '@/data/mockData';
+import { mockData, formatSlug } from '@/data/mockData';
 
 export interface Category {
   id: string;
   name: string;
   description?: string;
-  slug: string;
-  parent_id?: string | null;
-  category_type: 'main' | 'sub';
   image_url?: string;
+  slug: string;
+  parent_id?: string;
+  category_type: 'main' | 'sub';
   created_at?: string;
   updated_at?: string;
-  subcategories?: Category[];
 }
 
-export type CategoryCreate = Omit<Category, 'id' | 'created_at' | 'updated_at' | 'subcategories'>;
-export type CategoryUpdate = Partial<CategoryCreate>;
-
-// Helper function to format slug
-export const formatSlug = (text: string): string => {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-};
+export type CategoryCreate = Omit<Category, 'id' | 'created_at' | 'updated_at'>;
+export type CategoryUpdate = Partial<Omit<Category, 'id' | 'created_at' | 'updated_at'>>;
 
 // Get all categories
 export const getAllCategories = async (): Promise<Category[]> => {
@@ -37,101 +27,55 @@ export const getAllCategories = async (): Promise<Category[]> => {
       
     if (error) {
       console.error("Error fetching categories:", error);
-      return [...mockData.mainCategories, ...mockData.categories].map(cat => ({
-        ...cat,
-        id: String(cat.id),
-        parent_id: cat.parentId ? String(cat.parentId) : null,
-        category_type: cat.parentId ? 'sub' : 'main',
-        image_url: cat.imageUrl,
-        slug: cat.slug || formatSlug(cat.name)
-      })) as Category[];
+      
+      // Convert mockData categories to the right format
+      const mainCategories = mockData.mainCategories.map(c => ({
+        id: String(c.id),
+        name: c.name,
+        description: c.description || '',
+        image_url: c.imageUrl || c.image || '',
+        slug: c.slug || formatSlug(c.name),
+        category_type: 'main' as const
+      }));
+      
+      const subCategories = mockData.categories.map(c => ({
+        id: String(c.id),
+        name: c.name,
+        description: c.description || '',
+        image_url: c.imageUrl || c.image || '',
+        slug: c.slug || formatSlug(c.name),
+        parent_id: c.parentId ? String(c.parentId) : undefined,
+        category_type: 'sub' as const
+      }));
+      
+      return [...mainCategories, ...subCategories];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllCategories:", error);
-    return [...mockData.mainCategories, ...mockData.categories].map(cat => ({
-      ...cat,
-      id: String(cat.id),
-      parent_id: cat.parentId ? String(cat.parentId) : null,
-      category_type: cat.parentId ? 'sub' : 'main',
-      image_url: cat.imageUrl,
-      slug: cat.slug || formatSlug(cat.name)
-    })) as Category[];
-  }
-};
-
-// Get main categories
-export const getMainCategories = async (): Promise<Category[]> => {
-  try {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('category_type', 'main')
-      .order('name');
-      
-    if (error) {
-      console.error("Error fetching main categories:", error);
-      return mockData.mainCategories.map(cat => ({
-        ...cat,
-        id: String(cat.id),
-        parent_id: null,
-        category_type: 'main' as const,
-        image_url: cat.imageUrl,
-        slug: cat.slug || formatSlug(cat.name)
-      })) as Category[];
-    }
     
-    return data || [];
-  } catch (error) {
-    console.error("Error in getMainCategories:", error);
-    return mockData.mainCategories.map(cat => ({
-      ...cat,
-      id: String(cat.id),
-      parent_id: null,
-      category_type: 'main' as const,
-      image_url: cat.imageUrl,
-      slug: cat.slug || formatSlug(cat.name)
-    })) as Category[];
-  }
-};
-
-// Get subcategories by parent ID
-export const getSubcategoriesByParentId = async (parentId: string | null = null): Promise<Category[]> => {
-  try {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .eq(parentId ? 'parent_id' : 'category_type', parentId || 'sub')
-      .order('name');
-      
-    if (error) {
-      console.error("Error fetching subcategories:", error);
-      return mockData.categories
-        .filter(cat => parentId ? String(cat.parentId) === parentId : true)
-        .map(cat => ({
-          ...cat,
-          id: String(cat.id),
-          parent_id: cat.parentId ? String(cat.parentId) : null,
-          category_type: 'sub' as const,
-          image_url: cat.imageUrl,
-          slug: cat.slug || formatSlug(cat.name)
-        })) as Category[];
-    }
+    // Convert mockData categories to the right format
+    const mainCategories = mockData.mainCategories.map(c => ({
+      id: String(c.id),
+      name: c.name,
+      description: c.description || '',
+      image_url: c.imageUrl || c.image || '',
+      slug: c.slug || formatSlug(c.name),
+      category_type: 'main' as const
+    }));
     
-    return data || [];
-  } catch (error) {
-    console.error("Error in getSubcategoriesByParentId:", error);
-    return mockData.categories
-      .filter(cat => parentId ? String(cat.parentId) === parentId : true)
-      .map(cat => ({
-        ...cat,
-        id: String(cat.id),
-        parent_id: cat.parentId ? String(cat.parentId) : null,
-        category_type: 'sub' as const,
-        image_url: cat.imageUrl,
-        slug: cat.slug || formatSlug(cat.name)
-      })) as Category[];
+    const subCategories = mockData.categories.map(c => ({
+      id: String(c.id),
+      name: c.name,
+      description: c.description || '',
+      image_url: c.imageUrl || c.image || '',
+      slug: c.slug || formatSlug(c.name),
+      parent_id: c.parentId ? String(c.parentId) : undefined,
+      category_type: 'sub' as const
+    }));
+    
+    return [...mainCategories, ...subCategories];
   }
 };
 
@@ -146,29 +90,114 @@ export const getCategoryById = async (id: string): Promise<Category | null> => {
       
     if (error) {
       console.error("Error fetching category:", error);
-      const mockCategory = [...mockData.mainCategories, ...mockData.categories].find(c => String(c.id) === id);
-      return mockCategory ? {
-        ...mockCategory,
-        id: String(mockCategory.id),
-        parent_id: mockCategory.parentId ? String(mockCategory.parentId) : null,
-        category_type: mockCategory.parentId ? 'sub' : 'main',
-        image_url: mockCategory.imageUrl,
-        slug: mockCategory.slug || formatSlug(mockCategory.name)
-      } as Category : null;
+      
+      // Check in main categories
+      const mainCategory = mockData.mainCategories.find(c => String(c.id) === id);
+      if (mainCategory) {
+        return {
+          id: String(mainCategory.id),
+          name: mainCategory.name,
+          description: mainCategory.description || '',
+          image_url: mainCategory.imageUrl || mainCategory.image || '',
+          slug: mainCategory.slug || formatSlug(mainCategory.name),
+          category_type: 'main'
+        };
+      }
+      
+      // Check in subcategories
+      const subCategory = mockData.categories.find(c => String(c.id) === id);
+      if (subCategory) {
+        return {
+          id: String(subCategory.id),
+          name: subCategory.name,
+          description: subCategory.description || '',
+          image_url: subCategory.imageUrl || subCategory.image || '',
+          slug: subCategory.slug || formatSlug(subCategory.name),
+          parent_id: subCategory.parentId ? String(subCategory.parentId) : undefined,
+          category_type: 'sub'
+        };
+      }
+      
+      return null;
     }
     
     return data;
   } catch (error) {
     console.error("Error in getCategoryById:", error);
-    const mockCategory = [...mockData.mainCategories, ...mockData.categories].find(c => String(c.id) === id);
-    return mockCategory ? {
-      ...mockCategory,
-      id: String(mockCategory.id),
-      parent_id: mockCategory.parentId ? String(mockCategory.parentId) : null,
-      category_type: mockCategory.parentId ? 'sub' : 'main',
-      image_url: mockCategory.imageUrl,
-      slug: mockCategory.slug || formatSlug(mockCategory.name)
-    } as Category : null;
+    
+    // Check in main categories
+    const mainCategory = mockData.mainCategories.find(c => String(c.id) === id);
+    if (mainCategory) {
+      return {
+        id: String(mainCategory.id),
+        name: mainCategory.name,
+        description: mainCategory.description || '',
+        image_url: mainCategory.imageUrl || mainCategory.image || '',
+        slug: mainCategory.slug || formatSlug(mainCategory.name),
+        category_type: 'main'
+      };
+    }
+    
+    // Check in subcategories
+    const subCategory = mockData.categories.find(c => String(c.id) === id);
+    if (subCategory) {
+      return {
+        id: String(subCategory.id),
+        name: subCategory.name,
+        description: subCategory.description || '',
+        image_url: subCategory.imageUrl || subCategory.image || '',
+        slug: subCategory.slug || formatSlug(subCategory.name),
+        parent_id: subCategory.parentId ? String(subCategory.parentId) : undefined,
+        category_type: 'sub'
+      };
+    }
+    
+    return null;
+  }
+};
+
+// Get subcategories for a parent category
+export const getSubcategories = async (parentId: string): Promise<Category[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('parent_id', parentId)
+      .order('name');
+      
+    if (error) {
+      console.error("Error fetching subcategories:", error);
+      
+      // Use mockData for subcategories
+      return mockData.categories
+        .filter(c => String(c.parentId) === parentId)
+        .map(c => ({
+          id: String(c.id),
+          name: c.name,
+          description: c.description || '',
+          image_url: c.imageUrl || c.image || '',
+          slug: c.slug || formatSlug(c.name),
+          parent_id: String(c.parentId),
+          category_type: 'sub' as const
+        }));
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error("Error in getSubcategories:", error);
+    
+    // Use mockData for subcategories
+    return mockData.categories
+      .filter(c => String(c.parentId) === parentId)
+      .map(c => ({
+        id: String(c.id),
+        name: c.name,
+        description: c.description || '',
+        image_url: c.imageUrl || c.image || '',
+        slug: c.slug || formatSlug(c.name),
+        parent_id: String(c.parentId),
+        category_type: 'sub' as const
+      }));
   }
 };
 
@@ -177,7 +206,10 @@ export const createCategory = async (category: CategoryCreate): Promise<Category
   try {
     const { data, error } = await supabase
       .from('categories')
-      .insert([category])
+      .insert([{
+        ...category,
+        slug: category.slug || formatSlug(category.name)
+      }])
       .select()
       .single();
       
@@ -198,7 +230,10 @@ export const updateCategory = async (id: string, updates: CategoryUpdate): Promi
   try {
     const { data, error } = await supabase
       .from('categories')
-      .update(updates)
+      .update({
+        ...updates,
+        slug: updates.name ? (updates.slug || formatSlug(updates.name)) : undefined
+      })
       .eq('id', id)
       .select()
       .single();
@@ -233,4 +268,61 @@ export const deleteCategory = async (id: string): Promise<boolean> => {
     console.error("Error in deleteCategory:", error);
     return false;
   }
+};
+
+// Get main categories (top-level)
+export const getMainCategories = async (): Promise<Category[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('category_type', 'main')
+      .order('name');
+      
+    if (error) {
+      console.error("Error fetching main categories:", error);
+      
+      // Use mockData for main categories
+      return mockData.mainCategories.map(c => ({
+        id: String(c.id),
+        name: c.name,
+        description: c.description || '',
+        image_url: c.imageUrl || c.image || '',
+        slug: c.slug || formatSlug(c.name),
+        category_type: 'main' as const
+      }));
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error("Error in getMainCategories:", error);
+    
+    // Use mockData for main categories
+    return mockData.mainCategories.map(c => ({
+      id: String(c.id),
+      name: c.name,
+      description: c.description || '',
+      image_url: c.imageUrl || c.image || '',
+      slug: c.slug || formatSlug(c.name),
+      category_type: 'main' as const
+    }));
+  }
+};
+
+// Get category path (breadcrumb)
+export const getCategoryPath = async (categoryId: string): Promise<Category[]> => {
+  const result: Category[] = [];
+  let currentId = categoryId;
+  
+  while (currentId) {
+    const category = await getCategoryById(currentId);
+    if (!category) break;
+    
+    result.unshift(category);
+    if (!category.parent_id) break;
+    
+    currentId = category.parent_id;
+  }
+  
+  return result;
 };

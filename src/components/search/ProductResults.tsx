@@ -2,7 +2,7 @@
 import React from 'react';
 import ProductCard from '@/components/ProductCard';
 import ProductFilter from '@/components/ProductFilter';
-import { Product } from '@/data/mockData';
+import { Product } from '@/services/productService';
 
 interface ProductResultsProps {
   filteredResults: Product[];
