@@ -86,7 +86,7 @@ export const getSubcategoriesByParentId = async (parentId: string): Promise<Cate
   });
 };
 
-// Add the missing deleteCategory function
+// Add the deleteCategory function
 export const deleteCategory = async (id: string): Promise<boolean> => {
   // In a real app, this would be an API call to delete the category
   return new Promise((resolve) => {

@@ -20,7 +20,7 @@ const SearchHeader = ({ query, count, loading }: SearchHeaderProps) => {
           </>
         )}
       </h1>
-      <SearchBar initialValue={query} />
+      <SearchBar className="" />
     </div>
   );
 };

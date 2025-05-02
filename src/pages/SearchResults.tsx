@@ -20,7 +20,7 @@ const SearchResults = () => {
     handleVendorFilter,
     handlePriceRangeFilter,
     handleInStockOnly
-  } = useProductFilters({ initialProducts: products });
+  } = useProductFilters(products);
   
   useEffect(() => {
     const fetchResults = async () => {

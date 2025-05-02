@@ -1,10 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Product } from '@/services/productService';
 
-export interface UseProductFiltersProps {
-  initialProducts: Product[];
-}
-
 export const useProductFilters = (initialProducts: Product[]) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [sortParam, setSortParam] = useState<string>('default');
@@ -26,8 +22,9 @@ export const useProductFilters = (initialProducts: Product[]) => {
       results = results.filter(product => {
         // If product has prices and the prices have vendors
         if (product.prices && product.prices.length > 0) {
+          // We need to check vendor_id instead of vendor object
           return product.prices.some(price => 
-            price.vendor && filteredVendors.includes(price.vendor.name)
+            price.vendor_id && filteredVendors.includes(price.vendor_id)
           );
         }
         return false;
@@ -104,3 +101,5 @@ export const useProductFilters = (initialProducts: Product[]) => {
     handleInStockOnly
   };
 };
+
+export default useProductFilters;

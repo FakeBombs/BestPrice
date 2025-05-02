@@ -31,7 +31,7 @@ export interface Product {
   prices?: ProductPrice[];
   created_at?: string;
   updated_at?: string;
-  sku?: string; // Adding SKU field that's used in ProductHeader
+  sku?: string;
 }
 
 // Helper function to get the best (lowest) price from a product
@@ -65,11 +65,11 @@ export const getAllProducts = async (): Promise<Product[]> => {
           ...price,
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(p.id),
-          vendor_id: String(price.vendorId || price.vendor_id),
-          in_stock: price.inStock || price.in_stock || false,
+          vendor_id: String(price.vendorId || ''),
+          in_stock: price.inStock || false,
         })) || [],
         rating: p.rating || 0,
-        review_count: p.reviewCount || p.review_count || 0,
+        review_count: p.reviewCount || 0,
         brand: p.brand || '',
         model: p.model || '',
       })) as Product[];
@@ -100,11 +100,11 @@ export const getProductById = async (id: string): Promise<Product | null> => {
           ...price,
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(product.id),
-          vendor_id: String(price.vendorId || price.vendor_id),
-          in_stock: price.inStock || price.in_stock || false,
+          vendor_id: String(price.vendorId || ''),
+          in_stock: price.inStock || false,
         })) || [],
         rating: product.rating || 0,
-        review_count: product.reviewCount || product.review_count || 0,
+        review_count: product.reviewCount || 0,
         brand: product.brand || '',
         model: product.model || '',
       };
