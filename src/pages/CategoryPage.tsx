@@ -134,7 +134,7 @@ const renderBreadcrumbs = () => {
   const isMainCategoryPage = mainCategory && currentCategory.id === mainCategory.id;
 
   if (isMainCategoryPage) {
-    // Show only Home
+    // When on main category page, show only Home
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -148,17 +148,17 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // For other pages, always include Home, main category, and ancestors
+  // For subcategory pages, always start with Home and main category
   const trailItems = [];
 
-  // Home
+  // Add Home
   trailItems.push(
     <li key="home">
       <Link to="/" rel="home"><span>BestPrice</span></Link>
     </li>
   );
 
-  // Main category
+  // Add main category
   if (mainCategory) {
     trailItems.push(
       <li key={mainCategory.slug}>
@@ -169,15 +169,14 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Ancestors of current category
-  const ancestors = [];
+  // Add ancestors of current category (excluding main category)
   let category = currentCategory;
+  const ancestors = [];
   while (category && (!mainCategory || category.id !== mainCategory.id)) {
     ancestors.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  // Add ancestors
   ancestors.forEach((cat) => {
     trailItems.push(
       <li key={cat.slug}>
@@ -186,7 +185,6 @@ const renderBreadcrumbs = () => {
     );
   });
 
-  // Render breadcrumb with separators
   return (
     <div id="trail">
       <nav className="breadcrumb">
