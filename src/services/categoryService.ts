@@ -1,5 +1,5 @@
 
-import { categories, mainCategories } from '@/data/mockData';
+import { categories, mainCategories } from "@/data/mockData";
 
 export interface Category {
   id: string;
@@ -7,93 +7,80 @@ export interface Category {
   name: string;
   description: string;
   imageUrl?: string;
-  image_url?: string;
-  slug?: string;
-  category_type: 'main' | 'sub';
-}
-
-export interface CategoryCreate {
-  name: string;
-  description?: string;
-  image_url?: string;
-  category_type?: 'main' | 'sub';
-  parent_id?: string;
+  image?: string;
   slug?: string;
 }
 
 export const getAllCategories = async (): Promise<Category[]> => {
-  // In a real app, this would be an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const allCategories = [...mainCategories, ...categories].map(cat => ({
-        ...cat,
-        category_type: cat.parentId ? 'sub' : 'main' as 'main' | 'sub',
-        image_url: cat.imageUrl || cat.image
-      }));
-      resolve(allCategories as Category[]);
-    }, 500);
-  });
-};
-
-export const getCategoryById = async (id: string): Promise<Category | null> => {
-  // In a real app, this would be an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const categoryFromMain = mainCategories.find(cat => cat.id === id);
-      const categoryFromCategories = categories.find(cat => cat.id === id);
-      
-      const category = categoryFromMain || categoryFromCategories;
-      
-      if (!category) {
-        resolve(null);
-        return;
-      }
-      
-      resolve({
-        ...category,
-        category_type: category.parentId ? 'sub' : 'main' as 'main' | 'sub',
-        image_url: category.imageUrl || category.image
-      } as Category);
-    }, 500);
-  });
+  return [...mainCategories, ...categories];
 };
 
 export const getMainCategories = async (): Promise<Category[]> => {
-  // In a real app, this would be an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const mappedMainCategories = mainCategories.map(cat => ({
-        ...cat,
-        category_type: 'main' as 'main',
-        image_url: cat.imageUrl || cat.image
-      }));
-      resolve(mappedMainCategories as Category[]);
-    }, 500);
-  });
+  return [...mainCategories];
 };
 
-export const getSubcategoriesByParentId = async (parentId: string): Promise<Category[]> => {
-  // In a real app, this would be an API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const subcategories = categories.filter(cat => cat.parentId === parentId).map(cat => ({
-        ...cat,
-        category_type: 'sub' as 'sub',
-        image_url: cat.imageUrl || cat.image
-      }));
-      resolve(subcategories as Category[]);
-    }, 500);
-  });
+export const getSubcategories = async (parentId: string): Promise<Category[]> => {
+  return categories.filter((cat) => cat.parentId === parentId);
 };
 
-// Add the deleteCategory function
-export const deleteCategory = async (id: string): Promise<boolean> => {
-  // In a real app, this would be an API call to delete the category
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Simulate successful deletion
-      console.log(`Category with ID ${id} would be deleted in a real app`);
-      resolve(true);
-    }, 500);
-  });
+export const getCategoryById = async (id: string): Promise<Category | null> => {
+  const category = mainCategories.find((cat) => cat.id === id) || 
+                  categories.find((cat) => cat.id === id);
+  
+  return category || null;
+};
+
+export const getCategoryBySlug = async (slug: string): Promise<Category | null> => {
+  const category = mainCategories.find((cat) => cat.slug === slug) || 
+                  categories.find((cat) => cat.slug === slug);
+  
+  return category || null;
+};
+
+export const getCategoryPath = async (categoryId: string): Promise<Category[]> => {
+  const result: Category[] = [];
+  let currentId = categoryId;
+  
+  while (currentId) {
+    const category = await getCategoryById(currentId);
+    if (!category) break;
+    
+    result.unshift(category);
+    currentId = category.parentId || '';
+  }
+  
+  return result;
+};
+
+export const createCategory = async (category: Partial<Category>): Promise<Category> => {
+  // This is a mock function that would normally save to a database
+  console.log("Creating category:", category);
+  return {
+    id: `new-${Date.now()}`,
+    name: category.name || '',
+    description: category.description || '',
+    parentId: category.parentId,
+    image: category.image,
+    imageUrl: category.imageUrl,
+    slug: category.slug || category.name?.toLowerCase().replace(/\s+/g, '-') || '',
+  };
+};
+
+export const updateCategory = async (id: string, category: Partial<Category>): Promise<Category> => {
+  // This is a mock function that would normally update a database
+  console.log("Updating category:", id, category);
+  return {
+    id,
+    name: category.name || '',
+    description: category.description || '',
+    parentId: category.parentId,
+    image: category.image,
+    imageUrl: category.imageUrl,
+    slug: category.slug || category.name?.toLowerCase().replace(/\s+/g, '-') || '',
+  };
+};
+
+export const deleteCategory = async (id: string): Promise<void> => {
+  // This is a mock function that would normally delete from a database
+  console.log("Deleting category:", id);
 };

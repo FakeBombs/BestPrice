@@ -17,10 +17,10 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   useEffect(() => {
     // Get category name if product has categories
     const fetchCategory = async () => {
-      if (product.categories && product.categories.length > 0) {
-        const categoryId = product.categories[0].id;
-        setCategoryId(categoryId);
-        const category = await getCategoryById(categoryId);
+      if (product.categoryId) {
+        const catId = String(product.categoryId);
+        setCategoryId(catId);
+        const category = await getCategoryById(catId);
         if (category) {
           setCategoryName(category.name);
           setCategorySlug(category.slug || category.name.toLowerCase().replace(/\s+/g, '-'));
@@ -47,7 +47,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           </Link>
         </li>
         
-        {product.categories && product.categories.length > 0 && categoryId && (
+        {product.categoryId && categoryId && (
           <li className="flex items-center">
             <ChevronRight className="w-4 h-4 mx-1" />
             <Link 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice } from '@/data/mockData';
+import { products, fetchProductById, getProductsByCategory } from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -90,38 +90,63 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (productId && product && !productSlug) {
-      const correctSlug = formatProductSlug(product.title);
+      const correctSlug = product.slug || '';
       navigate(`/item/${productId}/${correctSlug}.html`, { replace: true });
     }
   }, [productId, product, productSlug, navigate]);
 
   useEffect(() => {
     if (productId) {
-      const productData = getProductById(numericProductId);
-      if (productData) {
-        setProduct(productData);
-        setCurrentImage(productData.image);
-        
-        setSimilarProducts(getSimilarProducts(productId));
-        setCategoryDeals(getProductsByCategory(productData.category).slice(0, 5));
+      const fetchProduct = async () => {
+        const productData = await fetchProductById(productId);
+        if (productData) {
+          setProduct(productData);
+          setCurrentImage(productData.image || productData.imageUrl || '');
+          
+          // Get similar products - find products with the same category
+          const similarProds = products.filter(p => 
+            p.categoryId === productData.categoryId && p.id !== productData.id
+          ).slice(0, 5);
+          setSimilarProducts(similarProds);
+          
+          if (productData.categoryId) {
+            setCategoryDeals(getProductsByCategory(String(productData.categoryId)).slice(0, 5));
+          }
 
-        const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-        const recentlyViewedProducts = recentlyViewedIds
-          .map(id => getProductById(id))
-          .filter(p => p);
-        setRecentlyViewed(recentlyViewedProducts);
+          const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+          const recentlyViewedProducts = recentlyViewedIds
+            .map(id => products.find(p => p.id === id))
+            .filter(Boolean);
+          setRecentlyViewed(recentlyViewedProducts);
 
-        if (!recentlyViewedIds.includes(productId)) {
-          const updatedRecentlyViewed = [productId, ...recentlyViewedIds].slice(0, 10);
-          localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
+          if (!recentlyViewedIds.includes(productId)) {
+            const updatedRecentlyViewed = [productId, ...recentlyViewedIds].slice(0, 10);
+            localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
+          }
         }
-      }
+      };
+
+      fetchProduct();
     }
   }, [productId]);
 
   if (!product) {
     return <div className="flex justify-center items-center h-96">Product not found. Please check the URL.</div>;
   }
+
+  const getBestPrice = (product) => {
+    if (!product.prices || product.prices.length === 0) {
+      return { price: product.price, vendorId: null, inStock: true };
+    }
+    
+    const inStockPrices = product.prices.filter(p => p.inStock);
+    
+    if (inStockPrices.length === 0) {
+      return { price: product.price, vendorId: null, inStock: false };
+    }
+    
+    return inStockPrices.sort((a, b) => a.price - b.price)[0];
+  };
 
   const bestPrice = getBestPrice(product);
   if (!bestPrice) return <div>Price data unavailable</div>;
@@ -213,14 +238,16 @@ const ProductDetail = () => {
             <main className="item-main">
               <div className="item-header__wrapper">
                 <div className="item-header">
-                  <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
+                  <ProductHeader product={product} />
                   <div className="item-price-button">
-                    <div className="item-price-button__label">Από <strong>${bestPrice.price.toFixed(2)}</strong> σε {product.prices.length} καταστήματα</div>
+                    <div className="item-price-button__label">Από <strong>${bestPrice.price.toFixed(2)}</strong> σε {product.prices?.length || 0} καταστήματα</div>
                     <svg width="17" height="20" viewBox="0 0 17 20" role="img" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
                   </div>
                   <ProductHighlights specifications={product.specifications} product={product} />
                 </div>
-                <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div>
+                <div className="product-overview product-overview--deal">
+                  <ProductEssentialInfo product={product} />
+                </div>
               </div>
 
               <div className="sections item-sections">

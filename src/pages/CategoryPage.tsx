@@ -57,9 +57,9 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     if (!currentCategory) return;
 
-    // Filter products directly based on current category ID
+    // Filter products based on current category ID
     const productsToDisplay = products.filter(product => 
-      product.categoryIds && product.categoryIds.includes(currentCategory.id)
+      (product.categoryId && product.categoryId === Number(currentCategory.id))
     );
 
     setFilteredProducts(productsToDisplay);
@@ -81,7 +81,7 @@ const CategoryPage: React.FC = () => {
     setIsPriceAlertModalOpen(true);
   };
 
-  const renderBreadcrumbs = () => {
+  function renderBreadcrumbs() {
     const breadcrumbs = [];
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
@@ -134,9 +134,9 @@ const CategoryPage: React.FC = () => {
         </nav>
       </div>
     );
-  };
+  }
 
-  const renderMainCategories = () => {
+  function renderMainCategories() {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
       <>
@@ -200,9 +200,9 @@ const CategoryPage: React.FC = () => {
         )}
       </>
     );
-  };
+  }
 
-  const renderSubcategories = (currentCategory) => {
+  function renderSubcategories(currentCategory) {
     const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     
     // Collect all parent categories leading up to the main category
@@ -288,61 +288,48 @@ const CategoryPage: React.FC = () => {
             </div>
         </>
     );
-};
+  }
 
-const renderProducts = () => (
-    <div className="page-products">
-      <aside className="page-products__filters"></aside>
-      <main className="page-products__main">
-        <header className="page-header">
-          <div className="page-header__title-wrapper">
-            <div className="products-wrapper">
-              <div className="products-wrapper__header"><div className="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
-              <ScrollableSlider></ScrollableSlider>
-            </div>
-          </div>
-          <div className="page-header__sorting">
-            <div className="tabs">
-              <div className="tabs-wrapper">
-                <nav>
-                  <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
-                  <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
-                  <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
-                  <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
-                </nav>
+  function renderProducts() {
+    return (
+      <div className="page-products">
+        <aside className="page-products__filters"></aside>
+        <main className="page-products__main">
+          <header className="page-header">
+            <div className="page-header__title-wrapper">
+              <div className="products-wrapper">
+                <div className="products-wrapper__header"><div className="products-wrapper__title">Επιλεγμένες Προσφορές</div></div>
+                <ScrollableSlider>{null}</ScrollableSlider>
               </div>
             </div>
+            <div className="page-header__sorting">
+              <div className="tabs">
+                <div className="tabs-wrapper">
+                  <nav>
+                    <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                    <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
+                    <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
+                    <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div className="page-products__main-wrapper">
+            <div className="p__products" data-pagination="">
+              {filteredResults.length > 0 ? (
+                filteredResults.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              ) : (
+                  <p>No products available for this category</p>
+              )}
+            </div>
           </div>
-        </header>
-        <div className="page-products__main-wrapper">
-          <div className="p__products" data-pagination="">
-            {filteredResults.length > 0 ? (
-              filteredResults.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            ) : (
-                <p>No products available for this category</p>
-            )}
-          </div>
-        </div>
-      </main>
-    </div>
-);
-
-  return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        {renderBreadcrumbs()}
-        {currentCategory && currentCategory.parentId 
-          ? renderSubcategories(currentCategory) 
-          : (currentCategory 
-              ? renderMainCategories() 
-              : renderProducts()
-            )
-        }
+        </main>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default CategoryPage;
