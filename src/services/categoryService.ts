@@ -23,6 +23,11 @@ export const getSubcategories = async (parentId: string): Promise<Category[]> =>
   return categories.filter((cat) => cat.parentId === parentId);
 };
 
+// Adding this function to match the import in CategoryList.tsx
+export const getSubcategoriesByParentId = async (parentId: string): Promise<Category[]> => {
+  return categories.filter((cat) => cat.parentId === parentId);
+};
+
 export const getCategoryById = async (id: string): Promise<Category | null> => {
   const category = mainCategories.find((cat) => cat.id === id) || 
                   categories.find((cat) => cat.id === id);

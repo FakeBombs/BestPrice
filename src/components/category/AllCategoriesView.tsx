@@ -23,7 +23,7 @@ const AllCategoriesView = () => {
   }, []);
 
   // Group categories by parent
-  const mainCategories = categories.filter(cat => cat.category_type === 'main');
+  const mainCategories = categories.filter(cat => !cat.parentId);
   const getCategoryChildren = (parentId: string) => 
     categories.filter(cat => cat.parentId === parentId);
 

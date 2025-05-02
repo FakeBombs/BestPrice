@@ -24,7 +24,7 @@ const CategoryList = ({ onEdit, onDelete, parentId = null, onCategorySelected }:
         const allCategories = await getAllCategories();
         // Filter to only get main categories
         const mainCategories = allCategories.filter(
-          cat => cat.category_type === 'main' || !cat.parentId
+          cat => !cat.parentId // Use parentId instead of category_type
         );
         setCategories(mainCategories);
       } catch (error) {

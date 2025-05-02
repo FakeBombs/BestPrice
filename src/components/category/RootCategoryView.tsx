@@ -52,7 +52,7 @@ const RootCategoryView = ({ categoryId, name }: RootCategoryViewProps) => {
         >
           <div className="aspect-square mb-4 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-700">
             <img
-              src={subcategory.image_url || '/dist/images/placeholder.svg'}
+              src={subcategory.imageUrl || '/dist/images/placeholder.svg'}
               alt={subcategory.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />

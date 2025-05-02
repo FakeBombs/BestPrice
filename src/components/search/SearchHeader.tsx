@@ -1,26 +1,18 @@
 
-import { useState } from 'react';
-import SearchBar from '@/components/SearchBar';
+import React from 'react';
+import { SearchBar } from '@/components/SearchBar';  // Changed from default import to named import
 
 interface SearchHeaderProps {
   query: string;
-  count: number;
-  loading: boolean;
+  onSearch: (query: string) => void;
 }
 
-const SearchHeader = ({ query, count, loading }: SearchHeaderProps) => {
+const SearchHeader: React.FC<SearchHeaderProps> = ({ query, onSearch }) => {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-2">
-        {loading ? (
-          'Searching...'
-        ) : (
-          <>
-            {count} results for <span className="text-primary">"{query}"</span>
-          </>
-        )}
-      </h1>
-      <SearchBar className="" />
+    <div className="search-header">
+      <div className="header-search">
+        <SearchBar initialQuery={query} onSearch={onSearch} />
+      </div>
     </div>
   );
 };

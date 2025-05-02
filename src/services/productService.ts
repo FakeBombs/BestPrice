@@ -1,37 +1,37 @@
-
 import { products } from '@/data/mockData';
 
 export interface ProductPrice {
-  id: string;
-  product_id: string;
-  vendor_id: string;
+  id?: string;
+  product_id?: string;
+  vendorId: string;
   price: number;
-  in_stock: boolean;
-  shipping_cost?: number;
+  shippingCost?: number;
+  inStock: boolean;
 }
 
 export interface Product {
   id: string;
+  categoryId?: number;
+  categoryIds?: number[];
+  category?: string;
   name: string;
   title?: string;
-  slug: string;
   description?: string;
-  price: number;
-  image_url?: string;
-  imageUrl?: string;
   image?: string;
-  images: string[];
-  brand: string;
-  model: string;
+  imageUrl?: string;
+  images?: string[];
+  brand?: string;
+  model?: string;
+  sku?: string;
+  price: number;
   rating: number;
-  review_count: number;
-  categories?: { id: string; name: string }[];
-  specifications: Record<string, any>;
+  reviewCount?: number; // Changed from review_count to match mockData.ts
+  reviews?: number;
+  specs?: Record<string, string>;
+  specifications?: Record<string, string>;
+  slug?: string;
   highlights?: string[];
   prices?: ProductPrice[];
-  created_at?: string;
-  updated_at?: string;
-  sku?: string;
 }
 
 // Helper function to get the best (lowest) price from a product
@@ -65,11 +65,11 @@ export const getAllProducts = async (): Promise<Product[]> => {
           ...price,
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(p.id),
-          vendor_id: String(price.vendorId || ''),
+          vendorId: String(price.vendorId || ''),
           in_stock: price.inStock || false,
         })) || [],
         rating: p.rating || 0,
-        review_count: p.reviewCount || 0,
+        reviewCount: p.reviewCount || 0,
         brand: p.brand || '',
         model: p.model || '',
       })) as Product[];
@@ -100,11 +100,11 @@ export const getProductById = async (id: string): Promise<Product | null> => {
           ...price,
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
           product_id: String(product.id),
-          vendor_id: String(price.vendorId || ''),
+          vendorId: String(price.vendorId || ''),
           in_stock: price.inStock || false,
         })) || [],
         rating: product.rating || 0,
-        review_count: product.reviewCount || 0,
+        reviewCount: product.reviewCount || 0,
         brand: product.brand || '',
         model: product.model || '',
       };

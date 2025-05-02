@@ -40,18 +40,18 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         if (mode === 'edit' && categoryData) {
           setValue('name', categoryData.name);
           setValue('description', categoryData.description || '');
-          setValue('image_url', categoryData.image_url || '');
-          setValue('category_type', categoryData.category_type || 'sub');
+          setValue('imageUrl', categoryData.imageUrl || '');
+          setValue('category_type', 'sub'); // Default value
           
-          if (categoryData.parent_id) {
-            setValue('parent_id', categoryData.parent_id);
-            setSelectedMainCategory(categoryData.parent_id);
+          if (categoryData.parentId) {
+            setValue('parentId', categoryData.parentId);
+            setSelectedMainCategory(categoryData.parentId);
             
-            const subCats = await getSubcategoriesByParentId(categoryData.parent_id);
+            const subCats = await getSubcategoriesByParentId(categoryData.parentId);
             setSubcategories(subCats);
           }
         } else if (parentId) {
-          setValue('parent_id', parentId);
+          setValue('parentId', parentId);
           setSelectedMainCategory(parentId);
           
           const subCats = await getSubcategoriesByParentId(parentId);
@@ -72,7 +72,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   
   const handleMainCategoryChange = async (value: string) => {
     setSelectedMainCategory(value);
-    setValue('parent_id', value);
+    setValue('parentId', value);
     
     try {
       const subCats = await getSubcategoriesByParentId(value);
@@ -114,10 +114,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="image_url">Image URL</Label>
+          <Label htmlFor="imageUrl">Image URL</Label>
           <Input 
-            id="image_url" 
-            {...register('image_url')} 
+            id="imageUrl" 
+            {...register('imageUrl')} 
             placeholder="https://example.com/image.jpg" 
           />
         </div>
@@ -126,7 +126,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           <Label htmlFor="category_type">Category Type</Label>
           <Select 
             onValueChange={(value) => setValue('category_type', value)} 
-            defaultValue={categoryData?.category_type || 'sub'}
+            defaultValue="sub"
           >
             <SelectTrigger>
               <SelectValue placeholder="Select type" />
@@ -139,10 +139,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="parent_id">Parent Category</Label>
+          <Label htmlFor="parentId">Parent Category</Label>
           <Select 
             onValueChange={handleMainCategoryChange} 
-            defaultValue={categoryData?.parent_id || parentId}
+            defaultValue={categoryData?.parentId || parentId}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select parent category" />
