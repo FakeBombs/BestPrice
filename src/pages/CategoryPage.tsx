@@ -8,7 +8,6 @@ import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
-// Main component
 const CategoryPage: React.FC = () => {
   const { mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug } = useParams<{
     mainCatSlug?: string;
@@ -27,22 +26,15 @@ const CategoryPage: React.FC = () => {
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
 
   useEffect(() => {
-    // Find the category by ID, not by slug
     let categoryId = mainCatSlug;
-    // Check if mainCatSlug is a valid ID
     let foundCategory = mainCategories.find(cat => cat.id === categoryId) || 
                       categories.find(cat => cat.id === categoryId);
-                      
     if (!foundCategory) {
-      // If not found by ID, try to find by slug as fallback
       foundCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
     }
-
     setCurrentCategory(foundCategory);
 
-    // Load related data
     if (foundCategory) {
-      // Load category products
       const productsToDisplay = products.filter(product => 
         (product.categoryId && product.categoryId === Number(foundCategory.id))
       );
@@ -52,12 +44,9 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     if (!currentCategory) return;
-
-    // Filter products directly based on current category ID
     const productsToDisplay = products.filter(product => 
       product.categoryIds.includes(currentCategory.id)
     );
-
     setFilteredProducts(productsToDisplay);
   }, [currentCategory, products]);
 
@@ -103,67 +92,60 @@ const CategoryPage: React.FC = () => {
       });
       return;
     }
-
     setIsPriceAlertModalOpen(true);
   };
 
-function renderBreadcrumbs() {
-  const breadcrumbs = [];
-  const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
+  function renderBreadcrumbs() {
+    const breadcrumbs = [];
+    const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
+    if (!mainCategory) return null;
 
-  if (!mainCategory) return null;
+    if (!(currentCategory && !currentCategory.parentId)) {
+      breadcrumbs.push(
+        <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
+      );
+    }
 
-  // Add the main category link if there's a current category with a parent
-  if (!(currentCategory && !currentCategory.parentId)) {
-    breadcrumbs.push(
-      <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
+    const categoryTrail = [];
+    let category = currentCategory;
+
+    while (category) {
+      categoryTrail.unshift(category);
+      category = categories.find(cat => cat.id === category.parentId);
+    }
+
+    categoryTrail.forEach((cat, index) => {
+      if (index !== categoryTrail.length - 1) {
+        breadcrumbs.push(
+          <li key={cat.slug}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>
+        );
+      }
+    });
+
+    return (
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            <li>
+              <Link to="/" rel="home"><span>BestPrice</span></Link>
+              {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
+            </li>
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={index}>
+                {crumb}
+                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+              </React.Fragment>
+            ))}
+          </ol>
+        </nav>
+      </div>
     );
   }
 
-  // Create a Set to keep track of slugged categories
-  const categoryTrail = [];
-
-  // Build the breadcrumb trail from currentCategory up to the main category
-  let category = currentCategory;
-
-  while (category) {
-    categoryTrail.unshift(category);  // Prepend to create the trail
-    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
-  }
-
-  // Add categories to breadcrumbs (excluding current category)
-  categoryTrail.forEach((cat, index) => {
-    if (index !== categoryTrail.length - 1) { // Exclude current category
-      breadcrumbs.push(
-        <li key={cat.slug}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>
-      );
-    }
-  });
-
-    // Render Breadcrumbs
-  return (
-    <div id="trail">
-      <nav className="breadcrumb">
-        <ol>
-          <li>
-            <Link to="/" rel="home"><span>BestPrice</span></Link>
-            {/* Only show the separator if there are additional breadcrumbs */}
-            {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
-          </li>
-          {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
-              {crumb}
-              {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-            </React.Fragment>
-          ))}
-        </ol>
-      </nav>
-    </div>
-  );
-};
-
   const renderMainCategories = () => {
+    if (!currentCategory) return null; // safeguard
     const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
+    if (!mainCategory) return null;
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
       <>
@@ -192,9 +174,7 @@ function renderBreadcrumbs() {
                       .slice(0, 5)
                       .map((linkedSubCat, index, arr) => (
                         <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>
-                            {linkedSubCat.name}
-                          </Link>
+                          <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
                           {index < arr.length - 1 && ', '}
                         </React.Fragment>
                       ))}
@@ -207,66 +187,61 @@ function renderBreadcrumbs() {
           )}
         </div>
         <div className="sections"></div>
-        <div class="p__products-section">
-          <div class="alerts">
-            <button data-url={`/cat/${mainCategory.id}/${mainCategory.slug}`} data-title={currentCategory?.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
-              <svg aria-hidden="true" class="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-              <span class="alerts__label">Ειδοποίηση</span>
+        <div className="p__products-section">
+          <div className="alerts">
+            <button data-url={`/cat/${mainCategory.id}/${mainCategory.slug}`} data-title={currentCategory?.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+              <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+              <span className="alerts__label">Ειδοποίηση</span>
             </button>
-            <div class="alerts__prompt"> σε <span class="alerts__title">{currentCategory?.name}</span></div>
+            <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory?.name}</span></div>
           </div>
         </div>
-
         {isPriceAlertModalOpen && (
           <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
         )}
       </>
     );
-  };
+  }
 
-  const renderSubcategories = (currentCategory) => {
+  const renderSubcategories = (category) => {
+    if (!category) return null; // safeguard
     return (
         <>
             <div className="page-header">
                 <div className="hgroup">
                     <div className="page-header__title-wrapper">
-                        <Link className="trail__back pressable" title={currentCategory.name} to={`/cat/${currentCategory.id}/${currentCategory.slug}`}>
+                        <Link className="trail__back pressable" title={category.name} to={`/cat/${category.id}/${category.slug}`}>
                           <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
                         </Link>
-                        <h1>{currentCategory.name}</h1>
+                        <h1>{category.name}</h1>
                     </div>
                 </div>
             </div>
             <div className="root-category__categories">
-                {categories.filter(cat => cat.parentId === currentCategory?.id).length > 0 ? (
-                  categories.filter(cat => cat.parentId === currentCategory?.id).map((subCat) => {
-
-                        return (
-                            <div key={subCat.id} className="root-category__category">
-                                <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-                                    <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                                </Link>
-                                <h2 className="root-category__category-title">
-                                    <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-                                </h2>
-                                <div className="root-category__footer">
-                                    <div className="root-category__links">
-                                        {categories
-                                            .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                                            .slice(0, 5)
-                                            .map((linkedSubCat, index, arr) => {
-                                              return (
-                                                <React.Fragment key={linkedSubCat.id}>
-                                                  <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                                                  {index < arr.length - 1 && ', '}
-                                                </React.Fragment>
-                                            );
-                                        })}
-                                    </div>
+                {categories.filter(cat => cat.parentId === category?.id).length > 0 ? (
+                  categories.filter(cat => cat.parentId === category?.id).map((subCat) => (
+                        <div key={subCat.id} className="root-category__category">
+                            <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                            </Link>
+                            <h2 className="root-category__category-title">
+                                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                            </h2>
+                            <div className="root-category__footer">
+                                <div className="root-category__links">
+                                    {categories
+                                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                                        .slice(0, 5)
+                                        .map((linkedSubCat, index, arr) => (
+                                          <React.Fragment key={linkedSubCat.id}>
+                                            <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                                            {index < arr.length - 1 && ', '}
+                                          </React.Fragment>
+                                        ))}
                                 </div>
                             </div>
-                        );
-                    })
+                        </div>
+                      ))
                 ) : (
                     renderProducts()
                 )}
@@ -274,22 +249,21 @@ function renderBreadcrumbs() {
             <div className="sections"></div>
             <div className="p__products-section">
               <div className="alerts">
-                <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
-                  <svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+                  <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                   <span className="alerts__label">Ειδοποίηση</span>
                 </button>
-                <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory.name}</span></div>
+                <div className="alerts__prompt"> σε <span className="alerts__title">{category.name}</span></div>
               </div>
             </div>
-        
-        {isPriceAlertModalOpen && (
-          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
-        )}
+            {isPriceAlertModalOpen && (
+              <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={category?.name} categoryId={category?.id} />
+            )}
         </>
     );
-};
+  }
 
-const renderProducts = () => (
+  const renderProducts = () => (
     <div className="page-products">
       <aside className="page-products__filters"></aside>
       <main className="page-products__main">
@@ -326,20 +300,18 @@ const renderProducts = () => (
         </div>
       </main>
     </div>
-);
+  );
 
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-      
-        {currentCategory.parentId ? 
+        {currentCategory?.parentId ? 
           renderSubcategories(currentCategory) : 
           renderMainCategories()
         }
-      
         {isPriceAlertModalOpen && (
-          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory.name} categoryId={currentCategory.id} />
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
         )}
       </div>
     </div>
