@@ -10,8 +10,7 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 
 const CategoryPage: React.FC = () => {
   const location = useLocation();
-  const pathSegments = location.pathname.split('/').filter(Boolean); // removes empty parts
-  // e.g., "/cat/1/technology" => ["cat", "1", "technology"]
+  const pathSegments = location.pathname.split('/').filter(Boolean); // e.g., ["cat", "1", "technology"]
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -21,7 +20,7 @@ const CategoryPage: React.FC = () => {
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
 
-  // Helper to find category by id or slug
+  // Helper: find category by id or slug
   const findCategory = (identifier: string) => {
     return [...mainCategories, ...categories].find(
       (cat) =>
@@ -29,7 +28,7 @@ const CategoryPage: React.FC = () => {
     );
   };
 
-  // Main logic: find category based on URL segments
+  // Main logic: resolve category from URL segments
 useEffect(() => {
   if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
     setCurrentCategory(undefined);
@@ -37,11 +36,11 @@ useEffect(() => {
     return;
   }
 
-  const segments = pathSegments.slice(1); // skip 'cat'
+  const segments = pathSegments.slice(1); // e.g., ["1", "technology"]
   let matchedCategory = undefined;
   let parentCats = [...mainCategories];
 
-  // Traverse URL segments to find nested categories
+  // Traverse nested categories if URL has multiple segments
   for (const segment of segments) {
     matchedCategory = parentCats.find(
       (cat) =>
@@ -56,24 +55,29 @@ useEffect(() => {
 
   if (matchedCategory) {
     setCurrentCategory(matchedCategory);
+    // Filter products for this category
     const productsToDisplay = products.filter(
       (product) =>
         product.categoryId && product.categoryId.toString() === matchedCategory.id.toString()
     );
     setFilteredProducts(productsToDisplay);
   } else {
-    // No match found for URL indicating a category
+    // No match for category URL
     setCurrentCategory(undefined);
     setFilteredProducts([]);
   }
 }, [pathSegments]);
 
-// Show NotFound only if URL suggests a category but no match
-if (pathSegments.length >= 2 && pathSegments[0] === 'cat' && !currentCategory) {
+// Show NotFound if URL indicates category but no match
+if (
+  pathSegments.length >= 2 &&
+  pathSegments[0] === 'cat' &&
+  currentCategory === undefined
+) {
   return <NotFound />;
 }
 
-// Sorting function
+// Function for sorting products
 const sortProducts = (productsList: any[]) => {
   switch (sortType) {
     case 'price-asc':
@@ -112,43 +116,40 @@ const handlePriceAlert = () => {
   setIsPriceAlertModalOpen(true);
 };
 
+// Render breadcrumbs, with main category included if applicable
 const renderBreadcrumbs = () => {
   const breadcrumbs = [];
-  if (!currentCategory) return null;
-
-  // Find main category parent if exists
-  const mainCategory = mainCategories.find(
-    (cat) =>
-      cat.id.toString() === currentCategory.parentId?.toString() ||
-      cat.slug === currentCategory.parentId
-  );
-
-  if (mainCategory) {
-    breadcrumbs.push(
-      <li key={mainCategory.slug}>
-        <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link>
-      </li>
+  if (currentCategory) {
+    // Find main category parent if exists
+    const mainCat = mainCategories.find(
+      (cat) =>
+        cat.id.toString() === currentCategory.parentId?.toString() ||
+        cat.slug === currentCategory.parentId
     );
-  }
-
-  // Build category trail for nested categories
-  const categoryTrail = [];
-  let category = currentCategory;
-  while (category) {
-    categoryTrail.unshift(category);
-    category = categories.find(cat => cat.id === category.parentId);
-  }
-
-  categoryTrail.forEach((cat, index) => {
-    if (index !== categoryTrail.length - 1) {
+    if (mainCat) {
       breadcrumbs.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+        <li key={mainCat.slug}>
+          <Link to={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</Link>
         </li>
       );
     }
-  });
-
+    // Build category trail (for nested categories)
+    const categoryTrail = [];
+    let category = currentCategory;
+    while (category) {
+      categoryTrail.unshift(category);
+      category = categories.find(cat => cat.id === category.parentId);
+    }
+    categoryTrail.forEach((cat, index) => {
+      if (index !== categoryTrail.length - 1) {
+        breadcrumbs.push(
+          <li key={cat.slug}>
+            <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+          </li>
+        );
+      }
+    });
+  }
   return (
     <div id="trail">
       <nav className="breadcrumb">
@@ -173,24 +174,26 @@ const renderBreadcrumbs = () => {
   );
 };
 
+// Render main categories view (for top-level categories)
 const renderMainCategories = () => {
   if (!currentCategory) return null;
-  const mainCategory = mainCategories.find(
+  const mainCat = mainCategories.find(
     (cat) =>
       cat.id.toString() === currentCategory.parentId?.toString() ||
       cat.slug === currentCategory.parentId
   );
-  if (!mainCategory) return null;
+  if (!mainCat) return null;
   const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
   return (
     <>
+      {/* header with back button to main category */}
       <div className="page-header">
         <div className="hgroup">
           <div className="page-header__title-wrapper">
             <Link
               className="trail__back pressable"
               title="Back"
-              to={`/cat/${mainCategory.id}/${mainCategory.slug}`}
+              to={`/cat/${mainCat.id}/${mainCat.slug}`}
             >
               <svg aria-hidden="true" className="icon" width={16} height={16}>
                 <use href="/dist/images/icons/icons.svg#icon-right-thin-16" />
@@ -200,6 +203,7 @@ const renderMainCategories = () => {
           </div>
         </div>
       </div>
+      {/* subcategories or products */}
       <div className="root-category__categories">
         {subcategories.length > 0 ? (
           subcategories.map((subCat) => (
@@ -231,11 +235,12 @@ const renderMainCategories = () => {
           renderProducts()
         )}
       </div>
+      {/* footer with alert button & modal */}
       <div className="sections"></div>
       <div className="p__products-section">
         <div className="alerts">
           <button
-            data-url={`/cat/${mainCategory.id}/${mainCategory.slug}`}
+            data-url={`/cat/${mainCat.id}/${mainCat.slug}`}
             data-title={currentCategory?.name}
             data-max-price="0"
             className="alerts__button pressable"
@@ -263,10 +268,12 @@ const renderMainCategories = () => {
   );
 };
 
+// Render subcategories view
 const renderSubcategories = (category) => {
   if (!category) return null;
   return (
     <>
+      {/* header with back button to current category */}
       <div className="page-header">
         <div className="hgroup">
           <div className="page-header__title-wrapper">
@@ -283,6 +290,7 @@ const renderSubcategories = (category) => {
           </div>
         </div>
       </div>
+      {/* subcategories */}
       <div className="root-category__categories">
         {categories
           .filter((cat) => cat.parentId === category?.id)
@@ -327,6 +335,7 @@ const renderSubcategories = (category) => {
           renderProducts()
         )}
       </div>
+      {/* footer with alert button & modal */}
       <div className="sections"></div>
       <div className="p__products-section">
         <div className="alerts">
@@ -359,6 +368,7 @@ const renderSubcategories = (category) => {
   );
 };
 
+// Render products list
 const renderProducts = () => (
   <div className="page-products">
     <aside className="page-products__filters"></aside>
