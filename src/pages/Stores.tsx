@@ -1,163 +1,193 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { vendors } from '@/data/mockData';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Search } from 'lucide-react';
+import { VendorWithStats, getAllVendors } from '@/services/vendorService';
 
 const Stores = () => {
-  const [storesByLetter, setStoresByLetter] = useState<Record<string, typeof vendors>>({});
-  const [activeLetter, setActiveLetter] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
-                   'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
+  const [vendors, setVendors] = useState<VendorWithStats[]>([]);
+  const [filteredVendors, setFilteredVendors] = useState<VendorWithStats[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
+  const navigate = useNavigate();
+  
   useEffect(() => {
-    // Enhance vendors with missing properties if needed
-    const enhancedVendors = vendors.map(vendor => ({
-      ...vendor,
-      productCount: vendor.productCount || Math.floor(Math.random() * 1000) + 100,
-      categoryCount: vendor.categoryCount || Math.floor(Math.random() * 20) + 5
-    }));
+    const fetchVendors = async () => {
+      try {
+        const data = await getAllVendors();
+        setVendors(data);
+        setFilteredVendors(data);
+      } catch (error) {
+        console.error('Error fetching vendors:', error);
+      }
+    };
     
-    // Group stores by first letter
-    const groupedStores: Record<string, typeof vendors> = {};
-    
-    enhancedVendors.forEach(store => {
-      const firstLetter = store.name.charAt(0).toUpperCase();
+    fetchVendors();
+  }, []);
+  
+  useEffect(() => {
+    const filterVendors = () => {
+      let filtered = [...vendors];
       
-      if (!groupedStores[firstLetter]) {
-        groupedStores[firstLetter] = [];
+      // Apply search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(vendor => 
+          vendor.name.toLowerCase().includes(query)
+        );
       }
       
-      groupedStores[firstLetter].push(store);
-    });
+      // Apply tab filter
+      if (activeTab !== 'all') {
+        filtered = filtered.filter(vendor => {
+          if (activeTab === 'certified') {
+            return vendor.certification;
+          }
+          // You can add more filters here
+          return true;
+        });
+      }
+      
+      setFilteredVendors(filtered);
+    };
     
-    setStoresByLetter(groupedStores);
-  }, []);
-
-  const handleLetterClick = (letter: string) => {
-    setActiveLetter(letter);
+    filterVendors();
+  }, [searchQuery, activeTab, vendors]);
+  
+  const handleVendorClick = (slug: string) => {
+    navigate(`/store/${slug}`);
   };
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setActiveLetter('all');
+    setSearchQuery(e.target.value);
   };
   
-  const filteredStores = () => {
-    let results = [...vendors];
-    
-    // Apply search filter
-    if (searchTerm.trim() !== '') {
-      results = results.filter(store => 
-        store.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      return results;
-    }
-    
-    // Apply letter filter
-    if (activeLetter !== 'all') {
-      results = storesByLetter[activeLetter] || [];
-    }
-    
-    return results;
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
   
-  const formattedSlug = (name: string) => {
-    return name.toLowerCase().replace(/\s+/g, '-');
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Online Stores</h1>
-      
-      {/* Search and Letter Filter */}
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <div className="md:w-1/3">
-            <input
-              type="text"
-              placeholder="Search stores..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => handleLetterClick('all')}
-              className={`px-3 py-1 rounded-md ${activeLetter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+  const renderAlphabeticalIndex = () => {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    
+    return (
+      <div className="flex flex-wrap justify-center mb-8">
+        {alphabet.map(letter => {
+          const hasVendorsStartingWith = filteredVendors.some(
+            vendor => vendor.name.toUpperCase().startsWith(letter)
+          );
+          
+          return (
+            <a 
+              key={letter}
+              href={`#section-${letter}`}
+              className={`mx-1 px-2 py-1 ${hasVendorsStartingWith ? 'text-primary hover:underline' : 'text-gray-400'}`}
             >
-              All
-            </button>
-            {letters.map(letter => (
-              <button
-                key={letter}
-                onClick={() => handleLetterClick(letter)}
-                disabled={!storesByLetter[letter]}
-                className={`px-3 py-1 rounded-md ${
-                  activeLetter === letter 
-                    ? 'bg-blue-500 text-white' 
-                    : storesByLetter[letter] 
-                      ? 'bg-gray-200 hover:bg-gray-300' 
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                }`}
+              {letter}
+            </a>
+          );
+        })}
+      </div>
+    );
+  };
+  
+  const renderAlphabeticalSections = () => {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    
+    return alphabet.map(letter => {
+      const vendorsStartingWith = filteredVendors.filter(
+        vendor => vendor.name.toUpperCase().startsWith(letter)
+      );
+      
+      if (vendorsStartingWith.length === 0) return null;
+      
+      return (
+        <div key={letter} id={`section-${letter}`} className="mb-8">
+          <h3 className="text-2xl font-bold mb-4 border-b pb-2">{letter}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {vendorsStartingWith.map(vendor => (
+              <Card 
+                key={vendor.id}
+                onClick={() => handleVendorClick(vendor.id)}
+                className="cursor-pointer hover:shadow-md transition-shadow"
               >
-                {letter}
-              </button>
+                <CardContent className="p-4">
+                  <div className="flex items-center mb-3">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden mr-3">
+                      {vendor.logo ? (
+                        <img src={vendor.logo} alt={vendor.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-lg font-bold">{vendor.name.charAt(0)}</span>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{vendor.name}</h4>
+                      <div className="text-xs text-gray-500">
+                        {vendor.productCount || 0} products | {vendor.categoryCount || 0} categories
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {vendor.certification && (
+                    <div className="mb-2 text-xs">
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                        {vendor.certification}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="text-xs text-gray-600">
+                    <div>{vendor.address && vendor.address[0]}</div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
+      );
+    });
+  };
+  
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold mb-6">All Stores</h1>
+      
+      <div className="mb-8">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Input 
+            type="text"
+            placeholder="Search stores..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="pl-10"
+          />
+        </div>
       </div>
       
-      {/* Store Listings */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredStores().map(store => (
-          <Link 
-            key={store.id}
-            to={`/store/${store.id}/${formattedSlug(store.name)}`} 
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <img 
-                  src={store.logo || '/images/no-image.svg'} 
-                  alt={`${store.name} logo`}
-                  className="w-16 h-16 object-contain mr-4"
-                />
-                <div>
-                  <h3 className="text-xl font-semibold">{store.name}</h3>
-                  {store.certification && (
-                    <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-                      {store.certification}
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-500">
-                <p>{(store.productCount || 0).toLocaleString()} products in {(store.categoryCount || 0).toLocaleString()} categories</p>
-                <div className="mt-2 flex items-center">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${i < Math.floor(store.rating) ? 'fill-current' : 'stroke-current fill-none'}`} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="ml-2 text-gray-700">{store.rating.toFixed(1)}</span>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
+        <TabsList className="grid grid-cols-3 max-w-md mx-auto">
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="certified">Certified</TabsTrigger>
+          <TabsTrigger value="featured">Featured</TabsTrigger>
+        </TabsList>
+      </Tabs>
       
-      {filteredStores().length === 0 && (
-        <div className="bg-white rounded-lg p-8 shadow text-center">
-          <h2 className="text-xl font-semibold mb-4">No stores found</h2>
-          <p className="text-gray-600">
-            We couldn't find any stores matching your search. Please try different criteria.
-          </p>
+      {renderAlphabeticalIndex()}
+      
+      {renderAlphabeticalSections()}
+      
+      {filteredVendors.length === 0 && (
+        <div className="text-center py-16">
+          <h3 className="text-xl font-medium mb-2">No stores found</h3>
+          <p className="text-gray-500">Try adjusting your search or filter criteria</p>
         </div>
       )}
     </div>
