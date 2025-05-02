@@ -44,6 +44,7 @@ function App() {
           <Route path="/cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug" element={<CategoryPage />} />
           {/* Route for fourth-level subcategory */}
           <Route path="/cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug/:anotherSubSubCatSlug" element={<CategoryPage />} />
+          <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="category/:categorySlug" element={<Categories />} />
