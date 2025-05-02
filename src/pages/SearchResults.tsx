@@ -1,145 +1,124 @@
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import Sidebar from '@/components/search/Sidebar';
-import ProductCard from '@/components/ProductCard';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SearchHeader from '@/components/search/SearchHeader';
+import Sidebar from '@/components/search/Sidebar';
+import ProductResults from '@/components/search/ProductResults';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProductFilters } from '@/hooks/useProductFilters';
-import { getAllProducts, searchProducts } from '@/services/productService';
+import { searchProducts, Product, SearchFilters } from '@/services/productService';
 import { getAllBrands } from '@/services/brandService';
 import { getAllVendors } from '@/services/vendorService';
-import { Product } from '@/services/productService';
-import { Brand } from '@/services/brandService';
-import { Vendor } from '@/services/vendorService';
 
-const SearchResults: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const SearchResults = () => {
+  const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const storeFilter = searchParams.get('store') || '';
-  const vendorFilter = searchParams.get('vendor') || '';
-  const brandFilter = searchParams.get('brand') || '';
-  const [results, setResults] = useState<Product[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Get sort order from query params or default to 'relevance'
-  const sortParam = searchParams.get('o') || 'relevance';
+  const category = searchParams.get('category') || '';
   
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [brands, setBrands] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  
+  const {
+    filteredResults,
+    sortParam,
+    setFilteredVendors,
+    setInStockOnly,
+    handlePriceRangeFilter
+  } = useProductFilters({ initialProducts: products });
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      
       try {
-        // Fetch all necessary data
-        const [brandsData, vendorsData] = await Promise.all([
-          getAllBrands(),
-          getAllVendors()
-        ]);
+        // Create a proper SearchFilters object
+        const searchFilters: SearchFilters = {
+          query: query,
+          category_id: category || undefined,
+          sort_by: 'relevance'
+        };
         
+        const { products: searchResults } = await searchProducts(searchFilters);
+        setProducts(searchResults);
+        
+        const brandsData = await getAllBrands();
         setBrands(brandsData);
+        
+        const vendorsData = await getAllVendors();
         setVendors(vendorsData);
-        
-        // Use searchProducts function with the query
-        let productsData;
-        if (query) {
-          productsData = await searchProducts(query);
-        } else {
-          productsData = await getAllProducts();
-        }
-        
-        // Apply vendor filter if present
-        if (storeFilter) {
-          productsData = productsData.filter(product => {
-            if (!product.prices) return false;
-            return product.prices.some(price => {
-              const vendor = price.vendor_id;
-              return vendor && vendor.includes(storeFilter);
-            });
-          });
-        }
-        
-        // Apply brand filter if present
-        if (brandFilter) {
-          productsData = productsData.filter(product => 
-            product.brand?.toLowerCase() === brandFilter.toLowerCase()
-          );
-        }
-        
-        setResults(productsData);
       } catch (error) {
-        console.error('Error searching products:', error);
-        setResults([]);
+        console.error('Error fetching search data:', error);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchData();
-  }, [query, storeFilter, brandFilter, vendorFilter]);
-
-  // Apply filters and sorting
-  const { filteredResults } = useProductFilters({ initialProducts: results });
+  }, [query, category]);
 
   const handleSortChange = (value: string) => {
-    // Update the URL with the new sort parameter
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('o', value);
-    setSearchParams(newParams);
+    // Handle sort change
+    console.log("Sort change:", value);
   };
 
-  // Get the total count
-  const totalResults = filteredResults.length;
+  const handleVendorFilter = (vendors: string[]) => {
+    setFilteredVendors(vendors);
+  };
+
+  const handlePriceRange = (min: number, max: number) => {
+    handlePriceRangeFilter(min, max);
+  };
+
+  const handleInStockOnly = (inStockOnly: boolean) => {
+    setInStockOnly(inStockOnly);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <SearchHeader query={query} resultsCount={totalResults} />
+    <div className="container mx-auto px-4 py-6">
+      <SearchHeader 
+        query={query} 
+        resultsCount={products.length} 
+      />
       
-      <div className="flex flex-col md:flex-row gap-6 mt-6">
-        <aside className="md:w-1/4">
+      <div className="flex flex-col lg:flex-row gap-6 mt-6">
+        <aside className="w-full lg:w-1/4">
           <Sidebar 
             query={query} 
-            brands={brands}
+            brands={brands} 
             vendors={vendors}
+            onInStockOnly={handleInStockOnly}
+            onVendorFilter={handleVendorFilter}
+            onPriceRangeFilter={handlePriceRange}
           />
         </aside>
         
-        <main className="md:w-3/4">
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-sm text-gray-600">
-              {loading ? 'Searching...' : `${totalResults} results`}
-            </p>
-            
-            <Tabs defaultValue={sortParam} onValueChange={handleSortChange}>
-              <TabsList>
-                <TabsTrigger value="relevance">Σχετικότερα</TabsTrigger>
-                <TabsTrigger value="price_asc">Φθηνότερα</TabsTrigger>
-                <TabsTrigger value="price_desc">Ακριβότερα</TabsTrigger>
-                <TabsTrigger value="stores">Αριθμός Καταστημάτων</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+        <main className="w-full lg:w-3/4">
+          <Tabs defaultValue="products" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="products">Προϊόντα</TabsTrigger>
+              <TabsTrigger value="shops">Καταστήματα</TabsTrigger>
+            </TabsList>
+          </Tabs>
           
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-          ) : totalResults === 0 ? (
-            <div className="bg-white rounded-lg p-8 shadow text-center">
-              <h2 className="text-2xl font-bold mb-4">No results found</h2>
-              <p className="text-gray-600 mb-6">
-                We couldn't find any products matching "{query}". Please try another search.
-              </p>
-              <Link to="/" className="text-blue-600 hover:underline">
-                Return to homepage
-              </Link>
+              <Button variant="ghost" disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Φόρτωση...
+              </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredResults.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <ProductResults 
+              filteredResults={filteredResults}
+              onSortChange={handleSortChange}
+              onVendorFilter={handleVendorFilter}
+              onPriceRangeFilter={handlePriceRange}
+              onInStockOnly={handleInStockOnly}
+            />
           )}
         </main>
       </div>

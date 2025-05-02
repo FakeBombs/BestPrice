@@ -2,7 +2,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
-// Add brands array to mockData if it doesn't exist
+// Initialize the brands array in mockData if it doesn't exist
 if (!mockData.brands) {
   mockData.brands = [
     { id: 1, name: 'Apple', logo: '/images/brands/apple.png' },
@@ -34,7 +34,7 @@ export const getAllBrands = async (): Promise<Brand[]> => {
       
     if (error) {
       console.error("Error fetching brands:", error);
-      // Use exported 'brands' array directly from mockData
+      // Use mockData brands
       return mockData.brands?.map(b => ({
         ...b,
         id: String(b.id)

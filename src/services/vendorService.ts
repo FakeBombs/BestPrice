@@ -2,7 +2,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
-// Add vendors array to mockData if it doesn't exist
+// Initialize the vendors array in mockData if it doesn't exist
 if (!mockData.vendors) {
   mockData.vendors = [
     { 

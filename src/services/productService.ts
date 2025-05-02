@@ -2,6 +2,28 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
+export interface ProductPrice {
+  id: string;
+  product_id: string;
+  vendor_id: string;
+  price: number;
+  shipping_cost?: number;
+  in_stock: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ProductCategory {
+  product_id: string;
+  category_id: string;
+  primary_category: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -16,16 +38,12 @@ export interface Product {
   slug: string;
   highlights?: string[];
   specifications?: Record<string, any>;
-  rating?: number;
+  rating: number;
   review_count?: number;
   created_at?: string;
   updated_at?: string;
-}
-
-export interface ProductCategory {
-  product_id: string;
-  category_id: string;
-  primary_category: boolean;
+  prices?: ProductPrice[];
+  categories?: Category[];
 }
 
 export interface SearchFilters {
@@ -43,6 +61,31 @@ export interface SearchFilters {
 export type ProductCreate = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
 export type ProductUpdate = Partial<ProductCreate>;
 
+// Helper function to get the best price for a product
+export const getBestPrice = (product: Product): ProductPrice | null => {
+  if (!product.prices || product.prices.length === 0) {
+    // Return a default price object using the product's base price
+    return {
+      id: "default",
+      product_id: product.id,
+      vendor_id: "default",
+      price: product.price,
+      in_stock: true
+    };
+  }
+  
+  // Filter for in-stock prices
+  const inStockPrices = product.prices.filter(p => p.in_stock);
+  
+  if (inStockPrices.length === 0) {
+    // If no in-stock prices, return the lowest price overall
+    return product.prices.sort((a, b) => a.price - b.price)[0];
+  }
+  
+  // Return the lowest in-stock price
+  return inStockPrices.sort((a, b) => a.price - b.price)[0];
+};
+
 // Get all products
 export const getAllProducts = async (): Promise<Product[]> => {
   try {
@@ -57,8 +100,14 @@ export const getAllProducts = async (): Promise<Product[]> => {
       return mockData.products?.map(p => ({
         ...p,
         id: String(p.id),
+        rating: p.rating || 0,
         review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
+        specifications: p.specs || {},
+        // Map categories from mockData if they exist
+        categories: p.categoryId ? [{ 
+          id: String(p.categoryId), 
+          name: p.category || 'Uncategorized' 
+        }] : []
       })) || [];
     }
     
@@ -68,8 +117,14 @@ export const getAllProducts = async (): Promise<Product[]> => {
     return mockData.products?.map(p => ({
       ...p,
       id: String(p.id),
+      rating: p.rating || 0,
       review_count: p.reviewCount || 0,
-      specifications: p.specs || {}
+      specifications: p.specs || {},
+      // Map categories from mockData if they exist
+      categories: p.categoryId ? [{ 
+        id: String(p.categoryId), 
+        name: p.category || 'Uncategorized' 
+      }] : []
     })) || [];
   }
 };
@@ -89,8 +144,14 @@ export const getProductById = async (id: string): Promise<Product | null> => {
       return mockProduct ? {
         ...mockProduct,
         id: String(mockProduct.id),
+        rating: mockProduct.rating || 0,
         review_count: mockProduct.reviewCount || 0,
-        specifications: mockProduct.specs || {}
+        specifications: mockProduct.specs || {},
+        // Map categories from mockData if they exist
+        categories: mockProduct.categoryId ? [{ 
+          id: String(mockProduct.categoryId), 
+          name: mockProduct.category || 'Uncategorized' 
+        }] : []
       } : null;
     }
     
@@ -101,8 +162,14 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     return mockProduct ? {
       ...mockProduct,
       id: String(mockProduct.id),
+      rating: mockProduct.rating || 0,
       review_count: mockProduct.reviewCount || 0,
-      specifications: mockProduct.specs || {}
+      specifications: mockProduct.specs || {},
+      // Map categories from mockData if they exist
+      categories: mockProduct.categoryId ? [{ 
+        id: String(mockProduct.categoryId), 
+        name: mockProduct.category || 'Uncategorized' 
+      }] : []
     } : null;
   }
 };

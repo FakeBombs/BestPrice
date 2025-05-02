@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Product } from '@/services/productService';
+import { Product, getBestPrice } from '@/services/productService';
 
 interface UseProductFiltersProps {
   initialProducts: Product[];
@@ -39,24 +39,19 @@ export const useProductFilters = ({ initialProducts }: UseProductFiltersProps) =
     // Apply price range filter
     if (priceRange) {
       filtered = filtered.filter(product => {
-        const minProductPrice = product.prices?.length 
-          ? Math.min(...product.prices.map(p => p.price)) 
-          : product.price;
-        
-        return minProductPrice >= priceRange.min && minProductPrice <= priceRange.max;
+        const bestPrice = getBestPrice(product);
+        return bestPrice ? bestPrice.price >= priceRange.min && bestPrice.price <= priceRange.max : false;
       });
     }
     
     // Apply sorting
     filtered = filtered.sort((a, b) => {
       // Get the minimum price for each product
-      const aPrice = a.prices?.length 
-        ? Math.min(...a.prices.map(p => p.price)) 
-        : a.price;
+      const aBestPrice = getBestPrice(a);
+      const bBestPrice = getBestPrice(b);
       
-      const bPrice = b.prices?.length 
-        ? Math.min(...b.prices.map(p => p.price)) 
-        : b.price;
+      const aPrice = aBestPrice ? aBestPrice.price : a.price;
+      const bPrice = bBestPrice ? bBestPrice.price : b.price;
       
       // Get the vendor count for each product
       const aVendorCount = a.prices?.length || 0;
