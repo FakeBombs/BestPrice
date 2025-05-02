@@ -210,7 +210,7 @@ const renderBreadcrumbs = () => {
 
 // Render main categories view (for top-level categories)
 const renderMainCategories = () => {
-  if (!currentCategory) return null;
+  if (!currentCategory || currentCategory.parentId !== null) return null;
   // Find main category based on currentCategory's parentId being null
   const mainCat = mainCategories.find(
     (cat) => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
@@ -476,7 +476,7 @@ return (
   <div className="root__wrapper root-category__root">
     <div className="root">
       {renderBreadcrumbs()}
-      {currentCategory?.parentId ? renderSubcategories(currentCategory) : renderMainCategories()}
+      {currentCategory?.parentId === null ? renderMainCategories() : (currentCategory ? renderSubcategories(currentCategory) : null)}
       {isPriceAlertModalOpen && (
         <PriceAlertModal
           isOpen={isPriceAlertModalOpen}
