@@ -164,7 +164,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
                     </div>
                     <div className="sitemap-desktop__view sitemap-desktop__view--cat">
                       <div className="sitemap-desktop__view-title">
-                        <Link to={`/cat/${mainCategory?.slug}`} onClick={sitemapToggle}>{t(mainCategory?.name)}</Link>
+                        <Link to={`/cat/${mainCategory?.id}/${mainCategory?.slug}`} onClick={sitemapToggle}>{t(mainCategory?.name)}</Link>
                       </div>
                       <div className="sitemap-desktop__category-subs">
                         {subCategories.map((sub) => (
