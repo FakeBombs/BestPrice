@@ -144,7 +144,7 @@ const Index = () => {
                 <div className="h-header__more-wrapper">
                   <div className="h-categories__verticals">
                     <Link data-id="deals" to="/deals?bpref=home-verticals"><svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>{t('deals')}</Link>
-                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.slug}?bpref=home-verticals`}>{t(category.name)}</Link> ))}
+                    {mainCategories.map(category => ( <Link key={category.id} to={`/cat/${category.id}/${category.slug}?bpref=home-verticals`}>{t(category.name)}</Link> ))}
                   </div>
                   <div className="h-header__more pressable">
                     <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-hamburger-12"></use></svg>
