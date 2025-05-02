@@ -248,16 +248,8 @@ const CategoryPage: React.FC = () => {
         <div className="sections"></div>
         <div className="p__products-section">
           <div className="alerts">
-            <button
-              data-url={`/cat/${mainCat.id}/${mainCat.slug}`}
-              data-title={currentCategory?.name}
-              data-max-price="0"
-              className="alerts__button pressable"
-              onClick={handlePriceAlert}
-            >
-              <svg aria-hidden="true" className="icon" width={20} height={20}>
-                <use href="/dist/images/icons/icons.svg#icon-notification-outline-20" />
-              </svg>
+            <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={currentCategory?.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+              <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
               <span className="alerts__label">Ειδοποίηση</span>
             </button>
             <div className="alerts__prompt">
@@ -266,12 +258,7 @@ const CategoryPage: React.FC = () => {
           </div>
         </div>
         {isPriceAlertModalOpen && (
-          <PriceAlertModal
-            isOpen={isPriceAlertModalOpen}
-            onClose={() => setIsPriceAlertModalOpen(false)}
-            categoryName={currentCategory?.name}
-            categoryId={currentCategory?.id}
-          />
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
         )}
       </>
     );
@@ -285,14 +272,8 @@ const CategoryPage: React.FC = () => {
         <div className="page-header">
           <div className="hgroup">
             <div className="page-header__title-wrapper">
-              <Link
-                className="trail__back pressable"
-                title={category.name}
-                to={`/cat/${category.id}/${category.slug}`}
-              >
-                <svg aria-hidden="true" className="icon" width={16} height={16}>
-                  <use href="/dist/images/icons/icons.svg#icon-right-thin-16" />
-                </svg>
+              <Link className="trail__back pressable" title={category.name} to={`/cat/${category.id}/${category.slug}`}>
+                <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
               </Link>
               <h1>{category.name}</h1>
             </div>
@@ -307,16 +288,11 @@ const CategoryPage: React.FC = () => {
               .filter((cat) => cat.parentId === category?.id)
               .map((subCat) => (
                 <div key={subCat.id} className="root-category__category">
-                  <Link
-                    to={`/cat/${subCat.id}/${subCat.slug}`}
-                    className="root-category__cover"
-                  >
+                  <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
                     <img src={subCat.image} alt={subCat.name} title={subCat.name} />
                   </Link>
                   <h2 className="root-category__category-title">
-                    <Link to={`/cat/${subCat.id}/${subCat.slug}`}>
-                      {subCat.name}
-                    </Link>
+                    <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
                   </h2>
                   <div className="root-category__footer">
                     <div className="root-category__links">
@@ -327,11 +303,7 @@ const CategoryPage: React.FC = () => {
                         .slice(0, 5)
                         .map((linkedSubCat) => (
                           <React.Fragment key={linkedSubCat.id}>
-                            <Link
-                              to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}
-                            >
-                              {linkedSubCat.name}
-                            </Link>
+                            <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
                             {linkedSubCat !== categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).slice(-1)[0] && ', '}
                           </React.Fragment>
                         ))}
@@ -347,13 +319,7 @@ const CategoryPage: React.FC = () => {
         <div className="sections"></div>
         <div className="p__products-section">
           <div className="alerts">
-            <button
-              data-url={`/cat/${category.id}/${category.slug}`}
-              data-title={category.name}
-              data-max-price="0"
-              className="alerts__button pressable"
-              onClick={handlePriceAlert}
-            >
+            <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
               <svg aria-hidden="true" className="icon" width={20} height={20}>
                 <use href="/dist/images/icons/icons.svg#icon-notification-outline-20" />
               </svg>
@@ -365,12 +331,7 @@ const CategoryPage: React.FC = () => {
           </div>
         </div>
         {isPriceAlertModalOpen && (
-          <PriceAlertModal
-            isOpen={isPriceAlertModalOpen}
-            onClose={() => setIsPriceAlertModalOpen(false)}
-            categoryName={category?.name}
-            categoryId={category?.id}
-          />
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={category?.name} categoryId={category?.id} />
         )}
       </>
     );
@@ -393,43 +354,15 @@ const CategoryPage: React.FC = () => {
             <div className="tabs">
               <div className="tabs-wrapper">
                 <nav>
-                  <a
-                    data-type="rating-desc"
-                    rel="nofollow"
-                    className={sortType === 'rating-desc' ? 'current' : ''}
-                    onClick={() => setSortType('rating-desc')}
-                  >
-                    <div className="tabs__content">Δημοφιλέστερα</div>
-                  </a>
-                  <a
-                    data-type="price-asc"
-                    rel="nofollow"
-                    className={sortType === 'price-asc' ? 'current' : ''}
-                    onClick={() => setSortType('price-asc')}
-                  >
-                    <div className="tabs__content">Φθηνότερα</div>
-                  </a>
-                  <a
-                    data-type="price-desc"
-                    rel="nofollow"
-                    className={sortType === 'price-desc' ? 'current' : ''}
-                    onClick={() => setSortType('price-desc')}
-                  >
-                    <div className="tabs__content">Ακριβότερα</div>
-                  </a>
-                  <a
-                    data-type="merchants_desc"
-                    rel="nofollow"
-                    className={sortType === 'merchants_desc' ? 'current' : ''}
-                    onClick={() => setSortType('merchants_desc')}
-                  >
-                    <div className="tabs__content">Αριθμός καταστημάτων</div>
-                  </a>
+                  <a data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={() => setSortType('rating-desc')}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                  <a data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={() => setSortType('price-asc')}><div className="tabs__content">Φθηνότερα</div></a>
+                  <a data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={() => setSortType('price-desc')}><div className="tabs__content">Ακριβότερα</div></a>
+                  <a data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={() => setSortType('merchants_desc')}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
                 </nav>
               </div>
             </div>
           </div>
-        </div>
+        </header>
         <div className="page-products__main-wrapper">
           <div className="p__products" data-pagination="">
             {filteredProducts.length > 0 ? (
@@ -451,12 +384,7 @@ const CategoryPage: React.FC = () => {
         {renderBreadcrumbs()}
         {currentCategory && currentCategory.parentId === null ? renderMainCategories() : (currentCategory ? renderSubcategories(currentCategory) : null)}
         {isPriceAlertModalOpen && (
-          <PriceAlertModal
-            isOpen={isPriceAlertModalOpen}
-            onClose={() => setIsPriceAlertModalOpen(false)}
-            categoryName={currentCategory?.name}
-            categoryId={currentCategory?.id}
-          />
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
         )}
       </div>
     </div>
