@@ -150,7 +150,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
                       </div>
                       <div className="sitemap-desktop__sidebar-categories">
                         {mainCategories.map((category) => (
-                          <Link to={`/cat/${category.slug}?bpref=sitemap`} className={`sitemap-desktop__item ${currentCategoryId === category.id ? 'sitemap-desktop__item--selected' : ''}`} key={category.id} onMouseEnter={() => handleMouseEnter(category.id)} onMouseLeave={handleMouseLeave} onClick={sitemapToggle}>
+                          <Link to={`/cat/${category.id}/${category.slug}?bpref=sitemap`} className={`sitemap-desktop__item ${currentCategoryId === category.id ? 'sitemap-desktop__item--selected' : ''}`} key={category.id} onMouseEnter={() => handleMouseEnter(category.id)} onMouseLeave={handleMouseLeave} onClick={sitemapToggle}>
                             {categorySvgMap[category.id]}
                             {t(category.name)}
                             <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path xmlns="http://www.w3.org/2000/svg" d="M13 1L5 9L13 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
