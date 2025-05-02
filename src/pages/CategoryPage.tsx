@@ -382,7 +382,7 @@ const CategoryPage: React.FC = () => {
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-        {currentCategory && currentCategory.parentId === null && renderMainCategories()}
+        {currentCategory ? (currentCategory.parentId === null && renderMainCategories()) : null}
         {currentCategory && currentCategory.parentId !== null && renderSubcategories(currentCategory)}
         {isPriceAlertModalOpen && (
           <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
