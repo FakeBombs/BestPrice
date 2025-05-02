@@ -114,7 +114,7 @@ const handlePriceAlert = () => {
 // Render breadcrumbs, with main category included if applicable
 const renderBreadcrumbs = () => {
   if (!currentCategory) {
-    // show only Home
+    // Show only home if no current category
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -130,23 +130,24 @@ const renderBreadcrumbs = () => {
 
   const breadcrumbs = [];
 
-  // Find main category (if currentCategory is nested)
-  const mainCat =
-    mainCategories.find(
-      cat =>
-        cat.id.toString() === currentCategory.parentId?.toString() ||
-        cat.slug === currentCategory.parentId
-    ) || null;
+  // Always find and add the main category
+  const mainCategory = mainCategories.find(
+    cat =>
+      cat.id.toString() === currentCategory.parentId?.toString() ||
+      cat.slug === currentCategory.parentId
+  );
 
-  if (mainCat) {
+  if (mainCategory) {
     breadcrumbs.push(
-      <li key={mainCat.slug}>
-        <Link to={`/cat/${mainCat.id}/${mainCat.slug}`}>{mainCat.name}</Link>
+      <li key={mainCategory.slug}>
+        <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
+          {mainCategory.name}
+        </Link>
       </li>
     );
   }
 
-  // Build category trail
+  // Build the trail of categories from currentCategory up to the root
   const categoryTrail = [];
   let category = currentCategory;
   while (category) {
@@ -154,14 +155,17 @@ const renderBreadcrumbs = () => {
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  categoryTrail.forEach((cat, index) => {
-    if (index !== categoryTrail.length - 1) {
-      breadcrumbs.push(
-        <li key={cat.slug}>
-          <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
-        </li>
-      );
-    }
+  // Skip the main category in trail if already added
+  const trailToRender = categoryTrail.filter(
+    (cat) => !mainCategory || cat.id !== mainCategory.id
+  );
+
+  trailToRender.forEach((cat, index) => {
+    breadcrumbs.push(
+      <li key={cat.slug}>
+        <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+      </li>
+    );
   });
 
   return (
