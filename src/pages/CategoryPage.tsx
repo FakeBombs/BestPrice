@@ -357,7 +357,7 @@ const CategoryPage: React.FC = () => {
 
     return (
         <div className="page-products">
-        {/* Optional: Filters sidebar <aside className="page-products__filters"></aside> */}
+        <aside className="page-products__filters"></aside>
         <main className="page-products__main">
             {showProductHeader && (
                 <header className="page-header">
@@ -412,12 +412,7 @@ const CategoryPage: React.FC = () => {
 
         {/* Conditionally render the Price Alert Modal */}
         {isPriceAlertModalOpen && currentCategory && (
-          <PriceAlertModal
-            isOpen={isPriceAlertModalOpen}
-            onClose={() => setIsPriceAlertModalOpen(false)}
-            categoryName={currentCategory.name}
-            categoryId={currentCategory.id}
-          />
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory.name} categoryId={currentCategory.id} />
         )}
       </div>
     </div>
