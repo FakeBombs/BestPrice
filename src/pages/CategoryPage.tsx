@@ -165,71 +165,81 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderMainCategories = () => {
-    if (!currentCategory || currentCategory.parentId !== null) return null;
-    const mainCat = mainCategories.find(
-      (cat) => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
-    );
-    if (!mainCat) return null;
-    const subcategories = categories.filter(cat => cat.parentId === mainCat.id) || [];
+  // Φιλτράρουμε τις κατηγορίες με isMain: true
+  const mainCats = mainCategories.filter(cat => cat.isMain === true);
+  if (mainCats.length === 0) return null;
 
-    if (categories.length === 0) return null; // Προσθήκη ασφαλείας
+  // Επιλέγουμε την τρέχουσα κύρια κατηγορία
+  if (!currentCategory || currentCategory.parentId !== null) return null;
+  const mainCat = mainCats.find(
+    (cat) => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
+  );
+  if (!mainCat) return null;
 
-    return (
-      <>
-        {/* header with back button to main category */}
-        <div className="page-header">
-          <div className="hgroup">
-            <div className="page-header__title-wrapper">
-              <Link className="trail__back pressable" title="Back" to={`/cat/${mainCat.id}/${mainCat.slug}`}>
-                <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
-              </Link>
-              <h1>{currentCategory?.name}</h1>
-            </div>
+  const subcategories = categories.filter(cat => cat.parentId === mainCat.id) || [];
+
+  if (categories.length === 0) return null; // Προσθήκη ασφαλείας
+
+  return (
+    <>
+      {/* header with back button to main category */}
+      <div className="page-header">
+        <div className="hgroup">
+          <div className="page-header__title-wrapper">
+            <Link className="trail__back pressable" title="Back" to={`/cat/${mainCat.id}/${mainCat.slug}`}>
+              <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
+            </Link>
+            <h1>{currentCategory?.name}</h1>
           </div>
         </div>
-        {/* subcategories or products */}
-        <div className="root-category__categories">
-          {subcategories.length > 0 ? (
-            subcategories.map((subCat) => (
-              <div key={subCat.id} className="root-category__category">
-                <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image} alt={subCat.name} title={subCat.name} /></Link>
-                <h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3>
-                <div className="root-category__footer">
-                  <div className="root-category__links">
-                    {categories
-                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                      .slice(0, 5)
-                      .map((linkedSubCat) => (
-                        <React.Fragment key={linkedSubCat.id}>
-                          <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                          {linkedSubCat !== categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).slice(-1)[0] && ', '}
-                        </React.Fragment>
-                      ))}
-                  </div>
+      </div>
+      {/* subcategories or products */}
+      <div className="root-category__categories">
+        {subcategories.length > 0 ? (
+          subcategories.map((subCat) => (
+            <div key={subCat.id} className="root-category__category">
+              <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+              </Link>
+              <h3 className="root-category__category-title">
+                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+              </h3>
+              <div className="root-category__footer">
+                <div className="root-category__links">
+                  {categories
+                    .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                    .slice(0, 5)
+                    .map((linkedSubCat) => (
+                      <React.Fragment key={linkedSubCat.id}>
+                        <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                        {linkedSubCat !== categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).slice(-1)[0] && ', '}
+                      </React.Fragment>
+                    ))}
                 </div>
               </div>
-            ))
-          ) : (
-            renderProducts()
-          )}
-        </div>
-        {/* footer with alert button & modal */}
-        <div className="sections"></div>
-        <div className="p__products-section">
-          <div className="alerts">
-            <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={currentCategory?.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
-              <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
-              <span className="alerts__label">Ειδοποίηση</span>
-            </button>
-            <div className="alerts__prompt">σε <span className="alerts__title">{currentCategory?.name}</span></div>
-          </div>
-        </div>
-        {isPriceAlertModalOpen && (
-          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
+            </div>
+          ))
+        ) : (
+          renderProducts()
         )}
-      </>
-    );
-  };
+      </div>
+      {/* footer with alert button & modal */}
+      <div className="sections"></div>
+      <div className="p__products-section">
+        <div className="alerts">
+          <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={currentCategory?.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+            <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
+            <span className="alerts__label">Ειδοποίηση</span>
+          </button>
+          <div className="alerts__prompt">σε <span className="alerts__title">{currentCategory?.name}</span></div>
+        </div>
+      </div>
+      {isPriceAlertModalOpen && (
+        <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
+      )}
+    </>
+  );
+};
 
   const renderSubcategories = (category) => {
     if (!category) return null;
