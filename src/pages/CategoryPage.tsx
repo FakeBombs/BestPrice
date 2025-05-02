@@ -34,20 +34,28 @@ useEffect(() => {
     setCurrentCategory(undefined);
     return;
   }
-  const segments = pathSegments.slice(1);
-  const lastSegment = segments[segments.length - 1];
-  let foundCategory = findCategory(lastSegment) || findCategory(segments[0]);
+  const segments = pathSegments.slice(1); // after "/cat"
+  let foundCategory = null;
+
+  // Try to match full URL segments (for nested categories)
+  for (let i = segments.length - 1; i >= 0; i--) {
+    const segmentToMatch = segments[i];
+    foundCategory = findCategory(segmentToMatch);
+    if (foundCategory) break;
+  }
+
+  // If no category found, and segments length=1, check mainCategories
   if (!foundCategory && segments.length === 1) {
-    // URL like "/cat/1" or "/cat/technology", try to match mainCategories
     foundCategory = mainCategories.find(
       cat => cat.id.toString() === segments[0] || cat.slug === segments[0]
     );
   }
+
   setCurrentCategory(foundCategory);
 
   if (foundCategory) {
-    const productsToDisplay = products.filter(product =>
-      product.categoryId && product.categoryId.toString() === foundCategory.id.toString()
+    const productsToDisplay = products.filter(p => 
+      p.categoryId && p.categoryId.toString() === foundCategory.id.toString()
     );
     setFilteredProducts(productsToDisplay);
   } else {
@@ -55,7 +63,7 @@ useEffect(() => {
   }
 }, [pathSegments]);
 
-// Show NotFound if URL indicates category but no match
+// Show NotFound only if URL indicates a category but no match found
 if (
   pathSegments.length >= 2 &&
   pathSegments[0] === 'cat' &&
