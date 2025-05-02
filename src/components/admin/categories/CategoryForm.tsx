@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -111,14 +110,24 @@ const CategoryForm = ({ categoryId, parentId }: CategoryFormProps) => {
       return;
     }
     
+    // Make sure name is not optional for CategoryCreate
+    const categoryData: CategoryCreate = {
+      name: formData.name,
+      description: formData.description,
+      category_type: formData.category_type as 'main' | 'sub',
+      parent_id: formData.parent_id,
+      slug: formData.slug || formatSlug(formData.name),
+      image_url: formData.image_url
+    };
+    
     setLoading(true);
     try {
       let result;
       
       if (isEditing && categoryId) {
-        result = await updateCategory(categoryId, formData);
+        result = await updateCategory(categoryId, categoryData);
       } else {
-        result = await createCategory(formData);
+        result = await createCategory(categoryData);
       }
       
       toast({

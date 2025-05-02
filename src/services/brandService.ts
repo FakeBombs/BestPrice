@@ -13,6 +13,9 @@ export interface Brand {
 export type BrandCreate = Omit<Brand, 'id' | 'created_at' | 'updated_at'>;
 export type BrandUpdate = Partial<BrandCreate>;
 
+// Make sure mockData has the brands property
+const mockBrands = mockData as any;
+
 // Get all brands
 export const getAllBrands = async (): Promise<Brand[]> => {
   try {
@@ -23,13 +26,13 @@ export const getAllBrands = async (): Promise<Brand[]> => {
       
     if (error) {
       console.error("Error fetching brands:", error);
-      return mockData.brands as unknown as Brand[];
+      return mockBrands.brands || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllBrands:", error);
-    return mockData.brands as unknown as Brand[];
+    return mockBrands.brands || [];
   }
 };
 
@@ -44,13 +47,13 @@ export const getBrandById = async (id: string): Promise<Brand | null> => {
       
     if (error) {
       console.error("Error fetching brand:", error);
-      return mockData.brands.find(b => String(b.id) === id) as unknown as Brand || null;
+      return mockBrands.brands ? mockBrands.brands.find(b => String(b.id) === id) as Brand || null : null;
     }
     
     return data;
   } catch (error) {
     console.error("Error in getBrandById:", error);
-    return mockData.brands.find(b => String(b.id) === id) as unknown as Brand || null;
+    return mockBrands.brands ? mockBrands.brands.find(b => String(b.id) === id) as Brand || null : null;
   }
 };
 
@@ -119,3 +122,6 @@ export const deleteBrand = async (id: string): Promise<boolean> => {
     return false;
   }
 };
+
+// Add the missing getBrands function that's being imported
+export const getBrands = getAllBrands;

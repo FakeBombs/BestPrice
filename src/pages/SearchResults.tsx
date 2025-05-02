@@ -6,9 +6,9 @@ import ProductCard from '@/components/ProductCard';
 import SearchHeader from '@/components/search/SearchHeader';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProductFilters } from '@/hooks/useProductFilters';
-import { searchProducts } from '@/services/productService';
-import { getBrands } from '@/services/brandService';
-import { getVendors } from '@/services/vendorService';
+import { getAllProducts } from '@/services/productService';
+import { getAllBrands } from '@/services/brandService';
+import { getAllVendors } from '@/services/vendorService';
 import { Product } from '@/services/productService';
 import { Brand } from '@/services/brandService';
 import { Vendor } from '@/services/vendorService';
@@ -33,22 +33,27 @@ const SearchResults: React.FC = () => {
       try {
         // Fetch all necessary data
         const [productsData, brandsData, vendorsData] = await Promise.all([
-          searchProducts(query),
-          getBrands(),
-          getVendors()
+          getAllProducts(), // Using getAllProducts instead of searchProducts
+          getAllBrands(),  // Using getAllBrands instead of getBrands
+          getAllVendors()  // Using getAllVendors instead of getVendors
         ]);
         
         setBrands(brandsData);
         setVendors(vendorsData);
         
+        // Filter products based on query
+        let filteredData = productsData.filter(product => 
+          product.name.toLowerCase().includes(query.toLowerCase()) || 
+          (product.description && product.description.toLowerCase().includes(query.toLowerCase()))
+        );
+        
         // Apply vendor filter if present
-        let filteredData = productsData;
         if (storeFilter) {
           filteredData = filteredData.filter(product => {
             if (!product.prices) return false;
             return product.prices.some(price => {
-              const vendor = price.vendor;
-              return vendor?.url.includes(storeFilter);
+              const vendor = price.vendor_id;
+              return vendor && vendor.includes(storeFilter);
             });
           });
         }

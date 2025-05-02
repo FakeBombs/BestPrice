@@ -67,17 +67,87 @@ export const getAllProducts = async (): Promise<Product[]> => {
       
     if (error) {
       console.error("Error fetching products:", error);
-      return mockData.products as unknown as Product[];
+      // Make sure mock data has review_count
+      return mockData.products.map((p: any) => ({
+        ...p,
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) as Product[];
     }
     
     if (!data || data.length === 0) {
-      return mockData.products as unknown as Product[];
+      return mockData.products.map((p: any) => ({
+        ...p,
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) as Product[];
     }
     
     return data.map(convertDBProductToProduct);
   } catch (error) {
     console.error("Error in getAllProducts:", error);
-    return mockData.products as unknown as Product[];
+    return mockData.products.map((p: any) => ({
+      ...p,
+      review_count: p.reviewCount || 0,
+      specifications: p.specs || {}
+    })) as Product[];
+  }
+};
+
+// Add the searchProducts function
+export const searchProducts = async (query: string): Promise<Product[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        product_categories!inner (
+          category_id,
+          categories:category_id (id, name)
+        ),
+        prices:product_prices (
+          *,
+          vendors:vendor_id (id, name, logo)
+        )
+      `)
+      .or(`name.ilike.%${query}%, description.ilike.%${query}%`);
+      
+    if (error || !data) {
+      console.error("Error searching products:", error);
+      // Filter mock data based on query
+      return mockData.products
+        .filter((p: any) => 
+          p.name.toLowerCase().includes(query.toLowerCase()) || 
+          (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
+        )
+        .map((p: any) => ({
+          ...p,
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) as Product[];
+    }
+    
+    return data.map(product => ({
+      ...convertDBProductToProduct(product),
+      categories: product.product_categories?.map((pc: any) => pc.categories) || [],
+      prices: product.prices?.map((price: any) => ({
+        ...price,
+        vendor_name: price.vendors?.name,
+        vendor_logo: price.vendors?.logo
+      }))
+    }));
+  } catch (error) {
+    console.error("Error in searchProducts:", error);
+    return mockData.products
+      .filter((p: any) => 
+        p.name.toLowerCase().includes(query.toLowerCase()) || 
+        (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
+      )
+      .map((p: any) => ({
+        ...p,
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) as Product[];
   }
 };
 
@@ -102,14 +172,18 @@ export const getProductById = async (id: string): Promise<Product | null> => {
       
     if (error || !data) {
       console.error("Error fetching product:", error);
-      const mockProduct = mockData.products.find(p => String(p.id) === id);
-      return mockProduct ? mockProduct as unknown as Product : null;
+      const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
+      return mockProduct ? {
+        ...mockProduct,
+        review_count: mockProduct.reviewCount || 0,
+        specifications: mockProduct.specs || {}
+      } as Product : null;
     }
     
     return {
       ...convertDBProductToProduct(data),
-      categories: data.product_categories.map(pc => pc.categories),
-      prices: data.prices.map(price => ({
+      categories: data.product_categories?.map((pc: any) => pc.categories) || [],
+      prices: data.prices?.map((price: any) => ({
         ...price,
         vendor_name: price.vendors?.name,
         vendor_logo: price.vendors?.logo
@@ -117,8 +191,12 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     };
   } catch (error) {
     console.error("Error in getProductById:", error);
-    const mockProduct = mockData.products.find(p => String(p.id) === id);
-    return mockProduct ? mockProduct as unknown as Product : null;
+    const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
+    return mockProduct ? {
+      ...mockProduct,
+      review_count: mockProduct.reviewCount || 0,
+      specifications: mockProduct.specs || {}
+    } as Product : null;
   }
 };
 
@@ -135,26 +213,44 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
       
     if (error) {
       console.error("Error fetching products by category:", error);
-      return mockData.products.filter(p => 
-        String(p.categoryId) === categoryId || 
-        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-      ) as unknown as Product[];
+      return mockData.products
+        .filter((p: any) => 
+          String(p.categoryId) === categoryId || 
+          (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+        )
+        .map((p: any) => ({
+          ...p,
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) as Product[];
     }
     
     if (!data || data.length === 0) {
-      return mockData.products.filter(p => 
-        String(p.categoryId) === categoryId || 
-        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-      ) as unknown as Product[];
+      return mockData.products
+        .filter((p: any) => 
+          String(p.categoryId) === categoryId || 
+          (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+        )
+        .map((p: any) => ({
+          ...p,
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) as Product[];
     }
     
-    return data.map(item => convertDBProductToProduct(item.products));
+    return data.map((item: any) => convertDBProductToProduct(item.products));
   } catch (error) {
     console.error("Error in getProductsByCategory:", error);
-    return mockData.products.filter(p => 
-      String(p.categoryId) === categoryId || 
-      (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-    ) as unknown as Product[];
+    return mockData.products
+      .filter((p: any) => 
+        String(p.categoryId) === categoryId || 
+        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
+      )
+      .map((p: any) => ({
+        ...p,
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) as Product[];
   }
 };
 
@@ -170,17 +266,35 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
       
     if (error) {
       console.error("Error fetching featured products:", error);
-      return mockData.products.slice(0, 12) as unknown as Product[];
+      return mockData.products
+        .slice(0, 12)
+        .map((p: any) => ({
+          ...p,
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) as Product[];
     }
     
     if (!data || data.length === 0) {
-      return mockData.products.slice(0, 12) as unknown as Product[];
+      return mockData.products
+        .slice(0, 12)
+        .map((p: any) => ({
+          ...p,
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) as Product[];
     }
     
     return data.map(convertDBProductToProduct);
   } catch (error) {
     console.error("Error in getFeaturedProducts:", error);
-    return mockData.products.slice(0, 12) as unknown as Product[];
+    return mockData.products
+      .slice(0, 12)
+      .map((p: any) => ({
+        ...p,
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) as Product[];
   }
 };
 
@@ -301,7 +415,7 @@ export const importMockDataToSupabase = async (): Promise<boolean> => {
         model: product.model || '',
         slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
         highlights: product.highlights || [],
-        specifications: product.specs || {},
+        specifications: product.specifications || {},
         rating: product.rating || 0,
         review_count: product.reviewCount || 0
       };

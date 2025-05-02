@@ -59,7 +59,7 @@ export const getMainCategories = async (): Promise<Category[]> => {
   }
 };
 
-// Get subcategories by parent ID
+// Get subcategories by parent ID - Add this missing function
 export const getSubcategoriesByParentId = async (parentId: string | null = null): Promise<Category[]> => {
   try {
     const { data, error } = await supabase
@@ -83,6 +83,9 @@ export const getSubcategoriesByParentId = async (parentId: string | null = null)
     ) as unknown as Category[];
   }
 };
+
+// Add this alias for the missing function
+export const getSubcategories = getSubcategoriesByParentId;
 
 // Get category by ID
 export const getCategoryById = async (id: string): Promise<Category | null> => {

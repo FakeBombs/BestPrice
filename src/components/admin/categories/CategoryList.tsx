@@ -23,7 +23,7 @@ import {
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { 
   getMainCategories, 
-  getSubcategories, 
+  getSubcategoriesByParentId, 
   deleteCategory, 
   Category 
 } from '@/services/categoryService';
@@ -46,7 +46,7 @@ const CategoryList = ({ parentId = null, onCategorySelected }: CategoryListProps
       try {
         let data: Category[];
         if (parentId) {
-          data = await getSubcategories(parentId);
+          data = await getSubcategoriesByParentId(parentId);
         } else {
           data = await getMainCategories();
         }

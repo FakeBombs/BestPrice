@@ -21,6 +21,9 @@ export interface Vendor {
 export type VendorCreate = Omit<Vendor, 'id' | 'created_at' | 'updated_at'>;
 export type VendorUpdate = Partial<VendorCreate>;
 
+// Make sure mockData has the vendors property
+const mockVendors = mockData as any;
+
 // Get all vendors
 export const getAllVendors = async (): Promise<Vendor[]> => {
   try {
@@ -31,13 +34,13 @@ export const getAllVendors = async (): Promise<Vendor[]> => {
       
     if (error) {
       console.error("Error fetching vendors:", error);
-      return mockData.vendors ? mockData.vendors as unknown as Vendor[] : [];
+      return mockVendors.vendors || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllVendors:", error);
-    return mockData.vendors ? mockData.vendors as unknown as Vendor[] : [];
+    return mockVendors.vendors || [];
   }
 };
 
@@ -52,13 +55,13 @@ export const getVendorById = async (id: string): Promise<Vendor | null> => {
       
     if (error) {
       console.error("Error fetching vendor:", error);
-      return mockData.vendors ? mockData.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
+      return mockVendors.vendors ? mockVendors.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
     }
     
     return data;
   } catch (error) {
     console.error("Error in getVendorById:", error);
-    return mockData.vendors ? mockData.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
+    return mockVendors.vendors ? mockVendors.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
   }
 };
 
@@ -135,3 +138,6 @@ export const deleteVendor = async (id: string): Promise<boolean> => {
     return false;
   }
 };
+
+// Add the missing getVendors function that's being imported
+export const getVendors = getAllVendors;
