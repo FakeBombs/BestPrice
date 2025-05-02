@@ -375,16 +375,14 @@ function renderBreadcrumbs() {
                 )}
             </div>
             <div className="sections"></div>
-            <div class="p__products-section">
-              {categories.filter(cat => cat.parentId === currentCategory?.id).slice(0, 1).map((subCat) => (
-              <div class="alerts" key={subCat.id}>
-                <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
-                  <svg aria-hidden="true" class="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                  <span class="alerts__label">Ειδοποίηση</span>
+            <div className="p__products-section">
+              <div className="alerts">
+                <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+                  <svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                  <span className="alerts__label">Ειδοποίηση</span>
                 </button>
-                <div class="alerts__prompt"> σε <span class="alerts__title">{currentCategory.name}</span></div>
+                <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory.name}</span></div>
               </div>
-              ))}
             </div>
         
         {/* Additional sections for subcategories */}
