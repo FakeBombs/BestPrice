@@ -127,15 +127,15 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Find the main category (top-level)
+  // Find main category (top-level)
   const mainCategory = mainCategories.find(
-    cat => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
+    (cat) => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
   );
 
   // Check if current page is the main category
   const isMainCategoryPage = mainCategory && currentCategory.id === mainCategory.id;
 
-  // When on main category page, only show "Home"
+  // For main category page, only show Home
   if (isMainCategoryPage) {
     return (
       <div id="trail">
@@ -150,7 +150,8 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // For subcategory pages, always start with Home and main category
+  // For first-level subcategory: show only Home (keeping previous behavior)
+  // For deeper subcategories: include full path
   const trailItems: React.ReactNode[] = [];
 
   // Always add Home
@@ -160,7 +161,7 @@ const renderBreadcrumbs = () => {
     </li>
   );
 
-  // Always add main category
+  // Add main category if exists
   if (mainCategory) {
     trailItems.push(
       <li key={mainCategory.id}>
@@ -171,15 +172,16 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Build ancestors chain excluding main category and current category
+  // Build ancestors chain, excluding main category and current category
   const ancestors: typeof categories = [];
   let category = currentCategory;
+
   while (category && mainCategory && category.id !== mainCategory.id) {
     ancestors.unshift(category);
-    category = categories.find(cat => cat.id === category.parentId);
+    category = categories.find((cat) => cat.id === category.parentId);
   }
 
-  // Add ancestors
+  // Add ancestors to trail
   ancestors.forEach((cat) => {
     trailItems.push(
       <li key={cat.id}>
@@ -188,7 +190,7 @@ const renderBreadcrumbs = () => {
     );
   });
 
-  // Render with separators
+  // Render breadcrumb with separators
   return (
     <div id="trail">
       <nav className="breadcrumb">
