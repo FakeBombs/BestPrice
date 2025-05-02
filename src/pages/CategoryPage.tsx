@@ -127,33 +127,33 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Find main category
+  // Find the main category for the current category
   const mainCategory = mainCategories.find(
     cat =>
       cat.id.toString() === currentCategory.parentId?.toString() ||
       cat.slug === currentCategory.parentId
   );
 
+  // Check if current category is a main category
+  const isMainCategory = mainCategory && currentCategory.id === mainCategory.id;
+
   const breadcrumbs = [];
 
   // Always add home link
-  const home = (
+  const homeLink = (
     <li key="home">
       <Link to="/" rel="home"><span>BestPrice</span></Link>
     </li>
   );
 
-  // Check if currentCategory is a main category
-  const isMainCategory = mainCategory && currentCategory.id === mainCategory.id;
-
-  // Handle when current category is the main category
+  // Handle case when current category is main category
   if (isMainCategory) {
     // Show only home and main category, exclude current category
     return (
       <div id="trail">
         <nav className="breadcrumb">
           <ol>
-            {home}
+            {homeLink}
             <span className="trail__breadcrumb-separator">›</span>
             <li>
               <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
@@ -166,7 +166,7 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // For subcategories, always include main category at start
+  // For other categories, include main category at start
   if (mainCategory) {
     breadcrumbs.push(
       <li key={mainCategory.slug}>
@@ -180,18 +180,24 @@ const renderBreadcrumbs = () => {
   // Build the trail from currentCategory up to but excluding mainCategory
   const trail = [];
   let category = currentCategory;
-  while (category && (!mainCategory || category.id !== mainCategory.id)) {
+  while (
+    category &&
+    (!mainCategory || category.id !== mainCategory.id)
+  ) {
     trail.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  // Add categories in trail (excluding currentCategory)
+  // Add all categories in the trail except the current category
   trail.forEach((cat) => {
-    breadcrumbs.push(
-      <li key={cat.slug}>
-        <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
-      </li>
-    );
+    // Exclude current category
+    if (cat.id !== currentCategory.id) {
+      breadcrumbs.push(
+        <li key={cat.slug}>
+          <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+        </li>
+      );
+    }
   });
 
   // Render the full breadcrumb trail
@@ -199,7 +205,7 @@ const renderBreadcrumbs = () => {
     <div id="trail">
       <nav className="breadcrumb">
         <ol>
-          {home}
+          {homeLink}
           {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
           {breadcrumbs.reduce((acc, crumb, index) => (
             <React.Fragment key={index}>
