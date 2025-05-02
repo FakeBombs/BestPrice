@@ -128,27 +128,19 @@ const renderBreadcrumbs = () => {
   }
 
   const mainCategory = mainCategories.find(
-    cat =>
-      cat.id.toString() === currentCategory.parentId?.toString() ||
-      cat.slug === currentCategory.parentId
+    cat => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
   );
 
   const isMainCategoryPage = mainCategory && currentCategory.id === mainCategory.id;
 
-  // If on main category page, show only home and main category
   if (isMainCategoryPage) {
+    // Show only Home
     return (
       <div id="trail">
         <nav className="breadcrumb">
           <ol>
-            <li key="home">
-              <Link to="/" rel="home"><span>BestPrice</span></Link>
-            </li>
-            <span className="trail__breadcrumb-separator">›</span>
             <li>
-              <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
-                {mainCategory.name}
-              </Link>
+              <Link to="/" rel="home"><span>BestPrice</span></Link>
             </li>
           </ol>
         </nav>
@@ -156,17 +148,17 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // For subcategories, always start with home and main category
+  // For other pages, always include Home, main category, and ancestors
   const trailItems = [];
 
-  // Add Home
+  // Home
   trailItems.push(
     <li key="home">
       <Link to="/" rel="home"><span>BestPrice</span></Link>
     </li>
   );
 
-  // Add main category
+  // Main category
   if (mainCategory) {
     trailItems.push(
       <li key={mainCategory.slug}>
@@ -177,7 +169,7 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Build ancestors trail from currentCategory up to main category
+  // Ancestors of current category
   const ancestors = [];
   let category = currentCategory;
   while (category && (!mainCategory || category.id !== mainCategory.id)) {
@@ -185,7 +177,7 @@ const renderBreadcrumbs = () => {
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  // Add ancestors (excluding current category)
+  // Add ancestors
   ancestors.forEach((cat) => {
     trailItems.push(
       <li key={cat.slug}>
@@ -194,7 +186,7 @@ const renderBreadcrumbs = () => {
     );
   });
 
-  // Render the full breadcrumb with separators
+  // Render breadcrumb with separators
   return (
     <div id="trail">
       <nav className="breadcrumb">
