@@ -32,28 +32,30 @@ const CategoryPage: React.FC = () => {
     return;
   }
   const segments = pathSegments.slice(1);
-  let foundCategory = null;
+  let matchedCategory = null;
 
-  // Αναζήτηση για κατηγορία που ταιριάζει με τα segments
-  for (let i = segments.length - 1; i >= 0; i--) {
-    const segmentToMatch = segments[i];
-    foundCategory = findCategory(segmentToMatch);
-    // Αν βρεθεί κατηγορία και είναι main ή αν είναι υποκατηγορία (έχει parentId)
-    if (foundCategory && (foundCategory.isMain || foundCategory.parentId !== null)) break;
-  }
+  // Αναζήτηση για την κατηγορία που ταιριάζει με το τελευταίο segment
+  const lastSegment = segments[segments.length - 1];
+  matchedCategory = findCategory(lastSegment);
 
-  // Αν δεν βρεθεί και το segment είναι μόνο ένα, ελέγχουμε αν είναι κύρια κατηγορία
-  if (!foundCategory && segments.length === 1) {
-    foundCategory = mainCategories.find(
-      (cat) => (cat.id.toString() === segments[0] || cat.slug === segments[0]) && cat.isMain
+  // Αν η κατηγορία δεν βρέθηκε, αναζητάμε κύριες κατηγορίες
+  if (!matchedCategory && segments.length === 1) {
+    matchedCategory = mainCategories.find(
+      (cat) => (cat.id.toString() === lastSegment || cat.slug === lastSegment)
     );
   }
 
-  setCurrentCategory(foundCategory);
+  // Αν η κατηγορία βρέθηκε και είναι main ή αν είναι υποκατηγορία
+  if (matchedCategory && (matchedCategory.isMain || matchedCategory.parentId !== null)) {
+    setCurrentCategory(matchedCategory);
+  } else {
+    setCurrentCategory(undefined);
+  }
 
-  if (foundCategory) {
+  // Φιλτράρισμα προϊόντων
+  if (matchedCategory) {
     const productsToDisplay = products.filter(p =>
-      p.categoryId && p.categoryId.toString() === foundCategory.id.toString()
+      p.categoryId && p.categoryId.toString() === matchedCategory.id.toString()
     );
     setFilteredProducts(productsToDisplay);
   } else {
