@@ -696,7 +696,7 @@ export const products: Product[] = [
     title: 'Samsung Galaxy S23 Ultra 512GB',
     brand: 'Samsung',
     model: 'Galaxy S23 Ultra',
-    categoryIds: [10, 30], // Now includes the smartphone subcategory
+    categoryIds: [99], // Now includes the smartphone subcategory
     description: 'The ultimate Samsung phone with exceptional camera capabilities.',
     image: '//placehold.co/400x400?text=Galaxy+S23',
     images: [
@@ -838,7 +838,7 @@ export const products: Product[] = [
     title: 'PlayStation 5 Console',
     brand: 'Sony',
     model: 'PS5',
-    categoryIds: [19],
+    categoryIds: [285],
     description: 'Next-gen gaming console with stunning graphics.',
     image: '//placehold.co/400x400?text=PS5',
     images: ['//placehold.co/400x400?text=PS5'],
@@ -1032,7 +1032,7 @@ export const products: Product[] = [
     title: 'Children’s Educational Tablet',
     brand: 'Amazon',
     model: 'Fire HD 10',
-    categoryIds: [10, 30], // Now includes the smartphone subcategory
+    categoryIds: [277], // Now includes the smartphone subcategory
     description: 'Kids-friendly tablet with educational content.',
     image: '//placehold.co/400x400?text=Kids+Tablet',
     images: ['//placehold.co/400x400?text=Kids+Tablet'],
@@ -1051,7 +1051,7 @@ export const products: Product[] = [
     title: 'Smart TV Stick',
     brand: 'Amazon',
     model: 'Fire Stick 4K',
-    categoryIds: [244],
+    categoryIds: [248],
     description: 'Stream all your favorites in 4K resolution.',
     image: '//placehold.co/400x400?text=Smart+TV+Stick',
     images: ['//placehold.co/400x400?text=Smart+TV+Stick'],
