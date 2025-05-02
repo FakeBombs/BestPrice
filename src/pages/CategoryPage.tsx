@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-import { categories, mainCategories, products, Category, Product } from '@/data/mockData'; // Assuming Category type is exported from mockData or defined elsewhere
+import { categories, mainCategories, products, Category, Product } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
@@ -14,7 +14,7 @@ const CategoryPage: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]); // Use a more specific Product type if available
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
@@ -132,43 +132,33 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  // --- FINAL UPDATED renderBreadcrumbs function ---
   const renderBreadcrumbs = () => {
     const trailItems: React.ReactNode[] = [];
-    // Always add Home link
     trailItems.push(
       <li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>
     );
 
-    // Only add more items if the current category exists AND it's a subcategory
     if (currentCategory && currentCategory.parentId !== null && !currentCategory.isMain) {
-        // --- Case: Current category IS a Subcategory ---
         const ancestors: Category[] = [];
         let category: Category | undefined = currentCategory;
 
-        // Traverse up the parent chain to build the path *excluding* the current category
         while (category && category.parentId !== null) {
-             // Find the parent in the combined list
             const parent = allCategories.find((cat) => cat.id === category?.parentId);
             if (parent) {
-                 ancestors.unshift(parent); // Add parent to the beginning of the list
-                 category = parent; // Move up to the parent
+                 ancestors.unshift(parent);
+                 category = parent;
             } else {
-                 category = undefined; // Stop if parent not found
+                 category = undefined;
             }
         }
 
-        // Add links for each ancestor found (Main Category first, then sub-parents)
         ancestors.forEach((cat) => {
             trailItems.push(
                 <li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>
             );
         });
-        // DO NOT add the currentCategory itself
     }
-    // If it's a main category (or no category), the trailItems array only contains "Home"
 
-    // Render the assembled trail
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -176,7 +166,6 @@ const CategoryPage: React.FC = () => {
             {trailItems.reduce((acc, item, index) => (
               <React.Fragment key={index}>
                 {acc}
-                {/* Add separator only if there are more than one items AND it's not the first item */}
                 {trailItems.length > 1 && index > 0 && <span className="trail__breadcrumb-separator">›</span>}
                 {item}
               </React.Fragment>
@@ -186,7 +175,6 @@ const CategoryPage: React.FC = () => {
       </div>
     );
   };
-  // --- End of FINAL UPDATED renderBreadcrumbs function ---
 
 
   // This function renders the view for a MAIN category page
