@@ -32,38 +32,25 @@ const CategoryPage: React.FC = () => {
 useEffect(() => {
   if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
     setCurrentCategory(undefined);
-    setFilteredProducts([]);
     return;
   }
-
-  const segments = pathSegments.slice(1); // e.g., ["1", "technology"]
-  let matchedCategory = undefined;
-  let parentCats = [...mainCategories];
-
-  // Traverse nested categories if URL has multiple segments
-  for (const segment of segments) {
-    matchedCategory = parentCats.find(
-      (cat) =>
-        cat.id.toString() === segment || cat.slug === segment
+  const segments = pathSegments.slice(1);
+  const lastSegment = segments[segments.length - 1];
+  let foundCategory = findCategory(lastSegment) || findCategory(segments[0]);
+  if (!foundCategory && segments.length === 1) {
+    // URL like "/cat/1" or "/cat/technology", try to match mainCategories
+    foundCategory = mainCategories.find(
+      cat => cat.id.toString() === segments[0] || cat.slug === segments[0]
     );
-    if (matchedCategory) {
-      parentCats = categories.filter(c => c.parentId === matchedCategory.id);
-    } else {
-      break;
-    }
   }
+  setCurrentCategory(foundCategory);
 
-  if (matchedCategory) {
-    setCurrentCategory(matchedCategory);
-    // Filter products for this category
-    const productsToDisplay = products.filter(
-      (product) =>
-        product.categoryId && product.categoryId.toString() === matchedCategory.id.toString()
+  if (foundCategory) {
+    const productsToDisplay = products.filter(product =>
+      product.categoryId && product.categoryId.toString() === foundCategory.id.toString()
     );
     setFilteredProducts(productsToDisplay);
   } else {
-    // No match for category URL
-    setCurrentCategory(undefined);
     setFilteredProducts([]);
   }
 }, [pathSegments]);
