@@ -27,37 +27,39 @@ const CategoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
-      setCurrentCategory(undefined);
-      return;
-    }
-    const segments = pathSegments.slice(1);
-    let foundCategory = null;
-    for (let i = segments.length - 1; i >= 0; i--) {
-      const segmentToMatch = segments[i];
-      foundCategory = findCategory(segmentToMatch);
-      if (foundCategory) break;
-    }
-    if (!foundCategory && segments.length === 1) {
-      // Έλεγξε αν η κατηγορία είναι main category
-      foundCategory = mainCategories.find(
-        (cat) => cat.id.toString() === segments[0] || cat.slug === segments[0]
-      );
-      // Αν βρεθεί, τσέκαρε αν έχει parentId null
-      if (foundCategory && foundCategory.parentId !== null) {
-        foundCategory = undefined; // Απόρριψε αν δεν είναι main category
-      }
-    }
-    setCurrentCategory(foundCategory);
-    if (foundCategory) {
-      const productsToDisplay = products.filter(p => 
-        p.categoryId && p.categoryId.toString() === foundCategory.id.toString()
-      );
-      setFilteredProducts(productsToDisplay);
-    } else {
-      setFilteredProducts([]);
-    }
-  }, [pathSegments]);
+  if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
+    setCurrentCategory(undefined);
+    return;
+  }
+  const segments = pathSegments.slice(1);
+  let foundCategory = null;
+
+  // Αναζήτηση για κατηγορία που ταιριάζει με τα segments
+  for (let i = segments.length - 1; i >= 0; i--) {
+    const segmentToMatch = segments[i];
+    foundCategory = findCategory(segmentToMatch);
+    // Αν βρεθεί κατηγορία και είναι main ή αν είναι υποκατηγορία (έχει parentId)
+    if (foundCategory && (foundCategory.isMain || foundCategory.parentId !== null)) break;
+  }
+
+  // Αν δεν βρεθεί και το segment είναι μόνο ένα, ελέγχουμε αν είναι κύρια κατηγορία
+  if (!foundCategory && segments.length === 1) {
+    foundCategory = mainCategories.find(
+      (cat) => (cat.id.toString() === segments[0] || cat.slug === segments[0]) && cat.isMain
+    );
+  }
+
+  setCurrentCategory(foundCategory);
+
+  if (foundCategory) {
+    const productsToDisplay = products.filter(p =>
+      p.categoryId && p.categoryId.toString() === foundCategory.id.toString()
+    );
+    setFilteredProducts(productsToDisplay);
+  } else {
+    setFilteredProducts([]);
+  }
+}, [pathSegments]);
 
   if (
     pathSegments.length >= 2 &&
