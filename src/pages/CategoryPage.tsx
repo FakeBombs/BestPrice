@@ -127,14 +127,16 @@ const renderBreadcrumbs = () => {
     );
   }
 
+  // Find the main category (top-level)
   const mainCategory = mainCategories.find(
     cat => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
   );
 
+  // Check if current page is the main category
   const isMainCategoryPage = mainCategory && currentCategory.id === mainCategory.id;
 
+  // When on main category page, only show "Home"
   if (isMainCategoryPage) {
-    // When on main category page, show only Home
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -149,19 +151,19 @@ const renderBreadcrumbs = () => {
   }
 
   // For subcategory pages, always start with Home and main category
-  const trailItems = [];
+  const trailItems: React.ReactNode[] = [];
 
-  // Add Home
+  // Always add Home
   trailItems.push(
     <li key="home">
       <Link to="/" rel="home"><span>BestPrice</span></Link>
     </li>
   );
 
-  // Add main category
+  // Always add main category
   if (mainCategory) {
     trailItems.push(
-      <li key={mainCategory.slug}>
+      <li key={mainCategory.id}>
         <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
           {mainCategory.name}
         </Link>
@@ -169,22 +171,24 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Add ancestors of current category (excluding main category)
+  // Build ancestors chain excluding main category and current category
+  const ancestors: typeof categories = [];
   let category = currentCategory;
-  const ancestors = [];
-  while (category && (!mainCategory || category.id !== mainCategory.id)) {
+  while (category && mainCategory && category.id !== mainCategory.id) {
     ancestors.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
 
+  // Add ancestors
   ancestors.forEach((cat) => {
     trailItems.push(
-      <li key={cat.slug}>
+      <li key={cat.id}>
         <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
       </li>
     );
   });
 
+  // Render with separators
   return (
     <div id="trail">
       <nav className="breadcrumb">
