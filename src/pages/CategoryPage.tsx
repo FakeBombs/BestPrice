@@ -136,7 +136,37 @@ const renderBreadcrumbs = () => {
 
   const breadcrumbs = [];
 
-  // Add main category first
+  // Always add home link
+  const home = (
+    <li key="home">
+      <Link to="/" rel="home"><span>BestPrice</span></Link>
+    </li>
+  );
+
+  // Check if currentCategory is a main category
+  const isMainCategory = mainCategory && currentCategory.id === mainCategory.id;
+
+  // Handle when current category is the main category
+  if (isMainCategory) {
+    // Show only home and main category, exclude current category
+    return (
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            {home}
+            <span className="trail__breadcrumb-separator">›</span>
+            <li>
+              <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>
+                {mainCategory.name}
+              </Link>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    );
+  }
+
+  // For subcategories, always include main category at start
   if (mainCategory) {
     breadcrumbs.push(
       <li key={mainCategory.slug}>
@@ -147,10 +177,10 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Build path from currentCategory up to mainCategory (excluding currentCategory)
+  // Build the trail from currentCategory up to but excluding mainCategory
   const trail = [];
   let category = currentCategory;
-  while (category && category.id !== mainCategory?.id) {
+  while (category && (!mainCategory || category.id !== mainCategory.id)) {
     trail.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
@@ -169,10 +199,8 @@ const renderBreadcrumbs = () => {
     <div id="trail">
       <nav className="breadcrumb">
         <ol>
-          <li>
-            <Link to="/" rel="home"><span>BestPrice</span></Link>
-            {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
-          </li>
+          {home}
+          {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
           {breadcrumbs.reduce((acc, crumb, index) => (
             <React.Fragment key={index}>
               {acc}
