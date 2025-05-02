@@ -47,7 +47,7 @@ useEffect(() => {
   // If no category found, and segments length=1, check mainCategories
   if (!foundCategory && segments.length === 1) {
     foundCategory = mainCategories.find(
-      cat => cat.id.toString() === segments[0] || cat.slug === segments[0]
+      (cat) => cat.id.toString() === segments[0] || cat.slug === segments[0]
     );
   }
 
@@ -211,13 +211,13 @@ const renderBreadcrumbs = () => {
 // Render main categories view (for top-level categories)
 const renderMainCategories = () => {
   if (!currentCategory) return null;
+  // Find main category based on currentCategory's parentId being null
   const mainCat = mainCategories.find(
-    (cat) =>
-      cat.id.toString() === currentCategory.parentId?.toString() ||
-      cat.slug === currentCategory.parentId
+    (cat) => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId
   );
   if (!mainCat) return null;
-  const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
+  const subcategories = categories.filter(cat => cat.parentId === mainCat.id) || [];
+
   return (
     <>
       {/* header with back button to main category */}
@@ -253,12 +253,12 @@ const renderMainCategories = () => {
                   {categories
                     .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
                     .slice(0, 5)
-                    .map((linkedSubCat, index, arr) => (
+                    .map((linkedSubCat) => (
                       <React.Fragment key={linkedSubCat.id}>
                         <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>
                           {linkedSubCat.name}
                         </Link>
-                        {index < arr.length - 1 && ', '}
+                        {linkedSubCat !== categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).slice(-1)[0] && ', '}
                       </React.Fragment>
                     ))}
                 </div>
@@ -351,14 +351,14 @@ const renderSubcategories = (category) => {
                         (linkedSubCat) => linkedSubCat.parentId === subCat.id
                       )
                       .slice(0, 5)
-                      .map((linkedSubCat, index, arr) => (
+                      .map((linkedSubCat) => (
                         <React.Fragment key={linkedSubCat.id}>
                           <Link
                             to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}
                           >
                             {linkedSubCat.name}
                           </Link>
-                          {index < arr.length - 1 && ', '}
+                          {linkedSubCat !== categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).slice(-1)[0] && ', '}
                         </React.Fragment>
                       ))}
                   </div>
