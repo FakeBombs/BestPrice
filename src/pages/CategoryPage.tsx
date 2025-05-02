@@ -8,26 +8,6 @@ import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
-// Define or import the Category type if not already done in mockData
-// type Category = {
-//   id: number;
-//   name: string;
-//   slug: string;
-//   parentId: number | null;
-//   image: string | null;
-//   isMain?: boolean; // Added isMain flag
-// };
-
-// Define or import Product type
-// type Product = {
-//   id: number;
-//   // ... other product properties
-//   categoryId: number | null;
-//   prices?: { price: number; inStock: boolean }[];
-//   ratingSum?: number;
-//   numReviews?: number;
-// };
-
 const CategoryPage: React.FC = () => {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -153,96 +133,50 @@ const CategoryPage: React.FC = () => {
     }
   };
 
+  // --- UPDATED renderBreadcrumbs function ---
   const renderBreadcrumbs = () => {
-    if (!currentCategory) {
-        // Default breadcrumb for when no category (or default main) is selected
-        return (
-            <div id="trail">
-            <nav className="breadcrumb">
-                <ol>
-                <li><Link to="/" rel="home"><span>BestPrice</span></Link></li>
-                {/* Optionally show the default main category if it's the one active */}
-                {currentCategory?.isMain && (
-                    <>
-                    <span className="trail__breadcrumb-separator">›</span>
-                    <li><span>{currentCategory.name}</span></li>
-                    </>
-                )}
-                </ol>
-            </nav>
-            </div>
-        );
-    }
-
     const trailItems: React.ReactNode[] = [];
+    // Always add Home link
     trailItems.push(
       <li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>
     );
 
-    // Find the main parent category if the current one is a subcategory
-    const mainCategory = currentCategory.parentId
-      ? mainCategories.find(cat => cat.id === currentCategory.parentId)
-      : (currentCategory.isMain ? currentCategory : null); // If it's main itself, it's the mainCategory
-
-    if (mainCategory && mainCategory.id !== currentCategory.id) {
-        // Add the main category link if we are not on its page
+    if (!currentCategory) {
+        // If no category context, just show Home
+        // (This case might be less common now with default category logic)
+    } else if (currentCategory.isMain || currentCategory.parentId === null) {
+        // --- Case 1: Current category IS a Main Category ---
+        // Add its name as text, not a link
         trailItems.push(
-            <li key={mainCategory.id}><Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
+            <li key={currentCategory.id}><span>{currentCategory.name}</span></li>
         );
-    } else if (mainCategory && mainCategory.id === currentCategory.id) {
-        // If we are on the main category page, just list its name (not as a link)
-         trailItems.push(
-            <li key={mainCategory.id}><span>{mainCategory.name}</span></li>
-        );
-        // No further breadcrumbs needed for a main category page
-         return (
-            <div id="trail">
-            <nav className="breadcrumb">
-                <ol>
-                {trailItems.reduce((acc, item, index) => (
-                    <React.Fragment key={index}>
-                    {acc}
-                    {index > 0 && <span className="trail__breadcrumb-separator">›</span>}
-                    {item}
-                    </React.Fragment>
-                ), null)}
-                </ol>
-            </nav>
-            </div>
-        );
-    }
-
-
-    // Build the rest of the trail for subcategories
-    if (currentCategory.parentId !== null && !currentCategory.isMain) {
+    } else {
+        // --- Case 2: Current category IS a Subcategory ---
         const ancestors: Category[] = [];
         let category: Category | undefined = currentCategory;
 
-        // Traverse up the parent chain until we hit the main category or null
+        // Traverse up the parent chain to build the path *excluding* the current category
         while (category && category.parentId !== null) {
-            // Find the parent in the subcategories array
-            const parent = categories.find((cat) => cat.id === category?.parentId);
-            // Add parent to the start of the ancestors array
-            if (parent && parent.id !== mainCategory?.id) { // Don't add the main category again if found
-                 ancestors.unshift(parent);
+             // Find the parent in the combined list
+            const parent = allCategories.find((cat) => cat.id === category?.parentId);
+            if (parent) {
+                 ancestors.unshift(parent); // Add parent to the beginning of the list
+                 category = parent; // Move up to the parent
+            } else {
+                 category = undefined; // Stop if parent not found
             }
-            // Move up to the parent, stop if parent isn't found or is the main category
-            category = (parent && parent.id !== mainCategory?.id) ? parent : undefined;
         }
 
+        // Add links for each ancestor found (Main Category first, then sub-parents)
         ancestors.forEach((cat) => {
             trailItems.push(
                 <li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>
             );
         });
-
-        // Add the current subcategory itself (as text, not link)
-         trailItems.push(
-             <li key={currentCategory.id}><span>{currentCategory.name}</span></li>
-         );
+        // DO NOT add the currentCategory itself to the breadcrumb trail here
     }
 
-
+    // Render the assembled trail
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -250,6 +184,7 @@ const CategoryPage: React.FC = () => {
             {trailItems.reduce((acc, item, index) => (
               <React.Fragment key={index}>
                 {acc}
+                {/* Add separator only after the first item (Home) */}
                 {index > 0 && <span className="trail__breadcrumb-separator">›</span>}
                 {item}
               </React.Fragment>
@@ -259,6 +194,7 @@ const CategoryPage: React.FC = () => {
       </div>
     );
   };
+  // --- End of UPDATED renderBreadcrumbs function ---
 
 
   // This function renders the view for a MAIN category page
