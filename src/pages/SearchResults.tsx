@@ -243,7 +243,7 @@ const SearchResults = () => {
                       ) : null;
                     })}
                     <button onClick={handleResetFilters}>
-                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters"><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
+                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters"><use href="/dist/images/icons/icons.svg#icon-minus"></use></svg>
                         Reset Filters
                     </button>
                 </div>
