@@ -6,7 +6,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchHeader from '@/components/search/SearchHeader';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useProductFilters } from '@/hooks/useProductFilters';
-import { getAllProducts } from '@/services/productService';
+import { getAllProducts, searchProducts } from '@/services/productService';
 import { getAllBrands } from '@/services/brandService';
 import { getAllVendors } from '@/services/vendorService';
 import { Product } from '@/services/productService';
@@ -32,24 +32,25 @@ const SearchResults: React.FC = () => {
       setLoading(true);
       try {
         // Fetch all necessary data
-        const [productsData, brandsData, vendorsData] = await Promise.all([
-          getAllProducts(), // Using getAllProducts instead of searchProducts
-          getAllBrands(),  // Using getAllBrands instead of getBrands
-          getAllVendors()  // Using getAllVendors instead of getVendors
+        const [brandsData, vendorsData] = await Promise.all([
+          getAllBrands(),
+          getAllVendors()
         ]);
         
         setBrands(brandsData);
         setVendors(vendorsData);
         
-        // Filter products based on query
-        let filteredData = productsData.filter(product => 
-          product.name.toLowerCase().includes(query.toLowerCase()) || 
-          (product.description && product.description.toLowerCase().includes(query.toLowerCase()))
-        );
+        // Use searchProducts function with the query
+        let productsData;
+        if (query) {
+          productsData = await searchProducts(query);
+        } else {
+          productsData = await getAllProducts();
+        }
         
         // Apply vendor filter if present
         if (storeFilter) {
-          filteredData = filteredData.filter(product => {
+          productsData = productsData.filter(product => {
             if (!product.prices) return false;
             return product.prices.some(price => {
               const vendor = price.vendor_id;
@@ -60,12 +61,12 @@ const SearchResults: React.FC = () => {
         
         // Apply brand filter if present
         if (brandFilter) {
-          filteredData = filteredData.filter(product => 
+          productsData = productsData.filter(product => 
             product.brand?.toLowerCase() === brandFilter.toLowerCase()
           );
         }
         
-        setResults(filteredData);
+        setResults(productsData);
       } catch (error) {
         console.error('Error searching products:', error);
         setResults([]);

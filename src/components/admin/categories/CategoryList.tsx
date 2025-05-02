@@ -27,7 +27,7 @@ import {
   deleteCategory, 
   Category 
 } from '@/services/categoryService';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 interface CategoryListProps {
   parentId?: string | null;
@@ -35,6 +35,7 @@ interface CategoryListProps {
 }
 
 const CategoryList = ({ parentId = null, onCategorySelected }: CategoryListProps) => {
+  const { toast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
@@ -64,7 +65,7 @@ const CategoryList = ({ parentId = null, onCategorySelected }: CategoryListProps
     };
     
     fetchCategories();
-  }, [parentId]);
+  }, [parentId, toast]);
   
   const handleDeleteClick = (id: string) => {
     setCategoryToDelete(id);

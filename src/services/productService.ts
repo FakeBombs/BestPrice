@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
@@ -48,6 +47,27 @@ const convertDBProductToProduct = (product: any): Product => {
   };
 };
 
+// Helper function to convert mock data to match our Product interface
+const convertMockProductToProduct = (mockProduct: any): Product => {
+  return {
+    id: String(mockProduct.id),
+    name: mockProduct.name,
+    title: mockProduct.title || mockProduct.name,
+    description: mockProduct.description || '',
+    price: mockProduct.price,
+    image_url: mockProduct.imageUrl || mockProduct.image,
+    images: mockProduct.images || [],
+    brand: mockProduct.brand || '',
+    sku: mockProduct.sku || '',
+    model: mockProduct.model || '',
+    slug: mockProduct.slug || mockProduct.name.toLowerCase().replace(/\s+/g, '-'),
+    highlights: mockProduct.highlights || [],
+    specifications: mockProduct.specifications || mockProduct.specs || {},
+    rating: mockProduct.rating || 0,
+    review_count: mockProduct.reviewCount || mockProduct.review_count || 0
+  };
+};
+
 // Get best price for a product
 export const getBestPrice = (product: Product): ProductPrice | null => {
   if (!product.prices || product.prices.length === 0) {
@@ -58,43 +78,7 @@ export const getBestPrice = (product: Product): ProductPrice | null => {
     .sort((a, b) => a.price - b.price)[0] || null;
 };
 
-// Get all products
-export const getAllProducts = async (): Promise<Product[]> => {
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*');
-      
-    if (error) {
-      console.error("Error fetching products:", error);
-      // Make sure mock data has review_count
-      return mockData.products.map((p: any) => ({
-        ...p,
-        review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
-      })) as Product[];
-    }
-    
-    if (!data || data.length === 0) {
-      return mockData.products.map((p: any) => ({
-        ...p,
-        review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
-      })) as Product[];
-    }
-    
-    return data.map(convertDBProductToProduct);
-  } catch (error) {
-    console.error("Error in getAllProducts:", error);
-    return mockData.products.map((p: any) => ({
-      ...p,
-      review_count: p.reviewCount || 0,
-      specifications: p.specs || {}
-    })) as Product[];
-  }
-};
-
-// Add the searchProducts function
+// Search products by query
 export const searchProducts = async (query: string): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
@@ -120,11 +104,7 @@ export const searchProducts = async (query: string): Promise<Product[]> => {
           p.name.toLowerCase().includes(query.toLowerCase()) || 
           (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
         )
-        .map((p: any) => ({
-          ...p,
-          review_count: p.reviewCount || 0,
-          specifications: p.specs || {}
-        })) as Product[];
+        .map(convertMockProductToProduct);
     }
     
     return data.map(product => ({
@@ -143,11 +123,30 @@ export const searchProducts = async (query: string): Promise<Product[]> => {
         p.name.toLowerCase().includes(query.toLowerCase()) || 
         (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
       )
-      .map((p: any) => ({
-        ...p,
-        review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
-      })) as Product[];
+      .map(convertMockProductToProduct);
+  }
+};
+
+// Get all products
+export const getAllProducts = async (): Promise<Product[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*');
+      
+    if (error) {
+      console.error("Error fetching products:", error);
+      return mockData.products.map(convertMockProductToProduct);
+    }
+    
+    if (!data || data.length === 0) {
+      return mockData.products.map(convertMockProductToProduct);
+    }
+    
+    return data.map(convertDBProductToProduct);
+  } catch (error) {
+    console.error("Error in getAllProducts:", error);
+    return mockData.products.map(convertMockProductToProduct);
   }
 };
 
@@ -173,11 +172,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     if (error || !data) {
       console.error("Error fetching product:", error);
       const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
-      return mockProduct ? {
-        ...mockProduct,
-        review_count: mockProduct.reviewCount || 0,
-        specifications: mockProduct.specs || {}
-      } as Product : null;
+      return mockProduct ? convertMockProductToProduct(mockProduct) : null;
     }
     
     return {
@@ -192,11 +187,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   } catch (error) {
     console.error("Error in getProductById:", error);
     const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
-    return mockProduct ? {
-      ...mockProduct,
-      review_count: mockProduct.reviewCount || 0,
-      specifications: mockProduct.specs || {}
-    } as Product : null;
+    return mockProduct ? convertMockProductToProduct(mockProduct) : null;
   }
 };
 
@@ -218,11 +209,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
           String(p.categoryId) === categoryId || 
           (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
         )
-        .map((p: any) => ({
-          ...p,
-          review_count: p.reviewCount || 0,
-          specifications: p.specs || {}
-        })) as Product[];
+        .map(convertMockProductToProduct);
     }
     
     if (!data || data.length === 0) {
@@ -231,11 +218,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
           String(p.categoryId) === categoryId || 
           (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
         )
-        .map((p: any) => ({
-          ...p,
-          review_count: p.reviewCount || 0,
-          specifications: p.specs || {}
-        })) as Product[];
+        .map(convertMockProductToProduct);
     }
     
     return data.map((item: any) => convertDBProductToProduct(item.products));
@@ -246,11 +229,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
         String(p.categoryId) === categoryId || 
         (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
       )
-      .map((p: any) => ({
-        ...p,
-        review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
-      })) as Product[];
+      .map(convertMockProductToProduct);
   }
 };
 
@@ -268,21 +247,13 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
       console.error("Error fetching featured products:", error);
       return mockData.products
         .slice(0, 12)
-        .map((p: any) => ({
-          ...p,
-          review_count: p.reviewCount || 0,
-          specifications: p.specs || {}
-        })) as Product[];
+        .map(convertMockProductToProduct);
     }
     
     if (!data || data.length === 0) {
       return mockData.products
         .slice(0, 12)
-        .map((p: any) => ({
-          ...p,
-          review_count: p.reviewCount || 0,
-          specifications: p.specs || {}
-        })) as Product[];
+        .map(convertMockProductToProduct);
     }
     
     return data.map(convertDBProductToProduct);
@@ -290,11 +261,7 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
     console.error("Error in getFeaturedProducts:", error);
     return mockData.products
       .slice(0, 12)
-      .map((p: any) => ({
-        ...p,
-        review_count: p.reviewCount || 0,
-        specifications: p.specs || {}
-      })) as Product[];
+      .map(convertMockProductToProduct);
   }
 };
 
@@ -415,7 +382,7 @@ export const importMockDataToSupabase = async (): Promise<boolean> => {
         model: product.model || '',
         slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
         highlights: product.highlights || [],
-        specifications: product.specifications || {},
+        specifications: product.specifications || product.specs || {},
         rating: product.rating || 0,
         review_count: product.reviewCount || 0
       };

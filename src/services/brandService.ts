@@ -13,9 +13,6 @@ export interface Brand {
 export type BrandCreate = Omit<Brand, 'id' | 'created_at' | 'updated_at'>;
 export type BrandUpdate = Partial<BrandCreate>;
 
-// Make sure mockData has the brands property
-const mockBrands = mockData as any;
-
 // Get all brands
 export const getAllBrands = async (): Promise<Brand[]> => {
   try {
@@ -26,13 +23,20 @@ export const getAllBrands = async (): Promise<Brand[]> => {
       
     if (error) {
       console.error("Error fetching brands:", error);
-      return mockBrands.brands || [];
+      // Use exported 'brands' array directly from mockData
+      return mockData.brands?.map(b => ({
+        ...b,
+        id: String(b.id)
+      })) || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllBrands:", error);
-    return mockBrands.brands || [];
+    return mockData.brands?.map(b => ({
+      ...b,
+      id: String(b.id)
+    })) || [];
   }
 };
 
@@ -47,13 +51,21 @@ export const getBrandById = async (id: string): Promise<Brand | null> => {
       
     if (error) {
       console.error("Error fetching brand:", error);
-      return mockBrands.brands ? mockBrands.brands.find(b => String(b.id) === id) as Brand || null : null;
+      const mockBrand = mockData.brands?.find(b => String(b.id) === id);
+      return mockBrand ? {
+        ...mockBrand,
+        id: String(mockBrand.id)
+      } : null;
     }
     
     return data;
   } catch (error) {
     console.error("Error in getBrandById:", error);
-    return mockBrands.brands ? mockBrands.brands.find(b => String(b.id) === id) as Brand || null : null;
+    const mockBrand = mockData.brands?.find(b => String(b.id) === id);
+    return mockBrand ? {
+      ...mockBrand,
+      id: String(mockBrand.id)
+    } : null;
   }
 };
 
@@ -123,5 +135,5 @@ export const deleteBrand = async (id: string): Promise<boolean> => {
   }
 };
 
-// Add the missing getBrands function that's being imported
+// Alias for compatibility with existing code
 export const getBrands = getAllBrands;

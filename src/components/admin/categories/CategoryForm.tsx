@@ -1,258 +1,233 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { 
-  Category, 
-  createCategory, 
-  updateCategory, 
-  getCategoryById, 
-  getMainCategories 
-} from '@/services/categoryService';
-import { toast } from '@/hooks/use-toast';
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Category, CategoryCreate, formatSlug } from '@/services/categoryService';
+import { useToast } from "@/components/ui/use-toast"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 
 interface CategoryFormProps {
-  categoryId?: string;
-  parentId?: string | null;
+  category?: Category;
+  categories?: Category[];
+  onSubmit?: (values: CategoryCreate) => void;
+  onSave?: (values: CategoryCreate) => void;
+  onCancel?: () => void;
 }
 
-const CategoryForm = ({ categoryId, parentId }: CategoryFormProps) => {
-  const navigate = useNavigate();
-  const isEditing = Boolean(categoryId);
-  
-  const [loading, setLoading] = useState(false);
-  const [mainCategories, setMainCategories] = useState<Category[]>([]);
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Category name must be at least 2 characters.",
+  }),
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
+  }),
+  image_url: z.string().url({ message: "Please enter a valid URL." }),
+  parent_id: z.string().optional(),
+  slug: z.string().optional(),
+  category_type: z.enum(['main', 'sub']).optional(),
+});
+
+const CategoryForm: React.FC<CategoryFormProps> = ({ category, categories = [], onSubmit, onSave, onCancel }) => {
+  const { toast } = useToast()
   const [formData, setFormData] = useState<Partial<Category>>({
-    name: '',
-    description: '',
-    category_type: 'sub',
-    parent_id: parentId || null,
-    image_url: ''
+    name: category?.name || '',
+    description: category?.description || '',
+    image_url: category?.image_url || '',
+    parent_id: category?.parent_id || '',
+    category_type: category?.category_type || 'sub',
+    slug: category?.slug || '',
   });
-  
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: category?.name || "",
+      description: category?.description || "",
+      image_url: category?.image_url || "",
+      parent_id: category?.parent_id || "",
+      slug: category?.slug || "",
+      category_type: category?.category_type || 'sub',
+    },
+  })
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // Fetch main categories for parent selection
-        const mainCats = await getMainCategories();
-        setMainCategories(mainCats);
-        
-        // If editing, fetch the category data
-        if (isEditing && categoryId) {
-          const category = await getCategoryById(categoryId);
-          if (category) {
-            setFormData({
-              name: category.name,
-              description: category.description || '',
-              category_type: category.category_type,
-              parent_id: category.parent_id,
-              image_url: category.image_url || ''
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load form data.",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
-  }, [categoryId, isEditing, parentId]);
-  
+    if (category) {
+      form.reset({
+        name: category.name,
+        description: category.description || "",
+        image_url: category.image_url || "",
+        parent_id: category.parent_id || "",
+        slug: category.slug,
+        category_type: category.category_type,
+      });
+      
+      setFormData({
+        name: category.name,
+        description: category.description,
+        image_url: category.image_url,
+        parent_id: category.parent_id,
+        slug: category.slug,
+        category_type: category.category_type,
+      });
+    }
+  }, [category, form]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
-  
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+  const handleSelectChange = (value: string) => {
+    setFormData({
+      ...formData,
+      parent_id: value !== "" ? value : null,
+    });
   };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const handleUpdate = () => {
+    const categoryTypeToUse = formData.parent_id ? 'sub' : 'main';
+    const slugToUse = formData.slug || formatSlug(formData.name || '');
     
-    if (!formData.name) {
-      toast({
-        title: "Validation Error",
-        description: "Category name is required.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Make sure name is not optional for CategoryCreate
-    const categoryData: CategoryCreate = {
-      name: formData.name,
+    const updatedCategory: CategoryCreate = {
+      name: formData.name || '',
       description: formData.description,
-      category_type: formData.category_type as 'main' | 'sub',
-      parent_id: formData.parent_id,
-      slug: formData.slug || formatSlug(formData.name),
-      image_url: formData.image_url
+      image_url: formData.image_url,
+      parent_id: formData.parent_id !== "" ? formData.parent_id : null,
+      category_type: categoryTypeToUse,
+      slug: slugToUse
     };
     
-    setLoading(true);
-    try {
-      let result;
-      
-      if (isEditing && categoryId) {
-        result = await updateCategory(categoryId, categoryData);
-      } else {
-        result = await createCategory(categoryData);
-      }
-      
-      toast({
-        title: "Success",
-        description: `Category ${isEditing ? 'updated' : 'created'} successfully.`
-      });
-      
-      // Navigate back to categories list
-      navigate('/admin/categories');
-    } catch (error) {
-      console.error('Error saving category:', error);
-      toast({
-        title: "Error",
-        description: `Failed to ${isEditing ? 'update' : 'create'} category.`,
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+    if (onSave) onSave(updatedCategory);
+    toast({
+      title: "Category updated!",
+      description: "Your category has been updated successfully.",
+    })
   };
-  
+
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    const categoryTypeToUse = values.parent_id ? 'sub' : 'main';
+    const slugToUse = values.slug || formatSlug(values.name);
+    
+    const newCategory: CategoryCreate = {
+      name: values.name,
+      description: values.description,
+      image_url: values.image_url,
+      parent_id: values.parent_id !== "" ? values.parent_id : null,
+      category_type: categoryTypeToUse,
+      slug: slugToUse
+    };
+    
+    const handler = onSubmit || onSave;
+    if (handler) handler(newCategory);
+    toast({
+      title: "Category created!",
+      description: "Your category has been created successfully.",
+    })
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{isEditing ? 'Edit Category' : 'Create New Category'}</CardTitle>
-        <CardDescription>
-          {isEditing 
-            ? 'Update the details for this category.' 
-            : 'Fill in the details to create a new category.'}
-        </CardDescription>
-      </CardHeader>
-      
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              name="description"
-              value={formData.description || ''}
-              onChange={handleChange}
-              disabled={loading}
-              rows={3}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="category_type">Category Type</Label>
-            <Select
-              value={formData.category_type}
-              onValueChange={(value) => handleSelectChange('category_type', value)}
-              disabled={loading || isEditing}
-            >
-              <SelectTrigger id="category_type">
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="main">Main</SelectItem>
-                <SelectItem value="sub">Sub</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {formData.category_type === 'sub' && (
-            <div className="space-y-2">
-              <Label htmlFor="parent_id">Parent Category</Label>
-              <Select
-                value={formData.parent_id || undefined}
-                onValueChange={(value) => handleSelectChange('parent_id', value)}
-                disabled={loading}
-              >
-                <SelectTrigger id="parent_id">
-                  <SelectValue placeholder="Select parent category" />
-                </SelectTrigger>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category name</FormLabel>
+              <FormControl>
+                <Input placeholder="Category name" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the name of category.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Category description"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Write a detailed description for your category.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="image_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input placeholder="Image URL" {...field} />
+              </FormControl>
+              <FormDescription>
+                Add an image URL for your category.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="parent_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Parent Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a parent category" />
+                  </SelectTrigger>
+                </FormControl>
                 <SelectContent>
-                  {mainCategories.map(cat => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
+                  <SelectItem value="">None</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+              <FormDescription>
+                Choose a parent category for this category.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
-          
-          <div className="space-y-2">
-            <Label htmlFor="image_url">Image URL</Label>
-            <Input
-              id="image_url"
-              name="image_url"
-              value={formData.image_url || ''}
-              onChange={handleChange}
-              disabled={loading}
-              placeholder="http://example.com/image.jpg"
-            />
-          </div>
-        </CardContent>
-        
-        <CardFooter className="flex justify-between">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={() => navigate('/admin/categories')}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Saving...' : isEditing ? 'Update Category' : 'Create Category'}
-          </Button>
-        </CardFooter>
+        />
+        {category ? (
+          <Button type="button" onClick={handleUpdate}>Update Category</Button>
+        ) : (
+          <Button type="submit">Create Category</Button>
+        )}
       </form>
-    </Card>
+    </Form>
   );
 };
 

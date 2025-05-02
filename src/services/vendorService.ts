@@ -21,9 +21,6 @@ export interface Vendor {
 export type VendorCreate = Omit<Vendor, 'id' | 'created_at' | 'updated_at'>;
 export type VendorUpdate = Partial<VendorCreate>;
 
-// Make sure mockData has the vendors property
-const mockVendors = mockData as any;
-
 // Get all vendors
 export const getAllVendors = async (): Promise<Vendor[]> => {
   try {
@@ -34,13 +31,19 @@ export const getAllVendors = async (): Promise<Vendor[]> => {
       
     if (error) {
       console.error("Error fetching vendors:", error);
-      return mockVendors.vendors || [];
+      return mockData.vendors?.map(v => ({
+        ...v,
+        id: String(v.id)
+      })) || [];
     }
     
     return data || [];
   } catch (error) {
     console.error("Error in getAllVendors:", error);
-    return mockVendors.vendors || [];
+    return mockData.vendors?.map(v => ({
+      ...v,
+      id: String(v.id)
+    })) || [];
   }
 };
 
@@ -55,13 +58,21 @@ export const getVendorById = async (id: string): Promise<Vendor | null> => {
       
     if (error) {
       console.error("Error fetching vendor:", error);
-      return mockVendors.vendors ? mockVendors.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
+      const mockVendor = mockData.vendors?.find(v => String(v.id) === id);
+      return mockVendor ? {
+        ...mockVendor,
+        id: String(mockVendor.id)
+      } : null;
     }
     
     return data;
   } catch (error) {
     console.error("Error in getVendorById:", error);
-    return mockVendors.vendors ? mockVendors.vendors.find(v => String(v.id) === id) as unknown as Vendor || null : null;
+    const mockVendor = mockData.vendors?.find(v => String(v.id) === id);
+    return mockVendor ? {
+      ...mockVendor,
+      id: String(mockVendor.id)
+    } : null;
   }
 };
 
@@ -139,5 +150,5 @@ export const deleteVendor = async (id: string): Promise<boolean> => {
   }
 };
 
-// Add the missing getVendors function that's being imported
+// Alias for compatibility with existing code
 export const getVendors = getAllVendors;
