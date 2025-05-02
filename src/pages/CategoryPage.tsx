@@ -25,26 +25,41 @@ const CategoryPage: React.FC = () => {
   const findCategory = (identifier: string) => {
     return (
       [...mainCategories, ...categories].find(
-        cat =>
+        (cat) =>
           cat.id.toString() === identifier || cat.slug === identifier
       )
     );
   };
 
-  // Find category based on URL segments
+  // Updated logic to handle nested categories hierarchically
   useEffect(() => {
     if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
       setCurrentCategory(undefined);
       return;
     }
-    const segments = pathSegments.slice(1); // segments after "/cat"
-    const lastSegment = segments[segments.length - 1];
-    const foundCategory = findCategory(lastSegment) || findCategory(segments[0]);
-    setCurrentCategory(foundCategory);
+    const segments = pathSegments.slice(1); // after "/cat"
+    let parentCategories = [...mainCategories]; // start with main categories
+    let matchedCategory: any | undefined;
 
-    if (foundCategory) {
-      const productsToDisplay = products.filter(product => 
-        product.categoryId && product.categoryId.toString() === foundCategory.id.toString()
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
+      matchedCategory = parentCategories.find(
+        (cat) =>
+          cat.id.toString() === segment || cat.slug === segment
+      );
+      if (matchedCategory) {
+        // prepare for next level
+        parentCategories = categories.filter(c => c.parentId === matchedCategory.id);
+      } else {
+        break; // no match at this level
+      }
+    }
+    setCurrentCategory(matchedCategory);
+
+    if (matchedCategory) {
+      const productsToDisplay = products.filter(
+        (product) =>
+          product.categoryId && product.categoryId.toString() === matchedCategory.id.toString()
       );
       setFilteredProducts(productsToDisplay);
     } else {
@@ -52,16 +67,10 @@ const CategoryPage: React.FC = () => {
     }
   }, [pathSegments]);
 
-  // Additional filtering for nested categories if needed
-  useEffect(() => {
-    if (!currentCategory) return;
-    const productsToDisplay = products.filter(product => 
-      product.categoryIds && product.categoryIds.includes(currentCategory.id)
-    );
-    setFilteredProducts(productsToDisplay);
-  }, [currentCategory, products]);
+  // No need for the previous useEffect filtering based on currentCategory, as the above handles filtering
 
-  if (!currentCategory) {
+  if (!currentCategory && pathSegments.length >= 2) {
+    // URL indicates a category but not found
     return <NotFound />;
   }
 
