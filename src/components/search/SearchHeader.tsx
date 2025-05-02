@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SearchBar } from '@/components/SearchBar';  // Changed from default import to named import
+import { SearchBar } from '@/components/SearchBar';
 
 interface SearchHeaderProps {
   query: string;
