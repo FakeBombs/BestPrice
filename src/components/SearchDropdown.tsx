@@ -1,48 +1,60 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatters';
 import { Product } from '@/services/productService';
-import { Command, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
 
 interface SearchDropdownProps {
-  items: Product[];
-  visible: boolean;
-  onSelect: (product: Product) => void;
-  onClose: () => void;
+  results: Product[];
+  isOpen: boolean;
+  onResultClick: () => void;
+  onViewAllResults: () => void;
+  searchTerm: string;
 }
 
-const SearchDropdown = ({ items, visible, onSelect, onClose }: SearchDropdownProps) => {
-  if (!visible || !items.length) return null;
+const SearchDropdown: React.FC<SearchDropdownProps> = ({
+  results,
+  isOpen,
+  onResultClick,
+  onViewAllResults,
+  searchTerm,
+}) => {
+  if (!isOpen || results.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="absolute mt-1 w-full rounded-md border bg-popover shadow-md z-50">
-      <Command className="rounded-lg border shadow-md">
-        <CommandEmpty>No recent searches</CommandEmpty>
-        <CommandGroup heading="Recent Searches">
-          {items.map((item) => (
-            <CommandItem
-              key={item.id}
-              onSelect={() => onSelect(item)}
-              className="flex items-center gap-2 p-2 cursor-pointer hover:bg-accent"
-            >
-              <div className="h-10 w-10 overflow-hidden rounded-md border">
-                <img 
-                  src={item.image_url || item.imageUrl || item.image || '/placeholder.svg'} 
-                  alt={item.name}
-                  className="h-full w-full object-cover"
-                />
+    <div className="search__results">
+      <div className="search__title">Quick Results</div>
+      <div className="search__items">
+        {results.map((product) => (
+          <Link
+            key={product.id}
+            to={`/item/${product.id}/${product.slug}`}
+            className="search__item"
+            onClick={onResultClick}
+          >
+            <div className="search__item-image">
+              <img src={product.imageUrl || product.image || product.image_url || '/placeholder.svg'} alt={product.name} />
+            </div>
+            <div className="search__item-details">
+              <div className="search__item-name">{product.name}</div>
+              <div className="search__item-category">
+                {product.category || 
+                 (product.categoryIds && product.categoryIds.length > 0 
+                  ? `Category ID: ${product.categoryIds[0]}` 
+                  : 'Unknown Category')}
               </div>
-              <div className="flex flex-col">
-                <span className="font-medium">{item.title || item.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  {item.categories?.[0]?.name || "Product"} • €{item.price.toFixed(2)}
-                </span>
-              </div>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </Command>
+              <div className="search__item-price">{formatPrice(product.price)}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div className="search__footer">
+        <button className="search__view-all" onClick={onViewAllResults}>
+          View all results for "{searchTerm}"
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,44 +1,29 @@
 
-import { useState } from 'react';
-import { Mic } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
 
-interface VoiceSearchButtonProps {
-  onVoiceInput: (text: string) => void;
+export interface VoiceSearchButtonProps {
+  onSearchComplete: (query: string) => void;
 }
 
-export const VoiceSearchButton = ({ onVoiceInput }: VoiceSearchButtonProps) => {
-  const [isListening, setIsListening] = useState(false);
-
-  const startVoiceRecognition = () => {
-    // Check if browser supports speech recognition
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      setIsListening(true);
-      
-      // This is just a mock implementation
-      // In a real app, we would use the Web Speech API
-      setTimeout(() => {
-        setIsListening(false);
-        onVoiceInput('sample voice search');
-      }, 2000);
-    } else {
-      alert('Voice search is not supported in your browser.');
-    }
+const VoiceSearchButton: React.FC<VoiceSearchButtonProps> = ({ onSearchComplete }) => {
+  const handleVoiceSearch = () => {
+    // Mock implementation - in a real app this would use the Web Speech API
+    setTimeout(() => {
+      onSearchComplete("voice search demo");
+    }, 1000);
   };
 
   return (
-    <Button 
-      type="button"
-      variant="ghost" 
-      size="icon" 
-      className={`search__voice-button ${isListening ? 'animate-pulse' : ''}`}
-      onClick={startVoiceRecognition}
-      aria-label="Search with voice"
+    <div 
+      role="button" 
+      className="search__icon tooltip__anchor search__voice search__icon--actionable"
+      onClick={handleVoiceSearch}
     >
-      <Mic className="h-5 w-5" />
-    </Button>
+      <svg aria-hidden="true" className="icon" width="18" height="18" viewBox="0 0 18 18" role="img">
+        <path xmlns="http://www.w3.org/2000/svg" d="M8.25 2.25h1.5a.75.75 0 01.75.75v6a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V3a.75.75 0 01.75-.75zm3.75 3v.75c0 2.9-2.35 5.25-5.25 5.25S1.5 8.9 1.5 6V5.25H3V6a3.75 3.75 0 107.5 0v-.75H12z" fillRule="evenodd"/>
+      </svg>
+    </div>
   );
 };
 
-// Also export as default for backward compatibility
 export default VoiceSearchButton;

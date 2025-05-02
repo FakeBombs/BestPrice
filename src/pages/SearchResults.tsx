@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { searchProducts, categories, vendors, brands, mainCategories } from '@/data/mockData'; 
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
+import { Product } from '@/services/productService';
 
 // Debounce function
 const useDebounce = (value, delay) => {
@@ -22,37 +23,45 @@ const MAX_DISPLAY_COUNT = 10;
 
 const SearchResults = () => {
     const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [availableBrands, setAvailableBrands] = useState({});
-    const [availableSpecs, setAvailableSpecs] = useState({});
-    const [availableCategories, setAvailableCategories] = useState([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+    const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
+    const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
+    const [availableCategories, setAvailableCategories] = useState<any[]>([]);
     const [showMoreCategories, setShowMoreCategories] = useState(false);
     const [showMoreVendors, setShowMoreVendors] = useState(false);
-    const [certifiedVendors, setCertifiedVendors] = useState([]);
+    const [certifiedVendors, setCertifiedVendors] = useState<any[]>([]);
     const [sortType, setSortType] = useState('rating-desc');
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q') || '';
     const debouncedSearchQuery = useDebounce(searchQuery, 300); // Using debounce
 
     useEffect(() => {
-        const results = searchProducts(debouncedSearchQuery);
-        setProducts(results);
-        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] }); // Reset vendorIds in filters
-        extractAvailableFilters(results);
-        extractCategories(results);
-        updateCertifiedVendors(results);
-        const sortedResults = sortProducts(results);
-        setFilteredProducts(sortedResults);
+        const fetchAndSetProducts = async () => {
+            const results = await searchProducts(debouncedSearchQuery);
+            setProducts(results);
+            setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] }); // Reset vendorIds in filters
+            extractAvailableFilters(results);
+            extractCategories(results);
+            updateCertifiedVendors(results);
+            const sortedResults = sortProducts(results);
+            setFilteredProducts(sortedResults);
+        };
+        
+        fetchAndSetProducts();
     }, [debouncedSearchQuery]);
 
     useEffect(() => {
-        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.vendorIds);
+        const filterAndSort = async () => {
+            await filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.vendorIds);
+        };
+        
+        filterAndSort();
     }, [activeFilters, products]);
 
-    const extractAvailableFilters = (results) => {
-        const brandsCount = {};
-        const specs = {};
+    const extractAvailableFilters = (results: Product[]) => {
+        const brandsCount: Record<string, number> = {};
+        const specs: Record<string, Set<string>> = {};
         results.forEach((product) => {
             if (product.brand) {
                 brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
@@ -61,41 +70,71 @@ const SearchResults = () => {
                 if (!specs[specKey]) {
                     specs[specKey] = new Set();
                 }
-                specs[specKey].add(product.specifications[specKey]);
+                specs[specKey].add(product.specifications![specKey]);
             });
         });
         setAvailableBrands(brandsCount);
         setAvailableSpecs(specs);
     };
 
-    const extractCategories = (results) => {
-        const categoryCount = {};
+    // Updated to show only the final categories that products belong to
+    const extractCategories = (results: Product[]) => {
+        // Build a map to count products in each category
+        const categoryCount: Record<string, number> = {};
+        
+        // First, collect all category IDs from products
         results.forEach((product) => {
-            (product.categoryIds || []).forEach(categoryId => {
-                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+            // Handle both categoryIds array and single categoryId
+            const productCatIds = product.categoryIds || (product.categoryId ? [product.categoryId] : []);
+            
+            productCatIds.forEach(categoryId => {
+                // Convert to string for consistent keys
+                const catIdStr = String(categoryId);
+                categoryCount[catIdStr] = (categoryCount[catIdStr] || 0) + 1;
+                
+                // Find if this category has a parent
+                const categoryData = categories.find(cat => String(cat.id) === catIdStr);
+                
+                // If this category has a parent, it's not a final category, so remove its parent from the count
+                if (categoryData && categoryData.parentId) {
+                    const parentId = String(categoryData.parentId);
+                    if (categoryCount[parentId]) {
+                        categoryCount[parentId] = Math.max(0, categoryCount[parentId] - 1);
+                    }
+                }
             });
         });
 
-        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
-            const categoryData = categories.find(cat => cat.id === parseInt(id));
-            return {
-                id: categoryData ? categoryData.id : '',
-                category: categoryData ? categoryData.name : '',
-                slug: categoryData ? categoryData.slug : '',
-                count,
-                image: categoryData ? categoryData.image : '',
-                parentId: categoryData ? categoryData.parentId : null,
-            };
-        }).filter(cat => cat.id && cat.parentId);
+        // Now filter out categories that are parents of other categories
+        const finalCategories = Object.entries(categoryCount)
+            .filter(([id, count]) => count > 0)  // Only keep categories with products
+            .map(([id, count]) => {
+                const categoryData = categories.find(cat => String(cat.id) === id);
+                const parentData = categoryData?.parentId ? 
+                    categories.find(cat => String(cat.id) === String(categoryData.parentId)) || 
+                    mainCategories.find(cat => String(cat.id) === String(categoryData.parentId)) : 
+                    null;
+                
+                return {
+                    id: categoryData ? categoryData.id : '',
+                    category: categoryData ? categoryData.name : '',
+                    slug: categoryData ? categoryData.slug : '',
+                    count,
+                    image: categoryData ? categoryData.image : '',
+                    parentId: categoryData ? categoryData.parentId : null,
+                    parentSlug: parentData ? parentData.slug : '',
+                };
+            })
+            .filter(cat => cat.id); // Remove empty entries
 
-        setAvailableCategories(categoriesArray);
+        setAvailableCategories(finalCategories);
     };
 
-    const updateCertifiedVendors = (results) => {
+    const updateCertifiedVendors = (results: Product[]) => {
         const vendorMap = new Map();
         results.forEach(product => {
-            product.prices.forEach(price => {
-                const vendor = vendors.find(v => v.id === price.vendorId);
+            (product.prices || []).forEach(price => {
+                const vendor = vendors.find(v => v.id === price.vendorId || v.id === price.vendor_id);
                 if (vendor && vendor.certification) {
                     vendorMap.set(vendor.id, vendor);
                 }
@@ -108,21 +147,24 @@ const SearchResults = () => {
         setCertifiedVendors(vendorArray);
     };
 
-    const filterProducts = (brands, specs, inStockOnly, results, vendorIds) => {
-        let filtered = results;
+    const filterProducts = async (brands: string[], specs: Record<string, string[]>, inStockOnly: boolean, results: Product[], vendorIds: string[]) => {
+        let filtered = [...results];
 
         if (inStockOnly) {
-            filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
+            filtered = filtered.filter((product) => 
+                (product.prices || []).some((price) => price.inStock || price.in_stock)
+            );
         }
 
         if (brands.length > 0) {
-            filtered = filtered.filter((product) => brands.includes(product.brand));
+            filtered = filtered.filter((product) => brands.includes(product.brand || ''));
         }
 
         if (vendorIds.length > 0) {
             filtered = filtered.filter(product =>
                 (product.prices || []).some(price => {
-                    const vendor = vendors.find(v => v.id === price.vendorId);
+                    const vendId = price.vendorId || price.vendor_id;
+                    const vendor = vendors.find(v => v.id === vendId);
                     return vendor && vendorIds.includes(vendor.id); // Filter based on selected vendor IDs
                 })
             );
@@ -131,7 +173,8 @@ const SearchResults = () => {
         if (Object.keys(specs).length > 0) {
             filtered = filtered.filter((product) => {
                 return Object.entries(specs).every(([key, values]) => {
-                    return values.includes(product.specifications[key]);
+                    const prodSpec = product.specifications && product.specifications[key];
+                    return values.includes(prodSpec || '');
                 });
             });
         }
@@ -143,31 +186,41 @@ const SearchResults = () => {
         updateCertifiedVendors(filtered);
     };
 
-    const sortProducts = (products) => {
+    // Enhanced sorting functionality
+    const sortProducts = (products: Product[]): Product[] => {
         switch (sortType) {
             case 'price-asc':
                 return [...products].sort((a, b) => {
-                    const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                    const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
+                    const minPriceA = Math.min(...(a.prices || [])
+                        .filter((p) => p.inStock || p.in_stock)
+                        .map((p) => p.price), Infinity);
+                    const minPriceB = Math.min(...(b.prices || [])
+                        .filter((p) => p.inStock || p.in_stock)
+                        .map((p) => p.price), Infinity);
                     return minPriceA - minPriceB;
                 });
             case 'price-desc':
                 return [...products].sort((a, b) => {
-                    const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                    const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
+                    const maxPriceA = Math.max(...(a.prices || [])
+                        .filter((p) => p.inStock || p.in_stock)
+                        .map((p) => p.price), 0);
+                    const maxPriceB = Math.max(...(b.prices || [])
+                        .filter((p) => p.inStock || p.in_stock)
+                        .map((p) => p.price), 0);
                     return maxPriceB - maxPriceA;
                 });
             case 'rating-desc':
             default:
                 return [...products].sort((a, b) => {
-                    const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                    const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                    return averageRatingB - averageRatingA;
+                    // Use rating directly if available
+                    return (b.rating || 0) - (a.rating || 0);
                 });
             case 'merchants_desc':
                 return [...products].sort((a, b) => {
-                    const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                    const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
+                    const availableVendorsA = (a.prices || [])
+                        .filter((price) => price.inStock || price.in_stock).length;
+                    const availableVendorsB = (b.prices || [])
+                        .filter((price) => price.inStock || price.in_stock).length;
                     return availableVendorsB - availableVendorsA;
                 });
         }
@@ -218,7 +271,7 @@ const SearchResults = () => {
                             <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
                                 <span className="applied-filters__label">{brand}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove filter of ${brand}`} onClick={() => handleBrandFilter(brand)}>
-                                    <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                    <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                 </svg>
                             </a>
                         </h2>
@@ -229,7 +282,7 @@ const SearchResults = () => {
                             <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
                                 <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
                                 <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove ${specKey}-${specValue} filter`}>
-                                    <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                    <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                 </svg>
                             </a>
                         </h2>
@@ -242,7 +295,7 @@ const SearchResults = () => {
                               <a data-scroll-to="" data-filter-key={vendor.name} datavalue-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
                                   <span className="applied-filters__label">{vendor.name}</span>
                                   <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" viewBox="0 0 12 12" role="img" aria-label={`Remove filter of ${vendor.name}`}>
-                                      <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
+                                      <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6.87335 6.00839L11.8052 1.098C12.0416 0.863692 12.0416 0.484357 11.8052 0.250643C11.5693 0.01633 11.1862 0.01633 10.9504 0.250643L6.02275 5.15683L1.04963 0.177533C0.813788 -0.0591775 0.430688 -0.0591775 0.194842 0.177533C-0.0410036 0.414842 -0.0410036 0.798971 0.194842 1.03568L5.16436 6.01139L0.176884 10.9769C-0.0589614 11.2112 -0.0589614 11.5906 0.176884 11.8243C0.41273 12.0586 0.79583 12.0586 1.03168 11.8243L6.01497 6.86294L10.9683 11.8225C11.2042 12.0592 11.5873 12.0592 11.8231 11.8225C12.059 11.5852 12.059 11.201 11.8231 10.9643L6.87335 6.00839Z"/>
                                   </svg>
                               </a>
                           </h2>
@@ -279,11 +332,19 @@ const SearchResults = () => {
                                 </div>
                                 <ol aria-expanded={showMoreCategories}>
                                     {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => {
-                                        const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
-                                        const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
+                                        const mainCatId = item.parentId ? 
+                                            (typeof item.parentId === 'string' ? parseInt(item.parentId) : item.parentId) : null;
+                                        
+                                        const mainCategory = mainCategories.find(cat => {
+                                            const catId = typeof cat.id === 'string' ? parseInt(cat.id) : cat.id;
+                                            return catId === mainCatId;
+                                        });
+                                        
+                                        const mainCatSlug = mainCategory ? mainCategory.slug : item.parentSlug || '';
+                                        
                                         return (
                                             <li key={item.id}>
-                                                <Link to={`/cat/${mainCatSlug}/${item.slug}`} className="filters__link">
+                                                <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
                                                     <span>{item.category} ({item.count})</span>
                                                 </Link>
                                             </li>
@@ -300,6 +361,7 @@ const SearchResults = () => {
                                 )}
                             </div>
 
+                            {/* ... keep existing code (filter UI elements like brand filter, specs filter, etc.) */}
                             {Object.keys(availableBrands).length > 0 && (
                                 <div className="filter-brand default-list" data-filter-name data-type data-key>
                                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
@@ -322,8 +384,8 @@ const SearchResults = () => {
                                         <div className="filter-container">
                                             <ol>
                                                 {Array.from(availableSpecs[specKey]).map((specValue) => (
-                                                    <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
-                                                        <span>{specValue}</span>
+                                                    <li key={String(specValue)} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}>
+                                                        <span>{String(specValue)}</span>
                                                     </li>
                                                 ))}
                                             </ol>
@@ -369,13 +431,6 @@ const SearchResults = () => {
                                             onChange={() => { 
                                                 const newInStockOnly = !activeFilters.inStockOnly; 
                                                 setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly })); 
-                                                filterProducts(
-                                                    activeFilters.brands, 
-                                                    activeFilters.specs, 
-                                                    newInStockOnly, 
-                                                    products,
-                                                    activeFilters.vendorIds // Changed from certifications to vendorIds
-                                                ); 
                                             }} 
                                         />Άμεσα διαθέσιμα
                                     </label>
@@ -418,12 +473,9 @@ const SearchResults = () => {
                                 <ScrollableSlider>
                                     <div className="categories categories--scrollable scroll__content">
                                         {availableCategories.map((item) => {
-                                            const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
-                                            const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Use the slug of the main category
-
                                             return (
-                                                <Link key={item.id} to={`/cat/${mainCatSlug}/${item.slug}`} className="categories__category"> {/* Updated Link */}
-                                                    <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.name}`} />
+                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
+                                                    <img width="200" height="200" className="categories__image" src={item.image} alt={`Category: ${item.category}`} />
                                                     <h2 className="categories__title">{item.category}</h2>
                                                     <div className="categories__cnt">{item.count} {item.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
                                                 </Link>

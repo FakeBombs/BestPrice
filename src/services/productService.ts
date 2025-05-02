@@ -1,4 +1,3 @@
-
 import { products } from '@/data/mockData';
 
 export interface ProductPrice {
@@ -8,6 +7,10 @@ export interface ProductPrice {
   price: number;
   shippingCost?: number;
   inStock: boolean;
+  // Add backward compatibility for the old property names
+  vendor_id?: string;
+  shipping_cost?: number;
+  in_stock?: boolean;
 }
 
 export interface Product {
@@ -20,6 +23,7 @@ export interface Product {
   description?: string;
   image?: string;
   imageUrl?: string;
+  image_url?: string; // For backwards compatibility
   images?: string[];
   brand?: string;
   model?: string;
@@ -33,6 +37,7 @@ export interface Product {
   slug?: string;
   highlights?: string[];
   prices?: ProductPrice[];
+  categories?: string[]; // For backwards compatibility
 }
 
 // Helper function to get the best (lowest) price from a product

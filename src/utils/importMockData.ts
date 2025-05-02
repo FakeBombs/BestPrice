@@ -1,90 +1,68 @@
+import { Product } from '@/services/productService';
 
-import { supabase } from '@/integrations/supabase/client';
-import { mockData } from '@/data/mockData';
-
-export const importMockData = async () => {
-  try {
-    console.log('Starting import of mock data...');
-    
-    // Import main categories
-    console.log('Importing main categories...');
-    for (const mainCategory of mockData.mainCategories) {
-      await supabase.from('categories').insert({
-        name: mainCategory.name,
-        description: mainCategory.description || '',
-        slug: mainCategory.slug || mainCategory.name.toLowerCase().replace(/\s+/g, '-'),
-        category_type: 'main',
-        image_url: mainCategory.imageUrl
-      });
-    }
-    
-    // Import subcategories
-    console.log('Importing subcategories...');
-    for (const subCategory of mockData.categories) {
-      await supabase.from('categories').insert({
-        name: subCategory.name,
-        description: subCategory.description || '',
-        slug: subCategory.slug || subCategory.name.toLowerCase().replace(/\s+/g, '-'),
-        category_type: 'sub',
-        parent_id: subCategory.parentId ? String(subCategory.parentId) : null,
-        image_url: subCategory.imageUrl
-      });
-    }
-    
-    // Import products
-    console.log('Importing products...');
-    for (const product of mockData.products) {
-      const { data, error } = await supabase.from('products').insert({
-        name: product.name,
-        title: product.title || product.name,
-        description: product.description || '',
-        price: product.price,
-        image_url: product.imageUrl || product.image,
-        images: product.images || [],
-        brand: product.brand || '',
-        sku: product.sku || '',
-        model: product.model || '',
-        slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
-        highlights: product.highlights || [],
-        specifications: product.specifications || {},
-        rating: product.rating || 0,
-        review_count: product.reviewCount || 0
-      }).select('id').single();
-      
-      if (error) {
-        console.error('Error importing product:', error);
-        continue;
-      }
-      
-      if (data) {
-        // Add category relationship
-        await supabase.from('product_categories').insert({
-          product_id: data.id,
-          category_id: String(product.categoryId),
-          primary_category: true
-        });
-        
-        // Add additional categories if present
-        if (product.categoryIds && product.categoryIds.length > 0) {
-          for (const catId of product.categoryIds) {
-            if (String(catId) !== String(product.categoryId)) {
-              await supabase.from('product_categories').insert({
-                product_id: data.id,
-                category_id: String(catId),
-                primary_category: false
-              });
-            }
-          }
-        }
-      }
-    }
-    
-    console.log('Mock data import completed successfully!');
-    return true;
-  } catch (error) {
-    console.error('Error importing mock data:', error);
-    return false;
-  }
+type ProductWithExtras = Product & {
+  reviews?: number;
+  specifications?: Record<string, string>;
 };
 
-export default importMockData;
+export const normalizeProducts = (products: ProductWithExtras[]): Product[] => {
+  return products.map(product => {
+    // Ensure id is a string
+    const id = String(product.id);
+    
+    // Ensure all required fields have values
+    return {
+      ...product,
+      id,
+      // Normalize category data
+      categoryId: product.categoryId || (product.categoryIds && product.categoryIds.length > 0 ? product.categoryIds[0] : undefined),
+      categoryIds: product.categoryIds || (product.categoryId ? [product.categoryId] : []),
+      category: product.category || '',
+      
+      // Normalize image data
+      image: product.image || '',
+      imageUrl: product.imageUrl || product.image || '',
+      image_url: product.imageUrl || product.image || '', // For backward compatibility
+      images: product.images || [],
+      
+      // Ensure product details
+      name: product.name,
+      title: product.title || product.name,
+      description: product.description || '',
+      brand: product.brand || '',
+      model: product.model || '',
+      sku: product.sku || '',
+      
+      // Normalize price and rating
+      price: product.price || 0,
+      rating: product.rating || 0,
+      reviewCount: product.reviewCount || product.reviews || 0,
+      
+      // Ensure specifications
+      specifications: product.specifications || {},
+      specs: product.specs || product.specifications || {},
+      
+      // Other fields
+      slug: product.slug || `product-${id}`,
+      highlights: product.highlights || [],
+      categories: product.categoryIds ? 
+        product.categoryIds.map(id => `Category ${id}`) : 
+        (product.categoryId ? [`Category ${product.categoryId}`] : []),
+      
+      // Normalize prices
+      prices: (product.prices || []).map(price => ({
+        ...price,
+        id: String(price.id || Math.random().toString(36).substr(2, 9)),
+        product_id: String(product.id),
+        vendorId: price.vendorId || '',
+        vendor_id: price.vendorId || '', // For backward compatibility
+        inStock: price.inStock || false,
+        in_stock: price.inStock || false, // For backward compatibility
+        shippingCost: price.shippingCost || 0,
+        shipping_cost: price.shippingCost || 0 // For backward compatibility
+      })),
+    };
+  });
+};
+
+export default normalizeProducts;
