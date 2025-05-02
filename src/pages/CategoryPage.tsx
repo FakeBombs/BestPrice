@@ -133,7 +133,7 @@ const CategoryPage: React.FC = () => {
     }
   };
 
-  // --- UPDATED renderBreadcrumbs function ---
+  // --- FINAL UPDATED renderBreadcrumbs function ---
   const renderBreadcrumbs = () => {
     const trailItems: React.ReactNode[] = [];
     // Always add Home link
@@ -141,17 +141,9 @@ const CategoryPage: React.FC = () => {
       <li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>
     );
 
-    if (!currentCategory) {
-        // If no category context, just show Home
-        // (This case might be less common now with default category logic)
-    } else if (currentCategory.isMain || currentCategory.parentId === null) {
-        // --- Case 1: Current category IS a Main Category ---
-        // Add its name as text, not a link
-        trailItems.push(
-            <li key={currentCategory.id}><span>{currentCategory.name}</span></li>
-        );
-    } else {
-        // --- Case 2: Current category IS a Subcategory ---
+    // Only add more items if the current category exists AND it's a subcategory
+    if (currentCategory && currentCategory.parentId !== null && !currentCategory.isMain) {
+        // --- Case: Current category IS a Subcategory ---
         const ancestors: Category[] = [];
         let category: Category | undefined = currentCategory;
 
@@ -173,8 +165,9 @@ const CategoryPage: React.FC = () => {
                 <li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>
             );
         });
-        // DO NOT add the currentCategory itself to the breadcrumb trail here
+        // DO NOT add the currentCategory itself
     }
+    // If it's a main category (or no category), the trailItems array only contains "Home"
 
     // Render the assembled trail
     return (
@@ -184,8 +177,8 @@ const CategoryPage: React.FC = () => {
             {trailItems.reduce((acc, item, index) => (
               <React.Fragment key={index}>
                 {acc}
-                {/* Add separator only after the first item (Home) */}
-                {index > 0 && <span className="trail__breadcrumb-separator">›</span>}
+                {/* Add separator only if there are more than one items AND it's not the first item */}
+                {trailItems.length > 1 && index > 0 && <span className="trail__breadcrumb-separator">›</span>}
                 {item}
               </React.Fragment>
             ), null)}
@@ -194,7 +187,7 @@ const CategoryPage: React.FC = () => {
       </div>
     );
   };
-  // --- End of UPDATED renderBreadcrumbs function ---
+  // --- End of FINAL UPDATED renderBreadcrumbs function ---
 
 
   // This function renders the view for a MAIN category page
