@@ -32,9 +32,21 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
       setBreadcrumbs(crumbs);
     }
   }, [category]);
-
+  
   const formatSlug = (name: string) => {
     return name.toLowerCase().replace(/\s+/g, '-');
+  };
+
+  const buildCategoryPath = (breadcrumbs: any[], index: number) => {
+    // Start with the main category
+    let path = `/cat/${breadcrumbs[0].slug}`;
+    
+    // Add subsequent slugs up to the current index
+    for (let i = 1; i <= index; i++) {
+      path += `/${breadcrumbs[i].slug}`;
+    }
+    
+    return path;
   };
 
   return (
@@ -54,7 +66,7 @@ const CategoryBreadcrumb = ({ category }: CategoryBreadcrumbProps) => {
                 <span>{crumb.name}</span>
               ) : (
                 <BreadcrumbLink>
-                  <Link to={`/cat/${crumb.id}/${formatSlug(crumb.name)}`}>
+                  <Link to={buildCategoryPath(breadcrumbs, index)}>
                     {crumb.name}
                   </Link>
                 </BreadcrumbLink>

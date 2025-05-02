@@ -7,6 +7,8 @@ import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
+import useProductFilters from '@/hooks/useProductFilters';
+import { ProductResultsProps } from '@/components/search/ProductResults';
 
 // Main component
 const CategoryPage: React.FC = () => {
@@ -21,13 +23,16 @@ const CategoryPage: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<any | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
+  const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
+
+  const { products: filteredResults, handleSortChange, handleVendorFilter, handlePriceRangeFilter, handleInStockOnly } = useProductFilters(filteredProducts);
 
   useEffect(() => {
     const foundMainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
-    let foundCategory: Category | undefined = foundMainCategory;
+    let foundCategory: any | undefined = foundMainCategory;
 
     // Traverse through each level of categories to find the correct one based on slugs
     if (subCatSlug) {
@@ -54,45 +59,15 @@ const CategoryPage: React.FC = () => {
 
     // Filter products directly based on current category ID
     const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
+      product.categoryIds && product.categoryIds.includes(currentCategory.id)
     );
 
     setFilteredProducts(productsToDisplay);
-  }, [currentCategory, products]);
+  }, [currentCategory]);
 
   if (!currentCategory) {
     return <NotFound />;
   }
-
-  const sortProducts = (products) => {
-    switch (sortType) {
-        case 'price-asc':
-            return [...products].sort((a, b) => {
-                const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                return minPriceA - minPriceB;
-            });
-        case 'price-desc':
-            return [...products].sort((a, b) => {
-                const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                return maxPriceB - maxPriceA;
-            });
-        case 'rating-desc':
-        default:
-            return [...products].sort((a, b) => {
-                const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                return averageRatingB - averageRatingA;
-            });
-        case 'merchants_desc':
-            return [...products].sort((a, b) => {
-                const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
-                return availableVendorsB - availableVendorsA;
-            });
-    }
-  };
 
   const handlePriceAlert = () => {
     if (!user) {
@@ -107,59 +82,59 @@ const CategoryPage: React.FC = () => {
   };
 
   const renderBreadcrumbs = () => {
-  const breadcrumbs = [];
-  const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    const breadcrumbs = [];
+    const mainCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
 
-  if (!mainCategory) return null;
+    if (!mainCategory) return null;
 
-  // Add the main category link if there's a current category with a parent
-  if (!(currentCategory && !currentCategory.parentId)) {
-    breadcrumbs.push(
-      <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
-    );
-  }
-
-  // Create a Set to keep track of slugged categories
-  const categoryTrail = [];
-
-  // Build the breadcrumb trail from currentCategory up to the main category
-  let category = currentCategory;
-
-  while (category) {
-    categoryTrail.unshift(category);  // Prepend to create the trail
-    category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
-  }
-
-  // Add categories to breadcrumbs (excluding current category)
-  categoryTrail.forEach((cat, index) => {
-    if (index !== categoryTrail.length - 1) { // Exclude current category
+    // Add the main category link if there's a current category with a parent
+    if (!(currentCategory && !currentCategory.parentId)) {
       breadcrumbs.push(
-        <li key={cat.slug}><Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link></li>
+        <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
       );
     }
-  });
+
+    // Create a Set to keep track of slugged categories
+    const categoryTrail = [];
+
+    // Build the breadcrumb trail from currentCategory up to the main category
+    let category = currentCategory;
+
+    while (category) {
+      categoryTrail.unshift(category);  // Prepend to create the trail
+      category = categories.find(cat => cat.id === category.parentId);  // Move up the category tree
+    }
+
+    // Add categories to breadcrumbs (excluding current category)
+    categoryTrail.forEach((cat, index) => {
+      if (index !== categoryTrail.length - 1) { // Exclude current category
+        breadcrumbs.push(
+          <li key={cat.slug}><Link to={`/cat/${mainCategory.slug}/${cat.slug}`}>{cat.name}</Link></li>
+        );
+      }
+    });
 
     // Render Breadcrumbs
-  return (
-    <div id="trail">
-      <nav className="breadcrumb">
-        <ol>
-          <li>
-            <Link to="/" rel="home"><span>BestPrice</span></Link>
-            {/* Only show the separator if there are additional breadcrumbs */}
-            {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
-          </li>
-          {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
-              {crumb}
-              {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
-            </React.Fragment>
-          ))}
-        </ol>
-      </nav>
-    </div>
-  );
-};
+    return (
+      <div id="trail">
+        <nav className="breadcrumb">
+          <ol>
+            <li>
+              <Link to="/" rel="home"><span>BestPrice</span></Link>
+              {/* Only show the separator if there are additional breadcrumbs */}
+              {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
+            </li>
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={index}>
+                {crumb}
+                {index < breadcrumbs.length - 1 && <span className="trail__breadcrumb-separator">›</span>}
+              </React.Fragment>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    );
+  };
 
   const renderMainCategories = () => {
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
@@ -205,15 +180,24 @@ const CategoryPage: React.FC = () => {
           )}
         </div>
         <div className="sections"></div>
-        <div class="p__products-section">
-          <div class="alerts">
-            <button data-url={`/cat/${mainCatSlug}`} data-title={currentCategory?.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
-              <svg aria-hidden="true" class="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-              <span class="alerts__label">Ειδοποίηση</span>
+        <div className="p__products-section">
+          <div className="alerts">
+            <button data-url={`/cat/${mainCatSlug}`} data-title={currentCategory?.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+              <svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+              <span className="alerts__label">Ειδοποίηση</span>
             </button>
-            <div class="alerts__prompt"> σε <span class="alerts__title">{currentCategory?.name}</span></div>
+            <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory?.name}</span></div>
           </div>
         </div>
+
+        {isPriceAlertModalOpen && (
+          <PriceAlertModal 
+            isOpen={isPriceAlertModalOpen}
+            onClose={() => setIsPriceAlertModalOpen(false)}
+            categoryName={currentCategory?.name}
+            categoryId={currentCategory?.id}
+          />
+        )}
       </>
     );
   };
@@ -283,16 +267,24 @@ const CategoryPage: React.FC = () => {
                 )}
             </div>
             <div className="sections"></div>
-            <div class="p__products-section">
+            <div className="p__products-section">
               {categories.filter(cat => cat.parentId === currentCategory?.id).slice(0, 1).map((subCat) => (
-              <div class="alerts" key={subCat.id}>
-                <button data-url={`/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`} data-title={currentCategory.name} data-max-price="0" class="alerts__button pressable" onClick={handlePriceAlert}>
-                  <svg aria-hidden="true" class="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                  <span class="alerts__label">Ειδοποίηση</span>
+              <div className="alerts" key={subCat.id}>
+                <button data-url={`/cat/${mainCategory.slug}/${slugs.join('/')}/${subCat.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+                  <svg aria-hidden="true" className="icon" width="20" height="20"><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                  <span className="alerts__label">Ειδοποίηση</span>
                 </button>
-                <div class="alerts__prompt"> σε <span class="alerts__title">{currentCategory.name}</span></div>
+                <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory.name}</span></div>
               </div>
               ))}
+              {isPriceAlertModalOpen && (
+                <PriceAlertModal 
+                  isOpen={isPriceAlertModalOpen}
+                  onClose={() => setIsPriceAlertModalOpen(false)}
+                  categoryName={currentCategory?.name}
+                  categoryId={currentCategory?.id}
+                />
+              )}
             </div>
         </>
     );
@@ -324,8 +316,8 @@ const renderProducts = () => (
         </header>
         <div className="page-products__main-wrapper">
           <div className="p__products" data-pagination="">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map(product => (
+            {filteredResults.length > 0 ? (
+              filteredResults.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))
             ) : (

@@ -1,221 +1,187 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Category, getAllCategories } from '@/services/categoryService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { Category, getMainCategories, getSubcategoriesByParentId } from '@/services/categoryService';
 
-interface CategoryFormProps {
-  initialData?: Partial<Category>;
-  onSubmit: (data: CategoryFormData) => void;
-  isSubmitting?: boolean;
-}
-
-export interface CategoryFormData {
-  name: string;
-  description?: string;
-  category_type: 'main' | 'sub';
+export interface CategoryFormProps {
+  onSubmit: (data: any) => void;
+  categoryData?: Category;
+  mode?: 'create' | 'edit';
   parentId?: string;
-  image_url?: string;
-  slug?: string;
 }
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  description: z.string().optional(),
-  category_type: z.enum(['main', 'sub']),
-  parentId: z.string().optional(),
-  image_url: z.string().optional(),
-  slug: z.string().optional(),
-});
-
-const CategoryForm = ({ initialData, onSubmit, isSubmitting = false }: CategoryFormProps) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-
+const CategoryForm: React.FC<CategoryFormProps> = ({ 
+  onSubmit, 
+  categoryData, 
+  mode = 'create', 
+  parentId 
+}) => {
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const [mainCategories, setMainCategories] = useState<Category[]>([]);
+  const [subcategories, setSubcategories] = useState<Category[]>([]);
+  const [selectedMainCategory, setSelectedMainCategory] = useState<string>('');
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const allCategories = await getAllCategories();
-        setCategories(allCategories.filter(cat => cat.category_type === 'main'));
+        const mainCats = await getMainCategories();
+        setMainCategories(mainCats);
+        
+        // If editing, set the initial values
+        if (mode === 'edit' && categoryData) {
+          setValue('name', categoryData.name);
+          setValue('description', categoryData.description || '');
+          setValue('image_url', categoryData.image_url || '');
+          setValue('category_type', categoryData.category_type || 'sub');
+          
+          if (categoryData.parent_id) {
+            setValue('parent_id', categoryData.parent_id);
+            setSelectedMainCategory(categoryData.parent_id);
+            
+            const subCats = await getSubcategoriesByParentId(categoryData.parent_id);
+            setSubcategories(subCats);
+          }
+        } else if (parentId) {
+          setValue('parent_id', parentId);
+          setSelectedMainCategory(parentId);
+          
+          const subCats = await getSubcategoriesByParentId(parentId);
+          setSubcategories(subCats);
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load categories",
+          variant: "destructive"
+        });
       }
     };
     
     fetchCategories();
-  }, []);
-
-  const form = useForm<CategoryFormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: initialData?.name || '',
-      description: initialData?.description || '',
-      category_type: initialData?.category_type || 'sub',
-      parentId: initialData?.parentId || undefined,
-      image_url: initialData?.image_url || '',
-      slug: initialData?.slug || '',
-    },
-  });
-
-  const categoryType = form.watch('category_type');
-
-  const handleFormSubmit = (data: CategoryFormData) => {
-    // If main category, remove parent ID
-    if (data.category_type === 'main') {
-      data.parentId = undefined;
-    }
+  }, [mode, categoryData, setValue, toast, parentId]);
+  
+  const handleMainCategoryChange = async (value: string) => {
+    setSelectedMainCategory(value);
+    setValue('parent_id', value);
     
-    // Generate a slug if not provided
-    if (!data.slug && data.name) {
-      data.slug = data.name
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '');
+    try {
+      const subCats = await getSubcategoriesByParentId(value);
+      setSubcategories(subCats);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+    }
+  };
+  
+  const handleFormSubmit = (data: any) => {
+    // Convert slug from name if not provided
+    if (!data.slug) {
+      data.slug = data.name.toLowerCase().replace(/\s+/g, '-');
     }
     
     onSubmit(data);
   };
-
+  
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter category name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="category_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category Type</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="main">Main Category</SelectItem>
-                  <SelectItem value="sub">Subcategory</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        {categoryType === 'sub' && (
-          <FormField
-            control={form.control}
-            name="parentId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Parent Category</FormLabel>
-                <Select 
-                  onValueChange={field.onChange} 
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select parent category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input 
+            id="name" 
+            {...register('name', { required: 'Name is required' })} 
+            placeholder="Category Name" 
           />
-        )}
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message?.toString()}</p>}
+        </div>
         
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Enter category description" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <div className="space-y-2">
+          <Label htmlFor="slug">Slug</Label>
+          <Input 
+            id="slug" 
+            {...register('slug')} 
+            placeholder="category-slug (optional, will be generated from name)" 
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="image_url">Image URL</Label>
+          <Input 
+            id="image_url" 
+            {...register('image_url')} 
+            placeholder="https://example.com/image.jpg" 
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="category_type">Category Type</Label>
+          <Select 
+            onValueChange={(value) => setValue('category_type', value)} 
+            defaultValue={categoryData?.category_type || 'sub'}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="main">Main Category</SelectItem>
+              <SelectItem value="sub">Subcategory</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="parent_id">Parent Category</Label>
+          <Select 
+            onValueChange={handleMainCategoryChange} 
+            defaultValue={categoryData?.parent_id || parentId}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select parent category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">None (Root Category)</SelectItem>
+              {mainCategories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea 
+          id="description" 
+          {...register('description')} 
+          placeholder="Enter category description..." 
+          className="min-h-[100px]"
         />
-        
-        <FormField
-          control={form.control}
-          name="image_url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter image URL" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug (URL friendly name)</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter slug or leave empty to auto-generate" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
+      </div>
+      
+      <div className="flex justify-end space-x-2">
         <Button 
-          type="submit" 
-          className="w-full"
-          disabled={isSubmitting}
+          type="button" 
+          variant="outline" 
+          onClick={() => navigate('/admin/categories')}
         >
-          {isSubmitting ? 'Saving...' : initialData ? 'Update Category' : 'Create Category'}
+          Cancel
         </Button>
-      </form>
-    </Form>
+        <Button type="submit">
+          {mode === 'edit' ? 'Update' : 'Create'} Category
+        </Button>
+      </div>
+    </form>
   );
 };
 

@@ -27,8 +27,12 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
-          <Route path="item/:id/:slug" element={<ProductDetail />} />
+          <Route path="cat/:mainCatSlug" element={<CategoryPage />} />
+          <Route path="cat/:mainCatSlug/:subCatSlug" element={<CategoryPage />} />
+          <Route path="cat/:mainCatSlug/:subCatSlug/:subSubCatSlug" element={<CategoryPage />} />
+          <Route path="cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug" element={<CategoryPage />} />
+          <Route path="cat/:mainCatSlug/:subCatSlug/:subSubCatSlug/:extraSubSubCatSlug/:anotherSubSubCatSlug" element={<CategoryPage />} />
+          <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="brand/:id/:name" element={<BrandPage />} />
           <Route path="categories" element={<Categories />} />
           <Route path="deals" element={<Deals />} />

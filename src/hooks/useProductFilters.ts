@@ -1,17 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Product } from '@/services/productService';
+import { Product } from '@/data/mockData';
 
-export const useProductFilters = (initialProducts: Product[]) => {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+export const useProductFilters = (products: Product[]) => {
   const [sortParam, setSortParam] = useState<string>('default');
   const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [priceRange, setPriceRange] = useState<{min: number, max: number}>({min: 0, max: 10000});
-  
-  // Update products when initialProducts change
-  useEffect(() => {
-    setProducts(initialProducts);
-  }, [initialProducts]);
   
   // Apply all filters
   const filteredResults = useMemo(() => {
@@ -24,7 +18,7 @@ export const useProductFilters = (initialProducts: Product[]) => {
         if (product.prices && product.prices.length > 0) {
           // We need to check vendor_id instead of vendor object
           return product.prices.some(price => 
-            price.vendor_id && filteredVendors.includes(price.vendor_id)
+            price.vendorId && filteredVendors.includes(price.vendorId)
           );
         }
         return false;
@@ -35,7 +29,7 @@ export const useProductFilters = (initialProducts: Product[]) => {
     if (inStockOnly) {
       results = results.filter(product => {
         if (product.prices && product.prices.length > 0) {
-          return product.prices.some(price => price.in_stock);
+          return product.prices.some(price => price.inStock);
         }
         // If no price, consider not in stock
         return false;
@@ -60,7 +54,7 @@ export const useProductFilters = (initialProducts: Product[]) => {
         results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case 'popularity':
-        results.sort((a, b) => ((b.review_count || 0) - (a.review_count || 0)));
+        results.sort((a, b) => ((b.reviewCount || 0) - (a.reviewCount || 0)));
         break;
       // Default sorting keeps the original order
       default:
@@ -88,7 +82,7 @@ export const useProductFilters = (initialProducts: Product[]) => {
   };
   
   return {
-    filteredResults,
+    products: filteredResults,
     sortParam,
     filteredVendors,
     inStockOnly,
