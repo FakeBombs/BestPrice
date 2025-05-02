@@ -5,6 +5,7 @@ import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "./components/ui/sonner";
 import { AuthProvider } from "./hooks/useAuth";
 import { NotificationProvider } from "./hooks/useNotifications";
+import '@/utils/i18n'; // Import i18n initialization
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

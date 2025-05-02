@@ -2,6 +2,17 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
+// Add brands array to mockData if it doesn't exist
+if (!mockData.brands) {
+  mockData.brands = [
+    { id: 1, name: 'Apple', logo: '/images/brands/apple.png' },
+    { id: 2, name: 'Samsung', logo: '/images/brands/samsung.png' },
+    { id: 3, name: 'Sony', logo: '/images/brands/sony.png' },
+    { id: 4, name: 'LG', logo: '/images/brands/lg.png' },
+    { id: 5, name: 'Microsoft', logo: '/images/brands/microsoft.png' },
+  ];
+}
+
 export interface Brand {
   id: string;
   name: string;

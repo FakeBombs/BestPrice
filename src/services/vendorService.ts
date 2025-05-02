@@ -2,6 +2,48 @@
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
+// Add vendors array to mockData if it doesn't exist
+if (!mockData.vendors) {
+  mockData.vendors = [
+    { 
+      id: 1, 
+      name: 'BestBuy', 
+      address: ['123 Main St, City'],
+      telephone: ['+1 234 567 8900'],
+      product_count: 1250,
+      category_count: 45,
+      payment_methods: ['Credit Card', 'PayPal', 'Cash'],
+      url: 'https://example.com/bestbuy',
+      logo: '/images/vendors/bestbuy.png',
+      rating: 4.5
+    },
+    { 
+      id: 2, 
+      name: 'TechWorld', 
+      address: ['456 Tech Blvd, Innovation City'],
+      telephone: ['+1 987 654 3210'],
+      product_count: 980,
+      category_count: 32,
+      payment_methods: ['Credit Card', 'Bank Transfer'],
+      url: 'https://example.com/techworld',
+      logo: '/images/vendors/techworld.png',
+      rating: 4.2
+    },
+    { 
+      id: 3, 
+      name: 'ElectroMart', 
+      address: ['789 Digital Ave, Smart Town'],
+      telephone: ['+1 555 123 4567'],
+      product_count: 1500,
+      category_count: 50,
+      payment_methods: ['Credit Card', 'PayPal', 'Apple Pay', 'Google Pay'],
+      url: 'https://example.com/electromart',
+      logo: '/images/vendors/electromart.png',
+      rating: 4.7
+    }
+  ];
+}
+
 export interface Vendor {
   id: string;
   name: string;

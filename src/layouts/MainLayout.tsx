@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '@/utils/i18n';
 import { useTheme } from '@/components/theme-provider';
 import { Switch } from '@/components/ui/switch';
-import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
+import { MoonIcon, SunIcon } from 'lucide-react';
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
@@ -109,7 +109,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               <ul className="header__actions">
                 <li className="header__action header__action--search">
                   <Link to="/search" className="header__action-link">
-                    <svg className="icon-search" aria-hidden="true" width="24" height="24">
+                    <svg aria-hidden="true" width="24" height="24">
                       <use xlinkHref="/dist/images/icons/search.svg#search"></use>
                     </svg>
                     <span className="header__action-name">{t('header.search')}</span>
@@ -117,7 +117,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 </li>
                 <li className="header__action header__action--cluster">
                   <Link to="/map" className="header__action-link">
-                    <svg className="icon-cluster" aria-hidden="true" width="24" height="24">
+                    <svg aria-hidden="true" width="24" height="24">
                       <use xlinkHref="/dist/images/icons/cluster.svg#cluster"></use>
                     </svg>
                     <span className="header__action-name">{t('header.map')}</span>
@@ -125,7 +125,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 </li>
                 <li className="header__action header__action--categories">
                   <Link to="/categories" className="header__action-link">
-                    <svg className="icon-categories" aria-hidden="true" width="24" height="24">
+                    <svg aria-hidden="true" width="24" height="24">
                       <use xlinkHref="/dist/images/icons/categories.svg#categories"></use>
                     </svg>
                     <span className="header__action-name">{t('header.categories')}</span>
@@ -133,7 +133,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 </li>
                 <li className="header__action header__action--profile">
                   <Link to="/profile" className="header__action-link">
-                    <svg className="icon-actions-person" aria-hidden="true" width="32" height="32">
+                    <svg aria-hidden="true" width="32" height="32">
                       <use xlinkHref="/dist/images/icons/actions.svg#person"></use>
                     </svg>
                     <span className="header__action-name">{t('header.profile')}</span>
@@ -150,7 +150,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
             <button className="header__trigger" type="button" onClick={toggleMenu}>
               <span className="header__trigger-in">
-                <svg className="icon-menu" aria-hidden="true" width="32" height="32">
+                <svg aria-hidden="true" width="32" height="32">
                   <use xlinkHref="/dist/images/icons/menu.svg#menu"></use>
                 </svg>
               </span>
@@ -171,7 +171,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
 
             <button className="mobile-nav__close" type="button" onClick={closeMenu}>
-              <svg className="icon-close" aria-hidden="true" width="24" height="24">
+              <svg aria-hidden="true" width="24" height="24">
                 <use xlinkHref="/dist/images/icons/close.svg#close"></use>
               </svg>
             </button>

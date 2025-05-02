@@ -1,6 +1,5 @@
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './hooks/useAuth';
+import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import Index from './pages/Index';
 import SearchResults from './pages/SearchResults';
@@ -15,32 +14,31 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
 import AdminEditCategoryPage from './pages/admin/AdminEditCategoryPage';
+import { AuthProvider } from './hooks/useAuth';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Index />} />
-            <Route path="search" element={<SearchResults />} />
-            <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
-          </Route>
-          
-          {/* Admin routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="categories" element={<AdminCategoriesPage />} />
-            <Route path="categories/new" element={<AdminNewCategoryPage />} />
-            <Route path="categories/edit/:categoryId" element={<AdminEditCategoryPage />} />
-          </Route>
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Index />} />
+          <Route path="search" element={<SearchResults />} />
+          <Route path="cat/:categoryId/:categorySlug" element={<CategoryPage />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
+        </Route>
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="categories" element={<AdminCategoriesPage />} />
+          <Route path="categories/new" element={<AdminNewCategoryPage />} />
+          <Route path="categories/edit/:categoryId" element={<AdminEditCategoryPage />} />
+        </Route>
+      </Routes>
     </AuthProvider>
   );
 }

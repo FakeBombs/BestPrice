@@ -1,7 +1,7 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { mockData } from '@/data/mockData';
 
-// Define proper types for our database
 export interface Product {
   id: string;
   name: string;
@@ -16,137 +16,61 @@ export interface Product {
   slug: string;
   highlights?: string[];
   specifications?: Record<string, any>;
-  rating: number;
-  review_count: number;
+  rating?: number;
+  review_count?: number;
   created_at?: string;
   updated_at?: string;
-  categories?: Array<{id: string, name: string}>;
-  prices?: ProductPrice[];
 }
 
-export interface ProductPrice {
-  id: string;
+export interface ProductCategory {
   product_id: string;
-  vendor_id: string;
-  price: number;
-  in_stock: boolean;
-  shipping_cost?: number;
-  vendor_name?: string;
-  vendor_logo?: string;
+  category_id: string;
+  primary_category: boolean;
+}
+
+export interface SearchFilters {
+  category_id?: string;
+  brand?: string;
+  min_price?: number;
+  max_price?: number;
+  rating?: number;
+  sort_by?: 'price_asc' | 'price_desc' | 'rating' | 'newest';
+  page?: number;
+  limit?: number;
+  query?: string;
 }
 
 export type ProductCreate = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
 export type ProductUpdate = Partial<ProductCreate>;
-
-// Helper function to convert database records to our Product interface
-const convertDBProductToProduct = (product: any): Product => {
-  return {
-    ...product,
-    // Ensure specifications is a Record<string, any> and not a Json type
-    specifications: product.specifications ? JSON.parse(JSON.stringify(product.specifications)) : {},
-  };
-};
-
-// Helper function to convert mock data to match our Product interface
-const convertMockProductToProduct = (mockProduct: any): Product => {
-  return {
-    id: String(mockProduct.id),
-    name: mockProduct.name,
-    title: mockProduct.title || mockProduct.name,
-    description: mockProduct.description || '',
-    price: mockProduct.price,
-    image_url: mockProduct.imageUrl || mockProduct.image,
-    images: mockProduct.images || [],
-    brand: mockProduct.brand || '',
-    sku: mockProduct.sku || '',
-    model: mockProduct.model || '',
-    slug: mockProduct.slug || mockProduct.name.toLowerCase().replace(/\s+/g, '-'),
-    highlights: mockProduct.highlights || [],
-    specifications: mockProduct.specifications || mockProduct.specs || {},
-    rating: mockProduct.rating || 0,
-    review_count: mockProduct.reviewCount || mockProduct.review_count || 0
-  };
-};
-
-// Get best price for a product
-export const getBestPrice = (product: Product): ProductPrice | null => {
-  if (!product.prices || product.prices.length === 0) {
-    return null;
-  }
-  return product.prices
-    .filter(price => price.in_stock)
-    .sort((a, b) => a.price - b.price)[0] || null;
-};
-
-// Search products by query
-export const searchProducts = async (query: string): Promise<Product[]> => {
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        product_categories!inner (
-          category_id,
-          categories:category_id (id, name)
-        ),
-        prices:product_prices (
-          *,
-          vendors:vendor_id (id, name, logo)
-        )
-      `)
-      .or(`name.ilike.%${query}%, description.ilike.%${query}%`);
-      
-    if (error || !data) {
-      console.error("Error searching products:", error);
-      // Filter mock data based on query
-      return mockData.products
-        .filter((p: any) => 
-          p.name.toLowerCase().includes(query.toLowerCase()) || 
-          (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
-        )
-        .map(convertMockProductToProduct);
-    }
-    
-    return data.map(product => ({
-      ...convertDBProductToProduct(product),
-      categories: product.product_categories?.map((pc: any) => pc.categories) || [],
-      prices: product.prices?.map((price: any) => ({
-        ...price,
-        vendor_name: price.vendors?.name,
-        vendor_logo: price.vendors?.logo
-      }))
-    }));
-  } catch (error) {
-    console.error("Error in searchProducts:", error);
-    return mockData.products
-      .filter((p: any) => 
-        p.name.toLowerCase().includes(query.toLowerCase()) || 
-        (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
-      )
-      .map(convertMockProductToProduct);
-  }
-};
 
 // Get all products
 export const getAllProducts = async (): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
       .from('products')
-      .select('*');
+      .select('*')
+      .order('name');
       
     if (error) {
       console.error("Error fetching products:", error);
-      return mockData.products.map(convertMockProductToProduct);
+      // Use mockData products when real API fails
+      return mockData.products?.map(p => ({
+        ...p,
+        id: String(p.id),
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) || [];
     }
     
-    if (!data || data.length === 0) {
-      return mockData.products.map(convertMockProductToProduct);
-    }
-    
-    return data.map(convertDBProductToProduct);
+    return data || [];
   } catch (error) {
     console.error("Error in getAllProducts:", error);
-    return mockData.products.map(convertMockProductToProduct);
+    return mockData.products?.map(p => ({
+      ...p,
+      id: String(p.id),
+      review_count: p.reviewCount || 0,
+      specifications: p.specs || {}
+    })) || [];
   }
 };
 
@@ -155,136 +79,383 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   try {
     const { data, error } = await supabase
       .from('products')
-      .select(`
-        *,
-        product_categories!inner (
-          category_id,
-          categories:category_id (id, name)
-        ),
-        prices:product_prices (
-          *,
-          vendors:vendor_id (id, name, logo)
-        )
-      `)
+      .select('*')
       .eq('id', id)
       .single();
       
-    if (error || !data) {
+    if (error) {
       console.error("Error fetching product:", error);
-      const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
-      return mockProduct ? convertMockProductToProduct(mockProduct) : null;
+      const mockProduct = mockData.products?.find(p => String(p.id) === id);
+      return mockProduct ? {
+        ...mockProduct,
+        id: String(mockProduct.id),
+        review_count: mockProduct.reviewCount || 0,
+        specifications: mockProduct.specs || {}
+      } : null;
     }
     
-    return {
-      ...convertDBProductToProduct(data),
-      categories: data.product_categories?.map((pc: any) => pc.categories) || [],
-      prices: data.prices?.map((price: any) => ({
-        ...price,
-        vendor_name: price.vendors?.name,
-        vendor_logo: price.vendors?.logo
-      }))
-    };
+    return data;
   } catch (error) {
     console.error("Error in getProductById:", error);
-    const mockProduct = mockData.products.find((p: any) => String(p.id) === id);
-    return mockProduct ? convertMockProductToProduct(mockProduct) : null;
+    const mockProduct = mockData.products?.find(p => String(p.id) === id);
+    return mockProduct ? {
+      ...mockProduct,
+      id: String(mockProduct.id),
+      review_count: mockProduct.reviewCount || 0,
+      specifications: mockProduct.specs || {}
+    } : null;
   }
 };
 
-// Get products by category ID
+// Get products by category
 export const getProductsByCategory = async (categoryId: string): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
       .from('product_categories')
-      .select(`
-        products:product_id (*),
-        categories:category_id (*)
-      `)
+      .select('product_id')
       .eq('category_id', categoryId);
       
     if (error) {
       console.error("Error fetching products by category:", error);
-      return mockData.products
-        .filter((p: any) => 
-          String(p.categoryId) === categoryId || 
-          (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-        )
-        .map(convertMockProductToProduct);
+      // Use mockData products filtered by category when real API fails
+      return mockData.products?.filter(p => String(p.categoryId) === categoryId || p.categoryIds?.includes(Number(categoryId)))
+        .map(p => ({
+          ...p,
+          id: String(p.id),
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) || [];
     }
     
-    if (!data || data.length === 0) {
-      return mockData.products
-        .filter((p: any) => 
-          String(p.categoryId) === categoryId || 
-          (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-        )
-        .map(convertMockProductToProduct);
+    if (data.length === 0) {
+      return [];
     }
     
-    return data.map((item: any) => convertDBProductToProduct(item.products));
+    const productIds = data.map(item => item.product_id);
+    
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('*')
+      .in('id', productIds);
+      
+    if (productsError) {
+      console.error("Error fetching products by IDs:", productsError);
+      return [];
+    }
+    
+    return products || [];
   } catch (error) {
     console.error("Error in getProductsByCategory:", error);
-    return mockData.products
-      .filter((p: any) => 
-        String(p.categoryId) === categoryId || 
-        (p.categoryIds && p.categoryIds.includes(Number(categoryId)))
-      )
-      .map(convertMockProductToProduct);
+    // Use mockData products filtered by category as fallback
+    return mockData.products?.filter(p => String(p.categoryId) === categoryId || p.categoryIds?.includes(Number(categoryId)))
+      .map(p => ({
+        ...p,
+        id: String(p.id),
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) || [];
   }
 };
 
-// Get featured products
-export const getFeaturedProducts = async (): Promise<Product[]> => {
+// Get related products
+export const getRelatedProducts = async (productId: string, limit = 10): Promise<Product[]> => {
   try {
-    // Fetch high rated products as featured
-    const { data, error } = await supabase
+    // Get the product's categories
+    const { data: productCategories, error: categoriesError } = await supabase
+      .from('product_categories')
+      .select('category_id')
+      .eq('product_id', productId);
+      
+    if (categoriesError || !productCategories || productCategories.length === 0) {
+      console.error("Error fetching product categories:", categoriesError);
+      // Fallback to mock data
+      const mockProduct = mockData.products?.find(p => String(p.id) === productId);
+      if (!mockProduct) return [];
+      
+      return mockData.products
+        ?.filter(p => p.id !== Number(productId) && 
+          (p.categoryId === mockProduct.categoryId || 
+          p.categoryIds?.some(cid => mockProduct.categoryIds?.includes(cid))))
+        .slice(0, limit)
+        .map(p => ({
+          ...p,
+          id: String(p.id),
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        })) || [];
+    }
+    
+    const categoryIds = productCategories.map(item => item.category_id);
+    
+    // Get product IDs from the same categories excluding the current product
+    const { data: relatedProductsData, error: relatedError } = await supabase
+      .from('product_categories')
+      .select('product_id')
+      .in('category_id', categoryIds)
+      .neq('product_id', productId)
+      .limit(limit);
+      
+    if (relatedError || !relatedProductsData || relatedProductsData.length === 0) {
+      console.error("Error fetching related products:", relatedError);
+      return [];
+    }
+    
+    const relatedProductIds = [...new Set(relatedProductsData.map(item => item.product_id))].slice(0, limit);
+    
+    // Get the actual product data
+    const { data: products, error: productsError } = await supabase
       .from('products')
       .select('*')
-      .gte('rating', 4.5)
-      .limit(12);
+      .in('id', relatedProductIds);
       
-    if (error) {
-      console.error("Error fetching featured products:", error);
-      return mockData.products
-        .slice(0, 12)
-        .map(convertMockProductToProduct);
+    if (productsError) {
+      console.error("Error fetching related product details:", productsError);
+      return [];
     }
     
-    if (!data || data.length === 0) {
-      return mockData.products
-        .slice(0, 12)
-        .map(convertMockProductToProduct);
-    }
-    
-    return data.map(convertDBProductToProduct);
+    return products || [];
   } catch (error) {
-    console.error("Error in getFeaturedProducts:", error);
+    console.error("Error in getRelatedProducts:", error);
+    // Fallback to mock data
+    const mockProduct = mockData.products?.find(p => String(p.id) === productId);
+    if (!mockProduct) return [];
+    
     return mockData.products
-      .slice(0, 12)
-      .map(convertMockProductToProduct);
+      ?.filter(p => p.id !== Number(productId) && 
+        (p.categoryId === mockProduct.categoryId || 
+        p.categoryIds?.some(cid => mockProduct.categoryIds?.includes(cid))))
+      .slice(0, limit)
+      .map(p => ({
+        ...p,
+        id: String(p.id),
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) || [];
+  }
+};
+
+// Search products with filters
+export const searchProducts = async (filters: SearchFilters): Promise<{ products: Product[]; total: number }> => {
+  try {
+    let query = supabase.from('products').select('*', { count: 'exact' });
+    
+    // Apply filters
+    if (filters.query) {
+      query = query.or(`name.ilike.%${filters.query}%, description.ilike.%${filters.query}%`);
+    }
+    
+    if (filters.min_price !== undefined) {
+      query = query.gte('price', filters.min_price);
+    }
+    
+    if (filters.max_price !== undefined) {
+      query = query.lte('price', filters.max_price);
+    }
+    
+    if (filters.rating !== undefined) {
+      query = query.gte('rating', filters.rating);
+    }
+    
+    if (filters.brand) {
+      query = query.eq('brand', filters.brand);
+    }
+    
+    // If category filter is applied, first get product IDs from that category
+    if (filters.category_id) {
+      const { data: categoryProducts, error: categoryError } = await supabase
+        .from('product_categories')
+        .select('product_id')
+        .eq('category_id', filters.category_id);
+        
+      if (categoryError) {
+        console.error("Error fetching products from category:", categoryError);
+        // Mock data fallback for category filter
+        const mockFiltered = mockData.products
+          ?.filter(p => {
+            let matches = true;
+            if (filters.category_id) {
+              matches = matches && (String(p.categoryId) === filters.category_id || p.categoryIds?.includes(Number(filters.category_id)));
+            }
+            if (filters.brand) {
+              matches = matches && p.brand === filters.brand;
+            }
+            if (filters.min_price !== undefined) {
+              matches = matches && p.price >= filters.min_price;
+            }
+            if (filters.max_price !== undefined) {
+              matches = matches && p.price <= filters.max_price;
+            }
+            if (filters.rating !== undefined) {
+              matches = matches && (p.rating || 0) >= filters.rating;
+            }
+            if (filters.query) {
+              const query = filters.query.toLowerCase();
+              matches = matches && (
+                p.name.toLowerCase().includes(query) ||
+                (p.description && p.description.toLowerCase().includes(query))
+              );
+            }
+            return matches;
+          })
+          .map(p => ({
+            ...p,
+            id: String(p.id),
+            review_count: p.reviewCount || 0,
+            specifications: p.specs || {}
+          }));
+        
+        // Apply sorting
+        if (mockFiltered) {
+          const sortedMock = [...mockFiltered];
+          if (filters.sort_by === 'price_asc') {
+            sortedMock.sort((a, b) => a.price - b.price);
+          } else if (filters.sort_by === 'price_desc') {
+            sortedMock.sort((a, b) => b.price - a.price);
+          } else if (filters.sort_by === 'rating') {
+            sortedMock.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          }
+          
+          // Apply pagination
+          const page = filters.page || 1;
+          const limit = filters.limit || 20;
+          const start = (page - 1) * limit;
+          const paginatedMock = sortedMock.slice(start, start + limit);
+          
+          return {
+            products: paginatedMock,
+            total: sortedMock.length
+          };
+        }
+      }
+      
+      if (!categoryProducts || categoryProducts.length === 0) {
+        return { products: [], total: 0 };
+      }
+      
+      const productIds = categoryProducts.map(item => item.product_id);
+      query = query.in('id', productIds);
+    }
+    
+    // Apply sorting
+    if (filters.sort_by === 'price_asc') {
+      query = query.order('price', { ascending: true });
+    } else if (filters.sort_by === 'price_desc') {
+      query = query.order('price', { ascending: false });
+    } else if (filters.sort_by === 'rating') {
+      query = query.order('rating', { ascending: false });
+    } else if (filters.sort_by === 'newest') {
+      query = query.order('created_at', { ascending: false });
+    } else {
+      query = query.order('name');
+    }
+    
+    // Apply pagination
+    const page = filters.page || 1;
+    const limit = filters.limit || 20;
+    const start = (page - 1) * limit;
+    query = query.range(start, start + limit - 1);
+    
+    const { data, error, count } = await query;
+    
+    if (error) {
+      console.error("Error searching products:", error);
+      // Fallback to mock data with filters
+      const mockFiltered = mockData.products
+        ?.filter(p => {
+          let matches = true;
+          if (filters.category_id) {
+            matches = matches && (String(p.categoryId) === filters.category_id || p.categoryIds?.includes(Number(filters.category_id)));
+          }
+          if (filters.brand) {
+            matches = matches && p.brand === filters.brand;
+          }
+          if (filters.min_price !== undefined) {
+            matches = matches && p.price >= filters.min_price;
+          }
+          if (filters.max_price !== undefined) {
+            matches = matches && p.price <= filters.max_price;
+          }
+          if (filters.rating !== undefined) {
+            matches = matches && (p.rating || 0) >= filters.rating;
+          }
+          if (filters.query) {
+            const query = filters.query.toLowerCase();
+            matches = matches && (
+              p.name.toLowerCase().includes(query) ||
+              (p.description && p.description.toLowerCase().includes(query))
+            );
+          }
+          return matches;
+        })
+        .map(p => ({
+          ...p,
+          id: String(p.id),
+          review_count: p.reviewCount || 0,
+          specifications: p.specs || {}
+        }));
+      
+      // Apply sorting
+      if (mockFiltered) {
+        const sortedMock = [...mockFiltered];
+        if (filters.sort_by === 'price_asc') {
+          sortedMock.sort((a, b) => a.price - b.price);
+        } else if (filters.sort_by === 'price_desc') {
+          sortedMock.sort((a, b) => b.price - a.price);
+        } else if (filters.sort_by === 'rating') {
+          sortedMock.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        }
+        
+        // Apply pagination
+        const paginatedMock = sortedMock.slice(start, start + limit);
+        
+        return {
+          products: paginatedMock,
+          total: sortedMock.length
+        };
+      }
+      
+      return { products: [], total: 0 };
+    }
+    
+    return {
+      products: data || [],
+      total: count || 0
+    };
+  } catch (error) {
+    console.error("Error in searchProducts:", error);
+    // Fallback to mock data with no filters
+    return {
+      products: mockData.products?.slice(0, 20).map(p => ({
+        ...p,
+        id: String(p.id),
+        review_count: p.reviewCount || 0,
+        specifications: p.specs || {}
+      })) || [],
+      total: mockData.products?.length || 0
+    };
   }
 };
 
 // Create product
-export const createProduct = async (product: ProductCreate): Promise<Product | null> => {
+export const createProduct = async (product: ProductCreate, categoryIds: string[]): Promise<Product | null> => {
   try {
     const { data, error } = await supabase
       .from('products')
       .insert([{
         name: product.name,
-        title: product.title,
-        description: product.description,
+        title: product.title || product.name,
+        description: product.description || '',
         price: product.price,
-        image_url: product.image_url,
-        images: product.images,
-        brand: product.brand,
-        sku: product.sku,
-        model: product.model,
+        image_url: product.image_url || '',
+        images: product.images || [],
+        brand: product.brand || '',
+        sku: product.sku || '',
+        model: product.model || '',
         slug: product.slug,
-        highlights: product.highlights,
-        specifications: product.specifications,
-        rating: product.rating,
-        review_count: product.review_count
+        highlights: product.highlights || [],
+        specifications: product.specifications || {},
+        rating: product.rating || 0,
+        review_count: product.review_count || 0
       }])
       .select()
       .single();
@@ -294,7 +465,40 @@ export const createProduct = async (product: ProductCreate): Promise<Product | n
       return null;
     }
     
-    return convertDBProductToProduct(data);
+    if (data && categoryIds.length > 0) {
+      // Add primary category
+      const primaryCategoryId = categoryIds[0];
+      const { error: primaryCategoryError } = await supabase
+        .from('product_categories')
+        .insert([{
+          product_id: data.id,
+          category_id: primaryCategoryId,
+          primary_category: true
+        }]);
+        
+      if (primaryCategoryError) {
+        console.error("Error adding primary category:", primaryCategoryError);
+      }
+      
+      // Add additional categories
+      if (categoryIds.length > 1) {
+        const additionalCategories = categoryIds.slice(1).map(categoryId => ({
+          product_id: data.id,
+          category_id: categoryId,
+          primary_category: false
+        }));
+        
+        const { error: additionalCategoriesError } = await supabase
+          .from('product_categories')
+          .insert(additionalCategories);
+          
+        if (additionalCategoriesError) {
+          console.error("Error adding additional categories:", additionalCategoriesError);
+        }
+      }
+    }
+    
+    return data;
   } catch (error) {
     console.error("Error in createProduct:", error);
     return null;
@@ -302,11 +506,26 @@ export const createProduct = async (product: ProductCreate): Promise<Product | n
 };
 
 // Update product
-export const updateProduct = async (id: string, updates: ProductUpdate): Promise<Product | null> => {
+export const updateProduct = async (id: string, updates: ProductUpdate, categoryIds?: string[]): Promise<Product | null> => {
   try {
     const { data, error } = await supabase
       .from('products')
-      .update(updates)
+      .update({
+        name: updates.name,
+        title: updates.title,
+        description: updates.description,
+        price: updates.price,
+        image_url: updates.image_url,
+        images: updates.images,
+        brand: updates.brand,
+        sku: updates.sku,
+        model: updates.model,
+        slug: updates.slug,
+        highlights: updates.highlights,
+        specifications: updates.specifications,
+        rating: updates.rating,
+        review_count: updates.review_count
+      })
       .eq('id', id)
       .select()
       .single();
@@ -316,7 +535,51 @@ export const updateProduct = async (id: string, updates: ProductUpdate): Promise
       return null;
     }
     
-    return convertDBProductToProduct(data);
+    // Update categories if provided
+    if (data && categoryIds && categoryIds.length > 0) {
+      // First delete existing categories
+      const { error: deleteError } = await supabase
+        .from('product_categories')
+        .delete()
+        .eq('product_id', id);
+        
+      if (deleteError) {
+        console.error("Error deleting existing categories:", deleteError);
+      }
+      
+      // Add primary category
+      const primaryCategoryId = categoryIds[0];
+      const { error: primaryCategoryError } = await supabase
+        .from('product_categories')
+        .insert([{
+          product_id: data.id,
+          category_id: primaryCategoryId,
+          primary_category: true
+        }]);
+        
+      if (primaryCategoryError) {
+        console.error("Error adding primary category:", primaryCategoryError);
+      }
+      
+      // Add additional categories
+      if (categoryIds.length > 1) {
+        const additionalCategories = categoryIds.slice(1).map(categoryId => ({
+          product_id: data.id,
+          category_id: categoryId,
+          primary_category: false
+        }));
+        
+        const { error: additionalCategoriesError } = await supabase
+          .from('product_categories')
+          .insert(additionalCategories);
+          
+        if (additionalCategoriesError) {
+          console.error("Error adding additional categories:", additionalCategoriesError);
+        }
+      }
+    }
+    
+    return data;
   } catch (error) {
     console.error("Error in updateProduct:", error);
     return null;
@@ -326,6 +589,18 @@ export const updateProduct = async (id: string, updates: ProductUpdate): Promise
 // Delete product
 export const deleteProduct = async (id: string): Promise<boolean> => {
   try {
+    // First delete product categories
+    const { error: categoriesError } = await supabase
+      .from('product_categories')
+      .delete()
+      .eq('product_id', id);
+      
+    if (categoriesError) {
+      console.error("Error deleting product categories:", categoriesError);
+      return false;
+    }
+    
+    // Then delete the product
     const { error } = await supabase
       .from('products')
       .delete()
@@ -339,82 +614,6 @@ export const deleteProduct = async (id: string): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error("Error in deleteProduct:", error);
-    return false;
-  }
-};
-
-// Import mock data into Supabase
-export const importMockDataToSupabase = async (): Promise<boolean> => {
-  try {
-    // First import categories
-    for (const category of mockData.mainCategories) {
-      await supabase.from('categories').insert({
-        name: category.name,
-        description: category.description || '',
-        slug: category.slug || category.name.toLowerCase().replace(/\s+/g, '-'),
-        category_type: 'main',
-        image_url: category.imageUrl
-      });
-    }
-    
-    for (const category of mockData.categories) {
-      await supabase.from('categories').insert({
-        name: category.name,
-        description: category.description || '',
-        slug: category.slug || category.name.toLowerCase().replace(/\s+/g, '-'),
-        category_type: 'sub',
-        parent_id: category.parentId ? String(category.parentId) : null,
-        image_url: category.imageUrl
-      });
-    }
-    
-    // Then import products
-    for (const product of mockData.products) {
-      const newProduct = {
-        name: product.name,
-        title: product.title || product.name,
-        description: product.description || '',
-        price: product.price,
-        image_url: product.imageUrl || product.image,
-        images: product.images || [],
-        brand: product.brand || '',
-        sku: product.sku || '',
-        model: product.model || '',
-        slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
-        highlights: product.highlights || [],
-        specifications: product.specifications || product.specs || {},
-        rating: product.rating || 0,
-        review_count: product.reviewCount || 0
-      };
-      
-      const { data } = await supabase.from('products').insert(newProduct).select('id').single();
-      
-      if (data) {
-        // Add category relationship
-        await supabase.from('product_categories').insert({
-          product_id: data.id,
-          category_id: String(product.categoryId),
-          primary_category: true
-        });
-        
-        // Add additional categories if present
-        if (product.categoryIds && product.categoryIds.length > 0) {
-          for (const catId of product.categoryIds) {
-            if (String(catId) !== String(product.categoryId)) {
-              await supabase.from('product_categories').insert({
-                product_id: data.id,
-                category_id: String(catId),
-                primary_category: false
-              });
-            }
-          }
-        }
-      }
-    }
-    
-    return true;
-  } catch (error) {
-    console.error("Error importing mock data to Supabase:", error);
     return false;
   }
 };
