@@ -1,123 +1,72 @@
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { getProductsByQuery, Product } from '@/services/productService';
 import SearchHeader from '@/components/search/SearchHeader';
-import Sidebar from '@/components/search/Sidebar';
 import ProductResults from '@/components/search/ProductResults';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Sidebar from '@/components/search/Sidebar';
 import { useProductFilters } from '@/hooks/useProductFilters';
-import { searchProducts, Product, SearchFilters } from '@/services/productService';
-import { getAllBrands } from '@/services/brandService';
-import { getAllVendors } from '@/services/vendorService';
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const category = searchParams.get('category') || '';
-  
-  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
-  const [brands, setBrands] = useState([]);
-  const [vendors, setVendors] = useState([]);
+  const [loading, setLoading] = useState(true);
   
+  // Use the hook for filtering functionality
   const {
     filteredResults,
-    sortParam,
-    setFilteredVendors,
-    setInStockOnly,
-    handlePriceRangeFilter
-  } = useProductFilters({ initialProducts: products });
-
+    handleSortChange,
+    handleVendorFilter,
+    handlePriceRangeFilter,
+    handleInStockOnly
+  } = useProductFilters(products);
+  
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchResults = async () => {
       setLoading(true);
-      
       try {
-        // Create a proper SearchFilters object
-        const searchFilters: SearchFilters = {
-          query: query,
-          category_id: category || undefined,
-          sort_by: 'relevance'
-        };
-        
-        const { products: searchResults } = await searchProducts(searchFilters);
-        setProducts(searchResults);
-        
-        const brandsData = await getAllBrands();
-        setBrands(brandsData);
-        
-        const vendorsData = await getAllVendors();
-        setVendors(vendorsData);
+        // Search for products based on query
+        const results = await getProductsByQuery(query);
+        setProducts(results);
       } catch (error) {
-        console.error('Error fetching search data:', error);
+        console.error('Error fetching search results:', error);
       } finally {
         setLoading(false);
       }
     };
     
-    fetchData();
-  }, [query, category]);
-
-  const handleSortChange = (value: string) => {
-    // Handle sort change
-    console.log("Sort change:", value);
-  };
-
-  const handleVendorFilter = (vendors: string[]) => {
-    setFilteredVendors(vendors);
-  };
-
-  const handlePriceRange = (min: number, max: number) => {
-    handlePriceRangeFilter(min, max);
-  };
-
-  const handleInStockOnly = (inStockOnly: boolean) => {
-    setInStockOnly(inStockOnly);
-  };
-
+    fetchResults();
+  }, [query]);
+  
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 pt-6 pb-16">
       <SearchHeader 
-        query={query} 
-        resultsCount={products.length} 
+        query={query}
+        totalResults={filteredResults.length}
+        loading={loading}
       />
       
-      <div className="flex flex-col lg:flex-row gap-6 mt-6">
-        <aside className="w-full lg:w-1/4">
+      <div className="flex flex-col md:flex-row mt-6 gap-6">
+        {/* Sidebar with filters */}
+        <div className="w-full md:w-1/4 lg:w-1/5">
           <Sidebar 
-            query={query} 
-            brands={brands} 
-            vendors={vendors}
+            onVendorFilter={handleVendorFilter}
+            onPriceRangeFilter={handlePriceRangeFilter}
+            onInStockOnly={handleInStockOnly}
           />
-        </aside>
+        </div>
         
-        <main className="w-full lg:w-3/4">
-          <Tabs defaultValue="products" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="products">Προϊόντα</TabsTrigger>
-              <TabsTrigger value="shops">Καταστήματα</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Button variant="ghost" disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Φόρτωση...
-              </Button>
-            </div>
-          ) : (
-            <ProductResults 
-              filteredResults={filteredResults}
-              onSortChange={handleSortChange}
-              onVendorFilter={handleVendorFilter}
-              onPriceRangeFilter={handlePriceRange}
-              onInStockOnly={handleInStockOnly}
-            />
-          )}
-        </main>
+        {/* Search results */}
+        <div className="w-full md:w-3/4 lg:w-4/5">
+          <ProductResults 
+            filteredResults={filteredResults}
+            onSortChange={handleSortChange}
+            onVendorFilter={handleVendorFilter}
+            onPriceRangeFilter={handlePriceRangeFilter}
+            onInStockOnly={handleInStockOnly}
+          />
+        </div>
       </div>
     </div>
   );

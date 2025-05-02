@@ -29,7 +29,8 @@ import {
 import { toast } from "@/hooks/use-toast";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
-import { Product, Category, categories, getBestPrice, products } from "@/data/mockData";
+import { Product, getBestPrice } from "@/services/productService";
+import { categories, products } from "@/data/mockData";
 
 export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");

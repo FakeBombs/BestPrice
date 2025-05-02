@@ -13,10 +13,11 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
   const [categoryName, setCategoryName] = useState<string>("Category");
   
   useEffect(() => {
-    // Get category name if product has categoryId
+    // Get category name if product has categories
     const fetchCategory = async () => {
-      if (product.categoryId) {
-        const category = await getCategoryById(String(product.categoryId));
+      if (product.categories && product.categories.length > 0) {
+        const categoryId = product.categories[0].id;
+        const category = await getCategoryById(categoryId);
         if (category) {
           setCategoryName(category.name);
         }
@@ -42,11 +43,11 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           </Link>
         </li>
         
-        {product.categoryId && (
+        {product.categories && product.categories.length > 0 && (
           <li className="flex items-center">
             <ChevronRight className="w-4 h-4 mx-1" />
             <Link 
-              to={`/cat/${product.categoryId}/${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
+              to={`/cat/${product.categories[0].id}/${categoryName.toLowerCase().replace(/\s+/g, '-')}`}
               className="hover:text-gray-900 dark:hover:text-gray-100"
             >
               {categoryName}

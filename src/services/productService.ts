@@ -1,5 +1,5 @@
 
-import { mockProducts } from '@/data/mockData';
+import { products } from '@/data/mockData';
 
 export interface ProductPrice {
   id: string;
@@ -31,6 +31,7 @@ export interface Product {
   prices?: ProductPrice[];
   created_at?: string;
   updated_at?: string;
+  sku?: string; // Adding SKU field that's used in ProductHeader
 }
 
 // Helper function to get the best (lowest) price from a product
@@ -54,7 +55,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       // Convert mockProducts to ensure they match the Product interface
-      const products: Product[] = mockProducts.map(p => ({
+      const standardizedProducts: Product[] = products.map(p => ({
         ...p,
         id: String(p.id), // Ensure id is a string
         slug: p.slug || `product-${p.id}`, // Ensure each product has a slug
@@ -73,7 +74,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
         model: p.model || '',
       })) as Product[];
       
-      resolve(products);
+      resolve(standardizedProducts);
     }, 500);
   });
 };
@@ -82,27 +83,33 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   // In a real app, this would be an API call
   return new Promise((resolve) => {
     setTimeout(() => {
-      const products = mockProducts.map(p => ({
-        ...p,
-        id: String(p.id), // Ensure id is a string
-        slug: p.slug || `product-${p.id}`, // Ensure each product has a slug
-        specifications: p.specifications || {},
-        images: p.images || [],
-        prices: p.prices?.map(price => ({
+      const product = products.find(p => String(p.id) === id);
+      
+      if (!product) {
+        resolve(null);
+        return;
+      }
+      
+      const standardizedProduct: Product = {
+        ...product,
+        id: String(product.id),
+        slug: product.slug || `product-${product.id}`,
+        specifications: product.specifications || {},
+        images: product.images || [],
+        prices: product.prices?.map(price => ({
           ...price,
           id: String(price.id || Math.random().toString(36).substr(2, 9)),
-          product_id: String(p.id),
+          product_id: String(product.id),
           vendor_id: String(price.vendorId || price.vendor_id),
           in_stock: price.inStock || price.in_stock || false,
         })) || [],
-        rating: p.rating || 0,
-        review_count: p.reviewCount || p.review_count || 0,
-        brand: p.brand || '',
-        model: p.model || '',
-      }));
+        rating: product.rating || 0,
+        review_count: product.reviewCount || product.review_count || 0,
+        brand: product.brand || '',
+        model: product.model || '',
+      };
       
-      const product = products.find(p => String(p.id) === id);
-      resolve(product as Product || null);
+      resolve(standardizedProduct);
     }, 500);
   });
 };
@@ -127,3 +134,17 @@ export const getProductsByQuery = async (query: string): Promise<Product[]> => {
     (p.description && p.description.toLowerCase().includes(lowerQuery))
   );
 };
+
+// Adding searchProducts function to resolve the missing export in SearchResults.tsx
+export const searchProducts = getProductsByQuery;
+
+// Adding SearchFilters type for SearchResults.tsx
+export interface SearchFilters {
+  query: string;
+  categories?: string[];
+  priceRange?: [number, number];
+  brands?: string[];
+  vendors?: string[];
+  inStock?: boolean;
+  sortBy?: string;
+}
