@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useLocation, Link } from 'react-router-dom'; 
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
@@ -9,43 +9,54 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
 const CategoryPage: React.FC = () => {
-  const { mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug } = useParams<{
-    mainCatSlug?: string;
-    subCatSlug?: string;
-    subSubCatSlug?: string;
-    extraSubSubCatSlug?: string;
-    anotherSubSubCatSlug?: string;
-  }>(); 
+  const location = useLocation();
+  const pathSegments = location.pathname.split('/').filter(Boolean); // removes empty parts
+  // pathSegments for "/cat/..." will be ['cat', 'slugOrId1', 'slugOrId2', ...]
+  
+  // Extract slugs/ids from URL
+  // For route "/cat/*", segments after "/cat" are at index 1 onwards
+  const categorySegments = pathSegments.slice(1); // skip 'cat'
 
   const { toast } = useToast();
   const { user } = useAuth();
-  
+
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [currentCategory, setCurrentCategory] = useState<any | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
 
+  // Helper to find category by id or slug
+  const findCategory = (identifier: string) => {
+    return (
+      mainCategories.find(cat => cat.id.toString() === identifier || cat.slug === identifier) ||
+      categories.find(cat => cat.id.toString() === identifier || cat.slug === identifier)
+    );
+  };
+
   useEffect(() => {
-    let categoryId = mainCatSlug;
-    let foundCategory = mainCategories.find(cat => cat.id === categoryId) || 
-                      categories.find(cat => cat.id === categoryId);
-    if (!foundCategory) {
-      foundCategory = mainCategories.find(cat => cat.slug === mainCatSlug);
+    // Determine current category based on URL segments
+    if (categorySegments.length === 0) {
+      setCurrentCategory(undefined);
+      return;
     }
+    const categoryIdOrSlug = categorySegments[0]; // first segment after "/cat"
+    const foundCategory = findCategory(categoryIdOrSlug);
     setCurrentCategory(foundCategory);
 
     if (foundCategory) {
       const productsToDisplay = products.filter(product => 
-        (product.categoryId && product.categoryId === Number(foundCategory.id))
+        product.categoryId && product.categoryId.toString() === foundCategory.id.toString()
       );
       setFilteredProducts(productsToDisplay);
+    } else {
+      setFilteredProducts([]);
     }
-  }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug]);
+  }, [categorySegments, mainCategories, categories]);
 
   useEffect(() => {
     if (!currentCategory) return;
     const productsToDisplay = products.filter(product => 
-      product.categoryIds.includes(currentCategory.id)
+      product.categoryIds && product.categoryIds.includes(currentCategory.id)
     );
     setFilteredProducts(productsToDisplay);
   }, [currentCategory, products]);
@@ -54,61 +65,56 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
-  const sortProducts = (products) => {
+  const sortProducts = (productsList: any[]) => {
     switch (sortType) {
-        case 'price-asc':
-            return [...products].sort((a, b) => {
-                const minPriceA = Math.min(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                const minPriceB = Math.min(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), Infinity);
-                return minPriceA - minPriceB;
-            });
-        case 'price-desc':
-            return [...products].sort((a, b) => {
-                const maxPriceA = Math.max(...(a.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                const maxPriceB = Math.max(...(b.prices || []).filter((p) => p.inStock).map((p) => p.price), 0);
-                return maxPriceB - maxPriceA;
-            });
-        case 'rating-desc':
-        default:
-            return [...products].sort((a, b) => {
-                const averageRatingA = a.ratingSum / Math.max(a.numReviews, 1);
-                const averageRatingB = b.ratingSum / Math.max(b.numReviews, 1);
-                return averageRatingB - averageRatingA;
-            });
-        case 'merchants_desc':
-            return [...products].sort((a, b) => {
-                const availableVendorsA = (a.prices || []).filter((price) => price.inStock).length;
-                const availableVendorsB = (b.prices || []).filter((price) => price.inStock).length;
-                return availableVendorsB - availableVendorsA;
-            });
+      case 'price-asc':
+        return [...productsList].sort((a, b) => {
+          const minPriceA = Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity);
+          const minPriceB = Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity);
+          return minPriceA - minPriceB;
+        });
+      case 'price-desc':
+        return [...productsList].sort((a, b) => {
+          const maxPriceA = Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0);
+          const maxPriceB = Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0);
+          return maxPriceB - maxPriceA;
+        });
+      case 'rating-desc':
+      default:
+        return [...productsList].sort((a, b) => {
+          const avgA = a.ratingSum / Math.max(a.numReviews, 1);
+          const avgB = b.ratingSum / Math.max(b.numReviews, 1);
+          return avgB - avgA;
+        });
+      case 'merchants_desc':
+        return [...productsList].sort((a, b) => {
+          const vendorsA = (a.prices || []).filter(p => p.inStock).length;
+          const vendorsB = (b.prices || []).filter(p => p.inStock).length;
+          return vendorsB - vendorsA;
+        });
     }
   };
 
   const handlePriceAlert = () => {
     if (!user) {
-      toast({
-        title: "Login Required",
-        description: "Please log in to set a price alert",
-      });
+      toast({ title: 'Login Required', description: 'Please log in to set a price alert' });
       return;
     }
     setIsPriceAlertModalOpen(true);
   };
 
-  function renderBreadcrumbs() {
+  const renderBreadcrumbs = () => {
     const breadcrumbs = [];
-    const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
-    if (!mainCategory) return null;
-
-    if (!(currentCategory && !currentCategory.parentId)) {
+    const mainCategory = mainCategories.find(cat => cat.id.toString() === currentCategory?.parentId?.toString() || cat.slug === currentCategory?.parentId);
+    if (mainCategory) {
       breadcrumbs.push(
         <li key={mainCategory.slug}><Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`}>{mainCategory.name}</Link></li>
       );
     }
 
+    // Build category trail
     const categoryTrail = [];
     let category = currentCategory;
-
     while (category) {
       categoryTrail.unshift(category);
       category = categories.find(cat => cat.id === category.parentId);
@@ -140,11 +146,11 @@ const CategoryPage: React.FC = () => {
         </nav>
       </div>
     );
-  }
+  };
 
   const renderMainCategories = () => {
-    if (!currentCategory) return null; // safeguard
-    const mainCategory = mainCategories.find(cat => cat.id === mainCatSlug || cat.slug === mainCatSlug);
+    if (!currentCategory) return null;
+    const mainCategory = mainCategories.find(cat => cat.id.toString() === currentCategory.parentId?.toString() || cat.slug === currentCategory.parentId);
     if (!mainCategory) return null;
     const subcategories = categories.filter(cat => cat.parentId === currentCategory?.id) || [];
     return (
@@ -201,67 +207,67 @@ const CategoryPage: React.FC = () => {
         )}
       </>
     );
-  }
+  };
 
   const renderSubcategories = (category) => {
-    if (!category) return null; // safeguard
+    if (!category) return null;
     return (
-        <>
-            <div className="page-header">
-                <div className="hgroup">
-                    <div className="page-header__title-wrapper">
-                        <Link className="trail__back pressable" title={category.name} to={`/cat/${category.id}/${category.slug}`}>
-                          <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
-                        </Link>
-                        <h1>{category.name}</h1>
-                    </div>
+      <>
+        <div className="page-header">
+          <div className="hgroup">
+            <div className="page-header__title-wrapper">
+              <Link className="trail__back pressable" title={category.name} to={`/cat/${category.id}/${category.slug}`}>
+                <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
+              </Link>
+              <h1>{category.name}</h1>
+            </div>
+          </div>
+        </div>
+        <div className="root-category__categories">
+          {categories.filter(cat => cat.parentId === category?.id).length > 0 ? (
+            categories.filter(cat => cat.parentId === category?.id).map((subCat) => (
+              <div key={subCat.id} className="root-category__category">
+                <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                  <img src={subCat.image} alt={subCat.name} title={subCat.name} />
+                </Link>
+                <h2 className="root-category__category-title">
+                  <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                </h2>
+                <div className="root-category__footer">
+                  <div className="root-category__links">
+                    {categories
+                      .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
+                      .slice(0, 5)
+                      .map((linkedSubCat, index, arr) => (
+                        <React.Fragment key={linkedSubCat.id}>
+                          <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                          {index < arr.length - 1 && ', '}
+                        </React.Fragment>
+                      ))}
+                  </div>
                 </div>
-            </div>
-            <div className="root-category__categories">
-                {categories.filter(cat => cat.parentId === category?.id).length > 0 ? (
-                  categories.filter(cat => cat.parentId === category?.id).map((subCat) => (
-                        <div key={subCat.id} className="root-category__category">
-                            <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
-                                <img src={subCat.image} alt={subCat.name} title={subCat.name} />
-                            </Link>
-                            <h2 className="root-category__category-title">
-                                <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
-                            </h2>
-                            <div className="root-category__footer">
-                                <div className="root-category__links">
-                                    {categories
-                                        .filter(linkedSubCat => linkedSubCat.parentId === subCat.id)
-                                        .slice(0, 5)
-                                        .map((linkedSubCat, index, arr) => (
-                                          <React.Fragment key={linkedSubCat.id}>
-                                            <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
-                                            {index < arr.length - 1 && ', '}
-                                          </React.Fragment>
-                                        ))}
-                                </div>
-                            </div>
-                        </div>
-                      ))
-                ) : (
-                    renderProducts()
-                )}
-            </div>
-            <div className="sections"></div>
-            <div className="p__products-section">
-              <div className="alerts">
-                <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
-                  <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                  <span className="alerts__label">Ειδοποίηση</span>
-                </button>
-                <div className="alerts__prompt"> σε <span className="alerts__title">{category.name}</span></div>
               </div>
-            </div>
-            {isPriceAlertModalOpen && (
-              <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={category?.name} categoryId={category?.id} />
-            )}
-        </>
+            ))
+          ) : (
+            renderProducts()
+          )}
+        </div>
+        <div className="sections"></div>
+        <div className="p__products-section">
+          <div className="alerts">
+            <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+              <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+              <span className="alerts__label">Ειδοποίηση</span>
+            </button>
+            <div className="alerts__prompt"> σε <span className="alerts__title">{category.name}</span></div>
+          </div>
+        </div>
+        {isPriceAlertModalOpen && (
+          <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={category?.name} categoryId={category?.id} />
+        )}
+      </>
     );
-  }
+  };
 
   const renderProducts = () => (
     <div className="page-products">
