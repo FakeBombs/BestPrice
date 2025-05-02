@@ -7,9 +7,6 @@ import { categories, mainCategories, products } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
-import { ProductResultsProps } from '@/components/search/ProductResults';
-import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals } from '@/data/mockData';
-import ProductCarousel from '@/components/ProductCarousel';
 
 // Main component
 const CategoryPage: React.FC = () => {
@@ -28,11 +25,6 @@ const CategoryPage: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<any | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
-  const [topOffers, setTopOffers] = useState<any[]>([]);
-  const [newArrivals, setNewArrivals] = useState<any[]>([]);
-  const [hotSales, setHotSales] = useState<any[]>([]);
-  const [recentlyViewed, setRecentlyViewed] = useState<any[]>([]);
-  const [popularBrands, setPopularBrands] = useState<any[]>([]);
 
   useEffect(() => {
     // Find the category by ID, not by slug
@@ -55,44 +47,6 @@ const CategoryPage: React.FC = () => {
         (product.categoryId && product.categoryId === Number(foundCategory.id))
       );
       setFilteredProducts(productsToDisplay);
-
-      // Load top offers/deals
-      fetchDeals().then(deals => {
-        const categoryDeals = deals.filter(deal => 
-          deal.categoryId === Number(foundCategory.id)
-        );
-        setTopOffers(categoryDeals);
-      });
-
-      // Load new arrivals
-      fetchNewArrivals().then(arrivals => {
-        const categoryArrivals = arrivals.filter(arrival => 
-          arrival.categoryId === Number(foundCategory.id)
-        );
-        setNewArrivals(categoryArrivals);
-      });
-
-      // Load hot sales (using featured products as a substitute)
-      fetchFeaturedProducts().then(featured => {
-        const categoryFeatured = featured.filter(item => 
-          item.categoryId === Number(foundCategory.id)
-        );
-        setHotSales(categoryFeatured);
-      });
-
-      // Load recently viewed (using the last few products as a substitute)
-      const mockRecentlyViewed = products.slice(-5).filter(product =>
-        product.categoryId === Number(foundCategory.id)
-      );
-      setRecentlyViewed(mockRecentlyViewed);
-
-      // Load popular brands
-      // This would normally come from an API, but for now we'll mock it
-      const extractedBrands = [...new Set(productsToDisplay.map(product => product.brand))];
-      const brandObjects = extractedBrands
-        .filter(Boolean)
-        .map(brand => ({ name: brand, id: brand }));
-      setPopularBrands(brandObjects);
     }
   }, [mainCatSlug, subCatSlug, subSubCatSlug, extraSubSubCatSlug, anotherSubSubCatSlug]);
 
@@ -262,64 +216,6 @@ function renderBreadcrumbs() {
           </div>
         </div>
 
-        {/* Additional sections */}
-        {topOffers.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Top Offers in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {topOffers.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {newArrivals.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">New Arrivals in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {newArrivals.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {hotSales.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Hot Sales in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {hotSales.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {recentlyViewed.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Recently Viewed in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {recentlyViewed.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {popularBrands.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Popular Brands in {currentCategory?.name}</h2>
-            <div className="brands-list">
-              {popularBrands.slice(0, 8).map((brand, index) => (
-                <Link key={index} to={`/brand/${brand.id}/${brand.name}`} className="brand-item">
-                  {brand.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
         {isPriceAlertModalOpen && (
           <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
         )}
@@ -384,64 +280,6 @@ function renderBreadcrumbs() {
                 <div className="alerts__prompt"> σε <span className="alerts__title">{currentCategory.name}</span></div>
               </div>
             </div>
-        
-        {/* Additional sections for subcategories */}
-        {topOffers.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Top Offers in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {topOffers.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {newArrivals.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">New Arrivals in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {newArrivals.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {hotSales.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Hot Sales in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {hotSales.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {recentlyViewed.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Recently Viewed in {currentCategory?.name}</h2>
-            <div className="products-grid">
-              {recentlyViewed.slice(0, 4).map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {popularBrands.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Popular Brands in {currentCategory?.name}</h2>
-            <div className="brands-list">
-              {popularBrands.slice(0, 8).map((brand, index) => (
-                <Link key={index} to={`/brand/${brand.id}/${brand.name}`} className="brand-item">
-                  {brand.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
         
         {isPriceAlertModalOpen && (
           <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory?.name} categoryId={currentCategory?.id} />
