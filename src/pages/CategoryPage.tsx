@@ -114,7 +114,6 @@ const handlePriceAlert = () => {
 // Render breadcrumbs, with main category included if applicable
 const renderBreadcrumbs = () => {
   if (!currentCategory) {
-    // Show only home if no current category
     return (
       <div id="trail">
         <nav className="breadcrumb">
@@ -128,15 +127,16 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  const breadcrumbs = [];
-
-  // Always find and add the main category
+  // Find main category
   const mainCategory = mainCategories.find(
     cat =>
       cat.id.toString() === currentCategory.parentId?.toString() ||
       cat.slug === currentCategory.parentId
   );
 
+  const breadcrumbs = [];
+
+  // Add main category first
   if (mainCategory) {
     breadcrumbs.push(
       <li key={mainCategory.slug}>
@@ -147,20 +147,16 @@ const renderBreadcrumbs = () => {
     );
   }
 
-  // Build the trail of categories from currentCategory up to the root
-  const categoryTrail = [];
+  // Build path from currentCategory up to mainCategory (excluding currentCategory)
+  const trail = [];
   let category = currentCategory;
-  while (category) {
-    categoryTrail.unshift(category);
+  while (category && category.id !== mainCategory?.id) {
+    trail.unshift(category);
     category = categories.find(cat => cat.id === category.parentId);
   }
 
-  // Skip the main category in trail if already added
-  const trailToRender = categoryTrail.filter(
-    (cat) => !mainCategory || cat.id !== mainCategory.id
-  );
-
-  trailToRender.forEach((cat, index) => {
+  // Add categories in trail (excluding currentCategory)
+  trail.forEach((cat) => {
     breadcrumbs.push(
       <li key={cat.slug}>
         <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
@@ -168,6 +164,7 @@ const renderBreadcrumbs = () => {
     );
   });
 
+  // Render the full breadcrumb trail
   return (
     <div id="trail">
       <nav className="breadcrumb">
@@ -176,14 +173,13 @@ const renderBreadcrumbs = () => {
             <Link to="/" rel="home"><span>BestPrice</span></Link>
             {breadcrumbs.length > 0 && <span className="trail__breadcrumb-separator">›</span>}
           </li>
-          {breadcrumbs.map((crumb, idx) => (
-            <React.Fragment key={idx}>
+          {breadcrumbs.reduce((acc, crumb, index) => (
+            <React.Fragment key={index}>
+              {acc}
+              {index > 0 && <span className="trail__breadcrumb-separator">›</span>}
               {crumb}
-              {idx < breadcrumbs.length - 1 && (
-                <span className="trail__breadcrumb-separator">›</span>
-              )}
             </React.Fragment>
-          ))}
+          ), null)}
         </ol>
       </nav>
     </div>
