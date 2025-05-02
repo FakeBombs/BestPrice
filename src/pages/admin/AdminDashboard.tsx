@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import AdminHeader from '@/components/admin/AdminHeader';
@@ -32,7 +33,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="admin-dashboard">
-      <AdminHeader />
+      <AdminHeader title="Admin Dashboard" />
       <div className="dashboard-content">
         <div className="overview-cards">
           <div className="card">
