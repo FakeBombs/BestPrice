@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Product } from '@/data/mockData';
+import { Product } from '@/services/productService';
 import ProductCarousel from '../ProductCarousel';
 
 interface ProductRelatedSectionsProps {

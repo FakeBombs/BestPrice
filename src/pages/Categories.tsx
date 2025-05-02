@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { getAllCategories, Category } from '@/services/categoryService';
 import AllCategoriesView from '@/components/category/AllCategoriesView';
 
@@ -28,17 +27,11 @@ const Categories = () => {
   }
   
   return (
-    <>
-      <Helmet>
-        <title>All Categories</title>
-      </Helmet>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">All Categories</h1>
       
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6">All Categories</h1>
-        
-        <AllCategoriesView />
-      </div>
-    </>
+      <AllCategoriesView />
+    </div>
   );
 };
 
