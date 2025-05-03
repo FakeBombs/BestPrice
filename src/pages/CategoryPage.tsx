@@ -453,8 +453,8 @@ const CategoryPage: React.FC = () => {
               </div>
               <ol aria-expanded={showMoreCategories}>
                 {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => {
-                  const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
-                  const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
+                  const mainCategory = mainCategories.find(cat => cat.id === item.parentId);
+                  const mainCatSlug = mainCategory ? mainCategory.slug : '';
                   return (
                     <li key={item.id}><Link to={`/cat/${item.id}/${item.slug}`} className="filters__link"><span>{item.category} ({item.count})</span></Link></li>
                   );
@@ -553,9 +553,15 @@ const CategoryPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="page-header__title-aside"></div>
+                      <div className="page-header__title-aside">
+                        {displayedBrand && (
+                          <Link to={`/b/${displayedBrand.id}/${displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
+                            <img itemProp="logo" title={`${displayedBrand.name} logo`} alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
+                          </Link>
+                        )}
+                      </div>
                     </div>
-
+                    {renderAppliedFilters()}
                     <div className="page-header__sorting">
                       <div className="tabs">
                         <div className="tabs-wrapper">
