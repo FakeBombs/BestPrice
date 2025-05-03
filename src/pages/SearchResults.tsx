@@ -306,8 +306,8 @@ const SearchResults: React.FC = () => {
                             {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
                                <li key={item.id} className={`pressable`}> {/* Remove 'selected' class logic */}
                                    {/* Link now navigates directly */}
-                                   <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link">
-                                       <span>{item.category}</span> <span className="filter-count">({item.count})</span>
+                                   <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link" data-c={item.count}>
+                                       <span>{item.category}</span>
                                     </Link>
                                </li>
                             ))}
