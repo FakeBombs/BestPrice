@@ -489,19 +489,19 @@ const CategoryPage: React.FC = () => {
                 <div class="filter-container">
                   <ol>
                     <li data-filter="deals">
-                      <a title="Προσφορές" data-c="38" rel="nofollow" href="/cat/806/mobile-phones.html?deals=1">
+                      <Link title="Προσφορές" data-c="38" rel="nofollow" to={`/cat/${currentCategory.id}/${currentCategory.slug}?deals=1`}>
                         <svg aria-hidden="true" class="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
                         <span>Προσφορές</span>
-                      </a>
+                      </Link>
                     </li>
                     <li data-filter="certified">
-                      <a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/cat/806/mobile-phones.html?certified=1">
+                      <Link title="Πιστοποιημένα καταστήματα" rel="nofollow" to={`/cat/${currentCategory.id}/${currentCategory.slug}?certified=1`}>
                         <svg aria-hidden="true" class="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
                         <span>Πιστοποιημένα καταστήματα</span>
-                      </a>
+                      </Link>
                     </li>
                     <li id="filter-nearby" class="nearby-location is-set">
-                      <a title="Κοντά μου" rel="nofollow" href="/cat/806/mobile-phones.html?nearby=1">Κοντά μου (20 χλμ)</a>
+                      <Link title="Κοντά μου" rel="nofollow" to={`/cat/${currentCategory.id}/${currentCategory.slug}?nearby=1`}>Κοντά μου (20 χλμ)</Link>
                       <div class="filter-nearby__options">Επιλογές</div>
                     </li>
                     <li data-filter="in-stock">
@@ -511,12 +511,12 @@ const CategoryPage: React.FC = () => {
                       </label>
                     </li>
                     <li data-filter="boxnow">
-                      <a title="Παράδοση" rel="nofollow" href="/cat/806/mobile-phones.html?boxnow=1">
+                      <Link title="Παράδοση" rel="nofollow" to={`/cat/${currentCategory.id}/${currentCategory.slug}?boxnow=1`}>
                         <svg aria-hidden="true" class="icon" width={24} height={24}><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg>
                         <span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW">
                           <svg aria-hidden="true" class="icon help" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-info-16"></use></svg>
                         </span><span>Παράδοση</span>
-                      </a>
+                      </Link>
                     </li>
                   </ol>
                 </div>
