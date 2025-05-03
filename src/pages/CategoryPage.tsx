@@ -490,7 +490,7 @@ const CategoryPage: React.FC = () => {
                     <ol>
                         {/* Sort brands alphabetically for display */}
                         {Object.keys(availableBrands).sort().map((brand) => (
-                          <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} ({availableBrands[brand]})</span></li>
+                          <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><a>{brand} ({availableBrands[brand]})</a></li>
                         ))}
                     </ol>
                     </div>
