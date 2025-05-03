@@ -751,7 +751,7 @@ export const products: Product[] = [
     title: 'Sony 55 Inch 4K UHD TV',
     brand: 'Sony',
     model: 'Bravia',
-    categoryIds: [14, 13, 12], // Updated categories
+    categoryIds: [253], // Updated categories
     description: 'Stunning visuals and vibrant colors.',
     image: '//placehold.co/400x400?text=Sony+TV',
     images: ['//placehold.co/400x400?text=Sony+TV'],
