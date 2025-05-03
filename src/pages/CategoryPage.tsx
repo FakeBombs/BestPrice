@@ -439,11 +439,9 @@ const CategoryPage: React.FC = () => {
     return (
         <div className="page-products">
          {/* --- ASIDE FILTERS --- */}
-         {/* Conditionally render aside only if there are products initially for the category */}
          {categoryProducts.length > 0 && currentCategory && (
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header">
-                {/* Removed Category Filter Section */}
 
                 {/* Brand Filter */}
                 {Object.keys(availableBrands).length > 0 && (
@@ -492,9 +490,9 @@ const CategoryPage: React.FC = () => {
                             <ol aria-expanded={showMoreVendors}>
                             {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
                                 <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`} onClick={() => handleVendorFilter(vendor)}>
-                                    {/* Use span instead of nested <a> */}
+                                  <a href="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
                                     <span>{vendor.name}</span>
-                                    {/* Optionally add certification badge/icon here */}
+                                  </a>
                                 </li>
                             ))}
                             </ol>
