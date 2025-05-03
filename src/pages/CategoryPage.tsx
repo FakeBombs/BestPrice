@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-import { categories, mainCategories, products, Category, Product } from '@/data/mockData';
+import { categories, mainCategories, products, Category, Product, vendors, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
