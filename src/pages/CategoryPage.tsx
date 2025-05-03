@@ -104,32 +104,57 @@ const CategoryPage: React.FC = () => {
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]); // Raw products for the category
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Products after filtering/sorting
 
+  // **Helper for case-insensitive find**
+  const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => {
+      const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map);
+      return mapKeys.find(k => k.toLowerCase() === lowerCaseKey);
+  };
+  const findOriginalCaseValue = (set: Set<string> | undefined, lowerCaseValue: string): string | undefined => {
+      if (!set) return undefined;
+      return Array.from(set).find(v => v.toLowerCase() === lowerCaseValue);
+  };
+
   // Initialize filters FROM URL on mount/load
+  // **Reads lowercase URL, tries to find original case for state**
   const initialFilters = useMemo((): ActiveFiltersState => {
       const params = searchParams;
-      // Parse store parameter (domain names) into vendor IDs
-      const storeDomains = params.get('store')?.split(',').filter(Boolean) || [];
-      const initialVendorIds = storeDomains
-            .map(domain => vendorDomainMap.get(domain)?.id) // Find vendor by domain, get ID
-            .filter((id): id is number => id !== undefined); // Filter out undefined IDs (not found vendors)
+      const initialVendorIds = (params.get('store')?.split(',').filter(Boolean) || [])
+            .map(domain => vendorDomainMap.get(domain.toLowerCase())?.id) // Use lowercase domain for lookup
+            .filter((id): id is number => id !== undefined);
 
-      return {
-        brands: params.get('brand')?.split(',').filter(Boolean) || [],
-        specs: Array.from(params.entries()).reduce((acc, [key, value]) => {
+      const initialBrands = (params.get('brand')?.split(',').filter(Boolean) || [])
+            .map(lowerBrand => findOriginalCaseKey(availableBrands, lowerBrand)) // Find original case brand
+            .filter((b): b is string => b !== undefined); // Filter if not found
+
+      const initialSpecs = Array.from(params.entries()).reduce((acc, [key, value]) => {
                  if (key.startsWith('spec_')) {
-                     const specKey = key.substring(5);
-                     acc[specKey] = value.split(',').filter(Boolean);
+                     const lowerSpecKey = key.substring(5);
+                     const originalSpecKey = findOriginalCaseKey(availableSpecs, lowerSpecKey); // Find original case spec key
+                     if (originalSpecKey) {
+                         const lowerValues = value.split(',').filter(Boolean);
+                         const originalValues = lowerValues
+                             .map(lv => findOriginalCaseValue(availableSpecs[originalSpecKey], lv)) // Find original case values
+                             .filter((v): v is string => v !== undefined);
+                         if (originalValues.length > 0) {
+                             acc[originalSpecKey] = originalValues; // Store original case key and values
+                         }
+                     }
                  }
                  return acc;
-             }, {} as Record<string, string[]>),
-        vendorIds: initialVendorIds, // Use parsed IDs
+             }, {} as Record<string, string[]>);
+
+      return {
+        brands: initialBrands,
+        specs: initialSpecs,
+        vendorIds: initialVendorIds,
         deals: params.get('deals') === '1',
         certified: params.get('certified') === '1',
         nearby: params.get('nearby') === '1',
         boxnow: params.get('boxnow') === '1',
         instock: params.get('instock') === '1',
       };
-  }, [searchParams, vendorDomainMap]); // Add vendorDomainMap dependency
+  // Depends on available options being populated first
+  }, [searchParams, vendorDomainMap, availableBrands, availableSpecs]);
 
   // Use the initialized state
   const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>(initialFilters);
@@ -157,30 +182,33 @@ const CategoryPage: React.FC = () => {
   const findCategory = (identifier: string): Category | undefined => allCategories.find(cat => cat.id.toString() === identifier || cat.slug === identifier);
   const defaultCategoryId = mainCategories.length > 0 ? mainCategories[0].id : null;
 
-  // --- URL Sync Function ---
+  // --- URL Sync Function - Writes lowercase parameters ---
   const updateUrlParams = (filters: ActiveFiltersState) => {
     const params = new URLSearchParams();
-    if (filters.brands.length > 0) params.set('brand', filters.brands.join(','));
-
-    // Convert vendor IDs back to domain names for the URL 'store' parameter
+    // Convert values to lowercase for URL
+    if (filters.brands.length > 0) params.set('brand', filters.brands.map(b => b.toLowerCase()).join(','));
     if (filters.vendorIds.length > 0) {
         const domains = filters.vendorIds
-            .map(id => vendorIdMap.get(id)?.url) // Get URL by ID using the precomputed map
-            .filter((url): url is string => !!url) // Filter out cases where vendor wasn't found
-            .map(cleanDomainName) // Clean the domain
-            .filter(Boolean); // Filter out potentially empty domains after cleaning
-        if (domains.length > 0) {
-             params.set('store', domains.join(',')); // Set comma-separated domains
-        }
+            .map(id => vendorIdMap.get(id)?.url)
+            .filter((url): url is string => !!url)
+            .map(cleanDomainName)
+            .map(d => d.toLowerCase()) // Ensure domain is lowercase
+            .filter(Boolean);
+        if (domains.length > 0) { params.set('store', domains.join(',')); }
     }
-
-    Object.entries(filters.specs).forEach(([key, values]) => { if (values.length > 0) params.set(`spec_${key}`, values.join(',')); });
+    Object.entries(filters.specs).forEach(([key, values]) => {
+        if (values.length > 0) {
+            // Lowercase key (after spec_) and values for URL
+            params.set(`spec_${key.toLowerCase()}`, values.map(v => v.toLowerCase()).join(','));
+        }
+    });
+    // Boolean flags
     if (filters.deals) params.set('deals', '1');
     if (filters.certified) params.set('certified', '1');
     if (filters.nearby) params.set('nearby', '1');
     if (filters.boxnow) params.set('boxnow', '1');
     if (filters.instock) params.set('instock', '1');
-    setSearchParams(params, { replace: true }); // Update URL efficiently
+    setSearchParams(params, { replace: true });
   };
 
   // Effect 1: Load Category Data & Initial Products
@@ -226,20 +254,23 @@ const CategoryPage: React.FC = () => {
 
   // --- Filter Extraction Logic ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
-        const brandsCount: Record<string, number> = {};
-        const specs: Record<string, Set<string>> = {};
-        sourceProducts.forEach((product) => {
-            if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; }
-            Object.keys(product.specifications || {}).forEach((specKey) => {
-                const specValue = product.specifications[specKey];
-                if (specValue != null) {
-                    if (!specs[specKey]) { specs[specKey] = new Set(); }
-                    specs[specKey].add(String(specValue));
-                }
-            });
-        });
-        setAvailableBrands(brandsCount);
-        setAvailableSpecs(specs);
+      const brandsCount: Record<string, number> = {};
+      const specs: Record<string, Set<string>> = {};
+      sourceProducts.forEach((product) => {
+          // Store original casing for available options
+          if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; }
+          Object.keys(product.specifications || {}).forEach((specKey) => {
+              const specValue = product.specifications[specKey];
+              if (specValue != null) {
+                  const originalKey = specKey; // Store original key case
+                  const originalValue = String(specValue); // Store original value case
+                  if (!specs[originalKey]) { specs[originalKey] = new Set(); }
+                  specs[originalKey].add(originalValue);
+              }
+          });
+      });
+      setAvailableBrands(brandsCount);
+      setAvailableSpecs(specs); // State now holds sets with original casing
   };
 
   const updateCertifiedVendors = (sourceProducts: Product[]) => {
@@ -273,41 +304,64 @@ const CategoryPage: React.FC = () => {
   // --- Effect 2: Apply Filters and Sorting ---
   useEffect(() => {
     let productsToFilter = [...categoryProducts];
-    const currentFilters = activeFilters; // Use state directly
+    const currentFilters = activeFilters;
 
-    // Apply filters based on currentFilters state
+    // Filtering logic now compares original case state with original case product data
     if (currentFilters.instock) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.inStock)); }
-    if (currentFilters.deals) { console.warn("Deals Filter Placeholder - Add actual logic"); /* Placeholder */ }
+    if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); }
     if (currentFilters.certified) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.certification)); }
-    if (currentFilters.nearby) { console.warn("Nearby Filter Placeholder - Add actual logic"); /* Placeholder */ }
+    if (currentFilters.nearby) { console.warn("Nearby Filter Placeholder"); }
     if (currentFilters.boxnow) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.paymentMethods?.includes(PaymentMethod.PickupVia))); }
-    if (currentFilters.brands.length > 0) { productsToFilter = productsToFilter.filter(p => p.brand && currentFilters.brands.includes(p.brand)); }
-    if (currentFilters.vendorIds.length > 0) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => currentFilters.vendorIds.includes(price.vendorId))); } // Filter by ID
+    // Brands: Case-insensitive comparison recommended for robustness
+    if (currentFilters.brands.length > 0) {
+        const lowerCaseBrands = currentFilters.brands.map(b => b.toLowerCase());
+        productsToFilter = productsToFilter.filter(p => p.brand && lowerCaseBrands.includes(p.brand.toLowerCase()));
+    }
+    if (currentFilters.vendorIds.length > 0) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => currentFilters.vendorIds.includes(price.vendorId))); }
+    // Specs: Case-insensitive comparison for robustness
     if (Object.keys(currentFilters.specs).length > 0) {
         productsToFilter = productsToFilter.filter(p => Object.entries(currentFilters.specs).every(([key, values]) => {
             if (!values || values.length === 0) return true;
-            if (!p.specifications || p.specifications[key] === undefined) return false;
-            return values.includes(String(p.specifications[key]));
+            const productSpecKey = Object.keys(p.specifications || {}).find(pk => pk.toLowerCase() === key.toLowerCase()); // Find product's key case-insensitively
+            if (!productSpecKey || p.specifications[productSpecKey] === undefined) return false;
+            const productValueLower = String(p.specifications[productSpecKey]).toLowerCase();
+            const filterValuesLower = values.map(v => v.toLowerCase());
+            return filterValuesLower.includes(productValueLower);
         }));
     }
 
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
 
-  }, [activeFilters, categoryProducts, sortType, vendorIdMap]); // Add vendorIdMap dependency
+  }, [activeFilters, categoryProducts, sortType, vendorIdMap]);
 
   // Effect 3: Update activeFilters state when URL parameters change directly
   useEffect(() => {
-    // Parse domains from URL param back to IDs
     const storeDomains = searchParams.get('store')?.split(',').filter(Boolean) || [];
-    const vendorIdsFromUrl = storeDomains
-        .map(domain => vendorDomainMap.get(domain)?.id)
-        .filter((id): id is number => id !== undefined);
+    const vendorIdsFromUrl = storeDomains.map(domain => vendorDomainMap.get(domain.toLowerCase())?.id).filter((id): id is number => id !== undefined);
+
+    const brandsFromUrl = (searchParams.get('brand')?.split(',').filter(Boolean) || [])
+        .map(lb => findOriginalCaseKey(availableBrands, lb)).filter((b): b is string => b !== undefined);
+
+    const specsFromUrl = Array.from(searchParams.entries()).reduce((acc, [key, value]) => {
+        if (key.startsWith('spec_')) {
+            const lowerKey = key.substring(5);
+            const originalKey = findOriginalCaseKey(availableSpecs, lowerKey);
+            if (originalKey) {
+                const originalValues = value.split(',').filter(Boolean)
+                    .map(lv => findOriginalCaseValue(availableSpecs[originalKey], lv))
+                    .filter((v): v is string => v !== undefined);
+                if (originalValues.length > 0) acc[originalKey] = originalValues;
+            }
+        }
+        return acc;
+    }, {} as Record<string, string[]>);
+
 
     const filtersFromUrl: ActiveFiltersState = {
-        brands: searchParams.get('brand')?.split(',').filter(Boolean) || [],
-        specs: Array.from(searchParams.entries()).reduce((acc, [key, value]) => { if (key.startsWith('spec_')) { acc[key.substring(5)] = value.split(',').filter(Boolean); } return acc; }, {} as Record<string, string[]>),
-        vendorIds: vendorIdsFromUrl, // Use IDs parsed from domains
+        brands: brandsFromUrl,
+        specs: specsFromUrl,
+        vendorIds: vendorIdsFromUrl,
         deals: searchParams.get('deals') === '1',
         certified: searchParams.get('certified') === '1',
         nearby: searchParams.get('nearby') === '1',
@@ -315,11 +369,11 @@ const CategoryPage: React.FC = () => {
         instock: searchParams.get('instock') === '1',
       };
 
-      // Update state only if it differs from URL derived filters
+      // Update state only if derived state differs from current state
       if (JSON.stringify(filtersFromUrl) !== JSON.stringify(activeFilters)) {
           setActiveFilters(filtersFromUrl);
       }
-  }, [searchParams, activeFilters, vendorDomainMap]); // Add map dependency
+  }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]); // React to available options changing
 
 
   // --- Filter Event Handlers ---
@@ -468,11 +522,8 @@ const CategoryPage: React.FC = () => {
     };
 
     // --- Calculate if any filter is active ---
-    const { brands, specs, vendorIds, deals, certified, nearby, boxnow, instock } = activeFilters;
-    const isAnyFilterActive = brands.length > 0 ||
-                              Object.values(specs).some(v => v.length > 0) ||
-                              vendorIds.length > 0 ||
-                              deals || certified || nearby || boxnow || instock;
+    const { brands: activeBrandFilters, specs: activeSpecFilters, vendorIds: activeVendorIds, ...restActiveFilters } = activeFilters;
+    const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || Object.values(restActiveFilters).some(v => v === true);
     // --- End Calculation ---
 
     return (
@@ -633,20 +684,17 @@ const CategoryPage: React.FC = () => {
 
   // --- NEW: renderMerchantInformation ---
   const renderMerchantInformation = () => {
-    // This function relies on the 'selectedVendor' calculated above.
-    // Render only if a single vendor is selected.
-    if (!selectedVendor) {
+    // Calculate selectedVendor based on activeFilters (using ID)
+    const selectedVendor: Vendor | null = useMemo(() => {
+      if (activeFilters.vendorIds.length === 1) {
+        return vendorIdMap.get(activeFilters.vendorIds[0]) || null;
+      }
       return null;
-    }
+    }, [activeFilters.vendorIds, vendorIdMap]);
 
-    // Now we know 'selectedVendor' is a valid Vendor object.
+    if (!selectedVendor) { return null; }
     const vendor = selectedVendor;
-
-    // Helper to remove this specific vendor filter
-    const removeThisVendorFilter = (e: React.MouseEvent) => {
-        e.preventDefault();
-        handleVendorFilter(vendor); // Call the existing handler to toggle it off
-    };
+    const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
 
     return (
     // Note: Using a div wrapper here. Adjust if it needs to be outside root__wrapper
