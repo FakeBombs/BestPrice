@@ -475,10 +475,12 @@ const CategoryPage: React.FC = () => {
         {categoryProducts.length > 0 && currentCategory && (
           <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header" data-label={currentCategory.name}>
-              <div className="filters__header"><h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3></div>
-              {isAnyFilterActive && (
+              <div className="filters__header">
+                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
+                {isAnyFilterActive && (
                     <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link>
-              )}
+                )}
+              </div>
 
               {/* "Εμφάνιση μόνο" Section */}
               <div className="filter-limit default-list" data-filter-name="limit" data-key="limit">
