@@ -77,6 +77,59 @@ const CategoryPage: React.FC = () => {
     return <NotFound />;
   }
 
+  const updateCertifiedVendors = (results) => {
+        const vendorMap = new Map();
+        results.forEach(product => {
+            product.prices.forEach(price => {
+                const vendor = vendors.find(v => v.id === price.vendorId);
+                if (vendor && vendor.certification) {
+                    vendorMap.set(vendor.id, vendor);
+                }
+            });
+        });
+        const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
+            const levels = { Gold: 3, Silver: 2, Bronze: 1 };
+            return levels[b.certification] - levels[a.certification];
+        });
+        setCertifiedVendors(vendorArray);
+    };
+
+    const filterProducts = (brands, specs, inStockOnly, results, vendorIds) => {
+        let filtered = results;
+
+        if (inStockOnly) {
+            filtered = filtered.filter((product) => product.prices.some((price) => price.inStock));
+        }
+
+        if (brands.length > 0) {
+            filtered = filtered.filter((product) => brands.includes(product.brand));
+        }
+
+        if (vendorIds.length > 0) {
+            filtered = filtered.filter(product =>
+                (product.prices || []).some(price => {
+                    const vendor = vendors.find(v => v.id === price.vendorId);
+                    return vendor && vendorIds.includes(vendor.id); // Filter based on selected vendor IDs
+                })
+            );
+        }
+
+        if (Object.keys(specs).length > 0) {
+            filtered = filtered.filter((product) => {
+                return Object.entries(specs).every(([key, values]) => {
+                    return values.includes(product.specifications[key]);
+                });
+            });
+        }
+
+        filtered = sortProducts(filtered);
+        setFilteredProducts(filtered);
+        extractAvailableFilters(filtered);
+        extractCategories(filtered);
+        updateCertifiedVendors(filtered);
+    };
+
+
   const sortProducts = (productsList: any[]) => {
     // Added checks for potentially undefined a.prices or b.prices
     switch (sortType) {
