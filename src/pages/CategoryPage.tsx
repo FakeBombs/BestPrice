@@ -12,22 +12,18 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 
 const MAX_DISPLAY_COUNT = 10;
 
-// Helper to clean domain name
 const cleanDomainName = (url: string): string => {
   if (!url) return '';
   try {
     const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`);
-    // Remove 'www.' if it exists at the start of the hostname
     return parsedUrl.hostname.replace(/^www\./i, '');
   } catch (e) {
-    // Fallback for invalid URLs: remove common prefixes
     return url
       .replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
-      .split('/')[0]; // Get part before first slash
+      .split('/')[0];
   }
 };
 
-// Define the structure for active filters state accurately
 interface ActiveFiltersState {
   brands: string[];
   specs: Record<string, string[]>;
@@ -145,6 +141,16 @@ const CategoryPage: React.FC = () => {
   const [certifiedVendors, setCertifiedVendors] = useState<Vendor[]>([]);
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
+
+  // --- Calculate selectedVendor based on activeFilters ---
+  const selectedVendor: Vendor | null = useMemo(() => {
+    if (activeFilters.vendorIds.length === 1) {
+      // If exactly one vendor ID is selected, find the vendor object
+      return vendorIdMap.get(activeFilters.vendorIds[0]) || null;
+    }
+    return null; // Return null if zero or more than one vendor is selected
+  }, [activeFilters.vendorIds, vendorIdMap]);
+  // --- End calculation ---
 
   // --- Helper Data & Category Logic ---
   const allCategories = [...mainCategories, ...categories];
@@ -577,7 +583,7 @@ const CategoryPage: React.FC = () => {
                     <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                     <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                       <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                      <div class="alerts-minimal__label"></div>
+                      <div className="alerts-minimal__label"></div>
                     </div>
                   </div>
                 </div>
@@ -625,17 +631,66 @@ const CategoryPage: React.FC = () => {
     );
    };
 
+  // --- NEW: renderMerchantInformation ---
+  const renderMerchantInformation = () => {
+    // This function relies on the 'selectedVendor' calculated above.
+    // Render only if a single vendor is selected.
+    if (!selectedVendor) {
+      return null;
+    }
+
+    // Now we know 'selectedVendor' is a valid Vendor object.
+    const vendor = selectedVendor;
+
+    // Helper to remove this specific vendor filter
+    const removeThisVendorFilter = (e: React.MouseEvent) => {
+        e.preventDefault();
+        handleVendorFilter(vendor); // Call the existing handler to toggle it off
+    };
+
+    return (
+    // Note: Using a div wrapper here. Adjust if it needs to be outside root__wrapper
+    <div className="information information--center" data-type="merchant-brand">
+      <div className="root"> {/* Assuming this 'root' class is desired here */}
+        <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}>
+          <div className="merchant-logo">
+            {/* Use template literals correctly for dynamic paths */}
+            <Link to={`/m/${vendor.id}/${cleanDomainName(vendor.url)}`}>
+              <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} />
+            </Link>
+            {/* Ensure certification value matches SVG ID convention */}
+            <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg>
+            </div>
+          </div>
+          <div className="information__content">
+            <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${cleanDomainName(vendor.url)}`}>{vendor.name}</Link></strong></p>
+            {/* Link to remove this specific vendor filter */}
+            <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p>
+          </div>
+          {/* Close button also removes this specific filter */}
+          <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span>
+        </div>
+      </div>
+    );
+  };
+  // --- End renderMerchantInformation ---
+
   // --- Main Return ---
   return (
-    <div className="root__wrapper root-category__root">
-      <div className="root">
-        {renderBreadcrumbs()}
-        {renderMainCategories()}
-        {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
-        {isPriceAlertModalOpen && currentCategory && ( <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory.name} categoryId={currentCategory.id} /> )}
+    <>
+      {/* Render merchant info conditionally BEFORE the main wrapper */}
+      {renderMerchantInformation()}
+
+      <div className="root__wrapper root-category__root">
+        <div className="root">
+          {renderBreadcrumbs()}
+          {renderMainCategories()}
+          {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
+          {isPriceAlertModalOpen && currentCategory && ( <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory.name} categoryId={currentCategory.id} /> )}
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}; // End of CategoryPage Component
 
 export default CategoryPage;
