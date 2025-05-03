@@ -549,15 +549,18 @@ const CategoryPage: React.FC = () => {
                 <div className="filter-container">
                   <ol>
                     {/* Deals Filter */}
-                    <li data-filter="deals" className={`pressable ${activeFilters.deals ? 'selected' : ''}`} onClick={handleDealsToggle}>
-                        {/* Removed Link, using onClick handler */}
-                        <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
-                        <span>Προσφορές</span>
+                    <li data-filter="deals" className={`pressable ${activeFilters.deals ? 'selected' : ''}`}>
+                        <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?deals=1`} title="Προσφορές" data-c="38" rel="nofollow" onClick={handleDealsToggle}>
+                          <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
+                          <span>Προσφορές</span>
+                        </Link>
                     </li>
                      {/* Certified Filter */}
-                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`} onClick={handleCertifiedToggle}>
+                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`}>
+                      <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?certified=1`} title="Πιστοποιημένα καταστήματα" data-c="38" rel="nofollow" onClick={handleCertifiedToggle}>
                         <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
-                        <span>Πιστοποιημένα</span>
+                        <span>Πιστοποιημένα καταστήματα</span>
+                      </Link>
                     </li>
                     {/* Nearby Filter (Placeholder/Commented) */}
                     {/* <li id="filter-nearby" className={`nearby-location pressable ${activeFilters.nearby ? 'selected' : ''}`} onClick={handleNearbyToggle}> */}
@@ -623,8 +626,8 @@ const CategoryPage: React.FC = () => {
                         <div className="filter-container">
                             <ol aria-expanded={showMoreVendors}>
                             {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
-                                <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`} onClick={() => handleVendorFilter(vendor)}>
-                                  <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?store=${cleanDomainName(vendor.url)}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
+                                <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}>
+                                  <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?store=${cleanDomainName(vendor.url)}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} onClick={() => handleVendorFilter(vendor)}>
                                     <span>{vendor.name}</span>
                                   </Link>
                                 </li>
