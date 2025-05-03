@@ -14,12 +14,19 @@ const CategoryPage: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
+  const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [availableBrands, setAvailableBrands] = useState({});
+  const [availableSpecs, setAvailableSpecs] = useState({});
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
+  const [showMoreVendors, setShowMoreVendors] = useState(false);
+  const [certifiedVendors, setCertifiedVendors] = useState([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
 
-  // Combines main and subcategories for easier lookup
   const allCategories = [...mainCategories, ...categories];
 
   const findCategory = (identifier: string): Category | undefined => {
@@ -194,6 +201,8 @@ const CategoryPage: React.FC = () => {
   const handleResetFilters = () => {
     setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
   };
+
+  const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
 
   const renderAppliedFilters = () => {
         return (
@@ -429,19 +438,6 @@ const CategoryPage: React.FC = () => {
   const renderProducts = () => {
     const sortedProducts = sortProducts(filteredProducts);
     const showProductHeader = sortedProducts.length > 0;
-
-    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [availableBrands, setAvailableBrands] = useState({});
-    const [availableSpecs, setAvailableSpecs] = useState({});
-    const [availableCategories, setAvailableCategories] = useState([]);
-    const [showMoreCategories, setShowMoreCategories] = useState(false);
-    const [showMoreVendors, setShowMoreVendors] = useState(false);
-    const [certifiedVendors, setCertifiedVendors] = useState([]);
-    const [sortType, setSortType] = useState('rating-desc');
-    
-    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
 
     return (
         <div className="page-products">
