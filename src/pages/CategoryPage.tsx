@@ -303,7 +303,100 @@ const CategoryPage: React.FC = () => {
 
     return (
         <div className="page-products">
-        <aside className="page-products__filters"></aside>
+        <aside className="page-products__filters">
+          <div id="filters" role="complementary" aria-labelledby="filters-header">
+            <div className="filters__categories" data-filter-name="categories">
+              <div className="filters__header">
+                <div className="filters__header-title filters__header-title--filters">Κατηγορίες</div>
+              </div>
+              <ol aria-expanded={showMoreCategories}>
+                {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => {
+                  const mainCategory = mainCategories.find(cat => cat.id === item.parentId); // Find the main category
+                  const mainCatSlug = mainCategory ? mainCategory.slug : ''; // Get the main category slug
+                  return (
+                    <li key={item.id}><Link to={`/cat/${item.id}/${item.slug}`} className="filters__link"><span>{item.category} ({item.count})</span></Link></li>
+                  );
+                })}
+              </ol>
+              {availableCategories.length > MAX_DISPLAY_COUNT && (
+                  <div className="filters-more-prompt" onClick={() => setShowMoreCategories(prev => !prev)} title={showMoreCategories ? "Εμφάνιση λιγότερων κατηγοριών" : "Εμφάνιση όλων των κατηγοριών"}>
+                    <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                      <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                    </svg>
+                    {showMoreCategories ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                  </div>
+              )}
+            </div>
+
+            {Object.keys(availableBrands).length > 0 && (
+              <div className="filter-brand default-list" data-filter-name data-type data-key>
+                <div className="filter__header"><h4>Κατασκευαστής</h4></div>
+                <div className="filter-container">
+                  <ol>
+                    {Object.keys(availableBrands).map((brand) => (
+                      <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} ({availableBrands[brand]})</span></li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            )}
+
+            {Object.keys(availableSpecs).length > 0 && (
+              Object.keys(availableSpecs).map((specKey) => (
+                <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-type data-key={specKey.toLowerCase()}>
+                  <div className="filter__header"><h4>{specKey}</h4></div>
+                  <div className="filter-container">
+                    <ol>
+                      {Array.from(availableSpecs[specKey]).map((specValue) => (
+                        <li key={specValue} className={activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''} onClick={() => handleSpecFilter(specKey, specValue)}><span>{specValue}</span></li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              ))
+            )}
+
+            <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
+              <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
+              <div className="filter-container">
+                <ol>
+                  {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
+                    <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''} onClick={() => handleVendorFilter(vendor)}>
+                      <a href="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}><span>{vendor.name}</span></a>
+                    </li>
+                  ))}
+                </ol>
+                {certifiedVendors.length > MAX_DISPLAY_COUNT && (
+                    <div id="filter-store-prompt" className="filters-more-prompt" title="Εμφάνιση όλων των πιστοποιημένων καταστημάτων" onClick={() => setShowMoreVendors(prev => !prev)}>
+                      <svg aria-hidden="true" className="icon" width="100%" height="100%" viewBox="0 0 10 10" role="img">
+                        <path xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" d="M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"/>
+                      </svg>
+                      {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                    </div>
+                )}
+              </div>
+            </div>
+
+            <div className="filter-in-stock default-list">
+              <div className="filter__header"><h4>In Stock</h4></div>
+              <div className="filter-container">
+                <label>
+                  <input type="checkbox" checked={activeFilters.inStockOnly} onChange={() => { 
+                    const newInStockOnly = !activeFilters.inStockOnly; 
+                    setActiveFilters((prev) => ({ ...prev, inStockOnly: newInStockOnly })); 
+                    filterProducts( activeFilters.brands, activeFilters.specs, newInStockOnly, products, activeFilters.vendorIds ); 
+                  }} />
+                  Άμεσα διαθέσιμα
+                </label>
+              </div>
+            </div>
+
+            <button className="button button--outline" id="filters__scrollback">
+              <svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div>
+            </button>
+          </div>
+        </aside>
+          
         <main className="page-products__main">
             {showProductHeader && currentCategory && (
                 <header className="page-header">
