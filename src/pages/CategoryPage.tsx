@@ -553,7 +553,7 @@ const CategoryPage: React.FC = () => {
     const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
 
     return (
-    <div className="information information--center" data-type="merchant-brand">
+    <div className="root__wrapper information information--center" data-type="merchant-brand">
       <div className="root">
         <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}>
           <div className="merchant-logo">
