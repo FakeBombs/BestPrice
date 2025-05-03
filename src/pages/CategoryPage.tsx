@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast'; // Adjust path if needed
-import { useAuth } from '@/hooks/useAuth'; // Adjust path if needed
-import NotFound from '@/pages/NotFound'; // Adjust path if needed
-import {
-  categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand // Ensure all types/data are exported
-} from '@/data/mockData'; // Adjust path if needed
-import ProductCard from '@/components/ProductCard'; // Adjust path if needed
-import PriceAlertModal from '@/components/PriceAlertModal'; // Adjust path if needed
-import ScrollableSlider from '@/components/ScrollableSlider'; // Adjust path if needed
-import { useTranslation } from '@/hooks/useTranslation'; // Adjust path if needed
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes'; // Adjust path if needed
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import NotFound from '@/pages/NotFound';
+import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
+import PriceAlertModal from '@/components/PriceAlertModal';
+import ScrollableSlider from '@/components/ScrollableSlider';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const MAX_DISPLAY_COUNT = 10;
 
@@ -51,10 +49,10 @@ const CategoryPage: React.FC = () => {
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
-  let classNamesForHtml = 'page';
+  let classNamesForHtml = '';
   const checkAdBlockers = (): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } };
   const isAdBlocked = useMemo(checkAdBlockers, []);
-  if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; }
+  if (userAgent.includes('windows')) { classNamesForHtml += 'windows no-touch'; }
   else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; }
   else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; }
   else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; }
