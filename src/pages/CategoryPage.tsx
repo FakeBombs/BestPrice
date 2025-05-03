@@ -531,7 +531,22 @@ const CategoryPage: React.FC = () => {
                 ))
               ) : (
                 currentCategory && !currentCategory.isMain && categoryProducts.length > 0 ?
-                <p>Δεν βρέθηκαν προϊόντα που να ταιριάζουν με τα επιλεγμένα φίλτρα.</p> :
+                  <div id="no-results">
+                    <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
+                    <div id="no-results-suggestions">
+                      <p><strong>Προτάσεις:</strong></p>
+                      <ul>
+                        <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
+                        <li>Έλεγξε τον όρο αναζήτησης για τυχόν λάθη κατά την πληκτρολόγηση.</li>
+                        <li>Δοκίμασε να αφαιρέσεις κάποιο φίλτρο.</li>
+                        <li>Δοκίμασε να ψάξεις κάτι πιο γενικό.</li>
+                        <li>Χρησιμοποίησε λιγότερους όρους (λέξεις) για την αναζήτησή σου.</li>
+                        <li>Χρησιμοποίησε συνώνυμα ή παρόμοιους όρους με αυτούς που αναζήτησες.</li>
+                        <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
+                      </ul>
+                    </div>
+                  </div> 
+          :
                 currentCategory && !currentCategory.isMain && categoryProducts.length === 0 ?
                 <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p> : null
               )}
