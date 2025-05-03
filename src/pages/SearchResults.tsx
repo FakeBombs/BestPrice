@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast'; // Adjust path if needed
 import { useAuth } from '@/hooks/useAuth'; // Adjust path if needed
-// Assuming NotFound is not directly needed in Search Results unless search fails completely
+// Assuming NotFound is not directly needed
 // import NotFound from '@/pages/NotFound'; // Adjust path if needed
 import {
   categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts // Ensure searchProducts is exported
@@ -17,12 +17,8 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 const useDebounce = (value: string, delay: number): string => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
-        return () => {
-            clearTimeout(handler);
-        };
+        const handler = setTimeout(() => { setDebouncedValue(value); }, delay);
+        return () => { clearTimeout(handler); };
     }, [value, delay]);
     return debouncedValue;
 };
@@ -34,35 +30,26 @@ const MAX_DISPLAY_COUNT = 10;
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
   if (!url) return '';
-  try {
-    const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`);
-    return parsedUrl.hostname.replace(/^www\./i, '');
-  } catch (e) {
-    return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0];
-  }
+  try { const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`); return parsedUrl.hostname.replace(/^www\./i, ''); }
+  catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
 };
 
 // Define the structure for active filters state accurately
 interface ActiveFiltersState {
-  brands: string[]; // Store original casing
-  specs: Record<string, string[]>; // Store original casing for keys and values
-  vendorIds: number[]; // Store vendor IDs
+  brands: string[];
+  specs: Record<string, string[]>;
+  vendorIds: number[];
   deals: boolean;
   certified: boolean;
   nearby: boolean;
   boxnow: boolean;
   instock: boolean;
-  categoryIds?: number[]; // Optional: Track selected category IDs for search results
+  categoryIds?: number[];
 }
 
 // Define available category structure
 interface AvailableCategory {
-    id: number;
-    category: string;
-    slug: string;
-    count: number;
-    image: string | null;
-    parentId: number | null;
+    id: number; category: string; slug: string; count: number; image: string | null; parentId: number | null;
 }
 
 
@@ -96,11 +83,7 @@ const SearchResults: React.FC = () => {
 
   // --- Precompute Vendor Maps ---
   const vendorIdMap = useMemo(() => new Map(vendors.map(v => [v.id, v])), []);
-  const vendorDomainMap = useMemo(() => {
-      const map = new Map<string, Vendor>();
-      vendors.forEach(v => { const domain = cleanDomainName(v.url).toLowerCase(); if (domain) { map.set(domain, v); } });
-      return map;
-  }, []);
+  const vendorDomainMap = useMemo(() => { const map = new Map<string, Vendor>(); vendors.forEach(v => { const domain = cleanDomainName(v.url).toLowerCase(); if (domain) { map.set(domain, v); } }); return map; }, []);
 
   // --- State Definitions ---
   const [baseSearchResults, setBaseSearchResults] = useState<Product[]>([]);
@@ -116,6 +99,7 @@ const SearchResults: React.FC = () => {
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
+  // Use initial searchQuery directly, debounce only for triggering search effect
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // Derive initial filter state directly from URL params
@@ -134,7 +118,7 @@ const SearchResults: React.FC = () => {
 
   // --- URL Sync Function - Writes lowercase parameters (preserves 'q') ---
   const updateUrlParams = (filters: ActiveFiltersState) => {
-    const params = new URLSearchParams(searchParams); // **Start with existing params**
+    const params = new URLSearchParams(searchParams);
     ['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'cat'].forEach(p => params.delete(p));
     Array.from(params.keys()).forEach(key => { if (key.startsWith('spec_')) params.delete(key); });
     if (filters.brands.length > 0) params.set('brand', filters.brands.map(b => b.toLowerCase()).join(','));
@@ -149,36 +133,35 @@ const SearchResults: React.FC = () => {
     setSearchParams(params, { replace: true });
   };
 
-  // Effect 1: Fetch Search Results & Extract Filters when debounced query changes
+  // Effect 1: Fetch Search Results or Load All Products & Extract Filters
   useEffect(() => {
-    if (debouncedSearchQuery) {
-        const results = searchProducts(debouncedSearchQuery);
-        setBaseSearchResults(results);
-        extractAvailableFilters(results);
-        extractCategories(results);
-        updateCertifiedVendors(results);
-        // Let Effect 3 handle syncing activeFilters from URL
+    let results: Product[] = [];
+    // Use the non-debounced query for the "All Products" check immediately
+    if (searchQuery) {
+        console.log(`Searching for: ${searchQuery}`);
+        results = searchProducts(searchQuery);
     } else {
-        setBaseSearchResults([]);
-        setFilteredProducts([]);
-        setAvailableBrands({});
-        setAvailableSpecs({});
-        setAvailableCategories([]);
-        setCertifiedVendors([]);
+        console.log("No search query, loading all products.");
+        results = allMockProducts; // Load all products if query is empty
     }
-  }, [debouncedSearchQuery]);
+
+    setBaseSearchResults(results);
+    // Reset available filters based on new search results or all products
+    extractAvailableFilters(results);
+    extractCategories(results);
+    updateCertifiedVendors(results);
+    // Let Effect 3 sync activeFilters state from URL
+    // Let Effect 2 apply filters to the new baseSearchResults
+
+  // Trigger this effect when the *actual* search query from URL changes
+  }, [searchQuery]);
+
 
   // --- Filter Extraction Logic (Stores original case) ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
       const brandsCount: Record<string, number> = {};
       const specs: Record<string, Set<string>> = {};
-      sourceProducts.forEach((product) => {
-          if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; }
-          Object.keys(product.specifications || {}).forEach((specKey) => {
-              const specValue = product.specifications[specKey];
-              if (specValue != null) { const originalKey = specKey; const originalValue = String(specValue); if (!specs[originalKey]) { specs[originalKey] = new Set(); } specs[originalKey].add(originalValue); }
-          });
-      });
+      sourceProducts.forEach((product) => { if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; } Object.keys(product.specifications || {}).forEach((specKey) => { const specValue = product.specifications[specKey]; if (specValue != null) { const originalKey = specKey; const originalValue = String(specValue); if (!specs[originalKey]) { specs[originalKey] = new Set(); } specs[originalKey].add(originalValue); } }); });
       setAvailableBrands(brandsCount);
       setAvailableSpecs(specs);
   };
@@ -186,10 +169,7 @@ const SearchResults: React.FC = () => {
         const categoryCount: Record<number, number> = {};
         results.forEach((product) => { (product.categoryIds || []).forEach(categoryId => { categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1; }); });
         const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-        const categoriesArray: AvailableCategory[] = Object.entries(categoryCount)
-          .map(([idStr, count]) => { const id = parseInt(idStr, 10); const categoryData = allCatsMap.get(id); return categoryData ? { id: categoryData.id, category: categoryData.name, slug: categoryData.slug, count, image: categoryData.image, parentId: categoryData.parentId } : null; })
-          .filter((cat): cat is AvailableCategory => cat !== null)
-          .sort((a, b) => b.count - a.count);
+        const categoriesArray: AvailableCategory[] = Object.entries(categoryCount).map(([idStr, count]) => { const id = parseInt(idStr, 10); const categoryData = allCatsMap.get(id); return categoryData ? { id: categoryData.id, category: categoryData.name, slug: categoryData.slug, count, image: categoryData.image, parentId: categoryData.parentId } : null; }).filter((cat): cat is AvailableCategory => cat !== null).sort((a, b) => b.count - a.count);
         setAvailableCategories(categoriesArray);
     };
   const updateCertifiedVendors = (sourceProducts: Product[]) => {
@@ -213,7 +193,7 @@ const SearchResults: React.FC = () => {
 
   // --- Effect 2: Apply Filters and Sorting (Case-insensitive comparison) ---
   useEffect(() => {
-    let productsToFilter = [...baseSearchResults]; // Start with base results
+    let productsToFilter = [...baseSearchResults]; // Start with base results (either search or all)
     const currentFilters = activeFilters;
 
     if (currentFilters.categoryIds && currentFilters.categoryIds.length > 0) { productsToFilter = productsToFilter.filter(p => (p.categoryIds || []).some(catId => currentFilters.categoryIds?.includes(catId))); }
@@ -229,7 +209,7 @@ const SearchResults: React.FC = () => {
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
 
-  }, [activeFilters, baseSearchResults, sortType, vendorIdMap]); // Depend on base search results now
+  }, [activeFilters, baseSearchResults, sortType, vendorIdMap]);
 
   // Effect 3: Update activeFilters state when URL parameters change directly OR when available options change
   useEffect(() => {
@@ -238,13 +218,13 @@ const SearchResults: React.FC = () => {
       // Reconcile URL state with internal state (find original case)
       const reconciledBrands = filtersFromUrl.brands.map(lb => Object.keys(availableBrands).find(b => b.toLowerCase() === lb)).filter((b): b is string => b !== undefined);
       const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [lowerKey, lowerValues]) => { const originalKey = Object.keys(availableSpecs).find(ak => ak.toLowerCase() === lowerKey); if (originalKey) { const originalValues = lowerValues.map(lv => Array.from(availableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv)).filter((v): v is string => v !== undefined); if (originalValues.length > 0) { acc[originalKey] = originalValues; } } return acc; }, {} as Record<string, string[]>);
+      // Use category IDs directly from URL parsing as they are numbers
       const reconciledState: ActiveFiltersState = { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs, categoryIds: filtersFromUrl.categoryIds };
 
       if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
           setActiveFilters(reconciledState);
       }
-  // React to available options changing, which might affect reconciliation
-  }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]);
+  }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]); // React to available options changing
 
 
   // --- Filter Event Handlers (Update state with original casing) ---
@@ -278,7 +258,7 @@ const SearchResults: React.FC = () => {
         const { brands, specs, vendorIds, categoryIds, deals, certified, nearby, boxnow, instock } = activeFilters;
         const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || vendorIds.length > 0 || (categoryIds && categoryIds.length > 0) || deals || certified || nearby || boxnow || instock;
         if (!isAnyFilterActive) return null;
-        const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c])); // Map for category names
+        const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
 
         return (
             <div className="applied-filters">
@@ -302,8 +282,9 @@ const SearchResults: React.FC = () => {
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || (activeCategoryIds && activeCategoryIds.length > 0) || Object.values(restActiveFilters).some(v => v === true);
 
     return (
-      <div className="page-products"> {/* Re-use category page structure */}
+      <div className="page-products">
          {/* ASIDE FILTERS */}
+         {/* Show aside if there were initial search results OR if showing all products */}
          {baseSearchResults.length > 0 && (
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header">
@@ -355,7 +336,7 @@ const SearchResults: React.FC = () => {
                {Object.keys(availableSpecs).length > 0 && ( Object.entries(availableSpecs).map(([specKey, specValuesSet]) => { const specValuesArray = Array.from(specValuesSet).sort(); if (specValuesArray.length === 0) return null; return ( <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`}> <div className="filter__header"><h4>{specKey}</h4></div> <div className="filter-container"> <ol> {specValuesArray.map((specValue) => ( <li key={specValue} className={`pressable ${activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''}`} onClick={() => handleSpecFilter(specKey, specValue)}> <span>{specValue}</span> </li> ))} </ol> </div> </div> ) }) )}
 
               {/* Certified Vendors Filter */}
-              {certifiedVendors.length > 0 && ( <div className="filter-store filter-collapsed default-list"> <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div> <div className="filter-container"> <ol aria-expanded={showMoreVendors}> {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => ( <li key={vendor.id} title={`Το κατάστημα ${vendor.name} (${cleanDomainName(vendor.url)}) διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}> <Link to="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} onClick={(e) => handleLinkFilterClick(e, () => handleVendorFilter(vendor))}> <span>{vendor.name}</span> </Link> </li> ))} </ol> {certifiedVendors.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> )}
+              {certifiedVendors.length > 0 && ( <div className="filter-store filter-collapsed default-list"> <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div> <div className="filter-container"> <ol aria-expanded={showMoreVendors}> {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => ( <li key={vendor.id} title={`Το κατάστημα ${vendor.name} (${cleanDomainName(vendor.url)}) διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}> <Link to={`?store=${cleanDomainName(vendor.url).toLowerCase()}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} onClick={(e) => handleLinkFilterClick(e, () => handleVendorFilter(vendor))}> <span>{vendor.name}</span> </Link> </li> ))} </ol> {certifiedVendors.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> )}
 
             </div>
             </aside>
@@ -364,14 +345,16 @@ const SearchResults: React.FC = () => {
 
         <main className="page-products__main">
           {/* Header */}
-          {(searchQuery || filteredProducts.length > 0) && (
+          {/* Show header if query exists OR if showing all products */}
+          {(searchQuery || baseSearchResults.length > 0) && (
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
-                  <h1>{searchQuery ? `Αποτελέσματα για "${searchQuery}"` : 'Αποτελέσματα Αναζήτησης'}</h1>
+                  {/* Adapt title based on search query */}
+                  <h1>{searchQuery ? `Αποτελέσματα για "${searchQuery}"` : 'Όλα τα προϊόντα'}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                    {/* Optional: Alert button if relevant for search */}
+                    {/* Optional: Alert button */}
                   </div>
                 </div>
                  <div className="page-header__title-aside">
@@ -379,8 +362,28 @@ const SearchResults: React.FC = () => {
                  </div>
               </div>
               {renderAppliedFilters()}
-              {/* Optional: Category Slider */}
-              {/* {availableCategories.length > 0 && ( <section className="section"><ScrollableSlider>...</ScrollableSlider></section> )} */}
+              {/* Category Slider */}
+              {availableCategories.length > 0 && (
+                  <section className="section">
+                    <header className="section__header">
+                        <hgroup className="section__hgroup">
+                            <h2 className="section__title">Κατηγορίες</h2>
+                        </hgroup>
+                    </header>
+                    <ScrollableSlider>
+                        <div className="categories categories--scrollable scroll__content">
+                            {availableCategories.map((item) => (
+                                // Link to the actual category page
+                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}`} className="categories__category">
+                                    <img width="200" height="200" className="categories__image" src={item.image || '/dist/images/cat/placeholder.webp'} alt={`Κατηγορία: ${item.category}`} loading="lazy" />
+                                    <h2 className="categories__title">{item.category}</h2>
+                                    <div className="categories__cnt">{item.count} {item.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
+                                </Link>
+                            ))}
+                        </div>
+                    </ScrollableSlider>
+                  </section>
+              )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
                 <div className="page-header__sorting">
@@ -397,22 +400,24 @@ const SearchResults: React.FC = () => {
 
           {/* Product Grid / No Results Messages */}
           <div className="page-products__main-wrapper">
-            {!debouncedSearchQuery && <p>Εισάγετε όρο αναζήτησης για να δείτε αποτελέσματα.</p>}
-            {debouncedSearchQuery && baseSearchResults.length === 0 && <p>Δεν βρέθηκαν προϊόντα για τον όρο "{searchQuery}".</p>}
-            {debouncedSearchQuery && baseSearchResults.length > 0 && filteredProducts.length === 0 && (
+            {/* Handle different loading/no results states */}
+            {!searchQuery && baseSearchResults.length === 0 && <p>Φόρτωση όλων των προϊόντων...</p> /* Initial load state */}
+            {searchQuery && baseSearchResults.length === 0 && <p>Δεν βρέθηκαν προϊόντα για τον όρο "{searchQuery}".</p> /* No initial search results */}
+            {baseSearchResults.length > 0 && filteredProducts.length === 0 && ( /* Initial results existed, but filters cleared them */
                  <div id="no-results">
-                    <h3>Δεν βρέθηκαν προϊόντα για τον όρο "{searchQuery}" που να πληρούν τα επιλεγμένα φίλτρα.</h3>
+                    <h3>Δεν βρέθηκαν προϊόντα {searchQuery ? `για τον όρο "${searchQuery}"` : ''} που να πληρούν τα επιλεγμένα φίλτρα.</h3>
                     <div id="no-results-suggestions">
                          <p><strong>Προτάσεις:</strong></p>
                          <ul>
                              <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
-                             <li>Έλεγξε τον όρο αναζήτησης για τυχόν λάθη κατά την πληκτρολόγηση.</li>
-                             <li>Δοκίμασε έναν πιο γενικό όρο αναζήτησης.</li>
+                             {searchQuery && <li>Έλεγξε τον όρο αναζήτησης για τυχόν λάθη κατά την πληκτρολόγηση.</li>}
+                             {searchQuery && <li>Δοκίμασε έναν πιο γενικό όρο αναζήτησης.</li>}
                              <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
                          </ul>
                      </div>
                  </div>
             )}
+            {/* Render product cards if filtered results exist */}
             {filteredProducts.length > 0 && (
               <div className="p__products" data-pagination="">
                 {filteredProducts.map((product) => (
@@ -446,7 +451,7 @@ const SearchResults: React.FC = () => {
                <nav className="breadcrumb">
                    <ol>
                        <li><Link to="/" rel="home"><span>BestPrice</span></Link></li>
-                       <li><span className="trail__breadcrumb-separator">›</span><span className="trail__last">{searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Αναζήτηση'}</span></li>
+                       <li><span className="trail__breadcrumb-separator">›</span><span className="trail__last">{searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Όλα τα προϊόντα'}</span></li>
                    </ol>
                </nav>
            </div>
