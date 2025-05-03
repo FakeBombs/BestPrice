@@ -305,14 +305,14 @@ const CategoryPage: React.FC = () => {
         <div className="page-products">
         <aside className="page-products__filters"></aside>
         <main className="page-products__main">
-            {showProductHeader && (
+            {showProductHeader && currentCategory && (
                 <header className="page-header">
                     <div className="page-header__title-wrapper">
                       <div className="page-header__title-main">
-                        <h1>{category.name}</h1>
+                        <h1>{currentCategory.name}</h1>
                         <div className="page-header__count-wrapper">
                           <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
-                          <div data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" class="alerts-minimal" onClick={handlePriceAlert}>
+                          <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" class="alerts-minimal" onClick={handlePriceAlert}>
                             <svg aria-hidden="true" class="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                             <div class="alerts-minimal__label"></div>
                           </div>
@@ -343,7 +343,7 @@ const CategoryPage: React.FC = () => {
                     <ProductCard key={product.id} product={product} />
                 ))
                 ) : (
-                currentCategory && !currentCategory.isMain && <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
+                currentCategory && !currentCategory.isMain && childCategories.length === 0 && <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
                 )}
             </div>
             </div>
