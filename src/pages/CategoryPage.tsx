@@ -444,6 +444,44 @@ const CategoryPage: React.FC = () => {
             <div id="filters" role="complementary" aria-labelledby="filters-header" data-label={currentCategory.name}>
               <div class="filters__header"><h3 class="filters__header-title filters__header-title--filters">Φίλτρα</h3></div>
 
+              <div class="filter-limit default-list" data-filter-name="limit" data-filter-id="" data-type="" data-key="limit">
+                <div class="filter__header"><h4>Εμφάνιση μόνο</h4></div>
+                <div class="filter-container">
+                  <ol>
+                    <li data-filter="deals">
+                      <a title="Προσφορές" data-c="38" rel="nofollow" href="/cat/806/mobile-phones.html?deals=1">
+                        <svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
+                        <span>Προσφορές</span>
+                      </a>
+                    </li>
+                    <li data-filter="certified">
+                      <a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/cat/806/mobile-phones.html?certified=1">
+                        <svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
+                        <span>Πιστοποιημένα καταστήματα</span>
+                      </a>
+                    </li>
+                    <li id="filter-nearby" class="nearby-location is-set">
+                      <a title="Κοντά μου" rel="nofollow" href="/cat/806/mobile-phones.html?nearby=1">Κοντά μου (20 χλμ)</a>
+                      <div class="filter-nearby__options">Επιλογές</div>
+                    </li>
+                    <li data-filter="in-stock">
+                      <label className="pressable">
+                        <input type="checkbox" checked={activeFilters.inStockOnly} onChange={handleInStockToggle} />
+                         <span>Άμεσα διαθέσιμα</span>
+                      </label>
+                    </li>
+                    <li data-filter="boxnow">
+                      <a title="Παράδοση" rel="nofollow" href="/cat/806/mobile-phones.html?boxnow=1">
+                        <svg aria-hidden="true" class="icon" width="24" height="24"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg>
+                        <span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW">
+                          <svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg>
+                        </span><span>Παράδοση</span>
+                      </a>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+
               {/* Brand Filter */}
               {Object.keys(availableBrands).length > 0 && (
               <div className="filter-brand default-list" data-filter-name="brand" data-type="select" data-key="brand">
@@ -507,7 +545,6 @@ const CategoryPage: React.FC = () => {
 
               {/* In Stock Filter */}
               <div className="filter-in-stock default-list">
-                    {/* Removed header, using label only */}
                     <div className="filter-container">
                     <label className="pressable">
                         <input type="checkbox" checked={activeFilters.inStockOnly} onChange={handleInStockToggle} />
