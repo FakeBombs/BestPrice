@@ -323,7 +323,7 @@ const SearchResults: React.FC = () => {
                )}
 
               {/* "Εμφάνιση μόνο" Section */}
-              <div className="filter-limit default-list" data-filter-name="limit" data-key="limit">
+              <div className="filter-limit default-list" data-filter-name="limit" data-filter-id data-type data-key="limit">
                  <div className="filter__header"><h4>Εμφάνιση μόνο</h4></div>
                  <div className="filter-container"> <ol>
                     <li data-filter="deals" className={`pressable ${activeFilters.deals ? 'selected' : ''}`}><Link to="#" title="Προσφορές" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleDealsToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg><span>Προσφορές</span></Link></li>
@@ -336,7 +336,7 @@ const SearchResults: React.FC = () => {
 
               {/* Brand Filter with Show More */}
               {Object.keys(availableBrands).length > 0 && (
-                 <div className="filter-brand default-list">
+                 <div className="filter-brand default-list" data-filter-name="Κατασκευαστής" data-type="brand" data-key="brand">
                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                     <div className="filter-container">
                       <ol aria-expanded={showMoreBrands}>
@@ -362,7 +362,7 @@ const SearchResults: React.FC = () => {
                  const isExpanded = showMoreSpecs[specKey] || false;
                  if (specValuesArray.length === 0) return null;
                  return (
-                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`}>
+                    <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-key={specKey.toLowerCase()}>
                       <div className="filter__header"><h4>{specKey}</h4></div>
                       <div className="filter-container">
                         <ol aria-expanded={isExpanded}>
@@ -386,7 +386,7 @@ const SearchResults: React.FC = () => {
 
               {/* Certified Vendors Filter with Show More */}
               {certifiedVendors.length > 0 && (
-                <div className="filter-store filter-collapsed default-list">
+                <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                   <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                   <div className="filter-container">
                     <ol aria-expanded={showMoreVendors}>
