@@ -655,7 +655,7 @@ const CategoryPage: React.FC = () => {
         <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}>
           <div className="merchant-logo">
             {/* Use template literals correctly for dynamic paths */}
-            <Link to={`/m/${vendor.id}/${cleanDomainName(vendor.url)}`}>
+            <Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}>
               <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} />
             </Link>
             {/* Ensure certification value matches SVG ID convention */}
@@ -663,7 +663,7 @@ const CategoryPage: React.FC = () => {
             </div>
           </div>
           <div className="information__content">
-            <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${cleanDomainName(vendor.url)}`}>{vendor.name}</Link></strong></p>
+            <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}>{vendor.name}</Link></strong></p>
             {/* Link to remove this specific vendor filter */}
             <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p>
           </div>
