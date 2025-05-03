@@ -157,6 +157,7 @@ const SearchResults: React.FC = () => {
         extractAvailableFilters(results);
         extractCategories(results);
         updateCertifiedVendors(results);
+        // Let Effect 3 handle syncing activeFilters from URL
     } else {
         setBaseSearchResults([]);
         setFilteredProducts([]);
@@ -212,14 +213,10 @@ const SearchResults: React.FC = () => {
 
   // --- Effect 2: Apply Filters and Sorting (Case-insensitive comparison) ---
   useEffect(() => {
-    let productsToFilter = [...baseSearchResults]; // Start with base search results
+    let productsToFilter = [...baseSearchResults]; // Start with base results
     const currentFilters = activeFilters;
 
-    // Apply Category Filter First (if active)
-    if (currentFilters.categoryIds && currentFilters.categoryIds.length > 0) {
-        productsToFilter = productsToFilter.filter(p => (p.categoryIds || []).some(catId => currentFilters.categoryIds?.includes(catId)));
-    }
-    // Apply other filters...
+    if (currentFilters.categoryIds && currentFilters.categoryIds.length > 0) { productsToFilter = productsToFilter.filter(p => (p.categoryIds || []).some(catId => currentFilters.categoryIds?.includes(catId))); }
     if (currentFilters.instock) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.inStock)); }
     if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); /* Add real deals filtering logic here */ }
     if (currentFilters.certified) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.certification)); }
@@ -234,7 +231,7 @@ const SearchResults: React.FC = () => {
 
   }, [activeFilters, baseSearchResults, sortType, vendorIdMap]); // Depend on base search results now
 
-  // Effect 3: Update activeFilters state when URL parameters change directly
+  // Effect 3: Update activeFilters state when URL parameters change directly OR when available options change
   useEffect(() => {
       const filtersFromUrl = getFiltersFromUrl(); // Reads URL, gets lowercase/IDs
 
@@ -246,7 +243,8 @@ const SearchResults: React.FC = () => {
       if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
           setActiveFilters(reconciledState);
       }
-  }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]); // React to available options changing
+  // React to available options changing, which might affect reconciliation
+  }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]);
 
 
   // --- Filter Event Handlers (Update state with original casing) ---
@@ -304,7 +302,7 @@ const SearchResults: React.FC = () => {
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || (activeCategoryIds && activeCategoryIds.length > 0) || Object.values(restActiveFilters).some(v => v === true);
 
     return (
-      <div className="page-products">
+      <div className="page-products"> {/* Re-use category page structure */}
          {/* ASIDE FILTERS */}
          {baseSearchResults.length > 0 && (
             <aside className="page-products__filters">
@@ -314,7 +312,7 @@ const SearchResults: React.FC = () => {
                 {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
               </div>
 
-              {/* Categories Filter (Specific to Search) */}
+               {/* Categories Filter (Specific to Search) */}
                {availableCategories.length > 0 && (
                     <div className="filters__categories filter-categories default-list" data-filter-name="categories">
                       <div className="filter__header"><h4>Κατηγορίες</h4></div>
@@ -357,7 +355,7 @@ const SearchResults: React.FC = () => {
                {Object.keys(availableSpecs).length > 0 && ( Object.entries(availableSpecs).map(([specKey, specValuesSet]) => { const specValuesArray = Array.from(specValuesSet).sort(); if (specValuesArray.length === 0) return null; return ( <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`}> <div className="filter__header"><h4>{specKey}</h4></div> <div className="filter-container"> <ol> {specValuesArray.map((specValue) => ( <li key={specValue} className={`pressable ${activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''}`} onClick={() => handleSpecFilter(specKey, specValue)}> <span>{specValue}</span> </li> ))} </ol> </div> </div> ) }) )}
 
               {/* Certified Vendors Filter */}
-              {certifiedVendors.length > 0 && ( <div className="filter-store filter-collapsed default-list"> <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div> <div className="filter-container"> <ol aria-expanded={showMoreVendors}> {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => ( <li key={vendor.id} title={`... ${cleanDomainName(vendor.url)} ...`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}> <Link to="#" data-l={/*...*/} onClick={(e) => handleLinkFilterClick(e, () => handleVendorFilter(vendor))}> <span>{vendor.name}</span> </Link> </li> ))} </ol> {certifiedVendors.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}> <svg aria-hidden="true" className="icon" width={10} height={10}><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> )}
+              {certifiedVendors.length > 0 && ( <div className="filter-store filter-collapsed default-list"> <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div> <div className="filter-container"> <ol aria-expanded={showMoreVendors}> {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => ( <li key={vendor.id} title={`Το κατάστημα ${vendor.name} (${cleanDomainName(vendor.url)}) διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}> <Link to="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} onClick={(e) => handleLinkFilterClick(e, () => handleVendorFilter(vendor))}> <span>{vendor.name}</span> </Link> </li> ))} </ol> {certifiedVendors.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> )}
 
             </div>
             </aside>
@@ -381,7 +379,9 @@ const SearchResults: React.FC = () => {
                  </div>
               </div>
               {renderAppliedFilters()}
-              {/* Sorting Tabs - Show only if there are results to sort */}
+              {/* Optional: Category Slider */}
+              {/* {availableCategories.length > 0 && ( <section className="section"><ScrollableSlider>...</ScrollableSlider></section> )} */}
+              {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
                 <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
