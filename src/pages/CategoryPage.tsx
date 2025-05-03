@@ -524,33 +524,37 @@ const CategoryPage: React.FC = () => {
 
           {/* Product Grid */}
           <div className="page-products__main-wrapper">
-            <div className="p__products" data-pagination="">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product) => (
+            {filteredProducts.length > 0 && (
+              <div className="p__products" data-pagination="">
+                {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
-                ))
-              ) : (
-                currentCategory && !currentCategory.isMain && categoryProducts.length > 0 ?
-                  <div id="no-results">
-                    <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
-                    <div id="no-results-suggestions">
-                      <p><strong>Προτάσεις:</strong></p>
-                      <ul>
-                        <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
-                        <li>Έλεγξε τον όρο αναζήτησης για τυχόν λάθη κατά την πληκτρολόγηση.</li>
-                        <li>Δοκίμασε να αφαιρέσεις κάποιο φίλτρο.</li>
-                        <li>Δοκίμασε να ψάξεις κάτι πιο γενικό.</li>
-                        <li>Χρησιμοποίησε λιγότερους όρους (λέξεις) για την αναζήτησή σου.</li>
-                        <li>Χρησιμοποίησε συνώνυμα ή παρόμοιους όρους με αυτούς που αναζήτησες.</li>
-                        <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
-                      </ul>
-                    </div>
-                  </div> 
-          :
-                currentCategory && !currentCategory.isMain && categoryProducts.length === 0 ?
-                <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p> : null
-              )}
-            </div>
+                ))}
+              </div>
+            )}
+            
+            {filteredProducts.length === 0 && (
+              currentCategory && !currentCategory.isMain ? (
+                  categoryProducts.length > 0 ? (
+                      <div id="no-results">
+                          <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
+                          <div id="no-results-suggestions">
+                              <p><strong>Προτάσεις:</strong></p>
+                              <ul>
+                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={handleResetFilters}>όλα τα προϊόντα της κατηγορίας</Link>.</li> {/* Added reset on click */}
+                                  {/* <li>Έλεγξε τον όρο αναζήτησης για τυχόν λάθη κατά την πληκτρολόγηση.</li> // Less relevant here */}
+                                  <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
+                                  {/* <li>Δοκίμασε να ψάξεις κάτι πιο γενικό.</li> // Less relevant here */}
+                                  {/* <li>Χρησιμοποίησε λιγότερους όρους (λέξεις) για την αναζήτησή σου.</li> // Less relevant here */}
+                                  {/* <li>Χρησιμοποίησε συνώνυμα ή παρόμοιους όρους με αυτούς που αναζήτησες.</li> // Less relevant here */}
+                                  <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
+                              </ul>
+                          </div>
+                      </div>
+                  ) : (
+                      <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
+                  )
+              ) : null
+            )}
           </div>
         </main>
       </div>
