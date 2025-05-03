@@ -578,7 +578,7 @@ export const vendors: Vendor[] = [
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', 
     rating: 4.0, 
     certification: 'Gold',
-    url: 'https://example.com/vendor-b', 
+    url: 'https://www.kotsovolos.gr', 
     telephone: ['456123789'], 
     address: ['Location C'], 
     location: [{ lat: 37.9090, lng: 23.7105 }], // Random latitude and longitude
@@ -589,7 +589,7 @@ export const vendors: Vendor[] = [
     name: 'Funky Buddha', 
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', 
     rating: 4.3,
-    url: 'https://example.com/vendor-b', 
+    url: 'https://www.funky-buddha.com', 
     telephone: ['456123789'], 
     address: ['Location C'], 
     location: [{ lat: 37.9500, lng: 23.6000 }], // Random latitude and longitude
@@ -601,7 +601,7 @@ export const vendors: Vendor[] = [
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', 
     rating: 4.1, 
     certification: '',
-    url: 'https://example.com/vendor-b', 
+    url: 'https://www.germanos.gr', 
     telephone: ['456123789'], 
     address: ['Location C'], 
     location: [{ lat: 37.9700, lng: 23.7350 }], // Random latitude and longitude
@@ -613,7 +613,7 @@ export const vendors: Vendor[] = [
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', 
     rating: 3.2, 
     certification: 'Gold',
-    url: 'https://example.com/vendor-b', 
+    url: 'http://www.e-shop.gr', 
     telephone: ['456123789'], 
     address: ['Location C'], 
     location: [{ lat: 38.0100, lng: 23.6000 }], // Random latitude and longitude
@@ -625,7 +625,7 @@ export const vendors: Vendor[] = [
     logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', 
     rating: 4.7, 
     certification: 'Bronze',
-    url: 'https://example.com/vendor-b', 
+    url: 'https://www.hamogelo.gr', 
     telephone: ['456123789'], 
     address: ['Location C'], 
     location: [{ lat: 37.9200, lng: 23.5400 }], // Random latitude and longitude 
@@ -664,7 +664,7 @@ export const products: Product[] = [
     title: 'Apple iPhone 14 Pro Max 256GB',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    categoryIds: [99], // Now includes the smartphone subcategory
+    categoryIds: [99],
     description: 'The latest iPhone with stunning design and performance.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
