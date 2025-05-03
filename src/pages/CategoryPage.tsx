@@ -450,13 +450,13 @@ const CategoryPage: React.FC = () => {
                   <ol>
                     <li data-filter="deals">
                       <a title="Προσφορές" data-c="38" rel="nofollow" href="/cat/806/mobile-phones.html?deals=1">
-                        <svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
+                        <svg aria-hidden="true" class="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>
                         <span>Προσφορές</span>
                       </a>
                     </li>
                     <li data-filter="certified">
                       <a title="Πιστοποιημένα καταστήματα" rel="nofollow" href="/cat/806/mobile-phones.html?certified=1">
-                        <svg aria-hidden="true" class="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
+                        <svg aria-hidden="true" class="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg>
                         <span>Πιστοποιημένα καταστήματα</span>
                       </a>
                     </li>
@@ -472,9 +472,9 @@ const CategoryPage: React.FC = () => {
                     </li>
                     <li data-filter="boxnow">
                       <a title="Παράδοση" rel="nofollow" href="/cat/806/mobile-phones.html?boxnow=1">
-                        <svg aria-hidden="true" class="icon" width="24" height="24"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg>
+                        <svg aria-hidden="true" class="icon" width={24} height={24}><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg>
                         <span class="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOXNOW">
-                          <svg aria-hidden="true" class="icon help" width="16" height="16"><use xlink:href="/public/dist/images/icons/icons.svg#icon-info-16"></use></svg>
+                          <svg aria-hidden="true" class="icon help" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-info-16"></use></svg>
                         </span><span>Παράδοση</span>
                       </a>
                     </li>
