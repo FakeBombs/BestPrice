@@ -441,11 +441,12 @@ const CategoryPage: React.FC = () => {
          {/* --- ASIDE FILTERS --- */}
          {categoryProducts.length > 0 && currentCategory && (
             <aside className="page-products__filters">
-            <div id="filters" role="complementary" aria-labelledby="filters-header">
+            <div id="filters" role="complementary" aria-labelledby="filters-header" data-label={currentCategory.name}>
+              <div class="filters__header"><h3 class="filters__header-title filters__header-title--filters">Φίλτρα</h3></div>
 
-                {/* Brand Filter */}
-                {Object.keys(availableBrands).length > 0 && (
-                <div className="filter-brand default-list" data-filter-name="brand" data-type="select" data-key="brand">
+              {/* Brand Filter */}
+              {Object.keys(availableBrands).length > 0 && (
+              <div className="filter-brand default-list" data-filter-name="brand" data-type="select" data-key="brand">
                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                     <div className="filter-container">
                     <ol>
@@ -455,11 +456,11 @@ const CategoryPage: React.FC = () => {
                         ))}
                     </ol>
                     </div>
-                </div>
-                )}
+              </div>
+              )}
 
-                 {/* Specs Filters */}
-                {Object.keys(availableSpecs).length > 0 && (
+              {/* Specs Filters */}
+              {Object.keys(availableSpecs).length > 0 && (
                     Object.entries(availableSpecs).map(([specKey, specValuesSet]) => {
                         const specValuesArray = Array.from(specValuesSet).sort(); // Sort values
                         if (specValuesArray.length === 0) return null; // Skip empty spec sets
@@ -478,10 +479,10 @@ const CategoryPage: React.FC = () => {
                             </div>
                         )
                     })
-                )}
+              )}
 
-                 {/* Certified Vendors Filter */}
-                 {certifiedVendors.length > 0 && (
+              {/* Certified Vendors Filter */}
+              {certifiedVendors.length > 0 && (
                     <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
                         <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
                         <div className="filter-container">
@@ -502,10 +503,10 @@ const CategoryPage: React.FC = () => {
                             )}
                         </div>
                     </div>
-                 )}
+              )}
 
-                {/* In Stock Filter */}
-                <div className="filter-in-stock default-list">
+              {/* In Stock Filter */}
+              <div className="filter-in-stock default-list">
                     {/* Removed header, using label only */}
                     <div className="filter-container">
                     <label className="pressable">
@@ -513,10 +514,10 @@ const CategoryPage: React.FC = () => {
                          <span>Άμεσα διαθέσιμα</span>
                     </label>
                     </div>
-                </div>
+              </div>
 
-                {/* Scrollback button - consider its functionality */}
-                {/* <button className="button button--outline" id="filters__scrollback">
+              {/* Scrollback button - consider its functionality */}
+              {/* <button className="button button--outline" id="filters__scrollback">
                     <svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div>
                 </button> */}
             </div>
