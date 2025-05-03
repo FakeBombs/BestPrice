@@ -455,6 +455,20 @@ const CategoryPage: React.FC = () => {
   const renderProducts = () => {
     const showProductHeader = filteredProducts.length > 0 && currentCategory;
 
+    // Helper function for link onClick handlers
+    const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => {
+        event.preventDefault(); // Stop the Link from navigating
+        handler(); // Call the state update handler
+    };
+
+    // --- Calculate if any filter is active ---
+    const { brands, specs, vendorIds, deals, certified, nearby, boxnow, instock } = activeFilters;
+    const isAnyFilterActive = brands.length > 0 ||
+                              Object.values(specs).some(v => v.length > 0) ||
+                              vendorIds.length > 0 ||
+                              deals || certified || nearby || boxnow || instock;
+    // --- End Calculation ---
+
     return (
       <div className="page-products">
         {/* ASIDE FILTERS */}
