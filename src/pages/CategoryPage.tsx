@@ -624,7 +624,7 @@ const CategoryPage: React.FC = () => {
                             <ol aria-expanded={showMoreVendors}>
                             {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
                                 <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`} onClick={() => handleVendorFilter(vendor)}>
-                                  <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?store=${vendor.url}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
+                                  <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?store=${cleanDomainName(vendor.url)}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
                                     <span>{vendor.name}</span>
                                   </Link>
                                 </li>
