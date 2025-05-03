@@ -674,14 +674,14 @@ export const products: Product[] = [
     rating: 4.8,
     reviews: 245,
     specifications: {
-      'Display': '6.7 inch Super Retina XDR',
-      'Processor': 'A16 Bionic',
+      'Οθόνη': '6.7 inch Super Retina XDR',
+      'Επεξεργαστής': 'A16 Bionic',
       'RAM': '6GB',
-      'Storage': '256GB',
+      'Χωρητικότητα': '256GB',
       'Camera': '48MP + 12MP + 12MP',
       'OS': 'iOS 16',
-      'Battery': '4323 mAh',
-      'Dimensions': '160.7 x 77.6 x 7.85 mm',
+      'Μπαταρία': '4323 mAh',
+      'Διαστάσεις': '160.7 x 77.6 x 7.85 mm',
       'Weight': '240g'
     },
     prices: [
@@ -707,14 +707,14 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 189,
     specifications: {
-      'Display': '6.8 inch Dynamic AMOLED 2X',
-      'Processor': 'Snapdragon 8 Gen 2',
+      'Οθόνη': '6.8 inch Dynamic AMOLED 2X',
+      'Επεξεργαστής': 'Snapdragon 8 Gen 2',
       'RAM': '12GB',
-      'Storage': '512GB',
+      'Χωρητικότητα': '512GB',
       'Camera': '200MP + 12MP + 10MP + 10MP',
       'OS': 'Android 13',
-      'Battery': '5000 mAh',
-      'Dimensions': '163.4 x 78.1 x 8.9 mm',
+      'Μπαταρία': '5000 mAh',
+      'Διαστάσεις': '163.4 x 78.1 x 8.9 mm',
       'Weight': '233g'
     },
     prices: [
@@ -735,10 +735,10 @@ export const products: Product[] = [
     rating: 4.6,
     reviews: 200,
     specifications: {
-      'Processor': 'Apple M1 Pro',
+      'Επεξεργαστής': 'Apple M1 Pro',
       'RAM': '16GB',
-      'Storage': '512GB SSD',
-      'Dimensions': '3.5 x 13.5 x 9.8 inches',
+      'Χωρητικότητα': '512GB SSD',
+      'Διαστάσεις': '3.5 x 13.5 x 9.8 inches',
       'Weight': '4.7 pounds'
     },
     prices: [
@@ -759,7 +759,7 @@ export const products: Product[] = [
     reviews: 150,
     specifications: {
       'Resolution': '4K UHD',
-      'Screen Type': 'LED',
+      'Τύπος οθόνης': 'LED',
       'Smart TV': 'Yes',
       'Weight': '37.5 pounds'
     },
@@ -780,10 +780,10 @@ export const products: Product[] = [
     rating: 4.5,
     reviews: 180,
     specifications: {
-      'Processor': 'Intel i7',
+      'Επεξεργαστής': 'Intel i7',
       'RAM': '16GB',
-      'Storage': '1TB SSD',
-      'Dimensions': '0.58 x 11.6 x 7.8 inches',
+      'Χωρητικότητα': '1TB SSD',
+      'Διαστάσεις': '0.58 x 11.6 x 7.8 inches',
       'Weight': '2.7 pounds'
     },
     prices: [
@@ -803,7 +803,7 @@ export const products: Product[] = [
     rating: 4.4,
     reviews: 300,
     specifications: {
-      'Battery Life': '6+ days',
+      'Διάρκεια μπαταρίας': '6+ days',
       'Water Resistant': 'Yes',
       'Syncs to': 'Mobile App'
     },
@@ -845,7 +845,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 500,
     specifications: {
-      'Storage': '825GB SSD',
+      'Χωρητικότητα': '825GB SSD',
       'Resolution': 'Up to 120fps',
       'Includes': 'Controller and Cable'
     },
@@ -866,7 +866,7 @@ export const products: Product[] = [
     rating: 4.8,
     reviews: 275,
     specifications: {
-      'Battery Life': '20 hours',
+      'Διάρκεια μπαταρίας': '20 hours',
       'Features': 'Bluetooth, Voice Assistant'
     },
     prices: [
@@ -925,7 +925,7 @@ export const products: Product[] = [
     reviews: 60,
     specifications: {
       'Material': 'Wood',
-      'Dimensions': '40 x 20 x 15 inches'
+      'Διαστάσεις': '40 x 20 x 15 inches'
     },
     prices: [
       { vendorId: 1, price: 79.99, shippingCost: 0, inStock: true }
@@ -963,7 +963,7 @@ export const products: Product[] = [
     reviews: 120,
     specifications: {
       'Material': 'Polyester',
-      'Dimensions': '17.5 x 12.5 x 7 inches'
+      'Διαστάσεις': '17.5 x 12.5 x 7 inches'
     },
     prices: [
       { vendorId: 5, price: 59.99, shippingCost: 0, inStock: true }
@@ -1039,7 +1039,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 300,
     specifications: {
-      'Battery Life': '12 hours',
+      'Διάρκεια μπαταρίας': '12 hours',
       'Size': '10.1 inch'
     },
     prices: [
