@@ -307,25 +307,35 @@ const CategoryPage: React.FC = () => {
         <main className="page-products__main">
             {showProductHeader && (
                 <header className="page-header">
-                    {/* Optional: Featured offers slider */}
-                    {/* <div className="page-header__title-wrapper"> ... </div> */}
+                    <div className="page-header__title-wrapper">
+                      <div className="page-header__title-main">
+                        <h1>{category.name}</h1>
+                        <div className="page-header__count-wrapper">
+                          <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
+                          <div data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" class="alerts-minimal" onClick={handlePriceAlert}>
+                            <svg aria-hidden="true" class="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                            <div class="alerts-minimal__label"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="page-header__title-aside"></div>
+                    </div>
 
-                    {/* Sorting Tabs */}
                     <div className="page-header__sorting">
-                    <div className="tabs">
+                      <div className="tabs">
                         <div className="tabs-wrapper">
-                        <nav>
+                          <nav>
                             <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
                             <a href="#" data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('price-asc'); }}><div className="tabs__content">Φθηνότερα</div></a>
                             <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
                             <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('merchants_desc'); }}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
-                        </nav>
+                          </nav>
                         </div>
-                    </div>
+                      </div>
                     </div>
                 </header>
             )}
-            {/* Product Grid */}
+
             <div className="page-products__main-wrapper">
             <div className="p__products" data-pagination="">
                 {sortedProducts.length > 0 ? (
@@ -333,7 +343,6 @@ const CategoryPage: React.FC = () => {
                     <ProductCard key={product.id} product={product} />
                 ))
                 ) : (
-                // Check if we are in a category context before showing "no products"
                 currentCategory && !currentCategory.isMain && <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
                 )}
             </div>
@@ -343,19 +352,12 @@ const CategoryPage: React.FC = () => {
     );
    };
 
-  // Main component render structure
   return (
     <div className="root__wrapper root-category__root">
       <div className="root">
         {renderBreadcrumbs()}
-
-        {/* Render the main category view (shows its subcategories) IF currentCategory is a main one */}
         {renderMainCategories()}
-
-        {/* Render the subcategory view (shows its children or products) IF currentCategory is a subcategory */}
         {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
-
-        {/* Conditionally render the Price Alert Modal */}
         {isPriceAlertModalOpen && currentCategory && (
           <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} categoryName={currentCategory.name} categoryId={currentCategory.id} />
         )}
