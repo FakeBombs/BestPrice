@@ -10,7 +10,7 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
-const MAX_DISPLAY_COUNT = 10; // For filters
+const MAX_DISPLAY_COUNT = 10;
 
 const CategoryPage: React.FC = () => {
   const userAgent = navigator.userAgent.toLowerCase();
@@ -458,14 +458,14 @@ const CategoryPage: React.FC = () => {
                   <h2 className="applied-filters__filter" key={`vendor-${vendor.id}`}>
                       <a className="pressable" onClick={() => handleVendorFilter(vendor)} title={`Αφαίρεση φίλτρου ${vendor.name}`}>
                           <span className="applied-filters__label">{vendor.name}</span>
-                          <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                          <svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
                       </a>
                   </h2>
               ) : null;
             })}
             {/* Reset Button */}
             <button className="applied-filters__reset pressable" onClick={handleResetFilters} title="Επαναφορά όλων των φίλτρων">
-                <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
+                <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
                 <span>Καθαρισμός όλων</span>
             </button>
         </div>
@@ -567,9 +567,9 @@ const CategoryPage: React.FC = () => {
                             <ol aria-expanded={showMoreVendors}>
                             {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
                                 <li key={vendor.id} title={`Το κατάστημα ${vendor.name} διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`} onClick={() => handleVendorFilter(vendor)}>
-                                  <a href="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
+                                  <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}?store={vendor.url}`} data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}>
                                     <span>{vendor.name}</span>
-                                  </a>
+                                  </Link>
                                 </li>
                             ))}
                             </ol>
