@@ -27,6 +27,9 @@ const CategoryPage: React.FC = () => {
   const [certifiedVendors, setCertifiedVendors] = useState([]);
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
   const [sortType, setSortType] = useState('rating-desc');
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const debouncedSearchQuery = useDebounce(searchQuery, 300); // Using debounce
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
 
   const allCategories = [...mainCategories, ...categories];
@@ -85,6 +88,62 @@ const CategoryPage: React.FC = () => {
   ) {
     return <NotFound />;
   }
+
+  useEffect(() => {
+        const results = searchProducts(debouncedSearchQuery);
+        setProducts(results);
+        setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] }); // Reset vendorIds in filters
+        extractAvailableFilters(results);
+        extractCategories(results);
+        updateCertifiedVendors(results);
+        const sortedResults = sortProducts(results);
+        setFilteredProducts(sortedResults);
+  }, [debouncedSearchQuery]);
+
+  useEffect(() => {
+        filterProducts(activeFilters.brands, activeFilters.specs, activeFilters.inStockOnly, products, activeFilters.vendorIds);
+  }, [activeFilters, products]);
+
+  const extractAvailableFilters = (results) => {
+        const brandsCount = {};
+        const specs = {};
+        results.forEach((product) => {
+            if (product.brand) {
+                brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
+            }
+            Object.keys(product.specifications || {}).forEach((specKey) => {
+                if (!specs[specKey]) {
+                    specs[specKey] = new Set();
+                }
+                specs[specKey].add(product.specifications[specKey]);
+            });
+        });
+        setAvailableBrands(brandsCount);
+        setAvailableSpecs(specs);
+  };
+
+  const extractCategories = (results) => {
+        const categoryCount = {};
+        results.forEach((product) => {
+            (product.categoryIds || []).forEach(categoryId => {
+                categoryCount[categoryId] = (categoryCount[categoryId] || 0) + 1;
+            });
+        });
+
+        const categoriesArray = Object.entries(categoryCount).map(([id, count]) => {
+            const categoryData = categories.find(cat => cat.id === parseInt(id));
+            return {
+                id: categoryData ? categoryData.id : '',
+                category: categoryData ? categoryData.name : '',
+                slug: categoryData ? categoryData.slug : '',
+                count,
+                image: categoryData ? categoryData.image : '',
+                parentId: categoryData ? categoryData.parentId : null,
+            };
+        }).filter(cat => cat.id && cat.parentId);
+
+        setAvailableCategories(categoriesArray);
+  };
 
   const updateCertifiedVendors = (results) => {
         const vendorMap = new Map();
