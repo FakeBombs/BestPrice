@@ -534,6 +534,7 @@ const CategoryPage: React.FC = () => {
                           <div className="page-header__count">{filteredProducts.length} προϊόντα</div>
                           <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                             <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                            <div class="alerts-minimal__label"></div>
                           </div>
                         </div>
                       </div>
