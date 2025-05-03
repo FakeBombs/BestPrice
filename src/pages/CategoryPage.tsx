@@ -543,16 +543,6 @@ const CategoryPage: React.FC = () => {
                     </div>
               )}
 
-              {/* In Stock Filter */}
-              <div className="filter-in-stock default-list">
-                    <div className="filter-container">
-                    <label className="pressable">
-                        <input type="checkbox" checked={activeFilters.inStockOnly} onChange={handleInStockToggle} />
-                         <span>Άμεσα διαθέσιμα</span>
-                    </label>
-                    </div>
-              </div>
-
               {/* Scrollback button - consider its functionality */}
               {/* <button className="button button--outline" id="filters__scrollback">
                     <svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg><div>Φίλτρα</div>
