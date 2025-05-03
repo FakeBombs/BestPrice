@@ -160,6 +160,82 @@ const CategoryPage: React.FC = () => {
         });
     }
   };
+  
+  const handleBrandFilter = (brand) => {
+        const newBrands = activeFilters.brands.includes(brand)
+            ? activeFilters.brands.filter((b) => b !== brand)
+            : [...activeFilters.brands, brand];
+
+        setActiveFilters((prev) => ({ ...prev, brands: newBrands }));
+  };
+
+  const handleSpecFilter = (specKey, specValue) => {
+        const currentSpecs = { ...activeFilters.specs };
+        const specValues = currentSpecs[specKey] || [];
+
+        if (specValues.includes(specValue)) {
+            currentSpecs[specKey] = specValues.filter((v) => v !== specValue);
+            if (currentSpecs[specKey].length === 0) delete currentSpecs[specKey];
+        } else {
+            currentSpecs[specKey] = [...specValues, specValue];
+        }
+
+        setActiveFilters((prev) => ({ ...prev, specs: currentSpecs }));
+  };
+
+  const handleVendorFilter = (vendor) => {
+        const newVendorIds = activeFilters.vendorIds.includes(vendor.id)
+            ? activeFilters.vendorIds.filter(id => id !== vendor.id) // Remove vendor if already selected
+            : [...activeFilters.vendorIds, vendor.id]; // Add vendor if not selected
+
+        setActiveFilters((prev) => ({ ...prev, vendorIds: newVendorIds }));
+  };
+
+  const handleResetFilters = () => {
+    setActiveFilters({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
+  };
+
+  const renderAppliedFilters = () => {
+        return (
+            (activeFilters.brands.length > 0 || Object.keys(activeFilters.specs).some(specKey => activeFilters.specs[specKey].length > 0) || activeFilters.vendorIds.length > 0) && (
+                <div className="applied-filters">
+                    {activeFilters.brands.map((brand) => (
+                        <h2 className="applied-filters__filter" key={brand}>
+                            <a data-scrollto="" data-filter-key="brand" data-value-id={brand} className="pressable" onClick={() => handleBrandFilter(brand)}>
+                                <span className="applied-filters__label">{brand}</span>
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" aria-label={`Remove filter of ${brand}`}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                            </a>
+                        </h2>
+                    ))}
+                    {Object.entries(activeFilters.specs).map(([specKey, specValues]) =>
+                      specValues.map((specValue) => (
+                        <h2 className="applied-filters__filter" key={`${specKey}-${specValue}`}>
+                            <a data-scrollto="" data-filter-key="spec" data-value-id={`${specKey}-${specValue}`} className="pressable" onClick={() => handleSpecFilter(specKey, specValue)}>
+                                <span className="applied-filters__label">{`${specKey}: ${specValue}`}</span>
+                                <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" aria-label={`Remove ${specKey}-${specValue} filter`}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                            </a>
+                        </h2>
+                      ))
+                    )}
+                    {activeFilters.vendorIds.map((vendorId) => {
+                      const vendor = certifiedVendors.find(v => v.id === vendorId);
+                      return vendor ? (
+                          <h2 className="applied-filters__filter" key={vendor.id}>
+                              <a data-scroll-to="" data-filter-key={vendor.name} datavalue-id={vendor.name} className="pressable" onClick={() => handleVendorFilter(vendor)}>
+                                  <span className="applied-filters__label">{vendor.name}</span>
+                                  <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" aria-label={`Remove filter of ${vendor.name}`}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                              </a>
+                          </h2>
+                      ) : null;
+                    })}
+                    <button onClick={handleResetFilters}>
+                        <svg aria-hidden="true" className="icon applied-filters__x" width="12" height="12" role="img" aria-label="Reset all filters"><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
+                        Reset Filters
+                    </button>
+                </div>
+            )
+        );
+    };
 
   const handlePriceAlert = () => {
     if (!user) {
