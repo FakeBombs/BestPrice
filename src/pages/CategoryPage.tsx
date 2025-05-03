@@ -3,51 +3,101 @@ import { useLocation, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-// Import the full product list, vendors, brands etc.
 import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 const MAX_DISPLAY_COUNT = 10; // For filters
 
 const CategoryPage: React.FC = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const [jsEnabled, setJsEnabled] = useState(false);
+  
+  let classNamesForBody = '';
+  let classNamesForHtml = '';
+
+  // Check for ad blockers
+  const checkAdBlockers = () => {
+    const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
+    return adElementsToCheck.some(selector => {
+      const adElement = document.createElement('div');
+      adElement.className = selector.slice(1);
+      document.body.appendChild(adElement);
+      const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
+      document.body.removeChild(adElement);
+      return isBlocked;
+    });
+  };
+
+  const isAdBlocked = checkAdBlockers();
+
+  // Determine device type
+  if (userAgent.includes('windows')) {
+      classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
+  } else if (userAgent.includes('mobile')) {
+      classNamesForHtml = 'is-mobile';
+      classNamesForBody = 'mobile';
+  } else if (userAgent.includes('tablet')) {
+      classNamesForHtml = 'is-tablet';
+      classNamesForBody = 'tablet';
+  } else {
+      classNamesForHtml = 'unknown-device';
+  }
+
+  // Handle ad blockers
+  classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
+
+  // Set JavaScript enabled state
+  useEffect(() => {
+    const handleLoad = () => {
+      setJsEnabled(true);
+    };
+
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
+
+  // Add JS enabled/disabled class
+  classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
+
+  // Set attributes
+  const newIdForBody = ''; // Keeping body ID empty
+  const newIdForHtml = 'page-cat';
+
+  useHtmlAttributes(classNamesForHtml, newIdForHtml);
+  useBodyAttributes(classNamesForBody, newIdForBody);
+  
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(Boolean);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
-  // State for the current category context
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
 
-  // State for products related to the current category
-  const [categoryProducts, setCategoryProducts] = useState<Product[]>([]); // Raw products for the category
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Products after applying filters & sort
+  const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-  // State for filtering UI and logic
   const [activeFilters, setActiveFilters] = useState<{
     brands: string[];
-    specs: Record<string, string[]>; // Changed from {} to be more specific
+    specs: Record<string, string[]>;
     inStockOnly: boolean;
     vendorIds: number[]; // Changed from []
   }>({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
-  const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({}); // Changed type
-  const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({}); // Changed type
+  const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
+  const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   // const [availableCategories, setAvailableCategories] = useState([]); // Removed - not needed here
   // const [showMoreCategories, setShowMoreCategories] = useState(false); // Removed
   const [showMoreVendors, setShowMoreVendors] = useState(false);
-  const [certifiedVendors, setCertifiedVendors] = useState<typeof vendors>([]); // Use Vendor type if available
+  const [certifiedVendors, setCertifiedVendors] = useState<typeof vendors>([]);
 
-  // State for sorting
   const [sortType, setSortType] = useState('rating-desc');
-
-  // State for modal
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
-
-  // --- Helper Data ---
   const allCategories = [...mainCategories, ...categories];
 
-  // --- Category Logic ---
   const findCategory = (identifier: string): Category | undefined => {
     return allCategories.find(
       (cat) => cat.id.toString() === identifier || cat.slug === identifier
@@ -69,47 +119,38 @@ const CategoryPage: React.FC = () => {
 
 
     if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
-      // Not a category path, load default main category (no products/filters needed)
       if (defaultCategoryId !== null) {
         const defaultCat = mainCategories.find(cat => cat.id === defaultCategoryId);
         setCurrentCategory(defaultCat);
       }
-      return; // Exit early
+      return;
     }
 
-    // It IS a category path /cat/...
     const segments = pathSegments.slice(1);
     const lastSegment = segments[segments.length - 1];
     let matchedCategory = findCategory(lastSegment);
 
     if (matchedCategory) {
-      setCurrentCategory(matchedCategory); // Set the identified category
+      setCurrentCategory(matchedCategory);
 
-      // If it's a subcategory (potential product page)
       if (matchedCategory.parentId !== null || !matchedCategory.isMain) {
-          // Find products belonging to this category from the master list
           const productsForCategory = allMockProducts.filter(p =>
             p.categoryIds?.includes(matchedCategory.id)
           );
-          setCategoryProducts(productsForCategory); // Store the raw list
-          setFilteredProducts(productsForCategory); // Initialize filtered list
+          setCategoryProducts(productsForCategory);
+          setFilteredProducts(productsForCategory);
 
-          // Extract available filters based on these initial products
           extractAvailableFilters(productsForCategory);
-          // extractCategories(productsForCategory); // No need for category filter here
           updateCertifiedVendors(productsForCategory);
       }
-      // If it's a main category, products/filters remain empty (handled by initial reset)
 
     } else {
-      // No match, load default main category (if available)
       if (defaultCategoryId !== null) {
         const defaultCat = mainCategories.find(cat => cat.id === defaultCategoryId);
         setCurrentCategory(defaultCat);
       }
-      // No products/filters needed for default main category
     }
-  }, [location.pathname, defaultCategoryId]); // Rerun when URL changes
+  }, [location.pathname, defaultCategoryId]);
 
   // --- Filter Extraction Logic ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
@@ -121,11 +162,11 @@ const CategoryPage: React.FC = () => {
             }
             Object.keys(product.specifications || {}).forEach((specKey) => {
                 const specValue = product.specifications[specKey];
-                if (specValue != null) { // Check for null/undefined spec values
+                if (specValue != null) {
                     if (!specs[specKey]) {
                         specs[specKey] = new Set();
                     }
-                    specs[specKey].add(String(specValue)); // Ensure value is a string if needed
+                    specs[specKey].add(String(specValue));
                 }
             });
         });
@@ -134,7 +175,7 @@ const CategoryPage: React.FC = () => {
   };
 
   const updateCertifiedVendors = (sourceProducts: Product[]) => {
-        const vendorMap = new Map<number, typeof vendors[0]>(); // Use Vendor type if available
+        const vendorMap = new Map<number, typeof vendors[0]>();
         sourceProducts.forEach(product => {
             (product.prices || []).forEach(price => {
                 const vendor = vendors.find(v => v.id === price.vendorId);
@@ -151,9 +192,8 @@ const CategoryPage: React.FC = () => {
         setCertifiedVendors(vendorArray);
     };
 
-  // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
-    const sorted = [...productsList]; // Create a copy to sort
+    const sorted = [...productsList];
     switch (sortType) {
       case 'price-asc':
         sorted.sort((a, b) => {
@@ -190,7 +230,7 @@ const CategoryPage: React.FC = () => {
 
   // --- Effect 2: Apply Filters and Sorting ---
   useEffect(() => {
-    let productsToFilter = [...categoryProducts]; // Start with the raw category products
+    let productsToFilter = [...categoryProducts];
 
     // Apply "In Stock Only" filter
     if (activeFilters.inStockOnly) {
@@ -378,7 +418,7 @@ const CategoryPage: React.FC = () => {
                               activeFilters.vendorIds.length > 0 ||
                               activeFilters.inStockOnly;
 
-    if (!isAnyFilterActive) return null; // Render nothing if no filters are active
+    if (!isAnyFilterActive) return null;
 
     return (
         <div className="applied-filters">
@@ -490,7 +530,7 @@ const CategoryPage: React.FC = () => {
                     <ol>
                         {/* Sort brands alphabetically for display */}
                         {Object.keys(availableBrands).sort().map((brand) => (
-                          <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><a>{brand} ({availableBrands[brand]})</a></li>
+                          <li key={brand} className={activeFilters.brands.includes(brand) ? 'selected' : ''} onClick={() => handleBrandFilter(brand)}><span>{brand} ({availableBrands[brand]})</span></li>
                         ))}
                     </ol>
                     </div>
