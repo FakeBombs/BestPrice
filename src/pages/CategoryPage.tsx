@@ -301,6 +301,19 @@ const CategoryPage: React.FC = () => {
     const sortedProducts = sortProducts(filteredProducts);
     const showProductHeader = sortedProducts.length > 0;
 
+    const [activeFilters, setActiveFilters] = useState({ brands: [], specs: {}, inStockOnly: false, vendorIds: [] });
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [availableBrands, setAvailableBrands] = useState({});
+    const [availableSpecs, setAvailableSpecs] = useState({});
+    const [availableCategories, setAvailableCategories] = useState([]);
+    const [showMoreCategories, setShowMoreCategories] = useState(false);
+    const [showMoreVendors, setShowMoreVendors] = useState(false);
+    const [certifiedVendors, setCertifiedVendors] = useState([]);
+    const [sortType, setSortType] = useState('rating-desc');
+    
+    const displayedBrand = activeFilters.brands.length === 1 ? brands.find((brand) => brand.name === activeFilters.brands[0]) : null;
+
     return (
         <div className="page-products">
         <aside className="page-products__filters">
