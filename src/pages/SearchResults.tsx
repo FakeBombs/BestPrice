@@ -170,48 +170,15 @@ const SearchResults: React.FC = () => {
       setCertifiedVendors(vendorArray);
   };
 
-    // --- Sorting Logic ---
+  // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
-    console.log(`Sorting ${productsList.length} products with sortType: ${sortType}`); // Log entry
     const sorted = [...productsList];
     switch (sortType) {
-      case 'price-asc':
-        sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity));
-        break;
-      case 'price-desc':
-        sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0));
-        break;
-      case 'rating-desc':
-      default:
-        // console.log('Applying rating-desc sort...'); // Keep console logs if needed
-        sorted.sort((a, b) => {
-            // Use the correct property names: rating and reviews
-            const ratingA = a.rating || 0;
-            const ratingB = b.rating || 0;
-            const reviewsA = a.reviews || 0;
-            const reviewsB = b.reviews || 0;
-
-            // --- Optional Debug Logging ---
-            // console.log(`Comparing A (ID ${a.id}, Rating ${ratingA}, Rev ${reviewsA}) vs B (ID ${b.id}, Rating ${ratingB}, Rev ${reviewsB})`);
-            // --- End Debug Logging ---
-
-            // Primary Sort: Descending Rating
-            // No epsilon needed here if rating is stored directly as a number
-            if (ratingB !== ratingA) {
-                // console.log(`  -> Sorting by Rating (${ratingB - ratingA})`);
-                return ratingB - ratingA; // Sort by rating descending
-            } else {
-                // Secondary Sort (Tie-breaker): Descending Number of Reviews
-                // console.log(`  -> Rating Equal: Sorting by Reviews (${reviewsB - reviewsA})`);
-                return reviewsB - reviewsA; // Sort by reviews descending
-            }
-        });
-        break;
-      case 'merchants_desc':
-        sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length);
-        break;
+      case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity)); break;
+      case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0)); break;
+      case 'rating-desc': default: sorted.sort((a, b) => { const ratingA = a.rating || 0; const ratingB = b.rating || 0; const reviewsA = a.reviews || 0; const reviewsB = b.reviews || 0; return (ratingB - ratingA) || (reviewsB - reviewsA); }); break;
+      case 'merchants_desc': sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length); break;
     }
-    console.log('Sort result (first 5 IDs):', sorted.slice(0, 5).map(p => p.id)); // Log result sample
     return sorted;
   };
 
