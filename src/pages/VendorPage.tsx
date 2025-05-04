@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
-import {
-    vendors, Category, Product, Vendor, Brand, PaymentMethod,
-    searchProducts, // Assuming this can filter by vendor later, or replace with getProductsByVendor
-    brands as allBrands,
-    products as allMockProducts,
-    mainCategories,
-    categories
-} from '@/data/mockData'; // Adjust path if needed
+import { vendors, Category, Product, Vendor, Brand, PaymentMethod, searchProducts, brands as allBrands, products as allMockProducts, mainCategories, categories, OpeningHours } from '@/data/mockData';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import PaymentMethodsComponent from '@/components/PaymentMethods';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
@@ -56,6 +49,46 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     useHtmlAttributes(classNamesForHtml, 'page-merchant'); // Use page-merchant ID
     useBodyAttributes(classNamesForBody, '');
     // --- End Document Attributes ---
+
+    // --- Helper Function to Determine Current Opening Status ---
+    const getOpeningStatus = (openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
+        if (!openingHours || openingHours.length === 0) {
+            return { text: "Δεν υπάρχουν πληροφορίες ωραρίου", isOpen: false }; // No info available
+        }
+
+        const now = new Date();
+        // Adjust day names if needed (e.g., Greek) or use getDay() (0=Sun, 1=Mon...)
+        const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' }) as OpeningHours['dayOfWeek'];
+        const currentTime = now.getHours() * 100 + now.getMinutes(); // e.g., 1430 for 14:30
+
+        const todayHours = openingHours.find(h => h.dayOfWeek === currentDayName);
+
+        if (!todayHours) {
+            // Find next opening day (simplified example, doesn't handle holidays well)
+            // This could be complex, maybe just show "Closed today"
+            return { text: "Κλειστό σήμερα", isOpen: false };
+        }
+
+        const opensTime = parseInt(todayHours.opens.replace(':', ''), 10);
+        const closesTime = parseInt(todayHours.closes.replace(':', ''), 10);
+
+        if (currentTime >= opensTime && currentTime < closesTime) {
+            // Currently Open
+            return { text: `Ανοιχτό μέχρι τις ${todayHours.closes}`, isOpen: true };
+        } else if (currentTime < opensTime) {
+            // Opens later today
+            return { text: `Κλειστό - Ανοίγει στις ${todayHours.opens}`, isOpen: false };
+        } else {
+            // Closed for the day
+            // Optionally find next day's opening time for a more informative message
+             return { text: "Κλειστό για σήμερα", isOpen: false };
+        }
+    };
+    // --- End Helper Function ---
+
+    // --- Calculate openingStatus using the helper ---
+    const openingStatus = useMemo(() => getOpeningStatus(vendor?.openingHours), [vendor?.openingHours]);
+    // --- End calculation ---
 
     const { vendorId, vendorName } = useParams<{ vendorId?: string, vendorName?: string }>();
     const [selectedVendor, setSelectedVendor] = useState<Vendor | null | undefined>(undefined); // undefined means not checked yet
