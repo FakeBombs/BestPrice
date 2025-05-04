@@ -183,29 +183,27 @@ const SearchResults: React.FC = () => {
         break;
       case 'rating-desc':
       default:
-        console.log('Applying rating-desc sort...'); // Confirm case execution
+        // console.log('Applying rating-desc sort...'); // Keep console logs if needed
         sorted.sort((a, b) => {
-            // Calculate average ratings
-            const avgA = (a.ratingSum || 0) / Math.max(a.numReviews || 1, 1);
-            const avgB = (b.ratingSum || 0) / Math.max(b.numReviews || 1, 1);
-            const numReviewsA = a.numReviews || 0;
-            const numReviewsB = b.numReviews || 0;
-            const epsilon = 0.00001; // Tolerance
+            // Use the correct property names: rating and reviews
+            const ratingA = a.rating || 0;
+            const ratingB = b.rating || 0;
+            const reviewsA = a.reviews || 0;
+            const reviewsB = b.reviews || 0;
 
-            // --- Start Debug Logging ---
-            console.log(`Comparing A (ID ${a.id}, Sum ${a.ratingSum}, Rev ${a.numReviews}, Avg ${avgA.toFixed(3)}) vs B (ID ${b.id}, Sum ${b.ratingSum}, Rev ${b.numReviews}, Avg ${avgB.toFixed(3)})`);
+            // --- Optional Debug Logging ---
+            // console.log(`Comparing A (ID ${a.id}, Rating ${ratingA}, Rev ${reviewsA}) vs B (ID ${b.id}, Rating ${ratingB}, Rev ${reviewsB})`);
             // --- End Debug Logging ---
 
-            // Primary Sort: Descending Average Rating (with tolerance)
-            if (Math.abs(avgB - avgA) > epsilon) {
-                const result = avgB - avgA;
-                // console.log(`  -> Rating Diff > Epsilon: Sorting by Rating (${result.toFixed(3)})`); // Optional more detail
-                return result;
+            // Primary Sort: Descending Rating
+            // No epsilon needed here if rating is stored directly as a number
+            if (ratingB !== ratingA) {
+                // console.log(`  -> Sorting by Rating (${ratingB - ratingA})`);
+                return ratingB - ratingA; // Sort by rating descending
             } else {
                 // Secondary Sort (Tie-breaker): Descending Number of Reviews
-                const result = numReviewsB - numReviewsA;
-                // console.log(`  -> Rating ~ Equal: Sorting by Reviews (${result})`); // Optional more detail
-                return result;
+                // console.log(`  -> Rating Equal: Sorting by Reviews (${reviewsB - reviewsA})`);
+                return reviewsB - reviewsA; // Sort by reviews descending
             }
         });
         break;
