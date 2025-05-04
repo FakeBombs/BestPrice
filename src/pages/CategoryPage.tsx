@@ -2,18 +2,15 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import NotFound from '@/pages/NotFound'; // Keep NotFound for category not found case
+import NotFound from '@/pages/NotFound';
 import {
   categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand
-} from '@/data/mockData'; // Removed searchProducts import
+} from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
-
-// --- Debounce Hook (Optional - not used currently but can be added back for search inputs if needed) ---
-// const useDebounce = ...
 
 const MAX_DISPLAY_COUNT = 10;
 const DEFAULT_SORT_TYPE = 'rating-desc';
@@ -37,19 +34,19 @@ interface ActiveFiltersState {
   instock: boolean;
 }
 
-// Define available category structure (though not used for filtering here)
+// Define available category structure (not used for filtering here)
 interface AvailableCategory {
     id: number; category: string; slug: string; count: number; image: string | null; parentId: number | null;
 }
 
-// Known non-spec URL parameters for THIS page (might differ from search)
+// Known non-spec URL parameters for THIS page
 const RESERVED_PARAMS_CAT = new Set(['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort']);
 
 
 const CategoryPage: React.FC = () => {
   // --- Hooks & Initial Setup ---
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams(); // For filter/sort params
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -70,7 +67,7 @@ const CategoryPage: React.FC = () => {
   classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   useEffect(() => { setJsEnabled(true); }, []);
   classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
-  useHtmlAttributes(classNamesForHtml, 'page-cat'); // Keep page-cat ID
+  useHtmlAttributes(classNamesForHtml, 'page-cat');
   useBodyAttributes(classNamesForBody, '');
   // --- End Document Attributes ---
 
@@ -80,31 +77,27 @@ const CategoryPage: React.FC = () => {
 
   // --- State Definitions ---
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(undefined);
-  const [baseCategoryProducts, setBaseCategoryProducts] = useState<Product[]>([]); // Raw products for THIS category
+  const [baseCategoryProducts, setBaseCategoryProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [certifiedVendors, setCertifiedVendors] = useState<Vendor[]>([]);
-  const [sliderProducts, setSliderProducts] = useState<Product[]>([]); // **NEW: For Product Slider**
+  const [sliderProducts, setSliderProducts] = useState<Product[]>([]);
   const [showMoreBrands, setShowMoreBrands] = useState(false);
   const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({});
   const [showMoreVendors, setShowMoreVendors] = useState(false);
   const [sortType, setSortType] = useState<string>(() => searchParams.get('sort') || DEFAULT_SORT_TYPE);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
-  const [priceAlertContext, setPriceAlertContext] = useState<{ categoryId: number; categoryName: string; filters: ActiveFiltersState } | null>(null); // Context for Category Alert
+  const [priceAlertContext, setPriceAlertContext] = useState<{ categoryId: number; categoryName: string; filters: ActiveFiltersState } | null>(null);
 
-  // --- Sticky Tabs State/Refs ---
-  const [isTabsSticky, setIsTabsSticky] = useState(false);
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const tabsPlaceholderRef = useRef<HTMLDivElement>(null);
-  const stickyOffsetRef = useRef<number>(0);
+  // ** REMOVED sticky state and refs **
 
   // Helper for case-insensitive key find
   const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => { const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map); return mapKeys.find(k => k.toLowerCase() === lowerCaseKey); };
   // Helper for case-insensitive value find
   const findOriginalCaseValue = (set: Set<string> | undefined, lowerCaseValue: string): string | undefined => { if (!set) return undefined; return Array.from(set).find(v => v.toLowerCase() === lowerCaseValue); };
 
-  // Derive initial filter state from URL params
+  // Reads URL params directly (lowercase/IDs)
   const getFiltersFromUrl = (): ActiveFiltersState => {
         const params = searchParams;
         const storeDomains = params.get('store')?.toLowerCase().split(',').filter(Boolean) || [];
@@ -124,7 +117,7 @@ const CategoryPage: React.FC = () => {
 
   // --- URL Sync Function - Writes lowercase parameters ---
   const updateUrlParams = (filters: ActiveFiltersState, currentSortType: string) => {
-    const params = new URLSearchParams(); // Start fresh for category page, don't preserve 'q'
+    const params = new URLSearchParams(); // Start fresh for category page
     ['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort'].forEach(p => params.delete(p));
     Array.from(params.keys()).forEach(key => { if (!RESERVED_PARAMS_CAT.has(key.toLowerCase())) params.delete(key); });
     if (filters.brands.length > 0) params.set('brand', filters.brands.map(b => b.toLowerCase()).join(','));
@@ -151,7 +144,6 @@ const CategoryPage: React.FC = () => {
 
     const pathSegments = location.pathname.split('/').filter(Boolean);
     if (pathSegments.length < 2 || pathSegments[0] !== 'cat') {
-        // Not a category path, maybe show default main category or redirect
         if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); }
         return;
     }
@@ -161,25 +153,36 @@ const CategoryPage: React.FC = () => {
 
     if (matchedCategory) {
       setCurrentCategory(matchedCategory);
-      // Load products only if it's NOT a main category (or if it's a leaf main category - adjust if needed)
-      if (matchedCategory.parentId !== null || !matchedCategory.isMain) { // Basic check, might need refinement for leaf main categories
+      if (matchedCategory.parentId !== null || !matchedCategory.isMain) {
           const productsForCategory = allMockProducts.filter(p => p.categoryIds?.includes(matchedCategory.id));
           setBaseCategoryProducts(productsForCategory);
-          extractAvailableFilters(productsForCategory); // Extract filters based on *all* products in category
+          extractAvailableFilters(productsForCategory);
           updateCertifiedVendors(productsForCategory);
           // Let Effect 3 sync activeFilters from URL
       }
     } else {
-        // Category not found, could redirect or show NotFound later
-        // If default is needed:
+        // Category not found - Could set state to show NotFound component
+        // For now, it might show empty page or default if logic exists
         // if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); }
     }
-  }, [location.pathname, defaultCategoryId]); // Rerun only when path changes
+  }, [location.pathname, defaultCategoryId]);
 
   // --- Filter Extraction Logic ---
-  const extractAvailableFilters = (sourceProducts: Product[]) => { /* ... same as SearchResults ... */ };
-  const updateCertifiedVendors = (sourceProducts: Product[]) => { /* ... same as SearchResults ... */ };
-  // extractCategories removed as not needed for filters/slider on category page
+  const extractAvailableFilters = (sourceProducts: Product[]) => {
+      const brandsCount: Record<string, number> = {};
+      const specs: Record<string, Set<string>> = {};
+      sourceProducts.forEach((product) => { if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; } Object.keys(product.specifications || {}).forEach((specKey) => { const specValue = product.specifications[specKey]; if (specValue != null) { const originalKey = specKey; const originalValue = String(specValue); if (!specs[originalKey]) { specs[originalKey] = new Set(); } specs[originalKey].add(originalValue); } }); });
+      setAvailableBrands(brandsCount);
+      setAvailableSpecs(specs);
+      setShowMoreSpecs(Object.keys(specs).reduce((acc, key) => { acc[key] = false; return acc; }, {} as Record<string, boolean>));
+  };
+  const updateCertifiedVendors = (sourceProducts: Product[]) => {
+      const vendorMap = new Map<number, Vendor>();
+      sourceProducts.forEach(product => { (product.prices || []).forEach(price => { const vendor = vendorIdMap.get(price.vendorId); if (vendor && vendor.certification) { vendorMap.set(vendor.id, vendor); } }); });
+      const vendorArray = Array.from(vendorMap.values()).sort((a, b) => { const levels: Record<string, number> = { Gold: 3, Silver: 2, Bronze: 1 }; return (levels[b.certification] || 0) - (levels[a.certification] || 0); });
+      setCertifiedVendors(vendorArray);
+  };
+  // Removed extractCategories
 
   // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
@@ -201,10 +204,8 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
     let productsToFilter = [...baseCategoryProducts]; // Start with base category products
     const currentFilters = activeFilters;
-
-    // Apply filters... (same logic as SearchResults)
     if (currentFilters.instock) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.inStock)); }
-    if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); productsToFilter = productsToFilter.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)); } // Example deal logic
+    if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); productsToFilter = productsToFilter.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)); }
     if (currentFilters.certified) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.certification)); }
     if (currentFilters.nearby) { console.warn("Nearby Filter Placeholder"); }
     if (currentFilters.boxnow) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.paymentMethods?.includes(PaymentMethod.PickupVia))); }
@@ -215,22 +216,15 @@ const CategoryPage: React.FC = () => {
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
 
-    // ** NEW: Update Slider Products **
-    // Show deals first, then featured from the *original* category products
+    // Update Slider Products based on deals/featured from BASE category products
     let sliderData = baseCategoryProducts.filter(p => p.prices.some(pr => pr.discountPrice && pr.discountPrice < pr.price)).slice(0, 10);
-    if (sliderData.length === 0) {
-        sliderData = baseCategoryProducts.filter(p => p.isFeatured).slice(0, 10);
-    }
-    // If still no data, maybe show top-rated or just leave empty
-     if (sliderData.length === 0 && baseCategoryProducts.length > 0) {
-         sliderData = [...baseCategoryProducts].sort((a,b) => (b.rating || 0) - (a.rating || 0)).slice(0,10);
-     }
+    if (sliderData.length === 0) { sliderData = baseCategoryProducts.filter(p => p.isFeatured).slice(0, 10); }
+    if (sliderData.length === 0 && baseCategoryProducts.length > 0) { sliderData = [...baseCategoryProducts].sort((a,b) => (b.rating || 0) - (a.rating || 0)).slice(0,10); }
     setSliderProducts(sliderData);
-
 
   }, [activeFilters, baseCategoryProducts, sortType, vendorIdMap]); // Trigger on filters, base data, or sort change
 
-  // --- Helper Function to Reconcile URL Filters with Available Options ---
+ // --- Helper Function to Reconcile URL Filters with Available Options ---
  const reconcileFilters = (
       filtersFromUrl: ActiveFiltersState, // Contains lowercase/IDs from URL
       currentAvailableBrands: Record<string, number>, // Original case
@@ -258,23 +252,6 @@ const CategoryPage: React.FC = () => {
       }
   }, [searchParams, availableBrands, availableSpecs, baseCategoryProducts]); // React to URL and available options
 
-  // --- JS Sticky Tabs Effect ---
-  useEffect(() => {
-    const tabsElement = tabsRef.current;
-    const placeholderElement = tabsPlaceholderRef.current;
-    if (!tabsElement || !placeholderElement) return;
-    let timeoutId: NodeJS.Timeout | null = null;
-    let resizeTimeoutId: NodeJS.Timeout | null = null;
-    const calculateOffset = () => { if (tabsElement.offsetParent !== null && tabsElement.offsetHeight > 0) { stickyOffsetRef.current = tabsElement.getBoundingClientRect().top + window.scrollY; } else { if (timeoutId) clearTimeout(timeoutId); timeoutId = setTimeout(calculateOffset, 50); } };
-    const handleResize = () => { if (resizeTimeoutId) clearTimeout(resizeTimeoutId); resizeTimeoutId = setTimeout(calculateOffset, 150); };
-    let frameId: number | null = null;
-    const handleScroll = () => { if (frameId !== null) return; frameId = window.requestAnimationFrame(() => { const currentOffset = stickyOffsetRef.current; if (currentOffset > 0) { const shouldBeSticky = window.scrollY >= currentOffset; setIsTabsSticky(prevSticky => { if (shouldBeSticky !== prevSticky) { placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px'; return shouldBeSticky; } return prevSticky; }); } frameId = null; }); };
-    const initialCalcTimeout = setTimeout(calculateOffset, 150);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
-    return () => { if (timeoutId) clearTimeout(timeoutId); if (resizeTimeoutId) clearTimeout(resizeTimeoutId); clearTimeout(initialCalcTimeout); window.removeEventListener('scroll', handleScroll); window.removeEventListener('resize', handleResize); if (frameId !== null) { window.cancelAnimationFrame(frameId); } if (placeholderElement) { placeholderElement.style.height = '0px'; } setIsTabsSticky(false); };
-  }, [baseCategoryProducts.length > 0]); // Rerun setup if base products presence changes
-
 
   // --- Filter Event Handlers ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
@@ -295,9 +272,18 @@ const CategoryPage: React.FC = () => {
       updateUrlParams(activeFilters, newSortType);
   };
 
-  // --- Scroll To Top Effect ---
+  // --- Scroll To Top Effect on Filter/Sort Change ---
   const isInitialSyncDone = useRef(false);
-  useEffect(() => { const timer = setTimeout(() => { if (isInitialSyncDone.current) { window.scrollTo({ top: 0, behavior: 'smooth' }); } else { isInitialSyncDone.current = true; } }, 50); return () => clearTimeout(timer); }, [activeFilters, sortType]);
+  useEffect(() => {
+      const timer = setTimeout(() => {
+          if (isInitialSyncDone.current) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+                isInitialSyncDone.current = true;
+          }
+      }, 100); // Delay slightly to ensure state updates are processed
+      return () => clearTimeout(timer);
+  }, [activeFilters, sortType]);
 
 
   // --- Misc Helper/UI Logic ---
@@ -315,8 +301,9 @@ const CategoryPage: React.FC = () => {
         let category: Category | undefined = currentCategory;
         while (category && category.parentId !== null) { const parent = allCategories.find((cat) => cat.id === category?.parentId); if (parent) { ancestors.unshift(parent); category = parent; } else { category = undefined; } }
         ancestors.forEach((cat) => { trailItems.push(<li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>); });
+         // Add current category itself if it's not the main one being displayed
+        trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>);
     } else if (currentCategory && (currentCategory.isMain || currentCategory.parentId === null)) {
-        // If it's a main category page, just show its name (not linked)
          trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>);
     }
     return ( <div id="trail"> <nav className="breadcrumb"><ol>{trailItems.reduce((acc, item, index) => (<React.Fragment key={index}>{acc}{trailItems.length > 1 && index > 0 && <span className="trail__breadcrumb-separator">›</span>}{item}</React.Fragment>), null)}</ol></nav> </div> );
@@ -326,6 +313,7 @@ const CategoryPage: React.FC = () => {
     if (!currentCategory || currentCategory.parentId !== null || !currentCategory.isMain) { return null; }
     const mainCat = currentCategory;
     const subcategories = categories.filter(cat => cat.parentId === mainCat.id);
+    // Show header only if there are subcategories
     return (
       <>
         {subcategories.length > 0 && (<div className="page-header"><div className="hgroup"><div className="page-header__title-wrapper"><h1>{mainCat.name}</h1></div></div></div>)}
@@ -346,8 +334,10 @@ const CategoryPage: React.FC = () => {
     const parentCategory = allCategories.find(cat => cat.id === category.parentId);
     return (
       <>
+        {/* Render header only if there are child categories */}
         {childCategories.length > 0 && (<div className="page-header"><div className="hgroup"><div className="page-header__title-wrapper">{parentCategory && (<Link className="trail__back pressable" title={`Επιστροφή σε ${parentCategory.name}`} to={`/cat/${parentCategory.id}/${parentCategory.slug}`}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg></Link>)}<h1>{category.name}</h1></div></div></div>)}
-        {childCategories.length > 0 ? (<div className="root-category__categories">{childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}</div>) : (renderProducts())}
+        {/* Decide whether to show child categories or products */}
+        {childCategories.length > 0 ? (<div className="root-category__categories">{childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}</div>) : (renderProducts())} {/* Render products if no children */}
         <div className="sections"></div>
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div></div>
@@ -379,7 +369,7 @@ const CategoryPage: React.FC = () => {
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header" data-label={currentCategory.name}>
               <div className="filters__header">
-                <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
+                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
                 {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
               </div>
 
@@ -388,7 +378,7 @@ const CategoryPage: React.FC = () => {
                  <div className="filter__header"><h4>Εμφάνιση μόνο</h4></div>
                  <div className="filter-container"> <ol>
                     <li data-filter="deals" className={`pressable ${activeFilters.deals ? 'selected' : ''}`}><Link to="#" title="Προσφορές" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleDealsToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg><span>Προσφορές</span></Link></li>
-                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`}><Link to="#" title="Πιστοποιημένα καταστήματα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleCertifiedToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></Link></li>
+                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`}><Link to="#" title="Πιστοποιημένα καταστήματα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleCertifiedToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα</span></Link></li>
                     <li data-filter="in-stock" className={`pressable ${activeFilters.instock ? 'selected' : ''}`}><Link to="#" title="Άμεσα διαθέσιμα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleInstockToggle)}><span>Άμεσα διαθέσιμα</span></Link></li>
                     <li data-filter="boxnow" className={`pressable ${activeFilters.boxnow ? 'selected' : ''}`}><Link to="#" title="Παράδοση με BoxNow" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleBoxnowToggle)}><svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span className="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOX NOW"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></Link></li>
                  </ol> </div>
@@ -420,50 +410,47 @@ const CategoryPage: React.FC = () => {
 
         <main className="page-products__main">
           {/* Header */}
-          {showProductHeader && currentCategory && (
+          {/* Show header only if products *were* initially loaded OR after filtering */}
+          {(baseCategoryProducts.length > 0 || filteredProducts.length > 0) && currentCategory && (
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
                   <h1>{currentCategory.name}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                    <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
-                      <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                      <div className="alerts-minimal__label"></div>
-                    </div>
+                    {/* Price alert trigger - Show if filters active or base products exist */}
+                    {(isAnyFilterActive || baseCategoryProducts.length > 0) && filteredProducts.length > 0 && (
+                        <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                          <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                          <div className="alerts-minimal__label"></div>
+                        </div>
+                    )}
                   </div>
                 </div>
                 <div className="page-header__title-aside">
-                  {displayedBrand && displayedBrand.logo && (
-                    <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand">
-                      <img alt={`${displayedBrand.name} logo`} height="70" loading="lazy" src={displayedBrand.logo} />
-                    </Link>
-                  )}
+                  {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={`${displayedBrand.name} logo`} height="70" loading="lazy"/></Link> )}
                 </div>
               </div>
               {renderAppliedFilters()}
-              {/* ** Product Slider Section ** */}
+              {/* Product Slider Section */}
               {sliderProducts.length > 0 && (
                   <section className="section">
                     <header className="section__header">
                         <hgroup className="section__hgroup">
-                            {/* Title changes based on content */}
                             <h2 className="section__title">{activeFilters.deals ? 'Προσφορές στην Κατηγορία' : 'Δημοφιλή στην Κατηγορία'}</h2>
                         </hgroup>
                     </header>
                     <ScrollableSlider>
-                        {/* Map over sliderProducts */}
-                        {sliderProducts.map(prod => (
-                            <ProductCard key={`slider-${prod.id}`} product={prod} />
-                        ))}
+                        {sliderProducts.map(prod => ( <ProductCard key={`slider-${prod.id}`} product={prod} /> ))}
                     </ScrollableSlider>
                   </section>
               )}
-              {/* ** End Product Slider Section ** */}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
                 <>
+                  {/* Placeholder Div */}
                   <div ref={tabsPlaceholderRef} style={{ height: '0px', transition: 'height 0.2s ease-out' }}></div>
+                  {/* Sorting Tabs Container with Ref and Conditional Class */}
                   <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
                     <div className="tabs"><div className="tabs-wrapper"><nav>
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
@@ -485,27 +472,23 @@ const CategoryPage: React.FC = () => {
           <div className="page-products__main-wrapper">
             {filteredProducts.length > 0 ? (
               <div className="p__products" data-pagination="">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
+                {filteredProducts.map((product) => ( <ProductCard key={product.id} product={product} /> ))}
               </div>
             ) : (
               currentCategory && !currentCategory.isMain ? (
-                  baseCategoryProducts.length > 0 ? ( // Changed from categoryProducts
+                  baseCategoryProducts.length > 0 ? (
                       <div id="no-results">
                           <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
                           <div id="no-results-suggestions">
                               <p><strong>Προτάσεις:</strong></p>
                               <ul>
-                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={(e) => { e.preventDefault(); handleResetFilters(); /* May need navigation too */ history.pushState({}, '', `/cat/${currentCategory.id}/${currentCategory.slug}`); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
+                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={(e) => { e.preventDefault(); handleResetFilters(); /* Consider navigation if needed */ }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
                                   <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
                                   <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
                               </ul>
                           </div>
                       </div>
-                  ) : (
-                      <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
-                  )
+                  ) : ( <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p> )
               ) : null
             )}
           </div>
@@ -514,7 +497,7 @@ const CategoryPage: React.FC = () => {
     );
    };
 
-  // --- NEW: renderMerchantInformation ---
+  // --- Merchant Info Rendering ---
   const renderMerchantInformation = () => {
     const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
     if (!selectedVendor) { return null; }
@@ -522,10 +505,15 @@ const CategoryPage: React.FC = () => {
     const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
     return ( <div className="root__wrapper information information--center" data-type="merchant-brand"> <div className="root"> <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}> <div className="merchant-logo"> <Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}> <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} /> </Link> <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg> </div> </div> <div className="information__content"> <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}>{vendor.name}</Link></strong></p> <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p> </div> <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span> </div> </div> );
   };
-  // --- End renderMerchantInformation ---
-
 
   // --- Main Return Structure ---
+  // Show NotFound if category wasn't matched (and not showing default)
+  if (location.pathname.startsWith('/cat/') && !currentCategory) {
+      // Add a check to prevent showing NotFound while initial category check is happening
+      // This might require an additional loading state if the check is async
+      return <NotFound />;
+  }
+
   return (
     <>
       {renderMerchantInformation()}
@@ -534,7 +522,7 @@ const CategoryPage: React.FC = () => {
           {renderBreadcrumbs()}
           {renderMainCategories()}
           {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
-          {/* ** MODIFIED: Price Alert Modal Call for Category ** */}
+          {/* Price Alert Modal */}
            {isPriceAlertModalOpen && priceAlertContext && currentCategory && (
                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="category" categoryId={priceAlertContext.categoryId} categoryName={priceAlertContext.categoryName} categoryFilters={priceAlertContext.filters} />
            )}
