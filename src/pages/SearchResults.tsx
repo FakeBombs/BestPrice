@@ -170,34 +170,50 @@ const SearchResults: React.FC = () => {
       setCertifiedVendors(vendorArray);
   };
 
-  // --- Sorting Logic ---
+    // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
+    console.log(`Sorting ${productsList.length} products with sortType: ${sortType}`); // Log entry
     const sorted = [...productsList];
     switch (sortType) {
-      case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity)); break;
-      case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0)); break;
-      case 'rating-desc': default: sorted.sort((a, b) => {
+      case 'price-asc':
+        sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity));
+        break;
+      case 'price-desc':
+        sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0));
+        break;
+      case 'rating-desc':
+      default:
+        console.log('Applying rating-desc sort...'); // Confirm case execution
+        sorted.sort((a, b) => {
             // Calculate average ratings
             const avgA = (a.ratingSum || 0) / Math.max(a.numReviews || 1, 1);
             const avgB = (b.ratingSum || 0) / Math.max(b.numReviews || 1, 1);
+            const numReviewsA = a.numReviews || 0;
+            const numReviewsB = b.numReviews || 0;
+            const epsilon = 0.00001; // Tolerance
 
-            // Define a small tolerance for floating-point comparisons
-            const epsilon = 0.00001;
+            // --- Start Debug Logging ---
+            console.log(`Comparing A (ID ${a.id}, Sum ${a.ratingSum}, Rev ${a.numReviews}, Avg ${avgA.toFixed(3)}) vs B (ID ${b.id}, Sum ${b.ratingSum}, Rev ${b.numReviews}, Avg ${avgB.toFixed(3)})`);
+            // --- End Debug Logging ---
 
             // Primary Sort: Descending Average Rating (with tolerance)
             if (Math.abs(avgB - avgA) > epsilon) {
-                // If the difference is greater than the tolerance, sort by rating
-                return avgB - avgA;
+                const result = avgB - avgA;
+                // console.log(`  -> Rating Diff > Epsilon: Sorting by Rating (${result.toFixed(3)})`); // Optional more detail
+                return result;
             } else {
                 // Secondary Sort (Tie-breaker): Descending Number of Reviews
-                // Ratings are considered equal within the tolerance
-                const numReviewsA = a.numReviews || 0;
-                const numReviewsB = b.numReviews || 0;
-                return numReviewsB - numReviewsA;
+                const result = numReviewsB - numReviewsA;
+                // console.log(`  -> Rating ~ Equal: Sorting by Reviews (${result})`); // Optional more detail
+                return result;
             }
-        }); break;
-      case 'merchants_desc': sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length); break;
+        });
+        break;
+      case 'merchants_desc':
+        sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length);
+        break;
     }
+    console.log('Sort result (first 5 IDs):', sorted.slice(0, 5).map(p => p.id)); // Log result sample
     return sorted;
   };
 
