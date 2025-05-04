@@ -23,7 +23,7 @@ const cleanDomainName = (url: string): string => {
 
 export const TopVendorAd: React.FC<TopVendorAdProps> = ({ productId }) => {
   // --- Ad Logic ---
-  const showAd = useMemo(() => Math.random() < 0.7, []); // Decide once per render
+  const showAd = useMemo(() => Math.random() < 0.9, []); // Decide once per render
 
   // Mock vendor data for the ad (replace with fetched data later)
   const mockAdVendor: Vendor = {
