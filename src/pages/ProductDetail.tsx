@@ -294,7 +294,7 @@ const ProductDetail = () => {
                                 <div className="minfo__lists">
                                     {popupVendorContent.paymentMethods && popupVendorContent.paymentMethods.length > 0 && (
                                         <div className="minfo__list">
-                                            <h3 className="minfo__list-header"><Link to={`/m/${popupVendorContent.id}/${popupVendorContent.slug || popupVendorContent.name.toLowerCase().replace(/\s+/g, '-')}/#merchant-shipping-payment`}>ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</Link></h3>
+                                            <h3 className="minfo__list-header"><Link to={`/m/${popupVendorContent.id}/${popupVendorContent.slug || popupVendorContent.name.toLowerCase().replace(/\s+/g, '-')}#merchant-shipping-payment`}>ΤΡΟΠΟΙ ΠΛΗΡΩΜΗΣ</Link></h3>
                                             <ul>
                                                 {Object.values(PaymentMethod).map(method => (
                                                     <li key={method} className={popupVendorContent.paymentMethods?.includes(method) ? 'minfo__yes' : ''}>
@@ -313,8 +313,10 @@ const ProductDetail = () => {
                                 </div>
                                 <div className="minfo__actions">
                                     <Link to={`/m/${popupVendorContent.id}/${popupVendorContent.slug || popupVendorContent.name.toLowerCase()}`} className="button button--outline">Μάθε περισσότερα</Link>
-                                    {/* Optionally add link to product on vendor site if available in priceInfo */}
-                                    {/* <a href={...} rel="nofollow noreferrer noopener" className="button minfo__product-link">Προβολή στο κατάστημα</a> */}
+                                    {/* ** Conditionally Render Link based on priceInfoForPopup ** */}
+                                    {priceInfoForPopup?.productUrl && (
+                                        <a href={priceInfoForPopup.productUrl} rel="nofollow noreferrer noopener external" target="_blank" className="button minfo__product-link">Προβολή στο κατάστημα</a>
+                                    )}
                                 </div>
                             </div>
                         </main>
