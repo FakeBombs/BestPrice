@@ -3,11 +3,11 @@
 
 .js-is-sticky {
   position: sticky;
-  top: 2rem; // Or header height
-  left: 0; // Adjust if container has padding/margin
-  right: 0; // Adjust if container has padding/margin
-  width: 100%; // Or calculate based on parent if needed
-  background-color: var(--colors-themed-body-bg); // Match page background
+  top: 2rem;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: var(--colors-themed-body-bg);
   z-index: 999
 }
 
