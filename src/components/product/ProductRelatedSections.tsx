@@ -1,3 +1,4 @@
+import React from 'react';
 import ProductCarousel from '@/components/ProductCarousel';
 import SimilarProductsSlider from '@/components/SimilarProductsSlider';
 import { Product, getCategoryById } from '@/data/mockData';
