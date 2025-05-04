@@ -18,7 +18,7 @@ const useDebounce = (value: string, delay: number): string => {
 // --- End Debounce Hook ---
 
 const MAX_DISPLAY_COUNT = 10;
-const DEFAULT_SORT_TYPE = 'rating-desc'; // Define default sort type
+const DEFAULT_SORT_TYPE = 'rating-desc';
 
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
@@ -29,9 +29,9 @@ const cleanDomainName = (url: string): string => {
 
 // Define the structure for active filters state accurately
 interface ActiveFiltersState {
-  brands: string[]; // Store original casing
-  specs: Record<string, string[]>; // Store original casing for keys and values
-  vendorIds: number[]; // Store vendor IDs
+  brands: string[];
+  specs: Record<string, string[]>;
+  vendorIds: number[];
   deals: boolean;
   certified: boolean;
   nearby: boolean;
@@ -96,12 +96,6 @@ const SearchResults: React.FC = () => {
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
   const [priceAlertContext, setPriceAlertContext] = useState<{ query: string; filters: ActiveFiltersState } | null>(null);
 
-  // --- State and Refs for JS Sticky Tabs ---
-  const [isTabsSticky, setIsTabsSticky] = useState(false);
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const tabsPlaceholderRef = useRef<HTMLDivElement>(null);
-  const stickyOffsetRef = useRef<number>(0); // Use ref to store offset
-
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
   const debouncedSearchQuery = useDebounce(searchQuery, 100); // Use debounce
@@ -118,18 +112,17 @@ const SearchResults: React.FC = () => {
         const vendorIdsFromUrl = storeDomains.map(domain => vendorDomainMap.get(domain)?.id).filter((id): id is number => id !== undefined);
         const brandsFromUrl = params.get('brand')?.toLowerCase().split(',').filter(Boolean) || [];
         const specsFromUrl = Array.from(params.entries()).reduce((acc, [key, value]) => { const lowerKey = key.toLowerCase(); if (!RESERVED_PARAMS.has(lowerKey)) { acc[lowerKey] = value.toLowerCase().split(',').filter(Boolean); } return acc; }, {} as Record<string, string[]>);
-        // Return structure matching ActiveFiltersState, excluding categoryIds
         return { brands: brandsFromUrl, specs: specsFromUrl, vendorIds: vendorIdsFromUrl, deals: params.get('deals') === '1', certified: params.get('certified') === '1', nearby: params.get('nearby') === '1', boxnow: params.get('boxnow') === '1', instock: params.get('instock') === '1' };
     };
 
-  // ** CORRECT INITIALIZATION from your last file **
+  // Active filters state - Initialize empty, synced via Effect 3
   const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>({ brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false });
 
   // --- Helper Data & Category Logic ---
   const allCategories = [...mainCategories, ...categories];
   const findCategory = (identifier: string): Category | undefined => allCategories.find(cat => cat.id.toString() === identifier || cat.slug === identifier);
 
-  // --- URL Sync Function - Writes lowercase parameters (preserves 'q') ---
+  // --- URL Sync Function ---
   const updateUrlParams = (filters: ActiveFiltersState, currentSortType: string) => {
     const params = new URLSearchParams(searchParams);
     ['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort', 'cat'].forEach(p => params.delete(p));
@@ -212,7 +205,7 @@ const SearchResults: React.FC = () => {
 
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
-    extractCategories(sortedAndFiltered, setSliderCategories);
+    extractCategories(sortedAndFiltered, setSliderCategories); // Update slider categories
 
   }, [activeFilters, baseSearchResults, sortType, vendorIdMap]);
 
@@ -224,7 +217,6 @@ const SearchResults: React.FC = () => {
       ): ActiveFiltersState => {
           const reconciledBrands = filtersFromUrl.brands.map(lb => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lb)).filter((b): b is string => b !== undefined);
           const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [lowerKey, lowerValues]) => { const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey); if (originalKey) { const originalValues = lowerValues.map(lv => Array.from(currentAvailableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv)).filter((v): v is string => v !== undefined); if (originalValues.length > 0) { acc[originalKey] = originalValues; } } return acc; }, {} as Record<string, string[]>);
-          // Return the full filter state, replacing brands/specs with reconciled versions
           return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs };
       };
 
@@ -236,89 +228,16 @@ const SearchResults: React.FC = () => {
         const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Reads URL (lowercase/IDs)
         const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Gets state with original casing
 
-        // Sync sort type from URL as well
         const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
         if (sortFromUrl !== sortType) {
             setSortType(sortFromUrl);
         }
 
-        // Update active filters state only if reconciled state differs
         if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
-            setActiveFilters(reconciledState); // Set state with original casing
+            setActiveFilters(reconciledState);
         }
       }
-  }, [searchParams, availableBrands, availableSpecs]); // React primarily to URL and available options
-
-
-  // --- JS Sticky Tabs Effect ---
-  useEffect(() => {
-    const tabsElement = tabsRef.current;
-    const placeholderElement = tabsPlaceholderRef.current;
-    if (!tabsElement || !placeholderElement) return;
-
-    let timeoutId: NodeJS.Timeout | null = null;
-    let resizeTimeoutId: NodeJS.Timeout | null = null;
-
-    // Function to calculate the correct offset
-    const calculateOffset = () => {
-        // Make sure element is visible and has dimensions before calculating
-        if (tabsElement.offsetParent !== null && tabsElement.offsetHeight > 0) {
-             // Calculate offset from the document top
-             stickyOffsetRef.current = tabsElement.getBoundingClientRect().top + window.scrollY;
-        } else {
-             // Retry if element not fully laid out
-             if (timeoutId) clearTimeout(timeoutId);
-             timeoutId = setTimeout(calculateOffset, 50);
-        }
-    };
-
-    // Debounce resize calculation
-    const handleResize = () => {
-        if (resizeTimeoutId) clearTimeout(resizeTimeoutId);
-        resizeTimeoutId = setTimeout(calculateOffset, 150);
-    };
-
-    let frameId: number | null = null;
-    const handleScroll = () => {
-        if (frameId !== null) return; // Already scheduled a frame
-
-        frameId = window.requestAnimationFrame(() => {
-            const currentOffset = stickyOffsetRef.current;
-            // Only proceed if offset is valid (calculated)
-            if (currentOffset > 0) {
-                const shouldBeSticky = window.scrollY >= currentOffset;
-                setIsTabsSticky(prevSticky => {
-                     if (shouldBeSticky !== prevSticky) {
-                        placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
-                        return shouldBeSticky;
-                     }
-                     return prevSticky;
-                });
-            }
-             frameId = null; // Reset frame ID after execution
-        });
-    };
-
-    // Calculate offset shortly after mount/update
-    const initialCalcTimeout = setTimeout(calculateOffset, 150); // Give a bit more time
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => {
-        if (timeoutId) clearTimeout(timeoutId);
-        if (resizeTimeoutId) clearTimeout(resizeTimeoutId);
-        clearTimeout(initialCalcTimeout);
-        window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleResize);
-        if (frameId !== null) { window.cancelAnimationFrame(frameId); }
-        if (placeholderElement) { placeholderElement.style.height = '0px'; }
-        setIsTabsSticky(false); // Ensure sticky state is reset on unmount/query change
-    };
-  // Rerun setup if the base results presence changes (might affect layout)
-  }, [baseSearchResults.length > 0]); // Dependency simplified
-
+  }, [searchParams, availableBrands, availableSpecs]);
 
   // --- Filter Event Handlers (Update state with original casing) ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
@@ -340,17 +259,19 @@ const SearchResults: React.FC = () => {
   };
 
   // --- Scroll To Top Effect on Filter/Sort Change ---
+  const isInitialSyncDone = useRef(false);
   useEffect(() => {
-      // Use a ref to track if it's the initial render/sync phase
-      const isInitialMount = useRef(true);
+      const timer = setTimeout(() => {
+          if (isInitialSyncDone.current) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+                isInitialSyncDone.current = true;
+          }
+      }, 50);
 
-      if (isInitialMount.current) {
-          isInitialMount.current = false; // Mark initial mount as done
-      } else {
-          // Only scroll if it's *not* the initial mount/sync
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-  }, [activeFilters, sortType]); // Trigger on actual filter/sort state changes
+      return () => clearTimeout(timer);
+
+  }, [activeFilters, sortType]);
 
 
   // --- Misc Helper/UI Logic ---
@@ -490,12 +411,8 @@ const SearchResults: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                 // ** JS STICKY WRAPPER **
                  <>
-                    {/* Placeholder Div */}
-                    <div ref={tabsPlaceholderRef} style={{ height: '0px', transition: 'height 0.2s ease-out' }}></div>
-                    {/* Sorting Tabs Container with Ref and Conditional Class */}
-                    <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
+                    <div className="page-header__sorting">
                         <div className="tabs"><div className="tabs-wrapper"><nav>
                             <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
                             <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
@@ -508,11 +425,9 @@ const SearchResults: React.FC = () => {
                         </nav></div></div>
                     </div>
                 </>
-                 // ** END JS STICKY WRAPPER **
               )}
             </header>
           )}
-
 
           {/* Product Grid / No Results Messages */}
           <div className="page-products__main-wrapper">
@@ -545,7 +460,7 @@ const SearchResults: React.FC = () => {
     );
    };
 
-  // --- Merchant Info Rendering (Conditional on single vendor filter) ---
+  // --- Merchant Info Rendering ---
   const renderMerchantInformation = () => {
     const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
     if (!selectedVendor) { return null; }
@@ -569,7 +484,6 @@ const SearchResults: React.FC = () => {
                </nav>
            </div>
            {renderSearchResultsContent()}
-           {/* ** MODIFIED: Price Alert Modal Call for Search ** */}
            {isPriceAlertModalOpen && priceAlertContext && (
                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="search" searchQuery={priceAlertContext.query} searchFilters={priceAlertContext.filters} />
            )}
