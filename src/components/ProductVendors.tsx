@@ -104,7 +104,16 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
                 <div className="prices__costs">
                   <div className="prices__cost-label">Μεταφορικά</div>
                   <div className="prices__cost-value">{priceInfo.shippingCost ? `+ ${priceInfo.shippingCost.toLocaleString('el-GR', { style: 'currency', currency: 'EUR' })}` : 'Δωρεάν'}</div>
-                  <div className="prices__cost-total">Τελική τιμή:</div>
+                  {priceInfo.installments && priceInfo.installments.count > 0 && (
+                    {/* Use Fragment to group label and value */}
+                    <div className="prices__cost-label">Άτοκες Δόσεις</div>
+                    <div className="prices__cost-value">
+                        έως {priceInfo.installments.count}
+                        {/* Optionally display monthly amount if available */}
+                        priceInfo.installments.monthlyAmount && ` (€${priceInfo.installments.monthlyAmount.toFixed(2)}/μήνα)`}
+                    </div>
+                  )}
+                  <div className="prices__cost-total">Τελική τιμή</div>
                   <div className="prices__cost-price"><strong>{(displayPrice + (priceInfo.shippingCost || 0)).toLocaleString('el-GR', { style: 'currency', currency: 'EUR' })}</strong></div>
                 </div>
               </div>
