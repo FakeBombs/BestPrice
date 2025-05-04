@@ -97,6 +97,12 @@ const SearchResults: React.FC = () => {
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
   const [priceAlertContext, setPriceAlertContext] = useState<{ query: string; filters: ActiveFiltersState } | null>(null);
 
+  // --- **NEW: State and Refs for JS Sticky Tabs** ---
+  const [isTabsSticky, setIsTabsSticky] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null); // Ref for the actual tabs container
+  const tabsPlaceholderRef = useRef<HTMLDivElement>(null); // Ref for the placeholder
+  const [stickyTopOffset, setStickyTopOffset] = useState(0); // To store initial offset
+
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
   const debouncedSearchQuery = useDebounce(searchQuery, 0); // Keep debounce if needed, otherwise set to 0
@@ -218,9 +224,7 @@ const SearchResults: React.FC = () => {
   // --- Effect 2: Apply Filters and Sorting ---
   useEffect(() => {
     let productsToFilter = [...baseSearchResults];
-    const currentFilters = activeFilters; // Holds original case
-
-    // Apply filters using case-insensitive comparison where appropriate
+    const currentFilters = activeFilters;
     if (currentFilters.instock) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.inStock)); }
     if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); }
     if (currentFilters.certified) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.certification)); }
@@ -232,8 +236,6 @@ const SearchResults: React.FC = () => {
 
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
-
-    // Update Slider Categories based on the *filtered* results
     extractCategories(sortedAndFiltered, setSliderCategories);
 
   }, [activeFilters, baseSearchResults, sortType, vendorIdMap]);
@@ -287,6 +289,33 @@ const SearchResults: React.FC = () => {
       }
   }, [searchParams, availableBrands, availableSpecs]); // React primarily to URL and available options
 
+  // --- **NEW: Effect for JS Sticky Logic** ---
+  useEffect(() => {
+    const tabsElement = tabsRef.current;
+    const placeholderElement = tabsPlaceholderRef.current;
+    if (!tabsElement || !placeholderElement) return; // Exit if elements not ready
+
+    // Calculate offset relative to the document, considering scroll position
+    const initialOffset = tabsElement.getBoundingClientRect().top + window.scrollY;
+    setStickyTopOffset(initialOffset); // Store the initial offset
+
+    const handleScroll = () => {
+        const shouldBeSticky = window.scrollY >= initialOffset;
+        if (shouldBeSticky !== isTabsSticky) { // Only update state if status changes
+            setIsTabsSticky(shouldBeSticky);
+            placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true }); // Use passive listener for better performance
+
+    // Cleanup listener on component unmount
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+    };
+  // Re-calculate initial offset if the base search results change (layout might shift)
+  }, [baseSearchResults, isTabsSticky]); // Add isTabsSticky to deps
+
 
   // --- Filter Event Handlers (Update state with original casing) ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
@@ -306,14 +335,6 @@ const SearchResults: React.FC = () => {
       setSortType(newSortType);
       updateUrlParams(activeFilters, newSortType); // Update URL with new sort type
   };
-
-  // --- Scroll To Top Effect on Filter/Sort Change ---
-  useEffect(() => {
-      // Check if it's not the initial render/load potentially
-      // For simplicity, scroll whenever key filter/sort states change
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeFilters, sortType]);
-
 
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
@@ -452,7 +473,7 @@ const SearchResults: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                <div className="page-header__sorting sticky-sorting-tabs">
+                <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
                     <div className="tabs"><div className="tabs-wrapper"><nav>
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
                       <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
