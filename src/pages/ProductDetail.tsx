@@ -19,7 +19,7 @@ import PriceAlertModal from '@/components/PriceAlertModal'; // For product price
 import { useAuth } from '@/hooks/useAuth';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
-import TopVendorAd from '@/components/ads/TopVendorAd'; // Import Ad component
+import { TopVendorAd } from '@/components/ads/TopVendorAd'; // Import Ad component
 
 // Helper to clean domain name (needed for popup)
 const cleanDomainName = (url: string): string => {
