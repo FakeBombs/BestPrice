@@ -158,11 +158,11 @@ const CategoryPage: React.FC = () => {
           setBaseCategoryProducts(productsForCategory);
           extractAvailableFilters(productsForCategory);
           updateCertifiedVendors(productsForCategory);
-          // Let Effect 3 sync activeFilters from URL
+          // Let Effect 3 sync state from URL
       }
     } else {
         // Category not found
-        // If default needed: if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); }
+        // if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); }
     }
   }, [location.pathname, defaultCategoryId]);
 
@@ -237,15 +237,19 @@ const CategoryPage: React.FC = () => {
 
   // Effect 3: Update activeFilters state AND sortType when URL parameters change OR when available options change
   useEffect(() => {
+      // Only run reconciliation if available options have been populated OR category products loaded
       if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || baseCategoryProducts.length > 0) {
-        const filtersFromUrl = getFiltersFromUrl(availableSpecs);
-        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs);
+        const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Reads URL (lowercase/IDs)
+        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Gets state with original casing
+
         const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
         if (sortFromUrl !== sortType) { setSortType(sortFromUrl); }
-        if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) { setActiveFilters(reconciledState); }
+
+        if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
+            setActiveFilters(reconciledState);
+        }
       }
   }, [searchParams, availableBrands, availableSpecs, baseCategoryProducts]); // React to URL and available options
-
 
   // --- Filter Event Handlers ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
@@ -340,6 +344,8 @@ const CategoryPage: React.FC = () => {
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || Object.values(restActiveFilters).some(v => v === true);
     const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
     const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
+    // ** Calculation moved to component scope **
+    // const shouldShowBrandSort = useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]);
 
     return (
       <div className="page-products">
@@ -389,19 +395,19 @@ const CategoryPage: React.FC = () => {
 
         <main className="page-products__main">
           {/* Header */}
-          {/* Show header only if products *were* initially loaded OR after filtering */}
-          {(baseCategoryProducts.length > 0 || filteredProducts.length > 0) && currentCategory && (
+          {filteredProducts.length > 0 && currentCategory && ( // Use filteredProducts length for header visibility
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
                   <h1>{currentCategory.name}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
+                    {/* Price alert trigger */}
                     {(isAnyFilterActive || baseCategoryProducts.length > 0) && filteredProducts.length > 0 && (
-                    <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
-                      <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                      <div className="alerts-minimal__label"></div>
-                    </div>
+                      <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                          <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                          <div className="alerts-minimal__label"></div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -425,12 +431,8 @@ const CategoryPage: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                <>
-                  {/* Placeholder Div */}
-                  <div ref={tabsPlaceholderRef} style={{ height: '0px', transition: 'height 0.2s ease-out' }}></div>
-                  {/* Sorting Tabs Container with Ref and Conditional Class */}
-                  {/* REMOVED STICKY CLASS AND REF */}
-                  <div className="page-header__sorting">
+                // ** REMOVED STICKY wrapper, refs and classes **
+                <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
                       <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
@@ -441,8 +443,7 @@ const CategoryPage: React.FC = () => {
                       {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">Ανά κατασκευαστή</div></a> )}
                       <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
                     </nav></div></div>
-                  </div>
-                </>
+                </div>
               )}
             </header>
           )}
@@ -476,7 +477,7 @@ const CategoryPage: React.FC = () => {
     );
    };
 
-  // --- NEW: renderMerchantInformation ---
+  // --- Merchant Info Rendering ---
   const renderMerchantInformation = () => {
     const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
     if (!selectedVendor) { return null; }
@@ -484,14 +485,10 @@ const CategoryPage: React.FC = () => {
     const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
     return ( <div className="root__wrapper information information--center" data-type="merchant-brand"> <div className="root"> <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}> <div className="merchant-logo"> <Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}> <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} /> </Link> <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg> </div> </div> <div className="information__content"> <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}>{vendor.name}</Link></strong></p> <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p> </div> <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span> </div> </div> );
   };
-  // --- End renderMerchantInformation ---
-
 
   // --- Main Return Structure ---
-  // Show NotFound if category wasn't matched (and not showing default)
-  if (location.pathname.startsWith('/cat/') && !currentCategory) {
-      // Add a check to prevent showing NotFound while initial category check is happening
-      // This might require an additional loading state if the check is async
+  // Show NotFound if category wasn't matched after initial load attempt
+  if (location.pathname.startsWith('/cat/') && !currentCategory && defaultCategoryId === null) { // Only show NotFound if no category AND no default exists
       return <NotFound />;
   }
 
@@ -503,7 +500,7 @@ const CategoryPage: React.FC = () => {
           {renderBreadcrumbs()}
           {renderMainCategories()}
           {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
-          {/* ** MODIFIED: Price Alert Modal Call for Category ** */}
+          {/* Price Alert Modal */}
            {isPriceAlertModalOpen && priceAlertContext && currentCategory && (
                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="category" categoryId={priceAlertContext.categoryId} categoryName={priceAlertContext.categoryName} categoryFilters={priceAlertContext.filters} />
            )}
@@ -511,6 +508,6 @@ const CategoryPage: React.FC = () => {
       </div>
     </>
   );
-}; // End of CategoryPage Component
+};
 
 export default CategoryPage;
