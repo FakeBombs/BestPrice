@@ -397,7 +397,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
