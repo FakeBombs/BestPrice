@@ -13,7 +13,7 @@ interface TopVendorAdProps {
   // vendor?: Vendor;
 }
 
-const TopVendorAd: React.FC<TopVendorAdProps> = ({ productId }) => {
+export const TopVendorAd: React.FC<TopVendorAdProps> = ({ productId }) => {
   // --- Ad Logic ---
   // In a real app, fetch ad data based on productId or other criteria.
   // For now, mock data and random display logic.
