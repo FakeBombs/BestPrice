@@ -302,10 +302,6 @@ const SearchResults: React.FC = () => {
          {baseSearchResults.length > 0 && (
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header">
-              <div className="filters__header">
-                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
-                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
-              </div>
 
                {/* Categories Filter (Links to Category Page) */}
                {availableCategories.length > 0 && (
@@ -330,6 +326,11 @@ const SearchResults: React.FC = () => {
                       </div>
                     </div>
                )}
+                
+              <div className="filters__header">
+                <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
+                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
+              </div>
               
               {/* "Εμφάνιση μόνο" Section */}
               <div className="filter-limit default-list" data-filter-name="limit" data-filter-id data-type data-key="limit">
@@ -393,7 +394,7 @@ const SearchResults: React.FC = () => {
                   <section className="section">
                     <header className="section__header">
                         <hgroup className="section__hgroup">
-                            <h2 className="section__title">Κατηγορίες στα Αποτελέσματα</h2>
+                            <h2 className="section__title">Κατηγορίες</h2>
                         </hgroup>
                     </header>
                     <ScrollableSlider>
