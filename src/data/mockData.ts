@@ -536,12 +536,12 @@ export interface OpeningHours {
  export enum PaymentMethod {
    COD = "Αντικαταβολή", CreditCard = "Πιστωτικές κάρτες", PayPal = "PayPal", BankTransfer = "Τραπεζική κατάθεση", VivaPayments = "Viva Payments", Paysafecard = "Paysafecard", Courier = "Ταχυμεταφορά (Courier)", 
    NetworkPickup = "Παραλαβή από δίκτυο", TransportCompany = "Μεταφορική εταιρία", PickupVia = "Παραλαβή μέσω", FreeReturn = "Δωρεάν επιστροφή", PointsCollection = "Συλλογή πόντων", GiftCards = "Δωροκάρτες", 
-   ExtendedWarranty = "Επέκταση εγγύησης", WeddingList = "Λίστα γάμου/μωρού", DeviceRecycling = "Ανακύκλωση συσκευών"
+   ExtendedWarranty = "Επέκταση εγγύησης", WeddingList = "Λίστα γάμου/μωρού", DeviceRecycling = "Ανακύκλωση συσκευών", Klarna = "Klarna", Epistrofi = "€πιστροφή Eurobank", Installments = "Άτοκες Δόσεις", LoyaltyPoints = "Πόντοι Επιβράβευσης"
  }
 
 export const vendors: Vendor[] = [
   {
-    id: 1, name: 'You', slug: 'you', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5, numberOfRatings: 1500, certification: 'Bronze', url: 'https://www.you.gr', telephone: ['211 9991900'], address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], location: [{ lat: 37.9337, lng: 23.7004 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn], shippingPolicySummary: "Δωρεάν μεταφορικά άνω των 50€", dateJoined: "2018-05-20",
+    id: 1, name: 'You', slug: 'you', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5, numberOfRatings: 1500, certification: 'Bronze', url: 'https://www.you.gr', telephone: ['211 9991900'], address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], location: [{ lat: 37.9337, lng: 23.7004 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.Klarna, PaymentMethod.Installments, PaymentMethod.LoyaltyPoints], shippingPolicySummary: "Δωρεάν μεταφορικά άνω των 50€", dateJoined: "2018-05-20",
     socialLinks: { facebook: "https://www.facebook.com/You.gr" },
     openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '18:00' } ]
   },
