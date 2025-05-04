@@ -68,3 +68,5 @@ export const InlineProductItem: React.FC<InlineProductItemProps> = ({ product, b
         </Link>
     );
 };
+
+export default InlineProductItem;
