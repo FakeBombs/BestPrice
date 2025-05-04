@@ -58,13 +58,14 @@ export const TopVendorAd: React.FC<TopVendorAdProps> = ({ productId }) => {
 
 
   return (
-    <div className="prices__card is-sponsored"> {/* Add 'is-sponsored' class */}
+    <div id="sponsored" className="prices"> {/* Add 'is-sponsored' class */}
         <div className="prices__group" data-id={vendor.id} data-price={Math.round(displayPrice * 100)} data-mid={vendor.id} data-domain={vendor.url} data-mrating={vendor.rating?.toFixed(4) || '0'}>
           <div className="prices__root">
             <div className="prices__merchant">
               <div className="prices__merchant-meta">
                 <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow sponsored noopener" target="_blank" href={priceInfo.productUrl || vendor.url} onClick={handleAdClick}>
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
+                  {vendor.certification && ( <span className="merchant__certification-inline" data-tooltip={vendor.certification}> <svg aria-hidden="true" className="icon" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg> </span> )}
                 </a>
                 <Link data-tooltip={`Sponsored Ad: Πληροφορίες για ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to={`/m/${vendor.id}/${vendor.slug || vendor.name.toLowerCase().replace(/\s+/g, '-')}`} >
                   <em>{vendor.name}</em>
@@ -72,7 +73,6 @@ export const TopVendorAd: React.FC<TopVendorAdProps> = ({ productId }) => {
                 </Link>
                 <div className="prices__merchant-props">
                   {vendor.rating && ( <Link className="merchant__rating" aria-label="Αξιολογήσεις καταστήματος" to={`/m/${vendor.id}/${vendor.slug || vendor.name.toLowerCase().replace(/\s+/g, '-')}/reviews`}> <span className="rating rating-all" data-total={vendor.rating.toFixed(1)}> <svg aria-hidden="true" className="icon" style={{ clipPath: `inset(0 ${10 - (vendor.rating * 2)}em 0 0)`, width: '5em', height: '1em' }}><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg> </span> </Link> )}
-                  {vendor.certification && ( <span className="merchant__certification-inline" data-tooltip={vendor.certification}> <svg aria-hidden="true" className="icon"><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg> </span> )}
                 </div>
               </div>
             </div>
