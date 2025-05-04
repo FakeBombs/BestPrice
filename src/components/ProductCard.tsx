@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge'; // Assuming used elsewhere or keep if needed
 import { Product, ProductPrice, getBestPrice, getVendorById, categories } from '@/data/mockData';
