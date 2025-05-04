@@ -2,8 +2,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-// Assuming NotFound is not directly needed
-// import NotFound from '@/pages/NotFound'; // Adjust path if needed
 import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
@@ -18,7 +16,6 @@ const useDebounce = (value: string, delay: number): string => {
     return debouncedValue;
 };
 // --- End Debounce Hook ---
-
 
 const MAX_DISPLAY_COUNT = 10;
 
@@ -223,7 +220,6 @@ const SearchResults: React.FC = () => {
           setActiveFilters(reconciledState);
       }
   }, [searchParams, activeFilters, vendorDomainMap, availableBrands, availableSpecs]);
-
 
   // --- Filter Event Handlers (Update state with original casing) ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
