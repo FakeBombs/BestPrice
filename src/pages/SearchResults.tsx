@@ -98,7 +98,7 @@ const SearchResults: React.FC = () => {
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
-  const debouncedSearchQuery = useDebounce(searchQuery, 300); // Adjusted debounce back to 300ms
+  const debouncedSearchQuery = useDebounce(searchQuery, 100);
 
   // Helper for case-insensitive key find
   const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => {
