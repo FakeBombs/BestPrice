@@ -301,6 +301,13 @@ const SearchResults: React.FC = () => {
     const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
     const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
 
+    // --- Move the calculation here, outside the return statement ---
+    const shouldShowBrandSort = useMemo(() => {
+        // Calculate based on currently FILTERED products
+        return new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1;
+    }, [filteredProducts]); // Depend on filteredProducts
+    // --- End Calculation ---
+
     return (
       <div className="page-products">
          {/* ASIDE FILTERS */}
