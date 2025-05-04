@@ -187,7 +187,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                             <nav className="breadcrumb">
                                 <ol>
                                     <li><Link to="/" rel="home"><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                                    <li><Link to="/m"><span>Καταστήματα</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+                                    <li><Link to="/m"><span>Καταστήματα</span></Link></li>
                                 </ol>
                             </nav>
                         </div>
