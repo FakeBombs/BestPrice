@@ -1329,7 +1329,7 @@ html {scroll-behavior: smooth}
 .sitemap-desktop__sub-list li {
     display: block;
     list-style-type: none;
-    margin: .7rem 0;
+    margin: .5rem 0;
     opacity: .58;
     overflow: hidden;
     padding: 0;
