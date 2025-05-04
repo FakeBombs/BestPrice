@@ -14,7 +14,7 @@ import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
-import TopVendorAd from '@/components/ads/TopVendorAd';
+import { TopVendorAd } from '@/components/ads/TopVendorAd';
 import NotFound from '@/pages/NotFound';
 
 // Helper to clean domain name
