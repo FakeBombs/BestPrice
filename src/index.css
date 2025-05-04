@@ -14,11 +14,11 @@ html {scroll-behavior: smooth}
 }
 .prices__merchant-logo span.merchant__certification-inline {
     position: absolute;
-    top: -.75rem;
-    right: -.5rem;
-    width: 18px;
-    height: 18px;
-    border-bottom: 0 !important
+    top: -.7rem;
+    right: -.7rem;
+    width: 22px;
+    height: 22px;
+    border-bottom: 0!important
 }
 .filter-store li a[data-l="2"]:after {
     background-image: url(https://bp.pstatic.gr/public/dist/b2d88e0b4f185d73a33f.svg)
