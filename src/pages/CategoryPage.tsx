@@ -3,10 +3,9 @@ import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-import {
-  categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand
-} from '@/data/mockData';
+import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
+import InlineProductItem from '@/components/InlineProductItem';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
