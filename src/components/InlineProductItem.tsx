@@ -1,9 +1,13 @@
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { Product, ProductPrice } from '@/data/mockData';
+
 interface InlineProductItemProps {
     product: Product;
     bpref?: string; // Optional tracking parameter
 }
 
-const InlineProductItem: React.FC<InlineProductItemProps> = ({ product, bpref }) => {
+export const InlineProductItem: React.FC<InlineProductItemProps> = ({ product, bpref }) => {
     // Find the best price (you might already have a function for this)
     const bestPriceInfo = useMemo(() => {
         if (!product || !product.prices || product.prices.length === 0) return null;
