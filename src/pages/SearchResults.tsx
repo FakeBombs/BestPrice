@@ -423,7 +423,7 @@ const SearchResults: React.FC = () => {
                     </ScrollableSlider>
                   </section>
               )}
-              {/* Sorting Tabs - Show only if there are products to sort */}
+              {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
                 <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
@@ -437,11 +437,13 @@ const SearchResults: React.FC = () => {
                       <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
                       {/* Most Reviews Descending */}
                       <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
-                      {/* Brand Alphabetical Ascending (Conditional) */}
-                      {/* Calculate if more than one brand exists in the filtered results */}
-                      {useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]) && (
+
+                      {/* --- Conditional Brand Tab (Use pre-calculated value) --- */}
+                      {shouldShowBrandSort && (
                           <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('brand-asc'); }}><div className="tabs__content">Μάρκα (Α-Ω)</div></a>
                       )}
+                      {/* --- End Conditional Brand Tab --- */}
+
                       {/* Merchants Descending */}
                       <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
                     </nav></div></div>
