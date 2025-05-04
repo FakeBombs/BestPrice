@@ -236,19 +236,18 @@ const SearchResults: React.FC = () => {
   const handleBrandFilter = (brand: string) => { const currentBrands = activeFilters.brands; const newBrands = currentBrands.includes(brand) ? currentBrands.filter(b => b !== brand) : [...currentBrands, brand]; const newFilters = { ...activeFilters, brands: newBrands }; setActiveFilters(newFilters); updateUrlParams(newFilters); };
   const handleSpecFilter = (specKey: string, specValue: string) => { const currentSpecs = { ...activeFilters.specs }; const specValues = currentSpecs[specKey] || []; const newSpecValues = specValues.includes(specValue) ? specValues.filter(v => v !== specValue) : [...specValues, specValue]; if (newSpecValues.length === 0) { delete currentSpecs[specKey]; } else { currentSpecs[specKey] = newSpecValues; } const newFilters = { ...activeFilters, specs: currentSpecs }; setActiveFilters(newFilters); updateUrlParams(newFilters); };
   const handleVendorFilter = (vendor: Vendor) => { const currentVendorIds = activeFilters.vendorIds; const newVendorIds = currentVendorIds.includes(vendor.id) ? currentVendorIds.filter(id => id !== vendor.id) : [...currentVendorIds, vendor.id]; const newFilters = { ...activeFilters, vendorIds: newVendorIds }; setActiveFilters(newFilters); updateUrlParams(newFilters); };
-  // Removed handleCategoryFilter
   const handleResetFilters = () => { const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false, categoryIds: [] }; setActiveFilters(resetState); updateUrlParams(resetState); };
 
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
-  const handlePriceAlert = () => { /* Less relevant */ };
+  const handlePriceAlert = () => { if (!user) { toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' }); return; } if (currentCategory) { setIsPriceAlertModalOpen(true); } else { toast({ title: 'Error', description: 'Cannot set alert, category not selected.', variant: 'destructive' }); } };
 
    // --- Rendering Functions ---
 
   // Renders the list of applied filter tags above the results
   const renderAppliedFilters = () => {
-        const { brands, specs, vendorIds, /* removed categoryIds */ deals, certified, nearby, boxnow, instock } = activeFilters;
-        const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || vendorIds.length > 0 /* removed cat check */ || deals || certified || nearby || boxnow || instock;
+        const { brands, specs, vendorIds, deals, certified, nearby, boxnow, instock } = activeFilters;
+        const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || vendorIds.length > 0 || deals || certified || nearby || boxnow || instock;
         if (!isAnyFilterActive) return null;
 
         return (
@@ -268,7 +267,7 @@ const SearchResults: React.FC = () => {
 
   // Renders the main content area including sidebar and product grid
   const renderSearchResultsContent = () => {
-    const { brands: activeBrandFilters, specs: activeSpecFilters, vendorIds: activeVendorIds, /* removed categoryIds */ ...restActiveFilters } = activeFilters;
+    const { brands: activeBrandFilters, specs: activeSpecFilters, vendorIds: activeVendorIds, ...restActiveFilters } = activeFilters;
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || Object.values(restActiveFilters).some(v => v === true);
     const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
     const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
@@ -288,7 +287,6 @@ const SearchResults: React.FC = () => {
                           <ol aria-expanded={showMoreCategories}>
                             {availableCategories.slice(0, showMoreCategories ? availableCategories.length : MAX_DISPLAY_COUNT).map((item) => (
                                <li key={item.id} className={`pressable`}>
-                                   {/* Link now navigates directly to the category page */}
                                    <Link to={`/cat/${item.id}/${item.slug}`} className="filters__link" data-c={item.count}>
                                        <span>{item.category}</span>
                                     </Link>
@@ -355,6 +353,10 @@ const SearchResults: React.FC = () => {
                   <h1>{searchQuery ? `Αποτελέσματα για "${searchQuery}"` : 'Όλα τα προϊόντα'}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
+                    <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                      <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                      <div class="alerts-minimal__label"></div>
+                    </div>
                   </div>
                 </div>
                  <div className="page-header__title-aside">
@@ -367,7 +369,7 @@ const SearchResults: React.FC = () => {
                   <section className="section">
                     <header className="section__header">
                         <hgroup className="section__hgroup">
-                            <h2 className="section__title">Κατηγορίες στα Αποτελέσματα</h2>
+                            <h2 className="section__title">Κατηγορίες</h2>
                         </hgroup>
                     </header>
                     <ScrollableSlider>
