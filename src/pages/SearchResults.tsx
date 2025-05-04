@@ -309,7 +309,7 @@ const SearchResults: React.FC = () => {
                )}
               
               <div className="filters__header">
-                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
+                <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
                 {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
               </div>
 
