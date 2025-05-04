@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'; // Keep if you want the button 
 import { ExternalLink } from 'lucide-react'; // Keep icon
 import { toast } from '@/hooks/use-toast';
 // Import Vendor type if you want to use real vendor data eventually
-import { Vendor, PaymentMethod } from '@/data/mockData';
+import { Vendor, Product, PaymentMethod } from '@/data/mockData';
 
 interface TopVendorAdProps {
   productId: number | string; // Accept number or string
