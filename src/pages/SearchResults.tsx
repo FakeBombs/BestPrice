@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast'; // Adjust path if needed
-import { useAuth } from '@/hooks/useAuth'; // Adjust path if needed
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 // Assuming NotFound is not directly needed
 // import NotFound from '@/pages/NotFound'; // Adjust path if needed
-import {
-  categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts // Ensure searchProducts is exported
-} from '@/data/mockData'; // Adjust path if needed
-import ProductCard from '@/components/ProductCard'; // Adjust path if needed
-import PriceAlertModal from '@/components/PriceAlertModal'; // Adjust path if needed
-import ScrollableSlider from '@/components/ScrollableSlider'; // Adjust path if needed
-import { useTranslation } from '@/hooks/useTranslation'; // Adjust path if needed
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes'; // Adjust path if needed
+import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
+import PriceAlertModal from '@/components/PriceAlertModal';
+import ScrollableSlider from '@/components/ScrollableSlider';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 // --- Debounce Hook ---
 const useDebounce = (value: string, delay: number): string => {
@@ -48,7 +46,6 @@ interface ActiveFiltersState {
 interface AvailableCategory {
     id: number; category: string; slug: string; count: number; image: string | null; parentId: number | null;
 }
-
 
 const SearchResults: React.FC = () => {
   // --- Hooks & Initial Setup ---
@@ -87,8 +84,8 @@ const SearchResults: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
-  const [availableCategories, setAvailableCategories] = useState<AvailableCategory[]>([]); // For sidebar links
-  const [sliderCategories, setSliderCategories] = useState<AvailableCategory[]>([]); // **NEW: For Slider**
+  const [availableCategories, setAvailableCategories] = useState<AvailableCategory[]>([]);
+  const [sliderCategories, setSliderCategories] = useState<AvailableCategory[]>([]);
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [showMoreBrands, setShowMoreBrands] = useState(false);
   const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({});
@@ -99,7 +96,7 @@ const SearchResults: React.FC = () => {
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const debouncedSearchQuery = useDebounce(searchQuery, 1);
 
   // Derive initial filter state directly from URL params
   const getFiltersFromUrl = (): ActiveFiltersState => {
