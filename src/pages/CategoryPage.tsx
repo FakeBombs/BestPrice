@@ -82,13 +82,15 @@ const CategoryPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
   const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
   const [certifiedVendors, setCertifiedVendors] = useState<Vendor[]>([]);
-  const [sliderProducts, setSliderProducts] = useState<Product[]>([]);
+  const [sliderProducts, setSliderProducts] = useState<Product[]>([]); // For Deals/Featured Slider
   const [showMoreBrands, setShowMoreBrands] = useState(false);
   const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({});
   const [showMoreVendors, setShowMoreVendors] = useState(false);
   const [sortType, setSortType] = useState<string>(() => searchParams.get('sort') || DEFAULT_SORT_TYPE);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
   const [priceAlertContext, setPriceAlertContext] = useState<{ categoryId: number; categoryName: string; filters: ActiveFiltersState } | null>(null);
+
+  // REMOVED sticky state and refs
 
   // Helper for case-insensitive key find
   const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => { const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map); return mapKeys.find(k => k.toLowerCase() === lowerCaseKey); };
@@ -108,12 +110,12 @@ const CategoryPage: React.FC = () => {
   // Active filters state - Initialize empty, synced via Effect 3
   const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>({ brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false });
 
-  // --- ** CORRECT LOCATION for shouldShowBrandSort calculation ** ---
-  const shouldShowBrandSort = useMemo(() => {
-      // Calculate based on currently FILTERED products state
-      return new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1;
-  }, [filteredProducts]); // Depend on filteredProducts state
-  // --- END CORRECT LOCATION ---
+  // ** MOVED Calculation to Top Level **
+  const shouldShowBrandSort = useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]);
+  const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
+  const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
+  const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
+  // --- End Moved Calculations ---
 
   // --- Helper Data & Category Logic ---
   const allCategories = [...mainCategories, ...categories];
@@ -161,10 +163,10 @@ const CategoryPage: React.FC = () => {
           // Let Effect 3 sync state from URL
       }
     } else {
-        // Category not found
-        // if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); }
+        // Category not found - Set state to indicate not found later
+        setCurrentCategory(undefined); // Explicitly set to undefined
     }
-  }, [location.pathname, defaultCategoryId]);
+  }, [location.pathname, defaultCategoryId]); // Rerun only when path changes
 
   // --- Filter Extraction Logic ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
@@ -215,13 +217,13 @@ const CategoryPage: React.FC = () => {
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
 
-    // Update Slider Products
+    // Update Slider Products based on deals/featured from BASE category products
     let sliderData = baseCategoryProducts.filter(p => p.prices.some(pr => pr.discountPrice && pr.discountPrice < pr.price)).slice(0, 10);
     if (sliderData.length === 0) { sliderData = baseCategoryProducts.filter(p => p.isFeatured).slice(0, 10); }
     if (sliderData.length === 0 && baseCategoryProducts.length > 0) { sliderData = [...baseCategoryProducts].sort((a,b) => (b.rating || 0) - (a.rating || 0)).slice(0,10); }
     setSliderProducts(sliderData);
 
-  }, [activeFilters, baseCategoryProducts, sortType, vendorIdMap]);
+  }, [activeFilters, baseCategoryProducts, sortType, vendorIdMap]); // Trigger on filters, base data, or sort change
 
  // --- Helper Function to Reconcile URL Filters with Available Options ---
  const reconcileFilters = (
@@ -239,15 +241,11 @@ const CategoryPage: React.FC = () => {
   useEffect(() => {
       // Only run reconciliation if available options have been populated OR category products loaded
       if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || baseCategoryProducts.length > 0) {
-        const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Reads URL (lowercase/IDs)
-        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Gets state with original casing
-
+        const filtersFromUrl = getFiltersFromUrl(availableSpecs);
+        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs);
         const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
         if (sortFromUrl !== sortType) { setSortType(sortFromUrl); }
-
-        if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
-            setActiveFilters(reconciledState);
-        }
+        if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) { setActiveFilters(reconciledState); }
       }
   }, [searchParams, availableBrands, availableSpecs, baseCategoryProducts]); // React to URL and available options
 
@@ -342,10 +340,7 @@ const CategoryPage: React.FC = () => {
   const renderProducts = () => {
     const { brands: activeBrandFilters, specs: activeSpecFilters, vendorIds: activeVendorIds, ...restActiveFilters } = activeFilters;
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || Object.values(restActiveFilters).some(v => v === true);
-    const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
-    const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
-    // ** Calculation moved to component scope **
-    // const shouldShowBrandSort = useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]);
+    // ** Moved calculations to component scope **
 
     return (
       <div className="page-products">
@@ -395,19 +390,18 @@ const CategoryPage: React.FC = () => {
 
         <main className="page-products__main">
           {/* Header */}
-          {filteredProducts.length > 0 && currentCategory && ( // Use filteredProducts length for header visibility
+          {(baseCategoryProducts.length > 0 || filteredProducts.length > 0) && currentCategory && (
             <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
                   <h1>{currentCategory.name}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                    {/* Price alert trigger */}
                     {(isAnyFilterActive || baseCategoryProducts.length > 0) && filteredProducts.length > 0 && (
-                      <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
-                          <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                          <div className="alerts-minimal__label"></div>
-                      </div>
+                    <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                      <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                      <div className="alerts-minimal__label"></div>
+                    </div>
                     )}
                   </div>
                 </div>
@@ -431,8 +425,8 @@ const CategoryPage: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                // ** REMOVED STICKY wrapper, refs and classes **
-                <div className="page-header__sorting">
+                 // ** REMOVED STICKY wrapper and classes **
+                 <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
                       <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
@@ -440,10 +434,11 @@ const CategoryPage: React.FC = () => {
                       <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
                       <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
                       <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
+                      {/* Use variable from component scope */}
                       {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">Ανά κατασκευαστή</div></a> )}
                       <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
                     </nav></div></div>
-                </div>
+                 </div>
               )}
             </header>
           )}
@@ -462,7 +457,7 @@ const CategoryPage: React.FC = () => {
                           <div id="no-results-suggestions">
                               <p><strong>Προτάσεις:</strong></p>
                               <ul>
-                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={(e) => { e.preventDefault(); handleResetFilters(); /* Consider navigation if needed */ history.pushState({}, '', `/cat/${currentCategory.id}/${currentCategory.slug}`); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
+                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={(e) => { e.preventDefault(); handleResetFilters(); history.pushState({}, '', `/cat/${currentCategory.id}/${currentCategory.slug}`); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
                                   <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
                                   <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
                               </ul>
@@ -479,7 +474,7 @@ const CategoryPage: React.FC = () => {
 
   // --- Merchant Info Rendering ---
   const renderMerchantInformation = () => {
-    const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
+    // ** Moved selectedVendor calculation to component scope **
     if (!selectedVendor) { return null; }
     const vendor = selectedVendor;
     const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
@@ -487,10 +482,7 @@ const CategoryPage: React.FC = () => {
   };
 
   // --- Main Return Structure ---
-  // Show NotFound if category wasn't matched after initial load attempt
-  if (location.pathname.startsWith('/cat/') && !currentCategory && defaultCategoryId === null) { // Only show NotFound if no category AND no default exists
-      return <NotFound />;
-  }
+  if (location.pathname.startsWith('/cat/') && !currentCategory && defaultCategoryId === null) { return <NotFound />; }
 
   return (
     <>
