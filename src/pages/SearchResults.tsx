@@ -336,6 +336,11 @@ const SearchResults: React.FC = () => {
       updateUrlParams(activeFilters, newSortType); // Update URL with new sort type
   };
 
+  // --- Scroll To Top Effect on Filter/Sort Change ---
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeFilters, sortType]);
+
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
   const handlePriceAlert = () => { if (!user) { toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' }); return; } if (searchQuery || Object.values(activeFilters).some(val => Array.isArray(val) ? val.length > 0 : val === true)) { setPriceAlertContext({ query: searchQuery, filters: activeFilters }); setIsPriceAlertModalOpen(true); } else { toast({ title: 'Error', description: 'Cannot set alert without a search query or active filters.', variant: 'destructive' }); } };
