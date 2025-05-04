@@ -493,6 +493,7 @@ const SearchResults: React.FC = () => {
               )}
             </header>
           )}
+            <div ref={tabsPlaceholderRef} style={{ height: '0' }}></div>
 
           {/* Product Grid / No Results Messages */}
           <div className="page-products__main-wrapper">
