@@ -1,17 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast'; // Adjust path if needed
-import { useAuth } from '@/hooks/useAuth'; // Adjust path if needed
-// Assuming NotFound is not directly needed
-// import NotFound from '@/pages/NotFound'; // Adjust path if needed
-import {
-  categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts // Ensure searchProducts is exported
-} from '@/data/mockData'; // Adjust path if needed
-import ProductCard from '@/components/ProductCard'; // Adjust path if needed
-import PriceAlertModal from '@/components/PriceAlertModal'; // Adjust path if needed
-import ScrollableSlider from '@/components/ScrollableSlider'; // Adjust path if needed
-import { useTranslation } from '@/hooks/useTranslation'; // Adjust path if needed
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes'; // Adjust path if needed
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard';
+import PriceAlertModal from '@/components/PriceAlertModal';
+import ScrollableSlider from '@/components/ScrollableSlider';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
 // --- Debounce Hook ---
 const useDebounce = (value: string, delay: number): string => {
@@ -21,9 +17,8 @@ const useDebounce = (value: string, delay: number): string => {
 };
 // --- End Debounce Hook ---
 
-
 const MAX_DISPLAY_COUNT = 10;
-const DEFAULT_SORT_TYPE = 'rating-desc'; // Define default sort type
+const DEFAULT_SORT_TYPE = 'rating-desc';
 
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
@@ -104,7 +99,7 @@ const SearchResults: React.FC = () => {
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
-  const debouncedSearchQuery = useDebounce(searchQuery, 100); // Keep debounce if needed, otherwise set to 0
+  const debouncedSearchQuery = useDebounce(searchQuery, 0); // Keep debounce if needed, otherwise set to 0
 
   // Helper for case-insensitive key find
   const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => {
@@ -304,7 +299,6 @@ const SearchResults: React.FC = () => {
   const handleBrandFilter = (brand: string) => { const currentBrands = activeFilters.brands; const newBrands = currentBrands.includes(brand) ? currentBrands.filter(b => b !== brand) : [...currentBrands, brand]; const newFilters = { ...activeFilters, brands: newBrands }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
   const handleSpecFilter = (specKey: string, specValue: string) => { const currentSpecs = { ...activeFilters.specs }; const specValues = currentSpecs[specKey] || []; const newSpecValues = specValues.includes(specValue) ? specValues.filter(v => v !== specValue) : [...specValues, specValue]; if (newSpecValues.length === 0) { delete currentSpecs[specKey]; } else { currentSpecs[specKey] = newSpecValues; } const newFilters = { ...activeFilters, specs: currentSpecs }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
   const handleVendorFilter = (vendor: Vendor) => { const currentVendorIds = activeFilters.vendorIds; const newVendorIds = currentVendorIds.includes(vendor.id) ? currentVendorIds.filter(id => id !== vendor.id) : [...currentVendorIds, vendor.id]; const newFilters = { ...activeFilters, vendorIds: newVendorIds }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
-  // Removed handleCategoryFilter
   const handleResetFilters = () => { const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false }; setActiveFilters(resetState); updateUrlParams(resetState, DEFAULT_SORT_TYPE); setSortType(DEFAULT_SORT_TYPE); }; // Reset sort type too
 
   // Handler for changing sort type (updates state and URL)
@@ -349,10 +343,6 @@ const SearchResults: React.FC = () => {
          {baseSearchResults.length > 0 && (
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header">
-              <div className="filters__header">
-                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
-                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
-              </div>
 
                {/* Categories Filter (Links to Category Page) */}
                {availableCategories.length > 0 && (
@@ -377,6 +367,11 @@ const SearchResults: React.FC = () => {
                       </div>
                     </div>
                )}
+              
+              <div className="filters__header">
+                <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
+                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
+              </div>
 
               {/* "Εμφάνιση μόνο" Section */}
               <div className="filter-limit default-list" data-filter-name="limit" data-filter-id data-type data-key="limit">
