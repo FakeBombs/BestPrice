@@ -657,13 +657,6 @@ export const products: Product[] = [
     variantAttributes: ["Χρώμα", "Χωρητικότητα"],
     // variants: [...] // Could add full variant objects here if needed
   },
-    prices: [
-      { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true },
-      { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true },
-      { vendorId: 3, price: 1289.99, shippingCost: 7.99, inStock: true },
-      { vendorId: 4, price: 1309.99, shippingCost: 0, inStock: false }
-    ]
-  },
   {
     id: 2,
     title: 'Samsung Galaxy S23 Ultra 512GB Phantom Black',
