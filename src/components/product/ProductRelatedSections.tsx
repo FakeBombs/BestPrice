@@ -17,8 +17,9 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
   const currentCategoryDeals = categoryDeals || [];
 
   return (
-    <div className="item-related sections">
+    <>
             {currentSimilarProducts.length > 0 && (
+              <div className="item-related sections">
                 <section className="section">
                     <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Παρόμοια προϊόντα</h2> </hgroup> </header>
                     <ScrollableSlider>
@@ -27,9 +28,11 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
                        </div>
                     </ScrollableSlider>
                 </section>
+              </div>
             )}
 
             {currentCategoryDeals.length > 0 && (
+              <div className="item-related sections">
                  <section className="section">
                     <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Προσφορές κατηγορίας</h2> </hgroup> </header>
                      <ScrollableSlider>
@@ -38,9 +41,11 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
                        </div>
                     </ScrollableSlider>
                  </section>
+              </div>
             )}
 
             {filteredRecentlyViewed.length > 0 && (
+              <div className="item-related sections">
                 <section className="section">
                     <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Είδες πρόσφατα</h2> </hgroup> </header>
                      <ScrollableSlider>
@@ -49,8 +54,9 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
                         </div>
                     </ScrollableSlider>
                 </section>
+              </div>
             )}
-        </div>
+        </>
   );
 };
 
