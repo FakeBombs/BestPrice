@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts } from '@/data/mockData';
+import { categories, mainCategories, products as allMockProducts, Category, Product, vendors, brands, PaymentMethod, Vendor, Brand, searchProducts // Ensure all types/data are exported } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
@@ -18,7 +18,7 @@ const useDebounce = (value: string, delay: number): string => {
 // --- End Debounce Hook ---
 
 const MAX_DISPLAY_COUNT = 10;
-const DEFAULT_SORT_TYPE = 'rating-desc';
+const DEFAULT_SORT_TYPE = 'rating-desc'; // Define default sort type
 
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
@@ -37,7 +37,6 @@ interface ActiveFiltersState {
   nearby: boolean;
   boxnow: boolean;
   instock: boolean;
-  // Removed categoryIds as filter now navigates away
 }
 
 // Define available category structure
@@ -85,12 +84,12 @@ const SearchResults: React.FC = () => {
   const [baseSearchResults, setBaseSearchResults] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [availableBrands, setAvailableBrands] = useState<Record<string, number>>({});
-  const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({});
-  const [availableCategories, setAvailableCategories] = useState<AvailableCategory[]>([]);
-  const [sliderCategories, setSliderCategories] = useState<AvailableCategory[]>([]);
+  const [availableSpecs, setAvailableSpecs] = useState<Record<string, Set<string>>>({}); // Stores original case keys/values
+  const [availableCategories, setAvailableCategories] = useState<AvailableCategory[]>([]); // For sidebar links
+  const [sliderCategories, setSliderCategories] = useState<AvailableCategory[]>([]); // **NEW: For Slider**
   const [showMoreCategories, setShowMoreCategories] = useState(false);
-  const [showMoreBrands, setShowMoreBrands] = useState(false);
-  const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({});
+  const [showMoreBrands, setShowMoreBrands] = useState(false); // State for brand filter toggle
+  const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({}); // State for spec filter toggles
   const [certifiedVendors, setCertifiedVendors] = useState<Vendor[]>([]);
   const [showMoreVendors, setShowMoreVendors] = useState(false);
   const [sortType, setSortType] = useState<string>(() => searchParams.get('sort') || DEFAULT_SORT_TYPE);
@@ -105,49 +104,26 @@ const SearchResults: React.FC = () => {
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
-  const debouncedSearchQuery = useDebounce(searchQuery, 0); // Keep debounce if needed, otherwise set to 0
+  const debouncedSearchQuery = useDebounce(searchQuery, 100); // Example: Faster debounce
 
   // Helper for case-insensitive key find
-  const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => {
-      const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map);
-      return mapKeys.find(k => k.toLowerCase() === lowerCaseKey);
-  };
+  const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => { const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map); return mapKeys.find(k => k.toLowerCase() === lowerCaseKey); };
   // Helper for case-insensitive value find
-  const findOriginalCaseValue = (set: Set<string> | undefined, lowerCaseValue: string): string | undefined => {
-      if (!set) return undefined;
-      return Array.from(set).find(v => v.toLowerCase() === lowerCaseValue);
-  };
+  const findOriginalCaseValue = (set: Set<string> | undefined, lowerCaseValue: string): string | undefined => { if (!set) return undefined; return Array.from(set).find(v => v.toLowerCase() === lowerCaseValue); };
 
-  // ** SIMPLIFIED: Reads URL params directly (lowercase/IDs) **
+  // ** Reads URL params directly (lowercase/IDs) **
   const getFiltersFromUrl = (): ActiveFiltersState => {
         const params = searchParams;
         const storeDomains = params.get('store')?.toLowerCase().split(',').filter(Boolean) || [];
         const vendorIdsFromUrl = storeDomains.map(domain => vendorDomainMap.get(domain)?.id).filter((id): id is number => id !== undefined);
         const brandsFromUrl = params.get('brand')?.toLowerCase().split(',').filter(Boolean) || [];
         // Identify and parse spec parameters (without 'spec_' prefix, store lowercase)
-        const specsFromUrl = Array.from(params.entries()).reduce((acc, [key, value]) => {
-            const lowerKey = key.toLowerCase();
-            if (!RESERVED_PARAMS.has(lowerKey)) { // If it's not reserved, assume it's a spec
-                 acc[lowerKey] = value.toLowerCase().split(',').filter(Boolean);
-            }
-            return acc;
-        }, {} as Record<string, string[]>);
-
-        return {
-            brands: brandsFromUrl,
-            specs: specsFromUrl,
-            vendorIds: vendorIdsFromUrl,
-            deals: params.get('deals') === '1',
-            certified: params.get('certified') === '1',
-            nearby: params.get('nearby') === '1',
-            boxnow: params.get('boxnow') === '1',
-            instock: params.get('instock') === '1',
-        };
+        const specsFromUrl = Array.from(params.entries()).reduce((acc, [key, value]) => { const lowerKey = key.toLowerCase(); if (!RESERVED_PARAMS.has(lowerKey)) { acc[lowerKey] = value.toLowerCase().split(',').filter(Boolean); } return acc; }, {} as Record<string, string[]>);
+        return { brands: brandsFromUrl, specs: specsFromUrl, vendorIds: vendorIdsFromUrl, deals: params.get('deals') === '1', certified: params.get('certified') === '1', nearby: params.get('nearby') === '1', boxnow: params.get('boxnow') === '1', instock: params.get('instock') === '1' };
     };
 
   // Active filters state - holds ORIGINAL CASING from user interaction
-  // ** Initialize with default empty state **
-  const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>({ brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false });
+  const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>(getFiltersFromUrl());
 
   // --- Helper Data & Category Logic ---
   const allCategories = [...mainCategories, ...categories];
@@ -160,13 +136,16 @@ const SearchResults: React.FC = () => {
     Array.from(params.keys()).forEach(key => { if (!RESERVED_PARAMS.has(key.toLowerCase()) && key.toLowerCase() !== 'q') params.delete(key); }); // Clear old specs/unknowns
     if (filters.brands.length > 0) params.set('brand', filters.brands.map(b => b.toLowerCase()).join(','));
     if (filters.vendorIds.length > 0) { const domains = filters.vendorIds.map(id => vendorIdMap.get(id)?.url).filter((url): url is string => !!url).map(cleanDomainName).map(d => d.toLowerCase()).filter(Boolean); if (domains.length > 0) { params.set('store', domains.join(',')); } }
+    // **MODIFIED: Set spec params WITHOUT 'spec_' prefix**
     Object.entries(filters.specs).forEach(([key, values]) => { if (values.length > 0) { params.set(key.toLowerCase(), values.map(v => v.toLowerCase()).join(',')); } });
     if (filters.deals) params.set('deals', '1');
     if (filters.certified) params.set('certified', '1');
     if (filters.nearby) params.set('nearby', '1');
     if (filters.boxnow) params.set('boxnow', '1');
     if (filters.instock) params.set('instock', '1');
-    if (currentSortType !== DEFAULT_SORT_TYPE) { params.set('sort', currentSortType); } else { params.delete('sort'); }
+    // **MODIFIED: Set sort parameter**
+    if (currentSortType !== DEFAULT_SORT_TYPE) { params.set('sort', currentSortType); }
+    else { params.delete('sort'); } // Remove if default
     setSearchParams(params, { replace: true });
   };
 
@@ -174,12 +153,12 @@ const SearchResults: React.FC = () => {
   useEffect(() => {
     let results: Product[] = [];
     if (searchQuery) { results = searchProducts(searchQuery); }
-    else { results = allMockProducts; }
+    else { results = allMockProducts; } // Load all products if query is empty
     setBaseSearchResults(results);
     extractAvailableFilters(results);
     extractCategories(results, setAvailableCategories);
     updateCertifiedVendors(results);
-    // Let Effect 3 sync activeFilters state from URL when availableSpecs/Brands are ready
+    // Let Effect 3 handle syncing state from URL
   }, [searchQuery]); // Rerun only when actual search query changes
 
   // --- Filter Extraction Logic (Stores original case) ---
@@ -236,7 +215,7 @@ const SearchResults: React.FC = () => {
 
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
-    extractCategories(sortedAndFiltered, setSliderCategories);
+    extractCategories(sortedAndFiltered, setSliderCategories); // Update slider categories
 
   }, [activeFilters, baseSearchResults, sortType, vendorIdMap]);
 
@@ -246,35 +225,18 @@ const SearchResults: React.FC = () => {
       currentAvailableBrands: Record<string, number>, // Original case
       currentAvailableSpecs: Record<string, Set<string>> // Original case keys/values
       ): ActiveFiltersState => {
-          // Find original case brands corresponding to lowercase brands from URL
-          const reconciledBrands = filtersFromUrl.brands
-              .map(lb => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lb))
-              .filter((b): b is string => b !== undefined);
-
-          // Find original case specs corresponding to lowercase specs from URL
-          const reconciledSpecs = Object.entries(filtersFromUrl.specs)
-              .reduce((acc, [lowerKey, lowerValues]) => {
-                  const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey);
-                  if (originalKey) {
-                      const originalValues = lowerValues
-                          .map(lv => Array.from(currentAvailableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv))
-                          .filter((v): v is string => v !== undefined);
-                      if (originalValues.length > 0) { acc[originalKey] = originalValues; } // Store original key/values
-                  }
-                  return acc;
-              }, {} as Record<string, string[]>);
-
-          // Return the full filter state, replacing brands/specs with reconciled versions
-          return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs };
+          const reconciledBrands = filtersFromUrl.brands.map(lb => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lb)).filter((b): b is string => b !== undefined);
+          const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [lowerKey, lowerValues]) => { const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey); if (originalKey) { const originalValues = lowerValues.map(lv => Array.from(currentAvailableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv)).filter((v): v is string => v !== undefined); if (originalValues.length > 0) { acc[originalKey] = originalValues; } } return acc; }, {} as Record<string, string[]>);
+          return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs }; // Return reconciled state
       };
 
 
-  // Effect 3: Update activeFilters state when URL parameters change OR when available options change
+  // Effect 3: Update activeFilters state AND sortType when URL parameters change OR when available options change
   useEffect(() => {
-      // Only run reconciliation if available options have been populated
-      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || !searchQuery) { // Include !searchQuery for initial "All Products" load
+      // Only run reconciliation if available options have been populated OR if showing all products (baseSearchResults might be empty initially)
+      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || baseSearchResults.length > 0 || !searchQuery) {
         const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Reads URL (lowercase/IDs)
-        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Get state with original casing
+        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Gets state with original casing
 
         // Sync sort type from URL as well
         const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
@@ -283,43 +245,54 @@ const SearchResults: React.FC = () => {
         }
 
         // Update active filters state only if reconciled state differs
+        // Use JSON compare for simplicity, might need deep compare for complex objects
         if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
             setActiveFilters(reconciledState); // Set state with original casing
         }
       }
   }, [searchParams, availableBrands, availableSpecs]); // React primarily to URL and available options
 
-  // --- **NEW: Effect for JS Sticky Logic** ---
+
+  // --- JS Sticky Tabs Effect ---
   useEffect(() => {
     const tabsElement = tabsRef.current;
     const placeholderElement = tabsPlaceholderRef.current;
-    if (!tabsElement || !placeholderElement) return; // Exit if elements not ready
-
-    // Calculate offset relative to the document, considering scroll position
-    const initialOffset = tabsElement.getBoundingClientRect().top + window.scrollY;
-    setStickyTopOffset(initialOffset); // Store the initial offset
+    if (!tabsElement || !placeholderElement) return;
+    let initialOffset = 0;
+    // Function to calculate offset, ensures layout is stable
+    const calculateOffset = () => {
+        initialOffset = tabsElement.getBoundingClientRect().top + window.scrollY;
+        // Set offset only if it's positive (element is rendered)
+        if (initialOffset > 0) {
+             setStickyTopOffset(initialOffset);
+        }
+    }
+    // Calculate initially and on window resize
+    calculateOffset();
+    window.addEventListener('resize', calculateOffset);
 
     const handleScroll = () => {
-        const shouldBeSticky = window.scrollY >= initialOffset;
-        if (shouldBeSticky !== isTabsSticky) { // Only update state if status changes
-            setIsTabsSticky(shouldBeSticky);
-            placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
-        }
+        const shouldBeSticky = window.scrollY >= stickyTopOffset;
+        // Check internal state directly for comparison
+        setIsTabsSticky(prevSticky => {
+             if (shouldBeSticky !== prevSticky) {
+                placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
+                return shouldBeSticky;
+             }
+             return prevSticky; // No change needed
+        });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true }); // Use passive listener for better performance
-
-    // Cleanup listener on component unmount
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
         window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', calculateOffset);
     };
-  // Re-calculate initial offset if the base search results change (layout might shift)
-  }, [baseSearchResults, isTabsSticky]); // Add isTabsSticky to deps
+  }, [baseSearchResults, stickyTopOffset]); // Rerun offset calculation if base results change layout
 
-
-  // --- Filter Event Handlers (Update state with original casing) ---
+  // --- Filter Event Handlers ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
-  const createToggleHandler = (filterKey: keyof Omit<ActiveFiltersState, 'categoryIds' | 'brands' | 'specs' | 'vendorIds'>) => { return () => { const newFilters = { ...activeFilters, [filterKey]: !activeFilters[filterKey] }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); }; };
+  const createToggleHandler = (filterKey: keyof Omit<ActiveFiltersState, 'brands' | 'specs' | 'vendorIds'>) => { return () => { const newFilters = { ...activeFilters, [filterKey]: !activeFilters[filterKey] }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); }; };
   const handleDealsToggle = createToggleHandler('deals');
   const handleCertifiedToggle = createToggleHandler('certified');
   const handleNearbyToggle = createToggleHandler('nearby');
@@ -328,18 +301,16 @@ const SearchResults: React.FC = () => {
   const handleBrandFilter = (brand: string) => { const currentBrands = activeFilters.brands; const newBrands = currentBrands.includes(brand) ? currentBrands.filter(b => b !== brand) : [...currentBrands, brand]; const newFilters = { ...activeFilters, brands: newBrands }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
   const handleSpecFilter = (specKey: string, specValue: string) => { const currentSpecs = { ...activeFilters.specs }; const specValues = currentSpecs[specKey] || []; const newSpecValues = specValues.includes(specValue) ? specValues.filter(v => v !== specValue) : [...specValues, specValue]; if (newSpecValues.length === 0) { delete currentSpecs[specKey]; } else { currentSpecs[specKey] = newSpecValues; } const newFilters = { ...activeFilters, specs: currentSpecs }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
   const handleVendorFilter = (vendor: Vendor) => { const currentVendorIds = activeFilters.vendorIds; const newVendorIds = currentVendorIds.includes(vendor.id) ? currentVendorIds.filter(id => id !== vendor.id) : [...currentVendorIds, vendor.id]; const newFilters = { ...activeFilters, vendorIds: newVendorIds }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
-  const handleResetFilters = () => { const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false }; setActiveFilters(resetState); updateUrlParams(resetState, DEFAULT_SORT_TYPE); setSortType(DEFAULT_SORT_TYPE); }; // Reset sort type too
+  const handleResetFilters = () => { const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false }; setActiveFilters(resetState); updateUrlParams(resetState, DEFAULT_SORT_TYPE); setSortType(DEFAULT_SORT_TYPE); };
 
-  // Handler for changing sort type (updates state and URL)
+  // Handler for changing sort type
   const handleSortChange = (newSortType: string) => {
       setSortType(newSortType);
-      updateUrlParams(activeFilters, newSortType); // Update URL with new sort type
+      updateUrlParams(activeFilters, newSortType);
   };
 
-  // --- Scroll To Top Effect on Filter/Sort Change ---
-  useEffect(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeFilters, sortType]);
+  // --- Scroll To Top Effect (Handled by JS Sticky effect already) ---
+  // useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [activeFilters, sortType]);
 
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
@@ -352,7 +323,7 @@ const SearchResults: React.FC = () => {
         const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || vendorIds.length > 0 || deals || certified || nearby || boxnow || instock;
         if (!isAnyFilterActive) return null;
 
-        return ( <div className="applied-filters"> {instock && (<h2 className="applied-filters__filter" key="instock"><a className="pressable" onClick={handleInstockToggle} title="Αφαίρεση φίλτρου άμεσα διαθέσιμων προϊόντων"><span className="applied-filters__label">Άμεσα διαθέσιμα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {deals && (<h2 className="applied-filters__filter" key="deals"><a className="pressable" onClick={handleDealsToggle} title="Αφαίρεση φίλτρου προσφορών"><span className="applied-filters__label">Προσφορές</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {certified && (<h2 className="applied-filters__filter" key="certified"><a className="pressable" onClick={handleCertifiedToggle} title="Αφαίρεση φίλτρου πιστοποιημένων καταστημάτων"><span className="applied-filters__label">Πιστοποιημένα καταστήματα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {nearby && (<h2 className="applied-filters__filter" key="nearby"><a className="pressable" onClick={handleNearbyToggle} title="Αφαίρεση φίλτρου για καταστήματα κοντά μου"><span className="applied-filters__label">Κοντά μου</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {boxnow && (<h2 className="applied-filters__filter" key="boxnow"><a className="pressable" onClick={handleBoxnowToggle} title="Αφαίρεση φίλτρου παράδοσης προϊόντων με Box Now"><span className="applied-filters__label">Παράδοση με Box Now</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {brands.map((brand) => (<h2 className="applied-filters__filter" key={`brand-${brand}`}><a className="pressable" onClick={() => handleBrandFilter(brand)} title={`Αφαίρεση φίλτρου του κατασκευαστή ${brand}`}><span className="applied-filters__label">{brand}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>))} {Object.entries(specs).flatMap(([specKey, specValues]) => specValues.map((specValue) => (<h2 className="applied-filters__filter" key={`spec-${specKey}-${specValue}`}><a className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} title={`Αφαίρεση φίλτρου ${specKey}: ${specValue}`}><span className="applied-filters__label">{`${specKey}: ${specValue}`}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)))} {vendorIds.map((vendorId) => { const vendor = vendorIdMap.get(vendorId); return vendor ? (<h2 className="applied-filters__filter" key={`vendor-${vendor.id}`}><a className="pressable" onClick={() => handleVendorFilter(vendor)} title={`Αφαίρεση φίλτρου από το κατάστημα ${vendor.name}`}><span className="applied-filters__label">{vendor.name}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>) : null; })} <button className="applied-filters__reset pressable" onClick={handleResetFilters} title="Επαναφορά όλων των φίλτρων"><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg><span>Καθαρισμός όλων</span></button> </div> );
+        return ( <div className="applied-filters"> {instock && (<h2 className="applied-filters__filter" key="instock"><a className="pressable" onClick={handleInstockToggle} title="Αφαίρεση φίλτρου άμεσα διαθέσιμων προϊόντων"><span className="applied-filters__label">Άμεσα διαθέσιμα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {deals && (<h2 className="applied-filters__filter" key="deals"><a className="pressable" onClick={handleDealsToggle} title="Αφαίρεση φίλτρου προσφορών"><span className="applied-filters__label">Προσφορές</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {certified && (<h2 className="applied-filters__filter" key="certified"><a className="pressable" onClick={handleCertifiedToggle} title="Αφαίρεση φίλτρου πιστοποιημένων καταστημάτων"><span className="applied-filters__label">Πιστοποιημένα καταστήματα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {nearby && (<h2 className="applied-filters__filter" key="nearby"><a className="pressable" onClick={handleNearbyToggle} title="Αφαίρεση φίλτρου για καταστήματα κοντά μου"><span className="applied-filters__label">Κοντά μου</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {boxnow && (<h2 className="applied-filters__filter" key="boxnow"><a className="pressable" onClick={handleBoxnowToggle} title="Αφαίρεση φίλτρου παράδοσης προϊόντων με Box Now"><span className="applied-filters__label">Παράδοση με Box Now</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {brands.map((brand) => (<h2 className="applied-filters__filter" key={`brand-${brand}`}><a className="pressable" onClick={() => handleBrandFilter(brand)} title={`Αφαίρεση φίλτρου του κατασκευαστή ${brand}`}><span className="applied-filters__label">{brand}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>))} {Object.entries(specs).flatMap(([specKey, specValues]) => specValues.map((specValue) => (<h2 className="applied-filters__filter" key={`spec-${specKey}-${specValue}`}><a className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} title={`Αφαίρεση φίλτρου ${specKey}: ${specValue}`}><span className="applied-filters__label">{`${specKey}: ${specValue}`}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)))} {vendorIds.map((vendorId) => { const vendor = vendorIdMap.get(vendorId); return vendor ? (<h2 className="applied-filters__filter" key={`vendor-${vendor.id}`}><a className="pressable" onClick={() => handleVendorFilter(vendor)} title={`Αφαίρεση φίλτρου από το κατάστημα ${vendor.name}`}><span className="applied-filters__label">{vendor.name}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>) : null; })} <button className="applied-filters__reset pressable" onClick={handleResetFilters} title="Επαναφορά όλων των φίλτρων"><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg><span>Καθαρισμός όλων</span></button> </div> );
     };
 
   // Renders the main content area including sidebar and product grid
@@ -393,18 +364,18 @@ const SearchResults: React.FC = () => {
                       </div>
                     </div>
                )}
-              
+            
               <div className="filters__header">
                 <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
                 {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
               </div>
-
+              
               {/* "Εμφάνιση μόνο" Section */}
               <div className="filter-limit default-list" data-filter-name="limit" data-filter-id data-type data-key="limit">
                  <div className="filter__header"><h4>Εμφάνιση μόνο</h4></div>
                  <div className="filter-container"> <ol>
                     <li data-filter="deals" className={`pressable ${activeFilters.deals ? 'selected' : ''}`}><Link to="#" title="Προσφορές" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleDealsToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg><span>Προσφορές</span></Link></li>
-                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`}><Link to="#" title="Πιστοποιημένα καταστήματα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleCertifiedToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα καταστήματα</span></Link></li>
+                    <li data-filter="certified" className={`pressable ${activeFilters.certified ? 'selected' : ''}`}><Link to="#" title="Πιστοποιημένα καταστήματα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleCertifiedToggle)}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-certified-16"></use></svg><span>Πιστοποιημένα</span></Link></li>
                     <li data-filter="in-stock" className={`pressable ${activeFilters.instock ? 'selected' : ''}`}><Link to="#" title="Άμεσα διαθέσιμα" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleInstockToggle)}><span>Άμεσα διαθέσιμα</span></Link></li>
                     <li data-filter="boxnow" className={`pressable ${activeFilters.boxnow ? 'selected' : ''}`}><Link to="#" title="Παράδοση με BoxNow" rel="nofollow" onClick={(e) => handleLinkFilterClick(e, handleBoxnowToggle)}><svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg><span className="help" data-tooltip-left="" data-tooltip="Προϊόντα από καταστήματα που υποστηρίζουν παράδοση με BOX NOW"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-info-16"></use></svg></span><span>Παράδοση</span></Link></li>
                  </ol> </div>
@@ -446,6 +417,7 @@ const SearchResults: React.FC = () => {
                     {(searchQuery || isAnyFilterActive) && filteredProducts.length > 0 && (
                     <div data-url={location.pathname + location.search} data-title={searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Όλα τα προϊόντα'} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                       <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                      <div className="alerts-minimal__label"></div> {/* Kept this div */}
                     </div>
                     )}
                   </div>
@@ -478,22 +450,28 @@ const SearchResults: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
-                    <div className="tabs"><div className="tabs-wrapper"><nav>
-                      <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
-                      <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
-                      <a href="#" data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-asc'); }}><div className="tabs__content">Φθηνότερα</div></a>
-                      <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
-                      <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
-                      <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
-                      {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">Ανά κατασκευαστή</div></a> )}
-                      <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
-                    </nav></div></div>
-                </div>
+                 // ** JS STICKY WRAPPER **
+                 <>
+                    {/* Placeholder Div - only takes up space when tabs are sticky */}
+                    <div ref={tabsPlaceholderRef} style={{ height: isTabsSticky ? (tabsRef.current?.offsetHeight ?? 0) : '0px' }}></div>
+                    {/* Original Tabs Div with Ref and Conditional Class */}
+                    <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
+                        <div className="tabs"><div className="tabs-wrapper"><nav>
+                            <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                            <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">Νεότερα</div></a>
+                            <a href="#" data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-asc'); }}><div className="tabs__content">Φθηνότερα</div></a>
+                            <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
+                            <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
+                            <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
+                            {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">Ανά κατασκευαστή</div></a> )}
+                            <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
+                        </nav></div></div>
+                    </div>
+                </>
+                 // ** END JS STICKY WRAPPER **
               )}
             </header>
           )}
-            <div ref={tabsPlaceholderRef} style={{ height: '0' }}></div>
 
           {/* Product Grid / No Results Messages */}
           <div className="page-products__main-wrapper">
