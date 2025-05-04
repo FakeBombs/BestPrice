@@ -369,14 +369,14 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                             <section className="section">
                                 <header className="section__header">
                                     <hgroup className="section__hgroup">
-                                        <h2 className="section__title">Δημοφιλείς Κατηγορίες από {vendor.name}</h2>
+                                        <h2 className="section__title">Δημοφιλείς Κατηγορίες {vendor.name}</h2>
                                     </hgroup>
                                 </header>
                                 <div className="categories">
                                     {vendorPopularCategories.map(cat => (
                                         <Link key={cat.id} title={cat.name} className="categories__category" to={`/cat/${cat.id}/${cat.slug}?store=${cleanDomainName(vendor.url).toLowerCase()}`}>
-                                            <img width="200" height="200" className="categories__image" src={cat.image || '/dist/images/cat/placeholder.webp'} alt={cat.name} loading="lazy"/>
-                                            <h2 className="categories__title">{cat.name}</h2>
+                                            <img width="200" height="200" className="categories__image" src={cat.image || '/images/no-image.svg'} alt={cat.name} loading="lazy"/>
+                                            <h2 className="categories__title">{cat.category}</h2>
                                             <div className="categories__cnt">{cat.count} {cat.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
                                         </Link>
                                     ))}
