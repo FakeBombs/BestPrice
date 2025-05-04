@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card'; // Assuming Card is still desired for layout
 import { Product, ProductPrice, Vendor, vendors, PaymentMethod, OpeningHours } from '@/data/mockData';
 import { useTranslation } from '@/hooks/useTranslation'; // Keep if needed by VendorPriceCard or its children
