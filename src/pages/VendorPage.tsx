@@ -188,7 +188,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 <ol>
                                     <li><Link to="/" rel="home"><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
                                     <li><Link to="/m"><span>Καταστήματα</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                                    <li><span className="trail__last">{vendor.name}</span></li>
                                 </ol>
                             </nav>
                         </div>
@@ -334,7 +333,7 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                             <a href={vendor.url} target="_blank" rel="noopener noreferrer nofollow external">
                                             <div className="ratio__wrapper">
                                                 <div className="ratio">
-                                                    <img className="ratio__content" itemProp="image" alt={`${vendor.name} Screenshot`} width="600" height="550" src={`//image.thum.io/get/width/600/crop/800/noanimate/${vendor.url}`} onError={(e) => { (e.target as HTMLImageElement).src = '/images/no-image.svg'; (e.target as HTMLImageElement).classList.add('no-image'); }} loading="lazy" />
+                                                    <img className="ratio__content" itemProp="image" alt={`${vendor.name} Screenshot`} src={`//image.thum.io/get/width/600/crop/1200/noanimate/${vendor.url}`} onError={(e) => { (e.target as HTMLImageElement).src = '/images/no-image.svg'; (e.target as HTMLImageElement).classList.add('no-image'); }} loading="lazy" />
                                                 </div>
                                             </div>
                                             </a>
