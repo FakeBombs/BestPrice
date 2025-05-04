@@ -207,10 +207,14 @@ const ProductDetail = () => {
                 </section>
                 {/* --- End Product Vendors Section --- */}
 
+                <ProductRelatedSections categoryDeals={categoryDeals} productId={numericProductId} />
+
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Ιστορικό Τιμών</h2></hgroup></header>
                     <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>Price History Graph Placeholder</div>
                 </section>
+
+                <ProductRelatedSections similarProducts={similarProducts} productId={numericProductId} />
 
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
@@ -322,7 +326,7 @@ const ProductDetail = () => {
             </main>
           </div>
         </div>
-        <ProductRelatedSections similarProducts={similarProducts} categoryDeals={categoryDeals} recentlyViewed={recentlyViewed} productId={numericProductId} />
+        <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
       </div>
     </div>
   );
