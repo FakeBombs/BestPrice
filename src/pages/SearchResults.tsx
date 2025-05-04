@@ -18,7 +18,7 @@ const useDebounce = (value: string, delay: number): string => {
 // --- End Debounce Hook ---
 
 const MAX_DISPLAY_COUNT = 10;
-const DEFAULT_SORT_TYPE = 'rating-desc';
+const DEFAULT_SORT_TYPE = 'rating-desc'; // Define default sort type
 
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
@@ -29,14 +29,15 @@ const cleanDomainName = (url: string): string => {
 
 // Define the structure for active filters state accurately
 interface ActiveFiltersState {
-  brands: string[];
-  specs: Record<string, string[]>;
-  vendorIds: number[];
+  brands: string[]; // Store original casing
+  specs: Record<string, string[]>; // Store original casing for keys and values
+  vendorIds: number[]; // Store vendor IDs
   deals: boolean;
   certified: boolean;
   nearby: boolean;
   boxnow: boolean;
   instock: boolean;
+  // Removed categoryIds
 }
 
 // Define available category structure
@@ -100,13 +101,11 @@ const SearchResults: React.FC = () => {
   const [isTabsSticky, setIsTabsSticky] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
   const tabsPlaceholderRef = useRef<HTMLDivElement>(null);
-  // Store offset in a ref to avoid triggering effect updates when it changes
-  const stickyOffsetRef = useRef<number>(0);
-
+  const stickyOffsetRef = useRef<number>(0); // Use ref to store offset without triggering re-renders
 
   // Search Query State
   const searchQuery = searchParams.get('q') || '';
-  const debouncedSearchQuery = useDebounce(searchQuery, 100);
+  const debouncedSearchQuery = useDebounce(searchQuery, 100); // Faster debounce
 
   // Helper for case-insensitive key find
   const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => { const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map); return mapKeys.find(k => k.toLowerCase() === lowerCaseKey); };
@@ -123,7 +122,7 @@ const SearchResults: React.FC = () => {
         return { brands: brandsFromUrl, specs: specsFromUrl, vendorIds: vendorIdsFromUrl, deals: params.get('deals') === '1', certified: params.get('certified') === '1', nearby: params.get('nearby') === '1', boxnow: params.get('boxnow') === '1', instock: params.get('instock') === '1' };
     };
 
-  // Active filters state - initialized empty, synced via Effect 3
+  // Active filters state - Initialize empty, synced via Effect 3
   const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>({ brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false });
 
   // --- Helper Data & Category Logic ---
@@ -159,7 +158,7 @@ const SearchResults: React.FC = () => {
     // Let Effect 3 sync activeFilters state from URL
   }, [searchQuery]);
 
-  // --- Filter Extraction Logic ---
+  // --- Filter Extraction Logic (Stores original case) ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
       const brandsCount: Record<string, number> = {};
       const specs: Record<string, Set<string>> = {};
@@ -215,7 +214,7 @@ const SearchResults: React.FC = () => {
     setFilteredProducts(sortedAndFiltered);
     extractCategories(sortedAndFiltered, setSliderCategories); // Update slider categories
 
-  }, [activeFilters, baseSearchResults, sortType, vendorIdMap]);
+  }, [activeFilters, baseSearchResults, sortType, vendorIdMap]); // Rerun when filters, base data, or sort changes
 
  // --- Helper Function to Reconcile URL Filters with Available Options ---
  const reconcileFilters = (
@@ -225,29 +224,27 @@ const SearchResults: React.FC = () => {
       ): ActiveFiltersState => {
           const reconciledBrands = filtersFromUrl.brands.map(lb => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lb)).filter((b): b is string => b !== undefined);
           const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [lowerKey, lowerValues]) => { const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey); if (originalKey) { const originalValues = lowerValues.map(lv => Array.from(currentAvailableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv)).filter((v): v is string => v !== undefined); if (originalValues.length > 0) { acc[originalKey] = originalValues; } } return acc; }, {} as Record<string, string[]>);
-          return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs }; // Return reconciled state
+          return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs };
       };
 
 
   // Effect 3: Update activeFilters state AND sortType when URL parameters change OR when available options change
   useEffect(() => {
-      // Only run reconciliation if available options are ready, needed for case mapping
-      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || (!searchQuery && baseSearchResults.length > 0)) {
-        const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Read URL
-        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Map to original case
+      // Only run reconciliation if available options have been populated OR if showing all products
+      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || !searchQuery) {
+        const filtersFromUrl = getFiltersFromUrl(); // Reads URL (lowercase/IDs)
+        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs); // Gets state with original casing
 
-        // Sync sort type from URL as well
         const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
         if (sortFromUrl !== sortType) {
             setSortType(sortFromUrl);
         }
 
-        // Update active filters state only if reconciled state differs
         if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
             setActiveFilters(reconciledState);
         }
       }
-  }, [searchParams, availableBrands, availableSpecs]); // React to URL and available options
+  }, [searchParams, availableBrands, availableSpecs]); // React primarily to URL and available options
 
   // --- JS Sticky Tabs Effect ---
   useEffect(() => {
@@ -255,62 +252,63 @@ const SearchResults: React.FC = () => {
     const placeholderElement = tabsPlaceholderRef.current;
     if (!tabsElement || !placeholderElement) return;
 
-    let initialOffset = 0;
-    let timeoutId: NodeJS.Timeout | null = null; // For cleanup
+    let timeoutId: NodeJS.Timeout | null = null;
+    let resizeTimeoutId: NodeJS.Timeout | null = null;
 
-    // Function to calculate the correct offset
     const calculateOffset = () => {
         if (tabsElement.offsetParent !== null) {
-             // Calculate offset from the document top
-             initialOffset = tabsElement.getBoundingClientRect().top + window.scrollY;
-             stickyOffsetRef.current = initialOffset; // Store in ref
+             stickyOffsetRef.current = tabsElement.getBoundingClientRect().top + window.scrollY;
         } else {
-            // Retry if element not fully laid out
-             if (timeoutId) clearTimeout(timeoutId); // Clear previous timeout
+             if (timeoutId) clearTimeout(timeoutId);
              timeoutId = setTimeout(calculateOffset, 50);
         }
     };
 
-    // Debounce resize calculation
-    let resizeTimeoutId: NodeJS.Timeout | null = null;
     const handleResize = () => {
         if (resizeTimeoutId) clearTimeout(resizeTimeoutId);
-        resizeTimeoutId = setTimeout(calculateOffset, 150); // Recalculate on resize end
+        resizeTimeoutId = setTimeout(calculateOffset, 150);
     };
 
+    let frameId: number | null = null;
     const handleScroll = () => {
-        // Use the stored offset from the ref
-        const currentOffset = stickyOffsetRef.current;
-        if (currentOffset > 0) { // Ensure offset was calculated
-            const shouldBeSticky = window.scrollY >= currentOffset;
-            setIsTabsSticky(prevSticky => {
-                 if (shouldBeSticky !== prevSticky) {
-                    placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
-                    return shouldBeSticky;
-                 }
-                 return prevSticky;
-            });
-        }
+        if (frameId !== null) return; // Already scheduled a frame
+
+        frameId = window.requestAnimationFrame(() => {
+            const currentOffset = stickyOffsetRef.current;
+            if (currentOffset > 0) {
+                const shouldBeSticky = window.scrollY >= currentOffset;
+                setIsTabsSticky(prevSticky => {
+                    if (shouldBeSticky !== prevSticky) {
+                        placeholderElement.style.height = shouldBeSticky ? `${tabsElement.offsetHeight}px` : '0px';
+                        return shouldBeSticky;
+                    }
+                    return prevSticky;
+                });
+            }
+             frameId = null; // Reset frame ID after execution
+        });
     };
 
-    // Calculate offset shortly after mount/update to allow layout settlement
-    const initialCalcTimeout = setTimeout(calculateOffset, 100);
+    const initialCalcTimeout = setTimeout(calculateOffset, 150); // Slightly longer delay
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
         if (timeoutId) clearTimeout(timeoutId);
         if (resizeTimeoutId) clearTimeout(resizeTimeoutId);
         clearTimeout(initialCalcTimeout);
         window.removeEventListener('scroll', handleScroll);
         window.removeEventListener('resize', handleResize);
-        if (placeholderElement) { placeholderElement.style.height = '0px'; } // Reset placeholder
+        if (frameId !== null) {
+             window.cancelAnimationFrame(frameId); // Cancel frame on cleanup
+        }
+        if (placeholderElement) { placeholderElement.style.height = '0px'; }
     };
-  }, [baseSearchResults.length]); // Rerun setup if base results potentially change layout
+  // Rerun when the presence of base results changes, might affect layout significantly
+  }, [baseSearchResults.length > 0]);
 
-  // --- Filter Event Handlers ---
+  // --- Filter Event Handlers (Update state with original casing) ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
   const createToggleHandler = (filterKey: keyof Omit<ActiveFiltersState, 'brands' | 'specs' | 'vendorIds'>) => { return () => { const newFilters = { ...activeFilters, [filterKey]: !activeFilters[filterKey] }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); }; };
   const handleDealsToggle = createToggleHandler('deals');
@@ -331,10 +329,29 @@ const SearchResults: React.FC = () => {
 
   // --- Scroll To Top Effect on Filter/Sort Change ---
   useEffect(() => {
-      // Add a check to only scroll if it's not the initial state reconciliation
-      // This is tricky; a simpler approach is just always scroll, users expect it.
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeFilters, sortType]); // Trigger scroll on filter or sort change
+      // Check if filters or sortType actually changed from the previous render
+      // Use refs to track previous values
+      const prevFiltersRef = useRef<ActiveFiltersState>();
+      const prevSortTypeRef = useRef<string>();
+
+      let hasChanged = false;
+      if (prevFiltersRef.current && JSON.stringify(activeFilters) !== JSON.stringify(prevFiltersRef.current)) {
+          hasChanged = true;
+      }
+      if (prevSortTypeRef.current && sortType !== prevSortTypeRef.current) {
+          hasChanged = true;
+      }
+
+      // Update refs for the next render
+      prevFiltersRef.current = activeFilters;
+      prevSortTypeRef.current = sortType;
+
+      // Scroll only if something changed (avoids scrolling on initial load/sync)
+      if (hasChanged) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+  }, [activeFilters, sortType]);
+
 
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
@@ -364,6 +381,10 @@ const SearchResults: React.FC = () => {
          {baseSearchResults.length > 0 && (
             <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header">
+              <div className="filters__header">
+                <h3 className="filters__header-title filters__header-title--filters">Φίλτρα</h3>
+                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
+              </div>
 
                {/* Categories Filter (Links to Category Page) */}
                {availableCategories.length > 0 && (
@@ -388,11 +409,6 @@ const SearchResults: React.FC = () => {
                       </div>
                     </div>
                )}
-              
-              <div className="filters__header">
-                <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
-                {isAnyFilterActive && ( <Link to="#" onClick={(e) => handleLinkFilterClick(e, handleResetFilters)} className="pressable filters__header-remove popup-anchor" data-tooltip="Αφαίρεση όλων των φίλτρων" data-tooltip-no-border="" data-tooltip-small="true">Καθαρισμός</Link> )}
-              </div>
               
               {/* "Εμφάνιση μόνο" Section */}
               <div className="filter-limit default-list" data-filter-name="limit" data-filter-id data-type data-key="limit">
@@ -441,7 +457,7 @@ const SearchResults: React.FC = () => {
                     {(searchQuery || isAnyFilterActive) && filteredProducts.length > 0 && (
                     <div data-url={location.pathname + location.search} data-title={searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Όλα τα προϊόντα'} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                       <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                      <div className="alerts-minimal__label"></div>
+                      <div className="alerts-minimal__label"></div> {/* Kept this div */}
                     </div>
                     )}
                   </div>
@@ -477,7 +493,7 @@ const SearchResults: React.FC = () => {
                  // ** JS STICKY WRAPPER **
                  <>
                     {/* Placeholder Div - Must have the ref */}
-                    <div ref={tabsPlaceholderRef} style={{ height: '0px' }}></div>
+                    <div ref={tabsPlaceholderRef} style={{ height: isTabsSticky ? (tabsRef.current?.offsetHeight ?? 0) : '0px' }}></div>
                     {/* Original Tabs Div with Ref and Conditional Class */}
                     <div className={`page-header__sorting ${isTabsSticky ? 'js-is-sticky' : ''}`} ref={tabsRef}>
                         <div className="tabs"><div className="tabs-wrapper"><nav>
@@ -552,7 +568,7 @@ const SearchResults: React.FC = () => {
                </nav>
            </div>
            {renderSearchResultsContent()}
-           {/* ** MODIFIED: Price Alert Modal Call for Search ** */}
+           {/* Price Alert Modal */}
            {isPriceAlertModalOpen && priceAlertContext && (
                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="search" searchQuery={priceAlertContext.query} searchFilters={priceAlertContext.filters} />
            )}
