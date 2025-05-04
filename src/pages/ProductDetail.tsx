@@ -45,6 +45,7 @@ const getOpeningStatus = (openingHours: OpeningHours[] | undefined): { text: str
 const ProductDetail = () => {
   // --- Hooks & Initial Setup ---
   const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  const numericProductId = Number(productId);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
