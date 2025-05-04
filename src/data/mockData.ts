@@ -1,10 +1,11 @@
 // Category interface for nested structure
 export interface Category {
-  id: number;              
-  name: string;           
-  slug: string;           
-  parentId?: number;      
-  image: string;
+  id: number;
+  name: string;
+  slug: string;
+  parentId?: number | null;
+  image: string | null;
+  isMain?: boolean; 
 }
 
 // Main categories
@@ -503,16 +504,21 @@ export const categories: Category[] = [
 ];
 
 export interface Vendor {
-  id: number; 
+  id: number;
   name: string;
   logo: string;
-  rating: number;
+  rating?: number; // Optional rating
   url: string;
-  certification: string;
-  telephone: string[]; // Multiple telephone numbers
-  location?: { lat: number; lng: number }[]; // Optional multiple locations defined by lat/lng
-  address?: string[]; // Optional multiple addresses
-  paymentMethods: PaymentMethod[]; // List of payment methods offered
+  certification?: 'Gold' | 'Silver' | 'Bronze' | ''; // Allow empty string for none
+  telephone?: string[];
+  location?: { lat: number; lng: number }[];
+  address?: string[];
+  paymentMethods?: PaymentMethod[]; // Optional list
+  // --- New Optional Fields ---
+  numberOfRatings?: number;        // How many ratings contribute to the average
+  shippingPolicySummary?: string; // Short text about shipping
+  returnPolicySummary?: string;   // Short text about returns
+  isMarketplace?: boolean;         // Is this vendor a marketplace itself (like Public)?
 }
 
 // Payment Methods Enum
@@ -536,154 +542,121 @@ export interface Vendor {
  }
 
 export const vendors: Vendor[] = [
-  { 
-    id: 1, 
-    name: 'You', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', 
-    rating: 4.5, 
-    certification: 'Bronze', 
-    url: 'https://www.you.gr', 
-    telephone: ['211 9991900'], 
-    address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], 
-    location: [{ lat: 37.9337, lng: 23.7004 }], // Add random latitude and longitude
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
-  { 
-    id: 2, 
-    name: 'Plaisio', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', 
-    rating: 4.2, 
-    certification: 'Silver', 
-    url: 'https://www.plaisio.gr', 
-    telephone: ['456123789'], 
-    address: ['Location B'], 
-    location: [{ lat: 37.9838, lng: 23.7275 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty] 
-  },
-  { 
-    id: 3, 
-    name: 'Public', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', 
-    rating: 4.7, 
-    certification: 'Gold', 
-    url: 'https://www.public.gr', 
-    telephone: ['210 8181333'], 
-    address: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα', 'The Mall Athens, Ανδρέα Παπανδρέου 35 (Θέση Ψαλίδι), 15122, Μαρούσι', 'Σ. Καράγιωργα 4 & Λαζαράκη, 16675, Γλυφάδα', 'Γρηγορίου Λαμπράκη 152-154, 18535, Πειραιάς'], 
-    location: [{ lat: 38.0747, lng: 23.7582 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling] 
-  },
-  { 
-    id: 4, 
-    name: 'Κωτσόβολος', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', 
-    rating: 4.0, 
-    certification: 'Gold',
-    url: 'https://www.kotsovolos.gr', 
-    telephone: ['456123789'], 
-    address: ['Location C'], 
-    location: [{ lat: 37.9090, lng: 23.7105 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
-  { 
-    id: 5, 
-    name: 'Funky Buddha', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', 
-    rating: 4.3,
-    url: 'https://www.funky-buddha.com', 
-    telephone: ['456123789'], 
-    address: ['Location C'], 
-    location: [{ lat: 37.9500, lng: 23.6000 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
-  { 
-    id: 6, 
-    name: 'Germanos', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', 
-    rating: 4.1, 
-    certification: '',
-    url: 'https://www.germanos.gr', 
-    telephone: ['456123789'], 
-    address: ['Location C'], 
-    location: [{ lat: 37.9700, lng: 23.7350 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
-  { 
-    id: 7, 
-    name: 'e-shop.gr', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', 
-    rating: 3.2, 
-    certification: 'Gold',
-    url: 'http://www.e-shop.gr', 
-    telephone: ['456123789'], 
-    address: ['Location C'], 
-    location: [{ lat: 38.0100, lng: 23.6000 }], // Random latitude and longitude
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
-  { 
-    id: 8, 
-    name: 'Χαμόγελο του Παιδιού', 
-    logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', 
-    rating: 4.7, 
-    certification: 'Bronze',
-    url: 'https://www.hamogelo.gr', 
-    telephone: ['456123789'], 
-    address: ['Location C'], 
-    location: [{ lat: 37.9200, lng: 23.5400 }], // Random latitude and longitude 
-    paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] 
-  },
+  { id: 1, name: 'You', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5, numberOfRatings: 1500, certification: 'Bronze', url: 'https://www.you.gr', telephone: ['211 9991900'], address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], location: [{ lat: 37.9337, lng: 23.7004 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn], shippingPolicySummary: "Δωρεάν μεταφορικά άνω των 50€" },
+  { id: 2, name: 'Plaisio', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', rating: 4.2, numberOfRatings: 2100, certification: 'Silver', url: 'https://www.plaisio.gr', telephone: ['210 2895000'], address: ['Στρατηγού Μακρυγιάννη 54, Μοσχάτο'], location: [{ lat: 37.9530, lng: 23.6845 }], paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty] },
+  { id: 3, name: 'Public', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', rating: 4.7, numberOfRatings: 5500, certification: 'Gold', url: 'https://www.public.gr', telephone: ['210 8181333'], address: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα'], location: [{ lat: 38.0747, lng: 23.7582 }], paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling], isMarketplace: true, returnPolicySummary: "Επιστροφές εντός 30 ημερών" },
+  { id: 4, name: 'Κωτσόβολος', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', rating: 4.0, numberOfRatings: 3200, certification: 'Gold', url: 'https://www.kotsovolos.gr', telephone: ['210 2899999'], address: ['Λεωφόρος Συγγρού 257-259, Νέα Σμύρνη'], location: [{ lat: 37.9465, lng: 23.7140 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn] },
+  { id: 5, name: 'Funky Buddha', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', rating: 4.3, numberOfRatings: 800, certification: '', url: 'https://www.funky-buddha.com', telephone: ['211 1030800'], address: ['Ερμού 23-25, Αθήνα'], location: [{ lat: 37.9768, lng: 23.7283 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD, PaymentMethod.PayPal] },
+  { id: 6, name: 'Germanos', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', rating: 4.1, numberOfRatings: 1800, certification: '', url: 'https://www.germanos.gr', telephone: ['800 11 40000'], address: ['Λεωφόρος Κηφισίας 196, Νέο Ψυχικό'], location: [{ lat: 38.0076, lng: 23.7779 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD] },
+  { id: 7, name: 'e-shop.gr', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', rating: 3.2, numberOfRatings: 4500, certification: 'Gold', url: 'http://www.e-shop.gr', telephone: ['211 5000500'], address: ['Πανεπιστημίου 44, Αθήνα'], location: [{ lat: 37.9800, lng: 23.7328 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD, PaymentMethod.PayPal] },
+  { id: 8, name: 'Χαμόγελο του Παιδιού', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', rating: 4.7, numberOfRatings: 300, certification: 'Bronze', url: 'https://www.hamogelo.gr', telephone: ['11040'], address: ['Ομήρου 9, Αθήνα'], location: [{ lat: 37.9780, lng: 23.7355 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.PayPal] },
 ];
 
 // Product price from vendor
 export interface ProductPrice {
-  vendorId: number; 
+  vendorId: number;
   price: number;
-  shippingCost: number;
+  shippingCost?: number; // Optional shipping cost per vendor
   inStock: boolean;
+  productUrl?: string; // Direct URL to product on vendor site
+  lastUpdated?: string; // ISO Date string (e.g., "2023-10-27T10:00:00Z")
+  discountPrice?: number; // Optional sale price
+}
+
+// Product Variant Interface
+export interface ProductVariant {
+  sku?: string; // Unique SKU for this variant
+  gtin?: string; // Unique GTIN/EAN for this variant
+  attributes: Record<string, string>; // e.g., { "Color": "Μαύρο", "Μέγεθος": "L" }
+  image?: string; // Specific image for this variant
+  prices: ProductPrice[]; // Prices specific to this variant
 }
 
 // Product
 export interface Product {
-  id: number; 
+  id: number;
   title: string;
-  brand: string;
-  model: string;
+  brand?: string;
+  model?: string;
+  mpn?: string;              // Manufacturer Part Number
+  gtin?: string;             // Global Trade Item Number (EAN, UPC, ISBN)
+  sku?: string;              // Base Stock Keeping Unit
+
   categoryIds: number[];
   description: string;
-  image: string;
-  images: string[];
-  rating: number;
-  reviews: number;
-  specifications: Record<string, string>;
-  prices: ProductPrice[];
+  shortDescription?: string;
+
+  image: string;             // Main display image
+  images?: string[];          // Additional images
+  videos?: string[];         // **NEW: Array for video URLs**
+
+  rating?: number;
+  reviews?: number;          // Renamed from numReviews for clarity
+
+  specifications?: Record<string, string | number | boolean>; // Allow varied types
+
+  prices: ProductPrice[];      // Prices for the base product or if no variants
+  lowestPrice?: number;      // Pre-calculated lowest price available
+  bestPriceVendorId?: number;// ID of vendor with lowest price
+
+  hasVariants?: boolean;       // Indicates if product has variants
+  variants?: ProductVariant[]; // Array of variants
+  variantAttributes?: string[];// e.g., ["Color", "Size"] that define variants
+
+  status?: 'active' | 'inactive' | 'discontinued';
+  isFeatured?: boolean;
+  tags?: string[];           // e.g., ["new", "sale", "best-seller"]
+  dateAdded?: string;        // ISO Date string
+  lastModified?: string;     // ISO Date string
+  releaseDate?: string;      // **NEW: ISO Date string (e.g., "2023-09-15")**
+
+  weight?: number;           // In kg for shipping
+  dimensions?: { length?: number; width?: number; height?: number; unit?: 'cm' | 'in'; };
+  shippingClass?: string;
+
+  relatedProductIds?: number[];
+  comparisonProductIds?: number[];
 }
 
 // Sample products (20 random products)
 export const products: Product[] = [
   {
     id: 1,
-    title: 'Apple iPhone 14 Pro Max 256GB',
+    title: 'Apple iPhone 14 Pro Max 256GB Deep Purple',
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
-    categoryIds: [99],
-    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Εκπληκτική οθόνη, επαγγελματική κάμερα, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία και εντυπωσιακό design. Ζήσε την απόλυτη εμπειρία Apple.',
+    mpn: 'MQ9X3HX/A', // Example MPN
+    gtin: '0194253401199', // Example GTIN/EAN
+    categoryIds: [99, 100], // Mobile, iPhone
+    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Με κάμερα 48MP, Always-On οθόνη, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία, εντυπωσιακό design και ανίχνευση σύγκρουσης. Ζήσε την απόλυτη εμπειρία Apple.',
+    shortDescription: 'iPhone 14 Pro Max 256GB Deep Purple με A16 Bionic.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
       '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
       '//bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp'
     ],
+    videos: ['https://www.youtube.com/watch?v=exampleVideoId1'], // Example Video URL
     rating: 4.8,
     reviews: 245,
-    specifications: {
-      'Οθόνη': '6.7 inch Super Retina XDR',
-      'Επεξεργαστής': 'A16 Bionic',
-      'RAM': '6GB',
-      'Χωρητικότητα': '256GB',
-      'Camera': '48MP + 12MP + 12MP',
-      'Λειτουργικό Σύστημα': 'iOS 16',
-      'Μπαταρία': '4323 mAh',
-      'Διαστάσεις': '160.7 x 77.6 x 7.85 mm',
-      'Weight': '240g'
-    },
+    specifications: { 'Οθόνη': '6.7 inch Super Retina XDR', 'Επεξεργαστής': 'A16 Bionic', 'RAM': '6GB', 'Χωρητικότητα': '256GB', 'Camera': '48MP + 12MP + 12MP', 'Λειτουργικό Σύστημα': 'iOS 16', 'Μπαταρία': '4323 mAh', 'Διαστάσεις': '160.7 x 77.6 x 7.85 mm', 'Weight': '240g', 'Χρώμα': 'Deep Purple' },
+    prices: [
+      { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true, productUrl: 'https://www.you.gr/product/1', lastUpdated: '2023-10-26T10:00:00Z' },
+      { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true, productUrl: 'https://www.plaisio.gr/product/1', lastUpdated: '2023-10-27T08:30:00Z' },
+      { vendorId: 3, price: 1289.99, shippingCost: 7.99, inStock: true, productUrl: 'https://www.public.gr/product/1', lastUpdated: '2023-10-27T11:15:00Z' },
+      { vendorId: 4, price: 1309.99, shippingCost: 0, inStock: false, productUrl: 'https://www.kotsovolos.gr/product/1', lastUpdated: '2023-10-25T14:00:00Z' }
+    ],
+    lowestPrice: 1289.99,
+    bestPriceVendorId: 3,
+    status: 'active',
+    isFeatured: true,
+    tags: ["new", "smartphone", "ios"],
+    dateAdded: "2022-09-16T00:00:00Z",
+    releaseDate: "2022-09-16", // Added Release Date
+    lastModified: "2023-10-27T11:15:00Z",
+    hasVariants: true, // Example: This phone might have color/storage variants elsewhere
+    variantAttributes: ["Χρώμα", "Χωρητικότητα"],
+    // variants: [...] // Could add full variant objects here if needed
+  },
     prices: [
       { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true },
       { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true },
@@ -693,34 +666,41 @@ export const products: Product[] = [
   },
   {
     id: 2,
-    title: 'Samsung Galaxy S23 Ultra 512GB',
+    title: 'Samsung Galaxy S23 Ultra 512GB Phantom Black',
     brand: 'Samsung',
     model: 'Galaxy S23 Ultra',
-    categoryIds: [99], // Now includes the smartphone subcategory
-    description: 'The ultimate Samsung phone with exceptional camera capabilities.',
-    image: '//placehold.co/400x400?text=Galaxy+S23',
-    images: [
-      '//placehold.co/400x400?text=Galaxy+S23',
-      '//placehold.co/400x400?text=Galaxy+S23+Side',
-      '//placehold.co/400x400?text=Galaxy+S23+Back'
-    ],
+    categoryIds: [99],
+    description: 'Το απόλυτο Samsung τηλέφωνο με εξαιρετικές δυνατότητες κάμερας και ενσωματωμένο S Pen.',
+    image: '//placehold.co/400x400?text=Galaxy+S23+Black',
+    images: ['//placehold.co/400x400?text=Galaxy+S23+Black', '//placehold.co/400x400?text=Galaxy+S23+Side', '//placehold.co/400x400?text=Galaxy+S23+Back'],
+    videos: [], // No videos for this example
     rating: 4.7,
     reviews: 189,
-    specifications: {
-      'Οθόνη': '6.8 inch Dynamic AMOLED 2X',
-      'Επεξεργαστής': 'Snapdragon 8 Gen 2',
-      'RAM': '12GB',
-      'Χωρητικότητα': '512GB',
-      'Camera': '200MP + 12MP + 10MP + 10MP',
-      'Λειτουργικό Σύστημα': 'Android 13',
-      'Μπαταρία': '5000 mAh',
-      'Διαστάσεις': '163.4 x 78.1 x 8.9 mm',
-      'Weight': '233g'
-    },
-    prices: [
-      { vendorId: 1, price: 1199.99, shippingCost: 0, inStock: true },
-      { vendorId: 3, price: 1179.99, shippingCost: 7.99, inStock: true },
-      { vendorId: 5, price: 1189.99, shippingCost: 5, inStock: true }
+    specifications: { 'Οθόνη': '6.8 inch Dynamic AMOLED 2X', 'Επεξεργαστής': 'Snapdragon 8 Gen 2 for Galaxy', 'RAM': '12GB', 'Χωρητικότητα': '512GB', 'Camera': '200MP + 12MP + 10MP + 10MP', 'Λειτουργικό Σύστημα': 'Android 13', 'Μπαταρία': '5000 mAh', 'Διαστάσεις': '163.4 x 78.1 x 8.9 mm', 'Weight': '233g', 'Χρώμα': 'Phantom Black' },
+    prices: [ { vendorId: 1, price: 1199.99, shippingCost: 0, inStock: true, lastUpdated: '2023-10-27T09:00:00Z' }, { vendorId: 3, price: 1179.99, shippingCost: 7.99, inStock: true, lastUpdated: '2023-10-27T11:00:00Z' }, { vendorId: 7, price: 1189.99, shippingCost: 3, inStock: true, discountPrice: 1159.99, lastUpdated: '2023-10-26T18:00:00Z' } ],
+    lowestPrice: 1159.99, // Reflects discount
+    bestPriceVendorId: 7,
+    status: 'active',
+    tags: ["android", "flagship", "s pen"],
+    dateAdded: "2023-02-01T00:00:00Z",
+    releaseDate: "2023-02-17",
+    lastModified: "2023-10-27T11:00:00Z",
+    hasVariants: true,
+    variantAttributes: ["Χρώμα", "Χωρητικότητα"],
+    variants: [ // Example variant structure
+        {
+            sku: "SM-S918BZGPEUB", // Variant SKU
+            gtin: "8806094732145",
+            attributes: { "Χρώμα": "Green", "Χωρητικότητα": "512GB" },
+            image: "//placehold.co/400x400?text=Galaxy+S23+Green",
+            prices: [ { vendorId: 3, price: 1185.00, shippingCost: 8, inStock: true, lastUpdated: '2023-10-27T10:00:00Z' } ]
+        },
+         {
+            sku: "SM-S918BZCPEUB",
+            gtin: "8806094732888",
+            attributes: { "Χρώμα": "Cream", "Χωρητικότητα": "512GB" },
+            prices: [ { vendorId: 1, price: 1199.99, shippingCost: 0, inStock: false, lastUpdated: '2023-10-25T10:00:00Z' } ]
+        }
     ]
   },
   {
@@ -835,24 +815,25 @@ export const products: Product[] = [
   },
   {
     id: 8,
-    title: 'PlayStation 5 Console',
+    title: 'PlayStation 5 Console Digital Edition',
     brand: 'Sony',
-    model: 'PS5',
+    model: 'PS5 Digital Edition',
+    gtin: '0711719395102',
     categoryIds: [285],
-    description: 'Next-gen gaming console with stunning graphics.',
-    image: '//placehold.co/400x400?text=PS5',
-    images: ['//placehold.co/400x400?text=PS5'],
+    description: 'Next-gen gaming console without a disc drive.',
+    image: '//placehold.co/400x400?text=PS5+Digital',
+    images: ['//placehold.co/400x400?text=PS5+Digital'],
     rating: 4.9,
-    reviews: 500,
-    specifications: {
-      'Χωρητικότητα': '825GB SSD',
-      'Resolution': 'Up to 120fps',
-      'Includes': 'Controller and Cable'
-    },
-    prices: [
-      { vendorId: 1, price: 499.99, shippingCost: 0, inStock: true },
-      { vendorId: 2, price: 489.99, shippingCost: 10, inStock: true }
-    ]
+    reviews: 500, // Shared reviews with disc version for example
+    specifications: { 'Χωρητικότητα': '825GB SSD', 'Resolution': 'Up to 120fps', 'Includes': 'Controller and Cable', 'Optical Drive': 'No' },
+    prices: [ { vendorId: 1, price: 449.99, shippingCost: 0, inStock: false, lastUpdated: '2023-10-20T10:00:00Z' }, { vendorId: 4, price: 439.99, shippingCost: 10, inStock: true, lastUpdated: '2023-10-27T12:00:00Z' } ],
+    lowestPrice: 439.99,
+    bestPriceVendorId: 4,
+    status: 'active',
+    tags: ["gaming", "console", "digital"],
+    dateAdded: "2020-11-12T00:00:00Z",
+    releaseDate: "2020-11-12",
+    lastModified: "2023-10-27T12:00:00Z",
   },
   {
     id: 9,
@@ -1088,96 +1069,110 @@ export const products: Product[] = [
 
 // Brands
 export interface Brand {
-  id: number; 
+  id: number;
   name: string;
   logo: string;
+  slug?: string; // Added slug for potential brand pages
+  // --- New Optional Fields ---
+  officialWebsite?: string;
+  description?: string;
+  countryOfOrigin?: string;
 }
 
 export const brands: Brand[] = [
-  { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg' },
-  { id: 2, name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg' },
-  { id: 3, name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg' },
-  { id: 4, name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg' },
-  { id: 5, name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg' },
-  { id: 6, name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg' },
-  { id: 7, name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg' },
-  { id: 8, name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg' },
-  { id: 9, name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg' },
-  { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg' },
-  { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg' },
-  { id: 12, name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg' },
-  { id: 13, name: 'ΑΛΦΑ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30165.svg' },
-  { id: 14, name: '3Guys', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16764.svg' },
-  { id: 15, name: '2K Games', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/18388.svg' },
-  { id: 16, name: '7Days', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/39065.svg' },
-  { id: 17, name: 'Βιοκαρπέτ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30055.svg' },
-  { id: 18, name: 'Χαμόγελο του Παιδιού', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/33632.svg' },
-  { id: 19, name: 'Χρωτέχ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/36032.svg' },
-  { id: 20, name: 'Γιώτης', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/21623.svg' }
+  { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
+  { id: 2, name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg', slug: 'samsung', officialWebsite: 'https://www.samsung.com', countryOfOrigin: 'South Korea' },
+  { id: 3, name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg', slug: 'sony' },
+  { id: 4, name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg', slug: 'lg' },
+  { id: 5, name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg', slug: 'canon' },
+  { id: 6, name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg', slug: 'nikon' },
+  { id: 7, name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg', slug: 'lenovo' },
+  { id: 8, name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg', slug: 'dell' },
+  { id: 9, name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg', slug: 'hp' },
+  { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg', slug: 'asus' },
+  { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg', slug: 'acer' },
+  { id: 12, name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg', slug: 'microsoft' },
+  { id: 13, name: 'ΑΛΦΑ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30165.svg', slug: 'alfa' },
+  { id: 14, name: '3Guys', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16764.svg', slug: '3guys' },
+  { id: 15, name: '2K Games', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/18388.svg', slug: '2k-games' },
+  { id: 16, name: '7Days', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/39065.svg', slug: '7days' },
+  { id: 17, name: 'Βιοκαρπέτ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30055.svg', slug: 'viokarpet' },
+  { id: 18, name: 'Χαμόγελο του Παιδιού', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/33632.svg', slug: 'hamogelo-tou-paidiou' },
+  { id: 19, name: 'Χρωτέχ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/36032.svg', slug: 'xrotex' },
+  { id: 20, name: 'Γιώτης', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/21623.svg', slug: 'giotis' },
 ];
 
 // Helper functions to simulate API calls
 export const fetchFeaturedProducts = () => {
-  return products.slice(0, 5);
+  // Could modify to use the isFeatured flag
+  return products.filter(p => p.isFeatured).slice(0, 5);
 };
 
 export const fetchDeals = () => {
-  return products.slice(3, 8);
+  // Could modify to use tags or discountPrice
+  return products.filter(p => p.tags?.includes('sale') || p.prices.some(price => price.discountPrice)).slice(0, 5);
 };
 
 export const fetchNewArrivals = () => {
-  return products.slice(5, 10);
-};
-
-export const searchProducts = (query: string) => {
-  const searchText = query.toLowerCase();
-  return products.filter(product => 
-    product.title.toLowerCase().includes(searchText) ||
-    product.brand.toLowerCase().includes(searchText)
-  );
-};
-
-export const getCategoryById = (id: number) => {
-  return categories.find(category => category.id === id);
-};
-
-export const getProductById = (id: number) => {
-  return products.find(product => product.id === id);
-};
-
-export const getProductsByCategory = (categoryId: number) => {
-  return products.filter(product => product.categoryIds.includes(categoryId));
-};
-
-export const getSimilarProducts = (productId: number) => {
-  const product = getProductById(productId);
-  if (!product) return [];
-  
-  return products
-    .filter(p => product.categoryIds.some(id => p.categoryIds.includes(id)) && p.id !== productId)
+  // Could modify to sort by dateAdded or releaseDate
+   return [...products]
+    .sort((a, b) => new Date(b.releaseDate || b.dateAdded || 0).getTime() - new Date(a.releaseDate || a.dateAdded || 0).getTime())
     .slice(0, 5);
 };
 
-export const getVendorById = (vendorId: number) => {
-  return vendors.find(vendor => vendor.id === vendorId);
+export const searchProducts = (query: string): Product[] => {
+  if (!query) return []; // Return empty if query is empty
+  const searchText = query.toLowerCase();
+  // Simple search - enhance as needed (e.g., check description, specs)
+  return products.filter(product =>
+    product.title.toLowerCase().includes(searchText) ||
+    product.brand?.toLowerCase().includes(searchText) ||
+    product.model?.toLowerCase().includes(searchText) ||
+    product.tags?.some(tag => tag.toLowerCase().includes(searchText))
+  );
 };
 
-export const getBestPrice = (product: Product) => {
-  if (!product.prices.length) return null;
-  
+export const getCategoryById = (id: number): Category | undefined => {
+    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+    return allCatsMap.get(id);
+};
+
+export const getProductById = (id: number): Product | undefined => {
+  return products.find(product => product.id === id);
+};
+
+export const getProductsByCategory = (categoryId: number): Product[] => {
+  return products.filter(product => product.categoryIds.includes(categoryId));
+};
+
+export const getSimilarProducts = (productId: number): Product[] => {
+  const product = getProductById(productId);
+  if (!product) return [];
+  // Basic similarity: same leaf category, different product
+  const leafCategoryId = product.categoryIds[product.categoryIds.length - 1];
+  return products
+    .filter(p => p.id !== productId && p.categoryIds.includes(leafCategoryId))
+    .slice(0, 5);
+};
+
+export const getVendorById = (vendorId: number): Vendor | undefined => {
+  // Use precomputed map for efficiency
+  const vendorMap = new Map(vendors.map(v => [v.id, v]));
+  return vendorMap.get(vendorId);
+};
+
+export const getBestPrice = (product: Product): ProductPrice | null => {
+  if (!product || !product.prices || product.prices.length === 0) return null;
   const inStockPrices = product.prices.filter(price => price.inStock);
-  if (!inStockPrices.length) return product.prices[0];
-  
-  return inStockPrices.reduce((best, current) => 
-    (current.price < best.price) ? current : best
-  , inStockPrices[0]);
+  if (inStockPrices.length === 0) {
+      // Optional: Return lowest out-of-stock price if desired, otherwise null
+      // return product.prices.reduce((best, current) => (current.price < best.price) ? current : best, product.prices[0]);
+      return null;
+  }
+  // Find the minimum price among in-stock items
+  return inStockPrices.reduce((best, current) => (current.price < best.price) ? current : best, inStockPrices[0]);
 };
 
 // Fetch categories and brands
-export const getCategories = () => {
-  return categories;
-};
-
-export const getBrands = () => {
-  return brands;
-};
+export const getCategories = (): Category[] => { return categories; };
+export const getBrands = (): Brand[] => { return brands; };
