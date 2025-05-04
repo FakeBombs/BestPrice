@@ -18,7 +18,7 @@ const cleanDomainName = (url: string): string => {
 interface VendorPriceCardProps {
   priceInfo: ProductPrice;
   product: Product;
-  openPopup: (vendor: Vendor) => void; // Expects Vendor object
+  openPopup: (vendor: Vendor, priceInfo: ProductPrice) => void;
 }
 
 export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps) => { // Use NAMED export
@@ -51,7 +51,7 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
                   )}
                 </a>
                 {/* Popup trigger link */}
-                <Link data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to="#" onClick={(e) => { e.preventDefault(); openPopup(vendor); }}>
+                <Link data-tooltip={`Πληροφορίες για το ${vendor.name}`} className="prices__merchant-link popup-anchor" data-mid={vendor.id} to="#" onClick={(e) => { e.preventDefault(); openPopup(vendor, priceInfo); }}>
                   <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
                   <em>{vendor.name}</em>
                 </Link>
@@ -146,7 +146,7 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
               </Link>
               )}
               {vendorAddress && (
-                   <Link className="prices__footer-item" data-mid={vendor.id} to="#" onClick={(e) => { e.preventDefault(); openPopup(vendor); }}><div className="dotted-link">{vendorAddress}</div></Link>
+                   <Link className="prices__footer-item" data-mid={vendor.id} to="#" onClick={(e) => { e.preventDefault(); openPopup(vendor, priceInfo); }}><div className="dotted-link">{vendorAddress}</div></Link>
               )}
               {/* Payment Method Icons */}
               {vendor.paymentMethods?.includes(PaymentMethod.Klarna) && (
