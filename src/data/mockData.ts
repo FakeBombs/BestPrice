@@ -583,6 +583,10 @@ export interface ProductPrice {
   productUrl?: string; // Direct URL to product on vendor site
   lastUpdated?: string; // ISO Date string (e.g., "2023-10-27T10:00:00Z")
   discountPrice?: number; // Optional sale price
+  installments?: {
+      count: number; // e.g., 3, 6, 12, 24
+      monthlyAmount?: number; // Optional: pre-calculated monthly cost
+  };
 }
 
 // Product Variant Interface
@@ -662,8 +666,8 @@ export const products: Product[] = [
     reviews: 245,
     specifications: { 'Οθόνη': '6.7 inch Super Retina XDR', 'Επεξεργαστής': 'A16 Bionic', 'RAM': '6GB', 'Χωρητικότητα': '256GB', 'Camera': '48MP + 12MP + 12MP', 'Λειτουργικό Σύστημα': 'iOS 16', 'Μπαταρία': '4323 mAh', 'Διαστάσεις': '160.7 x 77.6 x 7.85 mm', 'Weight': '240g', 'Χρώμα': 'Deep Purple' },
     prices: [
-      { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true, productUrl: 'https://www.you.gr/product/1', lastUpdated: '2023-10-26T10:00:00Z' },
-      { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true, productUrl: 'https://www.plaisio.gr/product/1', lastUpdated: '2023-10-27T08:30:00Z' },
+      { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true, installments: { count: 12 }, productUrl: 'https://www.you.gr/product/1', lastUpdated: '2023-10-26T10:00:00Z' },
+      { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true, installments: { count: 24, monthlyAmount: 55 }, productUrl: 'https://www.plaisio.gr/product/1', lastUpdated: '2023-10-27T08:30:00Z' },
       { vendorId: 3, price: 1289.99, shippingCost: 7.99, inStock: true, productUrl: 'https://www.public.gr/product/1', lastUpdated: '2023-10-27T11:15:00Z' },
       { vendorId: 4, price: 1309.99, shippingCost: 0, inStock: false, productUrl: 'https://www.kotsovolos.gr/product/1', lastUpdated: '2023-10-25T14:00:00Z' }
     ],
