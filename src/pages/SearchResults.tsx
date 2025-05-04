@@ -176,7 +176,26 @@ const SearchResults: React.FC = () => {
     switch (sortType) {
       case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity)); break;
       case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0)); break;
-      case 'rating-desc': default: sorted.sort((a, b) => { const avgA = (a.ratingSum || 0) / Math.max(a.numReviews || 1, 1); const avgB = (b.ratingSum || 0) / Math.max(b.numReviews || 1, 1); if (avgB !== avgA) { return avgB - avgA; } else { const numReviewsA = a.numReviews || 0; const numReviewsB = b.numReviews || 0; return numReviewsB - numReviewsA; } }); break;
+      case 'rating-desc': default: sorted.sort((a, b) => {
+            // Calculate average ratings
+            const avgA = (a.ratingSum || 0) / Math.max(a.numReviews || 1, 1);
+            const avgB = (b.ratingSum || 0) / Math.max(b.numReviews || 1, 1);
+
+            // Define a small tolerance for floating-point comparisons
+            const epsilon = 0.00001;
+
+            // Primary Sort: Descending Average Rating (with tolerance)
+            if (Math.abs(avgB - avgA) > epsilon) {
+                // If the difference is greater than the tolerance, sort by rating
+                return avgB - avgA;
+            } else {
+                // Secondary Sort (Tie-breaker): Descending Number of Reviews
+                // Ratings are considered equal within the tolerance
+                const numReviewsA = a.numReviews || 0;
+                const numReviewsB = b.numReviews || 0;
+                return numReviewsB - numReviewsA;
+            }
+        }); break;
       case 'merchants_desc': sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length); break;
     }
     return sorted;
