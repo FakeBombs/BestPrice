@@ -414,7 +414,7 @@ const CategoryPage: React.FC = () => {
                 <div className="products-wrapper">
                     <div className="products-wrapper__header">
                         <div className="products-wrapper__title">
-                            {activeFilters.deals ? 'Προσφορές στην Κατηγορία' : 'Δημοφιλή στην Κατηγορία'}
+                            {activeFilters.deals ? 'Επιλεγμένες προσφορές' : 'Δημοφιλή επιλογές'}
                         </div>
                     </div>
                     <ScrollableSlider>
