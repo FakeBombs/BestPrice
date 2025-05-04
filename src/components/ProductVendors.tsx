@@ -12,7 +12,6 @@ import {
 } from '@/data/mockData';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import PaymentMethodsComponent from '@/components/PaymentMethods';
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import ProductCard from '@/components/ProductCard';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useToast } from '@/hooks/use-toast';
@@ -41,26 +40,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
     const { toast } = useToast(); // Assuming needed for potential actions
     const { user } = useAuth();   // Assuming needed for potential actions
     const { t } = useTranslation(); // Assuming needed
-
-    // --- Document Attributes Logic ---
-    const userAgent = navigator.userAgent.toLowerCase();
-    const [jsEnabled, setJsEnabled] = useState(false);
-    let classNamesForBody = '';
-    let classNamesForHtml = 'page';
-    const checkAdBlockers = (): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } };
-    const isAdBlocked = useMemo(checkAdBlockers, []);
-    if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; }
-    else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; }
-    else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; }
-    else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; }
-    else { classNamesForHtml += ' unknown-device'; }
-    classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
-    classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-    useEffect(() => { setJsEnabled(true); }, []);
-    classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
-    useHtmlAttributes(classNamesForHtml, 'page-merchant');
-    useBodyAttributes(classNamesForBody, '');
-    // --- End Document Attributes ---
 
     // --- State Definitions ---
     const [selectedVendor, setSelectedVendor] = useState<Vendor | null | undefined>(undefined);
@@ -676,3 +655,5 @@ const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCardProps
     </Card>
   );
 };
+
+export default ProductVendors;
