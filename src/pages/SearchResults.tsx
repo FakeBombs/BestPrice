@@ -240,7 +240,19 @@ const SearchResults: React.FC = () => {
 
   // --- Misc Helper/UI Logic ---
   const displayedBrand = activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null;
-  const handlePriceAlert = () => { if (!user) { toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' }); return; } if (currentCategory) { setIsPriceAlertModalOpen(true); } else { toast({ title: 'Error', description: 'Cannot set alert, category not selected.', variant: 'destructive' }); } };
+  const handlePriceAlert = () => {
+      if (!user) {
+          toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' });
+          return;
+      }
+      // Check if there's a search query or active filters to define the alert scope
+      if (searchQuery || Object.values(activeFilters).some(val => Array.isArray(val) ? val.length > 0 : val === true)) {
+          setPriceAlertContext({ query: searchQuery, filters: activeFilters });
+          setIsPriceAlertModalOpen(true);
+      } else {
+          toast({ title: 'Error', description: 'Cannot set alert without a search query or active filters.', variant: 'destructive' });
+      }
+  };
 
    // --- Rendering Functions ---
 
@@ -353,10 +365,12 @@ const SearchResults: React.FC = () => {
                   <h1>{searchQuery ? `Αποτελέσματα για "${searchQuery}"` : 'Όλα τα προϊόντα'}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                    <div data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                    {(searchQuery || isAnyFilterActive) && (
+                    <div data-url={location.pathname + location.search} data-title={searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Όλα τα προϊόντα'} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                       <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                       <div class="alerts-minimal__label"></div>
                     </div>
+                    )}
                   </div>
                 </div>
                  <div className="page-header__title-aside">
