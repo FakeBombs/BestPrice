@@ -148,7 +148,6 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                 <ol>
                                     <li><Link to="/" rel="home"><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
                                     <li><Link to="/m"><span>Καταστήματα</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                                    <li><span className="trail__last">{vendor.name}</span></li>
                                 </ol>
                             </nav>
                         </div>
@@ -199,9 +198,54 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                                                     {/* <a data-review-src="merchant-page-header" href={`/m/${vendor.id}/${vendor.name?.toLowerCase()}/review`} className="id__rating-link">Rate it</a> */}
                                                 </div>
                                             )}
+                                            {/* --- UPDATED Meta List --- */}
                                             <ul className="id__meta">
-                                                {/* Add date joined, social links, opening status if available */}
-                                            </ul>
+                                              {/* Date Joined */}
+                                              {vendor.dateJoined && (
+                                                <li data-type="joined">
+                                                  {/* Format date if needed */}
+                                                  <span className="ui-kit__text ui-kit__muted">Στο BestPrice από {new Date(vendor.dateJoined).toLocaleDateString('el-GR')}</span>
+                                                </li>
+                                              )}
+
+                {/* Social Links */}
+                {vendor.socialLinks && Object.keys(vendor.socialLinks).length > 0 && (
+                    <li data-type="social" style={{ display: 'flex' }}>
+                        <span className="social-links">
+                            {Object.entries(vendor.socialLinks).map(([platform, url]) => {
+                                // Basic mapping, enhance with specific icons/tooltips
+                                let iconId = `icon-${platform}`; // Assumes SVG IDs match platform names
+                                let tooltip = platform.charAt(0).toUpperCase() + platform.slice(1); // Capitalize
+                                if (platform === 'facebook') iconId = 'icon-facebook'; // Example specific mapping
+                                if (platform === 'instagram') iconId = 'icon-instagram';
+                                // Add more specific mappings if needed (e.g., twitter -> x)
+
+                                return (
+                                    <a key={platform} className="pressable new-icon" data-tooltip={tooltip} rel="external nofollow noopener" target="_blank" href={url}>
+                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
+                                            {/* Use the dynamically determined icon ID */}
+                                            <use href={`/dist/images/icons/social.svg#${iconId}`}></use>
+                                        </svg>
+                                    </a>
+                                );
+                            })}
+                        </span>
+                    </li>
+                )}
+
+                {/* Opening Status */}
+                <li>
+                    <span className={`id__status id__status--ready ${openingStatus.isOpen ? 'id__status--open' : 'id__status--closed'}`}>
+                        <span className="status-dot"></span>
+                        <span className="ui-kit__small">{openingStatus.text}</span>
+                    </span>
+                     {/* Optionally show notes if present for today */}
+                     {/* { vendor.openingHours?.find(h => h.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }))?.notes &&
+                        <small className="ui-kit__muted ui-kit__small d-block">{vendor.openingHours.find(h => h.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }))?.notes}</small>
+                     } */}
+                </li>
+            </ul>
+            {/* --- END UPDATED Meta List --- */}
                                         </div>
                                         <div>
                                             <ul className="id__meta">
