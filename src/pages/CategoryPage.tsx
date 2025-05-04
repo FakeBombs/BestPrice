@@ -412,16 +412,20 @@ const CategoryPage: React.FC = () => {
               {renderAppliedFilters()}
               {/* Product Slider Section */}
               {sliderProducts.length > 0 && (
-                  <section className="section">
-                    <header className="section__header">
-                        <hgroup className="section__hgroup">
-                            <h2 className="section__title">{activeFilters.deals ? 'Προσφορές στην Κατηγορία' : 'Δημοφιλή στην Κατηγορία'}</h2>
-                        </hgroup>
-                    </header>
+                <div className="products-wrapper">
+                    <div className="products-wrapper__header">
+                        <div className="products-wrapper__title">
+                            {activeFilters.deals ? 'Προσφορές στην Κατηγορία' : 'Δημοφιλή στην Κατηγορία'}
+                        </div>
+                    </div>
                     <ScrollableSlider>
-                        {sliderProducts.map(prod => ( <ProductCard key={`slider-${prod.id}`} product={prod} /> ))}
+                        <div className="p__products--scroll p__products--inline scroll__content">
+                            {sliderProducts.map(prod => (
+                                <InlineProductItem key={`slider-${prod.id}`} product={prod} bpref="cat-slider-inline"/>
+                            ))}
+                        </div>
                     </ScrollableSlider>
-                  </section>
+                </div>
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
