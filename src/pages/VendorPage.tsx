@@ -1,152 +1,133 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import NotFound from '@/pages/NotFound';
-import { vendors } from '@/data/mockData';
-import PaymentMethodsComponent from '@/components/PaymentMethods';
-import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
-
-interface VendorPageProps { }
-
 const VendorPage: React.FC<VendorPageProps> = () => {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const [jsEnabled, setJsEnabled] = useState(false);
-    let classNamesForBody = '';
-    let classNamesForHtml = '';
+    // ... (hooks and document attribute logic) ...
 
-    // Check for ad blockers
-    const checkAdBlockers = () => {
-        const adElementsToCheck = ['.adsbox', '.ad-banner', '.video-ad'];
-        return adElementsToCheck.some(selector => {
-            const adElement = document.createElement('div');
-            adElement.className = selector.slice(1);
-            document.body.appendChild(adElement);
-            const isBlocked = adElement.offsetHeight === 0 || getComputedStyle(adElement).display === 'none';
-            document.body.removeChild(adElement);
-            return isBlocked;
-        });
-    };
+    const { vendorId, vendorName } = useParams<{ vendorId?: string, vendorName?: string }>(); // Add type for params
+    const [selectedVendor, setSelectedVendor] = useState<Vendor | null | undefined>(undefined); // Initial state undefined
+    const [vendorProducts, setVendorProducts] = useState<Product[]>([]); // All products from this vendor
+    const [vendorDeals, setVendorDeals] = useState<Product[]>([]); // Deals from this vendor
+    const [vendorPopularCategories, setVendorPopularCategories] = useState<Category[]>([]); // Popular cats for this vendor
+    const [vendorBrands, setVendorBrands] = useState<Brand[]>([]); // Brands sold by this vendor
+    const [loading, setLoading] = useState(true);
 
-    const isAdBlocked = checkAdBlockers();
-
-    // Determine device type
-    if (userAgent.includes('windows')) {
-        classNamesForHtml = 'windows no-touch not-touch supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
-    } else if (userAgent.includes('mobile')) {
-        classNamesForHtml = 'is-mobile';
-        classNamesForBody = 'mobile';
-    } else if (userAgent.includes('tablet')) {
-        classNamesForHtml = 'is-tablet';
-        classNamesForBody = 'tablet';
-    } else {
-        classNamesForHtml = 'unknown-device';
-    }
-
-    // Handle ad blockers
-    classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed';
-
-    // Set JavaScript enabled state
+    // --- Find Vendor Effect ---
     useEffect(() => {
-        const handleLoad = () => {
-            setJsEnabled(true);
-        };
+        setLoading(true);
+        let foundVendor: Vendor | undefined = undefined;
 
-        window.addEventListener('load', handleLoad);
-        return () => window.removeEventListener('load', handleLoad);
-    }, []);
-
-    // Add JS enabled/disabled class
-    classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
-
-    // Set attributes
-    const newIdForBody = ''; // Keeping body ID empty
-    const newIdForHtml = 'page-merchant';
-
-    useHtmlAttributes(classNamesForHtml, newIdForHtml);
-    useBodyAttributes(classNamesForBody, newIdForBody);
-    
-    const { vendorId, vendorName } = useParams();
-    const [selectedVendor, setSelectedVendor] = useState(null);
-    const [additionalAddresses, setAdditionalAddresses] = useState(0);
-    const [loading, setLoading] = useState(true); // Loading state
-
-    const displayedVendor = vendorName ? 
-    vendors.find(v => v.name.toLowerCase().replace(/\s+/g, '-') === vendorName) : null;
-
-    useEffect(() => {
-      if (vendorId) {
-        const foundVendor = vendors.find(v => v.id.toString() === vendorId);
-        setSelectedVendor(foundVendor);
-      }
-    }, [vendorId]);
-
-    // Set the additional address logic.
-    useEffect(() => {
-      if (selectedVendor) {
-        // This assumes selectedVendor contains the address and any locations you'd want to map
-        const additionalAdsCount = vendors.filter(v => v.id !== selectedVendor.id && v.address).length; 
-        setAdditionalAddresses(additionalAdsCount);
-      }
-    }, [selectedVendor]);
-
-    useEffect(() => {
-        if (displayedVendor) {
-            setSelectedVendor(displayedVendor);
+        if (vendorId) {
+            foundVendor = vendors.find(v => v.id.toString() === vendorId);
+        } else if (vendorName) {
+            // Find by cleaned slug-like name
+            foundVendor = vendors.find(v =>
+                v.name.toLowerCase().replace(/\s+/g, '-') === vendorName || // Check simple slug
+                cleanDomainName(v.url).split('.')[0] === vendorName // Check first part of domain
+            );
         }
-    }, [displayedVendor]);
 
+        setSelectedVendor(foundVendor); // Set found vendor or undefined if not found
+        setLoading(false);
+
+    }, [vendorId, vendorName]); // Re-run when params change
+
+
+    // --- Fetch Vendor-Specific Data Effect ---
     useEffect(() => {
-        setLoading(true); // Start loading when vendorName changes
+        if (selectedVendor) {
+            // 1. Get all products offered by this vendor
+            const productsFromVendor = allMockProducts.filter(p =>
+                p.prices.some(price => price.vendorId === selectedVendor.id)
+            );
+            setVendorProducts(productsFromVendor);
 
-        const foundVendor = vendors.find(v =>
-            v.name.toLowerCase().replace(/\s+/g, '-') === vendorName
-        );
-        
-        // Delay the setting of selectedVendor to simulate data fetching
-        setSelectedVendor(foundVendor);
-        setLoading(false); // End loading state
-    }, [vendorName]);
+            // 2. Find Deals from this vendor's products
+            const deals = productsFromVendor
+                .filter(p => p.prices.some(pr => pr.vendorId === selectedVendor.id && pr.discountPrice && pr.discountPrice < pr.price))
+                .slice(0, 10); // Limit deals shown
+            setVendorDeals(deals);
 
-    // While loading, return null or a spinner, you can implement loading feedback here
+            // 3. Find Popular Categories for this vendor
+            const categoryCounts: Record<number, number> = {};
+            productsFromVendor.forEach(p => {
+                p.categoryIds.forEach(catId => {
+                    categoryCounts[catId] = (categoryCounts[catId] || 0) + 1;
+                });
+            });
+            const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+            const popularCats = Object.entries(categoryCounts)
+                .sort(([, countA], [, countB]) => countB - countA) // Sort by count desc
+                .slice(0, 6) // Take top 6 categories
+                .map(([idStr]) => allCatsMap.get(parseInt(idStr)))
+                .filter((cat): cat is Category => cat !== undefined); // Type guard
+            setVendorPopularCategories(popularCats);
+
+            // 4. Find Brands sold by this vendor (based on products)
+            const brandIds = new Set<number>();
+            productsFromVendor.forEach(p => {
+                const brandData = allBrands.find(b => b.name === p.brand);
+                if (brandData) {
+                    brandIds.add(brandData.id);
+                }
+            });
+            setVendorBrands(allBrands.filter(b => brandIds.has(b.id)).slice(0, 10)); // Limit brands shown initially
+
+
+        } else {
+            // Reset if no vendor is selected
+            setVendorProducts([]);
+            setVendorDeals([]);
+            setVendorPopularCategories([]);
+            setVendorBrands([]);
+        }
+    }, [selectedVendor]); // Re-run when the selected vendor changes
+
+    // --- Loading / Not Found ---
     if (loading) {
-        return null; // Or some loading indicator
+        return <div>Loading Vendor...</div>; // Or a spinner component
     }
-
-    // Vendor is not found, show NotFound component
-    if (!selectedVendor) {
+    if (selectedVendor === undefined) { // Explicitly check for undefined (not found)
         return <NotFound />;
     }
+    // Vendor is found (selectedVendor is not null or undefined)
+    const vendor = selectedVendor; // Type assertion is safe here
+
+    // --- Dynamic Calculation for Address Count ---
+    const additionalAddresses = (vendor.address?.length || 0) > 1 ? (vendor.address.length - 1) : 0;
 
     return (
-        <div id="root" className="clr">
+        // Keep the outer div if necessary for styling, otherwise Fragment might suffice
+        // <div id="root" className="clr">
+        <>
             <section className="merchant-hero root_wrapper" style={{ background: 'var(--colors-themed-card-bg)', borderBottom: 0 }}>
                 <div className="root">
                     <div className="merchant-trail">
                         <div id="trail">
                             <nav className="breadcrumb">
                                 <ol>
-                                    <li><Link to="/" rel="home" data-no-info=""><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
-                                    <li><Link to="/m" data-no-info="" className="trail__last"><span>Καταστήματα</span></Link></li>
+                                    <li><Link to="/" rel="home"><span>BestPrice</span></Link><span className="trail__breadcrumb-separator">›</span></li>
+                                    <li><Link to="/m"><span>Καταστήματα</span></Link><span className="trail__breadcrumb-separator">›</span></li> {/* Link to merchants list */}
+                                    <li><span className="trail__last">{vendor.name}</span></li> {/* Current vendor name */}
                                 </ol>
                             </nav>
                         </div>
                     </div>
                     <div className="merchant-logo">
-                        <img src={selectedVendor.logo} alt={`${selectedVendor.name} logo`} title={selectedVendor.name} />
-                        {selectedVendor.certification && (
-                            <span className="merchant-logo--certification" data-certification={selectedVendor.certification.toLowerCase()}>
-                                <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
+                        <img src={vendor.logo} alt={`${vendor.name} logo`} title={vendor.name} loading="lazy" /> {/* Dynamic logo */}
+                        {vendor.certification && (
+                            <span className="merchant-logo--certification" data-certification={vendor.certification.toLowerCase()}>
+                                <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
                             </span>
                         )}
                     </div>
                 </div>
             </section>
 
-            {selectedVendor.certification && (
-            <div className={`merchant-certified--wrapper merchant-certified--${selectedVendor.certification.toLowerCase()} root__wrapper`}>
+            {vendor.certification && (
+            <div className={`merchant-certified--wrapper merchant-certified--${vendor.certification.toLowerCase()} root__wrapper`}>
                 <div className="root merchant-certified">
-                    <svg aria-hidden="true" className="icon" width="22" height="22"><use href={`/dist/images/icons/certification.svg#icon-${selectedVendor.certification.toLowerCase()}-22`}></use></svg>
-                    <span className="hide-tablet">Certified Store (<Link to="/certification">{selectedVendor.certification}</Link>)</span>
-                    <span className="hide-mobile">{selectedVendor.name} is a certified store (<b data-certification={selectedVendor.certification.toLowerCase()}>{selectedVendor.certification}</b>)</span>
+                    <svg aria-hidden="true" className="icon" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
+                    {/* Dynamic Certification Text */}
+                    <span className="hide-tablet">Certified Store (<Link to="/certification">{vendor.certification}</Link>)</span>
+                    <span className="hide-mobile">{vendor.name} is a certified store (<b data-certification={vendor.certification.toLowerCase()}>{vendor.certification}</b>)</span>
                 </div>
             </div>
             )}
@@ -157,94 +138,95 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                         <div className="masthead__main">
                             <div className="id">
                                 <div className="id__title">
-                                    <h1 itemProp="name">{selectedVendor.name}</h1>
+                                    <h1 itemProp="name">{vendor.name}</h1>
                                 </div>
                                 <div className="masthead__id">
                                     <div className="masthead__id-section">
                                         <div>
-                                            <div className="id__rating-wrapper">
-                                                <a className="id__rating" href="https://www.myshop.com/m/1234/myshop.html#merchant-reviews">
-                                                    <span className="rating rating-all" data-total="4.8">
-                                                        <svg aria-hidden="true" className="icon" style={{ clip: 'rect(0, 4.8em, auto, auto)' }} width="100%" height="100%">
-                                                            <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
-                                                        </svg>
-                                                    </span>
-                                                </a>
-                                                <a data-review-src="merchant-page-header" href="/m/1234/myshop/review" className="id__rating-link">Rate it</a>
-                                            </div>
+                                            {/* Dynamic Rating */}
+                                            {vendor.rating && (
+                                                <div className="id__rating-wrapper">
+                                                    {/* Link to reviews section on this page */}
+                                                    <a className="id__rating" href={`#merchant-reviews`} title={`${vendor.rating} αστέρια από ${vendor.numberOfRatings || '?'} αξιολογήσεις`}>
+                                                        <span className="rating rating-all" data-total={vendor.rating.toFixed(1)}>
+                                                            {/* Dynamic star clipping */}
+                                                            <svg aria-hidden="true" className="icon" style={{ clipPath: `inset(0 ${10 - (vendor.rating * 2)}em 0 0)` }} width="100%" height="100%">
+                                                                <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
+                                                            </svg>
+                                                        </span>
+                                                        {vendor.numberOfRatings && <span className="id__rating-count">({vendor.numberOfRatings})</span>}
+                                                    </a>
+                                                    {/* Optionally link to a separate review submission page if needed */}
+                                                    {/* <a data-review-src="merchant-page-header" href={`/m/${vendor.id}/${vendor.name?.toLowerCase()}/review`} className="id__rating-link">Rate it</a> */}
+                                                </div>
+                                            )}
                                             <ul className="id__meta">
-                                                <li data-type="joined">
-                                                    <span className="ui-kit__text ui-kit__muted">On BestPrice since 01/01/2020</span>
-                                                </li>
-                                                <li data-type="social" style={{ display: 'flex' }}>
-                                                    <span className="social-links">
-                                                        <a className="pressable new-icon" data-tooltip="Facebook" rel="external nofollow noopener" target="_blank" href="https://facebook.com/myshop">
-                                                            <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use href="/dist/images/icons/social.svg#icon-facebook"></use>
-                                                            </svg>
-                                                        </a>
-                                                        <a className="pressable new-icon" data-tooltip="Instagram" rel="external nofollow noopener" target="_blank" href="https://instagram.com/myshop">
-                                                            <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use href="/dist/images/icons/social.svg#icon-instagram"></use>
-                                                            </svg>
-                                                        </a>
-                                                        <a className="pressable new-icon" data-tooltip="LinkedIn" rel="external nofollow noopener" target="_blank" href="https://www.linkedin.com/company/myshop">
-                                                            <svg aria-hidden="true" className="icon icon--outline" width="16" height="16">
-                                                                <use href="/dist/images/icons/social.svg#icon-linkedin"></use>
-                                                            </svg>
-                                                        </a>
-                                                    </span>
-                                                </li>
-                                                <li><span class="id__status id__status--ready id__status--open"><span class="status-dot"></span><span class="ui-kit__small">Ανοιχτό μέχρι τις 21:00</span></span></li>
+                                                {/* Add 'date joined' if available in your data */}
+                                                {/* <li data-type="joined">...</li> */}
+                                                {/* Add social links dynamically if available */}
+                                                {/* <li data-type="social">...</li> */}
+                                                {/* Add opening status dynamically if available */}
+                                                {/* <li><span class="id__status ...">...</span></li> */}
                                             </ul>
                                         </div>
                                         <div>
                                             <ul className="id__meta">
-                                                <li data-type="url" itemProp="url" content={selectedVendor.url}>
-                                                    <a className="ui-kit__text" target="_blank" href={selectedVendor.url} rel="external nofollow noopener">
-                                                        <svg aria-hidden="true" className="icon" width="16" height="16">
-                                                            <use href="/dist/images/icons/icons.svg#icon-world-16"></use>
-                                                        </svg>
-                                                        {selectedVendor.url}
+                                                <li data-type="url" itemProp="url" content={vendor.url}>
+                                                    <a className="ui-kit__text" target="_blank" href={vendor.url} rel="external nofollow noopener">
+                                                        <svg aria-hidden="true" className="icon" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
+                                                        {cleanDomainName(vendor.url)} {/* Show cleaned domain */}
                                                     </a>
                                                 </li>
-                                                <li data-type="telephone">
-                                                    <svg aria-hidden="true" className="icon icon--outline" width="14" height="14">
-                                                        <use href="/dist/images/icons/icons.svg#icon-phone-14"></use>
-                                                    </svg>
-                                                    <span className="ui-kit__text">
-                                                        <a href={`tel:${selectedVendor.telephone.join(',')}`}>{selectedVendor.telephone.join(', ')}</a>
-                                                    </span>
-                                                </li>
-                                                <li data-type="address">
-                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}#merchant-map`}>
-                                                        <svg aria-hidden="true" className="icon icon--outline" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
-                                                        <span className="ui-kit__text">{Array.isArray(selectedVendor.address) && selectedVendor.address.length > 0 ? selectedVendor.address[0] : 'No locations available'}</span>
-                                                    </a>
-                                                </li>
-                                                <li data-type="storesCount">
-                                                    <a href={`/m/${selectedVendor.id}/${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}#merchant-map`}>
-                                                        <small className="ui-kit__small ui-kit__muted">{additionalAddresses > 0 ? `${additionalAddresses} more stores available` : 'No more stores'}</small>
-                                                    </a>
-                                                </li>
+                                                {vendor.telephone && vendor.telephone.length > 0 && (
+                                                    <li data-type="telephone">
+                                                        <svg aria-hidden="true" className="icon icon--outline" width="14" height="14"><use href="/dist/images/icons/icons.svg#icon-phone-14"></use></svg>
+                                                        <span className="ui-kit__text">
+                                                            {/* Map multiple phone numbers */}
+                                                            {vendor.telephone.map((tel, index) => (
+                                                                <React.Fragment key={tel}>
+                                                                    <a href={`tel:${tel}`}>{tel}</a>
+                                                                    {index < vendor.telephone.length - 1 && ', '}
+                                                                </React.Fragment>
+                                                            ))}
+                                                        </span>
+                                                    </li>
+                                                )}
+                                                 {vendor.address && vendor.address.length > 0 && (
+                                                    <li data-type="address">
+                                                        <a href={`#merchant-map`}> {/* Link to map section */}
+                                                            <svg aria-hidden="true" className="icon icon--outline" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-pin-12"></use></svg>
+                                                            <span className="ui-kit__text">{vendor.address[0]}</span> {/* Show first address */}
+                                                        </a>
+                                                    </li>
+                                                )}
+                                                {additionalAddresses > 0 && ( // Show only if there are more addresses
+                                                    <li data-type="storesCount">
+                                                        <a href={`#merchant-map`}> {/* Link to map section */}
+                                                            <small className="ui-kit__small ui-kit__muted">{additionalAddresses} ακόμη {additionalAddresses === 1 ? 'κατάστημα' : 'καταστήματα'}</small>
+                                                        </a>
+                                                    </li>
+                                                )}
                                             </ul>
                                         </div>
                                     </div>
-                                    <div className="masthead__id-section">
-                                        <ul className="id__meta">
-                                            <li data-type="brands">
-                                                <h4 className="ui-kit__secondary ui-kit__pb-4">Authorized Reseller</h4>
-                                                <div>
-                                                    <a href="/b/1/productA.html" title="Product A"><img width="56" height="56" alt="Product A logo" src="//myshopcdn.com/images/productA.svg" /></a>
-                                                    <a href="/b/2/productB.html" title="Product B"><img width="56" height="56" alt="Product B logo" src="//myshopcdn.com/images/productB.svg" /></a>
-                                                    <span className="foo-link id__more">
-                                                        <div className="id__more--counter">more</div>
-                                                        <a href="/b/3/productC.html" title="Product C"><img width="56" height="56" alt="Product C logo" src="//myshopcdn.com/images/productC.svg" /></a>
-                                                    </span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    {/* Dynamic Brands Section */}
+                                    {vendorBrands.length > 0 && (
+                                        <div className="masthead__id-section">
+                                            <ul className="id__meta">
+                                                <li data-type="brands">
+                                                    <h4 className="ui-kit__secondary ui-kit__pb-4">Authorized Reseller</h4> {/* Adjust title if needed */}
+                                                    <div>
+                                                        {vendorBrands.map((brand) => (
+                                                            <Link key={brand.id} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html`} title={brand.name}>
+                                                                <img width="56" height="56" alt={`${brand.name} logo`} src={brand.logo} loading="lazy" />
+                                                            </Link>
+                                                        ))}
+                                                        {/* Add "more" logic if needed */}
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -258,168 +240,147 @@ const VendorPage: React.FC<VendorPageProps> = () => {
                         {/* Shipping Payment Section */}
                         <section id="merchant-shipping-payment">
                             <section>
-                                <h2 className="ui-kit__secondary">Preview Website</h2>
-                                <div className="merchant__screenshot">
-                                    <div className="ratio__wrapper">
-                                        <div className="ratio">
-                                            <img className="ratio__content" itemProp="image" alt="MyShop Screenshot" width="600" height="550" src="//myshopcdn.com/images/screenshot.webp" onError={(e) => { e.currentTarget.src = '/images/no-image.svg'; e.currentTarget.classList.add('no-image'); }} />
+                                {selectedVendor.url && ( // Only show screenshot if URL exists
+                                    <>
+                                     <h2 className="ui-kit__secondary">Preview Website</h2>
+                                        <div className="merchant__screenshot">
+                                            <a href={selectedVendor.url} target="_blank" rel="noopener noreferrer nofollow external">
+                                            <div className="ratio__wrapper">
+                                                <div className="ratio">
+                                                    {/* Placeholder or actual screenshot service */}
+                                                    <img className="ratio__content" itemProp="image" alt={`${selectedVendor.name} Screenshot`} width="600" height="550" src={`//image.thum.io/get/width/600/crop/800/noanimate/${selectedVendor.url}`} onError={(e) => { e.currentTarget.src = '/images/no-image.svg'; e.currentTarget.classList.add('no-image'); }} loading="lazy" />
+                                                </div>
+                                            </div>
+                                            </a>
                                         </div>
+                                    </>
+                                )}
+                            </section>
+                            {/* Dynamic Payment Methods */}
+                            {vendor.paymentMethods && vendor.paymentMethods.length > 0 && (
+                                 <PaymentMethodsComponent paymentMethods={vendor.paymentMethods} />
+                            )}
+                        </section>
+
+                        {/* Deals Section - Dynamic */}
+                        {vendorDeals.length > 0 && (
+                            <section className="section">
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup">
+                                        {/* Link to a potential deals page filtered by this vendor */}
+                                        <h2 className="section__title"><Link to={`/search?store=${cleanDomainName(vendor.url).toLowerCase()}&deals=1`}>Προσφορές από {vendor.name}</Link></h2>
+                                    </hgroup>
+                                </header>
+                                <ScrollableSlider>
+                                  <div className="p__products--scroll scroll__content">
+                                      {vendorDeals.map(dealProduct => (
+                                         // Use InlineProductItem for consistency if available, or adapt ProductCard
+                                         <ProductCard key={`deal-${dealProduct.id}`} product={dealProduct} />
+                                         // Or <InlineProductItem key={`deal-${dealProduct.id}`} product={dealProduct} bpref={`merchant-deals-${vendor.id}`} />
+                                      ))}
+                                  </div>
+                                </ScrollableSlider>
+                            </section>
+                        )}
+
+                        {/* Popular Categories Section - Dynamic */}
+                        {vendorPopularCategories.length > 0 && (
+                            <section className="section">
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup">
+                                        <h2 className="section__title">Δημοφιλείς Κατηγορίες από {vendor.name}</h2>
+                                    </hgroup>
+                                </header>
+                                <div className="categories">
+                                    {vendorPopularCategories.map(cat => (
+                                        <Link key={cat.id} title={cat.name} className="categories__category" to={`/cat/${cat.id}/${cat.slug}?store=${cleanDomainName(vendor.url).toLowerCase()}`}>
+                                            <img width="200" height="200" className="categories__image" src={cat.image || '/dist/images/cat/placeholder.webp'} alt={cat.name} loading="lazy"/>
+                                            <h2 className="categories__title">{cat.name}</h2>
+                                            <div className="categories__cnt">{cat.count} {cat.count === 1 ? 'προϊόν' : 'προϊόντα'}</div>
+                                        </Link>
+                                    ))}
+                                </div>
+                                <div id="popular-categories" className="popular-categories">
+                                    <div className="expand popular-categories__view-wrapper">
+                                        {/* Link to all products filtered by this vendor */}
+                                        <Link className="button popular-categories__view-all" rel="nofollow" to={`/search?store=${cleanDomainName(vendor.url).toLowerCase()}`}>
+                                            <span>Δες όλα τα προϊόντα<span className="hide-mobile"> του καταστήματος</span></span>
+                                        </Link>
                                     </div>
                                 </div>
                             </section>
-                            <PaymentMethodsComponent paymentMethods={selectedVendor.paymentMethods} />
-                        </section>
+                        )}
 
-                        {/* Deals Section */}
-                        <section className="section">
-                            <header className="section__header">
-                                <hgroup className="section__hgroup">
-                                    <h2 className="section__title"><a href="/deals/m/1234/1234/myshop.html">Deals from {selectedVendor.name}</a></h2>
-                                </hgroup>
-                            </header>
-                            <div className="scroll">
-                                <div className="scroll__clip">
-                                    <div className="scroll__scroller">
-                                        <div className="p__products--scroll scroll__content">
-                                            {/* Example product, populate dynamically */}
-                                            <div className="p p--deal p--top-padding">
-                                                <div className="p__actions" data-js="">
-                                                    <div className="p__action" role="button" aria-label="All product actions">
-                                                        <svg aria-hidden="true" className="icon" width="100%" height="100%">
-                                                            <use href="/dist/images/icons/actions.svg#icon-more-vertical"></use>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                                <a className="p__cover" href="/item/2158477665/productX.html">
-                                                    <img width="250" height="250" alt="Product X" src="//myshopcdn.com/images/productX.webp" onError={(e) => { e.currentTarget.src = '/images/no-image.svg'; }} />
-                                                </a>
-                                                <div className="p__main">
-                                                    <div className="p__meta">
-                                                        <div className="p__category">Category A</div>
-                                                        <h4 className="p__title p__title--lines p__title--lines-3"><a href="/item/2158477665/productX.html">Product X</a></h4>
-                                                    </div>
-                                                    <div className="p__badges">
-                                                        <div className="p__badges-drop">
-                                                            <div className="p__badge p__badge--drop drop drop--20">-20%</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="p__footer">
-                                                    <div className="p__price-merchants">
-                                                        <a className="p__price" href="/item/2158477665/productX.html">
-                                                            <div className="p__price--current">199.00€</div>
-                                                            <del className="p__price--before">249.00€</del>
-                                                        </a>
-                                                        <div className="p__merchants">5 stores</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {/* Add more products as needed */}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button aria-label="Scroll arrow previous" disabled="" className="scroll__arrow scroll__arrow--previous scroll__arrow--disabled" style={{ left: 0 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
-                                    </button>
-                                    <button aria-label="Scroll arrow next" className="scroll__arrow scroll__arrow--next" style={{ right: -18.4 }}>
-                                        <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Popular Categories Section */}
-                        <section className="section">
-                            <header className="section__header">
-                                <hgroup className="section__hgroup">
-                                    <h2 className="section__title">Popular Categories from {selectedVendor.name}</h2>
-                                </hgroup>
-                            </header>
-                            <div className="categories">
-                                <a title="Electronics" className="categories__category" href="/cat/electronics.html">
-                                    <img width="200" height="200" className="categories__image" src="//myshopcdn.com/images/electronics.webp" alt="Electronics" />
-                                    <h2 className="categories__title">Electronics</h2>
-                                    <div className="categories__cnt">172 products</div>
-                                </a>
-                                <a title="Laptops" className="categories__category" href="/cat/laptops.html">
-                                    <img width="200" height="200" className="categories__image" src="//myshopcdn.com/images/laptops.webp" alt="Laptops" />
-                                    <h2 className="categories__title">Laptops</h2>
-                                    <div className="categories__cnt">25 products</div>
-                                </a>
-                                <a title="Smartphones" className="categories__category" href="/cat/smartphones.html">
-                                    <img width="200" height="200" className="categories__image" src="//myshopcdn.com/images/smartphones.webp" alt="Smartphones" />
-                                    <h2 className="categories__title">Smartphones</h2>
-                                    <div className="categories__cnt">99 products</div>
-                                </a>
-                            </div>
-                            <div id="popular-categories" class="popular-categories">
-                                <div class="expand popular-categories__view-wrapper">
-                                    <Link className="button popular-categories__view-all" rel="nofollow" to={`/search?store=${selectedVendor.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                                        <span>Δες όλα τα προϊόντα<span className="hide-mobile"> του καταστήματος</span></span>
-                                    </Link>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Reviews Section */}
+                        {/* Reviews Section - Placeholder Data */}
                         <div id="merchant-reviews">
                             <section className="section">
                                 <header className="section__header">
                                     <hgroup className="section__hgroup">
-                                        <h2 className="section__title">Reviews of {selectedVendor.name}</h2>
+                                        <h2 className="section__title">Αξιολογήσεις Καταστήματος {vendor.name}</h2>
                                     </hgroup>
                                 </header>
                                 <div>
-                                    <div className="rating-summary">
-                                        <div className="average-rating">4.6</div>
-                                        <div className="review-count">123 reviews</div>
+                                    {vendor.rating && vendor.numberOfRatings && ( // Show summary only if data exists
+                                        <div className="rating-summary">
+                                            <div className="average-rating">{vendor.rating.toFixed(1)}</div>
+                                            <div className="review-count">{vendor.numberOfRatings} αξιολογήσεις</div>
+                                             {/* Add star display matching the rating */}
+                                             <span className="rating rating-all" data-total={vendor.rating.toFixed(1)} style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '5px' }}>
+                                                 <svg aria-hidden="true" className="icon" style={{ clipPath: `inset(0 ${10 - (vendor.rating * 2)}em 0 0)`, width: '5em', height: '1em' }}>
+                                                     <use href="/dist/images/icons/stars.svg#icon-stars-all"></use>
+                                                 </svg>
+                                             </span>
+                                        </div>
+                                    )}
+                                    {/* Link to submit review - might need dynamic URL or different handling */}
+                                    <Link data-review-src="reviews-overview" to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}/review`} className="button">Αξιολόγησε το</Link>
+                                    {/* Placeholder for displaying actual reviews */}
+                                    <div className="reviews-list" style={{marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '20px'}}>
+                                        <p><i>(Εδώ θα εμφανίζονται οι πραγματικές αξιολογήσεις)</i></p>
+                                        {/* Example Review Item */}
+                                        {/* <div class="review-item">...</div> */}
                                     </div>
-                                    <a data-review-src="reviews-overview" href="/m/1234/myshop/review" className="button">Rate it</a>
                                 </div>
                             </section>
                         </div>
 
-                        {/* Map Section */}
-                        <section id="merchant-map" className="section">
-                            <header className="section__header">
-                                <hgroup className="section__hgroup">
-                                    <h2 className="section__title">{selectedVendor.name} Locations</h2>
-                                    <p className="section__subtitle">5 service points</p>
-                                </hgroup>
-                            </header>
-                            <div id="merchant-map-placeholder">
-                                <div className="geo__open-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabIndex={0} style={{ position: 'relative' }}>
-                                    {/* Map content will go here */}
-                                </div>
-                            </div>
-                            <div class="scroll">
-                                <div class="scroll__clip">
-                                    <div class="scroll__scroller">
-                                        <div class="merchant-map__pops grid scroll__content">
-                                            {selectedVendor.address.map((addr, index) => (
-                                                <div className="merchant-map__pop-wrapper" key={`${selectedVendor.id}-${index}`}>
-                                                    <div className="merchant-map__pop pressable" data-id={selectedVendor.id}>
-                                                        <div className="merchant-map__pop-meta">
-                                                            <address itemProp="address" className="ui-kit__tertiary ui-kit__pb-2">{addr}</address>
-                                                            <small className="ui-kit__small ui-kit__muted">Κατάστημα / Παραλαβή</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                        {/* Map Section - Placeholder Map, Dynamic Addresses */}
+                        {vendor.address && vendor.address.length > 0 && (
+                            <section id="merchant-map" className="section">
+                                <header className="section__header">
+                                    <hgroup className="section__hgroup">
+                                        <h2 className="section__title">Σημεία Εξυπηρέτησης {vendor.name}</h2>
+                                        {vendor.address.length > 1 && <p className="section__subtitle">{vendor.address.length} σημεία</p>}
+                                    </hgroup>
+                                </header>
+                                <div id="merchant-map-placeholder">
+                                    <div className="geo__open-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabIndex={0} style={{ position: 'relative', height: '300px', backgroundColor: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                                        {/* Basic Map Placeholder - Replace with actual map component (e.g., Leaflet, Google Maps) */}
+                                        <span>Map Placeholder</span>
                                     </div>
                                 </div>
-                                <div>
-                                    <button aria-label="Scroll arrow previous" disabled="" class="scroll__arrow scroll__arrow--previous scroll__arrow--disabled"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg></button>
-                                    <button aria-label="Scroll arrow next" class="scroll__arrow scroll__arrow--next"><svg class="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-forwards-16"></use></svg></button>
-                                </div>
-                            </div>
-                        </section>
+                                {vendor.address.length > 1 && ( // Show slider only if multiple addresses
+                                <ScrollableSlider>
+                                    <div className="merchant-map__pops grid scroll__content">
+                                        {vendor.address.map((addr, index) => (
+                                        <div className="merchant-map__pop-wrapper" key={`${vendor.id}-${index}`}>
+                                            <div className="merchant-map__pop pressable" data-id={vendor.id} /* Add onClick to focus map if implemented */ >
+                                            <div className="merchant-map__pop-meta">
+                                                <address itemProp="address" className="ui-kit__tertiary ui-kit__pb-2">{addr}</address>
+                                                <small className="ui-kit__small ui-kit__muted">Κατάστημα / Παραλαβή</small>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        ))}
+                                    </div>
+                                </ScrollableSlider>
+                                )}
+                            </section>
+                        )}
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
