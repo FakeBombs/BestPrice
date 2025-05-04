@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { Product, ProductPrice, Vendor, getVendorById, PaymentMethod, OpeningHours, vendors } from '@/data/mockData'; // Added Vendor, PaymentMethod, OpeningHours, vendors
+import { Product, ProductPrice, Vendor, getVendorById, PaymentMethod, OpeningHours, vendors } from '@/data/mockData';
 import TopVendorAd from './ads/TopVendorAd'; // Assuming path is correct
 import { useTranslation } from '@/hooks/useTranslation'; // Assuming used elsewhere or planned
 import PaymentMethodsComponent from '@/components/PaymentMethods'; // Import if used in popup
@@ -44,6 +44,11 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
               <div className="prices__merchant-meta">
                 <a aria-label={vendor.name} className="prices__merchant-logo" rel="nofollow noreferrer noopener" target="_blank" href={priceInfo.productUrl || vendor.url} >
                   <img width="90" height="30" loading="lazy" src={vendor.logo} alt={vendor.name} title={vendor.name} />
+                  {vendor.certification && (
+                     <span className="merchant__certification-inline" data-tooltip={vendor.certification}>
+                       <svg aria-hidden="true" className="icon" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
+                     </span>
+                  )}
                 </a>
                 {/* Popup trigger link */}
                 <Link
@@ -53,7 +58,7 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
                     to="#" // Link doesn't navigate, onClick does the work
                     onClick={(e) => { e.preventDefault(); openPopup(vendor); }}
                 >
-                  <svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
+                  <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-info-12"></use></svg>
                   <em>{vendor.name}</em>
                 </Link>
                 <div className="prices__merchant-props">
@@ -63,11 +68,6 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
                           <svg aria-hidden="true" className="icon" style={{ clipPath: `inset(0 ${10 - (vendor.rating * 2)}em 0 0)`, width: '5em', height: '1em' }}><use href="/dist/images/icons/stars.svg#icon-stars-all"></use></svg>
                       </span>
                     </Link>
-                  )}
-                  {vendor.certification && (
-                     <span className="merchant__certification-inline" data-tooltip={vendor.certification}>
-                       <svg aria-hidden="true" className="icon"><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification.toLowerCase()}-22`}></use></svg>
-                     </span>
                   )}
                 </div>
               </div>
