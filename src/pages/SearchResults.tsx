@@ -167,14 +167,35 @@ const SearchResults: React.FC = () => {
       setCertifiedVendors(vendorArray);
   };
 
-  // --- Sorting Logic ---
+    // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
-    const sorted = [...productsList];
+    const sorted = [...productsList]; 
     switch (sortType) {
       case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity)); break;
       case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0)); break;
-      case 'rating-desc': default: sorted.sort((a, b) => { const ratingA = a.rating || 0; const ratingB = b.rating || 0; const reviewsA = a.reviews || 0; const reviewsB = b.reviews || 0; return (ratingB - ratingA) || (reviewsB - reviewsA); }); break;
-      case 'merchants_desc': sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length); break;
+      case 'alpha-asc': // New: Title A-Z
+        sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        break;
+      case 'reviews-desc': // New: Most Reviews
+         sorted.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+         break;
+      case 'brand-asc': // New: Brand A-Z
+          sorted.sort((a, b) => (a.brand || '').localeCompare(b.brand || ''));
+          break;
+      case 'merchants_desc':
+        sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length);
+        break;
+      case 'rating-desc': // Default: Rating Desc, then Reviews Desc
+      default:
+        sorted.sort((a, b) => {
+            const ratingA = a.rating || 0;
+            const ratingB = b.rating || 0;
+            const reviewsA = a.reviews || 0;
+            const reviewsB = b.reviews || 0;
+            // Sort primarily by rating descending. If ratings are equal, sort by reviews descending.
+            return (ratingB - ratingA) || (reviewsB - reviewsA);
+        });
+        break;
     }
     return sorted;
   };
@@ -395,14 +416,27 @@ const SearchResults: React.FC = () => {
                     </ScrollableSlider>
                   </section>
               )}
-              {/* Sorting Tabs */}
+              {/* Sorting Tabs - Show only if there are products to sort */}
               {filteredProducts.length > 0 && (
                 <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
+                      {/* Default: Rating Descending */}
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
+                      {/* Price Ascending */}
                       <a href="#" data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('price-asc'); }}><div className="tabs__content">Φθηνότερα</div></a>
+                      {/* Price Descending */}
                       <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
-                      <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('merchants_desc'); }}><div className="tabs__content">Αριθμός καταστημάτων</div></a>
+                      {/* Title Alphabetical Ascending */}
+                      <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
+                      {/* Most Reviews Descending */}
+                      <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
+                      {/* Brand Alphabetical Ascending (Conditional) */}
+                      {/* Calculate if more than one brand exists in the filtered results */}
+                      {useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]) && (
+                          <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('brand-asc'); }}><div className="tabs__content">Μάρκα (Α-Ω)</div></a>
+                      )}
+                      {/* Merchants Descending */}
+                      <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); setSortType('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
                     </nav></div></div>
                 </div>
               )}
