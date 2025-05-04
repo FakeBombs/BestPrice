@@ -13,7 +13,6 @@ import ProductImageGallery from '@/components/ProductImageGallery';
 import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
-// ** CORRECTED IMPORT **
 import { VendorPriceCard } from '@/components/ProductVendors'; // Import the correct component
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal'; // For product price alerts
@@ -160,11 +159,11 @@ const ProductDetail = () => {
               </div>
 
               <div className="item-actions-buttons">
-                <button className="item-actions__button" onClick={handleAddToFavorites}><svg><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg><span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span></button>
-                <button className="item-actions__button" data-id="compare"><svg><use href="/dist/images/icons/actions.svg#icon-compare-16"></use></svg><span className="item-actions__label">Προσθήκη στη σύγκριση</span></button>
+                <button className="item-actions__button" onClick={handleAddToFavorites}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg><span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span></button>
+                <button className="item-actions__button" data-id="compare"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-compare-16"></use></svg><span className="item-actions__label">Προσθήκη στη σύγκριση</span></button>
                 {/* <button className="item-actions__button" data-id="want">...</button> */}
                 {/* <button className="item-actions__button" data-id="have">...</button> */}
-                <button className="item-actions__button" onClick={handlePriceAlert}><svg><use href="/dist/images/icons/actions.svg#icon-alert-16"></use></svg><span className="item-actions__label">Ειδοποίηση για πτώση τιμής</span></button>
+                <button className="item-actions__button" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-alert-16"></use></svg><span className="item-actions__label">Ειδοποίηση για πτώση τιμής</span></button>
                 {/* <button className="item-actions__button">...</button> */}
               </div>
             </aside>
@@ -182,8 +181,7 @@ const ProductDetail = () => {
                   <ProductHighlights specifications={product.specifications} product={product} />
                   <div className="item-description">{product.description}</div>
                 </div>
-                {/* Remove this section as Essential Info is shown below with Vendors */}
-                {/* <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPriceInfo} onNotifyMe={handlePriceAlert} /></div> */}
+                <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPriceInfo} onNotifyMe={handlePriceAlert} /></div>
               </div>
 
               <div className="sections item-sections">
@@ -211,12 +209,7 @@ const ProductDetail = () => {
                         {product.prices
                             .sort((a, b) => a.price - b.price) // Sort prices here
                             .map((priceInfo) => (
-                                <VendorPriceCard
-                                    key={priceInfo.vendorId}
-                                    priceInfo={priceInfo}
-                                    product={product}
-                                    openPopup={handleOpenVendorPopup} // Pass the handler
-                                />
+                                <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={handleOpenVendorPopup} />
                         ))}
                     </div>
                 </section>
@@ -235,20 +228,7 @@ const ProductDetail = () => {
 
               {/* Product Price Alert Modal */}
               {isPriceAlertModalOpen && bestPriceInfo && (
-                <PriceAlertModal
-                  isOpen={isPriceAlertModalOpen}
-                  onClose={() => setIsPriceAlertModalOpen(false)}
-                  // Pass Product context for this modal type
-                  alertType="product" // Indicate alert type
-                  productId={product.id}
-                  productName={product.title}
-                  currentPrice={bestPriceInfo.price} // Pass the best current price
-                  // Remove category/search props if not needed by modal
-                  // categoryId={undefined}
-                  // categoryName={undefined}
-                  // searchQuery={undefined}
-                  // searchFilters={undefined}
-                  />
+                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" // Indicate alert type productId={product.id} productName={product.title} currentPrice={bestPriceInfo.price} />
               )}
 
               {/* Vendor Info Popup Modal */}
@@ -305,7 +285,7 @@ const ProductDetail = () => {
                                         </div>
                                     ) : (
                                         <div className="minfo__button minfo__button--disabled">
-                                            <svg width="18" height="18" className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
+                                            <svg width={18} height={18} className="icon minfo__button-icon" aria-hidden="true"><use href="/dist/images/icons/icons.svg#icon-world-16"></use></svg>
                                             <div className="minfo__button-label">Μόνο Ηλεκτρονικό κατάστημα</div>
                                         </div>
                                     )}
@@ -320,9 +300,9 @@ const ProductDetail = () => {
                                                     <li key={method} className={popupVendorContent.paymentMethods?.includes(method) ? 'minfo__yes' : ''}>
                                                         {method}
                                                         {popupVendorContent.paymentMethods?.includes(method) ? (
-                                                            <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg>
+                                                            <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg>
                                                         ) : (
-                                                            <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg>
+                                                            <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-check-empty-16"></use></svg>
                                                         )}
                                                     </li>
                                                 ))}
