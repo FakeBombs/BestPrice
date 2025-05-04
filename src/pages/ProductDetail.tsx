@@ -228,7 +228,7 @@ const ProductDetail = () => {
 
               {/* Product Price Alert Modal */}
               {isPriceAlertModalOpen && bestPriceInfo && (
-                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" // Indicate alert type productId={product.id} productName={product.title} currentPrice={bestPriceInfo.price} />
+                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPriceInfo.price} />
               )}
 
               {/* Vendor Info Popup Modal */}
