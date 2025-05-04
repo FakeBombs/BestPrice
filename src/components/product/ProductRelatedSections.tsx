@@ -8,9 +8,10 @@ interface ProductRelatedSectionsProps {
   categoryDeals?: Product[];
   recentlyViewed?: Product[];
   productId: number;
+  categoryName?: string;
 }
 
-const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similarProducts, categoryDeals, recentlyViewed, productId }) => {
+const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similarProducts, categoryDeals, recentlyViewed, productId, categoryName }) => {
   const filteredRecentlyViewed = (recentlyViewed || []).filter(p => p.id !== productId);
   const categoryName = getCategoryById(categoryDeals?.[0]?.categoryIds?.[0])?.name || 'this category';
   const currentSimilarProducts = similarProducts || [];
@@ -18,45 +19,38 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
 
   return (
     <>
-            {currentSimilarProducts.length > 0 && (
-              <div className="item-related sections">
-                <section className="section">
-                    <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Παρόμοια προϊόντα</h2> </hgroup> </header>
-                    <ScrollableSlider>
-                       <div className="p__products--scroll scroll__content">
-                           {currentSimilarProducts.map(prod => (<ProductCard key={`similar-${prod.id}`} product={prod} />))}
-                       </div>
-                    </ScrollableSlider>
-                </section>
-              </div>
-            )}
+      {currentSimilarProducts.length > 0 && (
+        <section className="section">
+          <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Παρόμοια προϊόντα</h2> </hgroup> </header>
+          <ScrollableSlider>
+            <div className="p__products--scroll scroll__content"> {currentSimilarProducts.map(prod => (<ProductCard key={`similar-${prod.id}`} product={prod} />))} </div>
+          </ScrollableSlider>
+        </section>
+      )}
 
-            {currentCategoryDeals.length > 0 && (
-              <div className="item-related sections">
-                 <section className="section">
-                    <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Προσφορές κατηγορίας</h2> </hgroup> </header>
-                     <ScrollableSlider>
-                       <div className="p__products--scroll scroll__content">
-                          {currentCategoryDeals.map(prod => (<ProductCard key={`catdeal-${prod.id}`} product={prod} />))}
-                       </div>
-                    </ScrollableSlider>
-                 </section>
-              </div>
-            )}
+      {currentCategoryDeals.length > 0 && (
+        <section id="item-category-deals" className="section">
+          <header className="section__header"> 
+            <hgroup className="section__hgroup"> 
+              <h2 className="section__title">Προσφορές {categoryName ? `σε ${categoryName}` : 'της κατηγορίας'}</h2>
+              <p class="section__subtitle">Προϊόντα με μεγάλη πτώση τιμής</p>
+            </hgroup> 
+          </header>
+          <ScrollableSlider>
+            <div className="p__products--scroll scroll__content"> {currentCategoryDeals.map(prod => (<ProductCard key={`catdeal-${prod.id}`} product={prod} />))} </div>
+          </ScrollableSlider>
+        </section>
+      )}
 
-            {filteredRecentlyViewed.length > 0 && (
-              <div className="item-related sections">
-                <section className="section">
-                    <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Είδες πρόσφατα</h2> </hgroup> </header>
-                     <ScrollableSlider>
-                       <div className="p__products--scroll scroll__content">
-                           {filteredRecentlyViewed.map(prod => (<ProductCard key={`recent-${prod.id}`} product={prod} />))}
-                        </div>
-                    </ScrollableSlider>
-                </section>
-              </div>
-            )}
-        </>
+      {filteredRecentlyViewed.length > 0 && (
+        <section className="section history__products" style={{ paddingTop: '3.84rem' }}>
+          <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Είδες πρόσφατα</h2> </hgroup> </header>
+          <ScrollableSlider>
+            <div className="p__products--scroll scroll__content"> {filteredRecentlyViewed.map(prod => (<ProductCard key={`recent-${prod.id}`} product={prod} />))} </div>
+          </ScrollableSlider>
+        </section>
+      )}
+    </>
   );
 };
 
