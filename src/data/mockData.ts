@@ -665,7 +665,7 @@ export const products: Product[] = [
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
     categoryIds: [99],
-    description: 'The latest iPhone with stunning design and performance.',
+    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Εκπληκτική οθόνη, επαγγελματική κάμερα, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία και εντυπωσιακό design. Ζήσε την απόλυτη εμπειρία Apple.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
     images: [
       '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
@@ -679,7 +679,7 @@ export const products: Product[] = [
       'RAM': '6GB',
       'Χωρητικότητα': '256GB',
       'Camera': '48MP + 12MP + 12MP',
-      'OS': 'iOS 16',
+      'Λειτουργικό Σύστημα': 'iOS 16',
       'Μπαταρία': '4323 mAh',
       'Διαστάσεις': '160.7 x 77.6 x 7.85 mm',
       'Weight': '240g'
@@ -712,7 +712,7 @@ export const products: Product[] = [
       'RAM': '12GB',
       'Χωρητικότητα': '512GB',
       'Camera': '200MP + 12MP + 10MP + 10MP',
-      'OS': 'Android 13',
+      'Λειτουργικό Σύστημα': 'Android 13',
       'Μπαταρία': '5000 mAh',
       'Διαστάσεις': '163.4 x 78.1 x 8.9 mm',
       'Weight': '233g'
