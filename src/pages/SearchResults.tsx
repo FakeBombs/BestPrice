@@ -365,7 +365,7 @@ const SearchResults: React.FC = () => {
                   <h1>{searchQuery ? `Αποτελέσματα για "${searchQuery}"` : 'Όλα τα προϊόντα'}</h1>
                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                    {(searchQuery || isAnyFilterActive) && (
+                    {(searchQuery || isAnyFilterActive) && filteredProducts.length > 0 && (
                     <div data-url={location.pathname + location.search} data-title={searchQuery ? `Αναζήτηση: "${searchQuery}"` : 'Όλα τα προϊόντα'} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                       <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                       <div class="alerts-minimal__label"></div>
