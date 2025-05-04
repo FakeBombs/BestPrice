@@ -161,10 +161,10 @@ const ProductDetail = () => {
               <div className="item-actions-buttons">
                 <button className="item-actions__button" onClick={handleAddToFavorites}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg><span className="item-actions__label">Προσθήκη στη Λίστα Αγορών</span></button>
                 <button className="item-actions__button" data-id="compare"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-compare-16"></use></svg><span className="item-actions__label">Προσθήκη στη σύγκριση</span></button>
-                {/* <button className="item-actions__button" data-id="want">...</button> */}
-                {/* <button className="item-actions__button" data-id="have">...</button> */}
+                <button className="item-actions__button" data-id="want"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-want-16"></use></svg><span className="item-actions__label">Το θέλω</span><span className="item-actions__count">25</span></button>
+                <button className="item-actions__button" data-id="have"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-have-16"></use></svg><span className="item-actions__label">Το έχω</span></button>
                 <button className="item-actions__button" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-alert-16"></use></svg><span className="item-actions__label">Ειδοποίηση για πτώση τιμής</span></button>
-                {/* <button className="item-actions__button">...</button> */}
+                <button className="item-actions__button"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-collection-16"></use></svg><span className="item-actions__label">Προσθήκη σε συλλογή</span></button>
               </div>
             </aside>
             <main className="item-main">
