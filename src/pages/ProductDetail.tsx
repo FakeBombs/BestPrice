@@ -243,7 +243,7 @@ const ProductDetail = () => {
                         </div>
                         <div className="minfo minfo--info">
                         <aside className="minfo__aside">
-                            <div className="minfo__screen" style={{backgroundImage: `url(//image.thum.io/get/width/600/crop/800/noanimate/${popupVendorContent.url})`}}></div>
+                            <div className="minfo__screen" style={{backgroundImage: `url(//image.thum.io/get/width/600/crop/1200/viewport/1920/noanimate/${popupVendorContent.url})`}}></div>
                         </aside>
                         <main className="minfo__main">
                             <header className="minfo__header">
