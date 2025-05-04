@@ -79,7 +79,7 @@ export const VendorPriceCard = ({ priceInfo, product, openPopup }: VendorPriceCa
                 <div className="prices__title">
                   {/* Link to vendor's product page - Title can be implicit */}
                   <a data-price={Math.round(displayPrice * 100)} title={product.title} rel="nofollow noopener" target="_blank" href={priceInfo.productUrl || vendor.url}>
-                     {/* Maybe display variant info here if available */}
+                    <h3>{product.title}</h3>
                   </a>
                 </div>
                 <div className="prices__props">
