@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LogOut } from 'lucide-react'; // Keeping LogOut as it was used
+import { LogOut, Sun } from 'lucide-react'; // Using Sun icon for theme toggle
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
@@ -128,31 +128,47 @@ const UserButton = () => {
     setAuthModalOpen(true);
   };
 
-  if (user) {
-    return (
-      <div className="relative">
-        <button onClick={toggleDropdown} className="relative h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={user.avatar || ''} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-        </button>
-        {isDropdownOpen && (
-          <UserDropdownContent onLogout={logout} user={user} />
-        )}
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={authMode} />
-      </div>
-    );
-  }
-
   return (
-    <>
-      <div className="flex items-center space-x-2">
-        <button className="ghost" onClick={handleLoginClick}>{t('signIn')}</button>
-        <button onClick={handleRegisterClick}>{t('register')}</button>
-      </div>
+    <div id="user">
+      <span className="user-popups">
+        <span className="user-popup foo-button" id="mobile-search__icon">
+          <svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
+        </span>
+        <span
+          data-tooltip={t('changeTheme')} // Assuming you have a translation for this
+          data-tooltip-no-border=""
+          className="foo-button hide-mobile"
+          data-theme-toggle=""
+        >
+          <Sun aria-hidden="true" className="icon h-6 w-6" /> {/* Using lucide-react Sun icon */}
+        </span>
+        {user && (
+          <button onClick={toggleDropdown} className="relative foo-button h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={user.avatar || ''} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+          </button>
+        )}
+      </span>
+      {!user && (
+        <span className="user-actions">
+          <button className="foo-button" data-action="login" onClick={handleLoginClick}>
+            {t('signIn')}
+          </button>
+          <span className="separator"></span>
+          <button className="foo-button" data-action="signup" onClick={handleRegisterClick}>
+            {t('register')}
+          </button>
+        </span>
+      )}
+
+      {isDropdownOpen && user && (
+        <UserDropdownContent onLogout={logout} user={user} />
+      )}
+
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={authMode} />
-    </>
+    </div>
   );
 };
 
