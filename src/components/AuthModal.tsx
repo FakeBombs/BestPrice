@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
+import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button'; // Assuming you have this
+// import { Input } from '@/components/ui/input';  // Removed, using custom
+// import { Label } from '@/components/ui/label';  // Removed, using custom
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'register';
 }
 
+// Custom Input Component (with added classes)
 const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string }) => (
   <input
     type={type}
@@ -16,14 +18,15 @@ const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoC
     name={name}
     placeholder={placeholder}
     onChange={onChange}
-    className="auth-input"
+    className="login__input-field auth-input" // Added login__input-field
     autoCapitalize={autoCapitalize}
     autoComplete={autoComplete}
   />
 );
 
+// Custom Label Component (with added classes)
 const Label = ({ children, className, ...props }: { children: React.ReactNode; className?: string; [key: string]: any }) => (
-  <label className={`auth-label ${className || ''}`} {...props}>
+  <label className={`login__input-wrapper auth-label ${className || ''}`} {...props}>  {/* Added login__input-wrapper */}
     {children}
   </label>
 );
@@ -120,7 +123,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               placeholder=""
             />
             <div className="tooltip__anchor" onClick={() => setLoginShowPassword(!loginShowPassword)}>
-              <EyeOff className="icon icon pressable"  />
+              {loginShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
             </div>
           </Label>
         </div>
@@ -168,7 +171,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleRegister(e);}}>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">e-mail</div>
+            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>e-mail</div>
             <Input
               type="text"
               value={registerEmail}
@@ -207,7 +210,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">Κωδικός</div>
+            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Κωδικός</div>
             <Input
               type={registerShowPassword ? 'text' : 'password'}
               value={registerPassword}
@@ -218,7 +221,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               placeholder=""
             />
              <div className="tooltip__anchor" onClick={() => setRegisterShowPassword(!registerShowPassword)}>
-              <EyeOff className="icon icon pressable" />
+             {registerShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
             </div>
           </Label>
         </div>
