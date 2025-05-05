@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LogOut, Sun } from 'lucide-react'; // Using Sun icon for theme toggle
+import { LogOut, Sun, Moon } from 'lucide-react'; // Import Moon for dark mode icon
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
@@ -113,6 +113,8 @@ const UserButton = () => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'default'>('default'); // Default theme
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -128,20 +130,48 @@ const UserButton = () => {
     setAuthModalOpen(true);
   };
 
+  // Simulate useTheme and setTheme (for demonstration within this component)
+  const setTheme = (newTheme: 'dark' | 'default') => {
+    setCurrentTheme(newTheme);
+    // In a real app, you would use next-themes or a similar library here
+    // to actually apply the theme to the document or user preferences.
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme); // Persist theme
+    }
+  };
+
+    // Get persisted theme on mount
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const storedTheme = localStorage.getItem('theme') as 'dark' | 'default';
+      if (storedTheme) {
+        setCurrentTheme(storedTheme);
+      }
+    }
+  }, []);
+
+
+  if (!mounted) return null; // Or a loading indicator if you prefer
+
+
   return (
     <div id="user">
       <span className="user-popups">
         <span className="user-popup foo-button" id="mobile-search__icon">
-          <svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
+          <svg aria-hidden="true" className="icon" width="24" height="24"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-search-24"></use></svg>
         </span>
-        <span
-          data-tooltip={t('changeTheme')} // Assuming you have a translation for this
-          data-tooltip-no-border=""
+        <button
+          onClick={() => setTheme(currentTheme === 'dark' ? 'default' : 'dark')}
+          aria-label="Toggle theme"
           className="foo-button hide-mobile"
-          data-theme-toggle=""
         >
-          <Sun aria-hidden="true" className="icon h-6 w-6" /> {/* Using lucide-react Sun icon */}
-        </span>
+          {currentTheme === 'dark' ? (
+            <Sun className="h-6 w-6" />
+          ) : (
+            <Moon className="h-6 w-6" />
+          )}
+        </button>
         {user && (
           <button onClick={toggleDropdown} className="relative foo-button h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
             <Avatar className="h-10 w-10">
