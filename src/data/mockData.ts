@@ -602,6 +602,7 @@ export interface ProductVariant {
 export interface Product {
   id: number;
   title: string;
+  slug?: string;
   brand?: string;
   model?: string;
   mpn?: string;              // Manufacturer Part Number
