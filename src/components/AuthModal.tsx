@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff, Eye } from 'lucide-react';
+import { LogIn, UserPlus, X, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button'; // Assuming you have this
 
 
@@ -71,17 +71,6 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     onClose();
   }, [onClose, registerEmail, registerFirstName, registerLastName, registerPassword, registerConsentTerms, registerConsentNewsletters]);
 
-    const renderGoogleIcon = () => (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24">
-            <path fill="#fff" d="M16 24h4v10h-4z"/>
-            <path fill="#fff" d="M28 14h4v10h-4z"/>
-            <path fill="#fff" d="M36 18h4v10h-4z"/>
-            <path fill="#06c" d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24z"/>
-            <path fill="#fff" d="M24 4C12.8 4 3.6 11.8 3.6 24S12.8 44 24 44s20.4-8.2 20.4-20S35.2 4 24 4z"/>
-            <path fill="#ffba00" d="M24 16c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8z"/>
-        </svg>
-    )
-
   const renderLoginContent = () => {
 
 
@@ -89,22 +78,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     <div className="login__view login__view--signin">
       <div className="login__providers">
         <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Login')}>
-          <div>
-            {renderGoogleIcon()}
-            <span>Σύνδεση με Google</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Σύνδεση με Google</span></div>
         </button>
         <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Login')}>
-          <div>
-            <Facebook className="icon" />
-            <span>Σύνδεση με Facebook</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Σύνδεση με Facebook</span></div>
         </button>
         <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Login')}>
-          <div>
-            <Apple className="icon" />
-            <span>Σύνδεση με Apple</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Σύνδεση με Apple</span></div>
         </button>
       </div>
       <div className="login__sub-title">Σύνδεση με όνομα χρήστη ή e-mail</div>
@@ -184,17 +164,11 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           </Label>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!loginEmail || !loginPassword}>
-            Σύνδεση
-          </Button>
+          <Button type="submit" className="button" disabled={!loginEmail || !loginPassword}>Σύνδεση</Button>
         </div>
-        <div className="login__forgot">
-          <span className="foo-link" onClick={() => console.log('Forgot Password')}>Υπενθύμιση Κωδικού</span>
-        </div>
+        <div className="login__forgot"><span className="foo-link" onClick={() => console.log('Forgot Password')}>Υπενθύμιση Κωδικού</span></div>
       </form>
-      <div className="login__footer">
-        <span className="foo-link" onClick={() => setActiveTab('register')}>Δημιουργία λογαριασμού</span>
-      </div>
+      <div className="login__footer"><span className="foo-link" onClick={() => setActiveTab('register')}>Δημιουργία λογαριασμού</span></div>
     </div>
   );
   }
@@ -205,22 +179,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     <div className="login__view">
       <div className="login__providers">
        <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Register')}>
-          <div>
-            {renderGoogleIcon()}
-            <span>Εγγραφή με Google</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Εγγραφή με Google</span></div>
         </button>
         <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Register')}>
-          <div>
-            <Facebook className="icon" />
-            <span>Εγγραφή με Facebook</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Εγγραφή με Facebook</span></div>
         </button>
         <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Register')}>
-          <div>
-            <Apple className="icon" />
-            <span>Εγγραφή με Apple</span>
-          </div>
+          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Εγγραφή με Apple</span></div>
         </button>
       </div>
       <div className="login__sub-title">Εγγραφή με χρήση e-mail</div>
@@ -339,27 +304,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           }}
         >
           <Label className="login__input-wrapper">
-            <div
-              className="login__field-placeholder"
-              style={{
-                marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px',
-                transformOrigin: 'left top',
-                transform: registerPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
-              }}
-            >
-              Κωδικός
-            </div>
-            <Input
-              type={registerShowPassword ? 'text' : 'password'}
-              value=""
-              name="password"
-              onChange={(e) => setRegisterPassword(e.target.value)}
-              autoCapitalize="none"
-              autoComplete="new-password"
-              placeholder=""
-              onFocus={() => setRegisterPasswordFocused(true)}
-              onBlur={() => setRegisterPasswordFocused(false)}
-            />
+            <div className="login__field-placeholder" style={{ marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px', transformOrigin: 'left top', transform: registerPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none' }}>Κωδικός</div>
+            <Input type={registerShowPassword ? 'text' : 'password'} value="" name="password" onChange={(e) => setRegisterPassword(e.target.value)} autoCapitalize="none" autoComplete="new-password" placeholder="" onFocus={() => setRegisterPasswordFocused(true)} onBlur={() => setRegisterPasswordFocused(false)}/>
              <div className="tooltip__anchor" onClick={() => setRegisterShowPassword(!registerShowPassword)}>
              {registerShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
             </div>
@@ -368,41 +314,22 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         <div className="login__consent">
           <div className="login__field login__field--placeholder-transition login__field--checkbox">
             <Label className="login__input-wrapper">
-              <input
-                type="checkbox"
-                value={registerConsentTerms}
-                name="consentTerms"
-                onChange={(e) => setRegisterConsentTerms(e.target.checked)}
-
-              />
-              <div className="login__field-label">
-                Συμφωνώ με τους <a tabIndex={-1} className="dotted" target="_blank" href="/policies/terms">
-                  όρους χρήσης του BestPrice
-                </a>
-              </div>
+              <input type="checkbox" value={registerConsentTerms} name="consentTerms" onChange={(e) => setRegisterConsentTerms(e.target.checked)}/>
+              <div className="login__field-label">Συμφωνώ με τους <a tabIndex={-1} className="dotted" target="_blank" href="/policies/terms">όρους χρήσης του BestPrice</a></div>
             </Label>
           </div>
           <div className="login__field login__field--placeholder-transition login__field--checkbox">
             <Label className="login__input-wrapper">
-              <input
-                type="checkbox"
-                value={registerConsentNewsletters}
-                name="consentNewsletters"
-                onChange={(e) => setRegisterConsentNewsletters(e.target.checked)}
-              />
+              <input type="checkbox" value={registerConsentNewsletters} name="consentNewsletters" onChange={(e) => setRegisterConsentNewsletters(e.target.checked)}/>
               <div className="login__field-label">Θέλω να λαμβάνω ενημερωτικά newsletters</div>
             </Label>
           </div>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!registerEmail || !registerFirstName || !registerLastName || !registerPassword || !registerConsentTerms}>
-            Εγγραφή
-          </Button>
+          <Button type="submit" className="auth-button" disabled={!registerEmail || !registerFirstName || !registerLastName || !registerPassword || !registerConsentTerms}>Εγγραφή</Button>
         </div>
       </form>
-      <div className="login__footer">
-        <span className="foo-link" onClick={() => setActiveTab('login')}>Συνδέσου με το λογαριασμό σου</span>
-      </div>
+      <div className="login__footer"><span className="foo-link" onClick={() => setActiveTab('login')}>Συνδέσου με το λογαριασμό σου</span></div>
     </div>
   );
   }
@@ -416,17 +343,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483519 }}>
           <div className="popup-body">
             <div role="button" className="close-button__wrapper pressable popup-close">
-              <div className="close-button">
-                <svg className="icon" aria-hidden="true" width="12" height="12">
-                  <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
-                </svg>
-              </div>
+              <div className="close-button"><svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></div>
             </div>
-            <div className="login__wrapper">
-              <div className="login">
-                {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
-              </div>
-            </div>
+            <div className="login__wrapper"><div className="login">{activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}</div></div>
           </div>
         </div>
       </div>
