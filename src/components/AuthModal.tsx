@@ -78,13 +78,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     <div className="login__view login__view--signin">
       <div className="login__providers">
         <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Login')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Σύνδεση με Google</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Σύνδεση με Google</span></div>
         </button>
         <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Login')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Σύνδεση με Facebook</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Σύνδεση με Facebook</span></div>
         </button>
         <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Login')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Σύνδεση με Apple</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Σύνδεση με Apple</span></div>
         </button>
       </div>
       <div className="login__sub-title">Σύνδεση με όνομα χρήστη ή e-mail</div>
@@ -179,13 +179,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     <div className="login__view">
       <div className="login__providers">
        <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Register')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Εγγραφή με Google</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Εγγραφή με Google</span></div>
         </button>
         <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Register')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Εγγραφή με Facebook</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Εγγραφή με Facebook</span></div>
         </button>
         <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Register')}>
-          <div><svg class="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Εγγραφή με Apple</span></div>
+          <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Εγγραφή με Apple</span></div>
         </button>
       </div>
       <div className="login__sub-title">Εγγραφή με χρήση e-mail</div>
@@ -342,7 +342,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{ zIndex: 2147483519, transitionDuration: '150ms' }}></div>
         <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483519 }}>
           <div className="popup-body">
-            <div role="button" className="close-button__wrapper pressable popup-close">
+            <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
               <div className="close-button"><svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></div>
             </div>
             <div className="login__wrapper"><div className="login">{activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}</div></div>
