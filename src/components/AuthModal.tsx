@@ -109,19 +109,24 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       </div>
       <div className="login__sub-title">Σύνδεση με όνομα χρήστη ή e-mail</div>
       <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleLogin(e);}}>
-        <div className="login__field login__field--placeholder-transition login__field--text">
+        <div  className={
+            `login__field login__field--placeholder-transition login__field--text
+            ${loginEmailFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="usernameOrEmail"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: loginEmailFocused ? '-9.75px' : '-9.75px',
+                marginTop: loginEmailFocused ? '-8.2875px' : '-9.75px',
                 transformOrigin: 'left top',
-              }}
-              onClick={() => {
-                const input = document.querySelector('input[name="usernameOrEmail"]');
-                if (input) {
-                  input.focus();
-                }
+                transform: loginEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
             >
               Όνομα χρήστη ή e-mail
@@ -220,19 +225,24 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       </div>
       <div className="login__sub-title">Εγγραφή με χρήση e-mail</div>
       <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleRegister(e);}}>
-        <div className="login__field login__field--placeholder-transition login__field--text">
+        <div  className={
+            `login__field login__field--placeholder-transition login__field--text
+            ${registerEmailFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="email"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerEmailFocused ? '-9.75px' : '-9.75px',
+                marginTop: registerEmailFocused ? '-8.2875px' : '-9.75px',
                 transformOrigin: 'left top',
-              }}
-              onClick={() => {
-                const input = document.querySelector('input[name="email"]');
-                if (input) {
-                  input.focus();
-                }
+                transform: registerEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
             >
               e-mail
@@ -249,20 +259,25 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             />
           </Label>
         </div>
-        <div className="login__field login__field--placeholder-transition login__field--text">
+        <div  className={
+            `login__field login__field--placeholder-transition login__field--text
+            ${registerFirstNameFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="firstName"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
-              className="login__field-placeholder"
-              style={{
-                marginTop: registerFirstNameFocused ? '-9.75px' : '-9.75px',
-                transformOrigin: 'left top',
-              }}
-              onClick={() => {
-                const input = document.querySelector('input[name="firstName"]');
-                if (input) {
-                  input.focus();
-                }
-              }}
+               className="login__field-placeholder"
+                style={{
+                  marginTop: registerFirstNameFocused ? '-8.2875px' : '-9.75px',
+                  transformOrigin: 'left top',
+                  transform: registerFirstNameFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                }}
             >
               Όνομα
             </div>
@@ -278,19 +293,24 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             />
           </Label>
         </div>
-        <div className="login__field login__field--placeholder-transition login__field--text">
+        <div  className={
+            `login__field login__field--placeholder-transition login__field--text
+            ${registerLastNameFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="lastName"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerLastNameFocused ? '-9.75px' : '-9.75px',
+                marginTop: registerLastNameFocused ? '-8.2875px' : '-9.75px',
                 transformOrigin: 'left top',
-              }}
-              onClick={() => {
-                const input = document.querySelector('input[name="lastName"]');
-                if (input) {
-                  input.focus();
-                }
+                transform: registerLastNameFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
             >
               Επώνυμο
