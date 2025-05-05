@@ -143,13 +143,6 @@ const ProductDetail = () => {
   // Derived value - safe to use product here
   const productSlugForURL = product.slug || formatProductSlug(product.title);
 
-  const primaryCategoryId = product.categoryIds?.[0];
-  const primaryCategory = useMemo(() => {
-    if (!primaryCategoryId) return null;
-    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-    return allCatsMap.get(primaryCategoryId);
-  }, [primaryCategoryId]);
-
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
