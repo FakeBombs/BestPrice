@@ -150,9 +150,7 @@ const Deals = () => {
           <h1>{t('deals')} & Εκπτώσεις</h1>
           <p>6.551 προϊόντα με μεγάλη πτώση τιμής</p>
         </header>
-      
-        <ProductFilter onSortChange={handleSortChange} onVendorFilter={handleVendorFilter} onPriceRangeFilter={handlePriceRangeFilter} onInStockOnly={handleInStockOnly} />
-        
+
         <div className="page-products">
           <main className="page-products__main">
 
