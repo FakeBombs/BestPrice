@@ -1,10 +1,11 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
+import { AlertTriangle } from 'lucide-react';
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -18,6 +19,25 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [terms, setTerms] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  
+  // Reset button disabled state after a timeout in case the isLoading state gets stuck
+  useEffect(() => {
+    let timer: number;
+    
+    if (isLoading) {
+      // If still loading after 10 seconds, force enable the button
+      timer = window.setTimeout(() => {
+        setButtonDisabled(false);
+        console.log("Register button force enabled after timeout");
+      }, 10000);
+    }
+    
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [isLoading]);
   
   const validatePassword = () => {
     if (password !== confirmPassword) {
@@ -34,19 +54,46 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setButtonDisabled(true);
     
     if (!validatePassword() || !terms) {
+      setButtonDisabled(false);
       return;
     }
     
-    const success = await register(name, email, password);
-    if (success) {
-      onSuccess();
+    try {
+      console.log("Register form submitted");
+      const success = await register(name, email, password);
+      console.log("Registration result:", success);
+      
+      if (success) {
+        onSuccess();
+      } else {
+        const errorMsg = "Registration failed. Please try again.";
+        setError(errorMsg);
+      }
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      const errorMsg = err?.message || "Registration failed. Please try again.";
+      setError(errorMsg);
+    } finally {
+      // Enable button after a short delay to avoid rapid re-clicks
+      setTimeout(() => {
+        setButtonDisabled(false);
+      }, 500);
     }
   };
   
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md flex gap-2 items-start">
+          <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+      
       <div className="space-y-2">
         <Label htmlFor="name">Full Name</Label>
         <Input 
@@ -122,7 +169,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       <Button 
         type="submit" 
         className="w-full"
-        disabled={!terms}
+        disabled={buttonDisabled || (!terms && !isLoading)}
       >
         {isLoading ? 'Creating Account...' : 'Create Account'}
       </Button>

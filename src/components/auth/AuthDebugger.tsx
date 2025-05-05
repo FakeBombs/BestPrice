@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase, redirectURL, siteURL } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, Bug } from 'lucide-react';
+import { ChevronDown, ChevronRight, Bug, RefreshCw, Trash } from 'lucide-react';
 
 export default function AuthDebugger() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +13,11 @@ export default function AuthDebugger() {
     currentPath: window.location.pathname,
     redirectUrl: redirectURL,
   });
+  const [refreshing, setRefreshing] = useState(false);
   
-  useEffect(() => {
-    // Get current session data
-    const getSessionData = async () => {
+  const fetchSessionData = async () => {
+    setRefreshing(true);
+    try {
       const { data, error } = await supabase.auth.getSession();
       if (error) {
         console.error("Session retrieval error:", error);
@@ -24,9 +25,17 @@ export default function AuthDebugger() {
       } else {
         setSessionData(data);
       }
-    };
-    
-    getSessionData();
+    } catch (err) {
+      console.error("Error getting session:", err);
+      setSessionData({ error: String(err) });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+  
+  useEffect(() => {
+    // Get current session data
+    fetchSessionData();
   }, []);
   
   const handleTestAuth = async () => {
@@ -40,6 +49,21 @@ export default function AuthDebugger() {
       }
     } catch (err: any) {
       alert(`Auth test exception: ${err.message}`);
+    }
+  };
+  
+  const handleClearSession = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Sign out error:", error);
+        alert(`Failed to clear session: ${error.message}`);
+      } else {
+        alert("Session cleared successfully. Page will reload.");
+        window.location.reload();
+      }
+    } catch (err: any) {
+      alert(`Error clearing session: ${err.message}`);
     }
   };
   
@@ -62,6 +86,12 @@ export default function AuthDebugger() {
           <p className="mb-1">Site URL: {authConfig.siteUrl}</p>
           <p className="mb-1">Redirect URL: {authConfig.redirectUrl}</p>
           <p className="mb-2">Current Path: {authConfig.currentPath}</p>
+          {sessionData?.session && (
+            <p className="text-green-500 font-semibold">✓ Active session detected</p>
+          )}
+          {!sessionData?.session && (
+            <p className="text-red-500 font-semibold">✗ No active session</p>
+          )}
         </div>
         
         <CollapsibleContent>
@@ -69,7 +99,7 @@ export default function AuthDebugger() {
             <div>
               <h4 className="text-sm font-medium mb-1">Supabase Configuration Check</h4>
               <p className="text-xs">
-                Make sure your Supabase project has these values configured in Authentication &gt; URL Configuration:
+                Ensure your Supabase project has these values configured in Authentication &gt; URL Configuration:
               </p>
               <ul className="text-xs list-disc pl-5 mt-1">
                 <li>Site URL: {authConfig.siteUrl}</li>
@@ -77,6 +107,31 @@ export default function AuthDebugger() {
                 <li>Additional Redirect URL: {authConfig.redirectUrl}</li>
                 <li>Additional Redirect URL: {authConfig.siteUrl}/auth/callback</li>
               </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-1">Auth Storage</h4>
+              <div className="flex gap-2 flex-wrap">
+                {localStorage.getItem('supabase.auth.token') ? (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    localStorage: auth.token ✓
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    localStorage: auth.token ✗
+                  </span>
+                )}
+                
+                {localStorage.getItem(`sb-${SUPABASE_PROJECT_ID}-auth-token`) ? (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    localStorage: project token ✓
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    localStorage: project token ✗
+                  </span>
+                )}
+              </div>
             </div>
             
             <div>
@@ -96,10 +151,27 @@ export default function AuthDebugger() {
               </Button>
               <Button 
                 size="sm" 
+                variant="outline"
+                onClick={fetchSessionData}
+                disabled={refreshing}
+              >
+                <RefreshCw className={`h-3 w-3 mr-1 ${refreshing ? "animate-spin" : ""}`} />
+                Refresh
+              </Button>
+              <Button 
+                size="sm" 
                 variant="outline" 
                 onClick={() => window.open('https://supabase.com/dashboard/project/xibjuwcqceubldzeypyy/auth/url-configuration', '_blank')}
               >
-                Open Supabase Auth Settings
+                Supabase Auth Settings
+              </Button>
+              <Button 
+                size="sm" 
+                variant="destructive" 
+                onClick={handleClearSession}
+              >
+                <Trash className="h-3 w-3 mr-1" />
+                Clear Session
               </Button>
             </div>
           </div>
@@ -108,3 +180,5 @@ export default function AuthDebugger() {
     </div>
   );
 }
+
+const SUPABASE_PROJECT_ID = 'xibjuwcqceubldzeypyy';

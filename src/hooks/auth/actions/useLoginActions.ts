@@ -10,12 +10,20 @@ export function useLoginActions(
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log("Login attempt started for email:", email);
     setIsLoading(true);
+    
     try {
+      // First, abort any ongoing auth session
+      await supabase.auth.signOut();
+      
+      console.log("Calling signInWithPassword...");
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      console.log("Login response:", { data, error });
 
       if (error) {
         console.error("Supabase auth error:", error);
@@ -24,18 +32,22 @@ export function useLoginActions(
           description: error.message,
           variant: 'destructive',
         });
+        setIsLoading(false);
         return false;
       }
 
       if (!data.user) {
+        console.error("No user data returned");
         toast({
           title: 'Login Failed',
           description: 'User data not returned from authentication service.',
           variant: 'destructive',
         });
+        setIsLoading(false);
         return false;
       }
 
+      console.log("User authenticated successfully, fetching profile");
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -76,28 +88,36 @@ export function useLoginActions(
           .eq('id', data.user.id);
       }
 
+      toast({
+        title: 'Login Successful',
+        description: 'You have been successfully logged in.',
+      });
+      
+      setIsLoading(false);
       return true;
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
         title: 'Login Failed',
-        description: error.message,
+        description: error.message || 'An unexpected error occurred',
         variant: 'destructive',
       });
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
   const socialLogin = async (provider: 'google' | 'facebook' | 'twitter'): Promise<boolean> => {
     try {
+      console.log(`Starting ${provider} login flow`);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: window.location.origin,
         }
       });
+
+      console.log(`${provider} login response:`, { data, error });
 
       if (error) {
         console.error(`${provider} login error:`, error);
@@ -109,12 +129,14 @@ export function useLoginActions(
         return false;
       }
 
+      // For OAuth, we don't set the user here because the redirect will happen
+      // The user will be set during the auth state change event
       return true;
     } catch (error: any) {
       console.error(`${provider} login error:`, error);
       toast({
         title: 'Login Failed',
-        description: error.message,
+        description: error.message || `Error connecting to ${provider}`,
         variant: 'destructive',
       });
       return false;
@@ -122,9 +144,15 @@ export function useLoginActions(
   };
 
   const logout = async () => {
+    setIsLoading(true);
     try {
+      console.log("Starting logout process");
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      
+      if (error) {
+        console.error("Logout error:", error);
+        throw error;
+      }
       
       setUser(null);
       
@@ -132,6 +160,8 @@ export function useLoginActions(
         title: 'Logged Out',
         description: 'You have been successfully logged out.',
       });
+      
+      console.log("Logout successful");
     } catch (error: any) {
       console.error("Logout error:", error);
       toast({
@@ -139,6 +169,8 @@ export function useLoginActions(
         description: error.message,
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,13 +21,35 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  
+  // Reset button disabled state after a timeout in case the isLoading state gets stuck
+  useEffect(() => {
+    let timer: number;
+    
+    if (isLoading) {
+      // If still loading after 10 seconds, force enable the button
+      timer = window.setTimeout(() => {
+        setButtonDisabled(false);
+        console.log("Login button force enabled after timeout");
+      }, 10000);
+    }
+    
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [isLoading]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setButtonDisabled(true);
     
     try {
+      console.log("Login form submitted");
       const success = await login(email, password);
+      console.log("Login result:", success);
+      
       if (success) {
         onSuccess();
       } else {
@@ -40,11 +62,17 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
       const errorMsg = err?.message || "Login failed. Please check your credentials and try again.";
       setError(errorMsg);
       if (onError) onError(errorMsg);
+    } finally {
+      // Enable button after a short delay to avoid rapid re-clicks
+      setTimeout(() => {
+        setButtonDisabled(false);
+      }, 500);
     }
   };
   
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter') => {
     setError(null);
+    setButtonDisabled(true);
     
     try {
       // Log provider info for debugging
@@ -58,6 +86,11 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
       const errorMsg = `${provider} login failed: ${err?.message || 'Please try again.'}`;
       setError(errorMsg);
       if (onError) onError(errorMsg);
+    } finally {
+      // Re-enable button after timeout
+      setTimeout(() => {
+        setButtonDisabled(false);
+      }, 500);
     }
   };
   
@@ -111,7 +144,11 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={buttonDisabled}
+        >
           {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
       </form>
@@ -133,6 +170,7 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
           variant="outline" 
           className="w-full" 
           onClick={() => handleSocialLogin('google')}
+          disabled={buttonDisabled}
         >
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="h-5 w-5 mr-2">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -148,6 +186,7 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
           variant="outline" 
           className="w-full" 
           onClick={() => handleSocialLogin('facebook')}
+          disabled={buttonDisabled}
         >
           <Facebook className="h-5 w-5 mr-2 text-blue-600" />
           {t('facebook')}
@@ -158,6 +197,7 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
         variant="outline" 
         className="w-full" 
         onClick={() => handleSocialLogin('twitter')}
+        disabled={buttonDisabled}
       >
         <Twitter className="h-5 w-5 mr-2 text-sky-500" />
         {t('twitter')}

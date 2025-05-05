@@ -30,11 +30,11 @@ export const supabase = createClient<Database>(
       persistSession: true,
       autoRefreshToken: true,
       storage: typeof window !== 'undefined' ? localStorage : undefined,
-      flowType: 'pkce', // Recommended for web apps for better security
+      flowType: 'implicit', // Changed from 'pkce' to 'implicit' for simpler auth flow
       detectSessionInUrl: true, // Enables detecting OAuth session info from the URL
       redirectTo: getRedirectURL(), // Use the specific redirect URL with /callback path
       // Debug options
-      debug: import.meta.env.DEV // Only enable debug in development
+      debug: true // Enable debug in all environments for now to diagnose issues
     }
   }
 );
@@ -43,12 +43,10 @@ export const supabase = createClient<Database>(
 export const siteURL = getSiteURL();
 export const redirectURL = getRedirectURL();
 
-// Log configuration in development mode
-if (import.meta.env.DEV) {
-  console.log('Supabase Auth Configuration:', {
-    siteURL: siteURL,
-    redirectURL: redirectURL,
-    flowType: 'pkce',
-    detectSessionInUrl: true
-  });
-}
+// Log configuration in all modes for debugging
+console.log('Supabase Auth Configuration:', {
+  siteURL: siteURL,
+  redirectURL: redirectURL,
+  flowType: 'implicit',
+  detectSessionInUrl: true
+});
