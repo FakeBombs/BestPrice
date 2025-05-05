@@ -343,17 +343,38 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   }
 
   const renderForgotPasswordContent = () => {
+    const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+    const [forgotPasswordEmailFocused, setForgotPasswordEmailFocused] = useState(false);
+
+
     return (
       <div className="login__view">
         <form method="post" className="login__form" onSubmit={handleForgotPasswordSubmit}>
-          <div className="login__field login__field--placeholder-transition login__field--text">
+          <div className= {
+            `login__field login__field--placeholder-transition login__field--text
+            ${forgotPasswordEmailFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="usernameOrEmail"]');
+            if (input) {
+              input.focus();
+            }
+          }}>
             <Label className="login__input-wrapper">
-              <div className="login__field-placeholder" style={{ marginTop: '-8.2875px', transformOrigin: 'left top' }}>Όνομα χρήστη ή e-mail</div>
+              <div  className="login__field-placeholder"
+              style={{
+                marginTop: forgotPasswordEmailFocused ? '-8.2875px' : '-9.75px',
+                transformOrigin: 'left top',
+                transform: forgotPasswordEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+              }}>Όνομα χρήστη ή e-mail</div>
               <Input
                 autoCapitalize="none"
                 type="text"
-                value=""
+                value={forgotPasswordEmail}
                 name="usernameOrEmail"
+                onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                onFocus={() => setForgotPasswordEmailFocused(true)}
+                onBlur={() => setForgotPasswordEmailFocused(false)}
               />
             </Label>
           </div>
