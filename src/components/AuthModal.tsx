@@ -35,7 +35,7 @@ const Label = ({ children, className, ...props }: { children: React.ReactNode; c
 const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(defaultTab);
   const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState(false);
+  const [loginPassword, setLoginPassword] = useState('');
   const [loginShowPassword, setLoginShowPassword] = useState(false);
   const [loginEmailFocused, setLoginEmailFocused] = useState(false);
   const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
@@ -114,7 +114,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: '-9.75px',
+                marginTop: loginEmailFocused ? '-9.75px' : '-9.75px',
                 transformOrigin: 'left top',
               }}
               onClick={() => {
@@ -165,7 +165,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             </div>
             <Input
               type={loginShowPassword ? 'text' : 'password'}
-              value={loginPassword}
+              value=""
               name="password"
               onChange={(e) => setLoginPassword(e.target.value)}
               autoCapitalize="none"
@@ -225,7 +225,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: '-9.75px',
+                marginTop: registerEmailFocused ? '-9.75px' : '-9.75px',
                 transformOrigin: 'left top',
               }}
               onClick={() => {
@@ -254,7 +254,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: '-9.75px',
+                marginTop: registerFirstNameFocused ? '-9.75px' : '-9.75px',
                 transformOrigin: 'left top',
               }}
               onClick={() => {
@@ -283,7 +283,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: '-9.75px',
+                marginTop: registerLastNameFocused ? '-9.75px' : '-9.75px',
                 transformOrigin: 'left top',
               }}
               onClick={() => {
@@ -331,7 +331,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             </div>
             <Input
               type={registerShowPassword ? 'text' : 'password'}
-              value={registerPassword}
+              value=""
               name="password"
               onChange={(e) => setRegisterPassword(e.target.value)}
               autoCapitalize="none"
