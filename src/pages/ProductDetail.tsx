@@ -143,6 +143,12 @@ const ProductDetail = () => {
   // Derived value - safe to use product here
   const productSlugForURL = product.slug || formatProductSlug(product.title);
 
+  const primaryCategoryId = product.categoryIds?.[0];
+  const primaryCategory = useMemo(() => {
+    if (!primaryCategoryId) return null;
+    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+    return allCatsMap.get(primaryCategoryId);
+  }, [primaryCategoryId]);
 
   return (
     <div className="root__wrapper item-wrapper">
@@ -207,7 +213,7 @@ const ProductDetail = () => {
                 </section>
                 {/* --- End Product Vendors Section --- */}
 
-                <ProductRelatedSections categoryDeals={categoryDeals} productId={numericProductId} />
+                <ProductRelatedSections categoryDeals={categoryDeals} productId={numericProductId} categoryName={primaryCategory?.name} />
 
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Ιστορικό Τιμών</h2></hgroup></header>
