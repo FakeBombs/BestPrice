@@ -114,8 +114,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: loginEmailFocused ? '-9.75px' : '0',
-                transformOrigin: loginEmailFocused ? 'left top' : 'left top', // Keep left top
+                marginTop: '-9.75px',
+                transformOrigin: 'left top',
               }}
               onClick={() => {
                 const input = document.querySelector('input[name="usernameOrEmail"]');
@@ -155,8 +155,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
               className="login__field-placeholder"
               style={{
-                marginTop: loginPasswordFocused ? '-9.75px' : '0',
-                transformOrigin: loginPasswordFocused ? 'left top' : 'left top',
+                marginTop: loginPasswordFocused ? '-8.2875px' : '-9.75px',
+                transformOrigin: 'left top',
+                transform: loginPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
 
             >
@@ -224,8 +225,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerEmailFocused ? '-9.75px' : '0',
-                transformOrigin: registerEmailFocused ? 'left top' : 'left top', // Keep left top
+                marginTop: '-9.75px',
+                transformOrigin: 'left top',
               }}
               onClick={() => {
                 const input = document.querySelector('input[name="email"]');
@@ -253,8 +254,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerFirstNameFocused ? '-9.75px' : '0',
-                transformOrigin: registerFirstNameFocused ? 'left top' : 'left top', // Keep left top
+                marginTop: '-9.75px',
+                transformOrigin: 'left top',
               }}
               onClick={() => {
                 const input = document.querySelector('input[name="firstName"]');
@@ -282,8 +283,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerLastNameFocused ? '-9.75px' : '0',
-                transformOrigin: registerLastNameFocused ? 'left top' : 'left top', // Keep left top
+                marginTop: '-9.75px',
+                transformOrigin: 'left top',
               }}
               onClick={() => {
                 const input = document.querySelector('input[name="lastName"]');
@@ -321,8 +322,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div
               className="login__field-placeholder"
               style={{
-                marginTop: registerPasswordFocused ? '-9.75px' : '0',
-                transformOrigin: registerPasswordFocused ? 'left top' : 'left top', // Keep left top
+                marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px',
+                transformOrigin: 'left top',
+                transform: registerPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
             >
               Κωδικός
