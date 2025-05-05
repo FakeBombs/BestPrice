@@ -8,10 +8,10 @@ interface ProductRelatedSectionsProps {
   categoryDeals?: Product[];
   recentlyViewed?: Product[];
   productId: number;
-  categoryName?: string;
+  currentCategoryName?: string;
 }
 
-const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similarProducts, categoryDeals, recentlyViewed, productId, categoryName }) => {
+const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similarProducts, categoryDeals, recentlyViewed, productId, currentCategoryName }) => {
   const filteredRecentlyViewed = (recentlyViewed || []).filter(p => p.id !== productId);
   const categoryName = getCategoryById(categoryDeals?.[0]?.categoryIds?.[0])?.name || 'this category';
   const currentSimilarProducts = similarProducts || [];
@@ -32,7 +32,7 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
         <section id="item-category-deals" className="section">
           <header className="section__header"> 
             <hgroup className="section__hgroup"> 
-              <h2 className="section__title">Προσφορές {categoryName ? `σε ${categoryName}` : 'της κατηγορίας'}</h2>
+              <h2 className="section__title">Προσφορές {currentCategoryName ? `σε ${currentCategoryName}` : 'της κατηγορίας'}</h2>
               <p class="section__subtitle">Προϊόντα με μεγάλη πτώση τιμής</p>
             </hgroup> 
           </header>
