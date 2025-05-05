@@ -117,6 +117,11 @@ const UserButton = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleLoginClick = () => {
+    setAuthMode('login');
+    setAuthModalOpen(true);
+  };
+
   if (user) {
     return (
       <div className="relative">
