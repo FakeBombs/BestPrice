@@ -213,7 +213,7 @@ const ProductDetail = () => {
                 </section>
                 {/* --- End Product Vendors Section --- */}
 
-                <ProductRelatedSections categoryDeals={categoryDeals} productId={numericProductId} categoryName={primaryCategory?.name} />
+                <ProductRelatedSections categoryDeals={categoryDeals} productId={numericProductId} currentCategoryName={primaryCategory?.name} />
 
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">Ιστορικό Τιμών</h2></hgroup></header>
