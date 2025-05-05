@@ -1,17 +1,31 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LoginForm from "@/components/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from '@/hooks/useTranslation';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import AuthDebugger from "@/components/auth/AuthDebugger";
 
 export default function LoginPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [authError, setAuthError] = useState<string | null>(null);
   
   useEffect(() => {
+    // Check for auth error in URL (common with OAuth redirects)
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+    
+    if (error) {
+      setAuthError(`${error}: ${errorDescription || 'Please check Supabase URL configuration.'}`);
+    }
+    
+    // If user is already logged in, redirect to home
     if (user) {
       navigate('/');
     }
@@ -27,6 +41,13 @@ export default function LoginPage() {
   
   return (
     <div className="container max-w-md py-12">
+      {authError && (
+        <Alert variant="destructive" className="mb-4">
+          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertDescription>{authError}</AlertDescription>
+        </Alert>
+      )}
+      
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl text-center">{t('signIn')}</CardTitle>
@@ -35,6 +56,7 @@ export default function LoginPage() {
           <LoginForm 
             onSuccess={handleLoginSuccess}
             onForgotPassword={handleForgotPassword}
+            onError={(message) => setAuthError(message)}
           />
           
           <div className="mt-6 text-center">
@@ -50,6 +72,9 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Add auth debugger in development mode */}
+      {import.meta.env.DEV && <AuthDebugger />}
     </div>
   );
 }

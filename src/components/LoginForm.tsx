@@ -7,13 +7,15 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { Facebook, Twitter } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { siteURL } from '@/integrations/supabase/client';
 
 interface LoginFormProps {
   onSuccess: () => void;
   onForgotPassword?: () => void;
+  onError?: (message: string) => void;
 }
 
-const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
+const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => {
   const { login, socialLogin, isLoading } = useAuth();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
@@ -28,10 +30,16 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
       const success = await login(email, password);
       if (success) {
         onSuccess();
+      } else {
+        const errorMsg = "Login failed. Please check your credentials and try again.";
+        setError(errorMsg);
+        if (onError) onError(errorMsg);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Login error:", err);
-      setError("Login failed. Please check your credentials and try again.");
+      const errorMsg = err?.message || "Login failed. Please check your credentials and try again.";
+      setError(errorMsg);
+      if (onError) onError(errorMsg);
     }
   };
   
@@ -39,11 +47,14 @@ const LoginForm = ({ onSuccess, onForgotPassword }: LoginFormProps) => {
     setError(null);
     
     try {
+      // Pass the site URL to ensure consistent redirect behavior
       await socialLogin(provider);
-      // Note: We don't call onSuccess here because socialLogin will redirect the user
-    } catch (err) {
+      // We don't call onSuccess here because socialLogin will redirect the user
+    } catch (err: any) {
       console.error(`${provider} login error:`, err);
-      setError(`${provider} login failed. Please try again.`);
+      const errorMsg = `${provider} login failed: ${err?.message || 'Please try again.'}`;
+      setError(errorMsg);
+      if (onError) onError(errorMsg);
     }
   };
   
