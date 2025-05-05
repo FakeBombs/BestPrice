@@ -40,6 +40,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [loginEmailFocused, setLoginEmailFocused] = useState(false);
   const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false); // New state for "Forgot Password"
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState(''); // State for forgot password form
+  const [forgotPasswordEmailFocused, setForgotPasswordEmailFocused] = useState(false);
 
 
   const [registerEmail, setRegisterEmail] = useState('');
