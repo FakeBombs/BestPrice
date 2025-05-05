@@ -6,7 +6,6 @@ import AccountPage from "./pages/AccountPage";
 import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
-import Categories from "./pages/Categories";
 import CategoryPage from "./pages/CategoryPage";
 import Brands from "./pages/Brands";
 import BrandPage from "./pages/BrandPage";
@@ -36,8 +35,6 @@ function App() {
           <Route path="search" element={<SearchResults />} />
           <Route path="/cat/*" element={<CategoryPage />} />
           <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
-          <Route path="categories" element={<Categories />} />
-          <Route path="category/:categorySlug" element={<Categories />} />
           <Route path="brands" element={<Brands />} />
           <Route path="/b/:brandId/:brandName" element={<BrandPage />} />
           <Route path="m" element={<Stores />} />
