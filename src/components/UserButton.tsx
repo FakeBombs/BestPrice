@@ -127,11 +127,7 @@ const UserButton = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <AuthModal 
-          isOpen={authModalOpen} 
-          onClose={() => setAuthModalOpen(false)} 
-          defaultTab={authMode}
-        />
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={authMode} />
       </>
     );
   }
@@ -140,19 +136,11 @@ const UserButton = () => {
   return (
     <>
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" onClick={handleLoginClick}>
-          {t('signIn')}
-        </Button>
-        <Button onClick={handleRegisterClick}>
-          {t('register')}
-        </Button>
+        <Button variant="ghost" onClick={handleLoginClick}>{t('signIn')}</Button>
+        <Button onClick={handleRegisterClick}>{t('register')}</Button>
       </div>
       
-      <AuthModal 
-        isOpen={authModalOpen} 
-        onClose={() => setAuthModalOpen(false)} 
-        defaultTab={authMode}
-      />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} defaultTab={authMode} />
     </>
   );
 };
