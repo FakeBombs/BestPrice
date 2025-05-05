@@ -16,6 +16,12 @@ const getSiteURL = () => {
   return url;
 };
 
+// Define specific paths for auth callbacks
+const getRedirectURL = () => {
+  const baseURL = getSiteURL();
+  return `${baseURL}/callback`;
+};
+
 export const supabase = createClient<Database>(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,
@@ -26,10 +32,23 @@ export const supabase = createClient<Database>(
       storage: typeof window !== 'undefined' ? localStorage : undefined,
       flowType: 'pkce', // Recommended for web apps for better security
       detectSessionInUrl: true, // Enables detecting OAuth session info from the URL
-      redirectTo: getSiteURL()
+      redirectTo: getRedirectURL(), // Use the specific redirect URL with /callback path
+      // Debug options
+      debug: import.meta.env.DEV // Only enable debug in development
     }
   }
 );
 
-// Export site URL for other components that may need it
+// Export site URL and redirect URL for other components that may need it
 export const siteURL = getSiteURL();
+export const redirectURL = getRedirectURL();
+
+// Log configuration in development mode
+if (import.meta.env.DEV) {
+  console.log('Supabase Auth Configuration:', {
+    siteURL: siteURL,
+    redirectURL: redirectURL,
+    flowType: 'pkce',
+    detectSessionInUrl: true
+  });
+}

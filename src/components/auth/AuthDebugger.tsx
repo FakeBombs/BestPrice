@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, redirectURL, siteURL } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown, ChevronRight } from 'lucide-react';
@@ -10,7 +10,8 @@ export default function AuthDebugger() {
   const [sessionData, setSessionData] = useState<any>(null);
   const [authConfig, setAuthConfig] = useState({
     siteUrl: window.location.origin,
-    currentPath: window.location.pathname
+    currentPath: window.location.pathname,
+    redirectUrl: redirectURL,
   });
   
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function AuthDebugger() {
         
         <div className="text-sm mt-2">
           <p className="mb-1">Site URL: {authConfig.siteUrl}</p>
+          <p className="mb-1">Redirect URL: {authConfig.redirectUrl}</p>
           <p className="mb-2">Current Path: {authConfig.currentPath}</p>
         </div>
         
@@ -69,7 +71,7 @@ export default function AuthDebugger() {
               <ul className="text-xs list-disc pl-5 mt-1">
                 <li>Site URL: {authConfig.siteUrl}</li>
                 <li>Redirect URLs: {authConfig.siteUrl}</li>
-                <li>Additional Redirect URL: {authConfig.siteUrl}/callback</li>
+                <li>Additional Redirect URL: {authConfig.redirectUrl}</li>
               </ul>
             </div>
             

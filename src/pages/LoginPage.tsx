@@ -6,7 +6,7 @@ import LoginForm from "@/components/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from '@/hooks/useTranslation';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { ExclamationTriangleIcon } from "lucide-react";
 import AuthDebugger from "@/components/auth/AuthDebugger";
 
 export default function LoginPage() {
@@ -22,7 +22,9 @@ export default function LoginPage() {
     const errorDescription = params.get('error_description');
     
     if (error) {
-      setAuthError(`${error}: ${errorDescription || 'Please check Supabase URL configuration.'}`);
+      const errorMessage = `${error}: ${errorDescription || 'Please check Supabase URL configuration.'}`;
+      setAuthError(errorMessage);
+      console.error("Authentication error detected:", errorMessage);
     }
     
     // If user is already logged in, redirect to home
