@@ -194,15 +194,36 @@ const ProductDetail = () => {
               <div className="sections item-sections">
                 {/* --- Product Vendors Section --- */}
                 <section id="item-prices" className="section">
-                    <header className="section__header">
-                        <hgroup className="section__hgroup">
-                        <h2 className="section__title">Καταστήματα <small><span>({product.prices.length})</span></small></h2>
-                        </hgroup>
-                        {/* Add Filter Controls Here if needed */}
+                  <header className="section__header">
+                    <hgroup className="section__hgroup"> 
+                      <h2 className="section__title">Καταστήματα <small><span>({product.prices.length})</span></small>
+                        <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
+                      </h2> 
+                    </hgroup>
+                    <div class="section__side">
+                      <label data-type="priceFull" data-always-available="" class="price-filters__filter">
+                        <input type="checkbox">
+                          <svg aria-hidden="true" class="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
+                          <span class="price-filters__label">Τελική τιμή</span>
+                        </label>
+                      </div>
                     </header>
-
+                    
+                    <ScrollableSlider>
+                    <div class="filter-wrapper">
+                      <div data-count=({product.prices.length}) class="price-filters scroll__content">
+                        <label data-type="in-stock" class="price-filters__filter"><input type="checkbox"><span class="price-filters__label">Διαθέσιμα</span></label>
+                        <label data-type="nearby" data-always-available="" class="price-filters__filter"><input type="checkbox"><svg aria-hidden="true" class="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span class="price-filters__label">Κοντά μου</span></label>
+                        <label data-type="certified" data-tooltip="Εμφάνιση μόνο προϊόντων που παρέχονται από πιστοποιημένα καταστήματα" class="price-filters__filter"><input type="checkbox"><svg aria-hidden="true" class="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span class="price-filters__label">Πιστοποιημένα</span></label><label data-type="boxnow" class="price-filters__filter"><input type="checkbox"><span class="price-filters__label">Παράδοση με <svg aria-hidden="true" class="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
+                        <label data-type="coupons" class="price-filters__filter"><input type="checkbox"><svg aria-hidden="true" class="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span class="price-filters__label">Κουπόνια</span></label>
+                        <label data-type="color" data-options="[&quot;desert&quot;,&quot;black&quot;,&quot;white&quot;,&quot;grey&quot;,&quot;gold&quot;]" class="price-filters__filter is-inline"><input type="checkbox"><span class="price-filters__label">Χρώμα</span></label>
+                        <label data-type="authorized" class="price-filters__filter"><input type="checkbox"><span class="price-filters__label">Επίσημοι μεταπωλητές</span></label>
+                      </div>
+                    </div>
+                    </ScrollableSlider>
+                          
                     <TopVendorAd productId={product.id} />
-
+                          
                     <div className="prices" data-merchants={product.prices.length}>
                         {product.prices
                             .sort((a, b) => a.price - b.price)
