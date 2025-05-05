@@ -42,7 +42,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
               <div className="user-menu__self-username">{user.username}</div>
             </main>
             <div className="user-menu__caret">
-              <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
+              <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
             </div>
           </Link>
           <ul>
@@ -54,7 +54,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
           <ul>
             <li style={{ position: 'relative' }}>
               <Link className="collections__popup--link" data-scrollto="#root" to={`/@${user.username}/products/collections`}>
-                <svg className="icon" aria-hidden="true" width="8" height="8" style={{ transform: 'rotate(180deg)', position: 'absolute', left 8, top: '50%', transform: 'translateY(-50%) rotate(180deg)' }}><use href="/dist/images/icons/icons.svg#icon-left-8"></use></svg>
+                <svg className="icon" aria-hidden="true" width="8" height="8" style={{ transform: 'rotate(180deg)', position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%) rotate(180deg)' }}><use href="/dist/images/icons/icons.svg#icon-left-8"></use></svg>
                 {t('myCollections')} (11)
               </Link>
             </li>
@@ -64,7 +64,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
             <li>
               <Link to="/account/credits-club">
                 {t('creditsClub')}
-                <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-credits-16"></use></svg>
+                <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-credits-16"></use></svg>
               </Link>
             </li>
           </ul>
@@ -89,7 +89,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
             <li>
               <Link to="/account">
                 {t('settings')}
-                <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-settings-16"></use></svg>
+                <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-settings-16"></use></svg>
               </Link>
             </li>
           </ul>
