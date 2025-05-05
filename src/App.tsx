@@ -6,7 +6,7 @@ import AccountPage from "./pages/AccountPage";
 import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
-import CategoryPage from "./pages/CategoryPage";
+import CategoryPage from "./pages/Categories";
 import Brands from "./pages/Brands";
 import BrandPage from "./pages/BrandPage";
 import Stores from "./pages/Stores";
@@ -33,10 +33,10 @@ function App() {
         <Route path="/" element={<MainLayout><Outlet /></MainLayout>}>
           <Route index element={<Index />} />
           <Route path="search" element={<SearchResults />} />
-          <Route path="/cat/*" element={<CategoryPage />} />
-          <Route path="/item/:productId/:productSlug" element={<ProductDetail />} />
+          <Route path="cat/*" element={<Categories />} />
+          <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="brands" element={<Brands />} />
-          <Route path="/b/:brandId/:brandName" element={<BrandPage />} />
+          <Route path="b/:brandId/:brandName" element={<BrandPage />} />
           <Route path="m" element={<Stores />} />
           <Route path="m/:vendorId/:vendorName" element={<VendorPage />} />
           <Route path="deals" element={<Deals />} />
