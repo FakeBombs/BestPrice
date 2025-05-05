@@ -5,15 +5,32 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { EyeOff, Eye } from 'lucide-react';
-import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from '@/hooks/useTranslation';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import AuthDebugger from "@/components/auth/AuthDebugger";
 
 
 // Custom Input Component
-const InputComponent = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete, onFocus, onBlur }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string; onFocus?: () => void; onBlur?: () => void; }) => (
+const InputComponent = ({
+  type,
+  value,
+  name,
+  placeholder,
+  onChange,
+  autoCapitalize,
+  autoComplete,
+  onFocus,
+  onBlur
+}: {
+  type: string;
+  value: string;
+  name: string;
+  placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoCapitalize?: string;
+  autoComplete?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}) => (
   <input
     type={type}
     value={value}
@@ -29,7 +46,15 @@ const InputComponent = ({ type, value, name, placeholder, onChange, autoCapitali
 );
 
 // Custom Label Component
-const LabelComponent = ({ children, className, ...props }: { children: React.ReactNode; className?: string; [key: string]: any }) => (
+const LabelComponent = ({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+  [key: string]: any;
+}) => (
   <label className={`login__input-wrapper auth-label ${className || ''}`} {...props}>
     {children}
   </label>
@@ -37,9 +62,9 @@ const LabelComponent = ({ children, className, ...props }: { children: React.Rea
 
 
 export default function LoginPage() {
-  const { user } = useAuth();
+  const [user, setUser] = useState<any>(null); //  set user to null to prevent errors, since useAuth is removed
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const t = (key: string) => key; // added a basic translation function to prevent errors
   const [authError, setAuthError] = useState<string | null>(null);
 
   const [loginEmail, setLoginEmail] = useState('');
@@ -83,17 +108,38 @@ export default function LoginPage() {
     }
   }, [user, navigate]);
 
-  const handleLogin = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Login:', { email: loginEmail, password: loginPassword });
-    navigate('/'); // Or wherever you want to go after successful login
-  }, [navigate, loginEmail, loginPassword]);
+  const handleLogin = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      console.log('Login:', { email: loginEmail, password: loginPassword });
+      navigate('/'); // Or wherever you want to go after successful login
+    },
+    [navigate, loginEmail, loginPassword]
+  );
 
-  const handleRegister = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Register:', { email: registerEmail, firstName: registerFirstName, lastName: registerLastName, password: registerPassword, consentTerms: registerConsentTerms, consentNewsletters: registerConsentNewsletters });
-    navigate('/');
-  }, [navigate, registerEmail, registerFirstName, registerLastName, registerPassword, registerConsentTerms, registerConsentNewsletters]);
+  const handleRegister = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      console.log('Register:', {
+        email: registerEmail,
+        firstName: registerFirstName,
+        lastName: registerLastName,
+        password: registerPassword,
+        consentTerms: registerConsentTerms,
+        consentNewsletters: registerConsentNewsletters
+      });
+      navigate('/');
+    },
+    [
+      navigate,
+      registerEmail,
+      registerFirstName,
+      registerLastName,
+      registerPassword,
+      registerConsentTerms,
+      registerConsentNewsletters
+    ]
+  );
 
   const handleForgotPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,27 +149,48 @@ export default function LoginPage() {
   };
 
   const renderLoginContent = () => {
-
-
     return (
       <div className="login__view login__view--signin">
         <div className="login__providers">
-          <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Login')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Σύνδεση με Google</span></div>
+          <button
+            className="login__provider login__provider--google pressable"
+            onClick={() => console.log('Google Login')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-google-24"></use>
+              </svg>
+              <span>Σύνδεση με Google</span>
+            </div>
           </button>
-          <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Login')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Σύνδεση με Facebook</span></div>
+          <button
+            className="login__provider login__provider--fb pressable"
+            onClick={() => console.log('Facebook Login')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use>
+              </svg>
+              <span>Σύνδεση με Facebook</span>
+            </div>
           </button>
-          <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Login')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Σύνδεση με Apple</span></div>
+          <button
+            className="login__provider login__provider--apple pressable"
+            onClick={() => console.log('Apple Login')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use>
+              </svg>
+              <span>Σύνδεση με Apple</span>
+            </div>
           </button>
         </div>
         <div className="login__sub-title">Σύνδεση με όνομα χρήστη ή e-mail</div>
-        <form method="post" className="login__form" onSubmit={(e) => { e.preventDefault(); handleLogin(e); }}>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--text
-            ${loginEmailFocused ? 'login__field--focused' : ''}`
-          }
+        <form method="post" className="login__form" onSubmit={handleLogin}>
+          <div
+            className={`login__field login__field--placeholder-transition login__field--text
+            ${loginEmailFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="usernameOrEmail"]');
               if (input) {
@@ -137,7 +204,9 @@ export default function LoginPage() {
                 style={{
                   marginTop: loginEmailFocused ? '-8.2875px' : '-9.75px',
                   transformOrigin: 'left top',
-                  transform: loginEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                  transform: loginEmailFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
                 }}
               >
                 Όνομα χρήστη ή e-mail
@@ -151,14 +220,12 @@ export default function LoginPage() {
                 placeholder=""
                 onFocus={() => setLoginEmailFocused(true)}
                 onBlur={() => setLoginEmailFocused(false)}
-
               />
             </LabelComponent>
           </div>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
-            ${loginPasswordFocused ? 'login__field--focused' : ''}`
-          }
+          <div
+            className={`login__field login__field--placeholder-transition login__field--password login__field--has-toggler
+            ${loginPasswordFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="password"]');
               if (input) {
@@ -168,14 +235,14 @@ export default function LoginPage() {
           >
             <LabelComponent className="login__input-wrapper">
               <div
-
                 className="login__field-placeholder"
                 style={{
                   marginTop: loginPasswordFocused ? '-8.2875px' : '-9.75px',
                   transformOrigin: 'left top',
-                  transform: loginPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                  transform: loginPasswordFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
                 }}
-
               >
                 Κωδικός
               </div>
@@ -189,43 +256,85 @@ export default function LoginPage() {
                 onFocus={() => setLoginPasswordFocused(true)}
                 onBlur={() => setLoginPasswordFocused(false)}
               />
-              <div className="tooltip__anchor" onClick={() => setLoginShowPassword(!loginShowPassword)}>
-                {loginShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
+              <div
+                className="tooltip__anchor"
+                onClick={() => setLoginShowPassword(!loginShowPassword)}
+              >
+                {loginShowPassword ? (
+                  <Eye className="icon icon pressable" />
+                ) : (
+                  <EyeOff className="icon icon pressable" />
+                )}
               </div>
             </LabelComponent>
           </div>
           <div className="login__actions">
-            <Button type="submit" className="button" disabled={!loginEmail || !loginPassword}>Σύνδεση</Button>
+            <Button
+              type="submit"
+              className="button"
+              disabled={!loginEmail || !loginPassword}
+            >
+              Σύνδεση
+            </Button>
           </div>
-          <div className="login__forgot"><span className="foo-link" onClick={() => setShowForgotPassword(true)}>Υπενθύμιση Κωδικού</span></div>
+          <div className="login__forgot">
+            <span className="foo-link" onClick={() => setShowForgotPassword(true)}>
+              Υπενθύμιση Κωδικού
+            </span>
+          </div>
         </form>
-        <div className="login__footer"><span className="foo-link" onClick={() => navigate('/register')}>Δημιουργία λογαριασμού</span></div>
+        <div className="login__footer">
+          <span className="foo-link" onClick={() => navigate('/register')}>
+            Δημιουργία λογαριασμού
+          </span>
+        </div>
       </div>
     );
-  }
+  };
 
   const renderRegisterContent = () => {
-
-
     return (
       <div className="login__view">
         <div className="login__providers">
-          <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Register')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-google-24"></use></svg><span>Εγγραφή με Google</span></div>
+          <button
+            className="login__provider login__provider--google pressable"
+            onClick={() => console.log('Google Register')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-google-24"></use>
+              </svg>
+              <span>Εγγραφή με Google</span>
+            </div>
           </button>
-          <button className="login__provider login__provider--fb pressable" onClick={() => console.log('Facebook Register')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use></svg><span>Εγγραφή με Facebook</span></div>
+          <button
+            className="login__provider login__provider--fb pressable"
+            onClick={() => console.log('Facebook Register')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-facebook-white-24"></use>
+              </svg>
+              <span>Εγγραφή με Facebook</span>
+            </div>
           </button>
-          <button className="login__provider login__provider--apple pressable" onClick={() => console.log('Apple Register')}>
-            <div><svg className="icon" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use></svg><span>Εγγραφή με Apple</span></div>
+          <button
+            className="login__provider login__provider--apple pressable"
+            onClick={() => console.log('Apple Register')}
+          >
+            <div>
+              <svg className="icon" aria-hidden="true" width={24} height={24}>
+                <use href="/dist/images/icons/providers.svg#icon-apple-white-24"></use>
+              </svg>
+              <span>Εγγραφή με Apple</span>
+            </div>
           </button>
         </div>
         <div className="login__sub-title">Εγγραφή με χρήση e-mail</div>
-        <form method="post" className="login__form" onSubmit={(e) => { e.preventDefault(); handleRegister(e); }}>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--text
-            ${registerEmailFocused ? 'login__field--focused' : ''}`
-          }
+        <form method="post" className="login__form" onSubmit={handleRegister}>
+          <div
+            className={`login__field login__field--placeholder-transition login__field--text
+            ${registerEmailFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="email"]');
               if (input) {
@@ -239,7 +348,9 @@ export default function LoginPage() {
                 style={{
                   marginTop: registerEmailFocused ? '-8.2875px' : '-9.75px',
                   transformOrigin: 'left top',
-                  transform: registerEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                  transform: registerEmailFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
                 }}
               >
                 e-mail
@@ -256,10 +367,9 @@ export default function LoginPage() {
               />
             </LabelComponent>
           </div>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--text
-            ${registerFirstNameFocused ? 'login__field--focused' : ''}`
-          }
+          <div
+            className={`login__field login__field--placeholder-transition login__field--text
+            ${registerFirstNameFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="firstName"]');
               if (input) {
@@ -273,7 +383,9 @@ export default function LoginPage() {
                 style={{
                   marginTop: registerFirstNameFocused ? '-8.2875px' : '-9.75px',
                   transformOrigin: 'left top',
-                  transform: registerFirstNameFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                  transform: registerFirstNameFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
                 }}
               >
                 Όνομα
@@ -290,10 +402,9 @@ export default function LoginPage() {
               />
             </LabelComponent>
           </div>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--text
-            ${registerLastNameFocused ? 'login__field--focused' : ''}`
-          }
+          <div
+            className={`login__field login__field--placeholder-transition login__field--text
+            ${registerLastNameFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="lastName"]');
               if (input) {
@@ -307,7 +418,9 @@ export default function LoginPage() {
                 style={{
                   marginTop: registerLastNameFocused ? '-8.2875px' : '-9.75px',
                   transformOrigin: 'left top',
-                  transform: registerLastNameFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
+                  transform: registerLastNameFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
                 }}
               >
                 Επώνυμο
@@ -324,10 +437,9 @@ export default function LoginPage() {
               />
             </LabelComponent>
           </div>
-          <div className={
-            `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
-            ${registerPasswordFocused ? 'login__field--focused' : ''}`
-          }
+          <div
+            className={`login__field login__field--placeholder-transition login__field--password login__field--has-toggler
+            ${registerPasswordFocused ? 'login__field--focused' : ''}`}
             onClick={() => {
               const input = document.querySelector('input[name="password"]');
               if (input) {
@@ -336,59 +448,131 @@ export default function LoginPage() {
             }}
           >
             <LabelComponent className="login__input-wrapper">
-              <div className="login__field-placeholder" style={{ marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px', transformOrigin: 'left top', transform: registerPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none' }}>Κωδικός</div>
-              <InputComponent type={registerShowPassword ? 'text' : 'password'} value={registerPassword} name="password" onChange={(e) => setRegisterPassword(e.target.value)} autoCapitalize="none" autoComplete="new-password" placeholder="" onFocus={() => setRegisterPasswordFocused(true)} onBlur={() => setRegisterPasswordFocused(false)} />
-              <div className="tooltip__anchor" onClick={() => setRegisterShowPassword(!registerShowPassword)}>
-                {registerShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
+              <div
+                className="login__field-placeholder"
+                style={{
+                  marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px',
+                  transformOrigin: 'left top',
+                  transform: registerPasswordFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
+                }}
+              >
+                Κωδικός
+              </div>
+              <InputComponent
+                type={registerShowPassword ? 'text' : 'password'}
+                value={registerPassword}
+                name="password"
+                onChange={(e) => setRegisterPassword(e.target.value)}
+                autoCapitalize="none"
+                autoComplete="new-password"
+                placeholder=""
+                onFocus={() => setRegisterPasswordFocused(true)}
+                onBlur={() => setRegisterPasswordFocused(false)}
+              />
+              <div
+                className="tooltip__anchor"
+                onClick={() => setRegisterShowPassword(!registerShowPassword)}
+              >
+                {registerShowPassword ? (
+                  <Eye className="icon icon pressable" />
+                ) : (
+                  <EyeOff className="icon icon pressable" />
+                )}
               </div>
             </LabelComponent>
           </div>
           <div className="login__consent">
             <div className="login__field login__field--placeholder-transition login__field--checkbox">
               <LabelComponent className="login__input-wrapper">
-                <input type="checkbox" value={registerConsentTerms} name="consentTerms" onChange={(e) => setRegisterConsentTerms(e.target.checked)} />
-                <div className="login__field-label">Συμφωνώ με τους <a tabIndex={-1} className="dotted" target="_blank" href="/policies/terms">όρους χρήσης του BestPrice</a></div>
+                <input
+                  type="checkbox"
+                  value={registerConsentTerms}
+                  name="consentTerms"
+                  onChange={(e) => setRegisterConsentTerms(e.target.checked)}
+                />
+                <div className="login__field-label">
+                  Συμφωνώ με τους{' '}
+                  <a
+                    tabIndex={-1}
+                    className="dotted"
+                    target="_blank"
+                    href="/policies/terms"
+                  >
+                    όρους χρήσης του BestPrice
+                  </a>
+                </div>
               </LabelComponent>
             </div>
             <div className="login__field login__field--placeholder-transition login__field--checkbox">
               <LabelComponent className="login__input-wrapper">
-                <input type="checkbox" value={registerConsentNewsletters} name="consentNewsletters" onChange={(e) => setRegisterConsentNewsletters(e.target.checked)} />
-                <div className="login__field-label">Θέλω να λαμβάνω ενημερωτικά newsletters</div>
+                <input
+                  type="checkbox"
+                  value={registerConsentNewsletters}
+                  name="consentNewsletters"
+                  onChange={(e) =>
+                    setRegisterConsentNewsletters(e.target.checked)
+                  }
+                />
+                <div className="login__field-label">
+                  Θέλω να λαμβάνω ενημερωτικά newsletters
+                </div>
               </LabelComponent>
             </div>
           </div>
           <div className="login__actions">
-            <Button type="submit" className="auth-button" disabled={!registerEmail || !registerFirstName || !registerLastName || !registerPassword || !registerConsentTerms}>Εγγραφή</Button>
+            <Button
+              type="submit"
+              className="auth-button"
+              disabled={
+                !registerEmail ||
+                !registerFirstName ||
+                !registerLastName ||
+                !registerPassword ||
+                !registerConsentTerms
+              }
+            >
+              Εγγραφή
+            </Button>
           </div>
         </form>
-        <div className="login__footer"><span className="foo-link" onClick={() => navigate('/register')}>Δημιουργία λογαριασμού</span></div>
+        <div className="login__footer">
+          <span className="foo-link" onClick={() => navigate('/register')}>
+            Δημιουργία λογαριασμού
+          </span>
+        </div>
       </div>
     );
-  }
+  };
 
   const renderForgotPasswordContent = () => {
-
-
     return (
       <div className="login__view">
         <form method="post" className="login__form" onSubmit={handleForgotPasswordSubmit}>
-          <div className= {
-            `login__field login__field--placeholder-transition login__field--text
-            ${forgotPasswordEmailFocused ? 'login__field--focused' : ''}`
-          }
-          onClick={() => {
-            const input = document.querySelector('input[name="usernameOrEmail"]');
-            if (input) {
-              input.focus();
-            }
-          }}>
+          <div
+            className={`login__field login__field--placeholder-transition login__field--text
+            ${forgotPasswordEmailFocused ? 'login__field--focused' : ''}`}
+            onClick={() => {
+              const input = document.querySelector('input[name="usernameOrEmail"]');
+              if (input) {
+                input.focus();
+              }
+            }}
+          >
             <LabelComponent className="login__input-wrapper">
-              <div  className="login__field-placeholder"
-              style={{
-                marginTop: forgotPasswordEmailFocused ? '-8.2875px' : '-9.75px',
-                transformOrigin: 'left top',
-                transform: forgotPasswordEmailFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
-              }}>Όνομα χρήστη ή e-mail</div>
+              <div
+                className="login__field-placeholder"
+                style={{
+                  marginTop: forgotPasswordEmailFocused ? '-8.2875px' : '-9.75px',
+                  transformOrigin: 'left top',
+                  transform: forgotPasswordEmailFocused
+                    ? 'scale(0.85) translateY(-33.6765px)'
+                    : 'none'
+                }}
+              >
+                Όνομα χρήστη ή e-mail
+              </div>
               <InputComponent
                 autoCapitalize="none"
                 type="text"
@@ -401,7 +585,9 @@ export default function LoginPage() {
             </LabelComponent>
           </div>
           <div className="login__actions">
-            <Button type="submit" className="button">Συνέχεια</Button>
+            <Button type="submit" className="button">
+              Συνέχεια
+            </Button>
           </div>
         </form>
         <div className="login__footer">
@@ -412,7 +598,6 @@ export default function LoginPage() {
       </div>
     );
   };
-
 
   return (
     <div className="container max-w-md py-12">
@@ -431,7 +616,7 @@ export default function LoginPage() {
           {showForgotPassword ? renderForgotPasswordContent() : renderLoginContent()}
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {t('dontHaveAccount')}{' '}
+              {t('dontHaveAccount')}
               <a
                 onClick={() => navigate('/register')}
                 className="text-primary hover:underline cursor-pointer"
@@ -442,10 +627,6 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-
-      {/* Add auth debugger in development mode */}
-      {import.meta.env.DEV && <AuthDebugger />}
     </div>
   );
 }
-
