@@ -6,7 +6,7 @@ import AccountPage from "./pages/AccountPage";
 import SocialProfilePage from "./pages/SocialProfilePage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
-import CategoryPage from "./pages/Categories";
+import Categories from "./pages/Categories";
 import Brands from "./pages/Brands";
 import BrandPage from "./pages/BrandPage";
 import Stores from "./pages/Stores";
