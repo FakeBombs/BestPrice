@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff } from 'lucide-react'; // Import icons
 import { Button } from '@/components/ui/button'; // You can adapt this, or use a basic button
-//import { Input } from '@/components/ui/input'; //  Adapt or use basic input
-//import { Label } from '@/components/ui/label'; // Adapt or use basic label
+
 
 
 interface AuthModalProps {
@@ -47,20 +46,17 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   }, [defaultTab]);
 
 
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    //  Add your login logic here
     console.log('Login:', { email, password });
-    onClose(); // Use onClose prop to close the modal
-  };
+    onClose();
+  }, [onClose, email, password]);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    //  Add your registration logic here
     console.log('Register:', { email, firstName, lastName, password, consentTerms, consentNewsletters });
-    onClose();  // Use onClose prop to close the modal
-  };
+    onClose();
+  }, [onClose, email, firstName, lastName, password, consentTerms, consentNewsletters, consentNewsletters]);
 
     const renderGoogleIcon = () => (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24">
