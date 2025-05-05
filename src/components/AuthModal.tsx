@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button'; // Assuming you have this
 
@@ -10,7 +10,7 @@ interface AuthModalProps {
 }
 
 // Custom Input Component
-const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string }) => (
+const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete, onFocus, onBlur }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string; onFocus?: () => void; onBlur?: () => void; }) => (
   <input
     type={type}
     value={value}
@@ -20,6 +20,8 @@ const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoC
     className="login__input-field auth-input"
     autoCapitalize={autoCapitalize}
     autoComplete={autoComplete}
+    onFocus={onFocus}
+    onBlur={onBlur}
   />
 );
 
@@ -35,6 +37,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginShowPassword, setLoginShowPassword] = useState(false);
+  const [loginEmailFocused, setLoginEmailFocused] = useState(false);
+  const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
+
 
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerFirstName, setRegisterFirstName] = useState('');
@@ -43,6 +48,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [registerConsentTerms, setRegisterConsentTerms] = useState(false);
   const [registerConsentNewsletters, setRegisterConsentNewsletters] = useState(false);
   const [registerShowPassword, setRegisterShowPassword] = useState(false);
+  const [registerEmailFocused, setRegisterEmailFocused] = useState(false);
+  const [registerFirstNameFocused, setRegisterFirstNameFocused] = useState(false);
+  const [registerLastNameFocused, setRegisterLastNameFocused] = useState(false);
+  const [registerPasswordFocused, setRegisterPasswordFocused] = useState(false);
 
 
   useEffect(() => {
@@ -64,9 +73,12 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
     const renderGoogleIcon = () => (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24">
-            <path fill="#fbc02d" d="M43.611 20.083H42v-8H30v8H27.86c-.835 0-1.529.649-1.529 1.464v3.383c0 1.649 1.348 2.982 3.03 2.982H42v8h-8v-8h-2.13c-2.821 0-5.225-2.685-5.225-5.631s2.404-5.631 5.225-5.631H30v-8h12v8h1.611a4.96 4.96 0 0 1 3.9 7.216"/>
-            <path fill="#e53935" d="M6.306 14.691c.215-1.39 1.352-2.48 2.74-2.48h13.59v4.96H9.879c-.931 0-1.706.579-1.976 1.37s-.329 1.931-.329 3.295v7.513c0 1.364.138 2.524.329 3.316.27.791 1.039 1.37 1.976 1.37h13.589v4.96c-2.804 0-5.25-1.605-6.223-3.755H6.306V14.691z"/>
-            <path fill="#4285f4" d="M24.48 20.083c-2.783 0-5.053 2.35-5.053 5.131 0 2.781 2.27 5.031 5.053 5.031s5.053-2.25 5.053-5.031c0-2.781-2.27-5.131-5.053-5.131z"/>
+            <path fill="#fff" d="M16 24h4v10h-4z"/>
+            <path fill="#fff" d="M28 14h4v10h-4z"/>
+            <path fill="#fff" d="M36 18h4v10h-4z"/>
+            <path fill="#06c" d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24z"/>
+            <path fill="#fff" d="M24 4C12.8 4 3.6 11.8 3.6 24S12.8 44 24 44s20.4-8.2 20.4-20S35.2 4 24 4z"/>
+            <path fill="#ffba00" d="M24 16c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8z"/>
         </svg>
     )
 
@@ -99,7 +111,18 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleLogin(e);}}>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Όνομα χρήστη ή e-mail</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: loginEmailFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="usernameOrEmail"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              Όνομα χρήστη ή e-mail
+            </div>
             <Input
               type="text"
               value={loginEmail}
@@ -107,12 +130,26 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               onChange={(e) => setLoginEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
+              onFocus={() => setLoginEmailFocused(true)}
+              onBlur={() => setLoginEmailFocused(false)}
+
             />
           </Label>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Κωδικός</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: loginPasswordFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="password"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              Κωδικός
+            </div>
             <Input
               type={loginShowPassword ? 'text' : 'password'}
               value={loginPassword}
@@ -120,6 +157,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               onChange={(e) => setLoginPassword(e.target.value)}
               autoCapitalize="none"
               placeholder=""
+              onFocus={() => setLoginPasswordFocused(true)}
+              onBlur={() => setLoginPasswordFocused(false)}
             />
             <div className="tooltip__anchor" onClick={() => setLoginShowPassword(!loginShowPassword)}>
               {loginShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
@@ -170,7 +209,18 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleRegister(e);}}>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>e-mail</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: registerEmailFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="email"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              e-mail
+            </div>
             <Input
               type="text"
               value={registerEmail}
@@ -178,12 +228,25 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               onChange={(e) => setRegisterEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
+              onFocus={() => setRegisterEmailFocused(true)}
+              onBlur={() => setRegisterEmailFocused(false)}
             />
           </Label>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">Όνομα</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: registerFirstNameFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="firstName"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              Όνομα
+            </div>
             <Input
               type="text"
               value={registerFirstName}
@@ -191,12 +254,25 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               onChange={(e) => setRegisterFirstName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
+              onFocus={() => setRegisterFirstNameFocused(true)}
+              onBlur={() => setRegisterFirstNameFocused(false)}
             />
           </Label>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">Επώνυμο</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: registerLastNameFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="lastName"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              Επώνυμο
+            </div>
             <Input
               type="text"
               value={registerLastName}
@@ -204,12 +280,25 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               onChange={(e) => setRegisterLastName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
+              onFocus={() => setRegisterLastNameFocused(true)}
+              onBlur={() => setRegisterLastNameFocused(false)}
             />
           </Label>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Κωδικός</div>
+            <div
+              className="login__field-placeholder"
+              style={{ marginTop: registerPasswordFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              onClick={() => {
+                const input = document.querySelector('input[name="password"]');
+                if (input) {
+                  input.focus();
+                }
+              }}
+            >
+              Κωδικός
+            </div>
             <Input
               type={registerShowPassword ? 'text' : 'password'}
               value={registerPassword}
@@ -218,6 +307,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               autoCapitalize="none"
               autoComplete="new-password"
               placeholder=""
+              onFocus={() => setRegisterPasswordFocused(true)}
+              onBlur={() => setRegisterPasswordFocused(false)}
             />
              <div className="tooltip__anchor" onClick={() => setRegisterShowPassword(!registerShowPassword)}>
              {registerShowPassword ? <Eye className="icon icon pressable" /> : <EyeOff className="icon icon pressable" />}
