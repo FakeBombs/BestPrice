@@ -196,16 +196,14 @@ const ProductDetail = () => {
                 <section id="item-prices" className="section">
                   <header className="section__header">
                     <hgroup className="section__hgroup"> 
-                      <h2 className="section__title">Καταστήματα <small><span>({product.prices.length})</span></small>
-                        <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div>
-                      </h2> 
+                      <h2 className="section__title">Καταστήματα <small><span>({product.prices.length})</span></small> <div className="price-filters__clear undefined dotted-link">Καθαρισμός φίλτρων</div> </h2> 
                     </hgroup>
                     <div class="section__side">
                       <label data-type="priceFull" data-always-available="" class="price-filters__filter">
-                        <input type="checkbox">
-                          <svg aria-hidden="true" class="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
-                          <span class="price-filters__label">Τελική τιμή</span>
-                        </label>
+                        <input type="checkbox"/>
+                        <svg aria-hidden="true" class="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
+                        <span class="price-filters__label">Τελική τιμή</span>
+                      </label>
                       </div>
                     </header>
                     
