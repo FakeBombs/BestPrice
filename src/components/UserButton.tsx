@@ -122,6 +122,11 @@ const UserButton = () => {
     setAuthModalOpen(true);
   };
 
+  const handleRegisterClick = () => {
+    setAuthMode('register');
+    setAuthModalOpen(true);
+  };
+
   if (user) {
     return (
       <div className="relative">
