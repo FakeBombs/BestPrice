@@ -35,10 +35,10 @@ const ProductEssentialInfo = ({ product, bestPrice, onNotifyMe }: ProductEssenti
       )}
     </div>
     
-    <div class="product-overview__section"><div class="product-overview__section-title">Διατίθεται από</div><div class="product-overview__merchants">{product.prices.length} καταστήματα</div></div>
+    <div className="product-overview__section"><div className="product-overview__section-title">Διατίθεται από</div><div className="product-overview__merchants">{product.prices.length} καταστήματα</div></div>
     <div className="product-overview__section">
-      <div class="product-overview__section-title">Πτώση τιμής</div>
-      <div class="item-mini-graph__placeholder" data-intersected=""></div>
+      <div className="product-overview__section-title">Πτώση τιμής</div>
+      <div className="item-mini-graph__placeholder" data-intersected=""></div>
       <div className="mt-4 text-sm text-muted-foreground flex items-center">
         Last price update: {new Date().toLocaleDateString()}
       </div>
