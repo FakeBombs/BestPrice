@@ -123,6 +123,13 @@ const ProductDetail = () => {
   // --- Calculations after product is loaded ---
   const bestPriceInfo = useMemo(() => getBestPrice(product!), [product]); // Use ! assertion as we check product below
 
+  const primaryCategory = useMemo(() => {
+    if (!product?.categoryIds || product.categoryIds.length === 0) return null;
+    const primaryCategoryId = product.categoryIds[0];
+    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+    return allCatsMap.get(primaryCategoryId) || null;
+  }, [product?.categoryIds]);
+
   // --- Opening Status Calculation (Moved here) ---
   const openingStatus = useMemo(() => getOpeningStatus(popupContent?.vendor?.openingHours), [popupContent?.vendor?.openingHours]);
 
