@@ -46,9 +46,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     setActiveTab(defaultTab);
   }, [defaultTab]);
 
-  const handleSuccess = () => {
-    onClose();
-  };
+
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -279,22 +277,14 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   if (!isOpen) return null;
 
   return (
-    <div className="popup-flex-center" style={{zIndex: 2147483509}}>
-        <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{zIndex: 2147483509, transitionDuration: '150ms'}}></div>
-        <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
-            <div className="popup-body">
-                <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
-                <div className="close-button">
-                    <X className="icon" />
-                </div>
-                </div>
-                <div className="login__wrapper">
-                <div className="login">
-                    {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
-                </div>
-                </div>
-            </div>
+    <div  style={{zIndex: 2147483509}}>
+        
+        <div  style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
+            
+                {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
+            
         </div>
+       
     </div>
   );
 };
