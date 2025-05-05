@@ -6,7 +6,7 @@ import LoginForm from "@/components/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from '@/hooks/useTranslation';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExclamationTriangleIcon } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import AuthDebugger from "@/components/auth/AuthDebugger";
 
 export default function LoginPage() {
@@ -45,7 +45,7 @@ export default function LoginPage() {
     <div className="container max-w-md py-12">
       {authError && (
         <Alert variant="destructive" className="mb-4">
-          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertTriangle className="h-4 w-4" />
           <AlertDescription>{authError}</AlertDescription>
         </Alert>
       )}

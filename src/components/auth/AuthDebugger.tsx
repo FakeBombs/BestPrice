@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase, redirectURL, siteURL } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Bug } from 'lucide-react';
 
 export default function AuthDebugger() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,10 @@ export default function AuthDebugger() {
     <div className="mt-8 p-4 border rounded-md bg-muted">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <div className="flex items-center justify-between">
-          <h3 className="font-medium">Authentication Debug Info</h3>
+          <div className="flex items-center space-x-2">
+            <Bug className="h-4 w-4 text-amber-500" />
+            <h3 className="font-medium">Authentication Debug Info</h3>
+          </div>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="sm">
               {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -72,6 +75,7 @@ export default function AuthDebugger() {
                 <li>Site URL: {authConfig.siteUrl}</li>
                 <li>Redirect URLs: {authConfig.siteUrl}</li>
                 <li>Additional Redirect URL: {authConfig.redirectUrl}</li>
+                <li>Additional Redirect URL: {authConfig.siteUrl}/auth/callback</li>
               </ul>
             </div>
             

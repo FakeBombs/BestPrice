@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
-import { Facebook, Twitter } from 'lucide-react';
+import { Facebook, Twitter, AlertTriangle } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { siteURL } from '@/integrations/supabase/client';
 
@@ -47,6 +47,9 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
     setError(null);
     
     try {
+      // Log provider info for debugging
+      console.log(`Attempting ${provider} login with site URL:`, siteURL);
+      
       // Pass the site URL to ensure consistent redirect behavior
       await socialLogin(provider);
       // We don't call onSuccess here because socialLogin will redirect the user
@@ -70,8 +73,9 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
   return (
     <div className="space-y-4">
       {error && (
-        <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-          {error}
+        <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md flex gap-2 items-start">
+          <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+          <span>{error}</span>
         </div>
       )}
       
@@ -107,7 +111,7 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
             required
           />
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
       </form>
