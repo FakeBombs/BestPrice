@@ -35,7 +35,7 @@ const Label = ({ children, className, ...props }: { children: React.ReactNode; c
 const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(defaultTab);
   const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  const [loginPassword, setLoginPassword] = useState(false);
   const [loginShowPassword, setLoginShowPassword] = useState(false);
   const [loginEmailFocused, setLoginEmailFocused] = useState(false);
   const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
@@ -139,20 +139,26 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             />
           </Label>
         </div>
-        <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
+        <div className={
+            `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
+            ${loginPasswordFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="password"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
+
               className="login__field-placeholder"
               style={{
                 marginTop: loginPasswordFocused ? '-9.75px' : '0',
-                transformOrigin: loginPasswordFocused ? 'left top' : 'left top',  // Keep left top
+                transformOrigin: loginPasswordFocused ? 'left top' : 'left top',
               }}
-              onClick={() => {
-                const input = document.querySelector('input[name="password"]');
-                if (input) {
-                  input.focus();
-                }
-              }}
+
             >
               Κωδικός
             </div>
@@ -300,19 +306,23 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             />
           </Label>
         </div>
-        <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
+        <div  className={
+            `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
+            ${registerPasswordFocused ? 'login__field--focused' : ''}`
+          }
+          onClick={() => {
+            const input = document.querySelector('input[name="password"]');
+            if (input) {
+              input.focus();
+            }
+          }}
+        >
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
               style={{
                 marginTop: registerPasswordFocused ? '-9.75px' : '0',
                 transformOrigin: registerPasswordFocused ? 'left top' : 'left top', // Keep left top
-              }}
-              onClick={() => {
-                const input = document.querySelector('input[name="password"]');
-                if (input) {
-                  input.focus();
-                }
               }}
             >
               Κωδικός
@@ -386,7 +396,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div role="button" className="close-button__wrapper pressable popup-close">
               <div className="close-button">
                 <svg className="icon" aria-hidden="true" width="12" height="12">
-                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
+                  <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
                 </svg>
               </div>
             </div>
