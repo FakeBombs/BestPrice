@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff } from 'lucide-react'; // Import icons
-import { Button } from '@/components/ui/button'; // You can adapt this, or use a basic button
-
+import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 
 interface AuthModalProps {
@@ -10,7 +9,6 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'register';
 }
 
-// Simplified Input and Label components (adapt as needed)
 const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string }) => (
   <input
     type={type}
@@ -18,7 +16,7 @@ const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoC
     name={name}
     placeholder={placeholder}
     onChange={onChange}
-    className="auth-input" // Use a custom class
+    className="auth-input"
     autoCapitalize={autoCapitalize}
     autoComplete={autoComplete}
   />
@@ -32,13 +30,17 @@ const Label = ({ children, className, ...props }: { children: React.ReactNode; c
 
 const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(defaultTab);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [consentTerms, setConsentTerms] = useState(false);
-  const [consentNewsletters, setConsentNewsletters] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginShowPassword, setLoginShowPassword] = useState(false);
+
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerFirstName, setRegisterFirstName] = useState('');
+  const [registerLastName, setRegisterLastName] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerConsentTerms, setRegisterConsentTerms] = useState(false);
+  const [registerConsentNewsletters, setRegisterConsentNewsletters] = useState(false);
+  const [registerShowPassword, setRegisterShowPassword] = useState(false);
 
 
   useEffect(() => {
@@ -48,15 +50,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
   const handleLogin = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login:', { email, password });
+    console.log('Login:', { email: loginEmail, password: loginPassword });
     onClose();
-  }, [onClose, email, password]);
+  }, [onClose, loginEmail, loginPassword]);
 
   const handleRegister = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register:', { email, firstName, lastName, password, consentTerms, consentNewsletters });
+    console.log('Register:', { email: registerEmail, firstName: registerFirstName, lastName: registerLastName, password: registerPassword, consentTerms: registerConsentTerms, consentNewsletters: registerConsentNewsletters });
     onClose();
-  }, [onClose, email, firstName, lastName, password, consentTerms, consentNewsletters, consentNewsletters]);
+  }, [onClose, registerEmail, registerFirstName, registerLastName, registerPassword, registerConsentTerms, registerConsentNewsletters]);
 
     const renderGoogleIcon = () => (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24">
@@ -67,9 +69,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     )
 
   const renderLoginContent = () => {
-    const [localEmail, setLocalEmail] = useState('');
-    const [localPassword, setLocalPassword] = useState('');
-    const [localShowPassword, setLocalShowPassword] = useState(false);
+
 
     return (
     <div className="login__view login__view--signin">
@@ -100,9 +100,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Όνομα χρήστη ή e-mail</div>
             <Input
               type="text"
-              value={localEmail}
+              value={loginEmail}
               name="usernameOrEmail"
-              onChange={(e) => setLocalEmail(e.target.value)}
+              onChange={(e) => setLoginEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
@@ -112,20 +112,20 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Κωδικός</div>
             <Input
-              type={localShowPassword ? 'text' : 'password'}
-              value={localPassword}
+              type={loginShowPassword ? 'text' : 'password'}
+              value={loginPassword}
               name="password"
-              onChange={(e) => setLocalPassword(e.target.value)}
+              onChange={(e) => setLoginPassword(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
-            <div className="tooltip__anchor" onClick={() => setLocalShowPassword(!localShowPassword)}>
+            <div className="tooltip__anchor" onClick={() => setLoginShowPassword(!loginShowPassword)}>
               <EyeOff className="icon icon pressable"  />
             </div>
           </Label>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!localEmail || !localPassword}>
+          <Button type="submit" className="auth-button" disabled={!loginEmail || !loginPassword}>
             Σύνδεση
           </Button>
         </div>
@@ -141,13 +141,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   }
 
   const renderRegisterContent = () => {
-    const [localEmail, setLocalEmail] = useState('');
-      const [localFirstName, setLocalFirstName] = useState('');
-      const [localLastName, setLocalLastName] = useState('');
-    const [localPassword, setLocalPassword] = useState('');
-    const [localConsentTerms, setLocalConsentTerms] = useState(false);
-      const [localConsentNewsletters, setLocalConsentNewsletters] = useState(false);
-    const [localShowPassword, setLocalShowPassword] = useState(false);
+
     return(
     <div className="login__view">
       <div className="login__providers">
@@ -177,9 +171,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder">e-mail</div>
             <Input
               type="text"
-              value={localEmail}
+              value={registerEmail}
               name="email"
-              onChange={(e) => setLocalEmail(e.target.value)}
+              onChange={(e) => setRegisterEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
@@ -190,9 +184,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder">Όνομα</div>
             <Input
               type="text"
-              value={localFirstName}
+              value={registerFirstName}
               name="firstName"
-              onChange={(e) => setLocalFirstName(e.target.value)}
+              onChange={(e) => setRegisterFirstName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
             />
@@ -203,9 +197,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder">Επώνυμο</div>
             <Input
               type="text"
-              value={localLastName}
+              value={registerLastName}
               name="lastName"
-              onChange={(e) => setLocalLastName(e.target.value)}
+              onChange={(e) => setRegisterLastName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
             />
@@ -215,15 +209,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div className="login__field-placeholder">Κωδικός</div>
             <Input
-              type={localShowPassword ? 'text' : 'password'}
-              value={localPassword}
+              type={registerShowPassword ? 'text' : 'password'}
+              value={registerPassword}
               name="password"
-              onChange={(e) => setLocalPassword(e.target.value)}
+              onChange={(e) => setRegisterPassword(e.target.value)}
               autoCapitalize="none"
               autoComplete="new-password"
               placeholder=""
             />
-             <div className="tooltip__anchor" onClick={() => setLocalShowPassword(!localShowPassword)}>
+             <div className="tooltip__anchor" onClick={() => setRegisterShowPassword(!registerShowPassword)}>
               <EyeOff className="icon icon pressable" />
             </div>
           </Label>
@@ -233,9 +227,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <Label className="login__input-wrapper">
               <input
                 type="checkbox"
-                value={localConsentTerms}
+                value={registerConsentTerms}
                 name="consentTerms"
-                onChange={(e) => setLocalConsentTerms(e.target.checked)}
+                onChange={(e) => setRegisterConsentTerms(e.target.checked)}
 
               />
               <div className="login__field-label">
@@ -249,16 +243,16 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <Label className="login__input-wrapper">
               <input
                 type="checkbox"
-                value={localConsentNewsletters}
+                value={registerConsentNewsletters}
                 name="consentNewsletters"
-                onChange={(e) => setLocalConsentNewsletters(e.target.checked)}
+                onChange={(e) => setRegisterConsentNewsletters(e.target.checked)}
               />
               <div className="login__field-label">Θέλω να λαμβάνω ενημερωτικά newsletters</div>
             </Label>
           </div>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!localEmail || !localFirstName || !localLastName || !localPassword || !localConsentTerms}>
+          <Button type="submit" className="auth-button" disabled={!registerEmail || !registerFirstName || !registerLastName || !registerPassword || !registerConsentTerms}>
             Εγγραφή
           </Button>
         </div>
@@ -274,13 +268,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
   return (
     <div  style={{zIndex: 2147483509}}>
-        
         <div  style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
-            
                 {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
-            
         </div>
-       
     </div>
   );
 };
