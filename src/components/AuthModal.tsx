@@ -39,6 +39,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [loginShowPassword, setLoginShowPassword] = useState(false);
   const [loginEmailFocused, setLoginEmailFocused] = useState(false);
   const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false); // New state for "Forgot Password"
 
 
   const [registerEmail, setRegisterEmail] = useState('');
@@ -70,6 +71,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     console.log('Register:', { email: registerEmail, firstName: registerFirstName, lastName: registerLastName, password: registerPassword, consentTerms: registerConsentTerms, consentNewsletters: registerConsentNewsletters });
     onClose();
   }, [onClose, registerEmail, registerFirstName, registerLastName, registerPassword, registerConsentTerms, registerConsentNewsletters]);
+
+  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Implement your forgot password logic here (e.g., send a reset email)
+    console.log("Forgot Password Submitted", e);
+    onClose(); // Close the modal after submission (or after successful reset)
+  };
 
   const renderLoginContent = () => {
 
@@ -166,7 +174,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         <div className="login__actions">
           <Button type="submit" className="button" disabled={!loginEmail || !loginPassword}>Σύνδεση</Button>
         </div>
-        <div className="login__forgot"><span className="foo-link" onClick={() => console.log('Forgot Password')}>Υπενθύμιση Κωδικού</span></div>
+        <div className="login__forgot"><span className="foo-link" onClick={() => setShowForgotPassword(true)}>Υπενθύμιση Κωδικού</span></div>
       </form>
       <div className="login__footer"><span className="foo-link" onClick={() => setActiveTab('register')}>Δημιουργία λογαριασμού</span></div>
     </div>
@@ -334,6 +342,34 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   );
   }
 
+  const renderForgotPasswordContent = () => {
+    return (
+      <div className="login__view">
+        <form method="post" className="login__form" onSubmit={handleForgotPasswordSubmit}>
+          <div className="login__field login__field--placeholder-transition login__field--text">
+            <Label className="login__input-wrapper">
+              <div className="login__field-placeholder" style={{ marginTop: '-8.2875px', transformOrigin: 'left top' }}>Όνομα χρήστη ή e-mail</div>
+              <Input
+                autoCapitalize="none"
+                type="text"
+                value=""
+                name="usernameOrEmail"
+              />
+            </Label>
+          </div>
+          <div className="login__actions">
+            <Button type="submit" className="button">Συνέχεια</Button>
+          </div>
+        </form>
+        <div className="login__footer">
+          <span className="foo-link" onClick={() => setShowForgotPassword(false)}>
+            Σύνδεση στο BestPrice
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -345,7 +381,11 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
               <div className="close-button"><svg className="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></div>
             </div>
-            <div className="login__wrapper"><div className="login">{activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}</div></div>
+            <div className="login__wrapper">
+              <div className="login">
+                {showForgotPassword ? renderForgotPasswordContent() : (activeTab === 'login' ? renderLoginContent() : renderRegisterContent())}
+                </div>
+                </div>
           </div>
         </div>
       </div>
