@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LogOut } from 'lucide-react'; // Keeping LogOut as it was used
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
