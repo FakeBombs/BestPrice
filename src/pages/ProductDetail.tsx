@@ -16,6 +16,7 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 import { useTranslation } from '@/hooks/useTranslation';
 import { TopVendorAd } from '@/components/ads/TopVendorAd';
 import NotFound from '@/pages/NotFound';
+import ScrollableSlider from '@/components/ScrollableSlider';
 
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
