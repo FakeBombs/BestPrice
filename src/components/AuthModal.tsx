@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button'; // Assuming you have this
 
@@ -113,7 +113,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: loginEmailFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: loginEmailFocused ? '-9.75px' : '0',
+                transformOrigin: loginEmailFocused ? 'left top' : 'left top', // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="usernameOrEmail"]');
                 if (input) {
@@ -140,7 +143,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: loginPasswordFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: loginPasswordFocused ? '-9.75px' : '0',
+                transformOrigin: loginPasswordFocused ? 'left top' : 'left top',  // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="password"]');
                 if (input) {
@@ -211,7 +217,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: registerEmailFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: registerEmailFocused ? '-9.75px' : '0',
+                transformOrigin: registerEmailFocused ? 'left top' : 'left top', // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="email"]');
                 if (input) {
@@ -237,7 +246,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: registerFirstNameFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: registerFirstNameFocused ? '-9.75px' : '0',
+                transformOrigin: registerFirstNameFocused ? 'left top' : 'left top', // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="firstName"]');
                 if (input) {
@@ -263,7 +275,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: registerLastNameFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: registerLastNameFocused ? '-9.75px' : '0',
+                transformOrigin: registerLastNameFocused ? 'left top' : 'left top', // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="lastName"]');
                 if (input) {
@@ -289,7 +304,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div
               className="login__field-placeholder"
-              style={{ marginTop: registerPasswordFocused ? '-9.75px' : '0', transformOrigin: 'left top' }}
+              style={{
+                marginTop: registerPasswordFocused ? '-9.75px' : '0',
+                transformOrigin: registerPasswordFocused ? 'left top' : 'left top', // Keep left top
+              }}
               onClick={() => {
                 const input = document.querySelector('input[name="password"]');
                 if (input) {
@@ -368,7 +386,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div role="button" className="close-button__wrapper pressable popup-close">
               <div className="close-button">
                 <svg className="icon" aria-hidden="true" width="12" height="12">
-                  <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
+                  <use xlinkHref="/public/dist/images/icons/icons.svg#icon-x-12"></use>
                 </svg>
               </div>
             </div>
