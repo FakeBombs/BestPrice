@@ -30,7 +30,6 @@ export const supabase = createClient<Database>(
       persistSession: true,
       autoRefreshToken: true,
       storage: typeof window !== 'undefined' ? localStorage : undefined,
-      flowType: 'implicit', // Changed from 'pkce' to 'implicit' for simpler auth flow
       detectSessionInUrl: true, // Enables detecting OAuth session info from the URL
       redirectTo: getRedirectURL(), // Use the specific redirect URL with /callback path
       // Debug options
@@ -47,6 +46,5 @@ export const redirectURL = getRedirectURL();
 console.log('Supabase Auth Configuration:', {
   siteURL: siteURL,
   redirectURL: redirectURL,
-  flowType: 'implicit',
   detectSessionInUrl: true
 });
