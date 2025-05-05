@@ -7,6 +7,7 @@ import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
+import ProductTabsSection from '@/components/product/ProductTabsSection';
 import { VendorPriceCard } from '@/components/ProductVendors';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
