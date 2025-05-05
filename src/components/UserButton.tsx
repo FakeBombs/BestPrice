@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LogOut, Sun, Moon } from 'lucide-react'; // Import Moon for dark mode icon
+import { LogOut, Sun, Moon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
@@ -54,7 +54,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
           <ul>
             <li style={{ position: 'relative' }}>
               <Link className="collections__popup--link" data-scrollto="#root" to={`/@${user.username}/products/collections`}>
-                <svg className="icon" aria-hidden="true" width="8" height="8" style={{ transform: 'rotate(180deg)', position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%) rotate(180deg)' }}><use xlinkHref="/public/dist/images/icons/icons.svg#icon-left-8"></use></svg>
+                <svg className="icon" aria-hidden="true" width="8" height="8" style={{ transform: 'rotate(180deg)', position: 'absolute', left 8, top: '50%', transform: 'translateY(-50%) rotate(180deg)' }}><use xlinkHref="/public/dist/images/icons/icons.svg#icon-left-8"></use></svg>
                 {t('myCollections')} (11)
               </Link>
             </li>
@@ -114,7 +114,7 @@ const UserButton = () => {
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'default'>('default'); // Default theme
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'default'>('default');
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -130,30 +130,39 @@ const UserButton = () => {
     setAuthModalOpen(true);
   };
 
-  // Simulate useTheme and setTheme (for demonstration within this component)
   const setTheme = (newTheme: 'dark' | 'default') => {
     setCurrentTheme(newTheme);
-    // In a real app, you would use next-themes or a similar library here
-    // to actually apply the theme to the document or user preferences.
     if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme); // Persist theme
+      localStorage.setItem('theme', newTheme);
+      // Apply the theme to the document element using data-theme
+      document.documentElement.setAttribute('data-theme', newTheme);
+
+      // Apply color-scheme.  Note that this might not be supported in all browsers
+      document.documentElement.style.colorScheme = newTheme === 'dark' ? 'dark' : 'light';
     }
   };
 
-    // Get persisted theme on mount
   useEffect(() => {
     setMounted(true);
     if (typeof window !== 'undefined') {
       const storedTheme = localStorage.getItem('theme') as 'dark' | 'default';
       if (storedTheme) {
         setCurrentTheme(storedTheme);
+        // Apply the theme on initial load
+        document.documentElement.setAttribute('data-theme', storedTheme);
+        document.documentElement.style.colorScheme = storedTheme === 'dark' ? 'dark' : 'light';
+      } else {
+        // If no theme is stored, check system preference
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
+        setCurrentTheme(systemTheme);
+        localStorage.setItem('theme', systemTheme);
+        document.documentElement.setAttribute('data-theme', systemTheme);
+        document.documentElement.style.colorScheme = systemTheme === 'dark' ? 'dark' : 'light';
       }
     }
   }, []);
 
-
-  if (!mounted) return null; // Or a loading indicator if you prefer
-
+  if (!mounted) return null;
 
   return (
     <div id="user">
