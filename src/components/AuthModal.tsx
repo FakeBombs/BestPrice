@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, UserPlus, X,  Facebook, Apple, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button'; // Assuming you have this
-// import { Input } from '@/components/ui/input';  // Removed, using custom
-// import { Label } from '@/components/ui/label';  // Removed, using custom
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -10,7 +9,7 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'register';
 }
 
-// Custom Input Component (with added classes)
+// Custom Input Component
 const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoComplete }: { type: string; value: string; name: string; placeholder: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoCapitalize?: string; autoComplete?: string }) => (
   <input
     type={type}
@@ -18,15 +17,15 @@ const Input = ({ type, value, name, placeholder, onChange, autoCapitalize, autoC
     name={name}
     placeholder={placeholder}
     onChange={onChange}
-    className="login__input-field auth-input" // Added login__input-field
+    className="login__input-field auth-input"
     autoCapitalize={autoCapitalize}
     autoComplete={autoComplete}
   />
 );
 
-// Custom Label Component (with added classes)
+// Custom Label Component
 const Label = ({ children, className, ...props }: { children: React.ReactNode; className?: string; [key: string]: any }) => (
-  <label className={`login__input-wrapper auth-label ${className || ''}`} {...props}>  {/* Added login__input-wrapper */}
+  <label className={`login__input-wrapper auth-label ${className || ''}`} {...props}>
     {children}
   </label>
 );
@@ -270,10 +269,26 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   if (!isOpen) return null;
 
   return (
-    <div  style={{zIndex: 2147483509}}>
-        <div  style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
+    <div className="popup-placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0px', maxWidth: '98vw', position: 'absolute', top: '0px' }}>
+      <div className="popup-flex-center" style={{ zIndex: 2147483519 }}>
+        <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{ zIndex: 2147483519, transitionDuration: '150ms' }}></div>
+        <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483519 }}>
+          <div className="popup-body">
+            <div role="button" className="close-button__wrapper pressable popup-close">
+              <div className="close-button">
+                <svg className="icon" aria-hidden="true" width="12" height="12">
+                  <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
+                </svg>
+              </div>
+            </div>
+            <div className="login__wrapper">
+              <div className="login">
                 {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
   );
 };
