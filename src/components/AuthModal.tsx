@@ -72,7 +72,12 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         </svg>
     )
 
-  const renderLoginContent = () => (
+  const renderLoginContent = () => {
+    const [localEmail, setLocalEmail] = useState('');
+    const [localPassword, setLocalPassword] = useState('');
+    const [localShowPassword, setLocalShowPassword] = useState(false);
+
+    return (
     <div className="login__view login__view--signin">
       <div className="login__providers">
         <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Login')}>
@@ -95,15 +100,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         </button>
       </div>
       <div className="login__sub-title">Σύνδεση με όνομα χρήστη ή e-mail</div>
-      <form method="post" className="login__form" onSubmit={handleLogin}>
+      <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleLogin(e);}}>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">Όνομα χρήστη ή e-mail</div>
+            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Όνομα χρήστη ή e-mail</div>
             <Input
               type="text"
-              value={email}
+              value={localEmail}
               name="usernameOrEmail"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setLocalEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
@@ -111,22 +116,22 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         </div>
         <div className="login__field login__field--placeholder-transition login__field--password login__field--has-toggler">
           <Label className="login__input-wrapper">
-            <div className="login__field-placeholder">Κωδικός</div>
+            <div className="login__field-placeholder" style={{ marginTop: '-9.75px', transformOrigin: 'left top' }}>Κωδικός</div>
             <Input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
+              type={localShowPassword ? 'text' : 'password'}
+              value={localPassword}
               name="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setLocalPassword(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
-            <div className="tooltip__anchor" onClick={() => setShowPassword(!showPassword)}>
-              <EyeOff className="icon icon pressable" />
+            <div className="tooltip__anchor" onClick={() => setLocalShowPassword(!localShowPassword)}>
+              <EyeOff className="icon icon pressable"  />
             </div>
           </Label>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!email || !password}>
+          <Button type="submit" className="auth-button" disabled={!localEmail || !localPassword}>
             Σύνδεση
           </Button>
         </div>
@@ -139,8 +144,17 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       </div>
     </div>
   );
+  }
 
-  const renderRegisterContent = () => (
+  const renderRegisterContent = () => {
+    const [localEmail, setLocalEmail] = useState('');
+      const [localFirstName, setLocalFirstName] = useState('');
+      const [localLastName, setLocalLastName] = useState('');
+    const [localPassword, setLocalPassword] = useState('');
+    const [localConsentTerms, setLocalConsentTerms] = useState(false);
+      const [localConsentNewsletters, setLocalConsentNewsletters] = useState(false);
+    const [localShowPassword, setLocalShowPassword] = useState(false);
+    return(
     <div className="login__view">
       <div className="login__providers">
        <button className="login__provider login__provider--google pressable" onClick={() => console.log('Google Register')}>
@@ -163,15 +177,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         </button>
       </div>
       <div className="login__sub-title">Εγγραφή με χρήση e-mail</div>
-      <form method="post" className="login__form" onSubmit={handleRegister}>
+      <form method="post" className="login__form" onSubmit={(e) => {e.preventDefault(); handleRegister(e);}}>
         <div className="login__field login__field--placeholder-transition login__field--text">
           <Label className="login__input-wrapper">
             <div className="login__field-placeholder">e-mail</div>
             <Input
               type="text"
-              value={email}
+              value={localEmail}
               name="email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setLocalEmail(e.target.value)}
               autoCapitalize="none"
               placeholder=""
             />
@@ -182,9 +196,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder">Όνομα</div>
             <Input
               type="text"
-              value={firstName}
+              value={localFirstName}
               name="firstName"
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => setLocalFirstName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
             />
@@ -195,9 +209,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <div className="login__field-placeholder">Επώνυμο</div>
             <Input
               type="text"
-              value={lastName}
+              value={localLastName}
               name="lastName"
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => setLocalLastName(e.target.value)}
               autoCapitalize="sentences"
               placeholder=""
             />
@@ -207,15 +221,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           <Label className="login__input-wrapper">
             <div className="login__field-placeholder">Κωδικός</div>
             <Input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
+              type={localShowPassword ? 'text' : 'password'}
+              value={localPassword}
               name="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setLocalPassword(e.target.value)}
               autoCapitalize="none"
               autoComplete="new-password"
               placeholder=""
             />
-             <div className="tooltip__anchor" onClick={() => setShowPassword(!showPassword)}>
+             <div className="tooltip__anchor" onClick={() => setLocalShowPassword(!localShowPassword)}>
               <EyeOff className="icon icon pressable" />
             </div>
           </Label>
@@ -225,9 +239,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <Label className="login__input-wrapper">
               <input
                 type="checkbox"
-                value={consentTerms}
+                value={localConsentTerms}
                 name="consentTerms"
-                onChange={(e) => setConsentTerms(e.target.checked)}
+                onChange={(e) => setLocalConsentTerms(e.target.checked)}
 
               />
               <div className="login__field-label">
@@ -241,16 +255,16 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <Label className="login__input-wrapper">
               <input
                 type="checkbox"
-                value={consentNewsletters}
+                value={localConsentNewsletters}
                 name="consentNewsletters"
-                onChange={(e) => setConsentNewsletters(e.target.checked)}
+                onChange={(e) => setLocalConsentNewsletters(e.target.checked)}
               />
               <div className="login__field-label">Θέλω να λαμβάνω ενημερωτικά newsletters</div>
             </Label>
           </div>
         </div>
         <div className="login__actions">
-          <Button type="submit" className="auth-button" disabled={!email || !firstName || !lastName || !password || !consentTerms}>
+          <Button type="submit" className="auth-button" disabled={!localEmail || !localFirstName || !localLastName || !localPassword || !localConsentTerms}>
             Εγγραφή
           </Button>
         </div>
@@ -260,23 +274,27 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       </div>
     </div>
   );
+  }
 
   if (!isOpen) return null;
 
   return (
-    <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
-      <div className="popup-body">
-        <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
-          <div className="close-button">
-            <X className="icon" />
-          </div>
+    <div className="popup-flex-center" style={{zIndex: 2147483509}}>
+        <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{zIndex: 2147483509, transitionDuration: '150ms'}}></div>
+        <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483483 }}>
+            <div className="popup-body">
+                <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
+                <div className="close-button">
+                    <X className="icon" />
+                </div>
+                </div>
+                <div className="login__wrapper">
+                <div className="login">
+                    {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
+                </div>
+                </div>
+            </div>
         </div>
-        <div className="login__wrapper">
-          <div className="login">
-            {activeTab === 'login' ? renderLoginContent() : renderRegisterContent()}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
