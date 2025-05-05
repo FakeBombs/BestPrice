@@ -345,8 +345,6 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   }
 
   const renderForgotPasswordContent = () => {
-    const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
-    const [forgotPasswordEmailFocused, setForgotPasswordEmailFocused] = useState(false);
 
 
     return (
