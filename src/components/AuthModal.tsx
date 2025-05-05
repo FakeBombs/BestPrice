@@ -54,14 +54,14 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     e.preventDefault();
     //  Add your login logic here
     console.log('Login:', { email, password });
-    handleSuccess(); // Close modal on "success"
+    onClose(); // Use onClose prop to close the modal
   };
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     //  Add your registration logic here
     console.log('Register:', { email, firstName, lastName, password, consentTerms, consentNewsletters });
-    handleSuccess();  // Close modal on "success"
+    onClose();  // Use onClose prop to close the modal
   };
 
     const renderGoogleIcon = () => (
