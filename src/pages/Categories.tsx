@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { useLocation, Link, useSearchParams } from 'react-router-dom';
+import { useLocation, Link, useSearchParams, useNavigate } from 'react-router-dom'; // Added useNavigate for history manipulation
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
@@ -17,8 +17,13 @@ const DEFAULT_SORT_TYPE = 'rating-desc';
 // Helper to clean domain name
 const cleanDomainName = (url: string): string => {
   if (!url) return '';
-  try { const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`); return parsedUrl.hostname.replace(/^www\./i, ''); }
-  catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
+  try {
+    const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`);
+    return parsedUrl.hostname.replace(/^www\./i, '');
+  } catch (e) {
+    // Fallback for invalid URLs that might still represent a domain fragment
+    return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0];
+  }
 };
 
 // Define the structure for active filters state accurately
@@ -33,11 +38,6 @@ interface ActiveFiltersState {
   instock: boolean;
 }
 
-// Define available category structure (not used for filtering here)
-interface AvailableCategory {
-    id: number; category: string; slug: string; count: number; image: string | null; parentId: number | null;
-}
-
 // Known non-spec URL parameters for THIS page
 const RESERVED_PARAMS_CAT = new Set(['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort']);
 
@@ -45,6 +45,7 @@ const RESERVED_PARAMS_CAT = new Set(['brand', 'store', 'deals', 'certified', 'ne
 const CategoryPage: React.FC = () => {
   // --- Hooks & Initial Setup ---
   const location = useLocation();
+  const navigate = useNavigate(); // Use navigate for programmatic navigation
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -89,22 +90,38 @@ const CategoryPage: React.FC = () => {
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState(false);
   const [priceAlertContext, setPriceAlertContext] = useState<{ categoryId: number; categoryName: string; filters: ActiveFiltersState } | null>(null);
 
-  // REMOVED sticky state and refs
-
-  // Helper for case-insensitive key find
-  const findOriginalCaseKey = (map: Record<string, any> | Map<string, any>, lowerCaseKey: string): string | undefined => { const mapKeys = map instanceof Map ? Array.from(map.keys()) : Object.keys(map); return mapKeys.find(k => k.toLowerCase() === lowerCaseKey); };
-  // Helper for case-insensitive value find
-  const findOriginalCaseValue = (set: Set<string> | undefined, lowerCaseValue: string): string | undefined => { if (!set) return undefined; return Array.from(set).find(v => v.toLowerCase() === lowerCaseValue); };
-
   // Reads URL params directly (lowercase/IDs)
-  const getFiltersFromUrl = (): ActiveFiltersState => {
+  const getFiltersFromUrl = (currentAvailableSpecs: Record<string, Set<string>>): ActiveFiltersState => { // Pass availableSpecs for reconciliation context
         const params = searchParams;
         const storeDomains = params.get('store')?.toLowerCase().split(',').filter(Boolean) || [];
         const vendorIdsFromUrl = storeDomains.map(domain => vendorDomainMap.get(domain)?.id).filter((id): id is number => id !== undefined);
         const brandsFromUrl = params.get('brand')?.toLowerCase().split(',').filter(Boolean) || [];
-        const specsFromUrl = Array.from(params.entries()).reduce((acc, [key, value]) => { const lowerKey = key.toLowerCase(); if (!RESERVED_PARAMS_CAT.has(lowerKey)) { acc[lowerKey] = value.toLowerCase().split(',').filter(Boolean); } return acc; }, {} as Record<string, string[]>);
-        return { brands: brandsFromUrl, specs: specsFromUrl, vendorIds: vendorIdsFromUrl, deals: params.get('deals') === '1', certified: params.get('certified') === '1', nearby: params.get('nearby') === '1', boxnow: params.get('boxnow') === '1', instock: params.get('instock') === '1' };
+
+        // Reconcile spec keys from URL against available keys (case-insensitive)
+        const specsFromUrl = Array.from(params.entries()).reduce((acc, [key, value]) => {
+            const lowerKey = key.toLowerCase();
+            if (!RESERVED_PARAMS_CAT.has(lowerKey)) {
+                // Find the original case key from availableSpecs if it exists
+                const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey);
+                if (originalKey) { // Only add specs that are actually available for this category
+                    acc[originalKey] = value.toLowerCase().split(',').filter(Boolean);
+                }
+            }
+            return acc;
+        }, {} as Record<string, string[]>);
+
+        return {
+            brands: brandsFromUrl,
+            specs: specsFromUrl,
+            vendorIds: vendorIdsFromUrl,
+            deals: params.get('deals') === '1',
+            certified: params.get('certified') === '1',
+            nearby: params.get('nearby') === '1',
+            boxnow: params.get('boxnow') === '1',
+            instock: params.get('instock') === '1'
+        };
     };
+
 
   // Active filters state - Initialize empty, synced via Effect 3
   const [activeFilters, setActiveFilters] = useState<ActiveFiltersState>({ brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false });
@@ -113,7 +130,13 @@ const CategoryPage: React.FC = () => {
   const shouldShowBrandSort = useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]);
   const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]);
   const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]);
-  const selectedVendor: Vendor | null = useMemo(() => { if (activeFilters.vendorIds.length === 1) { return vendorIdMap.get(activeFilters.vendorIds[0]) || null; } return null; }, [activeFilters.vendorIds, vendorIdMap]);
+  const selectedVendor: Vendor | null = useMemo(() => {
+    // Only return a vendor if exactly one ID is selected
+    if (activeFilters.vendorIds.length === 1) {
+      return vendorIdMap.get(activeFilters.vendorIds[0]) || null;
+    }
+    return null;
+  }, [activeFilters.vendorIds, vendorIdMap]);
   // --- End Moved Calculations ---
 
   // --- Helper Data & Category Logic ---
@@ -123,9 +146,19 @@ const CategoryPage: React.FC = () => {
 
   // --- URL Sync Function ---
   const updateUrlParams = (filters: ActiveFiltersState, currentSortType: string) => {
-    const params = new URLSearchParams(); // Start fresh for category page
-    ['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort'].forEach(p => params.delete(p));
-    Array.from(params.keys()).forEach(key => { if (!RESERVED_PARAMS_CAT.has(key.toLowerCase())) params.delete(key); });
+    const params = new URLSearchParams(searchParams); // Start with existing params to preserve others if needed
+    // Clear known category page filters first
+    RESERVED_PARAMS_CAT.forEach(p => params.delete(p));
+    // Clear any potentially remaining spec filters (case-insensitive check might be safer but complex)
+    Object.keys(filters.specs).forEach(key => params.delete(key.toLowerCase())); // Remove based on keys we *might* have set
+    Array.from(params.keys()).forEach(key => { // Second pass to clean any remaining non-reserved params (maybe from old filters)
+        if (!RESERVED_PARAMS_CAT.has(key.toLowerCase()) && !Object.keys(availableSpecs).some(specKey => specKey.toLowerCase() === key.toLowerCase())) {
+           params.delete(key);
+        }
+    });
+
+
+    // Set new filters
     if (filters.brands.length > 0) params.set('brand', filters.brands.map(b => b.toLowerCase()).join(','));
     if (filters.vendorIds.length > 0) { const domains = filters.vendorIds.map(id => vendorIdMap.get(id)?.url).filter((url): url is string => !!url).map(cleanDomainName).map(d => d.toLowerCase()).filter(Boolean); if (domains.length > 0) { params.set('store', domains.join(',')); } }
     Object.entries(filters.specs).forEach(([key, values]) => { if (values.length > 0) { params.set(key.toLowerCase(), values.map(v => v.toLowerCase()).join(',')); } });
@@ -134,12 +167,14 @@ const CategoryPage: React.FC = () => {
     if (filters.nearby) params.set('nearby', '1');
     if (filters.boxnow) params.set('boxnow', '1');
     if (filters.instock) params.set('instock', '1');
-    if (currentSortType !== DEFAULT_SORT_TYPE) { params.set('sort', currentSortType); } else { params.delete('sort'); }
+    if (currentSortType !== DEFAULT_SORT_TYPE) { params.set('sort', currentSortType); } else { params.delete('sort'); } // Explicitly delete default sort
+
     setSearchParams(params, { replace: true });
   };
 
   // Effect 1: Load Category Data & Initial Products
   useEffect(() => {
+    // Reset states relevant to category change
     setCurrentCategory(undefined);
     setBaseCategoryProducts([]);
     setFilteredProducts([]);
@@ -147,55 +182,94 @@ const CategoryPage: React.FC = () => {
     setAvailableSpecs({});
     setCertifiedVendors([]);
     setSliderProducts([]);
+    setShowMoreBrands(false);
+    setShowMoreSpecs({});
+    setShowMoreVendors(false);
+    // Don't reset activeFilters or sortType here, let Effect 3 handle sync from URL
+
     const pathSegments = location.pathname.split('/').filter(Boolean);
-    if (pathSegments.length < 2 || pathSegments[0] !== 'cat') { if (defaultCategoryId !== null) { setCurrentCategory(mainCategories.find(cat => cat.id === defaultCategoryId)); } return; }
-    const segments = pathSegments.slice(1);
-    const lastSegment = segments[segments.length - 1];
-    let matchedCategory = findCategory(lastSegment);
+    let matchedCategory: Category | undefined;
+
+    if (pathSegments.length >= 2 && pathSegments[0] === 'cat') {
+      const segments = pathSegments.slice(1);
+      const lastSegment = segments[segments.length - 1];
+      matchedCategory = findCategory(lastSegment);
+    } else if (defaultCategoryId !== null) {
+      // Fallback to default main category if path is not a valid category path
+      matchedCategory = mainCategories.find(cat => cat.id === defaultCategoryId);
+    }
+
     if (matchedCategory) {
       setCurrentCategory(matchedCategory);
+      // Only load products etc. if it's not a main category page showing subcategories
       if (matchedCategory.parentId !== null || !matchedCategory.isMain) {
           const productsForCategory = allMockProducts.filter(p => p.categoryIds?.includes(matchedCategory.id));
           setBaseCategoryProducts(productsForCategory);
           extractAvailableFilters(productsForCategory);
           updateCertifiedVendors(productsForCategory);
-          // Let Effect 3 sync state from URL
+          // Let Effect 3 sync activeFilters state from URL after available options are set
       }
     } else {
-        // Category not found - Set state to indicate not found later
-        setCurrentCategory(undefined); // Explicitly set to undefined
+      // Category not found or invalid path
+      setCurrentCategory(undefined); // Explicitly set to undefined for NotFound check later
     }
-  }, [location.pathname, defaultCategoryId]); // Rerun only when path changes
+  }, [location.pathname, defaultCategoryId]); // Rerun only when path changes or default ID is determined
 
   // --- Filter Extraction Logic ---
   const extractAvailableFilters = (sourceProducts: Product[]) => {
       const brandsCount: Record<string, number> = {};
       const specs: Record<string, Set<string>> = {};
-      sourceProducts.forEach((product) => { if (product.brand) { brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1; } Object.keys(product.specifications || {}).forEach((specKey) => { const specValue = product.specifications[specKey]; if (specValue != null) { const originalKey = specKey; const originalValue = String(specValue); if (!specs[originalKey]) { specs[originalKey] = new Set(); } specs[originalKey].add(originalValue); } }); });
+      sourceProducts.forEach((product) => {
+          if (product.brand) {
+              brandsCount[product.brand] = (brandsCount[product.brand] || 0) + 1;
+          }
+          Object.keys(product.specifications || {}).forEach((specKey) => {
+              const specValue = product.specifications[specKey];
+              if (specValue != null && String(specValue).trim() !== '') { // Ensure value exists and isn't empty
+                  const originalKey = specKey; // Keep original casing
+                  const originalValue = String(specValue);
+                  if (!specs[originalKey]) {
+                      specs[originalKey] = new Set();
+                  }
+                  specs[originalKey].add(originalValue);
+              }
+          });
+      });
       setAvailableBrands(brandsCount);
       setAvailableSpecs(specs);
+      // Reset showMoreSpecs state based on newly available specs
       setShowMoreSpecs(Object.keys(specs).reduce((acc, key) => { acc[key] = false; return acc; }, {} as Record<string, boolean>));
   };
+
   const updateCertifiedVendors = (sourceProducts: Product[]) => {
       const vendorMap = new Map<number, Vendor>();
-      sourceProducts.forEach(product => { (product.prices || []).forEach(price => { const vendor = vendorIdMap.get(price.vendorId); if (vendor && vendor.certification) { vendorMap.set(vendor.id, vendor); } }); });
-      const vendorArray = Array.from(vendorMap.values()).sort((a, b) => { const levels: Record<string, number> = { Gold: 3, Silver: 2, Bronze: 1 }; return (levels[b.certification] || 0) - (levels[a.certification] || 0); });
+      sourceProducts.forEach(product => {
+          (product.prices || []).forEach(price => {
+              const vendor = vendorIdMap.get(price.vendorId);
+              if (vendor && vendor.certification) {
+                  vendorMap.set(vendor.id, vendor);
+              }
+          });
+      });
+      const vendorArray = Array.from(vendorMap.values()).sort((a, b) => {
+          const levels: Record<string, number> = { Gold: 3, Silver: 2, Bronze: 1 };
+          return (levels[b.certification] || 0) - (levels[a.certification] || 0);
+      });
       setCertifiedVendors(vendorArray);
   };
-  // Removed extractCategories
 
   // --- Sorting Logic ---
   const sortProducts = (productsList: Product[]) => {
     const sorted = [...productsList];
     switch (sortType) {
-      case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.price), Infinity)); break;
-      case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.price), 0)); break;
+      case 'price-asc': sorted.sort((a, b) => Math.min(...(a.prices || []).filter(p => p.inStock).map(p => p.discountPrice || p.price), Infinity) - Math.min(...(b.prices || []).filter(p => p.inStock).map(p => p.discountPrice || p.price), Infinity)); break;
+      case 'price-desc': sorted.sort((a, b) => Math.max(...(b.prices || []).filter(p => p.inStock).map(p => p.discountPrice || p.price), 0) - Math.max(...(a.prices || []).filter(p => p.inStock).map(p => p.discountPrice || p.price), 0)); break;
       case 'alpha-asc': sorted.sort((a, b) => (a.title || '').localeCompare(b.title || '')); break;
       case 'reviews-desc': sorted.sort((a, b) => (b.reviews || 0) - (a.reviews || 0)); break;
       case 'brand-asc': sorted.sort((a, b) => (a.brand || '').localeCompare(b.brand || '')); break;
       case 'merchants_desc': sorted.sort((a, b) => (b.prices || []).filter(p => p.inStock).length - (a.prices || []).filter(p => p.inStock).length); break;
       case 'newest-desc': sorted.sort((a, b) => { const dateA = new Date(a.releaseDate || a.dateAdded || 0).getTime(); const dateB = new Date(b.releaseDate || b.dateAdded || 0).getTime(); return dateB - dateA; }); break;
-      case 'rating-desc': default: sorted.sort((a, b) => { const rA = a.rating || 0; const rB = b.rating || 0; const revA = a.reviews || 0; const revB = b.reviews || 0; return (rB - rA) || (revB - revA); }); break;
+      case 'rating-desc': default: sorted.sort((a, b) => { const rA = a.rating || 0; const rB = b.rating || 0; const revA = a.reviews || 0; const revB = b.reviews || 0; return (rB - rA) || (revB - revA); }); break; // Default sort by rating then reviews
     }
     return sorted;
   };
@@ -203,15 +277,45 @@ const CategoryPage: React.FC = () => {
   // --- Effect 2: Apply Filters and Sorting ---
   useEffect(() => {
     let productsToFilter = [...baseCategoryProducts];
-    const currentFilters = activeFilters;
+    const currentFilters = activeFilters; // Use the state variable
+
+    // Apply boolean filters
     if (currentFilters.instock) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.inStock)); }
-    if (currentFilters.deals) { console.warn("Deals Filter Placeholder"); productsToFilter = productsToFilter.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)); }
+    if (currentFilters.deals) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => price.discountPrice && price.discountPrice < price.price)); }
     if (currentFilters.certified) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.certification)); }
-    if (currentFilters.nearby) { console.warn("Nearby Filter Placeholder"); }
-    if (currentFilters.boxnow) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.paymentMethods?.includes(PaymentMethod.PickupVia))); }
-    if (currentFilters.brands.length > 0) { const lowerCaseFilterBrands = currentFilters.brands.map(b => b.toLowerCase()); productsToFilter = productsToFilter.filter(p => p.brand && lowerCaseFilterBrands.includes(p.brand.toLowerCase())); }
-    if (currentFilters.vendorIds.length > 0) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => currentFilters.vendorIds.includes(price.vendorId))); }
-    if (Object.keys(currentFilters.specs).length > 0) { productsToFilter = productsToFilter.filter(p => Object.entries(currentFilters.specs).every(([filterKey, filterValues]) => { if (!filterValues || filterValues.length === 0) return true; const productSpecKey = Object.keys(p.specifications || {}).find(pk => pk.toLowerCase() === filterKey.toLowerCase()); if (!productSpecKey || p.specifications[productSpecKey] === undefined) return false; const productValueLower = String(p.specifications[productSpecKey]).toLowerCase(); const filterValuesLower = filterValues.map(v => v.toLowerCase()); return filterValuesLower.includes(productValueLower); }) ); }
+    if (currentFilters.nearby) { console.warn("Nearby Filter Placeholder - Not implemented"); /* Add nearby logic if available */ }
+    if (currentFilters.boxnow) { productsToFilter = productsToFilter.filter(p => (p.prices || []).some(price => vendorIdMap.get(price.vendorId)?.paymentMethods?.includes(PaymentMethod.PickupVia))); } // Assuming PickupVia relates to BoxNow
+
+    // Apply multi-select filters (Brands)
+    if (currentFilters.brands.length > 0) {
+        const lowerCaseFilterBrands = currentFilters.brands.map(b => b.toLowerCase());
+        productsToFilter = productsToFilter.filter(p => p.brand && lowerCaseFilterBrands.includes(p.brand.toLowerCase()));
+    }
+
+    // Apply multi-select filters (Vendors) - This applies ANY selected vendor
+    if (currentFilters.vendorIds.length > 0) {
+        productsToFilter = productsToFilter.filter(p =>
+            (p.prices || []).some(price => currentFilters.vendorIds.includes(price.vendorId))
+        );
+    }
+
+    // Apply multi-select filters (Specs)
+    if (Object.keys(currentFilters.specs).length > 0) {
+        productsToFilter = productsToFilter.filter(p =>
+            Object.entries(currentFilters.specs).every(([filterKey, filterValues]) => {
+                if (!filterValues || filterValues.length === 0) return true; // Skip if no values selected for this spec
+
+                // Find the product's spec key matching the filter key (case-insensitive)
+                const productSpecKey = Object.keys(p.specifications || {}).find(pk => pk.toLowerCase() === filterKey.toLowerCase());
+                if (!productSpecKey || p.specifications[productSpecKey] === undefined || p.specifications[productSpecKey] === null) return false; // Product doesn't have this spec
+
+                const productValueLower = String(p.specifications[productSpecKey]).toLowerCase();
+                const filterValuesLower = filterValues.map(v => v.toLowerCase());
+
+                return filterValuesLower.includes(productValueLower);
+            })
+        );
+    }
 
     const sortedAndFiltered = sortProducts(productsToFilter);
     setFilteredProducts(sortedAndFiltered);
@@ -224,52 +328,182 @@ const CategoryPage: React.FC = () => {
 
   }, [activeFilters, baseCategoryProducts, sortType, vendorIdMap]); // Trigger on filters, base data, or sort change
 
- // --- Helper Function to Reconcile URL Filters with Available Options ---
- const reconcileFilters = (
-      filtersFromUrl: ActiveFiltersState, // Contains lowercase/IDs from URL
-      currentAvailableBrands: Record<string, number>, // Original case
+  // --- Helper Function to Reconcile URL Filters with Available Options ---
+  const reconcileFilters = (
+      filtersFromUrl: ActiveFiltersState, // Contains lowercase/IDs from URL, spec keys might be original case now
+      currentAvailableBrands: Record<string, number>, // Original case keys
       currentAvailableSpecs: Record<string, Set<string>> // Original case keys/values
-      ): ActiveFiltersState => {
-          const reconciledBrands = filtersFromUrl.brands.map(lb => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lb)).filter((b): b is string => b !== undefined);
-          const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [lowerKey, lowerValues]) => { const originalKey = Object.keys(currentAvailableSpecs).find(ak => ak.toLowerCase() === lowerKey); if (originalKey) { const originalValues = lowerValues.map(lv => Array.from(currentAvailableSpecs[originalKey] || new Set<string>()).find(av => av.toLowerCase() === lv)).filter((v): v is string => v !== undefined); if (originalValues.length > 0) { acc[originalKey] = originalValues; } } return acc; }, {} as Record<string, string[]>);
-          return { ...filtersFromUrl, brands: reconciledBrands, specs: reconciledSpecs };
+  ): ActiveFiltersState => {
+      // Reconcile Brands: Find original case brand name for each lowercase brand from URL
+      const reconciledBrands = filtersFromUrl.brands
+          .map(lowerBrand => Object.keys(currentAvailableBrands).find(b => b.toLowerCase() === lowerBrand))
+          .filter((b): b is string => b !== undefined); // Filter out brands not actually available
+
+      // Reconcile Specs: Match URL spec keys (already original case from getFiltersFromUrl) and values
+      const reconciledSpecs = Object.entries(filtersFromUrl.specs).reduce((acc, [originalKey, lowerValuesFromUrl]) => {
+          const availableValuesSet = currentAvailableSpecs[originalKey]; // Use original key
+          if (availableValuesSet) {
+              // Find original case values for each lowercase value from URL
+              const originalValues = lowerValuesFromUrl
+                  .map(lowerValue => Array.from(availableValuesSet).find(av => av.toLowerCase() === lowerValue))
+                  .filter((v): v is string => v !== undefined); // Filter out values not actually available for this spec
+
+              if (originalValues.length > 0) {
+                  acc[originalKey] = originalValues; // Store with original key and original values
+              }
+          }
+          return acc;
+      }, {} as Record<string, string[]>);
+
+      // Reconcile Vendor IDs: Ensure IDs from URL correspond to actual vendors
+      const reconciledVendorIds = filtersFromUrl.vendorIds.filter(id => vendorIdMap.has(id));
+
+      return {
+          ...filtersFromUrl, // Keep boolean flags as they were from URL
+          brands: reconciledBrands,
+          specs: reconciledSpecs,
+          vendorIds: reconciledVendorIds
       };
+  };
 
 
   // Effect 3: Update activeFilters state AND sortType when URL parameters change OR when available options change
   useEffect(() => {
-      // Only run reconciliation if available options have been populated OR category products loaded
-      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || baseCategoryProducts.length > 0) {
-        const filtersFromUrl = getFiltersFromUrl(availableSpecs);
-        const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs);
-        const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
-        if (sortFromUrl !== sortType) { setSortType(sortFromUrl); }
-        if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) { setActiveFilters(reconciledState); }
+      // Only run reconciliation if available options have been populated OR category products loaded (relevant for initial load)
+      if (Object.keys(availableBrands).length > 0 || Object.keys(availableSpecs).length > 0 || (currentCategory && !currentCategory.isMain)) {
+          const filtersFromUrl = getFiltersFromUrl(availableSpecs); // Pass availableSpecs here
+          const reconciledState = reconcileFilters(filtersFromUrl, availableBrands, availableSpecs);
+          const sortFromUrl = searchParams.get('sort') || DEFAULT_SORT_TYPE;
+
+          let stateChanged = false;
+
+          // Update sort type if different
+          if (sortFromUrl !== sortType) {
+              setSortType(sortFromUrl);
+              // Note: sort change will trigger Effect 2 automatically if needed
+          }
+
+          // Update active filters if different after reconciliation
+          // Deep comparison needed for objects/arrays
+          if (JSON.stringify(reconciledState) !== JSON.stringify(activeFilters)) {
+              setActiveFilters(reconciledState);
+              stateChanged = true;
+          }
+
+          // If the URL had filters that were removed during reconciliation (e.g., invalid brand/spec),
+          // update the URL to reflect the clean state. Only do this if the state actually changed.
+          if (stateChanged && JSON.stringify(filtersFromUrl) !== JSON.stringify(reconciledState)) {
+             // Check if the *intended* state (from URL) differs from the *actual* state (reconciled)
+             // This indicates some URL params were invalid/unavailable and got cleaned up.
+             updateUrlParams(reconciledState, sortFromUrl);
+          }
       }
-  }, [searchParams, availableBrands, availableSpecs, baseCategoryProducts]); // React to URL and available options
+  }, [searchParams, availableBrands, availableSpecs, baseCategoryProducts, currentCategory]); // React to URL, available options, and category loading
+
 
   // --- Filter Event Handlers ---
   const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
-  const createToggleHandler = (filterKey: keyof Omit<ActiveFiltersState, 'brands' | 'specs' | 'vendorIds'>) => { return () => { const newFilters = { ...activeFilters, [filterKey]: !activeFilters[filterKey] }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); }; };
+  const createToggleHandler = (filterKey: keyof Omit<ActiveFiltersState, 'brands' | 'specs' | 'vendorIds'>) => {
+      return () => {
+          const newFilters = { ...activeFilters, [filterKey]: !activeFilters[filterKey] };
+          setActiveFilters(newFilters);
+          updateUrlParams(newFilters, sortType);
+      };
+  };
   const handleDealsToggle = createToggleHandler('deals');
-  const handleCertifiedToggle = createToggleHandler('certified');
+  const handleCertifiedToggle = createToggleHandler('certified'); // General certified toggle
   const handleNearbyToggle = createToggleHandler('nearby');
   const handleBoxnowToggle = createToggleHandler('boxnow');
   const handleInstockToggle = createToggleHandler('instock');
-  const handleBrandFilter = (brand: string) => { const currentBrands = activeFilters.brands; const newBrands = currentBrands.includes(brand) ? currentBrands.filter(b => b !== brand) : [...currentBrands, brand]; const newFilters = { ...activeFilters, brands: newBrands }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
-  const handleSpecFilter = (specKey: string, specValue: string) => { const currentSpecs = { ...activeFilters.specs }; const specValues = currentSpecs[specKey] || []; const newSpecValues = specValues.includes(specValue) ? specValues.filter(v => v !== specValue) : [...specValues, specValue]; if (newSpecValues.length === 0) { delete currentSpecs[specKey]; } else { currentSpecs[specKey] = newSpecValues; } const newFilters = { ...activeFilters, specs: currentSpecs }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
-  const handleVendorFilter = (vendor: Vendor) => { const currentVendorIds = activeFilters.vendorIds; const newVendorIds = currentVendorIds.includes(vendor.id) ? currentVendorIds.filter(id => id !== vendor.id) : [...currentVendorIds, vendor.id]; const newFilters = { ...activeFilters, vendorIds: newVendorIds }; setActiveFilters(newFilters); updateUrlParams(newFilters, sortType); };
-  const handleResetFilters = () => { const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false }; setActiveFilters(resetState); updateUrlParams(resetState, DEFAULT_SORT_TYPE); setSortType(DEFAULT_SORT_TYPE); };
+  const handleBrandFilter = (brand: string) => {
+      const currentBrands = activeFilters.brands;
+      const newBrands = currentBrands.includes(brand)
+          ? currentBrands.filter(b => b !== brand)
+          : [...currentBrands, brand];
+      const newFilters = { ...activeFilters, brands: newBrands };
+      setActiveFilters(newFilters);
+      updateUrlParams(newFilters, sortType);
+  };
+  const handleSpecFilter = (specKey: string, specValue: string) => {
+      const currentSpecs = { ...activeFilters.specs };
+      const specValues = currentSpecs[specKey] || [];
+      const newSpecValues = specValues.includes(specValue)
+          ? specValues.filter(v => v !== specValue)
+          : [...specValues, specValue];
+
+      if (newSpecValues.length === 0) {
+          delete currentSpecs[specKey]; // Remove the key if no values are selected
+      } else {
+          currentSpecs[specKey] = newSpecValues;
+      }
+      const newFilters = { ...activeFilters, specs: currentSpecs };
+      setActiveFilters(newFilters);
+      updateUrlParams(newFilters, sortType);
+  };
+
+  // RENAMED: Handles generic add/remove for vendor IDs (multi-select behavior)
+  // Used by Applied Filters removal
+  const handleMultiVendorToggle = (vendor: Vendor) => {
+    const currentVendorIds = activeFilters.vendorIds;
+    // Standard toggle logic: add if not present, remove if present.
+    const newVendorIds = currentVendorIds.includes(vendor.id)
+        ? currentVendorIds.filter(id => id !== vendor.id)
+        : [...currentVendorIds, vendor.id];
+    const newFilters = { ...activeFilters, vendorIds: newVendorIds };
+    setActiveFilters(newFilters);
+    updateUrlParams(newFilters, sortType);
+  };
+
+  // NEW: Handles single-select logic for the Certified Vendors list
+  const handleCertifiedVendorSelect = (vendor: Vendor) => {
+    const currentVendorIds = activeFilters.vendorIds;
+    let newVendorIds: number[];
+
+    // If the *only* currently selected vendor is the one being clicked, deselect it.
+    if (currentVendorIds.length === 1 && currentVendorIds[0] === vendor.id) {
+        newVendorIds = [];
+    } else {
+        // Otherwise, select *only* this vendor, replacing any existing selection.
+        newVendorIds = [vendor.id];
+    }
+
+    // Update state and URL
+    // We only modify vendorIds here. The 'certified' boolean filter remains independent.
+    const newFilters = { ...activeFilters, vendorIds: newVendorIds };
+    setActiveFilters(newFilters);
+    updateUrlParams(newFilters, sortType);
+  };
+
+
+  const handleResetFilters = () => {
+      const resetState: ActiveFiltersState = { brands: [], specs: {}, vendorIds: [], deals: false, certified: false, nearby: false, boxnow: false, instock: false };
+      setActiveFilters(resetState);
+      setSortType(DEFAULT_SORT_TYPE); // Also reset sort type
+      updateUrlParams(resetState, DEFAULT_SORT_TYPE);
+  };
 
   // Handler for changing sort type
   const handleSortChange = (newSortType: string) => {
-      setSortType(newSortType);
-      updateUrlParams(activeFilters, newSortType);
+      if (newSortType !== sortType) {
+        setSortType(newSortType);
+        updateUrlParams(activeFilters, newSortType);
+      }
   };
 
   // --- Scroll To Top Effect ---
-  const isInitialSyncDone = useRef(false);
-  useEffect(() => { const timer = setTimeout(() => { if (isInitialSyncDone.current) { window.scrollTo({ top: 0, behavior: 'smooth' }); } else { isInitialSyncDone.current = true; } }, 100); return () => clearTimeout(timer); }, [activeFilters, sortType]);
+  const isInitialSyncDone = useRef(false); // To prevent scroll on initial load/sync
+  useEffect(() => {
+      // Only scroll if it's not the very first render cycle after sync completes
+      if (isInitialSyncDone.current) {
+          const timer = setTimeout(() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 100); // Small delay to allow rendering updates
+          return () => clearTimeout(timer);
+      } else {
+          // Mark initial sync as done after the first run of Effect 3 completes
+          isInitialSyncDone.current = true;
+      }
+  }, [activeFilters, sortType]); // Scroll when filters or sort change (after initial load)
 
 
   // --- Misc Helper/UI Logic ---
@@ -281,71 +515,234 @@ const CategoryPage: React.FC = () => {
   const renderBreadcrumbs = () => {
     const trailItems: React.ReactNode[] = [];
     trailItems.push(<li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>);
-    if (currentCategory && currentCategory.parentId !== null && !currentCategory.isMain) {
+
+    if (currentCategory) {
         const ancestors: Category[] = [];
         let category: Category | undefined = currentCategory;
-        while (category && category.parentId !== null) { const parent = allCategories.find((cat) => cat.id === category?.parentId); if (parent) { ancestors.unshift(parent); category = parent; } else { category = undefined; } }
-        ancestors.forEach((cat) => { trailItems.push(<li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>); });
-        trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>);
-    } else if (currentCategory && (currentCategory.isMain || currentCategory.parentId === null)) {
-         trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>);
+
+        // Traverse up the parent chain, excluding the current category itself initially
+        while (category && category.parentId !== null) {
+            const parent = allCategories.find((cat) => cat.id === category?.parentId);
+            if (parent) {
+                ancestors.unshift(parent); // Add parent to the beginning
+                category = parent;
+            } else {
+                category = undefined; // Stop if parent not found
+            }
+        }
+
+        // Add links for all ancestors
+        ancestors.forEach((cat) => {
+            trailItems.push(
+                <li key={cat.id}>
+                    <Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link>
+                </li>
+            );
+        });
+
+        // Add the current category name (not as a link)
+        trailItems.push(
+            <li key={currentCategory.id}>
+                <span>{currentCategory.name}</span>
+            </li>
+        );
     }
-    return ( <div id="trail"> <nav className="breadcrumb"><ol>{trailItems.reduce((acc, item, index) => (<React.Fragment key={index}>{acc}{trailItems.length > 1 && index > 0 && <span className="trail__breadcrumb-separator">›</span>}{item}</React.Fragment>), null)}</ol></nav> </div> );
+
+    // Add separators between items
+    return (
+        <div id="trail">
+            <nav className="breadcrumb">
+                <ol>
+                    {trailItems.reduce((acc: React.ReactNode[], item, index) => {
+                        if (index > 0) {
+                            // Add separator before items other than the first
+                           acc.push(<span key={`sep-${index}`} className="trail__breadcrumb-separator">›</span>);
+                        }
+                        acc.push(item);
+                        return acc;
+                    }, [])}
+                </ol>
+            </nav>
+        </div>
+    );
   };
 
+
   const renderMainCategories = () => {
-    if (!currentCategory || currentCategory.parentId !== null || !currentCategory.isMain) { return null; }
+    if (!currentCategory || !currentCategory.isMain) { // Only render if it IS a main category
+        return null;
+    }
     const mainCat = currentCategory;
     const subcategories = categories.filter(cat => cat.parentId === mainCat.id);
     return (
       <>
-        {subcategories.length > 0 && (<div className="page-header"><div className="hgroup"><div className="page-header__title-wrapper"><h1>{mainCat.name}</h1></div></div></div>)}
+        <div className="page-header">
+            <div className="hgroup">
+                <div className="page-header__title-wrapper">
+                    <h1>{mainCat.name}</h1>
+                </div>
+            </div>
+        </div>
         <div className="root-category__categories">
-          {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" /></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>)}
+          {subcategories.length > 0 ? (
+                subcategories.map((subCat) => (
+                    <div key={subCat.id} className="root-category__category">
+                        <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                            <img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150" />
+                        </Link>
+                        <h3 className="root-category__category-title">
+                            <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                        </h3>
+                        <div className="root-category__footer">
+                           {/* Optionally show links to grandchildren */}
+                           {/*
+                            <div className="root-category__links">
+                                {categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (
+                                    <React.Fragment key={linkedSubCat.id}>
+                                        <Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>
+                                        {index < arr.length - 1 && ', '}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                           */}
+                        </div>
+                    </div>
+                ))
+          ) : (
+              <p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>
+          )}
         </div>
         <div className="sections"></div>
-        <div className="p__products-section">
-          <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
-        </div>
+        {/* No price alert button on main category page */}
+        {/* <div className="p__products-section"> ... </div> */}
       </>
     );
   };
 
-  const renderSubcategories = (category: Category) => {
-    if (!category || category.parentId === null || category.isMain) { return null; }
-    const childCategories = categories.filter(cat => cat.parentId === category.id);
-    const parentCategory = allCategories.find(cat => cat.id === category.parentId);
+  // Renders content for a subcategory page (either more subcategories or products)
+  const renderSubcategoryContent = () => {
+    if (!currentCategory || currentCategory.isMain) { // Only render if it's NOT a main category
+        return null;
+    }
+    const childCategories = categories.filter(cat => cat.parentId === currentCategory.id);
+    const parentCategory = allCategories.find(cat => cat.id === currentCategory.parentId);
+
     return (
       <>
-        {childCategories.length > 0 && (<div className="page-header"><div className="hgroup"><div className="page-header__title-wrapper">{parentCategory && (<Link className="trail__back pressable" title={`Επιστροφή σε ${parentCategory.name}`} to={`/cat/${parentCategory.id}/${parentCategory.slug}`}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg></Link>)}<h1>{category.name}</h1></div></div></div>)}
-        {childCategories.length > 0 ? (<div className="root-category__categories">{childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}</div>) : (renderProducts())}
-        <div className="sections"></div>
-        <div className="p__products-section">
-          <div className="alerts"><button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div></div>
+        {/* Header with Back button */}
+        <div className="page-header">
+            <div className="hgroup">
+                <div className="page-header__title-wrapper">
+                    {parentCategory && (
+                        <Link className="trail__back pressable" title={`Επιστροφή σε ${parentCategory.name}`} to={`/cat/${parentCategory.id}/${parentCategory.slug}`}>
+                            <svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-right-thin-16" /></svg>
+                        </Link>
+                    )}
+                    <h1>{currentCategory.name}</h1>
+                </div>
+            </div>
         </div>
+
+        {/* Conditionally render child categories OR products */}
+        {childCategories.length > 0 ? (
+            // Display Child Categories Grid
+            <div className="root-category__categories">
+                {childCategories.map((subCat) => (
+                    <div key={subCat.id} className="root-category__category">
+                        <Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover">
+                            <img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/>
+                        </Link>
+                        <h3 className="root-category__category-title">
+                            <Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link>
+                        </h3>
+                         {/* Optional grandchildren links */}
+                         {/* <div className="root-category__footer"> ... </div> */}
+                    </div>
+                ))}
+            </div>
+        ) : (
+            // Display Product Listing for this leaf category
+            renderProducts()
+        )}
+
+        <div className="sections"></div>
+        {/* Price Alert only if showing products */}
+        {childCategories.length === 0 && baseCategoryProducts.length > 0 && (
+            <div className="p__products-section">
+                <div className="alerts">
+                    <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={currentCategory.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
+                        <span className="alerts__label">Ειδοποίηση</span>
+                    </button>
+                    <div className="alerts__prompt">σε <span className="alerts__title">{currentCategory.name}</span></div>
+                </div>
+            </div>
+        )}
       </>
     );
   };
+
 
   const renderAppliedFilters = () => {
         const { brands, specs, vendorIds, deals, certified, nearby, boxnow, instock } = activeFilters;
         const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || vendorIds.length > 0 || deals || certified || nearby || boxnow || instock;
         if (!isAnyFilterActive) return null;
 
-        return ( <div className="applied-filters"> {instock && (<h2 className="applied-filters__filter" key="instock"><a className="pressable" onClick={handleInstockToggle} title="Αφαίρεση φίλτρου άμεσα διαθέσιμων προϊόντων"><span className="applied-filters__label">Άμεσα διαθέσιμα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {deals && (<h2 className="applied-filters__filter" key="deals"><a className="pressable" onClick={handleDealsToggle} title="Αφαίρεση φίλτρου προσφορών"><span className="applied-filters__label">Προσφορές</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {certified && (<h2 className="applied-filters__filter" key="certified"><a className="pressable" onClick={handleCertifiedToggle} title="Αφαίρεση φίλτρου πιστοποιημένων καταστημάτων"><span className="applied-filters__label">Πιστοποιημένα καταστήματα</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {nearby && (<h2 className="applied-filters__filter" key="nearby"><a className="pressable" onClick={handleNearbyToggle} title="Αφαίρεση φίλτρου για καταστήματα κοντά μου"><span className="applied-filters__label">Κοντά μου</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {boxnow && (<h2 className="applied-filters__filter" key="boxnow"><a className="pressable" onClick={handleBoxnowToggle} title="Αφαίρεση φίλτρου παράδοσης προϊόντων με Box Now"><span className="applied-filters__label">Παράδοση με Box Now</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)} {brands.map((brand) => (<h2 className="applied-filters__filter" key={`brand-${brand}`}><a className="pressable" onClick={() => handleBrandFilter(brand)} title={`Αφαίρεση φίλτρου του κατασκευαστή ${brand}`}><span className="applied-filters__label">{brand}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>))} {Object.entries(specs).flatMap(([specKey, specValues]) => specValues.map((specValue) => (<h2 className="applied-filters__filter" key={`spec-${specKey}-${specValue}`}><a className="pressable" onClick={() => handleSpecFilter(specKey, specValue)} title={`Αφαίρεση φίλτρου ${specKey}: ${specValue}`}><span className="applied-filters__label">{`${specKey}: ${specValue}`}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>)))} {vendorIds.map((vendorId) => { const vendor = vendorIdMap.get(vendorId); return vendor ? (<h2 className="applied-filters__filter" key={`vendor-${vendor.id}`}><a className="pressable" onClick={() => handleVendorFilter(vendor)} title={`Αφαίρεση φίλτρου από το κατάστημα ${vendor.name}`}><span className="applied-filters__label">{vendor.name}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>) : null; })} <button className="applied-filters__reset pressable" onClick={handleResetFilters} title="Επαναφορά όλων των φίλτρων"><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg><span>Καθαρισμός όλων</span></button> </div> );
+        // Helper to render a filter chip
+        const renderChip = (key: string, title: string, label: string, onRemove: () => void) => (
+            <h2 className="applied-filters__filter" key={key}>
+                <a className="pressable" onClick={(e) => { e.preventDefault(); onRemove(); }} title={title}>
+                    <span className="applied-filters__label">{label}</span>
+                    <svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                </a>
+            </h2>
+        );
+
+        return (
+            <div className="applied-filters">
+                {instock && renderChip('instock', 'Αφαίρεση φίλτρου άμεσα διαθέσιμων προϊόντων', 'Άμεσα διαθέσιμα', handleInstockToggle)}
+                {deals && renderChip('deals', 'Αφαίρεση φίλτρου προσφορών', 'Προσφορές', handleDealsToggle)}
+                {certified && renderChip('certified', 'Αφαίρεση φίλτρου πιστοποιημένων καταστημάτων', 'Πιστοποιημένα', handleCertifiedToggle)}
+                {nearby && renderChip('nearby', 'Αφαίρεση φίλτρου για καταστήματα κοντά μου', 'Κοντά μου', handleNearbyToggle)}
+                {boxnow && renderChip('boxnow', 'Αφαίρεση φίλτρου παράδοσης προϊόντων με Box Now', 'Παράδοση με Box Now', handleBoxnowToggle)}
+                {brands.map((brand) => renderChip(`brand-${brand}`, `Αφαίρεση φίλτρου του κατασκευαστή ${brand}`, brand, () => handleBrandFilter(brand)))}
+                {Object.entries(specs).flatMap(([specKey, specValues]) =>
+                    specValues.map((specValue) =>
+                        renderChip(`spec-${specKey}-${specValue}`, `Αφαίρεση φίλτρου ${specKey}: ${specValue}`, `${specKey}: ${specValue}`, () => handleSpecFilter(specKey, specValue))
+                    )
+                )}
+                {/* VENDOR FILTERS - Use the multi-toggle handler for removal */}
+                {vendorIds.map((vendorId) => {
+                    const vendor = vendorIdMap.get(vendorId);
+                    return vendor ? renderChip(`vendor-${vendor.id}`, `Αφαίρεση φίλτρου από το κατάστημα ${vendor.name}`, vendor.name, () => handleMultiVendorToggle(vendor)) : null;
+                })}
+
+                <button className="applied-filters__reset pressable" onClick={handleResetFilters} title="Επαναφορά όλων των φίλτρων">
+                    <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
+                    <span>Καθαρισμός όλων</span>
+                </button>
+            </div>
+        );
     };
 
   // Renders the main content area including sidebar and product grid for Category Page
   const renderProducts = () => {
     const { brands: activeBrandFilters, specs: activeSpecFilters, vendorIds: activeVendorIds, ...restActiveFilters } = activeFilters;
     const isAnyFilterActive = activeBrandFilters.length > 0 || Object.values(activeSpecFilters).some(v => v.length > 0) || activeVendorIds.length > 0 || Object.values(restActiveFilters).some(v => v === true);
-    // ** Moved calculations to component scope **
+
+    // Early return if no base products to filter from
+    if (!currentCategory || baseCategoryProducts.length === 0) {
+        return (
+            <main className="page-products__main">
+                <p>Δεν υπάρχουν διαθέσιμα προϊόντα για αυτήν την κατηγορία αυτή τη στιγμή.</p>
+            </main>
+        );
+    }
 
     return (
       <div className="page-products">
          {/* ASIDE FILTERS */}
-         {baseCategoryProducts.length > 0 && currentCategory && (
-            <aside className="page-products__filters">
+         <aside className="page-products__filters">
             <div id="filters" role="complementary" aria-labelledby="filters-header" data-label={currentCategory.name}>
               <div className="filters__header">
                 <div className="filters__header-title filters__header-title--filters">Φίλτρα</div>
@@ -369,40 +766,110 @@ const CategoryPage: React.FC = () => {
                     <div className="filter__header"><h4>Κατασκευαστής</h4></div>
                     <div className="filter-container">
                       <ol aria-expanded={showMoreBrands}>
-                        {sortedAvailableBrandKeys.slice(0, showMoreBrands ? sortedAvailableBrandKeys.length : MAX_DISPLAY_COUNT).map((brand) => ( <li key={brand} className={`pressable ${activeFilters.brands.includes(brand) ? 'selected' : ''}`} onClick={() => handleBrandFilter(brand)}> <a data-c={availableBrands[brand]}>{brand}</a> </li> ))}
+                        {sortedAvailableBrandKeys.slice(0, showMoreBrands ? sortedAvailableBrandKeys.length : MAX_DISPLAY_COUNT).map((brand) => (
+                          <li key={brand} className={`pressable ${activeFilters.brands.includes(brand) ? 'selected' : ''}`}>
+                            {/* Use onClick on li or a button inside for better semantics */}
+                            <a href="#" onClick={(e) => { e.preventDefault(); handleBrandFilter(brand); }} data-c={availableBrands[brand]}>
+                                {brand}
+                            </a>
+                          </li>
+                        ))}
                       </ol>
-                       {sortedAvailableBrandKeys.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreBrands(prev => !prev)} title={showMoreBrands ? "Λιγότεροι κατασκευαστές" : "Όλοι οι κατασκευαστές"}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreBrands ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreBrands ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )}
+                       {sortedAvailableBrandKeys.length > MAX_DISPLAY_COUNT && (
+                          <div className="filters-more-prompt pressable" onClick={() => setShowMoreBrands(prev => !prev)} title={showMoreBrands ? "Λιγότεροι κατασκευαστές" : "Όλοι οι κατασκευαστές"}>
+                            <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreBrands ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg>
+                            {showMoreBrands ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                          </div>
+                       )}
                     </div>
                  </div>
               )}
 
               {/* Specs Filters with Show More */}
-               {sortedAvailableSpecKeys.length > 0 && ( sortedAvailableSpecKeys.map((specKey) => { const specValuesSet = availableSpecs[specKey]; const specValuesArray = Array.from(specValuesSet).sort(); const isExpanded = showMoreSpecs[specKey] || false; if (specValuesArray.length === 0) return null; return ( <div key={specKey} className={`filter-${specKey.toLowerCase()} default-list`} data-filter-name={specKey.toLowerCase()} data-key={specKey.toLowerCase()}> <div className="filter__header"><h4>{specKey}</h4></div> <div className="filter-container"> <ol aria-expanded={isExpanded}> {specValuesArray.slice(0, isExpanded ? specValuesArray.length : MAX_DISPLAY_COUNT).map((specValue) => ( <li key={specValue} className={`pressable ${activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''}`} onClick={() => handleSpecFilter(specKey, specValue)}> <span>{specValue}</span> </li> ))} </ol> {specValuesArray.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreSpecs(prev => ({...prev, [specKey]: !prev[specKey]}))} title={isExpanded ? `Λιγότερες επιλογές ${specKey}` : `Όλες οι επιλογές ${specKey}`}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={isExpanded ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {isExpanded ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> ) }) )}
+               {sortedAvailableSpecKeys.length > 0 && (
+                    sortedAvailableSpecKeys.map((specKey) => {
+                        const specValuesSet = availableSpecs[specKey];
+                        if (!specValuesSet || specValuesSet.size === 0) return null; // Skip if no values for this spec
+                        const specValuesArray = Array.from(specValuesSet).sort(); // Sort values alphabetically
+                        const isExpanded = showMoreSpecs[specKey] || false;
 
-              {/* Certified Vendors Filter with Show More */}
-              {certifiedVendors.length > 0 && ( <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store"> <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div> <div className="filter-container"> <ol aria-expanded={showMoreVendors}> {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => ( <li key={vendor.id} title={`Το κατάστημα ${vendor.name} (${cleanDomainName(vendor.url)}) διαθέτει ${vendor.certification} πιστοποίηση`} className={`pressable ${activeFilters.vendorIds.includes(vendor.id) ? 'selected' : ''}`}> <Link to="#" data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'} onClick={(e) => handleLinkFilterClick(e, () => handleVendorFilter(vendor))}> <span>{vendor.name}</span> </Link> </li> ))} </ol> {certifiedVendors.length > MAX_DISPLAY_COUNT && ( <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}> <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg> {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"} </div> )} </div> </div> )}
+                        return (
+                            <div key={specKey} className={`filter-${specKey.toLowerCase().replace(/\s+/g, '-')} default-list`} data-filter-name={specKey} data-key={specKey.toLowerCase()}>
+                                <div className="filter__header"><h4>{specKey}</h4></div>
+                                <div className="filter-container">
+                                    <ol aria-expanded={isExpanded}>
+                                        {specValuesArray.slice(0, isExpanded ? specValuesArray.length : MAX_DISPLAY_COUNT).map((specValue) => (
+                                            <li key={specValue} className={`pressable ${activeFilters.specs[specKey]?.includes(specValue) ? 'selected' : ''}`}>
+                                              <a href="#" onClick={(e) => {e.preventDefault(); handleSpecFilter(specKey, specValue); }}>
+                                                <span>{specValue}</span>
+                                              </a>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                    {specValuesArray.length > MAX_DISPLAY_COUNT && (
+                                        <div className="filters-more-prompt pressable" onClick={() => setShowMoreSpecs(prev => ({...prev, [specKey]: !prev[specKey]}))} title={isExpanded ? `Λιγότερες επιλογές ${specKey}` : `Όλες οι επιλογές ${specKey}`}>
+                                            <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={isExpanded ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg>
+                                            {isExpanded ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
+
+              {/* Certified Vendors Filter with Show More - SINGLE SELECT */}
+              {certifiedVendors.length > 0 && (
+                  <div className="filter-store filter-collapsed default-list" data-filter-name="Πιστοποιημένα καταστήματα" data-filter-id="store" data-type="store" data-key="store">
+                      <div className="filter__header"><h4>Πιστοποιημένα καταστήματα</h4></div>
+                      <div className="filter-container">
+                          <ol aria-expanded={showMoreVendors}>
+                              {certifiedVendors.slice(0, showMoreVendors ? certifiedVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
+                                  <li key={vendor.id}
+                                      title={`Το κατάστημα ${vendor.name} (${cleanDomainName(vendor.url)}) διαθέτει ${vendor.certification} πιστοποίηση`}
+                                      // UPDATED selected class logic for single-select visual feedback
+                                      className={`pressable ${activeFilters.vendorIds.length === 1 && activeFilters.vendorIds[0] === vendor.id ? 'selected' : ''}`}
+                                    >
+                                      {/* UPDATED onClick to use the new single-select handler */}
+                                      <Link to="#"
+                                          data-l={vendor.certification === 'Gold' ? '3' : vendor.certification === 'Silver' ? '2' : '1'}
+                                          onClick={(e) => handleLinkFilterClick(e, () => handleCertifiedVendorSelect(vendor))} // Use NEW handler
+                                        >
+                                          <span>{vendor.name}</span>
+                                      </Link>
+                                  </li>
+                              ))}
+                          </ol>
+                          {certifiedVendors.length > MAX_DISPLAY_COUNT && (
+                              <div className="filters-more-prompt pressable" onClick={() => setShowMoreVendors(prev => !prev)}>
+                                  <svg aria-hidden="true" className="icon" width={10} height={10} viewBox="0 0 10 10"><path fillRule="evenodd" d={showMoreVendors ? "M9.5 6H0.5C0.224 6 0 5.776 0 5.5V4.5C0 4.224 0.224 4 0.5 4H9.5C9.776 4 10 4.224 10 4.5V5.5C10 5.776 9.776 6 9.5 6Z" : "M6 4V0.5C6 0.224 5.776 0 5.5 0H4.5C4.224 0 4 0.224 4 0.5V4H0.5C0.224 4 0 4.224 0 4.5V5.5C0 5.776 0.224 6 0.5 6H4V9.5C4 9.776 4.224 10 4.5 10H5.5C5.776 10 6 9.776 6 9.5V6H9.5C9.776 6 10 5.776 10 5.5V4.5C10 4.224 9.776 4 9.5 4H6Z"} /></svg>
+                                  {showMoreVendors ? "Εμφάνιση λιγότερων" : "Εμφάνιση όλων"}
+                              </div>
+                          )}
+                      </div>
+                  </div>
+              )}
 
             </div>
             </aside>
-         )}
          {/* END ASIDE FILTERS */}
 
         <main className="page-products__main">
-          {/* Header */}
-          {(baseCategoryProducts.length > 0 || filteredProducts.length > 0) && currentCategory && (
-            <header className="page-header">
+          {/* Header for Product List */}
+          <header className="page-header">
               <div className="page-header__title-wrapper">
                 <div className="page-header__title-main">
-                  <h1>{currentCategory.name}</h1>
-                  <div className="page-header__count-wrapper">
+                  {/* Title and count are already rendered in renderSubcategoryContent header */}
+                  {/* We only need the count and alert button here potentially */}
+                   <div className="page-header__count-wrapper">
                     <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
                     {(isAnyFilterActive || baseCategoryProducts.length > 0) && filteredProducts.length > 0 && (
-                    <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
-                      <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                      <div className="alerts-minimal__label"></div>
-                    </div>
+                        <div data-url={location.pathname + location.search} data-title={currentCategory.name} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
+                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
+                        <div className="alerts-minimal__label"></div>
+                        </div>
                     )}
-                  </div>
+                   </div>
                 </div>
                 <div className="page-header__title-aside">
                   {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={`${displayedBrand.name} logo`} height="70" loading="lazy"/></Link> )}
@@ -428,7 +895,6 @@ const CategoryPage: React.FC = () => {
               )}
               {/* Sorting Tabs */}
               {filteredProducts.length > 0 && (
-                 // ** REMOVED STICKY wrapper and classes **
                  <div className="page-header__sorting">
                     <div className="tabs"><div className="tabs-wrapper"><nav>
                       <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">Δημοφιλέστερα</div></a>
@@ -437,37 +903,38 @@ const CategoryPage: React.FC = () => {
                       <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-desc'); }}><div className="tabs__content">Ακριβότερα</div></a>
                       <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('alpha-asc'); }}><div className="tabs__content">Αλφαβητικά</div></a>
                       <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('reviews-desc'); }}><div className="tabs__content">Περισσότερες Αξιολογήσεις</div></a>
-                      {/* Use variable from component scope */}
                       {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">Ανά κατασκευαστή</div></a> )}
                       <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">Αριθμός Καταστημάτων</div></a>
                     </nav></div></div>
                  </div>
               )}
             </header>
-          )}
 
-          {/* Product Grid */}
+          {/* Product Grid / No Results */}
           <div className="page-products__main-wrapper">
             {filteredProducts.length > 0 ? (
               <div className="p__products" data-pagination="">
                 {filteredProducts.map((product) => ( <ProductCard key={product.id} product={product} /> ))}
               </div>
             ) : (
-              currentCategory && !currentCategory.isMain ? (
-                  baseCategoryProducts.length > 0 ? (
-                      <div id="no-results">
-                          <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
-                          <div id="no-results-suggestions">
-                              <p><strong>Προτάσεις:</strong></p>
-                              <ul>
-                                  <li>Δες <Link to={`/cat/${currentCategory.id}/${currentCategory.slug}`} onClick={(e) => { e.preventDefault(); handleResetFilters(); history.pushState({}, '', `/cat/${currentCategory.id}/${currentCategory.slug}`); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
-                                  <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
-                                  <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
-                              </ul>
-                          </div>
+              // Only show "no results" if filters *were* applied to an existing base set
+              isAnyFilterActive && baseCategoryProducts.length > 0 ? (
+                  <div id="no-results">
+                      <h3>Δεν βρέθηκαν προϊόντα στην κατηγορία <strong>{currentCategory.name}</strong> που να πληρούν τις επιλογές αναζήτησης.</h3>
+                      <div id="no-results-suggestions">
+                          <p><strong>Προτάσεις:</strong></p>
+                          <ul>
+                              <li>Δες <Link to={location.pathname} onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li>
+                              <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li>
+                              <li>Επέστρεψε στην <Link to="/">αρχική σελίδα του BestPrice</Link>.</li>
+                          </ul>
                       </div>
-                  ) : ( <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p> )
-              ) : null
+                  </div>
+              ) : (
+                  // This case should ideally be covered by the check at the start of renderProducts
+                  // but keep as a fallback.
+                  <p>Δεν υπάρχουν προϊόντα για αυτήν την κατηγορία.</p>
+              )
             )}
           </div>
         </main>
@@ -477,15 +944,45 @@ const CategoryPage: React.FC = () => {
 
   // --- Merchant Info Rendering ---
   const renderMerchantInformation = () => {
-    // ** Moved selectedVendor calculation to component scope **
+    // Uses `selectedVendor` which is calculated based on activeFilters.vendorIds
     if (!selectedVendor) { return null; }
-    const vendor = selectedVendor;
-    const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleVendorFilter(vendor); };
-    return ( <div className="root__wrapper information information--center" data-type="merchant-brand"> <div className="root"> <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}> <div className="merchant-logo"> <Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}> <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} /> </Link> <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg> </div> </div> <div className="information__content"> <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase()}`}>{vendor.name}</Link></strong></p> <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p> </div> <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span> </div> </div> );
+    const vendor = selectedVendor; // Already confirmed it's a single vendor
+    const removeThisVendorFilter = (e: React.MouseEvent) => {
+        e.preventDefault();
+        // Use the multi-toggle handler to simply remove this ID
+        handleMultiVendorToggle(vendor);
+    };
+    return (
+        <div className="root__wrapper information information--center" data-type="merchant-brand">
+            <div className="root">
+                <div data-tooltip-no-border="" data-tooltip={`Πληροφορίες για το πιστοποιημένο (${vendor.certification}) κατάστημα ${vendor.name}`}>
+                    <div className="merchant-logo">
+                        <Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase().replace(/\s+/g, '-')}`}>
+                            <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} />
+                        </Link>
+                        <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg>
+                    </div>
+                </div>
+                <div className="information__content">
+                    <p>Εμφανίζονται προϊόντα από το κατάστημα <strong><Link to={`/m/${vendor.id}/${vendor.name?.toLowerCase().replace(/\s+/g, '-')}`}>{vendor.name}</Link></strong></p>
+                    <p><Link to="#" onClick={removeThisVendorFilter}>Αφαίρεση φίλτρου</Link></p>
+                </div>
+                <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span>
+            </div>
+        </div>
+    );
   };
 
   // --- Main Return Structure ---
-  if (location.pathname.startsWith('/cat/') && !currentCategory && defaultCategoryId === null) { return <NotFound />; }
+  // Show NotFound if the path looks like a category but no category was matched after Effect 1
+  if (location.pathname.startsWith('/cat/') && !currentCategory && !defaultCategoryId) {
+      return <NotFound />;
+  }
+  // Also handle case where default category couldn't be found
+  if (!location.pathname.startsWith('/cat/') && defaultCategoryId && !currentCategory) {
+       return <NotFound />; // Or a specific error page / loading state
+  }
+
 
   return (
     <>
@@ -493,11 +990,18 @@ const CategoryPage: React.FC = () => {
       <div className="root__wrapper root-category__root">
         <div className="root">
           {renderBreadcrumbs()}
-          {renderMainCategories()}
-          {currentCategory && (currentCategory.parentId !== null && !currentCategory.isMain) && renderSubcategories(currentCategory)}
-          {/* Price Alert Modal */}
-           {isPriceAlertModalOpen && priceAlertContext && currentCategory && (
-               <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="category" categoryId={priceAlertContext.categoryId} categoryName={priceAlertContext.categoryName} categoryFilters={priceAlertContext.filters} />
+          {currentCategory?.isMain ? renderMainCategories() : renderSubcategoryContent()}
+
+           {/* Price Alert Modal (Rendered conditionally inside based on context) */}
+           {isPriceAlertModalOpen && priceAlertContext && (
+               <PriceAlertModal
+                 isOpen={isPriceAlertModalOpen}
+                 onClose={() => setIsPriceAlertModalOpen(false)}
+                 alertType="category"
+                 categoryId={priceAlertContext.categoryId}
+                 categoryName={priceAlertContext.categoryName}
+                 categoryFilters={priceAlertContext.filters} // Pass the active filters at time of opening
+                />
            )}
         </div>
       </div>
