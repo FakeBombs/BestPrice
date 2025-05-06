@@ -1,47 +1,32 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useCallback } from 'react'; // Removed useMemo for this extreme test
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define these constants outside the component
-type LanguageOption = {
-  code: string; 
-  name: string; 
+type LanguageOption = { // Kept for type safety if we reintroduce
+  code: string;
+  name: string;
   englishName: string;
-  regionKey: string; 
+  regionKey: string;
 };
 
-const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+// Keep these constants for the sidebar, even if the main list is hardcoded
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ /* Your full list here if you want to quickly switch back */
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
-  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
-  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
-  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
-  { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
-  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
-  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
-  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
-  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
-  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
-  { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
-  { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
-  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
-  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
-  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
-  { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' },
-  { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
-  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' },
-  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
-  // You would expand this list significantly
+  // ... rest of your ALL_AVAILABLE_LANGUAGES
 ];
 
-const LANGUAGE_REGIONS_FOR_MODAL = [
+const LANGUAGE_REGIONS_FOR_MODAL = [  /* Your full list here */
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
-    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
-    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+    // ... rest of your LANGUAGE_REGIONS_FOR_MODAL
+];
+
+// The small, hardcoded list that previously worked when modal was in Footer.tsx
+const HARDCODED_TEST_LANGUAGES_FOR_DEBUG: { code: string; name: string; }[] = [
+    { code: 'el', name: 'Ελληνικά (Hardcoded Test)' },
+    { code: 'en-US', name: 'English (US) (Hardcoded Test)' },
 ];
 
 interface LanguageModalProps {
@@ -52,11 +37,7 @@ interface LanguageModalProps {
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
-  const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
-
-  // This variable is not used if filtering and sorting are commented out,
-  // but keeping it for when we re-add them.
-  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
+  const [selectedRegion, setSelectedRegion] = useState<string>("suggested"); // Still used for sidebar
 
   if (!isOpen) return null;
 
@@ -73,29 +54,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const suggestedLangsToDisplay = useMemo(() => {
-    console.log("DEBUG: suggestedLangsToDisplay useMemo triggered");
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
-        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) 
-    );
-  }, []); 
-
-  // ***** DEBUGGING STEP 2b: Test with ONLY suggestedLangsToDisplay *****
-  const languagesToDisplay = useMemo(() => {
-    console.log("DEBUG Attempt B: languagesToDisplay (ONLY suggested).");
-    // SIMPLIFY FURTHER: ALWAYS return only suggestedLangsToDisplay
-    return suggestedLangsToDisplay;
-    
-    // --- ORIGINAL COMPLEX LOGIC (COMMENTED OUT FOR DEBUGGING) ---
-    // let listToFilter;
-    // if (selectedRegion === "suggested") {
-    //     listToFilter = suggestedLangsToDisplay;
-    // } else {
-    //     listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
-    // }
-    // return [...listToFilter].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort || 'en'));
-  }, [suggestedLangsToDisplay]); // Dependency is ONLY on the stable suggestedLangsToDisplay
-
+  // ALL useMemo calls for language lists are removed for this test.
+  // We will map HARDCODED_TEST_LANGUAGES_FOR_DEBUG directly.
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -119,7 +79,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
             {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
               <button
                 key={region.key}
-                onClick={() => setSelectedRegion(region.key)} // This will not affect the displayed list in this test version
+                onClick={() => setSelectedRegion(region.key)}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
@@ -129,8 +89,9 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
+            <p>DEBUG: Rendering HARDCODED list directly.</p>
             <ul className="space-y-1">
-              {languagesToDisplay.map((lang) => ( // This will now use the further simplified list
+              {HARDCODED_TEST_LANGUAGES_FOR_DEBUG.map((lang) => (
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -142,10 +103,6 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {/* This condition might always be false now, or the list won't be empty, depending on suggestedLangsToDisplay */}
-               {languagesToDisplay.length === 0 && (
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
-              )}
             </ul>
           </main>
         </div>
