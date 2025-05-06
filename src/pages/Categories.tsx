@@ -105,7 +105,7 @@ const Categories: React.FC = () => {
         <div className="root-category__categories">
           {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>)}
         </div>
-        {/* Added Sections BELOW Main Category Grid */}
+        {/* *** Added Sections BELOW Main Category Grid *** */}
         <div className="sections">
             {renderTopDealsSlider()}
             {renderHotProductsSlider()}
@@ -113,7 +113,7 @@ const Categories: React.FC = () => {
             {renderPopularBrands()}
             {renderRecentlyViewedSlider()}
         </div>
-        {/* Large Price Alert Button AT BOTTOM for Main Category */}
+        {/* *** Large Price Alert Button AT BOTTOM for Main Category *** */}
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
         </div>
@@ -181,7 +181,7 @@ const Categories: React.FC = () => {
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
                    <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                   {/* *** 1. Minimal Price Alert Button (Correctly placed) *** */}
+                   {/* *** 1. Minimal Price Alert Button REMAINS HERE *** */}
                    {filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
@@ -206,7 +206,7 @@ const Categories: React.FC = () => {
                 {filteredProducts.map((product, index) => (
                   <React.Fragment key={product.id}>
                     <ProductCard product={product} activeVendorFilterDomain={activeVendorDomainForProductLink}/>
-                    {/* *** 1. Price Alert Button within the grid logic *** */}
+                    {/* *** 1. UPDATED Price Alert Button within the grid logic *** */}
                     {currentCategory && (
                       (index + 1) === ALERT_BUTTON_THRESHOLD ||
                       ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0))
@@ -239,13 +239,13 @@ const Categories: React.FC = () => {
               ) : null
             )}
           </div>
-          {/* *** 1. REMOVED Bottom p__products-section from renderProducts *** */}
+          {/* *** 1. Bottom p__products-section containing alert is REMOVED from renderProducts *** */}
         </main>
       </div>
     );
    };
 
-   // *** PRESERVED renderSubcategories with conditional header & sections ***
+   // *** PRESERVED renderSubcategories with CORRECTED Alert & Section placement ***
   const renderSubcategories = (category: Category) => {
     if (!category || category.isMain) return null;
     const childCategories = categories.filter(cat => cat.parentId === category.id);
