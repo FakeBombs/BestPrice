@@ -34,21 +34,21 @@ const defaultTranslations: Translations = {
     passwordsDontMatch: 'Passwords Don\'t Match', pleaseCheckPasswords: 'Please check that both passwords match.',
 
     // ============================== General UI & Nav ============================
-    languageSettings: 'Language Settings',       selectLanguage: 'Select Language',         english: 'English',       greek: 'Greek',
-    spanish: 'Spanish',                          french: 'French',                         german: 'German',         systemLanguage: 'System Language (Default)',
-    save: 'Save',                                cancel: 'Cancel',                          loading: 'Loading...',    success: 'Success',
-    error: 'Error',                              wallet: 'Wallet',                          myWallet: 'My Wallet',    manageWallet: 'Manage your funds, transactions, and ad payments',
+    languageSettings: 'Language Settings',       selectLanguage: 'Select Language',         english: 'English',          greek: 'Greek',
+    spanish: 'Spanish',                          french: 'French',                         german: 'German',            systemLanguage: 'System Language (Default)',
+    save: 'Save',                                cancel: 'Cancel',                          loading: 'Loading...',       success: 'Success',
+    error: 'Error',                              wallet: 'Wallet',                          myWallet: 'My Wallet',       manageWallet: 'Manage your funds, transactions, and ad payments',
     deposit: 'Deposit',                          transactions: 'Transactions',              connectWallet: 'Connect Wallet', addFunds: 'Add Funds',
     amount: 'Amount ($)',                        enterAmount: 'Enter amount',               paymentMethod: 'Payment Method', processing: 'Processing...',
-    myAccount: 'My Account',                     profile: 'Profile',                        favorites: 'Favorites',   recentlyViewed: 'Recently Viewed',
-    priceAlerts: 'Price Alerts',                 settings: 'Settings',                      logout: 'Logout',         myProfile: 'My Profile',
+    myAccount: 'My Account',                     profile: 'Profile',                        favorites: 'Favorites',      recentlyViewed: 'Recently Viewed',
+    priceAlerts: 'Price Alerts',                 settings: 'Settings',                      logout: 'Logout',            myProfile: 'My Profile',
     managePersonalInfo: 'Manage your personal information',
-    name: 'Name',                                memberSince: 'Member since',               role: 'Role',             administrator: 'Administrator',
+    name: 'Name',                                memberSince: 'Member since',               role: 'Role',                administrator: 'Administrator',
     regularUser: 'Regular User',                 editProfile: 'Edit Profile',               accountSummary: 'Account Summary', categories: 'Categories',
     gifts: 'Gifts',                              deals: 'Deals',                            clearFilters: 'Clear filters', finalPrice: 'Final price',
-    yes: "Yes",                                  no: "No",                                  ok: "OK",                 close: "Close",
-    showMore: "Show More",                       showLess: "Show Less",                     all: "All",               selectOption: "Select an option",
-    optional: "Optional",                        required: "Required",                      back: "Back",             next: "Next",
+    yes: "Yes",                                  no: "No",                                  ok: "OK",                    close: "Close",
+    showMore: "Show More",                       showLess: "Show Less",                     all: "All",                  selectOption: "Select an option",
+    optional: "Optional",                        required: "Required",                      back: "Back",                next: "Next",
     submit: "Submit",                            search: "Search",                          searchPlaceholder: "Search for products...",
     notFoundPageTitle: "Page Not Found",         notFoundMessage: "Oops! The page you are looking for does not exist.",
     recently_viewed_title: "Recently Viewed",
@@ -137,7 +137,7 @@ const defaultTranslations: Translations = {
     "vendorPopupAddressNotAvailable": "Online Only Store",
     "vendorPopupPaymentMethods": "PAYMENT METHODS",
     "vendorPopupLearnMore": "Learn More",        "vendorPopupViewInStore": "View in Store",
-    // For getOpeningStatus helper (ensure these are specific if needed, or use generic ones)
+    // For getOpeningStatus helper
     "openingHoursNotAvailable": "Opening hours information not available",
     "closedToday": "Closed today",               "openUntil": "Open until {{time}}",
     "closedOpensAt": "Closed - Opens at {{time}}", "closedForToday": "Closed for today",
@@ -156,27 +156,35 @@ const defaultTranslations: Translations = {
     "certifiedStoreLinkText": "Certified Store ({{certificationLevel}})",
     "certifiedStoreFullText": "{{vendorName}} is a certified store ({{certificationLevel}})",
     "memberSinceDate": "On BestPrice since {{date}}",
-    "ratingTooltip": "{{rating}} stars from {{count}} ratings", // For vendor rating
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok", // Add other social platforms as needed
-    "additionalStores": "{{count}} more {{storeLabel}}", // storeLabel will be singular/plural
+    "ratingTooltip": "{{rating}} stars from {{count}} ratings",
+    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
+    "additionalStores": "{{count}} more {{storeLabel}}",
     "storeLabelSingular": "store", "storeLabelPlural": "stores",
     "logoFor": "{{name}} logo", "screenshotFor": "{{name}} Screenshot",
-    "authorizedReseller": "Authorized Reseller", // Already in proactive, ensure it's here
+    "authorizedReseller": "Authorized Reseller",
     "previewWebsite": "Preview Website",
     "dealsFromVendor": "Deals from {{vendorName}}",
     "popularCategoriesInVendor": "Popular Categories in {{vendorName}}",
-    "productCountSingular": "product", // Already defined for categories, ensure consistency
-    "productCountPlural": "{{count}} products", // Already defined for categories
-    "viewAllVendorProducts": "View all products<span class=\"hide-mobile\"> of the store</span>", // HTML in value
+    "productCountSingular": "product",           "productCountPlural": "{{count}} products",
+    "viewAllVendorProducts": "View all products<span class=\"hide-mobile\"> of the store</span>",
     "storeReviewsTitle": "Store Reviews for {{vendorName}}",
-    "reviewCount": "{{count}} reviews", // Already defined for products, ensure consistency
+    "reviewCount": "{{count}} reviews",
     "rateIt": "Rate It",
     "reviewsPlaceholder": "(Reviews display - Implementation needed)",
     "servicePointsTitle": "Service Points for {{vendorName}}",
     "servicePointsCount": "{{count}} points",
     "storeAndPickup": "Store / Pickup Point",
     "mapPlaceholderText": "Map Placeholder - Requires Map Library",
-    // "paymentMethods": "Payment Methods", // Already in general UI
+
+    // ================= UserButton & UserDropdownContent =======================
+    "toggleTheme": "Toggle theme",
+    "productsYouWant": "Products you want",      "productsYouHave": "Products you have",
+    "myOffers": "My Offers",                     "priceDrops": "Price Drops", // Consider aliasing if same as "priceAlerts"
+    "myCollections": "My Collections",           "newCollection": "New Collection...",
+    "creditsClub": "Credits Club",               "savedOrders": "Saved Orders",
+    "myQuestions": "My Questions",               "myReviews": "My Reviews",
+    "myFriends": "My Friends",                   "viewProfileTooltip": "View your profile",
+    "userMenuCaretAlt": "Open user menu",       // "settings" and "logout" are in General UI
 
     // ============================ Deals, Brands, Search =======================
     "allBrands": "All Brands",                   "productsFromBrand": "Products from {{brandName}}",
@@ -199,18 +207,12 @@ const defaultTranslations: Translations = {
     "apply": "Apply",
 
     // ============================ Payment Methods (Dynamic Keys) ================
-    "paymentMethod_credit_card": "Credit Card",
-    "paymentMethod_bank_transfer": "Bank Transfer",
-    "paymentMethod_paypal": "PayPal",
-    "paymentMethod_cash_on_delivery": "Cash on Delivery",
-    "paymentMethod_pickup_from_store": "Pickup from Store",
-    "paymentMethod_klarna": "Klarna",
-    "paymentMethod_apple_pay": "Apple Pay",
-    "paymentMethod_google_pay": "Google Pay",
-    "paymentMethod_ideal": "iDEAL",
-    "paymentMethod_crypto": "Cryptocurrency",
-    "paymentMethod_pay_by_link": "Pay by Link",
-    "paymentMethod_pickup_via": "Pickup via Courier/Service",
+    "paymentMethod_credit_card": "Credit Card",           "paymentMethod_bank_transfer": "Bank Transfer",
+    "paymentMethod_paypal": "PayPal",                     "paymentMethod_cash_on_delivery": "Cash on Delivery",
+    "paymentMethod_pickup_from_store": "Pickup from Store", "paymentMethod_klarna": "Klarna",
+    "paymentMethod_apple_pay": "Apple Pay",               "paymentMethod_google_pay": "Google Pay",
+    "paymentMethod_ideal": "iDEAL",                       "paymentMethod_crypto": "Cryptocurrency",
+    "paymentMethod_pay_by_link": "Pay by Link",           "paymentMethod_pickup_via": "Pickup via Courier/Service",
 
     // ============================== Category Slugs ============================
     'technology': 'Technology',                  'home-garden': 'Home & Garden',        'fashion': 'Fashion',
@@ -285,21 +287,21 @@ const defaultTranslations: Translations = {
     passwordsDontMatch: 'Οι Κωδικοί δεν Ταιριάζουν', pleaseCheckPasswords: 'Ελέγξτε ότι οι δύο κωδικοί ταιριάζουν.',
 
     // ============================== General UI & Nav ============================
-    languageSettings: 'Ρυθμίσεις Γλώσσας',   selectLanguage: 'Επιλογή Γλώσσας',       english: 'Αγγλικά',       greek: 'Ελληνικά',
-    spanish: 'Ισπανικά',                      french: 'Γαλλικά',                      german: 'Γερμανικά',         systemLanguage: 'Γλώσσα Συστήματος (Προεπιλογή)',
-    save: 'Αποθήκευση',                       cancel: 'Άκυρο',                       loading: 'Φόρτωση...',    success: 'Επιτυχία',
-    error: 'Σφάλμα',                          wallet: 'Πορτοφόλι',                   myWallet: 'Το Πορτοφόλι μου', manageWallet: 'Διαχείριση κεφαλαίων, συναλλαγών και διαφημίσεων',
+    languageSettings: 'Ρυθμίσεις Γλώσσας',   selectLanguage: 'Επιλογή Γλώσσας',       english: 'Αγγλικά',          greek: 'Ελληνικά',
+    spanish: 'Ισπανικά',                      french: 'Γαλλικά',                      german: 'Γερμανικά',            systemLanguage: 'Γλώσσα Συστήματος (Προεπιλογή)',
+    save: 'Αποθήκευση',                       cancel: 'Άκυρο',                       loading: 'Φόρτωση...',       success: 'Επιτυχία',
+    error: 'Σφάλμα',                          wallet: 'Πορτοφόλι',                   myWallet: 'Το Πορτοφόλι μου',  manageWallet: 'Διαχείριση κεφαλαίων, συναλλαγών και διαφημίσεων',
     deposit: 'Κατάθεση',                      transactions: 'Συναλλαγές',           connectWallet: 'Σύνδεση Πορτοφολιού', addFunds: 'Προσθήκη Χρημάτων',
     amount: 'Ποσό (€)',                      enterAmount: 'Εισάγετε ποσό',            paymentMethod: 'Μέθοδος Πληρωμής', processing: 'Επεξεργασία...',
-    myAccount: 'Ο Λογαριασμός μου',           profile: 'Προφίλ',                     favorites: 'Αγαπημένα',   recentlyViewed: 'Είδατε Πρόσφατα',
-    priceAlerts: 'Ειδοποιήσεις Τιμών',       settings: 'Ρυθμίσεις',                   logout: 'Αποσύνδεση',     myProfile: 'Το Προφίλ μου',
+    myAccount: 'Ο Λογαριασμός μου',           profile: 'Προφίλ',                     favorites: 'Αγαπημένα',      recentlyViewed: 'Είδατε Πρόσφατα',
+    priceAlerts: 'Ειδοποιήσεις Τιμών',       settings: 'Ρυθμίσεις',                   logout: 'Αποσύνδεση',        myProfile: 'Το Προφίλ μου',
     managePersonalInfo: 'Διαχείριση προσωπικών πληροφοριών',
-    name: 'Όνομα',                            memberSince: 'Μέλος από',                role: 'Ρόλος',             administrator: 'Διαχειριστής',
+    name: 'Όνομα',                            memberSince: 'Μέλος από',                role: 'Ρόλος',                administrator: 'Διαχειριστής',
     regularUser: 'Απλός Χρήστης',             editProfile: 'Επεξεργασία Προφίλ',        accountSummary: 'Σύνοψη Λογαριασμού', categories: 'Κατηγορίες',
     gifts: 'Δώρα',                            deals: 'Προσφορές',                     clearFilters: 'Καθαρισμός φίλτρων', finalPrice: 'Τελική τιμή',
-    yes: "Ναι",                              no: "Όχι",                               ok: "OK",                  close: "Κλείσιμο",
-    showMore: "Περισσότερα",                   showLess: "Λιγότερα",                      all: "Όλα",                selectOption: "Επιλέξτε",
-    optional: "Προαιρετικό",                    required: "Απαιτείται",                   back: "Πίσω",              next: "Επόμενο",
+    yes: "Ναι",                              no: "Όχι",                               ok: "OK",                     close: "Κλείσιμο",
+    showMore: "Περισσότερα",                   showLess: "Λιγότερα",                      all: "Όλα",                   selectOption: "Επιλέξτε",
+    optional: "Προαιρετικό",                    required: "Απαιτείται",                   back: "Πίσω",                 next: "Επόμενο",
     submit: "Υποβολή",                        search: "Αναζήτηση",                     searchPlaceholder: "Αναζήτηση προϊόντων...",
     notFoundPageTitle: "Η Σελίδα δεν Βρέθηκε",  notFoundMessage: "Ουπς! Η σελίδα που αναζητάτε δεν υπάρχει.",
     recently_viewed_title: "Είδατε Πρόσφατα",
@@ -416,18 +418,26 @@ const defaultTranslations: Translations = {
     "previewWebsite": "Προεπισκόπηση Ιστοσελίδας",
     "dealsFromVendor": "Προσφορές από {{vendorName}}",
     "popularCategoriesInVendor": "Δημοφιλείς Κατηγορίες {{vendorName}}",
-    "productCountSingular": "προϊόν", // Already defined
-    "productCountPlural": "{{count}} προϊόντα", // Already defined
+    "productCountSingular": "προϊόν",           "productCountPlural": "{{count}} προϊόντα",
     "viewAllVendorProducts": "Δες όλα τα προϊόντα<span class=\"hide-mobile\"> του καταστήματος</span>",
     "storeReviewsTitle": "Αξιολογήσεις Καταστήματος {{vendorName}}",
-    "reviewCount": "{{count}} αξιολογήσεις", // Already defined
+    "reviewCount": "{{count}} αξιολογήσεις",
     "rateIt": "Αξιολόγησέ το",
     "reviewsPlaceholder": "(Προβολή αξιολογήσεων - Χρειάζεται Υλοποίηση)",
     "servicePointsTitle": "Σημεία Εξυπηρέτησης {{vendorName}}",
     "servicePointsCount": "{{count}} σημεία",
     "storeAndPickup": "Κατάστημα / Παραλαβή",
     "mapPlaceholderText": "Map Placeholder - Απαιτείται Βιβλιοθήκη Χάρτη",
-    // "paymentMethods": "Τρόποι Πληρωμής", // Already in general UI
+
+    // ================= UserButton & UserDropdownContent =======================
+    "toggleTheme": "Εναλλαγή θέματος",
+    "productsYouWant": "Προϊόντα που θέλεις",    "productsYouHave": "Προϊόντα που έχεις",
+    "myOffers": "Οι Προσφορές μου",              "priceDrops": "Ειδοποιήσεις Τιμών",
+    "myCollections": "Οι Συλλογές μου",          "newCollection": "Νέα Συλλογή...",
+    "creditsClub": "Credits Club",               "savedOrders": "Αποθηκευμένες Παραγγελίες",
+    "myQuestions": "Οι Ερωτήσεις μου",           "myReviews": "Οι Αξιολογήσεις μου",
+    "myFriends": "Οι Φίλοι μου",                 "viewProfileTooltip": "Δείτε το προφίλ σας",
+    "userMenuCaretAlt": "Άνοιγμα μενού χρήστη",
 
     // ============================ Deals, Brands, Search =======================
     "allBrands": "Όλες οι Μάρκες",               "productsFromBrand": "Προϊόντα από {{brandName}}",
@@ -519,27 +529,15 @@ const defaultTranslations: Translations = {
     // Auth
     email: 'Correo electrónico',               password: 'Contraseña',                  forgotPassword: '¿Olvidaste tu contraseña?', register: 'Registrarse',
     signIn: 'Iniciar sesión',                  loggingIn: 'Iniciando sesión...',         emailPlaceholder: 'email@example.com',     orContinueWith: 'O continuar con',
-    // ... (Rest of your Spanish translations, ensuring all new keys from 'en' and 'el' are added and translated)
-    "product_singular": "producto",              "product_plural": "{{count}} productos",
-    "rating_label": "Clasificación",            "reviews_label_singular": "reseña",      "reviews_label_plural": "{{count}} reseñas",
-    "from_vendor": "de",                         "with": "con",
-    "loadingVendor": "Cargando tienda...",       "allStores": "Tiendas",
-    "certifiedStoreLinkText": "Tienda Certificada ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} es una tienda certificada ({{certificationLevel}})",
-    "memberSinceDate": "En BestPrice desde {{date}}",
-    "ratingTooltip": "{{rating}} estrellas de {{count}} valoraciones",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} más {{storeLabel}}",
-    "storeLabelSingular": "tienda", "storeLabelPlural": "tiendas",
-    "logoFor": "Logo de {{name}}", "screenshotFor": "Captura de pantalla de {{name}}",
-    "authorizedReseller": "Distribuidor Autorizado", "previewWebsite": "Vista Previa del Sitio Web",
-    "dealsFromVendor": "Ofertas de {{vendorName}}", "popularCategoriesInVendor": "Categorías Populares en {{vendorName}}",
-    "viewAllVendorProducts": "Ver todos los productos<span class=\"hide-mobile\"> de la tienda</span>",
-    "storeReviewsTitle": "Reseñas de la Tienda {{vendorName}}",
-    "reviewCount": "{{count}} reseñas",
-    "rateIt": "Califícalo", "reviewsPlaceholder": "(Visualización de reseñas - Implementación necesaria)",
-    "servicePointsTitle": "Puntos de Servicio {{vendorName}}", "servicePointsCount": "{{count}} puntos",
-    "storeAndPickup": "Tienda / Punto de Recogida", "mapPlaceholderText": "Marcador de Posición del Mapa - Requiere Biblioteca de Mapas",
+    // ...
+    "toggleTheme": "Cambiar tema",
+    "productsYouWant": "Productos que quieres",    "productsYouHave": "Productos que tienes",
+    "myOffers": "Mis Ofertas",                     "priceDrops": "Alertas de Precio",
+    "myCollections": "Mis Colecciones",            "newCollection": "Nueva Colección...",
+    "creditsClub": "Club de Créditos",             "savedOrders": "Pedidos Guardados",
+    "myQuestions": "Mis Preguntas",                "myReviews": "Mis Reseñas",
+    "myFriends": "Mis Amigos",                     "viewProfileTooltip": "Ver tu perfil",
+    "userMenuCaretAlt": "Abrir menú de usuario",
     // ... (All other keys from 'en'/'el' translated to 'es')
     'technology': 'Tecnología', 'home-garden': 'Casa y Jardín', // ... ALL CATEGORY SLUGS ...
   },
@@ -547,27 +545,15 @@ const defaultTranslations: Translations = {
   fr: {
     email: 'E-mail',                           password: 'Mot de passe',                forgotPassword: 'Mot de passe oublié ?', register: "S'inscrire",
     signIn: 'Connexion',                       loggingIn: 'Connexion en cours...',       emailPlaceholder: 'email@example.com',    orContinueWith: 'Ou continuer avec',
-    // ... (Rest of your French translations, ensuring all new keys from 'en' and 'el' are added and translated)
-    "product_singular": "produit",               "product_plural": "{{count}} produits",
-    "rating_label": "Évaluation",                "reviews_label_singular": "avis",        "reviews_label_plural": "{{count}} avis",
-    "from_vendor": "de",                         "with": "avec",
-    "loadingVendor": "Chargement du magasin...", "allStores": "Magasins",
-    "certifiedStoreLinkText": "Magasin Certifié ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} est un magasin certifié ({{certificationLevel}})",
-    "memberSinceDate": "Sur BestPrice depuis {{date}}",
-    "ratingTooltip": "{{rating}} étoiles sur {{count}} évaluations",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} autre(s) {{storeLabel}}",
-    "storeLabelSingular": "magasin", "storeLabelPlural": "magasins",
-    "logoFor": "Logo de {{name}}", "screenshotFor": "Capture d'écran de {{name}}",
-    "authorizedReseller": "Revendeur Agréé", "previewWebsite": "Aperçu du Site Web",
-    "dealsFromVendor": "Offres de {{vendorName}}", "popularCategoriesInVendor": "Catégories Populaires chez {{vendorName}}",
-    "viewAllVendorProducts": "Voir tous les produits<span class=\"hide-mobile\"> du magasin</span>",
-    "storeReviewsTitle": "Avis sur le Magasin {{vendorName}}",
-    "reviewCount": "{{count}} avis",
-    "rateIt": "Évaluez-le", "reviewsPlaceholder": "(Affichage des avis - Implémentation nécessaire)",
-    "servicePointsTitle": "Points de Service {{vendorName}}", "servicePointsCount": "{{count}} points",
-    "storeAndPickup": "Magasin / Point de Retrait", "mapPlaceholderText": "Espace réservé pour la carte - Nécessite une bibliothèque de cartes",
+    // ...
+    "toggleTheme": "Changer de thème",
+    "productsYouWant": "Produits souhaités",     "productsYouHave": "Produits possédés",
+    "myOffers": "Mes Offres",                     "priceDrops": "Alertes de Prix",
+    "myCollections": "Mes Collections",            "newCollection": "Nouvelle Collection...",
+    "creditsClub": "Club de Crédits",             "savedOrders": "Commandes Enregistrées",
+    "myQuestions": "Mes Questions",                "myReviews": "Mes Avis",
+    "myFriends": "Mes Amis",                       "viewProfileTooltip": "Voir votre profil",
+    "userMenuCaretAlt": "Ouvrir le menu utilisateur",
     // ... (All other keys from 'en'/'el' translated to 'fr')
     'technology': 'Technologie', 'home-garden': 'Maison et Jardin', // ... ALL CATEGORY SLUGS ...
   },
@@ -575,27 +561,15 @@ const defaultTranslations: Translations = {
   de: {
     email: 'E-Mail',                           password: 'Passwort',                    forgotPassword: 'Passwort vergessen?',    register: 'Registrieren',
     signIn: 'Anmelden',                        loggingIn: 'Anmeldung läuft...',          emailPlaceholder: 'email@example.com',    orContinueWith: 'Oder weiter mit',
-    // ... (Rest of your German translations, ensuring all new keys from 'en' and 'el' are added and translated)
-    "product_singular": "Produkt",               "product_plural": "{{count}} Produkte",
-    "rating_label": "Bewertung",                 "reviews_label_singular": "Bewertung",   "reviews_label_plural": "{{count}} Bewertungen",
-    "from_vendor": "von",                        "with": "mit",
-    "loadingVendor": "Shop wird geladen...",     "allStores": "Shops",
-    "certifiedStoreLinkText": "Zertifizierter Shop ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} ist ein zertifizierter Shop ({{certificationLevel}})",
-    "memberSinceDate": "Bei BestPrice seit {{date}}",
-    "ratingTooltip": "{{rating}} Sterne von {{count}} Bewertungen",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} weitere {{storeLabel}}",
-    "storeLabelSingular": "Shop", "storeLabelPlural": "Shops",
-    "logoFor": "{{name}} Logo", "screenshotFor": "{{name}} Screenshot",
-    "authorizedReseller": "Autorisierter Händler", "previewWebsite": "Webseite Vorschau",
-    "dealsFromVendor": "Angebote von {{vendorName}}", "popularCategoriesInVendor": "Beliebte Kategorien bei {{vendorName}}",
-    "viewAllVendorProducts": "Alle Produkte<span class=\"hide-mobile\"> des Shops anzeigen</span>",
-    "storeReviewsTitle": "Shop-Bewertungen für {{vendorName}}",
-    "reviewCount": "{{count}} Bewertungen",
-    "rateIt": "Bewerten", "reviewsPlaceholder": "(Bewertungsanzeige - Implementierung erforderlich)",
-    "servicePointsTitle": "Servicestellen {{vendorName}}", "servicePointsCount": "{{count}} Stellen",
-    "storeAndPickup": "Shop / Abholstelle", "mapPlaceholderText": "Kartenplatzhalter - Kartenbibliothek erforderlich",
+    // ...
+    "toggleTheme": "Theme wechseln",
+    "productsYouWant": "Gewünschte Produkte",   "productsYouHave": "Besessene Produkte",
+    "myOffers": "Meine Angebote",                "priceDrops": "Preisbenachrichtigungen",
+    "myCollections": "Meine Sammlungen",         "newCollection": "Neue Sammlung...",
+    "creditsClub": "Credits Club",               "savedOrders": "Gespeicherte Bestellungen",
+    "myQuestions": "Meine Fragen",               "myReviews": "Meine Bewertungen",
+    "myFriends": "Meine Freunde",                 "viewProfileTooltip": "Dein Profil ansehen",
+    "userMenuCaretAlt": "Benutzermenü öffnen",
     // ... (All other keys from 'en'/'el' translated to 'de')
     'technology': 'Technologie', 'home-garden': 'Haus und Garten', // ... ALL CATEGORY SLUGS ...
   }
