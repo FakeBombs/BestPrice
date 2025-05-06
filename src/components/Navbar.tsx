@@ -71,10 +71,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
             <SearchBar className="mb-4" />
             <nav className="flex flex-col space-y-4">
               <div className="flex items-center justify-between">
-                <Link to="/account" className="text-sm font-medium">
-                  My Account
-                </Link>
-                <ThemeToggle />
+                <Link to="/account" className="text-sm font-medium">My Account</Link>
               </div>
             </nav>
           </div>
