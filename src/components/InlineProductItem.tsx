@@ -5,54 +5,78 @@ import { Product, ProductPrice } from '@/data/mockData';
 interface InlineProductItemProps {
     product: Product;
     bpref?: string; // Optional tracking parameter
+    activeVendorFilterDomain?: string | null; // <-- New prop for vendor filter
 }
 
-export const InlineProductItem: React.FC<InlineProductItemProps> = ({ product, bpref }) => {
+export const InlineProductItem: React.FC<InlineProductItemProps> = ({
+    product,
+    bpref,
+    activeVendorFilterDomain // <-- Destructure the new prop
+}) => {
     // Find the best price (you might already have a function for this)
     const bestPriceInfo = useMemo(() => {
         if (!product || !product.prices || product.prices.length === 0) return null;
         const inStockPrices = product.prices.filter(price => price.inStock);
         if (inStockPrices.length === 0) return null; // Only show in-stock for slider? Or show lowest out-of-stock? Decide here.
-        return inStockPrices.reduce((best, current) => (current.price < best.price) ? current : best, inStockPrices[0]);
+        // Find the price object with the lowest price (considering discount)
+        return inStockPrices.reduce((best, current) => {
+             const bestEffectivePrice = best.discountPrice ?? best.price;
+             const currentEffectivePrice = current.discountPrice ?? current.price;
+             return currentEffectivePrice < bestEffectivePrice ? current : best;
+        }, inStockPrices[0]);
     }, [product]);
 
     // Placeholder for price drop calculation - THIS NEEDS REAL LOGIC
     const calculatePriceDrop = () => {
-        // Example: Check if discountPrice exists
         if (bestPriceInfo?.discountPrice && bestPriceInfo.price > bestPriceInfo.discountPrice) {
             const dropPercentage = Math.round(((bestPriceInfo.price - bestPriceInfo.discountPrice) / bestPriceInfo.price) * 100);
-            // Simple class logic, adjust as needed
             const dropClass = dropPercentage >= 40 ? 'drop--40' : dropPercentage >= 30 ? 'drop--30' : dropPercentage >= 10 ? 'drop--10' : '';
             if (dropPercentage >= 10) {
                  return { percentage: dropPercentage, className: `drop ${dropClass}` };
             }
         }
-        // Add more complex logic here if you track historical prices
         return null;
     };
 
     const priceDrop = calculatePriceDrop();
-    const displayPrice = bestPriceInfo?.discountPrice || bestPriceInfo?.price;
+    // Use the effective price (discount or regular) from the bestPriceInfo object
+    const displayPrice = bestPriceInfo?.discountPrice ?? bestPriceInfo?.price;
 
     if (!bestPriceInfo || displayPrice === undefined) {
-        return null; // Don't render if no price info
+        return null; // Don't render if no valid price info
     }
 
     const formatPrice = (price: number) => {
-        // Simple formatter, adjust for your currency/locale needs
         return price.toLocaleString('el-GR', { style: 'currency', currency: 'EUR' });
     };
+
+    // --- Construct Target URL ---
+    const productSlug = product.slug || product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') || 'product';
+    const baseProductUrl = `/item/${product.id}/${productSlug}.html`; // Assuming .html extension based on previous examples
+
+    // Build query parameters string
+    const queryParams = new URLSearchParams();
+    if (bpref) {
+        queryParams.set('bpref', bpref);
+    }
+    if (activeVendorFilterDomain) {
+        queryParams.set('filter', `store:${activeVendorFilterDomain}`);
+    }
+
+    const queryString = queryParams.toString();
+    const targetUrl = queryString ? `${baseProductUrl}?${queryString}` : baseProductUrl;
+    // --- End Construct Target URL ---
 
     return (
         <Link
             data-id={product.id}
-            data-cid={product.categoryIds[0]} // Assuming first category ID is relevant
-            data-price={Math.round(displayPrice * 100)} // Price in cents? Adjust if needed
-            className={`pi ${priceDrop ? 'pi--deal' : ''}`} // Add pi--deal class if there's a drop
-            to={`/item/${product.id}/${product.slug || product.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=${bpref || 'cat-slider'}`}
+            data-cid={product.categoryIds?.[0]} // Use optional chaining
+            data-price={Math.round(displayPrice * 100)}
+            className={`pi ${priceDrop ? 'pi--deal' : ''}`}
+            to={targetUrl} // Use the dynamically constructed URL
         >
             <div className="pi__image">
-                <img width={70} height={70} alt={product.title} src={product.image} loading="lazy" />
+                <img width={70} height={70} alt={product.title} src={product.image || '/dist/images/placeholder.png'} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/dist/images/placeholder.png'; }}/>
             </div>
             <div className="pi__meta">
                 <h3 className="pi__title">{product.title}</h3>
