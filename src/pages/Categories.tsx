@@ -132,11 +132,140 @@ const Categories: React.FC = () => {
 
   const renderBreadcrumbs = useCallback(() => { const trailItems: React.ReactNode[] = []; trailItems.push(<li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>); if (currentCategory) { const ancestors: Category[] = []; let category: Category | undefined = currentCategory; while (category?.parentId !== null && category?.parentId !== undefined) { const parent = allCategoriesList.find((cat) => cat.id === category?.parentId); if (parent) { ancestors.unshift(parent); category = parent; } else category = undefined; } ancestors.forEach((cat) => { trailItems.push(<li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{t(cat.slug)}</Link></li>); }); trailItems.push(<li key={currentCategory.id}><span>{t(currentCategory.slug)}</span></li>); } return ( <div id="trail"> <nav className="breadcrumb"><ol>{trailItems.reduce((acc: React.ReactNode[], item, index) => (<React.Fragment key={index}>{acc}{index > 0 && <span className="trail__breadcrumb-separator">›</span>}{item}</React.Fragment>), null)}</ol></nav> </div> ); }, [currentCategory, allCategoriesList, t]);
 
-  const renderTopDealsSlider = useCallback(() => { if (!currentCategory) return null; const dealProducts = getProductsForSections( p => (p.prices || []).some(pr => pr.discountPrice && pr.discountPrice < pr.price) ); if (dealProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title"> <Link to={`/deals/${currentCategory.id}/${currentCategory.slug}.html?bpref=root-cat-deals`}> 🔥 {t('top_deals_in')} {t(currentCategory.slug)} </Link> </h2> <p className="section__subtitle">{t('products_with_significant_price_drop')}</p> </hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {dealProducts.map(prod => ( <ProductCard key={`deal-${prod.id}`} product={prod} className="p p--card p--card-slider"/> ))} </div> </ScrollableSlider> </section> ); }, [currentCategory, getProductsForSections, t]);
-  const renderHotProductsSlider = useCallback(() => { if (!currentCategory) return null; const hotProducts = getProductsForSections( () => true, (a, b) => (b.rating || 0) - (a.rating || 0) ); if (hotProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">🚀 {t('hottest_in')} {t(currentCategory.slug)}</h2> </hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {hotProducts.map(prod => ( <ProductCard key={`hot-${prod.id}`} product={prod} className="p p--card p--card-slider"/> ))} </div> </ScrollableSlider> </section> ); }, [currentCategory, getProductsForSections, t]);
-  const renderProductReviewsSlider = useCallback(() => { if (!currentCategory) return null; const reviewedProducts = getProductsForSections( p => (p.reviews || 0) > 0, (a, b) => (b.reviews || 0) - (a.reviews || 0) ); if (reviewedProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">{t('product_reviews_title')}</h2> <p className="section__subtitle">{t('helpful_reviews_subtitle')}</p> </hgroup> </header> <ScrollableSlider> <div className="scroll__content" style={{ display: 'flex', gap: '15px' }}> {reviewedProducts.map(prod => ( <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}> <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}> <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div> {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews} {t('reviews_label', { count: prod.reviews })})</p>} </Link> </div> ))} </div> </ScrollableSlider> </section> ); }, [currentCategory, getProductsForSections, t]);
-  const renderPopularBrands = useCallback(() => { if (!currentCategory) return null; const popularBrandNames = Array.from(new Set(productsFromDescendants.map(p => p.brand).filter(Boolean))); const popularBrandObjects = popularBrandNames .map(name => brands.find(b => b.name === name)) .filter((b): b is Brand => !!b) .slice(0, 10); if (popularBrandObjects.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">{t('popular_manufacturers')}</h2></hgroup> </header> <div className="root-category__brands"> {popularBrandObjects.map(brand => ( <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html?bpref=cat-brand`}> <img src={brand.logo} width="90" height="30" alt={brand.name} loading="lazy"/> </Link> ))} </div> </section> ); }, [currentCategory, productsFromDescendants, t]);
-  const renderRecentlyViewedSlider = useCallback(() => { if (!currentCategory) return null; const recentlyViewed = productsFromDescendants.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); if (recentlyViewed.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">{t('recently_viewed_title')}</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {recentlyViewed.map(prod => ( <ProductCard key={`recent-${prod.id}`} product={prod} className="p p--card p--card-slider"/> ))} </div> </ScrollableSlider> </section> ); }, [currentCategory, productsFromDescendants, t]);
+  const renderTopDealsSlider = useCallback(() => {
+      if (!currentCategory) return null;
+      const sourceProducts = productsFromDescendantsOfCurrentCategory; // Using all products of the current category and its descendants
+      const dealProducts = getProductsForSections(
+          sourceProducts,
+          p => (p.prices || []).some(pr => pr.discountPrice && pr.discountPrice < pr.price)
+      );
+      if (dealProducts.length === 0) return null;
+      return (
+          <section className="section">
+              <header className="section__header">
+                  <hgroup className="section__hgroup">
+                      <h2 className="section__title">
+                          <Link to={`/deals/${currentCategory.id}/${currentCategory.slug}.html?bpref=root-cat-deals`}>
+                              🔥 {t('top_deals_in')} {t(currentCategory.slug)}
+                          </Link>
+                      </h2>
+                      <p className="section__subtitle">{t('products_with_significant_price_drop')}</p>
+                  </hgroup>
+              </header>
+              <ScrollableSlider>
+                  <div className="p__products--scroll p__products--inline scroll__content">
+                      {dealProducts.map(prod => (
+                          <ProductCard key={`deal-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
+                      ))}
+                  </div>
+              </ScrollableSlider>
+          </section>
+      );
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, getProductsForSections, t]);
+
+  const renderHotProductsSlider = useCallback(() => {
+      if (!currentCategory) return null;
+      const sourceProducts = productsFromDescendantsOfCurrentCategory; // Using all products of the current category and its descendants
+      const hotProducts = getProductsForSections(
+          sourceProducts,
+          () => true, // No specific filter, just sort
+          (a, b) => (b.rating || 0) - (a.rating || 0)
+      );
+      if (hotProducts.length === 0) return null;
+      return (
+          <section className="section">
+              <header className="section__header">
+                  <hgroup className="section__hgroup">
+                      <h2 className="section__title">🚀 {t('hottest_in')} {t(currentCategory.slug)}</h2>
+                  </hgroup>
+              </header>
+              <ScrollableSlider>
+                  <div className="p__products--scroll p__products--inline scroll__content">
+                      {hotProducts.map(prod => (
+                          <ProductCard key={`hot-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
+                      ))}
+                  </div>
+              </ScrollableSlider>
+          </section>
+      );
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, getProductsForSections, t]);
+
+  const renderProductReviewsSlider = useCallback(() => {
+      if (!currentCategory) return null;
+      const sourceProducts = productsFromDescendantsOfCurrentCategory; // Using all products of the current category and its descendants
+      const reviewedProducts = getProductsForSections(
+          sourceProducts,
+          p => (p.reviews || 0) > 0,
+          (a, b) => (b.reviews || 0) - (a.reviews || 0)
+      );
+      if (reviewedProducts.length === 0) return null;
+      return (
+          <section className="section">
+              <header className="section__header">
+                  <hgroup className="section__hgroup">
+                      <h2 className="section__title">{t('product_reviews_title')}</h2>
+                      <p className="section__subtitle">{t('helpful_reviews_subtitle')}</p>
+                  </hgroup>
+              </header>
+              <ScrollableSlider>
+                  <div className="scroll__content" style={{ display: 'flex', gap: '15px' }}>
+                      {reviewedProducts.map(prod => (
+                          <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}>
+                              <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}>
+                                  <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div>
+                                  {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews} {t('reviews_label', { count: prod.reviews })})</p>}
+                              </Link>
+                          </div>
+                      ))}
+                  </div>
+              </ScrollableSlider>
+          </section>
+      );
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, getProductsForSections, t]);
+
+  const renderPopularBrands = useCallback(() => {
+    if (!currentCategory) return null;
+    const popularBrandNames = Array.from(new Set(productsFromDescendantsOfCurrentCategory.map(p => p.brand).filter(Boolean))); // Corrected
+    const popularBrandObjects = popularBrandNames
+        .map(name => brands.find(b => b.name === name))
+        .filter((b): b is Brand => !!b)
+        .slice(0, 10);
+    if (popularBrandObjects.length === 0) return null;
+    return (
+        <section className="section">
+            <header className="section__header">
+                <hgroup className="section__hgroup"><h2 className="section__title">{t('popular_manufacturers')}</h2></hgroup>
+            </header>
+            <div className="root-category__brands">
+                {popularBrandObjects.map(brand => (
+                    <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html?bpref=cat-brand`}>
+                        <img src={brand.logo} width="90" height="30" alt={brand.name} loading="lazy"/>
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]); // Corrected dependency
+
+  const renderRecentlyViewedSlider = useCallback(() => {
+    if (!currentCategory) return null;
+    const recentlyViewed = productsFromDescendantsOfCurrentCategory.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); // Corrected
+    if (recentlyViewed.length === 0) return null;
+    return (
+        <section className="section">
+            <header className="section__header">
+                <hgroup className="section__hgroup"><h2 className="section__title">{t('recently_viewed_title')}</h2></hgroup>
+            </header>
+            <ScrollableSlider>
+                <div className="p__products--scroll p__products--inline scroll__content">
+                    {recentlyViewed.map(prod => (
+                        <ProductCard key={`recent-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
+                    ))}
+                </div>
+            </ScrollableSlider>
+        </section>
+    );
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]); // Corrected dependency
 
   // *** Popular Categories Section (Shows GRANDCHILDREN for Main Category) ***
   const renderPopularCategoriesSection = useCallback((mainCategory: Category) => {
@@ -314,7 +443,7 @@ const Categories: React.FC = () => {
         )}
       </>
     );
-   }, [currentCategory, allCategoriesList, renderProducts, handlePriceAlert, t, renderPopularCategoriesSection, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider]);
+   }, [currentCategory, allCategoriesList, renderProducts, handlePriceAlert, t, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider]); // Removed renderPopularCategoriesSection as it's not directly used here but passed down
 
   // --- Merchant Info Rendering ---
   const renderMerchantInformation = useCallback(() => { if (!selectedVendor) return null; const vendor = selectedVendor; const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleMultiVendorToggle(vendor); }; const vendorUrl = `/m/${vendor.id}/${vendor.name?.toLowerCase().replace(/\s+/g, '-') || vendor.id}`; return ( <div className="root__wrapper information information--center" data-type="merchant-brand"> <div className="root"> <div data-tooltip-no-border="" data-tooltip={`${t('info_for_certified_store')} ${vendor.name} (${vendor.certification})`}> <div className="merchant-logo"> <Link to={vendorUrl}> <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} /> </Link> <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg> </div> </div> <div className="information__content"> <p>{t('showing_products_from_store')} <strong><Link to={vendorUrl}>{vendor.name}</Link></strong></p> <p><Link to="#" onClick={removeThisVendorFilter}>{t('remove_filter')}</Link></p> </div> <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span> </div> </div> ); }, [selectedVendor, handleMultiVendorToggle, t]);
