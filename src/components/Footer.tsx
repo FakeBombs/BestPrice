@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products, vendors, mainCategories, Category } from '@/data/mockData'; // Added Category type
-import { useLanguageContext } from '@/context/LanguageContext';
+import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
+import LanguageModal from '@/components/LanguageModal';
 
-// Define the getStatsData function outside the component as it doesn't depend on component state/props
+// Define the getStatsData function outside the component
 const getStatsData = () => {
     const totalProducts = products.length;
     const totalVendors = vendors.length;
@@ -19,62 +19,8 @@ const getStatsData = () => {
     };
 };
 
-// DRASTICALLY SIMPLIFIED Language Modal Component for DEBUGGING Error #310
-interface LanguageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t } = useTranslation(); // Still need t for the title and close button
-
-  if (!isOpen) return null;
-
-  // Temporarily disable language setting logic to isolate the rendering error
-  const handleTestLanguageClick = () => {
-    console.log("Test language button clicked inside simplified modal.");
-    // const { setLanguage } = useLanguageContext(); // Would get this if enabling
-    // setLanguage('en'); // Example
-    onClose();
-  };
-
-  return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" 
-      onClick={onClose} // Close if overlay is clicked
-    >
-      <div 
-        className="bg-background p-6 rounded-lg shadow-xl w-full max-w-sm" // Simplified styling and size
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal content
-      >
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">
-            {t('selectYourLanguageTitle', 'Select Your Language')}
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted" // Basic styling for close button
-            aria-label={t('close', 'Close')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
-        
-        <p className="mb-4">Simplified modal content for debugging.</p>
-        <button
-          onClick={handleTestLanguageClick}
-          className="w-full p-2 rounded bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          Test Language Option (Does not change language)
-        </button>
-      </div>
-    </div>
-  );
-};
-
-
 const Footer: React.FC = () => {
-    const { t, language } = useTranslation();
+    const { t, language } = useTranslation(); // language might be used for date formatting if needed
     const stats = useMemo(() => getStatsData(), []); 
     const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
@@ -96,9 +42,9 @@ const Footer: React.FC = () => {
             
             <div className="footer__top">
             <div className="footer__aside">
-              <Link rel="home" title={t('breadcrumbHome', 'BestPrice')} className="footer__logo pressable" to="/">
+              <Link rel="home" title={t('breadcrumbHome')} className="footer__logo pressable" to="/">
                 <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
-                <span>BestPrice</span> {/* Brand name likely stays untranslated */}
+                <span>BestPrice</span> {/* Brand name kept as is */}
               </Link>
               <div className="footer__identity">
                 <p>{t('bestpriceSloganShort')}</p>
