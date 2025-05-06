@@ -213,6 +213,7 @@ const Categories: React.FC = () => {
                           <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}>
                               <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}>
                                   <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div>
+                                  {/* MODIFICATION POINT for Option 2 */}
                                   {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews}{' '} {prod.reviews === 1 ? t('reviews_label_singular') : t('reviews_label_plural', { count: prod.reviews })}</p>}
                               </Link>
                           </div>
@@ -225,7 +226,7 @@ const Categories: React.FC = () => {
 
   const renderPopularBrands = useCallback(() => {
     if (!currentCategory) return null;
-    const popularBrandNames = Array.from(new Set(productsFromDescendantsOfCurrentCategory.map(p => p.brand).filter(Boolean))); // Corrected
+    const popularBrandNames = Array.from(new Set(productsFromDescendantsOfCurrentCategory.map(p => p.brand).filter(Boolean)));
     const popularBrandObjects = popularBrandNames
         .map(name => brands.find(b => b.name === name))
         .filter((b): b is Brand => !!b)
@@ -245,11 +246,11 @@ const Categories: React.FC = () => {
             </div>
         </section>
     );
-  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]); // Corrected dependency
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]);
 
   const renderRecentlyViewedSlider = useCallback(() => {
     if (!currentCategory) return null;
-    const recentlyViewed = productsFromDescendantsOfCurrentCategory.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); // Corrected
+    const recentlyViewed = productsFromDescendantsOfCurrentCategory.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT);
     if (recentlyViewed.length === 0) return null;
     return (
         <section className="section">
@@ -265,29 +266,21 @@ const Categories: React.FC = () => {
             </ScrollableSlider>
         </section>
     );
-  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]); // Corrected dependency
+  }, [currentCategory, productsFromDescendantsOfCurrentCategory, t]);
 
-  // *** Popular Categories Section (Shows GRANDCHILDREN for Main Category) ***
   const renderPopularCategoriesSection = useCallback((mainCategory: Category) => {
-      if (!mainCategory || !mainCategory.isMain) return null; // Only for main categories
+      if (!mainCategory || !mainCategory.isMain) return null;
 
       const childrenOfMain = allCategoriesList.filter(cat => cat.parentId === mainCategory.id);
       const childrenIds = childrenOfMain.map(c => c.id);
       let grandchildrenAndBeyond: Category[] = [];
       childrenIds.forEach(childId => {
           grandchildrenAndBeyond = grandchildrenAndBeyond.concat(
-              allCategoriesList.filter(cat => cat.parentId === childId) // Direct grandchildren
+              allCategoriesList.filter(cat => cat.parentId === childId)
           );
-          // Optionally, recurse deeper if needed:
-          // getDescendantCategoryIds(childId, allCategoriesList)
-          //    .filter(id => id !== childId) // Exclude the child itself
-          //    .forEach(descId => {
-          //        const descCat = allCategoriesList.find(c => c.id === descId);
-          //        if(descCat) grandchildrenAndBeyond.push(descCat);
-          //    });
       });
 
-      const popularToShow = Array.from(new Set(grandchildrenAndBeyond)) // Remove duplicates if any from deeper recursion
+      const popularToShow = Array.from(new Set(grandchildrenAndBeyond))
           .sort((a, b) => (categoryProductCounts[b.id] || 0) - (categoryProductCounts[a.id] || 0))
           .slice(0, POPULAR_CATEGORY_COUNT);
 
@@ -314,7 +307,7 @@ const Categories: React.FC = () => {
               </div>
           </section>
       );
-  }, [allCategoriesList, categoryProductCounts, t]); // Dependencies
+  }, [allCategoriesList, categoryProductCounts, t]);
 
   const renderAppliedFilters = useCallback(() => { const { brands, specs, deals, certified, nearby, boxnow, instock } = activeFilters; const isAnyFilterActive = brands.length > 0 || Object.values(specs).some(v => v.length > 0) || deals || certified || nearby || boxnow || instock; if (!isAnyFilterActive) return null; const renderChip = (key: string, title: string, label: string, onRemove: () => void) => (<h2 className="applied-filters__filter" key={key}><a className="pressable" onClick={(e) => { e.preventDefault(); onRemove(); }} title={title}><span className="applied-filters__label">{label}</span><svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></a></h2>); return ( <div className="applied-filters"> {instock && renderChip('instock', t('remove_instock_filter'), t('instock_label'), handleInstockToggle)} {deals && renderChip('deals', t('remove_deals_filter'), t('deals_label'), handleDealsToggle)} {certified && renderChip('certified', t('remove_certified_filter'), t('certified_label'), handleCertifiedToggle)} {nearby && renderChip('nearby', t('remove_nearby_filter'), t('nearby_label'), handleNearbyToggle)} {boxnow && renderChip('boxnow', t('remove_boxnow_filter'), t('boxnow_label'), handleBoxnowToggle)} {brands.map((brand) => renderChip(`brand-${brand}`, `${t('remove_brand_filter')} ${brand}`, brand, () => handleBrandFilter(brand)))} {Object.entries(specs).flatMap(([specKey, specValues]) => specValues.map((specValue) => renderChip(`spec-${specKey}-${specValue}`, `${t('remove_spec_filter')} ${t(specKey.toLowerCase().replace(/\s+/g, '-'))}: ${specValue}`, `${t(specKey.toLowerCase().replace(/\s+/g, '-'))}: ${specValue}`, () => handleSpecFilter(specKey, specValue))) )} <button className="applied-filters__reset pressable" onClick={handleResetFilters} title={t('reset_all_filters')}><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg><span>{t('clear_all_filters')}</span></button> </div> ); }, [activeFilters, handleInstockToggle, handleDealsToggle, handleCertifiedToggle, handleNearbyToggle, handleBoxnowToggle, handleBrandFilter, handleSpecFilter, handleResetFilters, t]);
 
@@ -341,7 +334,8 @@ const Categories: React.FC = () => {
               <div className="page-header__title-main">
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
-                   <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? t('product_singular') : t('product_plural', { count: filteredProducts.length })}</div>
+                   {/* MODIFICATION POINT for Option 2 */}
+                   <div className="page-header__count">{filteredProducts.length}{' '} {filteredProducts.length === 1 ? t('product_singular') : t('product_plural', { count: filteredProducts.length })}</div>
                    {filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
@@ -364,7 +358,7 @@ const Categories: React.FC = () => {
         </main>
       </div>
     );
-   }, [ currentCategory, baseCategoryProducts, filteredProducts, activeFilters, availableBrands, availableSpecs, certifiedVendors, sliderProducts, showMoreBrands, showMoreSpecs, showMoreVendors, sortType, handlePriceAlert, handleResetFilters, handleLinkFilterClick, handleBrandFilter, handleSpecFilter, handleCertifiedVendorSelect, handleSortChange, dynamicPageTitle, displayedBrand, shouldShowBrandSort, isSingleVendorSelected, singleSelectedVendorId, sortedAvailableBrandKeys, sortedAvailableSpecKeys, activeVendorDomainForProductLink, renderAppliedFilters, t // Added `t`
+   }, [ currentCategory, baseCategoryProducts, filteredProducts, activeFilters, availableBrands, availableSpecs, certifiedVendors, sliderProducts, showMoreBrands, showMoreSpecs, showMoreVendors, sortType, handlePriceAlert, handleResetFilters, handleLinkFilterClick, handleBrandFilter, handleSpecFilter, handleCertifiedVendorSelect, handleSortChange, dynamicPageTitle, displayedBrand, shouldShowBrandSort, isSingleVendorSelected, singleSelectedVendorId, sortedAvailableBrandKeys, sortedAvailableSpecKeys, activeVendorDomainForProductLink, renderAppliedFilters, t
   ]);
 
   const renderMainCategories = useCallback(() => {
@@ -377,11 +371,9 @@ const Categories: React.FC = () => {
         <div className="root-category__categories">
           {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={t(subCat.slug)} title={t(subCat.slug)} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{t(subCat.slug)}</Link></h3><div className="root-category__footer"><div className="root-category__links">{allCategoriesList.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{t(linkedSubCat.slug)}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>{t('no_subcategories')}</p>)}
         </div>
-        {/* Sections Rendered AFTER Main Category Grid */}
         <div className="sections" style={{ paddingTop: '5.84rem' }}>
           {renderPopularCategoriesSection(currentCategory)}
           {renderTopDealsSlider()}
-          {/* Large Price Alert Button AT BOTTOM for Main Category */}
           <div className="p__products-section">
             <div className="alerts">
               <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={t(mainCat.slug)} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">{t('price_alert_button')}</span></button>
@@ -394,7 +386,7 @@ const Categories: React.FC = () => {
         </div>
       </>
     );
-  }, [currentCategory, allCategoriesList, t, renderPopularCategoriesSection, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider, handlePriceAlert]); // Added dependencies
+  }, [currentCategory, allCategoriesList, t, renderPopularCategoriesSection, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider, handlePriceAlert]);
 
   const renderSubcategories = useCallback((category: Category) => {
     if (!category || category.isMain) return null;
@@ -404,7 +396,6 @@ const Categories: React.FC = () => {
 
     return (
       <>
-        {/* Conditionally render Subcategory Static Header */}
         {!showProductsInsteadOfChildren && (
             <div className="page-header">
               <div className="hgroup">
@@ -416,16 +407,13 @@ const Categories: React.FC = () => {
             </div>
         )}
 
-        {/* Render child categories grid OR product list */}
         {!showProductsInsteadOfChildren ? (
           <>
             <div className="root-category__categories">
               {childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={t(subCat.slug)} title={t(subCat.slug)} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{t(subCat.slug)}</Link></h3><div className="root-category__footer"><div className="root-category__links">{allCategoriesList.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{t(linkedSubCat.slug)}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}
             </div>
-            {/* Sections Rendered AFTER Subcategory Grid */}
             <div className="sections" style={{ paddingTop: '5.84rem' }}>
               {renderTopDealsSlider()}
-              {/* *** Large Price Alert Button at BOTTOM of Subcategories (Unconditional) *** */}
               <div className="p__products-section">
                 <div className="alerts">
                   <button data-url={`/cat/${category.id}/${category.slug}`} data-title={t(category.slug)} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">{t('price_alert_button')}</span></button>
@@ -443,7 +431,7 @@ const Categories: React.FC = () => {
         )}
       </>
     );
-   }, [currentCategory, allCategoriesList, renderProducts, handlePriceAlert, t, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider]); // Removed renderPopularCategoriesSection as it's not directly used here but passed down
+   }, [currentCategory, allCategoriesList, renderProducts, handlePriceAlert, t, renderTopDealsSlider, renderHotProductsSlider, renderProductReviewsSlider, renderPopularBrands, renderRecentlyViewedSlider]);
 
   // --- Merchant Info Rendering ---
   const renderMerchantInformation = useCallback(() => { if (!selectedVendor) return null; const vendor = selectedVendor; const removeThisVendorFilter = (e: React.MouseEvent) => { e.preventDefault(); handleMultiVendorToggle(vendor); }; const vendorUrl = `/m/${vendor.id}/${vendor.name?.toLowerCase().replace(/\s+/g, '-') || vendor.id}`; return ( <div className="root__wrapper information information--center" data-type="merchant-brand"> <div className="root"> <div data-tooltip-no-border="" data-tooltip={`${t('info_for_certified_store')} ${vendor.name} (${vendor.certification})`}> <div className="merchant-logo"> <Link to={vendorUrl}> <img loading="lazy" src={vendor.logo} width={90} height={30} alt={`${vendor.name} logo`} /> </Link> <svg aria-hidden="true" className="icon merchant__certification" width={22} height={22}><use href={`/dist/images/icons/certification.svg#icon-${vendor.certification?.toLowerCase()}-22`}></use></svg> </div> </div> <div className="information__content"> <p>{t('showing_products_from_store')} <strong><Link to={vendorUrl}>{vendor.name}</Link></strong></p> <p><Link to="#" onClick={removeThisVendorFilter}>{t('remove_filter')}</Link></p> </div> <span><svg aria-hidden="true" className="icon information__close pressable" width={12} height={12} onClick={removeThisVendorFilter}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg></span> </div> </div> ); }, [selectedVendor, handleMultiVendorToggle, t]);
@@ -459,10 +447,9 @@ const Categories: React.FC = () => {
       <div className="root__wrapper root-category__root">
         <div className="root">
           {renderBreadcrumbs()}
-          {/* Call main or subcategory rendering */}
           {currentCategory?.isMain ? renderMainCategories() : renderSubcategories(currentCategory!)}
           {isPriceAlertModalOpen && priceAlertContext && currentCategory && (
-               <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="category" categoryId={priceAlertContext.categoryId} categoryName={t(currentCategory.slug)} /* Use translated name */ filters={priceAlertContext.filters} />
+               <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="category" categoryId={priceAlertContext.categoryId} categoryName={t(currentCategory.slug)} filters={priceAlertContext.filters} />
            )}
         </div>
       </div>
