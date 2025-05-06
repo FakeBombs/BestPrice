@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
+import { brands, products, vendors, mainCategories, Category } from '@/data/mockData'; // Added Category type
 import { useLanguageContext } from '@/context/LanguageContext';
 
 // Define the getStatsData function outside the component as it doesn't depend on component state/props
@@ -25,73 +25,51 @@ interface LanguageModalProps {
   onClose: () => void;
 }
 
+// Define a more comprehensive language list structure
+type LanguageOption = {
+  code: string; // Standard language code e.g., 'en-US', 'el', 'fr-FR'
+  name: string; // Native name of the language e.g., "Ελληνικά", "English (US)"
+  englishName: string; // English name for sorting or display if needed
+  regionKey: string; // For categorizing e.g., "languageCategoryEurope"
+};
+
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
+  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
+  { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
+  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
+  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
+  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
+  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
+  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
+  { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
+  { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
+  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
+  { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' },
+  { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
+  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' },
+  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
+];
+
+const LANGUAGE_REGIONS_FOR_MODAL = [
+    { key: "suggested", nameKey: "suggestedLanguages" },
+    { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+];
+
+
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentLanguageSetting } = useTranslation(); // currentLanguageSetting from context
-  const { setLanguage: setContextLanguage, language: currentContextLang } = useLanguageContext(); // Get setLanguage and current context lang
-
-
-  // Simpler list for now, matching your Language type for direct setting
-  const languages: { code: 'en' | 'el' | 'es' | 'fr' | 'de'; nameKey: string }[] = [
-    { code: 'el', nameKey: 'greek' },
-    { code: 'en', nameKey: 'english' },
-    { code: 'es', nameKey: 'spanish' },
-    { code: 'fr', nameKey: 'french' },
-    { code: 'de', nameKey: 'german' },
-  ];
-
-  // More comprehensive list for Facebook-like UI (you would expand this)
-    type LanguageOption = {
-        code: string; // e.g., 'el', 'en-US'
-        name: string; // Native name
-        englishName: string; // English name for sorting
-        regionKey: string; // Key for the region category
-    };
-
-    const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-        // Suggested (these will also appear in their respective regions)
-        { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
-        { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-        { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
-        { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
-
-
-        // Europe
-        { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
-        { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
-        { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
-        { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
-        { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
-
-
-        // Americas
-        { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
-        { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
-        { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
-
-        // Asia
-        { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
-        { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
-        { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
-        { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
-        { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
-        { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' }, // Also Middle East
-
-        // Africa & Middle East
-        { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
-        { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' }, // Also Europe
-        { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
-    ];
-
-    const LANGUAGE_REGIONS_FOR_MODAL = [
-        { key: "suggested", nameKey: "suggestedLanguages" },
-        { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-        { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
-        { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
-        { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
-    ];
-
+  const { t, language: currentContextLang } = useTranslation();
+  const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
-
 
   if (!isOpen) return null;
 
@@ -100,9 +78,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
         setContextLanguage(simpleLangCode);
     } else {
-        // Fallback or warning if the full code doesn't map to a supported simple code
-        console.warn(`Selected language code ${langCode} not directly supported, attempting base code ${simpleLangCode}`);
-        // Attempt to set with base code if it's one of the supported ones
+        console.warn(`Unsupported language code: ${langCode}. Defaulting or keeping current.`);
         if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
             setContextLanguage(simpleLangCode);
         }
@@ -110,14 +86,17 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang => 
-    ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)
-  );
+  const suggestedLangsToDisplay = useMemo(() => {
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)
+    );
+  }, []);
 
   const languagesToDisplay = useMemo(() => {
     if (selectedRegion === "suggested") return suggestedLangsToDisplay;
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion).sort((a,b) => a.name.localeCompare(b.name));
-  }, [selectedRegion, suggestedLangsToDisplay]);
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion)
+                                  .sort((a,b) => a.name.localeCompare(b.name, currentContextLang));
+  }, [selectedRegion, suggestedLangsToDisplay, currentContextLang]);
 
 
   return (
@@ -126,11 +105,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         className="bg-background rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b border-border relative"> {/* Added relative for absolute positioning of close button */}
+        <div className="p-4 border-b border-border relative">
           <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
           <button 
             onClick={onClose} 
-            className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2"
+            className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
             aria-label={t('close', 'Close')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -179,7 +158,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
 const Footer: React.FC = () => {
     const { t, language } = useTranslation();
-    const stats = useMemo(() => getStatsData(), []);
+    const stats = useMemo(() => getStatsData(), []); 
     const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
     const handleClickToTop = (event: React.MouseEvent<HTMLElement>) => {
@@ -202,7 +181,7 @@ const Footer: React.FC = () => {
             <div className="footer__aside">
               <Link rel="home" title={t('breadcrumbHome')} className="footer__logo pressable" to="/">
                 <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
-                <span>BestPrice</span>
+                <span>BestPrice</span> {/* Brand name likely stays untranslated */}
               </Link>
               <div className="footer__identity">
                 <p>{t('bestpriceSloganShort')}</p>
@@ -363,7 +342,7 @@ const Footer: React.FC = () => {
                 <Link rel="nofollow" title={t('dsaLink')} to="/policies/dsa">{t('dsaLink')}</Link>
                 <button 
                   onClick={() => setIsLanguageModalOpen(true)} 
-                  className="ml-4 text-sm hover:underline"
+                  className="ml-4 text-sm hover:underline" // Basic styling
                   title={t('changeLanguage')}
                 >
                   {t('changeLanguage')}
