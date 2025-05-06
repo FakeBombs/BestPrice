@@ -94,7 +94,7 @@ const Categories: React.FC = () => {
   const renderRecentlyViewedSlider = () => { if (!currentCategory) return null; const categoryProducts = allMockProducts.filter(p => p.categoryIds?.includes(currentCategory.id)); const recentlyViewed = categoryProducts.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); if (recentlyViewed.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Είδατε Πρόσφατα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {recentlyViewed.map(prod => ( <InlineProductItem key={`recent-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-recent"/> ))} </div> </ScrollableSlider> </section> ); };
   // --- End New Section Logic ---
 
-  // *** PRESERVED renderMainCategories with added sections ***
+  // *** PRESERVED renderMainCategories (with sections added) ***
   const renderMainCategories = () => {
     if (!currentCategory || !currentCategory.isMain) return null;
     const mainCat = currentCategory;
@@ -113,7 +113,7 @@ const Categories: React.FC = () => {
             {renderPopularBrands()}
             {renderRecentlyViewedSlider()}
         </div>
-        {/* *** 1. Kept Price Alert Button at the BOTTOM for Main Category *** */}
+        {/* *** 1. Price Alert Button AT BOTTOM for Main Category *** */}
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
         </div>
@@ -138,7 +138,6 @@ const Categories: React.FC = () => {
              <header className="page-header">
                 <div className="page-header__title-wrapper">
                    <div className="page-header__title-main">
-                      {/* Use DYNAMIC Title */}
                       <h1>{dynamicPageTitle}</h1>
                    </div>
                    <div className="page-header__title-aside">
@@ -179,7 +178,6 @@ const Categories: React.FC = () => {
           <header className="page-header">
             <div className="page-header__title-wrapper">
               <div className="page-header__title-main">
-                 {/* Use DYNAMIC Title */}
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
                    <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
@@ -288,8 +286,15 @@ const Categories: React.FC = () => {
           renderProducts()
         )}
 
-        {/* *** 1. REMOVED Price Alert Button section from end of renderSubcategories *** */}
-
+        {/* *** 1. RESTORED Price Alert Button at BOTTOM of Subcategories *** */}
+        {/* This button appears for ALL subcategory pages (leaf or not) */}
+        <div className="p__products-section">
+          <div className="alerts">
+            <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
+            <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
+          </div>
+        </div>
+        {/* *** End Price Alert Button *** */}
       </>
     );
   };
