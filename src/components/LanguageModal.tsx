@@ -11,8 +11,6 @@ type LanguageOption = {
   regionKey: string; 
 };
 
-// THIS IS WHERE YOU WILL PUT THE FULL FACEBOOK-LIKE LIST
-// For now, I'll keep it as the sample one we had.
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
@@ -35,6 +33,7 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
   { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' },
   { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
+  // You would expand this list significantly
 ];
 
 const LANGUAGE_REGIONS_FOR_MODAL = [
@@ -55,6 +54,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
+  // This variable is not used if sorting is commented out, but keeping it for when we re-add sorting
   const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
   if (!isOpen) return null;
@@ -72,18 +72,25 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // Reintroduce suggestedLangsToDisplay useMemo
   const suggestedLangsToDisplay = useMemo(() => {
     console.log("DEBUG: suggestedLangsToDisplay useMemo triggered");
     return ALL_AVAILABLE_LANGUAGES.filter(lang => 
-        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) // Your example suggested codes
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) 
     );
-  }, []); // Empty dependency array as ALL_AVAILABLE_LANGUAGES is constant
+  }, []); 
 
-  // For now, languagesToDisplay will just be suggestedLangsToDisplay
-  // We will reintroduce the more complex logic for this in the next step if this works.
-  const languagesToDisplay = suggestedLangsToDisplay;
-
+  // ***** DEBUGGING STEP 2a: Test without .sort() *****
+  const languagesToDisplay = useMemo(() => {
+    console.log("DEBUG Attempt A: languagesToDisplay (NO SORT). Region:", selectedRegion);
+    let listToFilter;
+    if (selectedRegion === "suggested") {
+        listToFilter = suggestedLangsToDisplay;
+    } else {
+        listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
+    }
+    // return [...listToFilter].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort || 'en')); // SORTING IS COMMENTED OUT
+    return listToFilter; // Return the list UNSORTED
+  }, [selectedRegion, suggestedLangsToDisplay]); // Removed currentContextLangForSort from deps as it's not used
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -131,7 +138,6 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                 </li>
               ))}
                {languagesToDisplay.length === 0 && selectedRegion !== "suggested" && (
-                // This condition might need adjustment based on how `languagesToDisplay` is constructed now
                 <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
