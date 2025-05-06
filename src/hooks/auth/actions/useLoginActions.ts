@@ -14,7 +14,7 @@ export function useLoginActions(
     setIsLoading(true);
     
     try {
-      // First, abort any ongoing auth session
+      // First, abort any ongoing auth session to ensure a clean login attempt
       await supabase.auth.signOut();
       
       console.log("Calling signInWithPassword...");
@@ -23,7 +23,11 @@ export function useLoginActions(
         password,
       });
 
-      console.log("Login response:", { data, error });
+      console.log("Login response:", { 
+        user: data?.user ? data.user.id : null,
+        session: data?.session ? "Session exists" : "No session", 
+        error: error ? error.message : null 
+      });
 
       if (error) {
         console.error("Supabase auth error:", error);
@@ -52,40 +56,77 @@ export function useLoginActions(
         .from('profiles')
         .select('*')
         .eq('id', data.user.id)
-        .single();
+        .maybeSingle();
 
       if (profileError) {
         console.error("Profile fetch error:", profileError);
-        // Don't fail the login, just log the error and continue
+        // Don't fail the login, just log the error and continue with basic profile info
       }
 
       // Check if the email is the specified super admin email
       const isAdmin = email.toLowerCase() === 'chrissfreezers@gmail.com' || 
                       (profileData && profileData.role === 'admin');
 
-      setUser({
-        id: data.user.id,
-        email: data.user.email!,
-        name: (profileData && profileData.display_name) || data.user.email?.split('@')[0] || 'User',
-        avatar: profileData?.profile_image_url,
-        username: profileData?.username,
-        bio: profileData?.bio,
-        location: profileData?.location,
-        website: profileData?.website,
-        isAdmin: isAdmin,
-      });
+      // Create a basic profile if none was found
+      if (!profileData) {
+        console.log("No profile found, creating one");
+        const displayName = data.user.email?.split('@')[0] || 'User';
+        
+        try {
+          const { error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+              id: data.user.id,
+              display_name: displayName,
+              username: data.user.email?.split('@')[0] || 'user',
+              role: email.toLowerCase() === 'chrissfreezers@gmail.com' ? 'admin' : 'user'
+            });
+          
+          if (insertError) {
+            console.error("Error creating profile:", insertError);
+          }
+        } catch (err) {
+          console.error("Profile creation error:", err);
+        }
+        
+        // Set a basic user profile
+        setUser({
+          id: data.user.id,
+          email: data.user.email!,
+          name: displayName,
+          username: data.user.email?.split('@')[0] || 'user',
+          isAdmin: isAdmin
+        });
+      } else {
+        // Use existing profile data
+        setUser({
+          id: data.user.id,
+          email: data.user.email!,
+          name: profileData.display_name || data.user.email?.split('@')[0] || 'User',
+          avatar: profileData.profile_image_url,
+          username: profileData.username || data.user.email?.split('@')[0] || 'user',
+          bio: profileData.bio,
+          location: profileData.location,
+          website: profileData.website,
+          isAdmin: isAdmin,
+        });
+      }
         
       // If the email is the super admin but the role is not set in the database,
       // update the profile to set them as an admin
-      if (email.toLowerCase() === 'chrissfreezers@gmail.com' && (!profileData || profileData.role !== 'admin')) {
-        await supabase
-          .from('profiles')
-          .upsert({ 
-            id: data.user.id, 
-            role: 'admin',
-            display_name: data.user.email?.split('@')[0] || 'Admin'
-          })
-          .eq('id', data.user.id);
+      if (email.toLowerCase() === 'chrissfreezers@gmail.com') {
+        try {
+          await supabase
+            .from('profiles')
+            .upsert({ 
+              id: data.user.id, 
+              role: 'admin',
+              display_name: data.user.email?.split('@')[0] || 'Admin'
+            });
+          console.log("Admin role assigned to chrissfreezers@gmail.com");
+        } catch (err) {
+          console.error("Error setting admin role:", err);
+        }
       }
 
       toast({

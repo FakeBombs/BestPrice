@@ -14,6 +14,7 @@ export default function AuthDebugger() {
     redirectUrl: redirectURL,
   });
   const [refreshing, setRefreshing] = useState(false);
+  const SUPABASE_PROJECT_ID = 'xibjuwcqceubldzeypyy';
   
   const fetchSessionData = async () => {
     setRefreshing(true);
@@ -66,6 +67,12 @@ export default function AuthDebugger() {
       alert(`Error clearing session: ${err.message}`);
     }
   };
+
+  // Check for auth tokens in localStorage
+  const hasLocalStorageToken = Boolean(
+    localStorage.getItem('supabase.auth.token') || 
+    localStorage.getItem(`sb-${SUPABASE_PROJECT_ID}-auth-token`)
+  );
   
   return (
     <div className="mt-8 p-4 border rounded-md bg-muted">
@@ -180,5 +187,3 @@ export default function AuthDebugger() {
     </div>
   );
 }
-
-const SUPABASE_PROJECT_ID = 'xibjuwcqceubldzeypyy';

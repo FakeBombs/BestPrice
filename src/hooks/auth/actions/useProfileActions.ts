@@ -9,72 +9,96 @@ export function useProfileActions(
 ) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateProfile = async (data: Partial<UserProfile>): Promise<boolean> => {
+  const updateProfile = async (profile: Partial<UserProfile>): Promise<boolean> => {
     setIsLoading(true);
+    
     try {
-      // Type assertion to fix the issue
-      const userData = { 
-        ...data, 
-        ...(data.language && { language: data.language })
-      } as any;
-      
       const { error } = await supabase
         .from('profiles')
-        .update(userData)
-        .eq('id', data.id);
+        .update({
+          display_name: profile.name,
+          username: profile.username,
+          bio: profile.bio,
+          location: profile.location,
+          website: profile.website,
+          profile_image_url: profile.avatar
+        })
+        .eq('id', profile.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Profile update error:", error);
+        toast({
+          title: 'Profile Update Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+        return false;
+      }
 
-      // Update the user state
-      setUser((prev: UserProfile | null) => {
+      // Update the user context
+      setUser(prev => {
         if (!prev) return null;
-        return { 
-          ...prev, 
-          ...data 
-        };
+        return { ...prev, ...profile };
       });
 
       toast({
         title: 'Profile Updated',
-        description: 'Your profile has been updated successfully.',
+        description: 'Your profile has been successfully updated.',
       });
+      
+      setIsLoading(false);
       return true;
     } catch (error: any) {
+      console.error("Profile update error:", error);
       toast({
-        title: 'Update Failed',
-        description: error.message,
+        title: 'Profile Update Failed',
+        description: error.message || 'An unexpected error occurred',
         variant: 'destructive',
       });
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
   const resetPassword = async (email: string): Promise<boolean> => {
     setIsLoading(true);
+    
     try {
+      console.log("Sending password reset email to:", email);
+      
+      // Use sendPasswordResetLink API for better error handling
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset-password',
+        redirectTo: window.location.origin + '/reset-password'
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Password reset error:", error);
+        toast({
+          title: 'Password Reset Failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+        return false;
+      }
 
       toast({
         title: 'Password Reset Email Sent',
-        description:
-          "Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.",
+        description: `Check your email (${email}) for a password reset link.`,
       });
+      
+      setIsLoading(false);
       return true;
     } catch (error: any) {
+      console.error("Password reset error:", error);
       toast({
-        title: 'Reset Failed',
-        description: error.message,
+        title: 'Password Reset Failed',
+        description: error.message || 'An unexpected error occurred',
         variant: 'destructive',
       });
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
