@@ -5,10 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useTheme } from "next-themes"; // *** IMPORT useTheme ***
-// Removed useBodyAttributes, useHtmlAttributes as next-themes handles DOM
+import { useTheme } from "next-themes";
 
-// UserDropdownContent component remains the same...
 interface UserDropdownContentProps {
   onLogout: () => void;
   user: {
@@ -55,7 +53,6 @@ const UserButton = () => {
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  // *** Use next-themes hook ***
   const { theme, setTheme } = useTheme();
 
   const toggleDropdown = () => { setIsDropdownOpen(!isDropdownOpen); };
@@ -67,11 +64,7 @@ const UserButton = () => {
       setMounted(true);
   }, []);
 
-  // No longer need manual applyTheme or useEffect for theme changes
-
-  // Return null or placeholder on server/before mount
   if (!mounted) {
-      // Render a basic placeholder to prevent layout shifts if possible
       return (
          <div id="user">
            <span className="user-popups">
