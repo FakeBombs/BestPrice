@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -112,6 +112,7 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
   );
 };
 
+
 const UserButton = () => {
   const { user, logout } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -119,18 +120,17 @@ const UserButton = () => {
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  // *** Initialize state based on localStorage or system pref ***
-  // We read localStorage directly here to avoid flicker, useEffect will confirm later
+
+  // Initialize state based on localStorage or system pref, default 'light'
   const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
       if (typeof window !== 'undefined') {
           const storedTheme = localStorage.getItem('theme');
           if (storedTheme === 'light' || storedTheme === 'dark') {
               return storedTheme;
           }
-          // If nothing stored, check system preference
           return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
-      return 'light'; // Default for SSR or non-browser environments
+      return 'light'; // Default for SSR
   });
 
 
@@ -149,58 +149,77 @@ const UserButton = () => {
   };
 
   // Function to apply theme to DOM and save preference
-  const applyTheme = (theme: Theme) => {
+  const applyTheme = useCallback((theme: Theme) => {
       if (typeof window !== 'undefined') {
-          // Remove previous theme class if any (optional, safe)
-          // document.documentElement.classList.remove('light', 'dark');
-          // document.documentElement.classList.add(theme);
-
-          // Set data-theme attribute (preferred method)
+          // console.log(`Applying theme: ${theme}`); // DEBUG LOG
           document.documentElement.setAttribute('data-theme', theme);
-
-          // Set color-scheme style for browser UI hints
           document.documentElement.style.colorScheme = theme;
-
-          // Save preference
           localStorage.setItem('theme', theme);
       }
-  }
+  }, []); // No dependencies needed
 
   // Function to handle theme toggle click
   const toggleTheme = () => {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setCurrentTheme(newTheme); // Update React state
-    applyTheme(newTheme); // Apply changes to DOM and localStorage
+    // console.log(`Toggling theme to: ${newTheme}`); // DEBUG LOG
+    setCurrentTheme(newTheme); // Update React state -> triggers the effect below
   };
 
 
-  // Effect to apply initial theme and handle hydration mismatch
+  // Effect to apply theme changes whenever currentTheme state changes
+  // This runs both on initial load (after state init) and on subsequent toggles
   useEffect(() => {
-    setMounted(true); // Indicate component has mounted
-    // Apply the theme determined by the initial state calculation
+    // console.log(`Theme effect running. Current theme state: ${currentTheme}`); // DEBUG LOG
     applyTheme(currentTheme);
-  }, [currentTheme]); // Rerun if currentTheme changes programmatically (unlikely here but safe)
+  }, [currentTheme, applyTheme]); // Depend on state and the memoized apply function
+
+  // Effect to set mounted state (for hydration safety)
+  useEffect(() => {
+      setMounted(true);
+  }, []);
 
 
   // Return null on server or before mount to avoid hydration issues
-  if (!mounted) return null;
+  if (!mounted) {
+      // Render a basic placeholder to prevent layout shifts if possible
+      return (
+         <div id="user">
+           <span className="user-popups">
+             <span className="user-popup foo-button" id="mobile-search__icon">
+                <svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
+             </span>
+             {/* Placeholder for theme button */}
+             <button aria-label="Toggle theme" className="foo-button hide-mobile" disabled>
+                  <Sun className="h-6 w-6"/> {/* Default to Sun perhaps */}
+             </button>
+             {/* You might want placeholders for login/register or user avatar too */}
+           </span>
+           {/* Placeholder for login/register actions */}
+           <span className="user-actions">
+                <button className="foo-button" disabled>{t('signIn')}</button>
+                <span className="separator"></span>
+                <button className="foo-button" disabled>{t('register')}</button>
+            </span>
+         </div>
+      )
+  }
 
+  // Main return when mounted
   return (
     <div id="user">
       <span className="user-popups">
         <span className="user-popup foo-button" id="mobile-search__icon">
-          <svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
+          <svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
         </span>
         <button
-          onClick={toggleTheme} // Use the toggleTheme handler
+          onClick={toggleTheme}
           aria-label="Toggle theme"
           className="foo-button hide-mobile"
         >
-          {/* Show the opposite icon of the current theme */}
           {currentTheme === 'dark' ? (
-            <Sun className="h-6 w-6" /> /* Show sun when dark */
+            <Sun className="h-6 w-6" />
           ) : (
-            <Moon className="h-6 w-6" /> /* Show moon when light */
+            <Moon className="h-6 w-6" />
           )}
         </button>
         {user && (
