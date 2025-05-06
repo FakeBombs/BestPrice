@@ -1,9 +1,8 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useCallback } from 'react'; // Removed useMemo for this test
+import React, { useState, useMemo, useCallback } from 'react'; // Add useMemo back
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define these constants outside the component (they are NOT directly used by the list in this test)
 type LanguageOption = {
   code: string; 
   name: string; 
@@ -14,21 +13,24 @@ type LanguageOption = {
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  // ... (your full list can remain here for when we re-enable it)
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+  // ... Add your full list here
 ];
 
 const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    // ... (your full list can remain here)
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-// The small, hardcoded list that previously worked
-const HARDCODED_DEBUG_LANGUAGES: { code: string; name: string; }[] = [
-    { code: 'el', name: 'Ελληνικά (DEBUG Hardcoded)' },
-    { code: 'en-US', name: 'English (US) (DEBUG Hardcoded)' },
-    { code: 'es-ES', name: 'Español (DEBUG Hardcoded)'},
-];
+// Keep the hardcoded list for a moment, just in case, but we won't use it yet
+// const HARDCODED_DEBUG_LANGUAGES: { code: string; name: string; }[] = [
+//     { code: 'el', name: 'Ελληνικά (DEBUG Hardcoded)' },
+//     { code: 'en-US', name: 'English (US) (DEBUG Hardcoded)' },
+// ];
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -39,6 +41,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
+
+  // const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Not needed yet
 
   if (!isOpen) return null;
 
@@ -55,12 +59,21 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // ALL useMemo calls for language lists are removed for this test.
-  // We will map HARDCODED_DEBUG_LANGUAGES directly.
-  // const suggestedLangsToDisplay = useMemo(...); // GONE
-  // const languagesToDisplay = useMemo(...);    // GONE
+  // ===== STEP 1: RE-INTRODUCE suggestedLangsToDisplay useMemo =====
+  const suggestedLangsToDisplay = useMemo(() => {
+    console.log("DEBUG STEP 1: suggestedLangsToDisplay useMemo triggered");
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) 
+    );
+  }, []); // Empty dependency array is correct as ALL_AVAILABLE_LANGUAGES is constant
 
-  console.log("DEBUG: LanguageModal rendering with HARDCODED_DEBUG_LANGUAGES. isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
+  // For this step, we will map over suggestedLangsToDisplay directly
+  // to test if this useMemo causes the error.
+  const languagesToDisplayInJSX = suggestedLangsToDisplay; 
+  // const languagesToDisplay = useMemo(...); // The more complex one is still out
+
+  console.log("DEBUG: LanguageModal rendering. SelectedRegion:", selectedRegion, "Displaying count:", languagesToDisplayInJSX.length);
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -81,11 +94,10 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
         <div className="flex flex-1 overflow-hidden">
           <aside className="w-1/3 border-r border-border overflow-y-auto p-2 space-y-1 bg-muted/20">
-            {/* Sidebar still uses LANGUAGE_REGIONS_FOR_MODAL and t() */}
             {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
               <button
                 key={region.key}
-                onClick={() => setSelectedRegion(region.key)} // Will not change the main list in this test
+                onClick={() => setSelectedRegion(region.key)}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
@@ -96,8 +108,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {/* ***** DEBUGGING: Use HARDCODED_DEBUG_LANGUAGES directly ***** */}
-              {HARDCODED_DEBUG_LANGUAGES.map((lang) => ( 
+              {/* Mapping over the memoized suggestedLangsToDisplay (via languagesToDisplayInJSX) */}
+              {languagesToDisplayInJSX.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -109,8 +121,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {/* This condition likely won't be met with the hardcoded list */}
-               {HARDCODED_DEBUG_LANGUAGES.length === 0 && ( 
+               {languagesToDisplayInJSX.length === 0 && ( 
                 <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
