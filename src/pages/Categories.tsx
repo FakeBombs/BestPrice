@@ -202,7 +202,6 @@ const Categories: React.FC = () => {
           <div className="page-products__main-wrapper">
             {filteredProducts.length > 0 ? ( <div className="p__products" data-pagination=""> {filteredProducts.map((product, index) => ( <React.Fragment key={product.id}> <ProductCard product={product} activeVendorFilterDomain={activeVendorDomainForProductLink}/> {currentCategory && ( (index + 1) === ALERT_BUTTON_THRESHOLD || ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0)) ) && ( <div className="p__products-section p__products-section--in-grid"> <div className="alerts alerts--in-grid"> <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={dynamicPageTitle} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}> <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg> <span className="alerts__label">Ειδοποίηση για {currentCategory.name}</span> </button> </div> </div> )} </React.Fragment> ))} </div> ) : ( isAnyFilterActive && baseCategoryProducts.length > 0 ? ( <div id="no-results"> <h3>Δεν βρέθηκαν προϊόντα με αυτά τα φίλτρα.</h3> <div id="no-results-suggestions"> <p><strong>Προτάσεις:</strong></p> <ul> <li>Δες <Link to={location.pathname} onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>όλα τα προϊόντα της κατηγορίας</Link>.</li> <li>Δοκίμασε να <Link to="#" onClick={(e) => { e.preventDefault(); handleResetFilters(); }}>αφαιρέσεις κάποιο φίλτρο</Link>.</li> <li>Επέστρεψε στην <Link to="/">αρχική</Link>.</li> </ul> </div> </div> ) : null )}
           </div>
-          {/* Large Price Alert Section REMOVED from here */}
         </main>
       </div>
     );
@@ -219,17 +218,20 @@ const Categories: React.FC = () => {
           {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>)}
         </div>
         {/* Sections Rendered AFTER Main Category Grid */}
-        <div className="sections">
-            {renderPopularCategoriesSection(currentCategory)} {/* Pass current main category */}
-            {renderTopDealsSlider()}
-            {renderHotProductsSlider()}
-            {renderProductReviewsSlider()}
-            {renderPopularBrands()}
-            {renderRecentlyViewedSlider()}
-        </div>
-        {/* Large Price Alert Button AT BOTTOM for Main Category */}
-        <div className="p__products-section">
-          <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
+        <div className="sections" style={{ paddingTop: '5.84rem' }}>
+          {renderPopularCategoriesSection(currentCategory)}
+          {renderTopDealsSlider()}
+          {/* Large Price Alert Button AT BOTTOM for Main Category */}
+          <div className="p__products-section">
+            <div className="alerts">
+              <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
+              <div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div>
+            </div>
+          </div>
+          {renderHotProductsSlider()}
+          {renderProductReviewsSlider()}
+          {renderPopularBrands()}
+          {renderRecentlyViewedSlider()}
         </div>
       </>
     );
@@ -262,24 +264,22 @@ const Categories: React.FC = () => {
               {childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}
             </div>
             {/* Sections Rendered AFTER Subcategory Grid */}
-            <div className="sections">
-                 {/* *** Popular Categories REMOVED from Subcategory view *** */}
-                {renderTopDealsSlider()}
-                {renderHotProductsSlider()}
-                {renderProductReviewsSlider()}
-                {renderPopularBrands()}
-                {renderRecentlyViewedSlider()}
-            </div>
-            {/* *** Large Price Alert Button at BOTTOM of Subcategories (showing children) *** */}
-             <div className="p__products-section">
-               <div className="alerts">
-                 <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
-                 <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
+            <div className="sections" style={{ paddingTop: '5.84rem' }}>
+              {renderTopDealsSlider()}
+              {/* *** Large Price Alert Button at BOTTOM of Subcategories (showing children) *** */}
+               <div className="p__products-section">
+                 <div className="alerts">
+                   <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
+                   <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
+                 </div>
                </div>
-             </div>
+              {renderHotProductsSlider()}
+              {renderProductReviewsSlider()}
+              {renderPopularBrands()}
+              {renderRecentlyViewedSlider()}
+            </div>
           </>
         ) : (
-          // Render the product list structure
           renderProducts()
         )}
 
