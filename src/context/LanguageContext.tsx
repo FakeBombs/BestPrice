@@ -97,6 +97,13 @@ const defaultTranslations: Translations = {
     clearFilters: 'Clear filters',
     finalPrice: 'Final price',
 
+    // Added for Categories page
+    "product_singular": "product",
+    "product_plural": "{{count}} products",
+    "rating_label": "Rating",
+    "reviews_label_one": "{{count}} review",
+    "reviews_label_other": "{{count}} reviews",
+
     // --- Main Categories (English) ---
     'technology': 'Technology',
     'home-garden': 'Home & Garden',
@@ -110,14 +117,14 @@ const defaultTranslations: Translations = {
     'mobile-telephony': 'Mobile Telephony',
     'computers': 'Computers',
     'laptops-accessories': 'Laptops & Accessories',
-    'visual': 'Visual', // Changed from 'image' to be more descriptive for English
+    'visual': 'Visual',
     'smartwatches-wearables': 'Smartwatches & Wearables',
     'tablets-accessories': 'Tablets & Accessories',
     'video-games': 'Video Games',
     'audio': 'Audio',
     'photo-video': 'Photo & Video',
-    'electronics': 'Electronics', // Changed from 'consumer-electronics' for brevity
-    'telephony': 'Telephony', // General telephony
+    'electronics': 'Electronics',
+    'telephony': 'Telephony',
     'gadgets': 'Gadgets',
 
     // --- Subcategories of Σπίτι & Κήπος (English) ---
@@ -126,13 +133,13 @@ const defaultTranslations: Translations = {
     'furniture': 'Furniture',
     'garden': 'Garden',
     'home-items': 'Home Items',
-    'linens': 'Linens', // Changed from 'home-linens'
+    'linens': 'Linens',
     'lighting': 'Lighting',
-    'kitchenware': 'Kitchenware', // Changed from 'kitchen-items'
+    'kitchenware': 'Kitchenware',
     'food-beverages': 'Food & Beverages',
-    'electrical-supplies': 'Electrical Supplies', // Changed
-    'smoking-accessories': 'Smoking Accessories', // Changed
-    'office-supplies': 'Office Supplies', // Changed
+    'electrical-supplies': 'Electrical Supplies',
+    'smoking-accessories': 'Smoking Accessories',
+    'office-supplies': 'Office Supplies',
     'gift-items': 'Gift Items',
     'security-systems': 'Security Systems',
     'professional-equipment': 'Professional Equipment',
@@ -140,19 +147,19 @@ const defaultTranslations: Translations = {
     'shopping-bags': 'Shopping Bags',
     'shopping-trolleys': 'Shopping Trolleys',
     'church-items': 'Church Items',
-    'pet-supplies': 'Pet Supplies', // For Home & Garden context
+    'pet-supplies': 'Pet Supplies',
 
     // --- Subcategories of Μόδα (English) ---
     'womens-fashion': "Women's Fashion",
     'mens-fashion': "Men's Fashion",
     'watches': 'Watches',
     'jewelry': 'Jewelry',
-    'eyewear': 'Eyewear', // Using 'eyewear' as it's more common than 'opticals'
+    'eyewear': 'Eyewear',
     'converse-all-star': 'Converse All Star',
     'rain-umbrellas': 'Rain Umbrellas',
     'shoe-accessories': 'Shoe Accessories',
-    'kids-baby-fashion': "Kids & Baby Fashion", // For Fashion context
-    'sneakers': 'Sneakers', // Slug was already 'sneakers'
+    'kids-baby-fashion': "Kids & Baby Fashion",
+    'sneakers': 'Sneakers',
 
     // --- Subcategories of Υγεία & Ομορφιά (English) ---
     'grooming': 'Grooming',
@@ -170,11 +177,10 @@ const defaultTranslations: Translations = {
     'cannabis-products': 'Cannabis Products',
     'orthopedics': 'Orthopedics',
     'patient-aids': 'Patient Aids',
-    'optics': 'Optics', // Using 'optics' for Health context, matches one of your examples
+    'optics': 'Optics',
     'korean-cosmetics': 'Korean Cosmetics',
 
     // --- Subcategories of Παιδικά - Βρεφικά (English) ---
-    // 'kids-baby-fashion' already defined under Fashion, assuming same key is fine if content differs by parent
     'kids-toys': "Kids' Toys",
     'school-supplies': 'School Supplies',
     'baby-toys': 'Baby Toys',
@@ -194,7 +200,7 @@ const defaultTranslations: Translations = {
     'books': 'Books',
     'hunting': 'Hunting',
     'fitness-equipment': 'Fitness Equipment',
-    'pet-supplies-hobby': 'Pet Supplies (Hobby)', // Differentiated
+    'pet-supplies-hobby': 'Pet Supplies (Hobby)',
     'drones-accessories': 'Drones & Accessories',
     'electric-scooters': 'Electric Scooters',
     'hoverboards': 'Hoverboards',
@@ -245,17 +251,10 @@ const defaultTranslations: Translations = {
     'connection-packs': 'Connection Packs',
     'portable-bluetooth-speakers-mobile': 'Portable Bluetooth Speakers (Mobile)',
 
-    // ... AND SO ON FOR ALL OTHER CATEGORIES ...
-    // This will be a very long list. I will add a few more examples for deeper levels.
-
-    // Example for nested: Subcategories of Ηλεκτρονικά Παιχνίδια (parentId: 179)
     'ps5-games': 'PS5 Games',
     'pc-games': 'PC Games',
-
-    // Example for nested: Subcategories of Home Audio (parentId: 193)
     'amplifiers-preamplifiers': 'Amplifiers & Preamplifiers',
     'hi-fi-systems': 'Hi-Fi Systems',
-    // 'soundbars' // Assuming this slug is used for Soundbar under Home Cinema as well for consistency
   },
   el: {
     // Auth (Existing)
@@ -315,7 +314,7 @@ const defaultTranslations: Translations = {
     transactions: 'Συναλλαγές',
     connectWallet: 'Σύνδεση Πορτοφολιού',
     addFunds: 'Προσθήκη Χρημάτων',
-    amount: 'Ποσό (€)', // Adjusted for Euro
+    amount: 'Ποσό (€)',
     enterAmount: 'Εισάγετε ποσό',
     paymentMethod: 'Μέθοδος Πληρωμής',
     processing: 'Επεξεργασία...',
@@ -340,6 +339,13 @@ const defaultTranslations: Translations = {
     deals: 'Προσφορές',
     clearFilters: 'Καθαρισμός φίλτρων',
     finalPrice: 'Τελική τιμή',
+
+    // Added for Categories page
+    "product_singular": "προϊόν",
+    "product_plural": "{{count}} προϊόντα",
+    "rating_label": "Βαθμολογία",
+    "reviews_label_one": "{{count}} αξιολόγηση",
+    "reviews_label_other": "{{count}} αξιολογήσεις",
 
     // --- Main Categories (Greek) ---
     'technology': 'Τεχνολογία',
@@ -418,7 +424,6 @@ const defaultTranslations: Translations = {
     'korean-cosmetics': 'Κορεάτικα Καλλυντικά',
 
     // --- Subcategories of Παιδικά - Βρεφικά (Greek) ---
-    // 'kids-baby-fashion' is already defined
     'kids-toys': 'Παιδικά Παιχνίδια',
     'school-supplies': 'Σχολικά Είδη',
     'baby-toys': 'Βρεφικά Παιχνίδια',
@@ -458,12 +463,12 @@ const defaultTranslations: Translations = {
 
     // --- Subcategories of Κινητή Τηλεφωνία (parentId: 10) (Greek) ---
     'smartphones': 'Κινητά',
-    // 'iphone': 'iPhone', // Already 'iphone'
+    'iphone': 'iPhone',
     'mobile-cases': 'Θήκες Κινητών',
-    // 'bluetooth-handsfree': 'Bluetooth Handsfree', // Already same
-    // 'handsfree': 'Handsfree', // Already same
+    'bluetooth-handsfree': 'Bluetooth Handsfree',
+    'handsfree': 'Handsfree',
     'mobile-chargers': 'Φορτιστές Κινητών',
-    // 'tempered-glass': 'Tempered Glass', // Already same
+    'tempered-glass': 'Tempered Glass',
     'screen-protectors': 'Προστασία Οθόνης',
     'power-banks': 'Power Banks',
     'mobile-batteries': 'Μπαταρίες Κινητών',
@@ -489,39 +494,48 @@ const defaultTranslations: Translations = {
     'connection-packs': 'Πακέτα Σύνδεσης',
     'portable-bluetooth-speakers-mobile': 'Φορητά Ηχεία Bluetooth',
 
-    // Example for nested: Subcategories of Ηλεκτρονικά Παιχνίδια (parentId: 179)
     'ps5-games': 'PS5 Games',
     'pc-games': 'PC Games',
-
-    // Example for nested: Subcategories of Home Audio (parentId: 193)
     'amplifiers-preamplifiers': 'Ενισχυτές, Προενισχυτές',
     'hi-fi-systems': 'Συστήματα Hi-Fi',
-    // 'soundbars' uses the English key for consistency
-
-    // ... (YOU WILL NEED TO ADD ALL OTHER GREEK TRANSLATIONS HERE FOR EACH SLUG)
   },
   es: {
     email: 'Correo electrónico', password: 'Contraseña', signIn: 'Iniciar sesión', createAccount: 'Crear cuenta',
+    "product_singular": "producto",
+    "product_plural": "{{count}} productos",
+    "rating_label": "Clasificación",
+    "reviews_label_one": "{{count}} reseña",
+    "reviews_label_other": "{{count}} reseñas",
     'technology': 'Tecnología',
     'mobile-telephony': 'Telefonía Móvil',
-    // ... (Add all other Spanish translations)
+    // ... (Add all other Spanish translations, including for categories)
   },
   fr: {
     email: 'E-mail', password: 'Mot de passe', signIn: 'Connexion', createAccount: 'Créer un compte',
+    "product_singular": "produit",
+    "product_plural": "{{count}} produits",
+    "rating_label": "Évaluation",
+    "reviews_label_one": "{{count}} avis",
+    "reviews_label_other": "{{count}} avis",
     'technology': 'Technologie',
     'mobile-telephony': 'Téléphonie Mobile',
-    // ... (Add all other French translations)
+    // ... (Add all other French translations, including for categories)
   },
   de: {
     email: 'E-Mail', password: 'Passwort', signIn: 'Anmelden', createAccount: 'Konto erstellen',
+    "product_singular": "Produkt",
+    "product_plural": "{{count}} Produkte",
+    "rating_label": "Bewertung",
+    "reviews_label_one": "{{count}} Bewertung",
+    "reviews_label_other": "{{count}} Bewertungen",
     'technology': 'Technologie',
     'mobile-telephony': 'Mobiltelefonie',
-    // ... (Add all other German translations)
+    // ... (Add all other German translations, including for categories)
   }
 };
 
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'el', // Default to Greek if you prefer
+  language: 'el', // Default to Greek
   setLanguage: () => {},
   translations: defaultTranslations,
   isLoaded: false,
@@ -555,44 +569,62 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setLanguageState(detectedLang);
-      setIsLoaded(true);
+      setIsLoaded(true); // Set loaded after language is determined
     };
     detectLanguage();
   }, [user]);
 
   useEffect(() => {
     const loadCustomTranslations = async () => {
+      // If not loaded yet, start with default and then try to load custom
+      if (!isLoaded) {
+         setTranslations(defaultTranslations); // Ensure default is set if first load
+      }
+
       try {
         const { data, error } = await (supabase as any).from('translations').select('*');
-        if (error) throw error;
+        if (error) {
+            console.error('Error fetching custom translations:', error);
+            // Keep default translations if fetching fails
+            setTranslations(prev => ({ ...defaultTranslations, ...prev })); // Merge defaults underneath anything already there
+            return;
+        };
         if (data && data.length > 0) {
-          const customTranslations = { ...defaultTranslations };
+          // Start with a fresh copy of defaults to ensure structure
+          const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
+
           data.forEach((item: any) => {
             if (item && item.key) {
-              Object.keys(customTranslations).forEach(lang => {
-                if (item[lang]) {
-                  // Only add if the key is not already in default (or decide merge strategy)
-                  // This example prioritizes defaultTranslations if key exists, then DB
-                  if (!customTranslations[lang][item.key] || typeof customTranslations[lang][item.key] === 'undefined') {
-                     customTranslations[lang][item.key] = item[lang];
-                  } else if (customTranslations[lang][item.key] && typeof item[lang] === 'string' && customTranslations[lang][item.key] !== item[lang]) {
-                    // If key exists in both, and DB has a different value, update it.
-                    // This makes DB override default if a key is present in both and different.
-                    // If you want default to always win if key exists, remove this else if.
-                     customTranslations[lang][item.key] = item[lang];
-                  }
+              // Iterate over languages defined in defaultTranslations (en, el, es, fr, de)
+              (Object.keys(newLoadedTranslations) as Language[]).forEach(lang => {
+                if (item[lang] && typeof item[lang] === 'string') { // Ensure item[lang] exists and is a string
+                  newLoadedTranslations[lang][item.key] = item[lang]; // DB overrides default for this key
                 }
               });
             }
           });
-          setTranslations(customTranslations);
+          setTranslations(newLoadedTranslations);
+        } else {
+          // No custom translations found or data is empty, ensure defaults are set
+          setTranslations(defaultTranslations);
         }
       } catch (error) {
-        console.error('Error loading translations:', error);
+        console.error('Error processing custom translations:', error);
+        setTranslations(defaultTranslations); // Fallback to defaults on error
       }
     };
-    loadCustomTranslations();
-  }, []); // Load custom translations once
+
+    // Only load custom translations once after initial language detection might have set isLoaded
+    if (isLoaded) { // Or simply run it once on mount like before if preferred
+        loadCustomTranslations();
+    } else {
+        // If isLoaded is false, it means detectLanguage hasn't finished.
+        // We should set default translations to avoid using empty ones.
+        setTranslations(defaultTranslations);
+    }
+    // To load custom translations once on mount (like before), use:
+    // loadCustomTranslations();
+  }, [isLoaded]); // Rerun if isLoaded changes, or change to [] for once on mount
 
   const setLanguage = (lang: Language) => {
     localStorage.setItem('language', lang);
