@@ -794,7 +794,7 @@ export const products: Product[] = [
     model: 'iPhone 14 Pro Max',
     mpn: 'MQ9X3HX/A', // Example MPN
     gtin: '0194253401199', // Example GTIN/EAN
-    categoryIds: [99, 100], // Mobile, iPhone
+    categoryIds: [102, 103], // Mobile, iPhone
     description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Με κάμερα 48MP, Always-On οθόνη, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία, εντυπωσιακό design και ανίχνευση σύγκρουσης. Ζήσε την απόλυτη εμπειρία Apple.',
     shortDescription: 'iPhone 14 Pro Max 256GB Deep Purple με A16 Bionic.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
