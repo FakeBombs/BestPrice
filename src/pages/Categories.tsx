@@ -16,8 +16,8 @@ import {
   Brand,
   ProductPrice
 } from '@/data/mockData';
-import ProductCard from '@/components/ProductCard'; // Needs activeVendorFilterDomain prop
-import InlineProductItem from '@/components/InlineProductItem'; // Needs activeVendorFilterDomain prop
+import ProductCard from '@/components/ProductCard';
+import InlineProductItem from '@/components/InlineProductItem';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -36,12 +36,11 @@ const cleanDomainName = (url: string): string => { if (!url) return ''; try { co
 interface ActiveFiltersState { brands: string[]; specs: Record<string, string[]>; vendorIds: number[]; deals: boolean; certified: boolean; nearby: boolean; boxnow: boolean; instock: boolean; }
 const RESERVED_PARAMS_CAT = new Set(['brand', 'store', 'deals', 'certified', 'nearby', 'boxnow', 'instock', 'sort']);
 
-// *** 1. RENAMED COMPONENT ***
 const Categories: React.FC = () => {
   // --- Hooks & Setup ---
   const location = useLocation(); const navigate = useNavigate(); const [searchParams, setSearchParams] = useSearchParams(); const { toast } = useToast(); const { user } = useAuth(); const { t } = useTranslation();
 
-  // --- Document Attributes --- (Original code retained)
+  // --- Document Attributes ---
   const userAgent = navigator.userAgent.toLowerCase(); const [jsEnabled, setJsEnabled] = useState(false); let classNamesForBody = ''; let classNamesForHtml = 'page'; const checkAdBlockers = (): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } }; const isAdBlocked = useMemo(checkAdBlockers, []); if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; } else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; } else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; } else { classNamesForHtml += ' unknown-device'; } classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed'; classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home'; useEffect(() => { setJsEnabled(true); }, []); classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled'; useHtmlAttributes(classNamesForHtml, 'page-cat'); useBodyAttributes(classNamesForBody, '');
 
   // --- Precompute Maps ---
@@ -81,9 +80,7 @@ const Categories: React.FC = () => {
   const displayedBrand = useMemo(() => activeFilters.brands.length === 1 ? brands.find(b => b.name === activeFilters.brands[0]) : null, [activeFilters.brands]); const handlePriceAlert = () => { if (!user) { toast({ title: 'Login Required', description: 'Please log in to set a price alert', variant: 'destructive' }); return; } if (currentCategory) { setPriceAlertContext({ categoryId: currentCategory.id, categoryName: currentCategory.name, filters: activeFilters }); setIsPriceAlertModalOpen(true); } else { toast({ title: 'Error', description: 'Cannot set alert, category context is missing.', variant: 'destructive' }); } };
 
   // --- Dynamic H1 Title Logic (with limits) ---
-  const dynamicPageTitle = useMemo(() => {
-    if (!currentCategory) return ''; let title = currentCategory.name; const specStrings: string[] = []; if (selectedVendor) { title += ` από ${selectedVendor.name}`; } Object.entries(activeFilters.specs).forEach(([key, values]) => { if (values.length === 1) { specStrings.push(`${values[0]} ${key}`); } else if (values.length > 1) { specStrings.push(`${key}: ${values.join('/')}`); } }); const MAX_SPECS_IN_TITLE = 3; const initialSpecCount = Math.min(specStrings.length, MAX_SPECS_IN_TITLE); let finalSpecParts = specStrings.slice(0, initialSpecCount); if (initialSpecCount === MAX_SPECS_IN_TITLE) { const prefix = selectedVendor ? ' με ' : ' '; const potentialTitle = title + prefix + finalSpecParts.join(' & '); if (potentialTitle.length > DYNAMIC_TITLE_CHAR_LIMIT) { finalSpecParts = specStrings.slice(0, MAX_SPECS_IN_TITLE - 1); } } if (finalSpecParts.length > 0) { const prefix = selectedVendor ? ' με ' : ' '; title += prefix + finalSpecParts.join(' & '); } return title;
-  }, [currentCategory, selectedVendor, activeFilters.specs]);
+  const dynamicPageTitle = useMemo(() => { if (!currentCategory) return ''; let title = currentCategory.name; const specStrings: string[] = []; if (selectedVendor) { title += ` από ${selectedVendor.name}`; } Object.entries(activeFilters.specs).forEach(([key, values]) => { if (values.length === 1) { specStrings.push(`${values[0]} ${key}`); } else if (values.length > 1) { specStrings.push(`${key}: ${values.join('/')}`); } }); const MAX_SPECS_IN_TITLE = 3; const initialSpecCount = Math.min(specStrings.length, MAX_SPECS_IN_TITLE); let finalSpecParts = specStrings.slice(0, initialSpecCount); if (initialSpecCount === MAX_SPECS_IN_TITLE) { const prefix = selectedVendor ? ' με ' : ' '; const potentialTitle = title + prefix + finalSpecParts.join(' & '); if (potentialTitle.length > DYNAMIC_TITLE_CHAR_LIMIT) { finalSpecParts = specStrings.slice(0, MAX_SPECS_IN_TITLE - 1); } } if (finalSpecParts.length > 0) { const prefix = selectedVendor ? ' με ' : ' '; title += prefix + finalSpecParts.join(' & '); } return title; }, [currentCategory, selectedVendor, activeFilters.specs]);
 
   // --- Rendering Functions ---
   const renderBreadcrumbs = () => { const trailItems: React.ReactNode[] = []; trailItems.push(<li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>); if (currentCategory) { const ancestors: Category[] = []; let category: Category | undefined = currentCategory; while (category?.parentId !== null && category?.parentId !== undefined) { const parent = allCategories.find((cat) => cat.id === category?.parentId); if (parent) { ancestors.unshift(parent); category = parent; } else category = undefined; } ancestors.forEach((cat) => { trailItems.push(<li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>); }); trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>); } return ( <div id="trail"> <nav className="breadcrumb"><ol>{trailItems.reduce((acc: React.ReactNode[], item, index) => (<React.Fragment key={index}>{acc}{index > 0 && <span className="trail__breadcrumb-separator">›</span>}{item}</React.Fragment>), null)}</ol></nav> </div> ); };
@@ -116,7 +113,6 @@ const Categories: React.FC = () => {
             {renderPopularBrands()}
             {renderRecentlyViewedSlider()}
         </div>
-        {/* *** End Added Sections *** */}
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
         </div>
@@ -132,15 +128,16 @@ const Categories: React.FC = () => {
   const renderProducts = () => {
     const isAnyFilterActive = Object.values(activeFilters).some(value => Array.isArray(value) ? value.length > 0 : value === true);
 
-    if (!currentCategory) return null; // Guard
+    if (!currentCategory) return null;
 
-    // Handle category with no base products (render minimal header)
+    // Handle category with no base products
     if (baseCategoryProducts.length === 0 && !currentCategory.isMain) {
        return (
           <main className="page-products__main">
              <header className="page-header">
                 <div className="page-header__title-wrapper">
                    <div className="page-header__title-main">
+                      {/* Use DYNAMIC Title Here */}
                       <h1>{dynamicPageTitle}</h1>
                    </div>
                    <div className="page-header__title-aside">
@@ -188,7 +185,7 @@ const Categories: React.FC = () => {
                    {(isAnyFilterActive || baseCategoryProducts.length > 0) && filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} /* Use dynamic title */ data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
-                       <div className="alerts-minimal__label"></div> {/* Label might be added via CSS */}
+                       <div className="alerts-minimal__label"></div>
                      </div>
                    )}
                  </div>
@@ -209,18 +206,17 @@ const Categories: React.FC = () => {
                 {filteredProducts.map((product, index) => (
                   <React.Fragment key={product.id}>
                     <ProductCard product={product} activeVendorFilterDomain={activeVendorDomainForProductLink}/>
-                    {/* *** 1. UPDATED Price Alert Button within the grid *** */}
+                    {/* *** 1. UPDATED Price Alert Button within the grid logic *** */}
                     {currentCategory && (
                       (index + 1) === ALERT_BUTTON_THRESHOLD ||
                       ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0))
                     ) && (
                       <div className="p__products-section p__products-section--in-grid">
                          <div className="alerts alerts--in-grid">
-                             <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={dynamicPageTitle} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
+                             <button data-url={`/cat/${currentCategory.id}/${currentCategory.slug}`} data-title={dynamicPageTitle} /* Use dynamic title */ data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}>
                                  <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
                                  <span className="alerts__label">Ειδοποίηση για {currentCategory.name}</span>
                              </button>
-                             {/* Optional: <div className="alerts__prompt">...</div> */}
                          </div>
                       </div>
                     )}
@@ -243,12 +239,13 @@ const Categories: React.FC = () => {
               ) : null
             )}
           </div>
+          {/* *** 1. REMOVED Bottom p__products-section from here *** */}
         </main>
       </div>
     );
    };
 
-   // *** PRESERVED renderSubcategories with conditional header & sections ***
+  // *** PRESERVED renderSubcategories with conditional header & sections ***
   const renderSubcategories = (category: Category) => {
     if (!category || category.isMain) return null;
     const childCategories = categories.filter(cat => cat.parentId === category.id);
@@ -289,8 +286,8 @@ const Categories: React.FC = () => {
           renderProducts()
         )}
 
-        {/* Price Alert Section (Only for leaf categories with products) */}
-        {/* *** 1. Price Alert Button REMAINS HERE (conditional on leaf & products) *** */}
+        {/* *** 1. Price Alert Button REMAINS HERE (conditional) *** */}
+        {/* Render Price Alert only for leaf categories that initially had products */}
         {showProductsInsteadOfChildren && baseCategoryProducts.length > 0 && (
           <div className="p__products-section">
              {/* This is the main alert button for the category page */}
