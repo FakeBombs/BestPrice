@@ -1,33 +1,30 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useCallback } from 'react'; // Removed useMemo for this extreme test
+import React, { useState, useMemo, useCallback } from 'react'; // Added useMemo back
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-type LanguageOption = { // Kept for type safety if we reintroduce
-  code: string;
-  name: string;
+type LanguageOption = {
+  code: string; 
+  name: string; 
   englishName: string;
-  regionKey: string;
+  regionKey: string; 
 };
 
-// Keep these constants for the sidebar, even if the main list is hardcoded
-const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ /* Your full list here if you want to quickly switch back */
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ /* Your full list */
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  // ... rest of your ALL_AVAILABLE_LANGUAGES
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+  // ...
 ];
 
-const LANGUAGE_REGIONS_FOR_MODAL = [  /* Your full list here */
+const LANGUAGE_REGIONS_FOR_MODAL = [ /* Your full list */
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    // ... rest of your LANGUAGE_REGIONS_FOR_MODAL
+    // ...
 ];
 
-// The small, hardcoded list that previously worked when modal was in Footer.tsx
-const HARDCODED_TEST_LANGUAGES_FOR_DEBUG: { code: string; name: string; }[] = [
-    { code: 'el', name: 'Ελληνικά (Hardcoded Test)' },
-    { code: 'en-US', name: 'English (US) (Hardcoded Test)' },
-];
+// const HARDCODED_TEST_LANGUAGES_FOR_DEBUG ... // We can remove or keep this commented for now
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -37,7 +34,9 @@ interface LanguageModalProps {
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
-  const [selectedRegion, setSelectedRegion] = useState<string>("suggested"); // Still used for sidebar
+  const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
+
+  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
   if (!isOpen) return null;
 
@@ -54,8 +53,17 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // ALL useMemo calls for language lists are removed for this test.
-  // We will map HARDCODED_TEST_LANGUAGES_FOR_DEBUG directly.
+  // ===== RE-INTRODUCE suggestedLangsToDisplay useMemo =====
+  const suggestedLangsToDisplay = useMemo(() => {
+    console.log("DEBUG: Re-introducing suggestedLangsToDisplay useMemo");
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) 
+    );
+  }, []); // Empty dependency array is correct as ALL_AVAILABLE_LANGUAGES is constant
+
+  // For this step, languagesToDisplay will *only* be suggestedLangsToDisplay
+  const languagesToDisplay = suggestedLangsToDisplay; 
+  // We are NOT yet re-introducing the more complex useMemo for languagesToDisplay
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -89,9 +97,9 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
-            <p>DEBUG: Rendering HARDCODED list directly.</p>
             <ul className="space-y-1">
-              {HARDCODED_TEST_LANGUAGES_FOR_DEBUG.map((lang) => (
+              {/* Now mapping over the memoized suggestedLangsToDisplay */}
+              {languagesToDisplay.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -103,6 +111,10 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
+               {/* This message might show if suggestedLangsToDisplay is empty, which it shouldn't be with current hardcoded codes */}
+               {languagesToDisplay.length === 0 && ( 
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
+              )}
             </ul>
           </main>
         </div>
