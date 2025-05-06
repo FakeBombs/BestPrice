@@ -213,7 +213,7 @@ const Categories: React.FC = () => {
                           <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}>
                               <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}>
                                   <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div>
-                                  {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews} {t('reviews_label', { count: prod.reviews })})</p>}
+                                  {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews}{' '} {prod.reviews === 1 ? t('reviews_label_singular') : t('reviews_label_plural', { count: prod.reviews })}</p>}
                               </Link>
                           </div>
                       ))}
