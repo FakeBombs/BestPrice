@@ -220,6 +220,10 @@ const defaultTranslations: Translations = {
     "bestpriceOnLinkedIn": "BestPrice on LinkedIn",
     "homepageTitle": "Homepage",
     "changeLanguage": "Change Language",         "selectYourLanguageTitle": "Select Your Language",
+    "suggestedLanguages": "Suggested Languages", "allLanguages": "All Languages",
+    "languageCategoryEurope": "Europe",          "languageCategoryAsia": "Asia",
+    "languageCategoryAmericas": "Americas",      "languageCategoryAfrica": "Africa & Middle East",
+
 
     // ============================ Deals, Brands, Search =======================
     "allBrands": "All Brands",                   "productsFromBrand": "Products from {{brandName}}",
@@ -507,6 +511,9 @@ const defaultTranslations: Translations = {
     "bestpriceOnLinkedIn": "Το BestPrice στο LinkedIn",
     "homepageTitle": "Αρχική σελίδα",
     "changeLanguage": "Αλλαγή Γλώσσας",             "selectYourLanguageTitle": "Επιλέξτε τη Γλώσσα σας",
+    "suggestedLanguages": "Προτεινόμενες γλώσσες", "allLanguages": "Όλες οι γλώσσες",
+    "languageCategoryEurope": "Ευρώπη",             "languageCategoryAsia": "Ασία",
+    "languageCategoryAmericas": "Αμερική",          "languageCategoryAfrica": "Αφρική και Μέση Ανατολή",
 
     // ============================ Deals, Brands, Search =======================
     "allBrands": "Όλες οι Μάρκες",               "productsFromBrand": "Προϊόντα από {{brandName}}",
@@ -640,6 +647,9 @@ const defaultTranslations: Translations = {
     "bestpriceOnLinkedIn": "BestPrice en LinkedIn",
     "homepageTitle": "Página de Inicio",
     "changeLanguage": "Cambiar Idioma",         "selectYourLanguageTitle": "Selecciona tu Idioma",
+    "suggestedLanguages": "Idiomas sugeridos",   "allLanguages": "Todos los idiomas",
+    "languageCategoryEurope": "Europa",          "languageCategoryAsia": "Asia",
+    "languageCategoryAmericas": "Américas",      "languageCategoryAfrica": "África y Medio Oriente",
     // ... (All other keys from 'en'/'el' translated to 'es')
     'technology': 'Tecnología', 'home-garden': 'Casa y Jardín', // ... ALL CATEGORY SLUGS ...
   },
@@ -689,6 +699,9 @@ const defaultTranslations: Translations = {
     "bestpriceOnLinkedIn": "BestPrice sur LinkedIn",
     "homepageTitle": "Page d'Accueil",
     "changeLanguage": "Changer de Langue",        "selectYourLanguageTitle": "Sélectionnez Votre Langue",
+    "suggestedLanguages": "Langues suggérées",    "allLanguages": "Toutes les langues",
+    "languageCategoryEurope": "Europe",           "languageCategoryAsia": "Asie",
+    "languageCategoryAmericas": "Amériques",       "languageCategoryAfrica": "Afrique et Moyen-Orient",
     // ... (All other keys from 'en'/'el' translated to 'fr')
     'technology': 'Technologie', 'home-garden': 'Maison et Jardin', // ... ALL CATEGORY SLUGS ...
   },
@@ -738,6 +751,9 @@ const defaultTranslations: Translations = {
     "bestpriceOnLinkedIn": "BestPrice auf LinkedIn",
     "homepageTitle": "Startseite",
     "changeLanguage": "Sprache Ändern",           "selectYourLanguageTitle": "Wählen Sie Ihre Sprache",
+    "suggestedLanguages": "Vorgeschlagene Sprachen", "allLanguages": "Alle Sprachen",
+    "languageCategoryEurope": "Europa",             "languageCategoryAsia": "Asien",
+    "languageCategoryAmericas": "Amerika",          "languageCategoryAfrica": "Afrika & Naher Osten",
     // ... (All other keys from 'en'/'el' translated to 'de')
     'technology': 'Technologie', 'home-garden': 'Haus und Garten', // ... ALL CATEGORY SLUGS ...
   }
