@@ -1,36 +1,27 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products, vendors, mainCategories, Category } from '@/data/mockData'; // Added Category type
+import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define the getStatsData function outside the component as it doesn't depend on component state/props
 const getStatsData = () => {
     const totalProducts = products.length;
     const totalVendors = vendors.length;
     const totalBrands = brands.length;
     const totalDeals = products.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)).length;
-
-    return {
-        totalProducts,
-        totalVendors,
-        totalBrands,
-        totalDeals,
-    };
+    return { totalProducts, totalVendors, totalBrands, totalDeals };
 };
 
-// Language Modal Component
 interface LanguageModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Define a more comprehensive language list structure
 type LanguageOption = {
-  code: string; // Standard language code e.g., 'en-US', 'el', 'fr-FR'
-  name: string; // Native name of the language e.g., "Ελληνικά", "English (US)"
-  englishName: string; // English name for sorting or display if needed
-  regionKey: string; // For categorizing e.g., "languageCategoryEurope"
+  code: string; 
+  name: string; 
+  englishName: string;
+  regionKey: string; 
 };
 
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
@@ -65,11 +56,12 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentContextLang } = useTranslation();
+  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
+
+  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
   if (!isOpen) return null;
 
@@ -78,7 +70,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
         setContextLanguage(simpleLangCode);
     } else {
-        console.warn(`Unsupported language code: ${langCode}. Defaulting or keeping current.`);
+        console.warn(`Unsupported language code: ${langCode}.`);
         if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
             setContextLanguage(simpleLangCode);
         }
@@ -90,13 +82,17 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     return ALL_AVAILABLE_LANGUAGES.filter(lang => 
         ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)
     );
-  }, []);
+  }, []); 
 
   const languagesToDisplay = useMemo(() => {
-    if (selectedRegion === "suggested") return suggestedLangsToDisplay;
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion)
-                                  .sort((a,b) => a.name.localeCompare(b.name, currentContextLang));
-  }, [selectedRegion, suggestedLangsToDisplay, currentContextLang]);
+    let list;
+    if (selectedRegion === "suggested") {
+        list = suggestedLangsToDisplay;
+    } else {
+        list = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
+    }
+    return [...list].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort));
+  }, [selectedRegion, suggestedLangsToDisplay, currentContextLangForSort]);
 
 
   return (
@@ -125,7 +121,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {t(region.nameKey, region.key === "suggested" ? "Suggested" : region.key.replace('languageCategory',''))}
+                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages') : t(region.nameKey, region.key.replace('languageCategory','')))}
               </button>
             ))}
           </aside>
@@ -137,10 +133,10 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
-                      ${currentContextLang === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
+                      ${currentContextLangFromHook === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
                   >
                     {lang.name}
-                    {currentContextLang === lang.code.split('-')[0] && <span className="ml-2">✓</span>}
+                    {currentContextLangFromHook === lang.code.split('-')[0] && <span className="ml-2">✓</span>}
                   </button>
                 </li>
               ))}
@@ -181,7 +177,7 @@ const Footer: React.FC = () => {
             <div className="footer__aside">
               <Link rel="home" title={t('breadcrumbHome')} className="footer__logo pressable" to="/">
                 <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
-                <span>BestPrice</span> {/* Brand name likely stays untranslated */}
+                <span>BestPrice</span>
               </Link>
               <div className="footer__identity">
                 <p>{t('bestpriceSloganShort')}</p>
@@ -342,7 +338,7 @@ const Footer: React.FC = () => {
                 <Link rel="nofollow" title={t('dsaLink')} to="/policies/dsa">{t('dsaLink')}</Link>
                 <button 
                   onClick={() => setIsLanguageModalOpen(true)} 
-                  className="ml-4 text-sm hover:underline" // Basic styling
+                  className="ml-4 text-sm hover:underline"
                   title={t('changeLanguage')}
                 >
                   {t('changeLanguage')}
