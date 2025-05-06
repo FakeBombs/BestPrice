@@ -25,8 +25,8 @@ import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttribu
 
 const MAX_DISPLAY_COUNT = 10;
 const DEFAULT_SORT_TYPE = 'rating-desc';
-const ALERT_BUTTON_THRESHOLD = 20; // Show alert button after this many products in the grid
-const ALERT_BUTTON_INTERVAL = 100; // Show alert button every X products after threshold
+const ALERT_BUTTON_THRESHOLD = 20;
+const ALERT_BUTTON_INTERVAL = 100;
 const DYNAMIC_TITLE_CHAR_LIMIT = 70;
 const SLIDER_PRODUCT_COUNT = 10;
 
@@ -94,7 +94,7 @@ const Categories: React.FC = () => {
   const renderRecentlyViewedSlider = () => { if (!currentCategory) return null; const categoryProducts = allMockProducts.filter(p => p.categoryIds?.includes(currentCategory.id)); const recentlyViewed = categoryProducts.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); if (recentlyViewed.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Είδατε Πρόσφατα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {recentlyViewed.map(prod => ( <InlineProductItem key={`recent-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-recent"/> ))} </div> </ScrollableSlider> </section> ); };
   // --- End New Section Logic ---
 
-  // *** PRESERVED renderMainCategories (with sections added) ***
+  // *** PRESERVED renderMainCategories (with added sections) ***
   const renderMainCategories = () => {
     if (!currentCategory || !currentCategory.isMain) return null;
     const mainCat = currentCategory;
@@ -113,7 +113,7 @@ const Categories: React.FC = () => {
             {renderPopularBrands()}
             {renderRecentlyViewedSlider()}
         </div>
-        {/* *** 1. Price Alert Button AT BOTTOM for Main Category *** */}
+        {/* *** 1. Kept Price Alert Button at the BOTTOM for Main Category *** */}
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
         </div>
@@ -178,10 +178,11 @@ const Categories: React.FC = () => {
           <header className="page-header">
             <div className="page-header__title-wrapper">
               <div className="page-header__title-main">
+                 {/* Use DYNAMIC Title */}
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
                    <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
-                   {/* *** 1. RESTORED Minimal Price Alert Button *** */}
+                   {/* *** 1. Minimal Price Alert Button *** */}
                    {filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
@@ -208,8 +209,8 @@ const Categories: React.FC = () => {
                     <ProductCard product={product} activeVendorFilterDomain={activeVendorDomainForProductLink}/>
                     {/* *** 1. UPDATED Price Alert Button within the grid logic *** */}
                     {currentCategory && (
-                      (index + 1) === ALERT_BUTTON_THRESHOLD ||
-                      ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0))
+                      (index + 1) === ALERT_BUTTON_THRESHOLD || // Show after initial threshold
+                      ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0)) // Show every interval after threshold
                     ) && (
                       <div className="p__products-section p__products-section--in-grid">
                          <div className="alerts alerts--in-grid">
@@ -239,7 +240,7 @@ const Categories: React.FC = () => {
               ) : null
             )}
           </div>
-          {/* *** 1. REMOVED Bottom p__products-section from renderProducts *** */}
+          {/* *** 1. Bottom p__products-section containing alert is REMOVED from renderProducts *** */}
         </main>
       </div>
     );
@@ -286,15 +287,13 @@ const Categories: React.FC = () => {
           renderProducts()
         )}
 
-        {/* *** 1. RESTORED Price Alert Button at BOTTOM of Subcategories *** */}
-        {/* This button appears for ALL subcategory pages (leaf or not) */}
+        {/* *** 1. Price Alert Button RESTORED at BOTTOM of Subcategories (Unconditional) *** */}
         <div className="p__products-section">
           <div className="alerts">
             <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
             <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
           </div>
         </div>
-        {/* *** End Price Alert Button *** */}
       </>
     );
   };
