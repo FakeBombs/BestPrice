@@ -94,16 +94,14 @@ const Categories: React.FC = () => {
   const renderRecentlyViewedSlider = () => { if (!currentCategory) return null; const categoryProducts = allMockProducts.filter(p => p.categoryIds?.includes(currentCategory.id)); const recentlyViewed = categoryProducts.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); if (recentlyViewed.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Είδατε Πρόσφατα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {recentlyViewed.map(prod => ( <InlineProductItem key={`recent-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-recent"/> ))} </div> </ScrollableSlider> </section> ); };
   // --- End New Section Logic ---
 
-  // *** PRESERVED renderMainCategories (with added sections) ***
+  // *** PRESERVED renderMainCategories with added sections ***
   const renderMainCategories = () => {
     if (!currentCategory || !currentCategory.isMain) return null;
     const mainCat = currentCategory;
     const subcategories = categories.filter(cat => cat.parentId === mainCat.id);
     return (
       <>
-        {/* Static Header for Main Category */}
         <div className="page-header"><div className="hgroup"><div className="page-header__title-wrapper"><h1>{mainCat.name}</h1></div></div></div>
-        {/* Grid of Subcategories */}
         <div className="root-category__categories">
           {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>)}
         </div>
@@ -115,7 +113,6 @@ const Categories: React.FC = () => {
             {renderPopularBrands()}
             {renderRecentlyViewedSlider()}
         </div>
-        {/* *** End Added Sections *** */}
         {/* *** 1. Kept Price Alert Button at the BOTTOM for Main Category *** */}
         <div className="p__products-section">
           <div className="alerts"><button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={mainCat.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button><div className="alerts__prompt">σε <span className="alerts__title">{mainCat.name}</span></div></div>
@@ -141,6 +138,7 @@ const Categories: React.FC = () => {
              <header className="page-header">
                 <div className="page-header__title-wrapper">
                    <div className="page-header__title-main">
+                      {/* Use DYNAMIC Title */}
                       <h1>{dynamicPageTitle}</h1>
                    </div>
                    <div className="page-header__title-aside">
@@ -181,11 +179,12 @@ const Categories: React.FC = () => {
           <header className="page-header">
             <div className="page-header__title-wrapper">
               <div className="page-header__title-main">
+                 {/* Use DYNAMIC Title */}
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
                    <div className="page-header__count">{filteredProducts.length} {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}</div>
                    {/* *** 1. RESTORED Minimal Price Alert Button *** */}
-                   {filteredProducts.length > 0 && currentCategory && ( // Condition simplified
+                   {filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
                        <div className="alerts-minimal__label"></div>
@@ -211,8 +210,8 @@ const Categories: React.FC = () => {
                     <ProductCard product={product} activeVendorFilterDomain={activeVendorDomainForProductLink}/>
                     {/* *** 1. UPDATED Price Alert Button within the grid logic *** */}
                     {currentCategory && (
-                      (index + 1) === ALERT_BUTTON_THRESHOLD || // Show after initial threshold
-                      ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0)) // Show every interval after threshold
+                      (index + 1) === ALERT_BUTTON_THRESHOLD ||
+                      ((index + 1 > ALERT_BUTTON_THRESHOLD) && ((index + 1 - ALERT_BUTTON_THRESHOLD) % ALERT_BUTTON_INTERVAL === 0))
                     ) && (
                       <div className="p__products-section p__products-section--in-grid">
                          <div className="alerts alerts--in-grid">
@@ -220,8 +219,6 @@ const Categories: React.FC = () => {
                                  <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg>
                                  <span className="alerts__label">Ειδοποίηση για {currentCategory.name}</span>
                              </button>
-                             {/* Prompt could be dynamic or static */}
-                             {/* <div className="alerts__prompt">σε <span className="alerts__title">{dynamicPageTitle}</span></div> */}
                          </div>
                       </div>
                     )}
@@ -259,7 +256,7 @@ const Categories: React.FC = () => {
 
     return (
       <>
-        {/* *** 2. Conditionally render Subcategory Static Header *** */}
+        {/* *** 2. Conditionally render Subcategory Header *** */}
         {!showProductsInsteadOfChildren && (
             <div className="page-header">
               <div className="hgroup">
@@ -277,7 +274,7 @@ const Categories: React.FC = () => {
             <div className="root-category__categories">
               {childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}
             </div>
-            {/* *** 4. Added Sections for Subcategory Page (showing children) *** */}
+            {/* *** 4. Added Sections AFTER Subcategory Grid *** */}
             <div className="sections">
                 {renderTopDealsSlider()}
                 {renderHotProductsSlider()}
@@ -291,16 +288,8 @@ const Categories: React.FC = () => {
           renderProducts()
         )}
 
-        {/* *** 1. Price Alert Button ONLY for LEAF categories showing products *** */}
-        {showProductsInsteadOfChildren && baseCategoryProducts.length > 0 && (
-          <div className="p__products-section">
-            <div className="alerts">
-              <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
-              <div className="alerts__prompt">σε <span className="alerts__title">{category.name}</span></div>
-            </div>
-          </div>
-        )}
-        {/* *** REMOVED standalone <div class="sections"></div> from end of subcat render *** */}
+        {/* *** 1. REMOVED Price Alert Button section from end of renderSubcategories *** */}
+
       </>
     );
   };
