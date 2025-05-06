@@ -253,7 +253,7 @@ const Categories: React.FC = () => {
           {renderPopularCategoriesSection(currentCategory)}
           {renderTopDealsSlider()}
           {/* Large Price Alert Button AT BOTTOM for Main Category */}
-          div className="p__products-section">
+          <div className="p__products-section">
             <div className="alerts">
               <button data-url={`/cat/${mainCat.id}/${mainCat.slug}`} data-title={t(mainCat.slug)} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">{t('price_alert_button')}</span></button>
               <div className="alerts__prompt">{t('price_alert_prompt_in')} <span className="alerts__title">{t(mainCat.slug)}</span></div></div>
