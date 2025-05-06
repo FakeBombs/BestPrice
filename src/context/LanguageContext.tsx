@@ -101,8 +101,8 @@ const defaultTranslations: Translations = {
     "product_singular": "product",
     "product_plural": "{{count}} products",
     "rating_label": "Rating",
-    "reviews_label_one": "{{count}} review",
-    "reviews_label_other": "{{count}} reviews",
+    "reviews_label_singular": "review",
+    "reviews_label_plural": "{{count}} reviews",
 
     // --- Main Categories (English) ---
     'technology': 'Technology',
@@ -344,8 +344,8 @@ const defaultTranslations: Translations = {
     "product_singular": "προϊόν",
     "product_plural": "{{count}} προϊόντα",
     "rating_label": "Βαθμολογία",
-    "reviews_label_one": "{{count}} αξιολόγηση",
-    "reviews_label_other": "{{count}} αξιολογήσεις",
+    "reviews_label_singular": "αξιολόγηση",
+    "reviews_label_plural": "{{count}} αξιολογήσεις",
 
     // --- Main Categories (Greek) ---
     'technology': 'Τεχνολογία',
@@ -504,8 +504,8 @@ const defaultTranslations: Translations = {
     "product_singular": "producto",
     "product_plural": "{{count}} productos",
     "rating_label": "Clasificación",
-    "reviews_label_one": "{{count}} reseña",
-    "reviews_label_other": "{{count}} reseñas",
+    "reviews_label_singular": "reseña",
+    "reviews_label_plural": "{{count}} reseñas",
     'technology': 'Tecnología',
     'mobile-telephony': 'Telefonía Móvil',
     // ... (Add all other Spanish translations, including for categories)
@@ -515,8 +515,8 @@ const defaultTranslations: Translations = {
     "product_singular": "produit",
     "product_plural": "{{count}} produits",
     "rating_label": "Évaluation",
-    "reviews_label_one": "{{count}} avis",
-    "reviews_label_other": "{{count}} avis",
+    "reviews_label_singular": "avis",
+    "reviews_label_plural": "{{count}} avis",
     'technology': 'Technologie',
     'mobile-telephony': 'Téléphonie Mobile',
     // ... (Add all other French translations, including for categories)
@@ -526,8 +526,8 @@ const defaultTranslations: Translations = {
     "product_singular": "Produkt",
     "product_plural": "{{count}} Produkte",
     "rating_label": "Bewertung",
-    "reviews_label_one": "{{count}} Bewertung",
-    "reviews_label_other": "{{count}} Bewertungen",
+    "reviews_label_singular": "Bewertung",
+    "reviews_label_plural": "{{count}} Bewertungen",
     'technology': 'Technologie',
     'mobile-telephony': 'Mobiltelefonie',
     // ... (Add all other German translations, including for categories)
