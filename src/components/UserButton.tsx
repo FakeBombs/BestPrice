@@ -5,7 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/AuthModal';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useTheme } from "next-themes"; // *** IMPORT useTheme ***
+// Removed useBodyAttributes, useHtmlAttributes as next-themes handles DOM
 
+// UserDropdownContent component remains the same...
 interface UserDropdownContentProps {
   onLogout: () => void;
   user: {
@@ -15,9 +18,6 @@ interface UserDropdownContentProps {
     email: string;
   } | null;
 }
-
-// Define Theme type explicitly
-type Theme = 'light' | 'dark';
 
 const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, user }) => {
   const { t } = useTranslation();
@@ -55,55 +55,23 @@ const UserButton = () => {
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  // Initialize state based on localStorage, default 'light'
-  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
-      if (typeof window !== 'undefined') {
-          const storedTheme = localStorage.getItem('theme');
-          // Only initialize as 'dark' if explicitly stored as 'dark'
-          return storedTheme === 'dark' ? 'dark' : 'light';
-      }
-      return 'light'; // Default for SSR
-  });
-
+  // *** Use next-themes hook ***
+  const { theme, setTheme } = useTheme();
 
   const toggleDropdown = () => { setIsDropdownOpen(!isDropdownOpen); };
   const handleLoginClick = () => { setAuthMode('login'); setAuthModalOpen(true); };
   const handleRegisterClick = () => { setAuthMode('register'); setAuthModalOpen(true); };
 
-  // Function to apply theme to DOM and save preference
-  const applyTheme = useCallback((theme: Theme) => {
-      if (typeof window !== 'undefined') {
-          if (theme === 'dark') {
-              document.documentElement.setAttribute('data-theme', 'dark');
-          } else {
-              // For light theme, ensure the attribute is removed
-              document.documentElement.removeAttribute('data-theme');
-          }
-          // Removed color-scheme styling
-          localStorage.setItem('theme', theme);
-      }
-  }, []); // No dependencies needed
-
-  // Function to handle theme toggle click
-  const toggleTheme = () => {
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setCurrentTheme(newTheme); // Update React state -> triggers the effect below
-  };
-
-  // Effect to apply theme changes whenever currentTheme state changes
-  useEffect(() => {
-    applyTheme(currentTheme);
-  }, [currentTheme, applyTheme]);
-
-  // Effect to set mounted state
+  // Effect to set mounted state (for hydration safety)
   useEffect(() => {
       setMounted(true);
   }, []);
 
+  // No longer need manual applyTheme or useEffect for theme changes
 
-  // Return null/placeholder on server or before mount
+  // Return null or placeholder on server/before mount
   if (!mounted) {
+      // Render a basic placeholder to prevent layout shifts if possible
       return (
          <div id="user">
            <span className="user-popups">
@@ -111,8 +79,7 @@ const UserButton = () => {
                 <svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
              </span>
              <button aria-label="Toggle theme" className="foo-button hide-mobile" disabled>
-                  {/* Show a default icon, maybe Sun as light is default */}
-                  <Sun className="h-6 w-6"/>
+                  <Sun className="h-6 w-6"/> {/* Or Moon depending on default */}
              </button>
            </span>
            <span className="user-actions">
@@ -132,11 +99,15 @@ const UserButton = () => {
           <svg aria-hidden="true" className="icon" width={24} height={24}><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
         </span>
         <button
-          onClick={toggleTheme}
+          // *** Use setTheme from next-themes ***
+          // Note: next-themes might resolve 'system' to 'light' or 'dark'
+          // We toggle between explicit 'light' and 'dark' for simplicity here
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           aria-label="Toggle theme"
           className="foo-button hide-mobile"
         >
-          {currentTheme === 'dark' ? (
+          {/* *** Use theme from next-themes *** */}
+          {theme === 'dark' ? (
             <Sun className="h-6 w-6" />
           ) : (
             <Moon className="h-6 w-6" />
