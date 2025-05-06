@@ -11,15 +11,31 @@ type LanguageOption = {
   regionKey: string; 
 };
 
-const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ /* Keep your full list here */
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ /* Your full list */
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
   { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
   { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
-  // ... (the rest of your ALL_AVAILABLE_LANGUAGES array)
+  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
+  { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
+  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
+  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
+  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
+  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
+  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
+  { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
+  { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
+  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
+  { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' },
+  { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
+  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' },
+  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
 ];
 
-const LANGUAGE_REGIONS_FOR_MODAL = [ /* Keep your full list here */
+const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
     { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
@@ -58,27 +74,18 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     return ALL_AVAILABLE_LANGUAGES.filter(lang => 
         ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)
     );
-  }, []); // This useMemo is likely fine
+  }, []);
 
-  // ***** START DEBUGGING MODIFICATION *****
   const languagesToDisplay = useMemo(() => {
-    console.log("DEBUG: languagesToDisplay useMemo triggered. selectedRegion:", selectedRegion, "currentContextLangForSort:", currentContextLangForSort);
-    // SIMPLIFY: Temporarily return only the suggested languages, bypassing region filtering and sorting
-    return suggestedLangsToDisplay;
-
-    // --- ORIGINAL LOGIC (COMMENTED OUT FOR DEBUGGING) ---
-    // let listToFilter;
-    // if (selectedRegion === "suggested") {
-    //     listToFilter = suggestedLangsToDisplay;
-    // } else {
-    //     listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
-    // }
-    // // Create a new array before sorting
-    // return [...listToFilter].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort));
-    // ***** END DEBUGGING MODIFICATION *****
-
-  }, [selectedRegion, suggestedLangsToDisplay, currentContextLangForSort]); // Keep dependencies for now, but the function body is simplified
-
+    console.log("DEBUG Attempt A: languagesToDisplay (no sort). Region:", selectedRegion, "SortLang:", currentContextLangForSort);
+    let listToFilter;
+    if (selectedRegion === "suggested") {
+        listToFilter = suggestedLangsToDisplay;
+    } else {
+        listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
+    }
+    return listToFilter; // Return WITHOUT sorting
+  }, [selectedRegion, suggestedLangsToDisplay]); // Removed currentContextLangForSort as it's not used in this simplified version
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -113,7 +120,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesToDisplay.map((lang) => ( // This will now use the simplified list
+              {languagesToDisplay.map((lang) => (
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -125,7 +132,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {languagesToDisplay.length === 0 && selectedRegion !== "suggested" && ( // This condition might not be hit if we always return suggestedLangsToDisplay
+               {languagesToDisplay.length === 0 && selectedRegion !== "suggested" && (
                 <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
