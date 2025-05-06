@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LogOut, Sun, Moon } from 'lucide-react';
@@ -16,6 +15,9 @@ interface UserDropdownContentProps {
     email: string;
   } | null;
 }
+
+// Define Theme type explicitly
+type Theme = 'light' | 'dark';
 
 const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, user }) => {
   const { t } = useTranslation();
@@ -117,7 +119,20 @@ const UserButton = () => {
   const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'default'>('default');
+  // *** Initialize state based on localStorage or system pref ***
+  // We read localStorage directly here to avoid flicker, useEffect will confirm later
+  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+      if (typeof window !== 'undefined') {
+          const storedTheme = localStorage.getItem('theme');
+          if (storedTheme === 'light' || storedTheme === 'dark') {
+              return storedTheme;
+          }
+          // If nothing stored, check system preference
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      return 'light'; // Default for SSR or non-browser environments
+  });
+
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -133,38 +148,41 @@ const UserButton = () => {
     setAuthModalOpen(true);
   };
 
-  const setTheme = (newTheme: 'dark' | 'default') => {
-    setCurrentTheme(newTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme);
-      // Apply the theme to the document element using data-theme
-      document.documentElement.setAttribute('data-theme', newTheme);
+  // Function to apply theme to DOM and save preference
+  const applyTheme = (theme: Theme) => {
+      if (typeof window !== 'undefined') {
+          // Remove previous theme class if any (optional, safe)
+          // document.documentElement.classList.remove('light', 'dark');
+          // document.documentElement.classList.add(theme);
 
-      // Apply color-scheme. Note that this might not be supported in all browsers
-      document.documentElement.style.colorScheme = newTheme === 'dark' ? 'dark' : 'light';
-    }
+          // Set data-theme attribute (preferred method)
+          document.documentElement.setAttribute('data-theme', theme);
+
+          // Set color-scheme style for browser UI hints
+          document.documentElement.style.colorScheme = theme;
+
+          // Save preference
+          localStorage.setItem('theme', theme);
+      }
+  }
+
+  // Function to handle theme toggle click
+  const toggleTheme = () => {
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setCurrentTheme(newTheme); // Update React state
+    applyTheme(newTheme); // Apply changes to DOM and localStorage
   };
 
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('theme') as 'dark' | 'default';
-      if (storedTheme) {
-        setCurrentTheme(storedTheme);
-        // Apply the theme on initial load
-        document.documentElement.setAttribute('data-theme', storedTheme);
-        document.documentElement.style.colorScheme = storedTheme === 'dark' ? 'dark' : 'light';
-      } else {
-        // If no theme is stored, check system preference
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
-        setCurrentTheme(systemTheme);
-        localStorage.setItem('theme', systemTheme);
-        document.documentElement.setAttribute('data-theme', systemTheme);
-        document.documentElement.style.colorScheme = systemTheme === 'dark' ? 'dark' : 'light';
-      }
-    }
-  }, []);
 
+  // Effect to apply initial theme and handle hydration mismatch
+  useEffect(() => {
+    setMounted(true); // Indicate component has mounted
+    // Apply the theme determined by the initial state calculation
+    applyTheme(currentTheme);
+  }, [currentTheme]); // Rerun if currentTheme changes programmatically (unlikely here but safe)
+
+
+  // Return null on server or before mount to avoid hydration issues
   if (!mounted) return null;
 
   return (
@@ -174,14 +192,15 @@ const UserButton = () => {
           <svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/icons.svg#icon-search-24"></use></svg>
         </span>
         <button
-          onClick={() => setTheme(currentTheme === 'dark' ? 'default' : 'dark')}
+          onClick={toggleTheme} // Use the toggleTheme handler
           aria-label="Toggle theme"
           className="foo-button hide-mobile"
         >
+          {/* Show the opposite icon of the current theme */}
           {currentTheme === 'dark' ? (
-            <Sun className="h-6 w-6" />
+            <Sun className="h-6 w-6" /> /* Show sun when dark */
           ) : (
-            <Moon className="h-6 w-6" />
+            <Moon className="h-6 w-6" /> /* Show moon when light */
           )}
         </button>
         {user && (
