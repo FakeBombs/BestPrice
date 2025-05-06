@@ -93,18 +93,163 @@ const defaultTranslations: Translations = {
     accountSummary: 'Account Summary',
     categories: 'Categories',
     gifts: 'Gifts',
-    deals: 'Deals',
+    deals: 'Deals', // Already present
     clearFilters: 'Clear filters',
     finalPrice: 'Final price',
 
-    // Added for Categories page
+    // == For Categories page (and general product listings) ==
     "product_singular": "product",
     "product_plural": "{{count}} products",
     "rating_label": "Rating",
     "reviews_label_singular": "review",
     "reviews_label_plural": "{{count}} reviews",
+    "from_vendor": "from", // Used in dynamicPageTitle in Categories.tsx
+    "with": "with", // Used in dynamicPageTitle in Categories.tsx
+    "no_products_in_category": "There are no products in this category yet.",
+    "filters_title": "Filters",
+    "remove_all_filters_tooltip": "Remove all filters",
+    "show_only_title": "Show only",
+    "deals_label": "Deals", // Also used for applied filter chip
+    "deals_title": "Products with significant price drop",
+    "certified_label": "Certified", // Also used for applied filter chip
+    "certified_stores_title": "Certified Stores",
+    "instock_label": "In Stock", // Also used for applied filter chip
+    "instock_title": "Only products available in stock",
+    "boxnow_delivery_title": "BOX NOW Delivery",
+    "boxnow_tooltip": "Pick up your order from a BOX NOW locker 24/7",
+    "delivery_label": "BOX NOW", // Also used for applied filter chip
+    "manufacturer_title": "Manufacturer",
+    "show_less_manufacturers": "Show less manufacturers",
+    "show_all_manufacturers": "Show all manufacturers",
+    "show_less": "Show Less",
+    "show_all": "Show All",
+    "show_less_options": "Show less options for",
+    "show_all_options": "Show all options for",
+    "remove_instock_filter": "Remove 'In Stock' filter",
+    "remove_deals_filter": "Remove 'Deals' filter",
+    "remove_certified_filter": "Remove 'Certified' filter",
+    "remove_nearby_filter": "Remove 'Nearby' filter", // Assuming 'nearby_label' will be added if needed
+    "remove_boxnow_filter": "Remove 'BOX NOW' filter",
+    "remove_brand_filter": "Remove brand filter",
+    "remove_spec_filter": "Remove spec filter",
+    "reset_all_filters": "Reset all filters",
+    "clear_all_filters": "Clear All", // Already present, but context is filter reset
+    "selected_deals": "Selected Deals",
+    "popular_choices": "Popular Choices",
+    "sort_most_popular": "Most Popular",
+    "sort_newest": "Newest",
+    "sort_cheapest": "Cheapest",
+    "sort_most_expensive": "Most Expensive",
+    "sort_alphabetical": "Alphabetical (A-Z)",
+    "sort_most_reviews": "Most Reviews",
+    "sort_by_manufacturer": "By Manufacturer",
+    "sort_num_stores": "Number of Stores",
+    "price_alert_for": "Price Alert for",
+    "no_products_found_filters": "No products match your current filters.",
+    "suggestions_title": "Suggestions",
+    "suggestion_see_all_products": "See all products in this category:",
+    "all_category_products": "All Category Products",
+    "suggestion_try_removing_filters": "Try removing some filters:",
+    "remove_a_filter": "Remove a filter",
+    "suggestion_return_home": "Return to the homepage:",
+    "return_to_homepage": "Return to Homepage",
+    "no_subcategories": "No subcategories available.",
+    "popular_categories": "Popular Categories", // Used in Categories.tsx
+    "top_deals_in": "Top Deals in", // Used in Categories.tsx
+    "products_with_significant_price_drop": "Products with a significant price drop", // Used in Categories.tsx
+    "hottest_in": "Hottest in", // Used in Categories.tsx
+    "product_reviews_title": "Product Reviews", // Used in Categories.tsx
+    "helpful_reviews_subtitle": "Helpful reviews from our users", // Used in Categories.tsx
+    "popular_manufacturers": "Popular Manufacturers", // Used in Categories.tsx
+    "recently_viewed_title": "Recently Viewed", // Used in Categories.tsx, also general
+    "price_alert_button": "Set Price Alert", // Used in Categories.tsx
+    "price_alert_prompt_in": "Never miss a deal for products in", // Used in Categories.tsx
+    "return_to": "Return to", // Used in Categories.tsx subcategory header
+    "info_for_certified_store": "Information for certified store", // Used in Categories.tsx merchant info
+    "showing_products_from_store": "Showing products from store", // Used in Categories.tsx merchant info
+    "remove_filter": "Remove this filter", // Used in Categories.tsx merchant info
 
-    // --- Main Categories (English) ---
+    // == For ProductBreadcrumb.tsx ==
+    "breadcrumbHome": "BestPrice", // Or just "Home"
+    "breadcrumbAllProductsInCategory": "All products in the {{categoryName}} category",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "All products and subcategories in the {{categoryName}} category",
+
+    // == Proactive Keys for other components ==
+    // ProductDetail.tsx
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "specifications": "Specifications",
+    "reviews": "Reviews", // also general
+    "relatedProducts": "Related Products",
+    "writeReview": "Write a Review",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock", // also general
+    "availableAt": "Available at {{count}} stores",
+    "noStoresAvailable": "Currently unavailable",
+    "priceRange": "Price Range",
+    "comparePrices": "Compare {{count}} Prices",
+    "viewAllStores": "View all stores",
+    "productDescription": "Description",
+    "share": "Share",
+    "addToFavorites": "Add to Favorites", // Also general
+    "removeFromFavorites": "Remove from Favorites", // Also general
+    "priceHistory": "Price History",
+    "priceDropAlert": "Price Drop Alert", // Also related to PriceAlertModal
+
+    // Deals.tsx / BrandPage.tsx / SearchResults.tsx
+    "allBrands": "All Brands",
+    "productsFromBrand": "Products from {{brandName}}",
+    "searchResultsFor": "Search results for \"{{searchTerm}}\"",
+    "noResultsFound": "No results found for \"{{searchTerm}}\"",
+    "sortBy": "Sort by", // General sorting label
+    "viewAsGrid": "Grid View",
+    "viewAsList": "List View",
+    "itemsPerPage": "Items per page",
+    "page": "Page", // For pagination
+    "of": "of", // For pagination e.g. "Page 1 of 10"
+    "nextPage": "Next",
+    "previousPage": "Previous",
+    "todaysDeals": "Today's Deals",
+    "filterBy": "Filter by",
+
+    // ShoppingCart.tsx / Checkout
+    "shoppingCart": "Shopping Cart",
+    "proceedToCheckout": "Proceed to Checkout",
+    "item": "Item",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "emptyCart": "Your cart is empty.",
+    "continueShopping": "Continue Shopping",
+    "shippingAddress": "Shipping Address",
+    "billingAddress": "Billing Address",
+    "paymentInformation": "Payment Information",
+    "placeOrder": "Place Order",
+    "orderSummary": "Order Summary",
+    "discountCode": "Discount Code",
+    "apply": "Apply",
+
+    // General UI
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "close": "Close",
+    "showMore": "Show More", // Already have show_all/show_less, this is generic
+    "showLess": "Show Less", // Already present
+    "all": "All", // General 'All'
+    "selectOption": "Select an option",
+    "optional": "Optional",
+    "required": "Required",
+    "back": "Back",
+    "next": "Next", // Also for pagination
+    "submit": "Submit",
+    "search": "Search",
+    "searchPlaceholder": "Search for products...",
+    "notFoundPageTitle": "Page Not Found",
+    "notFoundMessage": "Oops! The page you are looking for does not exist.",
+
+
+    // --- Main Categories (English) --- (Ensure these are duplicated for completeness if not already there)
     'technology': 'Technology',
     'home-garden': 'Home & Garden',
     'fashion': 'Fashion',
@@ -113,7 +258,7 @@ const defaultTranslations: Translations = {
     'hobby-sports': 'Hobby & Sports',
     'auto-moto': 'Auto & Moto',
 
-    // --- Subcategories of Τεχνολογία (English) ---
+    // --- Subcategories (Ensure these are duplicated for completeness if not already there)
     'mobile-telephony': 'Mobile Telephony',
     'computers': 'Computers',
     'laptops-accessories': 'Laptops & Accessories',
@@ -126,8 +271,6 @@ const defaultTranslations: Translations = {
     'electronics': 'Electronics',
     'telephony': 'Telephony',
     'gadgets': 'Gadgets',
-
-    // --- Subcategories of Σπίτι & Κήπος (English) ---
     'home-appliances': 'Home Appliances',
     'tools': 'Tools',
     'furniture': 'Furniture',
@@ -148,8 +291,6 @@ const defaultTranslations: Translations = {
     'shopping-trolleys': 'Shopping Trolleys',
     'church-items': 'Church Items',
     'pet-supplies': 'Pet Supplies',
-
-    // --- Subcategories of Μόδα (English) ---
     'womens-fashion': "Women's Fashion",
     'mens-fashion': "Men's Fashion",
     'watches': 'Watches',
@@ -160,8 +301,6 @@ const defaultTranslations: Translations = {
     'shoe-accessories': 'Shoe Accessories',
     'kids-baby-fashion': "Kids & Baby Fashion",
     'sneakers': 'Sneakers',
-
-    // --- Subcategories of Υγεία & Ομορφιά (English) ---
     'grooming': 'Grooming',
     'pharmacy-products': 'Pharmacy Products',
     'perfumes': 'Perfumes',
@@ -179,8 +318,6 @@ const defaultTranslations: Translations = {
     'patient-aids': 'Patient Aids',
     'optics': 'Optics',
     'korean-cosmetics': 'Korean Cosmetics',
-
-    // --- Subcategories of Παιδικά - Βρεφικά (English) ---
     'kids-toys': "Kids' Toys",
     'school-supplies': 'School Supplies',
     'baby-toys': 'Baby Toys',
@@ -188,8 +325,6 @@ const defaultTranslations: Translations = {
     'kids-linens': "Kids' Linens",
     'christening-items': 'Christening Items',
     'kids-watches': "Kids' Watches",
-
-    // --- Subcategories of Hobby, Αθλητισμός (English) ---
     'sports': 'Sports',
     'cycling': 'Cycling',
     'leisure-time': 'Leisure Time',
@@ -211,14 +346,10 @@ const defaultTranslations: Translations = {
     'womens-sports-shoes': "Women's Sports Shoes",
     'mens-sportswear': "Men's Sportswear",
     'mens-sports-shoes': "Men's Sports Shoes",
-
-    // --- Subcategories of Μηχανοκίνηση (English) ---
     'car': 'Car',
     'motorcycle': 'Motorcycle',
     'boat': 'Boat',
     'truck-items': 'Truck Items',
-
-    // --- Subcategories of Κινητή Τηλεφωνία (parentId: 10) (English) ---
     'smartphones': 'Smartphones',
     'iphone': 'iPhone',
     'mobile-cases': 'Mobile Cases',
@@ -250,7 +381,6 @@ const defaultTranslations: Translations = {
     'mobile-gaming-buttons': 'Mobile Gaming Buttons',
     'connection-packs': 'Connection Packs',
     'portable-bluetooth-speakers-mobile': 'Portable Bluetooth Speakers (Mobile)',
-
     'ps5-games': 'PS5 Games',
     'pc-games': 'PC Games',
     'amplifiers-preamplifiers': 'Amplifiers & Preamplifiers',
@@ -336,18 +466,162 @@ const defaultTranslations: Translations = {
     accountSummary: 'Σύνοψη Λογαριασμού',
     categories: 'Κατηγορίες',
     gifts: 'Δώρα',
-    deals: 'Προσφορές',
+    deals: 'Προσφορές', // Already present
     clearFilters: 'Καθαρισμός φίλτρων',
     finalPrice: 'Τελική τιμή',
 
-    // Added for Categories page
+    // == For Categories page (and general product listings) ==
     "product_singular": "προϊόν",
     "product_plural": "{{count}} προϊόντα",
     "rating_label": "Βαθμολογία",
     "reviews_label_singular": "αξιολόγηση",
     "reviews_label_plural": "{{count}} αξιολογήσεις",
+    "from_vendor": "από",
+    "with": "με",
+    "no_products_in_category": "Δεν υπάρχουν προϊόντα σε αυτή την κατηγορία ακόμα.",
+    "filters_title": "Φίλτρα",
+    "remove_all_filters_tooltip": "Αφαίρεση όλων των φίλτρων",
+    "show_only_title": "Εμφάνιση μόνο",
+    "deals_label": "Προσφορές",
+    "deals_title": "Προϊόντα με σημαντική πτώση τιμής",
+    "certified_label": "Πιστοποιημένα",
+    "certified_stores_title": "Πιστοποιημένα Καταστήματα",
+    "instock_label": "Διαθέσιμα",
+    "instock_title": "Μόνο προϊόντα διαθέσιμα σε απόθεμα",
+    "boxnow_delivery_title": "BOX NOW Παράδοση",
+    "boxnow_tooltip": "Παραλάβετε την παραγγελία σας από ένα BOX NOW locker 24/7",
+    "delivery_label": "BOX NOW",
+    "manufacturer_title": "Κατασκευαστής",
+    "show_less_manufacturers": "Λιγότεροι κατασκευαστές",
+    "show_all_manufacturers": "Όλοι οι κατασκευαστές",
+    "show_less": "Λιγότερα",
+    "show_all": "Όλα",
+    "show_less_options": "Λιγότερες επιλογές για",
+    "show_all_options": "Όλες οι επιλογές για",
+    "remove_instock_filter": "Αφαίρεση φίλτρου 'Διαθέσιμα'",
+    "remove_deals_filter": "Αφαίρεση φίλτρου 'Προσφορές'",
+    "remove_certified_filter": "Αφαίρεση φίλτρου 'Πιστοποιημένα'",
+    "remove_nearby_filter": "Αφαίρεση φίλτρου 'Κοντινά'",
+    "remove_boxnow_filter": "Αφαίρεση φίλτρου 'BOX NOW'",
+    "remove_brand_filter": "Αφαίρεση φίλτρου κατασκευαστή",
+    "remove_spec_filter": "Αφαίρεση φίλτρου χαρακτηριστικού",
+    "reset_all_filters": "Επαναφορά όλων των φίλτρων",
+    "clear_all_filters": "Καθαρισμός Όλων",
+    "selected_deals": "Επιλεγμένες Προσφορές",
+    "popular_choices": "Δημοφιλείς Επιλογές",
+    "sort_most_popular": "Δημοφιλέστερα",
+    "sort_newest": "Νεότερα",
+    "sort_cheapest": "Φθηνότερα",
+    "sort_most_expensive": "Ακριβότερα",
+    "sort_alphabetical": "Αλφαβητικά (Α-Ω)",
+    "sort_most_reviews": "Περισσότερες Αξιολογήσεις",
+    "sort_by_manufacturer": " ανά Κατασκευαστή",
+    "sort_num_stores": "Πλήθος Καταστημάτων",
+    "price_alert_for": "Ειδοποίηση Τιμής για",
+    "no_products_found_filters": "Κανένα προϊόν δεν αντιστοιχεί στα τρέχοντα φίλτρα σας.",
+    "suggestions_title": "Προτάσεις",
+    "suggestion_see_all_products": "Δείτε όλα τα προϊόντα αυτής της κατηγορίας:",
+    "all_category_products": "Όλα τα Προϊόντα Κατηγορίας",
+    "suggestion_try_removing_filters": "Δοκιμάστε να αφαιρέσετε μερικά φίλτρα:",
+    "remove_a_filter": "Αφαίρεση φίλτρου",
+    "suggestion_return_home": "Επιστρέψτε στην αρχική σελίδα:",
+    "return_to_homepage": "Επιστροφή στην Αρχική",
+    "no_subcategories": "Δεν υπάρχουν διαθέσιμες υποκατηγορίες.",
+    "popular_categories": "Δημοφιλείς Κατηγορίες",
+    "top_deals_in": "Top Προσφορές σε",
+    "products_with_significant_price_drop": "Προϊόντα με σημαντική πτώση τιμής",
+    "hottest_in": "Τα πιο Hot σε",
+    "product_reviews_title": "Αξιολογήσεις Προϊόντων",
+    "helpful_reviews_subtitle": "Χρήσιμες αξιολογήσεις από τους χρήστες μας",
+    "popular_manufacturers": "Δημοφιλείς Κατασκευαστές",
+    "recently_viewed_title": "Είδατε Πρόσφατα", // Already present
+    "price_alert_button": "Ειδοποίηση Πτώσης Τιμής",
+    "price_alert_prompt_in": "Μην χάσετε ποτέ μια προσφορά για προϊόντα στην κατηγορία",
+    "return_to": "Επιστροφή σε",
+    "info_for_certified_store": "Πληροφορίες για πιστοποιημένο κατάστημα",
+    "showing_products_from_store": "Εμφάνιση προϊόντων από το κατάστημα",
+    "remove_filter": "Αφαίρεση αυτού του φίλτρου",
 
-    // --- Main Categories (Greek) ---
+    // == For ProductBreadcrumb.tsx ==
+    "breadcrumbHome": "BestPrice", // Ή "Αρχική"
+    "breadcrumbAllProductsInCategory": "Όλα τα προϊόντα της κατηγορίας {{categoryName}}",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας {{categoryName}}",
+
+    // == Proactive Keys for other components ==
+    // ProductDetail.tsx
+    "addToCart": "Προσθήκη στο Καλάθι",
+    "buyNow": "Αγορά Τώρα",
+    "specifications": "Χαρακτηριστικά",
+    "reviews": "Αξιολογήσεις",
+    "relatedProducts": "Σχετικά Προϊόντα",
+    "writeReview": "Γράψτε Αξιολόγηση",
+    "outOfStock": "Εξαντλημένο",
+    "inStock": "Διαθέσιμο",
+    "availableAt": "Διαθέσιμο σε {{count}} καταστήματα",
+    "noStoresAvailable": "Προς το παρόν μη διαθέσιμο",
+    "priceRange": "Εύρος Τιμών",
+    "comparePrices": "Σύγκριση {{count}} Τιμών",
+    "viewAllStores": "Δείτε όλα τα καταστήματα",
+    "productDescription": "Περιγραφή",
+    "share": "Κοινοποίηση",
+    "addToFavorites": "Προσθήκη στα Αγαπημένα",
+    "removeFromFavorites": "Αφαίρεση από τα Αγαπημένα",
+    "priceHistory": "Ιστορικό Τιμών",
+    "priceDropAlert": "Ειδοποίηση Πτώσης Τιμής",
+
+    // Deals.tsx / BrandPage.tsx / SearchResults.tsx
+    "allBrands": "Όλες οι Μάρκες",
+    "productsFromBrand": "Προϊόντα από {{brandName}}",
+    "searchResultsFor": "Αποτελέσματα αναζήτησης για \"{{searchTerm}}\"",
+    "noResultsFound": "Δεν βρέθηκαν αποτελέσματα για \"{{searchTerm}}\"",
+    "sortBy": "Ταξινόμηση κατά",
+    "viewAsGrid": "Προβολή Πλέγματος",
+    "viewAsList": "Προβολή Λίστας",
+    "itemsPerPage": "Αντικείμενα ανά σελίδα",
+    "page": "Σελίδα",
+    "of": "από", // e.g. "Σελίδα 1 από 10"
+    "nextPage": "Επόμενη",
+    "previousPage": "Προηγούμενη",
+    "todaysDeals": " σημερινές Προσφορές",
+    "filterBy": "Φιλτράρισμα κατά",
+
+    // ShoppingCart.tsx / Checkout
+    "shoppingCart": "Καλάθι Αγορών",
+    "proceedToCheckout": "Ολοκλήρωση Παραγγελίας",
+    "item": "Προϊόν",
+    "quantity": "Ποσότητα",
+    "subtotal": "Μερικό Σύνολο",
+    "total": "Συνολικό Ποσό",
+    "emptyCart": "Το καλάθι σας είναι άδειο.",
+    "continueShopping": "Συνέχεια Αγορών",
+    "shippingAddress": "Διεύθυνση Αποστολής",
+    "billingAddress": "Διεύθυνση Χρέωσης",
+    "paymentInformation": "Στοιχεία Πληρωμής",
+    "placeOrder": "Καταχώρηση Παραγγελίας",
+    "orderSummary": "Σύνοψη Παραγγελίας",
+    "discountCode": "Κωδικός Έκπτωσης",
+    "apply": "Εφαρμογή",
+
+    // General UI
+    "yes": "Ναι",
+    "no": "Όχι",
+    "ok": "OK",
+    "close": "Κλείσιμο",
+    "showMore": "Περισσότερα",
+    "showLess": "Λιγότερα", // Already present
+    "all": "Όλα",
+    "selectOption": "Επιλέξτε",
+    "optional": "Προαιρετικό",
+    "required": "Απαιτείται",
+    "back": "Πίσω",
+    "next": "Επόμενο",
+    "submit": "Υποβολή",
+    "search": "Αναζήτηση",
+    "searchPlaceholder": "Αναζήτηση προϊόντων...",
+    "notFoundPageTitle": "Η Σελίδα δεν Βρέθηκε",
+    "notFoundMessage": "Ουπς! Η σελίδα που αναζητάτε δεν υπάρχει.",
+
+    // --- Main Categories (Greek) --- (Ensure these are duplicated for completeness if not already there)
     'technology': 'Τεχνολογία',
     'home-garden': 'Σπίτι & Κήπος',
     'fashion': 'Μόδα',
@@ -356,7 +630,7 @@ const defaultTranslations: Translations = {
     'hobby-sports': 'Hobby, Αθλητισμός',
     'auto-moto': 'Μηχανοκίνηση',
 
-    // --- Subcategories of Τεχνολογία (Greek) ---
+    // --- Subcategories (Ensure these are duplicated for completeness if not already there)
     'mobile-telephony': 'Κινητή Τηλεφωνία',
     'computers': 'Υπολογιστές',
     'laptops-accessories': 'Laptops, Αξεσουάρ',
@@ -369,8 +643,6 @@ const defaultTranslations: Translations = {
     'electronics': 'Ηλεκτρονικά',
     'telephony': 'Τηλεφωνία',
     'gadgets': 'Gadgets',
-
-    // --- Subcategories of Σπίτι & Κήπος (Greek) ---
     'home-appliances': 'Οικιακές Συσκευές',
     'tools': 'Εργαλεία',
     'furniture': 'Έπιπλα',
@@ -391,8 +663,6 @@ const defaultTranslations: Translations = {
     'shopping-trolleys': 'Καρότσια Λαϊκής',
     'church-items': 'Εκκλησιαστικά Είδη',
     'pet-supplies': 'Είδη Κατοικιδίων',
-
-    // --- Subcategories of Μόδα (Greek) ---
     'womens-fashion': 'Γυναικεία Μόδα',
     'mens-fashion': 'Ανδρική Μόδα',
     'watches': 'Ρολόγια',
@@ -403,8 +673,6 @@ const defaultTranslations: Translations = {
     'shoe-accessories': 'Αξεσουάρ Παπουτσιών',
     'kids-baby-fashion': 'Παιδική, Βρεφική Μόδα',
     'sneakers': 'Sneakers: Τα πιο trendy παπούτσια για κάθε στυλ και περίσταση!',
-
-    // --- Subcategories of Υγεία & Ομορφιά (Greek) ---
     'grooming': 'Περιποίηση',
     'pharmacy-products': 'Είδη Φαρμακείου',
     'perfumes': 'Αρώματα',
@@ -422,8 +690,6 @@ const defaultTranslations: Translations = {
     'patient-aids': 'Βοηθήματα Ασθενών',
     'optics': 'Οπτικά',
     'korean-cosmetics': 'Κορεάτικα Καλλυντικά',
-
-    // --- Subcategories of Παιδικά - Βρεφικά (Greek) ---
     'kids-toys': 'Παιδικά Παιχνίδια',
     'school-supplies': 'Σχολικά Είδη',
     'baby-toys': 'Βρεφικά Παιχνίδια',
@@ -431,8 +697,6 @@ const defaultTranslations: Translations = {
     'kids-linens': 'Παιδικά Λευκά Είδη',
     'christening-items': 'Βαπτιστικά',
     'kids-watches': 'Παιδικά Ρολόγια',
-
-    // --- Subcategories of Hobby, Αθλητισμός (Greek) ---
     'sports': 'Αθλήματα',
     'cycling': 'Ποδηλασία',
     'leisure-time': 'Ελεύθερος Χρόνος',
@@ -454,14 +718,10 @@ const defaultTranslations: Translations = {
     'womens-sports-shoes': 'Γυναικεία Αθλητικά Παπούτσια',
     'mens-sportswear': 'Ανδρικά Αθλητικά Ρούχα',
     'mens-sports-shoes': 'Ανδρικά Αθλητικά Παπούτσια',
-
-    // --- Subcategories of Μηχανοκίνηση (Greek) ---
     'car': 'Αυτοκίνητο',
     'motorcycle': 'Μοτοσυκλέτα',
     'boat': 'Σκάφος',
     'truck-items': 'Είδη Φορτηγού',
-
-    // --- Subcategories of Κινητή Τηλεφωνία (parentId: 10) (Greek) ---
     'smartphones': 'Κινητά',
     'iphone': 'iPhone',
     'mobile-cases': 'Θήκες Κινητών',
@@ -493,7 +753,6 @@ const defaultTranslations: Translations = {
     'mobile-gaming-buttons': 'Πλήκτρα Mobile Gaming',
     'connection-packs': 'Πακέτα Σύνδεσης',
     'portable-bluetooth-speakers-mobile': 'Φορητά Ηχεία Bluetooth',
-
     'ps5-games': 'PS5 Games',
     'pc-games': 'PC Games',
     'amplifiers-preamplifiers': 'Ενισχυτές, Προενισχυτές',
@@ -506,9 +765,159 @@ const defaultTranslations: Translations = {
     "rating_label": "Clasificación",
     "reviews_label_singular": "reseña",
     "reviews_label_plural": "{{count}} reseñas",
+    "from_vendor": "de",
+    "with": "con",
+    "no_products_in_category": "Aún no hay productos en esta categoría.",
+    "filters_title": "Filtros",
+    "remove_all_filters_tooltip": "Eliminar todos los filtros",
+    "show_only_title": "Mostrar solo",
+    "deals_label": "Ofertas",
+    "deals_title": "Productos con bajada de precio significativa",
+    "certified_label": "Certificado",
+    "certified_stores_title": "Tiendas Certificadas",
+    "instock_label": "En Stock",
+    "instock_title": "Solo productos disponibles en stock",
+    "boxnow_delivery_title": "Entrega BOX NOW",
+    "boxnow_tooltip": "Recoge tu pedido en un casillero BOX NOW 24/7",
+    "delivery_label": "BOX NOW",
+    "manufacturer_title": "Fabricante",
+    "show_less_manufacturers": "Mostrar menos fabricantes",
+    "show_all_manufacturers": "Mostrar todos los fabricantes",
+    "show_less": "Mostrar Menos",
+    "show_all": "Mostrar Todo",
+    "show_less_options": "Mostrar menos opciones para",
+    "show_all_options": "Mostrar todas las opciones para",
+    "remove_instock_filter": "Eliminar filtro 'En Stock'",
+    "remove_deals_filter": "Eliminar filtro 'Ofertas'",
+    "remove_certified_filter": "Eliminar filtro 'Certificado'",
+    "remove_nearby_filter": "Eliminar filtro 'Cercano'",
+    "remove_boxnow_filter": "Eliminar filtro 'BOX NOW'",
+    "remove_brand_filter": "Eliminar filtro de marca",
+    "remove_spec_filter": "Eliminar filtro de especificación",
+    "reset_all_filters": "Restablecer todos los filtros",
+    "clear_all_filters": "Limpiar Todo",
+    "selected_deals": "Ofertas Seleccionadas",
+    "popular_choices": "Opciones Populares",
+    "sort_most_popular": "Más Populares",
+    "sort_newest": "Más Nuevos",
+    "sort_cheapest": "Más Baratos",
+    "sort_most_expensive": "Más Caros",
+    "sort_alphabetical": "Alfabético (A-Z)",
+    "sort_most_reviews": "Más Reseñas",
+    "sort_by_manufacturer": "Por Fabricante",
+    "sort_num_stores": "Número de Tiendas",
+    "price_alert_for": "Alerta de Precio para",
+    "no_products_found_filters": "Ningún producto coincide con tus filtros actuales.",
+    "suggestions_title": "Sugerencias",
+    "suggestion_see_all_products": "Ver todos los productos en esta categoría:",
+    "all_category_products": "Todos los Productos de la Categoría",
+    "suggestion_try_removing_filters": "Intenta eliminar algunos filtros:",
+    "remove_a_filter": "Eliminar un filtro",
+    "suggestion_return_home": "Volver a la página de inicio:",
+    "return_to_homepage": "Volver a la Página de Inicio",
+    "no_subcategories": "No hay subcategorías disponibles.",
+    "popular_categories": "Categorías Populares",
+    "top_deals_in": "Mejores Ofertas en",
+    "products_with_significant_price_drop": "Productos con una bajada de precio significativa",
+    "hottest_in": "Lo Más Popular en",
+    "product_reviews_title": "Reseñas de Productos",
+    "helpful_reviews_subtitle": "Reseñas útiles de nuestros usuarios",
+    "popular_manufacturers": "Fabricantes Populares",
+    "recently_viewed_title": "Visto Recientemente",
+    "price_alert_button": "Establecer Alerta de Precio",
+    "price_alert_prompt_in": "No te pierdas una oferta para productos en",
+    "return_to": "Volver a",
+    "info_for_certified_store": "Información para tienda certificada",
+    "showing_products_from_store": "Mostrando productos de la tienda",
+    "remove_filter": "Eliminar este filtro",
+    "breadcrumbHome": "BestPrice", // o "Inicio"
+    "breadcrumbAllProductsInCategory": "Todos los productos de la categoría {{categoryName}}",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "Todos los productos y subcategorías de la categoría {{categoryName}}",
+    "addToCart": "Añadir al Carrito",
+    "buyNow": "Comprar Ahora",
+    "specifications": "Especificaciones",
+    "reviews": "Reseñas",
+    "relatedProducts": "Productos Relacionados",
+    "writeReview": "Escribir una Reseña",
+    "outOfStock": "Agotado",
+    "inStock": "En Stock",
+    "availableAt": "Disponible en {{count}} tiendas",
+    "noStoresAvailable": "Actualmente no disponible",
+    "priceRange": "Rango de Precios",
+    "comparePrices": "Comparar {{count}} Precios",
+    "viewAllStores": "Ver todas las tiendas",
+    "productDescription": "Descripción",
+    "share": "Compartir",
+    "addToFavorites": "Añadir a Favoritos",
+    "removeFromFavorites": "Eliminar de Favoritos",
+    "priceHistory": "Historial de Precios",
+    "priceDropAlert": "Alerta de Bajada de Precio",
+    "allBrands": "Todas las Marcas",
+    "productsFromBrand": "Productos de {{brandName}}",
+    "searchResultsFor": "Resultados de búsqueda para \"{{searchTerm}}\"",
+    "noResultsFound": "No se encontraron resultados para \"{{searchTerm}}\"",
+    "sortBy": "Ordenar por",
+    "viewAsGrid": "Vista de Cuadrícula",
+    "viewAsList": "Vista de Lista",
+    "itemsPerPage": "Artículos por página",
+    "page": "Página",
+    "of": "de",
+    "nextPage": "Siguiente",
+    "previousPage": "Anterior",
+    "todaysDeals": "Ofertas de Hoy",
+    "filterBy": "Filtrar por",
+    "shoppingCart": "Carrito de Compras",
+    "proceedToCheckout": "Proceder al Pago",
+    "item": "Artículo",
+    "quantity": "Cantidad",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "emptyCart": "Tu carrito está vacío.",
+    "continueShopping": "Continuar Comprando",
+    "shippingAddress": "Dirección de Envío",
+    "billingAddress": "Dirección de Facturación",
+    "paymentInformation": "Información de Pago",
+    "placeOrder": "Realizar Pedido",
+    "orderSummary": "Resumen del Pedido",
+    "discountCode": "Código de Descuento",
+    "apply": "Aplicar",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "OK",
+    "close": "Cerrar",
+    "showMore": "Mostrar Más",
+    "showLess": "Mostrar Menos",
+    "all": "Todo",
+    "selectOption": "Selecciona una opción",
+    "optional": "Opcional",
+    "required": "Requerido",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar productos...",
+    "notFoundPageTitle": "Página No Encontrada",
+    "notFoundMessage": "¡Ups! La página que buscas no existe.",
     'technology': 'Tecnología',
+    'home-garden': 'Casa y Jardín',
+    'fashion': 'Moda',
+    'health-beauty': 'Salud y Belleza',
+    'kids-baby': 'Niños y Bebés',
+    'hobby-sports': 'Aficiones y Deportes',
+    'auto-moto': 'Automoción',
     'mobile-telephony': 'Telefonía Móvil',
-    // ... (Add all other Spanish translations, including for categories)
+    'computers': 'Ordenadores',
+    'laptops-accessories': 'Portátiles y Accesorios',
+    'visual': 'Imagen',
+    'smartwatches-wearables': 'Smartwatches y Wearables',
+    'tablets-accessories': 'Tablets y Accesorios',
+    'video-games': 'Videojuegos',
+    'audio': 'Audio',
+    'photo-video': 'Foto y Vídeo',
+    'electronics': 'Electrónica',
+    'telephony': 'Telefonía',
+    'gadgets': 'Gadgets',
+     // ... (YOU NEED TO FILL IN ALL OTHER CATEGORY SLUGS FOR SPANISH)
   },
   fr: {
     email: 'E-mail', password: 'Mot de passe', signIn: 'Connexion', createAccount: 'Créer un compte',
@@ -517,9 +926,159 @@ const defaultTranslations: Translations = {
     "rating_label": "Évaluation",
     "reviews_label_singular": "avis",
     "reviews_label_plural": "{{count}} avis",
+    "from_vendor": "de",
+    "with": "avec",
+    "no_products_in_category": "Il n'y a pas encore de produits dans cette catégorie.",
+    "filters_title": "Filtres",
+    "remove_all_filters_tooltip": "Supprimer tous les filtres",
+    "show_only_title": "Afficher seulement",
+    "deals_label": "Promotions",
+    "deals_title": "Produits avec baisse de prix significative",
+    "certified_label": "Certifié",
+    "certified_stores_title": "Magasins Certifiés",
+    "instock_label": "En Stock",
+    "instock_title": "Uniquement les produits disponibles en stock",
+    "boxnow_delivery_title": "Livraison BOX NOW",
+    "boxnow_tooltip": "Récupérez votre commande dans un casier BOX NOW 24/7",
+    "delivery_label": "BOX NOW",
+    "manufacturer_title": "Fabricant",
+    "show_less_manufacturers": "Afficher moins de fabricants",
+    "show_all_manufacturers": "Afficher tous les fabricants",
+    "show_less": "Afficher Moins",
+    "show_all": "Afficher Tout",
+    "show_less_options": "Afficher moins d'options pour",
+    "show_all_options": "Afficher toutes les options pour",
+    "remove_instock_filter": "Supprimer le filtre 'En Stock'",
+    "remove_deals_filter": "Supprimer le filtre 'Promotions'",
+    "remove_certified_filter": "Supprimer le filtre 'Certifié'",
+    "remove_nearby_filter": "Supprimer le filtre 'Proche'",
+    "remove_boxnow_filter": "Supprimer le filtre 'BOX NOW'",
+    "remove_brand_filter": "Supprimer le filtre de marque",
+    "remove_spec_filter": "Supprimer le filtre de spécification",
+    "reset_all_filters": "Réinitialiser tous les filtres",
+    "clear_all_filters": "Tout Effacer",
+    "selected_deals": "Promotions Sélectionnées",
+    "popular_choices": "Choix Populaires",
+    "sort_most_popular": "Plus Populaires",
+    "sort_newest": "Plus Récents",
+    "sort_cheapest": "Moins Chers",
+    "sort_most_expensive": "Plus Chers",
+    "sort_alphabetical": "Alphabétique (A-Z)",
+    "sort_most_reviews": "Plus d'Avis",
+    "sort_by_manufacturer": "Par Fabricant",
+    "sort_num_stores": "Nombre de Magasins",
+    "price_alert_for": "Alerte de Prix pour",
+    "no_products_found_filters": "Aucun produit ne correspond à vos filtres actuels.",
+    "suggestions_title": "Suggestions",
+    "suggestion_see_all_products": "Voir tous les produits de cette catégorie :",
+    "all_category_products": "Tous les Produits de la Catégorie",
+    "suggestion_try_removing_filters": "Essayez de supprimer quelques filtres :",
+    "remove_a_filter": "Supprimer un filtre",
+    "suggestion_return_home": "Retourner à la page d'accueil :",
+    "return_to_homepage": "Retour à l'Accueil",
+    "no_subcategories": "Aucune sous-catégorie disponible.",
+    "popular_categories": "Catégories Populaires",
+    "top_deals_in": "Meilleures Offres en",
+    "products_with_significant_price_drop": "Produits avec une baisse de prix significative",
+    "hottest_in": "Le Plus Populaire en",
+    "product_reviews_title": "Avis sur les Produits",
+    "helpful_reviews_subtitle": "Avis utiles de nos utilisateurs",
+    "popular_manufacturers": "Fabricants Populaires",
+    "recently_viewed_title": "Vu Récemment",
+    "price_alert_button": "Définir une Alerte de Prix",
+    "price_alert_prompt_in": "Ne manquez jamais une offre pour les produits dans",
+    "return_to": "Retour à",
+    "info_for_certified_store": "Informations pour magasin certifié",
+    "showing_products_from_store": "Affichage des produits du magasin",
+    "remove_filter": "Supprimer ce filtre",
+    "breadcrumbHome": "BestPrice", // ou "Accueil"
+    "breadcrumbAllProductsInCategory": "Tous les produits de la catégorie {{categoryName}}",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "Tous les produits et sous-catégories de la catégorie {{categoryName}}",
+    "addToCart": "Ajouter au Panier",
+    "buyNow": "Acheter Maintenant",
+    "specifications": "Spécifications",
+    "reviews": "Avis",
+    "relatedProducts": "Produits Connexes",
+    "writeReview": "Écrire un Avis",
+    "outOfStock": "Épuisé",
+    "inStock": "En Stock",
+    "availableAt": "Disponible dans {{count}} magasins",
+    "noStoresAvailable": "Actuellement indisponible",
+    "priceRange": "Fourchette de Prix",
+    "comparePrices": "Comparer {{count}} Prix",
+    "viewAllStores": "Voir tous les magasins",
+    "productDescription": "Description",
+    "share": "Partager",
+    "addToFavorites": "Ajouter aux Favoris",
+    "removeFromFavorites": "Retirer des Favoris",
+    "priceHistory": "Historique des Prix",
+    "priceDropAlert": "Alerte Baisse de Prix",
+    "allBrands": "Toutes les Marques",
+    "productsFromBrand": "Produits de {{brandName}}",
+    "searchResultsFor": "Résultats de recherche pour \"{{searchTerm}}\"",
+    "noResultsFound": "Aucun résultat trouvé pour \"{{searchTerm}}\"",
+    "sortBy": "Trier par",
+    "viewAsGrid": "Vue Grille",
+    "viewAsList": "Vue Liste",
+    "itemsPerPage": "Articles par page",
+    "page": "Page",
+    "of": "de",
+    "nextPage": "Suivant",
+    "previousPage": "Précédent",
+    "todaysDeals": "Offres du Jour",
+    "filterBy": "Filtrer par",
+    "shoppingCart": "Panier d'Achat",
+    "proceedToCheckout": "Passer à la Caisse",
+    "item": "Article",
+    "quantity": "Quantité",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "emptyCart": "Votre panier est vide.",
+    "continueShopping": "Continuer les Achats",
+    "shippingAddress": "Adresse de Livraison",
+    "billingAddress": "Adresse de Facturation",
+    "paymentInformation": "Informations de Paiement",
+    "placeOrder": "Passer la Commande",
+    "orderSummary": "Résumé de la Commande",
+    "discountCode": "Code de Réduction",
+    "apply": "Appliquer",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "close": "Fermer",
+    "showMore": "Afficher Plus",
+    "showLess": "Afficher Moins",
+    "all": "Tout",
+    "selectOption": "Sélectionner une option",
+    "optional": "Optionnel",
+    "required": "Requis",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher des produits...",
+    "notFoundPageTitle": "Page Introuvable",
+    "notFoundMessage": "Oups ! La page que vous recherchez n'existe pas.",
     'technology': 'Technologie',
+    'home-garden': 'Maison et Jardin',
+    'fashion': 'Mode',
+    'health-beauty': 'Santé et Beauté',
+    'kids-baby': 'Enfants et Bébés',
+    'hobby-sports': 'Loisirs et Sports',
+    'auto-moto': 'Auto et Moto',
     'mobile-telephony': 'Téléphonie Mobile',
-    // ... (Add all other French translations, including for categories)
+    'computers': 'Ordinateurs',
+    'laptops-accessories': 'Portables et Accessoires',
+    'visual': 'Image',
+    'smartwatches-wearables': 'Montres Connectées et Wearables',
+    'tablets-accessories': 'Tablettes et Accessoires',
+    'video-games': 'Jeux Vidéo',
+    'audio': 'Audio',
+    'photo-video': 'Photo et Vidéo',
+    'electronics': 'Électronique',
+    'telephony': 'Téléphonie',
+    'gadgets': 'Gadgets',
+    // ... (YOU NEED TO FILL IN ALL OTHER CATEGORY SLUGS FOR FRENCH)
   },
   de: {
     email: 'E-Mail', password: 'Passwort', signIn: 'Anmelden', createAccount: 'Konto erstellen',
@@ -528,9 +1087,159 @@ const defaultTranslations: Translations = {
     "rating_label": "Bewertung",
     "reviews_label_singular": "Bewertung",
     "reviews_label_plural": "{{count}} Bewertungen",
+    "from_vendor": "von",
+    "with": "mit",
+    "no_products_in_category": "Es gibt noch keine Produkte in dieser Kategorie.",
+    "filters_title": "Filter",
+    "remove_all_filters_tooltip": "Alle Filter entfernen",
+    "show_only_title": "Nur anzeigen",
+    "deals_label": "Angebote",
+    "deals_title": "Produkte mit deutlichem Preisnachlass",
+    "certified_label": "Zertifiziert",
+    "certified_stores_title": "Zertifizierte Shops",
+    "instock_label": "Auf Lager",
+    "instock_title": "Nur Produkte auf Lager",
+    "boxnow_delivery_title": "BOX NOW Lieferung",
+    "boxnow_tooltip": "Bestellung rund um die Uhr an einem BOX NOW Locker abholen",
+    "delivery_label": "BOX NOW",
+    "manufacturer_title": "Hersteller",
+    "show_less_manufacturers": "Weniger Hersteller anzeigen",
+    "show_all_manufacturers": "Alle Hersteller anzeigen",
+    "show_less": "Weniger Anzeigen",
+    "show_all": "Alle Anzeigen",
+    "show_less_options": "Weniger Optionen für anzeigen",
+    "show_all_options": "Alle Optionen für anzeigen",
+    "remove_instock_filter": "Filter 'Auf Lager' entfernen",
+    "remove_deals_filter": "Filter 'Angebote' entfernen",
+    "remove_certified_filter": "Filter 'Zertifiziert' entfernen",
+    "remove_nearby_filter": "Filter 'In der Nähe' entfernen",
+    "remove_boxnow_filter": "Filter 'BOX NOW' entfernen",
+    "remove_brand_filter": "Markenfilter entfernen",
+    "remove_spec_filter": "Spezifikationsfilter entfernen",
+    "reset_all_filters": "Alle Filter zurücksetzen",
+    "clear_all_filters": "Alles Löschen",
+    "selected_deals": "Ausgewählte Angebote",
+    "popular_choices": "Beliebte Auswahl",
+    "sort_most_popular": "Beliebteste",
+    "sort_newest": "Neueste",
+    "sort_cheapest": "Günstigste",
+    "sort_most_expensive": "Teuerste",
+    "sort_alphabetical": "Alphabetisch (A-Z)",
+    "sort_most_reviews": "Meiste Bewertungen",
+    "sort_by_manufacturer": "Nach Hersteller",
+    "sort_num_stores": "Anzahl der Shops",
+    "price_alert_for": "Preisalarm für",
+    "no_products_found_filters": "Keine Produkte entsprechen Ihren aktuellen Filtern.",
+    "suggestions_title": "Vorschläge",
+    "suggestion_see_all_products": "Alle Produkte in dieser Kategorie anzeigen:",
+    "all_category_products": "Alle Produkte der Kategorie",
+    "suggestion_try_removing_filters": "Versuchen Sie, einige Filter zu entfernen:",
+    "remove_a_filter": "Einen Filter entfernen",
+    "suggestion_return_home": "Zurück zur Startseite:",
+    "return_to_homepage": "Zurück zur Startseite",
+    "no_subcategories": "Keine Unterkategorien verfügbar.",
+    "popular_categories": "Beliebte Kategorien",
+    "top_deals_in": "Top-Angebote in",
+    "products_with_significant_price_drop": "Produkte mit deutlichem Preisnachlass",
+    "hottest_in": "Am Beliebtesten in",
+    "product_reviews_title": "Produktbewertungen",
+    "helpful_reviews_subtitle": "Hilfreiche Bewertungen von unseren Nutzern",
+    "popular_manufacturers": "Beliebte Hersteller",
+    "recently_viewed_title": "Zuletzt Angesehen",
+    "price_alert_button": "Preisalarm Einstellen",
+    "price_alert_prompt_in": "Verpassen Sie nie ein Angebot für Produkte in",
+    "return_to": "Zurück zu",
+    "info_for_certified_store": "Informationen für zertifizierten Shop",
+    "showing_products_from_store": "Zeige Produkte von Shop",
+    "remove_filter": "Diesen Filter entfernen",
+    "breadcrumbHome": "BestPrice", // oder "Startseite"
+    "breadcrumbAllProductsInCategory": "Alle Produkte der Kategorie {{categoryName}}",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "Alle Produkte und Unterkategorien der Kategorie {{categoryName}}",
+    "addToCart": "In den Warenkorb",
+    "buyNow": "Jetzt Kaufen",
+    "specifications": "Spezifikationen",
+    "reviews": "Bewertungen",
+    "relatedProducts": "Ähnliche Produkte",
+    "writeReview": "Bewertung Schreiben",
+    "outOfStock": "Ausverkauft",
+    "inStock": "Auf Lager",
+    "availableAt": "Verfügbar in {{count}} Shops",
+    "noStoresAvailable": "Derzeit nicht verfügbar",
+    "priceRange": "Preisspanne",
+    "comparePrices": "{{count}} Preise Vergleichen",
+    "viewAllStores": "Alle Shops anzeigen",
+    "productDescription": "Beschreibung",
+    "share": "Teilen",
+    "addToFavorites": "Zu Favoriten Hinzufügen",
+    "removeFromFavorites": "Aus Favoriten Entfernen",
+    "priceHistory": "Preisentwicklung",
+    "priceDropAlert": "Preisalarm bei Preissenkung",
+    "allBrands": "Alle Marken",
+    "productsFromBrand": "Produkte von {{brandName}}",
+    "searchResultsFor": "Suchergebnisse für \"{{searchTerm}}\"",
+    "noResultsFound": "Keine Ergebnisse für \"{{searchTerm}}\" gefunden",
+    "sortBy": "Sortieren nach",
+    "viewAsGrid": "Rasteransicht",
+    "viewAsList": "Listenansicht",
+    "itemsPerPage": "Artikel pro Seite",
+    "page": "Seite",
+    "of": "von",
+    "nextPage": "Nächste",
+    "previousPage": "Vorherige",
+    "todaysDeals": "Heutige Angebote",
+    "filterBy": "Filtern nach",
+    "shoppingCart": "Warenkorb",
+    "proceedToCheckout": "Zur Kasse Gehen",
+    "item": "Artikel",
+    "quantity": "Menge",
+    "subtotal": "Zwischensumme",
+    "total": "Gesamtsumme",
+    "emptyCart": "Ihr Warenkorb ist leer.",
+    "continueShopping": "Weiter Einkaufen",
+    "shippingAddress": "Lieferadresse",
+    "billingAddress": "Rechnungsadresse",
+    "paymentInformation": "Zahlungsinformationen",
+    "placeOrder": "Bestellung Aufgeben",
+    "orderSummary": "Bestellübersicht",
+    "discountCode": "Rabattcode",
+    "apply": "Anwenden",
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK",
+    "close": "Schließen",
+    "showMore": "Mehr Anzeigen",
+    "showLess": "Weniger Anzeigen",
+    "all": "Alle",
+    "selectOption": "Eine Option auswählen",
+    "optional": "Optional",
+    "required": "Erforderlich",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Senden",
+    "search": "Suchen",
+    "searchPlaceholder": "Produkte suchen...",
+    "notFoundPageTitle": "Seite Nicht Gefunden",
+    "notFoundMessage": "Hoppla! Die gesuchte Seite existiert nicht.",
     'technology': 'Technologie',
+    'home-garden': 'Haus und Garten',
+    'fashion': 'Mode',
+    'health-beauty': 'Gesundheit und Schönheit',
+    'kids-baby': 'Kinder und Baby',
+    'hobby-sports': 'Hobby und Sport',
+    'auto-moto': 'Auto und Motorrad',
     'mobile-telephony': 'Mobiltelefonie',
-    // ... (Add all other German translations, including for categories)
+    'computers': 'Computer',
+    'laptops-accessories': 'Laptops und Zubehör',
+    'visual': 'Bild',
+    'smartwatches-wearables': 'Smartwatches und Wearables',
+    'tablets-accessories': 'Tablets und Zubehör',
+    'video-games': 'Videospiele',
+    'audio': 'Audio',
+    'photo-video': 'Foto und Video',
+    'electronics': 'Elektronik',
+    'telephony': 'Telefonie',
+    'gadgets': 'Gadgets',
+    // ... (YOU NEED TO FILL IN ALL OTHER CATEGORY SLUGS FOR GERMAN)
   }
 };
 
@@ -576,55 +1285,52 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const loadCustomTranslations = async () => {
-      // If not loaded yet, start with default and then try to load custom
-      if (!isLoaded) {
-         setTranslations(defaultTranslations); // Ensure default is set if first load
+      if (!isLoaded && Object.keys(translations).length === 0) { // Only set if translations are truly empty
+         setTranslations(defaultTranslations);
       }
 
       try {
         const { data, error } = await (supabase as any).from('translations').select('*');
         if (error) {
             console.error('Error fetching custom translations:', error);
-            // Keep default translations if fetching fails
-            setTranslations(prev => ({ ...defaultTranslations, ...prev })); // Merge defaults underneath anything already there
+            // Do not overwrite if there was an error and defaults are already set
+            if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
+              setTranslations(defaultTranslations);
+            }
             return;
         };
         if (data && data.length > 0) {
-          // Start with a fresh copy of defaults to ensure structure
           const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
-
           data.forEach((item: any) => {
             if (item && item.key) {
-              // Iterate over languages defined in defaultTranslations (en, el, es, fr, de)
               (Object.keys(newLoadedTranslations) as Language[]).forEach(lang => {
-                if (item[lang] && typeof item[lang] === 'string') { // Ensure item[lang] exists and is a string
-                  newLoadedTranslations[lang][item.key] = item[lang]; // DB overrides default for this key
+                if (item[lang] && typeof item[lang] === 'string') {
+                  newLoadedTranslations[lang][item.key] = item[lang];
                 }
               });
             }
           });
           setTranslations(newLoadedTranslations);
         } else {
-          // No custom translations found or data is empty, ensure defaults are set
-          setTranslations(defaultTranslations);
+          // No custom translations, ensure defaults are set if not already
+           if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
+            setTranslations(defaultTranslations);
+          }
         }
       } catch (error) {
         console.error('Error processing custom translations:', error);
-        setTranslations(defaultTranslations); // Fallback to defaults on error
+        if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
+          setTranslations(defaultTranslations);
+        }
       }
     };
 
-    // Only load custom translations once after initial language detection might have set isLoaded
-    if (isLoaded) { // Or simply run it once on mount like before if preferred
+    if (isLoaded) {
         loadCustomTranslations();
-    } else {
-        // If isLoaded is false, it means detectLanguage hasn't finished.
-        // We should set default translations to avoid using empty ones.
+    } else if (Object.keys(translations).length === 0) { // Ensure defaults are set initially if not loaded
         setTranslations(defaultTranslations);
     }
-    // To load custom translations once on mount (like before), use:
-    // loadCustomTranslations();
-  }, [isLoaded]); // Rerun if isLoaded changes, or change to [] for once on mount
+  }, [isLoaded]); // Rerun if isLoaded changes
 
   const setLanguage = (lang: Language) => {
     localStorage.setItem('language', lang);
