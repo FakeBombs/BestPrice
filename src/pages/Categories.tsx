@@ -16,8 +16,8 @@ import {
   Brand,
   ProductPrice
 } from '@/data/mockData';
-import ProductCard from '@/components/ProductCard';
-import InlineProductItem from '@/components/InlineProductItem';
+import ProductCard from '@/components/ProductCard'; // Assuming ProductCard accepts activeVendorFilterDomain prop
+import InlineProductItem from '@/components/InlineProductItem'; // Still used for the top slider
 import PriceAlertModal from '@/components/PriceAlertModal';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -85,8 +85,8 @@ const Categories: React.FC = () => {
   // --- Rendering Functions ---
   const renderBreadcrumbs = () => { const trailItems: React.ReactNode[] = []; trailItems.push(<li key="home"><Link to="/" rel="home"><span>BestPrice</span></Link></li>); if (currentCategory) { const ancestors: Category[] = []; let category: Category | undefined = currentCategory; while (category?.parentId !== null && category?.parentId !== undefined) { const parent = allCategories.find((cat) => cat.id === category?.parentId); if (parent) { ancestors.unshift(parent); category = parent; } else category = undefined; } ancestors.forEach((cat) => { trailItems.push(<li key={cat.id}><Link to={`/cat/${cat.id}/${cat.slug}`}>{cat.name}</Link></li>); }); trailItems.push(<li key={currentCategory.id}><span>{currentCategory.name}</span></li>); } return ( <div id="trail"> <nav className="breadcrumb"><ol>{trailItems.reduce((acc: React.ReactNode[], item, index) => (<React.Fragment key={index}>{acc}{index > 0 && <span className="trail__breadcrumb-separator">›</span>}{item}</React.Fragment>), null)}</ol></nav> </div> ); };
 
-  // --- New Section Data Logic ---
-  // Helper to get all descendant category IDs
+  // --- New Slider/Section Rendering Logic ---
+  // Helper to get all descendant category IDs recursively
   const getDescendantCategoryIds = (categoryId: number): number[] => {
     let ids: number[] = [categoryId];
     const children = categories.filter(cat => cat.parentId === categoryId);
@@ -99,59 +99,40 @@ const Categories: React.FC = () => {
   // Memoized list of products belonging to current category and its descendants
   const productsFromDescendants = useMemo(() => {
       if (!currentCategory) return [];
-      const descendantIds = getDescendantCategoryIds(currentCategory.id);
+      // Find all category IDs including descendants
+      const allRelevantCategoryIds = getDescendantCategoryIds(currentCategory.id);
+      // Filter all products to find those belonging to any of these categories
       return allMockProducts.filter(p =>
-          p.categoryIds?.some(catId => descendantIds.includes(catId))
+          p.categoryIds?.some(catId => allRelevantCategoryIds.includes(catId))
       );
-  }, [currentCategory]); // Recalculate when category changes
+  }, [currentCategory]); // Recalculate only when category changes
 
-  // --- New Slider/Section Rendering Logic (using descendant products) ---
+  // Get products for sliders/sections using the descendant product list
   const getProductsForSections = (filterFn: (p: Product) => boolean, sortFn?: (a: Product, b: Product) => number) => {
-      let products = productsFromDescendants.filter(filterFn); // Use pre-filtered descendant products
+      let products = productsFromDescendants.filter(filterFn);
       if (sortFn) {
           products = products.sort(sortFn);
       }
       return products.slice(0, SLIDER_PRODUCT_COUNT);
   };
 
-  const renderTopDealsSlider = () => {
-      if (!currentCategory) return null;
-      const dealProducts = getProductsForSections( p => (p.prices || []).some(pr => pr.discountPrice && pr.discountPrice < pr.price) );
-      if (dealProducts.length === 0) return null;
-      return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Top Προσφορές</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {dealProducts.map(prod => ( <InlineProductItem key={`deal-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-deals"/> ))} </div> </ScrollableSlider> </section> );
-  };
-  const renderHotProductsSlider = () => {
-      if (!currentCategory) return null;
-      const hotProducts = getProductsForSections( () => true, (a, b) => (b.rating || 0) - (a.rating || 0) );
-      if (hotProducts.length === 0) return null;
-      return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Δημοφιλή Προϊόντα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {hotProducts.map(prod => ( <InlineProductItem key={`hot-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-hot"/> ))} </div> </ScrollableSlider> </section> );
-  };
-  const renderProductReviewsSlider = () => {
-      if (!currentCategory) return null;
-      const reviewedProducts = getProductsForSections( p => (p.reviews || 0) > 0, (a, b) => (b.reviews || 0) - (a.reviews || 0) );
-      if (reviewedProducts.length === 0) return null;
-      return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Αξιολογήσεις Προϊόντων</h2> <p className="section__subtitle">Χρήσιμες αξιολογήσεις που θα σε ενδιαφέρουν</p> </hgroup> </header> <ScrollableSlider> <div className="scroll__content" style={{ display: 'flex', gap: '15px' }}> {reviewedProducts.map(prod => ( <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}> <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}> <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div> {prod.rating && <p>Βαθμολογία: {prod.rating}/5 ({prod.reviews} reviews)</p>} </Link> </div> ))} </div> </ScrollableSlider> </section> );
-  };
-  const renderPopularBrands = () => {
-      if (!currentCategory) return null;
-      // Use descendant products to find relevant brands
-      const popularBrandNames = Array.from(new Set(productsFromDescendants.map(p => p.brand).filter(Boolean)));
-      const popularBrandObjects = popularBrandNames .map(name => brands.find(b => b.name === name)) .filter((b): b is Brand => !!b) .slice(0, 10);
-      if (popularBrandObjects.length === 0) return null;
-      return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Δημοφιλείς κατασκευαστές</h2></hgroup> </header> <div className="root-category__brands"> {popularBrandObjects.map(brand => ( <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html?bpref=cat-brand`}> <img src={brand.logo} width="90" height="30" alt={brand.name} loading="lazy"/> </Link> ))} </div> </section> );
-  };
-  const renderRecentlyViewedSlider = () => {
-      if (!currentCategory) return null;
-      // ** SIMULATION: Use random products from descendants **
-      // Replace with actual recent view logic if needed
-      const recentlyViewed = productsFromDescendants.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT);
-      // ** End Simulation **
-      if (recentlyViewed.length === 0) return null;
-      return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Είδατε Πρόσφατα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {recentlyViewed.map(prod => ( <InlineProductItem key={`recent-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-recent"/> ))} </div> </ScrollableSlider> </section> );
-  };
+  const renderTopDealsSlider = () => { if (!currentCategory) return null; const dealProducts = getProductsForSections( p => (p.prices || []).some(pr => pr.discountPrice && pr.discountPrice < pr.price) ); if (dealProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Top Προσφορές</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content">
+    {/* *** 1. Use ProductCard in Sliders (Example for Deals) *** */}
+    {dealProducts.map(prod => ( <ProductCard key={`deal-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} className="p p--card p--card-slider"/> /* Added specific class */ ))}
+    </div> </ScrollableSlider> </section> ); };
+  const renderHotProductsSlider = () => { if (!currentCategory) return null; const hotProducts = getProductsForSections( () => true, (a, b) => (b.rating || 0) - (a.rating || 0) ); if (hotProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Δημοφιλή Προϊόντα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content">
+    {/* *** 1. Use ProductCard in Sliders *** */}
+    {hotProducts.map(prod => ( <ProductCard key={`hot-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} className="p p--card p--card-slider"/> ))}
+    </div> </ScrollableSlider> </section> ); };
+  const renderProductReviewsSlider = () => { if (!currentCategory) return null; const reviewedProducts = getProductsForSections( p => (p.reviews || 0) > 0, (a, b) => (b.reviews || 0) - (a.reviews || 0) ); if (reviewedProducts.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Αξιολογήσεις Προϊόντων</h2> <p className="section__subtitle">Χρήσιμες αξιολογήσεις που θα σε ενδιαφέρουν</p> </hgroup> </header> <ScrollableSlider> <div className="scroll__content" style={{ display: 'flex', gap: '15px' }}> {reviewedProducts.map(prod => ( <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}> <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}> <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div> {prod.rating && <p>Βαθμολογία: {prod.rating}/5 ({prod.reviews} reviews)</p>} </Link> </div> ))} </div> </ScrollableSlider> </section> ); };
+  const renderPopularBrands = () => { if (!currentCategory) return null; const popularBrandNames = Array.from(new Set(productsFromDescendants.map(p => p.brand).filter(Boolean))); const popularBrandObjects = popularBrandNames .map(name => brands.find(b => b.name === name)) .filter((b): b is Brand => !!b) .slice(0, 10); if (popularBrandObjects.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Δημοφιλείς κατασκευαστές</h2></hgroup> </header> <div className="root-category__brands"> {popularBrandObjects.map(brand => ( <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html?bpref=cat-brand`}> <img src={brand.logo} width="90" height="30" alt={brand.name} loading="lazy"/> </Link> ))} </div> </section> ); };
+  const renderRecentlyViewedSlider = () => { if (!currentCategory) return null; const recentlyViewed = productsFromDescendants.sort(() => 0.5 - Math.random()).slice(0, SLIDER_PRODUCT_COUNT); if (recentlyViewed.length === 0) return null; return ( <section className="section"> <header className="section__header"> <hgroup className="section__hgroup"><h2 className="section__title">Είδατε Πρόσφατα</h2></hgroup> </header> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content">
+    {/* *** 1. Use ProductCard in Sliders *** */}
+    {recentlyViewed.map(prod => ( <ProductCard key={`recent-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} className="p p--card p--card-slider"/> ))}
+    </div> </ScrollableSlider> </section> ); };
   // --- End New Section Logic ---
 
-  // *** PRESERVED renderMainCategories (with added sections & correct alert button) ***
+  // *** PRESERVED renderMainCategories (with sections added & correct alert button) ***
   const renderMainCategories = () => {
     if (!currentCategory || !currentCategory.isMain) return null;
     const mainCat = currentCategory;
@@ -162,7 +143,7 @@ const Categories: React.FC = () => {
         <div className="root-category__categories">
           {subcategories.length > 0 ? (subcategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))) : (<p>Δεν υπάρχουν υποκατηγορίες για αυτήν την κατηγορία.</p>)}
         </div>
-        {/* *** 4. Sections Rendered BELOW Main Category Grid *** */}
+        {/* *** 4. Added Sections BELOW Main Category Grid *** */}
         <div className="sections">
             {renderTopDealsSlider()}
             {renderHotProductsSlider()}
@@ -188,7 +169,7 @@ const Categories: React.FC = () => {
 
     if (!currentCategory) return null;
 
-    // Handle category with no base products (render minimal header)
+    // Handle category with no base products
     if (baseCategoryProducts.length === 0 && !currentCategory.isMain) {
        return (
           <main className="page-products__main">
@@ -296,13 +277,13 @@ const Categories: React.FC = () => {
               ) : null
             )}
           </div>
-          {/* *** 1. Large Price Alert Section is REMOVED from the end of renderProducts *** */}
+          {/* *** 1. Bottom p__products-section is CONFIRMED REMOVED from renderProducts *** */}
         </main>
       </div>
     );
    };
 
-   // *** PRESERVED renderSubcategories with conditional header & sections, corrected Alert Button ***
+   // *** PRESERVED renderSubcategories with conditional header & sections, and CORRECTED Alert Button ***
   const renderSubcategories = (category: Category) => {
     if (!category || category.isMain) return null;
     const childCategories = categories.filter(cat => cat.parentId === category.id);
@@ -329,7 +310,7 @@ const Categories: React.FC = () => {
             <div className="root-category__categories">
               {childCategories.map((subCat) => (<div key={subCat.id} className="root-category__category"><Link to={`/cat/${subCat.id}/${subCat.slug}`} className="root-category__cover"><img src={subCat.image || '/dist/images/cat/placeholder.webp'} alt={subCat.name} title={subCat.name} loading="lazy" width="200" height="150"/></Link><h3 className="root-category__category-title"><Link to={`/cat/${subCat.id}/${subCat.slug}`}>{subCat.name}</Link></h3><div className="root-category__footer"><div className="root-category__links">{categories.filter(linkedSubCat => linkedSubCat.parentId === subCat.id).slice(0, 5).map((linkedSubCat, index, arr) => (<React.Fragment key={linkedSubCat.id}><Link to={`/cat/${linkedSubCat.id}/${linkedSubCat.slug}`}>{linkedSubCat.name}</Link>{index < arr.length - 1 && ', '}</React.Fragment>))}</div></div></div>))}
             </div>
-            {/* Added Sections AFTER Subcategory Grid */}
+            {/* Sections Rendered AFTER Subcategory Grid */}
             <div className="sections">
                 {renderTopDealsSlider()}
                 {renderHotProductsSlider()}
@@ -343,7 +324,7 @@ const Categories: React.FC = () => {
           renderProducts()
         )}
 
-        {/* *** 1. Price Alert Button ADDED BACK at BOTTOM of Subcategories (Unconditional within renderSubcategories) *** */}
+        {/* *** 1. Large Price Alert Button ADDED BACK at BOTTOM of Subcategories (Unconditional within this function) *** */}
         <div className="p__products-section">
           <div className="alerts">
             <button data-url={`/cat/${category.id}/${category.slug}`} data-title={category.name} data-max-price="0" className="alerts__button pressable" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20" /></svg><span className="alerts__label">Ειδοποίηση</span></button>
