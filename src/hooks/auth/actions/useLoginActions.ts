@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { UserProfile } from '../types';
@@ -17,7 +16,7 @@ export function useLoginActions(
       // First, abort any ongoing auth session to ensure a clean login attempt
       await supabase.auth.signOut();
       
-      console.log("Calling signInWithPassword...");
+      console.log("Calling signInWithPassword with email:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,

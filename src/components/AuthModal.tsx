@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, UserPlus, X, EyeOff, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Assuming you have this
-
+import { Button } from '@/components/ui/button';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -40,7 +40,6 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [loginEmailFocused, setLoginEmailFocused] = useState(false);
   const [loginPasswordFocused, setLoginPasswordFocused] = useState(false);
 
-
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerFirstName, setRegisterFirstName] = useState('');
   const [registerLastName, setRegisterLastName] = useState('');
@@ -53,11 +52,9 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const [registerLastNameFocused, setRegisterLastNameFocused] = useState(false);
   const [registerPasswordFocused, setRegisterPasswordFocused] = useState(false);
 
-
   useEffect(() => {
     setActiveTab(defaultTab);
   }, [defaultTab]);
-
 
   const handleLogin = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +68,15 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     onClose();
   }, [onClose, registerEmail, registerFirstName, registerLastName, registerPassword, registerConsentTerms, registerConsentNewsletters]);
 
+  // Fix: Handle input focus correctly with querySelectors
+  const focusInput = (inputName: string) => {
+    const input = document.querySelector(`input[name="${inputName}"]`) as HTMLInputElement;
+    if (input) {
+      input.focus();
+    }
+  };
+
   const renderLoginContent = () => {
-
-
     return (
     <div className="login__view login__view--signin">
       <div className="login__providers">
@@ -93,12 +96,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--text
             ${loginEmailFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="usernameOrEmail"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('usernameOrEmail')}
         >
           <Label className="login__input-wrapper">
             <div
@@ -120,7 +118,6 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
               placeholder=""
               onFocus={() => setLoginEmailFocused(true)}
               onBlur={() => setLoginEmailFocused(false)}
-
             />
           </Label>
         </div>
@@ -128,23 +125,16 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
             ${loginPasswordFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="password"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('password')}
         >
           <Label className="login__input-wrapper">
             <div
-
               className="login__field-placeholder"
               style={{
                 marginTop: loginPasswordFocused ? '-8.2875px' : '-9.75px',
                 transformOrigin: 'left top',
                 transform: loginPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none'
               }}
-
             >
               Κωδικός
             </div>
@@ -174,7 +164,6 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   }
 
   const renderRegisterContent = () => {
-
     return(
     <div className="login__view">
       <div className="login__providers">
@@ -194,12 +183,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--text
             ${registerEmailFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="email"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('email')}
         >
           <Label className="login__input-wrapper">
             <div
@@ -228,12 +212,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--text
             ${registerFirstNameFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="firstName"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('firstName')}
         >
           <Label className="login__input-wrapper">
             <div
@@ -262,12 +241,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--text
             ${registerLastNameFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="lastName"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('lastName')}
         >
           <Label className="login__input-wrapper">
             <div
@@ -296,12 +270,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             `login__field login__field--placeholder-transition login__field--password login__field--has-toggler
             ${registerPasswordFocused ? 'login__field--focused' : ''}`
           }
-          onClick={() => {
-            const input = document.querySelector('input[name="password"]');
-            if (input) {
-              input.focus();
-            }
-          }}
+          onClick={() => focusInput('password')}
         >
           <Label className="login__input-wrapper">
             <div className="login__field-placeholder" style={{ marginTop: registerPasswordFocused ? '-8.2875px' : '-9.75px', transformOrigin: 'left top', transform: registerPasswordFocused ? 'scale(0.85) translateY(-33.6765px)' : 'none' }}>Κωδικός</div>
@@ -314,13 +283,23 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
         <div className="login__consent">
           <div className="login__field login__field--placeholder-transition login__field--checkbox">
             <Label className="login__input-wrapper">
-              <input type="checkbox" value={registerConsentTerms} name="consentTerms" onChange={(e) => setRegisterConsentTerms(e.target.checked)}/>
+              <input 
+                type="checkbox" 
+                checked={registerConsentTerms} 
+                name="consentTerms" 
+                onChange={(e) => setRegisterConsentTerms(e.target.checked)}
+              />
               <div className="login__field-label">Συμφωνώ με τους <a tabIndex={-1} className="dotted" target="_blank" href="/policies/terms">όρους χρήσης του BestPrice</a></div>
             </Label>
           </div>
           <div className="login__field login__field--placeholder-transition login__field--checkbox">
             <Label className="login__input-wrapper">
-              <input type="checkbox" value={registerConsentNewsletters} name="consentNewsletters" onChange={(e) => setRegisterConsentNewsletters(e.target.checked)}/>
+              <input 
+                type="checkbox" 
+                checked={registerConsentNewsletters} 
+                name="consentNewsletters" 
+                onChange={(e) => setRegisterConsentNewsletters(e.target.checked)}
+              />
               <div className="login__field-label">Θέλω να λαμβάνω ενημερωτικά newsletters</div>
             </Label>
           </div>

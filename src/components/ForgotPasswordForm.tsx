@@ -29,6 +29,7 @@ const ForgotPasswordForm = ({ onBack }: ForgotPasswordFormProps) => {
     
     try {
       console.log("Initiating password reset for:", email);
+      // Fix: Pass email as a string instead of an object
       const success = await resetPassword(email);
       
       if (success) {

@@ -19,6 +19,7 @@ const getSiteURL = () => {
 // Define specific paths for auth callbacks
 const getRedirectURL = () => {
   const baseURL = getSiteURL();
+  // Return multiple redirect URLs to support both patterns
   return `${baseURL}/callback`;
 };
 
@@ -31,7 +32,16 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       storage: typeof window !== 'undefined' ? localStorage : undefined,
       detectSessionInUrl: true, // Enables detecting OAuth session info from the URL
+      flowType: 'pkce', // Use PKCE flow for more secure authentication
       redirectTo: getRedirectURL(), // Use the specific redirect URL with /callback path
+      cookieOptions: {
+        // Ensure cookies work across different environments
+        name: 'sb-auth-token',
+        lifetime: 60 * 60 * 24 * 7, // 7 days
+        domain: window?.location?.hostname || '',
+        path: '/',
+        sameSite: 'lax'
+      },
       // Debug options
       debug: true // Enable debug in all environments for now to diagnose issues
     }
@@ -46,5 +56,22 @@ export const redirectURL = getRedirectURL();
 console.log('Supabase Auth Configuration:', {
   siteURL: siteURL,
   redirectURL: redirectURL,
-  detectSessionInUrl: true
+  detectSessionInUrl: true,
+  cookieDomain: window?.location?.hostname || ''
 });
+
+// Helper function to check if auth is working
+export const checkAuth = async () => {
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    console.log("Auth check result:", { 
+      session: data.session ? true : false,
+      sessionExpiry: data.session?.expires_at ? new Date(data.session.expires_at * 1000).toISOString() : null,
+      error: error ? error.message : null
+    });
+    return { isAuthenticated: !!data.session, error };
+  } catch (err) {
+    console.error("Auth check failed:", err);
+    return { isAuthenticated: false, error: err };
+  }
+};

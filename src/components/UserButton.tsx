@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LogOut, Sun, Moon } from 'lucide-react';
@@ -10,8 +11,8 @@ interface UserDropdownContentProps {
   onLogout: () => void;
   user: {
     name: string;
-    username: string;
-    avatar: string | null;
+    username?: string;
+    avatar?: string | null;
     email: string;
   } | null;
 }
@@ -22,6 +23,8 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
   if (!user) {
     return null;
   }
+
+  const username = user.username || user.name.toLowerCase().replace(/\s+/g, '');
 
   return (
     <div id="user-menu-popup" className="popup-bottom popup open is-popup" style={{ zIndex: 50 }}>
@@ -39,21 +42,21 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
             </aside>
             <main>
               <h3 className="user-menu__self-header">{user.name}</h3>
-              <div className="user-menu__self-username">{user.username}</div>
+              <div className="user-menu__self-username">{username}</div>
             </main>
             <div className="user-menu__caret">
               <svg className="icon" aria-hidden="true" width="16" height="16"><use xlinkHref="/public/dist/images/icons/icons.svg#icon-right-thin-16"></use></svg>
             </div>
           </Link>
           <ul>
-            <li><Link data-scrollto="#root" to={`/@${user.username}/products/want`}>{t('productsYouWant')}</Link></li>
-            <li><Link data-scrollto="#root" to={`/@${user.username}/products/have`}>{t('productsYouHave')}</Link></li>
+            <li><Link data-scrollto="#root" to={`/@${username}/products/want`}>{t('productsYouWant')}</Link></li>
+            <li><Link data-scrollto="#root" to={`/@${username}/products/have`}>{t('productsYouHave')}</Link></li>
             <li><Link to="/deals/my">{t('myOffers')}</Link></li>
             <li><Link to="/account/price-drops">{t('priceDrops')}</Link></li>
           </ul>
           <ul>
             <li style={{ position: 'relative' }}>
-              <Link className="collections__popup--link" data-scrollto="#root" to={`/@${user.username}/products/collections`}>
+              <Link className="collections__popup--link" data-scrollto="#root" to={`/@${username}/products/collections`}>
                 <svg className="icon" aria-hidden="true" width="8" height="8" style={{ transform: 'rotate(180deg)', position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%) rotate(180deg)' }}><use href="/dist/images/icons/icons.svg#icon-left-8"></use></svg>
                 {t('myCollections')} (11)
               </Link>
@@ -79,11 +82,11 @@ const UserDropdownContent: React.FC<UserDropdownContentProps> = ({ onLogout, use
             </li>
           </ul>
           <ul>
-            <li><Link to={`/@${user.username}/qna/questions`}>{t('myQuestions')}</Link></li>
-            <li><Link data-scrollto="#root" to={`/@${user.username}/reviews/products`}>{t('myReviews')}</Link></li>
+            <li><Link to={`/@${username}/qna/questions`}>{t('myQuestions')}</Link></li>
+            <li><Link data-scrollto="#root" to={`/@${username}/reviews/products`}>{t('myReviews')}</Link></li>
           </ul>
           <ul>
-            <li><Link to={`/@${user.username}/friends`}>{t('myFriends')}</Link></li>
+            <li><Link to={`/@${username}/friends`}>{t('myFriends')}</Link></li>
           </ul>
           <ul>
             <li>
@@ -137,7 +140,7 @@ const UserButton = () => {
       // Apply the theme to the document element using data-theme
       document.documentElement.setAttribute('data-theme', newTheme);
 
-      // Apply color-scheme.  Note that this might not be supported in all browsers
+      // Apply color-scheme. Note that this might not be supported in all browsers
       document.documentElement.style.colorScheme = newTheme === 'dark' ? 'dark' : 'light';
     }
   };

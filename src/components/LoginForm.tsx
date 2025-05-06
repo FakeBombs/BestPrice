@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -46,7 +45,10 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
     setButtonDisabled(true);
     
     try {
-      console.log("Login form submitted");
+      console.log("Login form submitted with:", email, password);
+      // Explicitly log credentials for debugging (will be removed in production)
+      console.log("DEBUG ONLY - Credentials:", { email, password });
+      
       const success = await login(email, password);
       console.log("Login result:", success);
       
@@ -147,7 +149,7 @@ const LoginForm = ({ onSuccess, onForgotPassword, onError }: LoginFormProps) => 
         <Button 
           type="submit" 
           className="w-full" 
-          disabled={buttonDisabled}
+          disabled={buttonDisabled || !email || !password}
         >
           {isLoading ? t('loggingIn') : t('signIn')}
         </Button>
