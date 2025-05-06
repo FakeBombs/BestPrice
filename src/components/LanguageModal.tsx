@@ -1,5 +1,5 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useMemo, useCallback } from 'react'; // Add useMemo back
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
@@ -10,27 +10,18 @@ type LanguageOption = {
   regionKey: string; 
 };
 
+// These are defined but not directly used by the list in this specific test
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
-  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
-  // ... Add your full list here
+  // ... your full list
 ];
 
 const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
-    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
-    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+    // ... your full list
 ];
-
-// Keep the hardcoded list for a moment, just in case, but we won't use it yet
-// const HARDCODED_DEBUG_LANGUAGES: { code: string; name: string; }[] = [
-//     { code: 'el', name: 'Ελληνικά (DEBUG Hardcoded)' },
-//     { code: 'en-US', name: 'English (US) (DEBUG Hardcoded)' },
-// ];
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -41,8 +32,6 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
-
-  // const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Not needed yet
 
   if (!isOpen) return null;
 
@@ -59,21 +48,19 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // ===== STEP 1: RE-INTRODUCE suggestedLangsToDisplay useMemo =====
+  // ***** DEBUGGING STEP 1A: Extreme useMemo Simplification *****
   const suggestedLangsToDisplay = useMemo(() => {
-    console.log("DEBUG STEP 1: suggestedLangsToDisplay useMemo triggered");
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
-        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) 
-    );
-  }, []); // Empty dependency array is correct as ALL_AVAILABLE_LANGUAGES is constant
+    console.log("DEBUG STEP 1A: suggestedLangsToDisplay useMemo (hardcoded minimal array)");
+    return [
+      { code: 'el-debug', name: 'Ελληνικά (Memo Debug)', englishName: 'Greek', regionKey: 'debug' },
+      { code: 'en-debug', name: 'English (Memo Debug)', englishName: 'English', regionKey: 'debug' },
+    ];
+  }, []); // Empty dependency array, should be extremely stable
 
-  // For this step, we will map over suggestedLangsToDisplay directly
-  // to test if this useMemo causes the error.
+  // For this step, languagesToDisplay will *only* be this hardcoded memoized array
   const languagesToDisplayInJSX = suggestedLangsToDisplay; 
-  // const languagesToDisplay = useMemo(...); // The more complex one is still out
 
   console.log("DEBUG: LanguageModal rendering. SelectedRegion:", selectedRegion, "Displaying count:", languagesToDisplayInJSX.length);
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -108,7 +95,6 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {/* Mapping over the memoized suggestedLangsToDisplay (via languagesToDisplayInJSX) */}
               {languagesToDisplayInJSX.map((lang) => ( 
                 <li key={lang.code}>
                   <button
