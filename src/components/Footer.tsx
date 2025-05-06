@@ -1,145 +1,173 @@
-// Footer.tsx (or your LanguageModal.tsx if separated)
-
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// ... (getStatsData function remains the same) ...
+// Define the getStatsData function outside the component as it doesn't depend on component state/props
+const getStatsData = () => {
+    const totalProducts = products.length;
+    const totalVendors = vendors.length;
+    const totalBrands = brands.length;
+    const totalDeals = products.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)).length;
 
-// Updated Language Modal Component
+    return {
+        totalProducts,
+        totalVendors,
+        totalBrands,
+        totalDeals,
+    };
+};
+
+// Language Modal Component
 interface LanguageModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Define a more comprehensive language list structure
-type LanguageOption = {
-  code: string; // Standard language code e.g., 'en-US', 'el', 'fr-FR'
-  name: string; // Native name of the language e.g., "Ελληνικά", "English (US)"
-  englishName: string; // English name for sorting or display if needed
-  region?: string; // For categorizing e.g., "Europe", "Asia"
-};
-
-// Expanded list of languages with regions (EXAMPLE - you'll need to curate this)
-// This is a VERY simplified list. Facebook's list is extensive and carefully curated.
-const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-  // Suggested (these will also appear in their respective regions)
-  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', region: 'Europe' },
-  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', region: 'Americas' },
-  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', region: 'Europe' },
-
-  // Europe
-  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', region: 'Europe' },
-  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', region: 'Europe' },
-  { code: 'de-DE', name: 'Deutsch', englishName: 'German', region: 'Europe' },
-  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', region: 'Europe' },
-  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', region: 'Europe' },
-  { code: 'sq', name: 'Shqip', englishName: 'Albanian', region: 'Europe' },
-
-
-  // Americas
-  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', region: 'Americas' },
-  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', region: 'Americas' },
-  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', region: 'Americas' },
-
-  // Asia
-  { code: 'ja', name: '日本語', englishName: 'Japanese', region: 'Asia' },
-  { code: 'ko', name: '한국어', englishName: 'Korean', region: 'Asia' },
-  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', region: 'Asia' },
-  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', region: 'Asia' },
-  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', region: 'Asia' },
-  { code: 'ar', name: 'العربية', englishName: 'Arabic', region: 'Africa & Middle East' }, // Also Middle East
-
-  // Africa & Middle East
-  { code: 'he', name: 'עברית', englishName: 'Hebrew', region: 'Africa & Middle East' },
-  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', region: 'Africa & Middle East' }, // Also Europe
-  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', region: 'Africa & Middle East' },
-  // Add many more languages here, categorized by region
-];
-
-const LANGUAGE_REGIONS = [
-    { key: "suggested", nameKey: "suggestedLanguages" },
-    { key: "Europe", nameKey: "languageCategoryEurope" },
-    { key: "Americas", nameKey: "languageCategoryAmericas" },
-    { key: "Asia", nameKey: "languageCategoryAsia" },
-    { key: "Africa & Middle East", nameKey: "languageCategoryAfrica" },
-    // Add more region keys as needed
-];
-
-
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentLangCode } = useTranslation(); // currentLangCode from context
-  const { setLanguage: setContextLanguage } = useLanguageContext();
-  const [selectedRegion, setSelectedRegion] = useState<string>("suggested"); // Default to 'suggested'
+  const { t, language: currentLanguageSetting } = useTranslation(); // currentLanguageSetting from context
+  const { setLanguage: setContextLanguage, language: currentContextLang } = useLanguageContext(); // Get setLanguage and current context lang
+
+
+  // Simpler list for now, matching your Language type for direct setting
+  const languages: { code: 'en' | 'el' | 'es' | 'fr' | 'de'; nameKey: string }[] = [
+    { code: 'el', nameKey: 'greek' },
+    { code: 'en', nameKey: 'english' },
+    { code: 'es', nameKey: 'spanish' },
+    { code: 'fr', nameKey: 'french' },
+    { code: 'de', nameKey: 'german' },
+  ];
+
+  // More comprehensive list for Facebook-like UI (you would expand this)
+    type LanguageOption = {
+        code: string; // e.g., 'el', 'en-US'
+        name: string; // Native name
+        englishName: string; // English name for sorting
+        regionKey: string; // Key for the region category
+    };
+
+    const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+        // Suggested (these will also appear in their respective regions)
+        { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
+        { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
+        { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+        { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+
+
+        // Europe
+        { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
+        { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
+        { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
+        { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
+        { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
+
+
+        // Americas
+        { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
+        { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
+        { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
+
+        // Asia
+        { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
+        { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
+        { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
+        { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
+        { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
+        { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' }, // Also Middle East
+
+        // Africa & Middle East
+        { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
+        { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' }, // Also Europe
+        { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
+    ];
+
+    const LANGUAGE_REGIONS_FOR_MODAL = [
+        { key: "suggested", nameKey: "suggestedLanguages" },
+        { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
+        { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+        { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+        { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+    ];
+
+  const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
+
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
-    // Your Language type is 'en' | 'el' | etc.
-    // You might need to map the detailed langCode (e.g., 'en-US') to your simpler type
-    // For now, let's assume if it's 'en-US' or 'en-GB', you set 'en'
-    let simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
+    const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
     if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
         setContextLanguage(simpleLangCode);
     } else {
-        console.warn(`Unsupported language code: ${langCode}. Defaulting or keeping current.`);
-        // Optionally set a default or do nothing
+        // Fallback or warning if the full code doesn't map to a supported simple code
+        console.warn(`Selected language code ${langCode} not directly supported, attempting base code ${simpleLangCode}`);
+        // Attempt to set with base code if it's one of the supported ones
+        if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
+            setContextLanguage(simpleLangCode);
+        }
     }
     onClose();
   };
 
-  const suggestedLanguages = ALL_AVAILABLE_LANGUAGES.filter(lang => ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)); // Example suggested
+  const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang => 
+    ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)
+  );
 
-  const languagesByRegion = (regionKey: string): LanguageOption[] => {
-    if (regionKey === "suggested") return suggestedLanguages;
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.region === regionKey).sort((a,b) => a.name.localeCompare(b.name));
-  };
+  const languagesToDisplay = useMemo(() => {
+    if (selectedRegion === "suggested") return suggestedLangsToDisplay;
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion).sort((a,b) => a.name.localeCompare(b.name));
+  }, [selectedRegion, suggestedLangsToDisplay]);
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
       <div 
         className="bg-background rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b border-border">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle', 'Select Your Language')}</h3>
-          <button onClick={onClose} className="absolute top-3 right-3 text-muted-foreground hover:text-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <div className="p-4 border-b border-border relative"> {/* Added relative for absolute positioning of close button */}
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
+          <button 
+            onClick={onClose} 
+            className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2"
+            aria-label={t('close', 'Close')}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar for regions */}
-          <aside className="w-1/3 border-r border-border overflow-y-auto p-2 space-y-1 bg-muted/40">
-            {LANGUAGE_REGIONS.map(region => (
+          <aside className="w-1/3 border-r border-border overflow-y-auto p-2 space-y-1 bg-muted/20">
+            {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
               <button
                 key={region.key}
                 onClick={() => setSelectedRegion(region.key)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none
-                  ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'}`}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
+                  ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {t(region.nameKey, region.key)}
+                {t(region.nameKey, region.key === "suggested" ? "Suggested" : region.key.replace('languageCategory',''))}
               </button>
             ))}
           </aside>
 
-          {/* Main area for languages */}
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesByRegion(selectedRegion).map((lang) => (
+              {languagesToDisplay.map((lang) => (
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none
-                      ${currentLangCode === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
+                    className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
+                      ${currentContextLang === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
                   >
                     {lang.name}
-                    {currentLangCode === lang.code.split('-')[0] && <span className="ml-2 text-primary">✓</span>}
+                    {currentContextLang === lang.code.split('-')[0] && <span className="ml-2">✓</span>}
                   </button>
                 </li>
               ))}
+               {languagesToDisplay.length === 0 && selectedRegion !== "suggested" && (
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
+              )}
             </ul>
           </main>
         </div>
@@ -148,7 +176,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-// ... (Footer component remains the same as in the previous response, just ensure it calls the LanguageModal)
+
 const Footer: React.FC = () => {
     const { t, language } = useTranslation();
     const stats = useMemo(() => getStatsData(), []);
@@ -165,14 +193,14 @@ const Footer: React.FC = () => {
   return (
     <>
       <div id="footer-wrapper">
-        <div id="back-to-top" className="pressable" onClick={handleClickToTop} style={{display: "flex"}}>{t('backToTop', 'Back to Top')}<svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg></div>
+        <div id="back-to-top" className="pressable" onClick={handleClickToTop} style={{display: "flex"}}>{t('backToTop')}<svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg></div>
         <div id="promo-footer"></div>
         <div className="root__wrapper bp-footer">
           <div className="footer root">
             
             <div className="footer__top">
             <div className="footer__aside">
-              <Link rel="home" title={t('breadcrumbHome', 'BestPrice')} className="footer__logo pressable" to="/">
+              <Link rel="home" title={t('breadcrumbHome')} className="footer__logo pressable" to="/">
                 <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
                 <span>BestPrice</span>
               </Link>
@@ -205,7 +233,7 @@ const Footer: React.FC = () => {
 
               <div className="footer__section">
                 <div className="footer__section-header">
-                  {t('footerBestPriceSectionTitle', 'BestPrice')}
+                  {t('footerBestPriceSectionTitle')}
                   <div className="footer__section-icon">
                     <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
