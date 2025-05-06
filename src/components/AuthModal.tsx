@@ -139,7 +139,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             </div>
             <Input
               type={loginShowPassword ? 'text' : 'password'}
-              value="{loginPassword}"
+              value=""
               name="password"
               onChange={(e) => setLoginPassword(e.target.value)}
               autoCapitalize="none"
