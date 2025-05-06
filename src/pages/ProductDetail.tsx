@@ -71,7 +71,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const location = useLocation();
   const getOpeningStatusForVendor = useOpeningStatus(); // Use the custom hook
 
