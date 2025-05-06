@@ -54,7 +54,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
-  // This variable is not used if sorting is commented out, but keeping it for when we re-add sorting
+  // This variable is not used if filtering and sorting are commented out,
+  // but keeping it for when we re-add them.
   const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
   if (!isOpen) return null;
@@ -79,18 +80,22 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     );
   }, []); 
 
-  // ***** DEBUGGING STEP 2a: Test without .sort() *****
+  // ***** DEBUGGING STEP 2b: Test with ONLY suggestedLangsToDisplay *****
   const languagesToDisplay = useMemo(() => {
-    console.log("DEBUG Attempt A: languagesToDisplay (NO SORT). Region:", selectedRegion);
-    let listToFilter;
-    if (selectedRegion === "suggested") {
-        listToFilter = suggestedLangsToDisplay;
-    } else {
-        listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
-    }
-    // return [...listToFilter].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort || 'en')); // SORTING IS COMMENTED OUT
-    return listToFilter; // Return the list UNSORTED
-  }, [selectedRegion, suggestedLangsToDisplay]); // Removed currentContextLangForSort from deps as it's not used
+    console.log("DEBUG Attempt B: languagesToDisplay (ONLY suggested).");
+    // SIMPLIFY FURTHER: ALWAYS return only suggestedLangsToDisplay
+    return suggestedLangsToDisplay;
+    
+    // --- ORIGINAL COMPLEX LOGIC (COMMENTED OUT FOR DEBUGGING) ---
+    // let listToFilter;
+    // if (selectedRegion === "suggested") {
+    //     listToFilter = suggestedLangsToDisplay;
+    // } else {
+    //     listToFilter = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegion);
+    // }
+    // return [...listToFilter].sort((a,b) => a.name.localeCompare(b.name, currentContextLangForSort || 'en'));
+  }, [suggestedLangsToDisplay]); // Dependency is ONLY on the stable suggestedLangsToDisplay
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -114,7 +119,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
             {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
               <button
                 key={region.key}
-                onClick={() => setSelectedRegion(region.key)}
+                onClick={() => setSelectedRegion(region.key)} // This will not affect the displayed list in this test version
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
@@ -125,7 +130,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesToDisplay.map((lang) => (
+              {languagesToDisplay.map((lang) => ( // This will now use the further simplified list
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -137,7 +142,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {languagesToDisplay.length === 0 && selectedRegion !== "suggested" && (
+               {/* This condition might always be false now, or the list won't be empty, depending on suggestedLangsToDisplay */}
+               {languagesToDisplay.length === 0 && (
                 <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
