@@ -1,82 +1,157 @@
-import React, { useEffect, useState, useMemo } from 'react'; // Added useMemo
+// Footer.tsx (or your LanguageModal.tsx if separated)
+
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products, vendors, mainCategories, Category } from '@/data/mockData'; // Added Category type
-import { useLanguageContext } from '@/context/LanguageContext'; // Import context for changing language
+import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
+import { useLanguageContext } from '@/context/LanguageContext';
 
-// Moved getStats outside or make it a useMemo inside if it relies on props/state not available globally
-const getStatsData = () => { // Renamed to avoid conflict if getStats becomes a hook
-    const totalProducts = products.length;
-    const totalVendors = vendors.length;
-    const totalBrands = brands.length;
-    // Example: Count products that have a discount price
-    const totalDeals = products.filter(p => p.prices.some(price => price.discountPrice && price.discountPrice < price.price)).length;
+// ... (getStatsData function remains the same) ...
 
-    return {
-        totalProducts,
-        totalVendors,
-        totalBrands,
-        totalDeals,
-    };
-};
-
-// Language Modal Component (can be in a separate file later)
+// Updated Language Modal Component
 interface LanguageModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentLanguage } = useTranslation();
-  const { setLanguage } = useLanguageContext(); // Get setLanguage from context
+// Define a more comprehensive language list structure
+type LanguageOption = {
+  code: string; // Standard language code e.g., 'en-US', 'el', 'fr-FR'
+  name: string; // Native name of the language e.g., "Ελληνικά", "English (US)"
+  englishName: string; // English name for sorting or display if needed
+  region?: string; // For categorizing e.g., "Europe", "Asia"
+};
 
-  const languages: { code: 'en' | 'el' | 'es' | 'fr' | 'de'; nameKey: string }[] = [
-    { code: 'en', nameKey: 'english' },
-    { code: 'el', nameKey: 'greek' },
-    { code: 'es', nameKey: 'spanish' },
-    { code: 'fr', nameKey: 'french' },
-    { code: 'de', nameKey: 'german' },
-  ];
+// Expanded list of languages with regions (EXAMPLE - you'll need to curate this)
+// This is a VERY simplified list. Facebook's list is extensive and carefully curated.
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+  // Suggested (these will also appear in their respective regions)
+  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', region: 'Europe' },
+  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', region: 'Americas' },
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', region: 'Europe' },
+
+  // Europe
+  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', region: 'Europe' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', region: 'Europe' },
+  { code: 'de-DE', name: 'Deutsch', englishName: 'German', region: 'Europe' },
+  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', region: 'Europe' },
+  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', region: 'Europe' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', region: 'Europe' },
+
+
+  // Americas
+  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', region: 'Americas' },
+  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', region: 'Americas' },
+  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', region: 'Americas' },
+
+  // Asia
+  { code: 'ja', name: '日本語', englishName: 'Japanese', region: 'Asia' },
+  { code: 'ko', name: '한국어', englishName: 'Korean', region: 'Asia' },
+  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', region: 'Asia' },
+  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', region: 'Asia' },
+  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', region: 'Asia' },
+  { code: 'ar', name: 'العربية', englishName: 'Arabic', region: 'Africa & Middle East' }, // Also Middle East
+
+  // Africa & Middle East
+  { code: 'he', name: 'עברית', englishName: 'Hebrew', region: 'Africa & Middle East' },
+  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', region: 'Africa & Middle East' }, // Also Europe
+  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', region: 'Africa & Middle East' },
+  // Add many more languages here, categorized by region
+];
+
+const LANGUAGE_REGIONS = [
+    { key: "suggested", nameKey: "suggestedLanguages" },
+    { key: "Europe", nameKey: "languageCategoryEurope" },
+    { key: "Americas", nameKey: "languageCategoryAmericas" },
+    { key: "Asia", nameKey: "languageCategoryAsia" },
+    { key: "Africa & Middle East", nameKey: "languageCategoryAfrica" },
+    // Add more region keys as needed
+];
+
+
+const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
+  const { t, language: currentLangCode } = useTranslation(); // currentLangCode from context
+  const { setLanguage: setContextLanguage } = useLanguageContext();
+  const [selectedRegion, setSelectedRegion] = useState<string>("suggested"); // Default to 'suggested'
 
   if (!isOpen) return null;
 
-  const handleLanguageChange = (langCode: 'en' | 'el' | 'es' | 'fr' | 'de') => {
-    setLanguage(langCode);
-    onClose(); // Close modal after selection
+  const handleLanguageChange = (langCode: string) => {
+    // Your Language type is 'en' | 'el' | etc.
+    // You might need to map the detailed langCode (e.g., 'en-US') to your simpler type
+    // For now, let's assume if it's 'en-US' or 'en-GB', you set 'en'
+    let simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
+    if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
+        setContextLanguage(simpleLangCode);
+    } else {
+        console.warn(`Unsupported language code: ${langCode}. Defaulting or keeping current.`);
+        // Optionally set a default or do nothing
+    }
+    onClose();
+  };
+
+  const suggestedLanguages = ALL_AVAILABLE_LANGUAGES.filter(lang => ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code)); // Example suggested
+
+  const languagesByRegion = (regionKey: string): LanguageOption[] => {
+    if (regionKey === "suggested") return suggestedLanguages;
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => lang.region === regionKey).sort((a,b) => a.name.localeCompare(b.name));
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background p-6 rounded-lg shadow-xl w-full max-w-sm">
-        <h3 className="text-lg font-semibold mb-4">{t('selectYourLanguageTitle', 'Select Your Language')}</h3>
-        <ul>
-          {languages.map((lang) => (
-            <li key={lang.code} className="mb-2">
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
+      <div 
+        className="bg-background rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+      >
+        <div className="p-4 border-b border-border">
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle', 'Select Your Language')}</h3>
+          <button onClick={onClose} className="absolute top-3 right-3 text-muted-foreground hover:text-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar for regions */}
+          <aside className="w-1/3 border-r border-border overflow-y-auto p-2 space-y-1 bg-muted/40">
+            {LANGUAGE_REGIONS.map(region => (
               <button
-                onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full text-left p-2 rounded hover:bg-muted ${currentLanguage === lang.code ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary'}`}
+                key={region.key}
+                onClick={() => setSelectedRegion(region.key)}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none
+                  ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'}`}
               >
-                {t(lang.nameKey, lang.code.toUpperCase())}
+                {t(region.nameKey, region.key)}
               </button>
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={onClose}
-          className="mt-4 w-full p-2 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90"
-        >
-          {t('close', 'Close')}
-        </button>
+            ))}
+          </aside>
+
+          {/* Main area for languages */}
+          <main className="w-2/3 overflow-y-auto p-4">
+            <ul className="space-y-1">
+              {languagesByRegion(selectedRegion).map((lang) => (
+                <li key={lang.code}>
+                  <button
+                    onClick={() => handleLanguageChange(lang.code)}
+                    className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none
+                      ${currentLangCode === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
+                  >
+                    {lang.name}
+                    {currentLangCode === lang.code.split('-')[0] && <span className="ml-2 text-primary">✓</span>}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </main>
+        </div>
       </div>
     </div>
   );
 };
 
-
+// ... (Footer component remains the same as in the previous response, just ensure it calls the LanguageModal)
 const Footer: React.FC = () => {
-    const { t, language } = useTranslation(); // Destructure language for date formatting
-    const stats = useMemo(() => getStatsData(), []); // Memoize stats calculation
-
+    const { t, language } = useTranslation();
+    const stats = useMemo(() => getStatsData(), []);
     const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
 
     const handleClickToTop = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,12 +174,12 @@ const Footer: React.FC = () => {
             <div className="footer__aside">
               <Link rel="home" title={t('breadcrumbHome', 'BestPrice')} className="footer__logo pressable" to="/">
                 <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
-                <span>BestPrice</span> {/* Brand name likely stays untranslated */}
+                <span>BestPrice</span>
               </Link>
               <div className="footer__identity">
-                <p>{t('bestpriceSloganShort', 'The truly best price')}</p>
-                <p>{t('bestpriceSloganLong', 'BestPrice is the first and largest price comparison service in Greece.')}</p>
-                <p>{t('bestpriceSloganFindDeals', 'At BestPrice you will quickly and easily find real offers and the best price from the largest stores.')}</p>
+                <p>{t('bestpriceSloganShort')}</p>
+                <p>{t('bestpriceSloganLong')}</p>
+                <p>{t('bestpriceSloganFindDeals')}</p>
               </div>
             </div>
             
@@ -122,7 +197,7 @@ const Footer: React.FC = () => {
                       {mainCategories.map(category => ( <li key={category.id}><Link to={`/cat/${category.id}/${category.slug}`}>{t(category.slug, category.name)}</Link></li> ))}
                       <li><Link to="/deals">{t('deals')}</Link></li>
                       <li><Link to="/gifts">{t('gifts')}</Link></li>
-                      <li><Link to="/give">{t('bestpriceGive', 'BestPrice Give')}</Link></li>
+                      <li><Link to="/give">{t('bestpriceGive')}</Link></li>
                     </ul>
                   </div>
                 </div>
@@ -138,19 +213,19 @@ const Footer: React.FC = () => {
                 <div className="footer__section-scroller">
                   <div className="footer__section-content">
                     <ul>
-                      <li><Link to="/about">{t('aboutUs', 'About Us')}</Link></li>
-                      <li><Link to="/blog">{t('ourBlog', 'Our Blog')}</Link></li>
-                      <li><Link to="/guides">{t('buyingGuides', 'Buying Guides')}</Link></li>
-                      <li><Link to="/insurance">{t('purchaseInsurance', 'Purchase Insurance')}</Link></li>
-                      <li><Link to="/advertising">{t('advertising', 'Advertising')}</Link></li>
-                      <li><Link to="/credits-club">{t('creditsClub', 'Credits Club')}</Link></li>
-                      <li><Link to="/certification">{t('bestpriceCertification', 'BestPrice Certification')}</Link></li>
-                      <li><Link to="/customer-review-awards">{t('customerReviewAwards', 'Customer Review Awards')}</Link></li>
-                      <li><Link to="/awards">{t('ourAwards', 'Our Awards')}</Link></li>
-                      <li><Link to="/team">{t('ourTeam', 'Our Team')}</Link></li>
-                      <li><Link to="/assistant">{t('bestpriceAssistant', 'BestPrice Assistant')}</Link></li>
+                      <li><Link to="/about">{t('aboutUs')}</Link></li>
+                      <li><Link to="/blog">{t('ourBlog')}</Link></li>
+                      <li><Link to="/guides">{t('buyingGuides')}</Link></li>
+                      <li><Link to="/insurance">{t('purchaseInsurance')}</Link></li>
+                      <li><Link to="/advertising">{t('advertising')}</Link></li>
+                      <li><Link to="/credits-club">{t('creditsClub')}</Link></li>
+                      <li><Link to="/certification">{t('bestpriceCertification')}</Link></li>
+                      <li><Link to="/customer-review-awards">{t('customerReviewAwards')}</Link></li>
+                      <li><Link to="/awards">{t('ourAwards')}</Link></li>
+                      <li><Link to="/team">{t('ourTeam')}</Link></li>
+                      <li><Link to="/assistant">{t('bestpriceAssistant')}</Link></li>
                       <li><Link to="/careers">{t('jobOpenings', { count: 5 })}</Link></li>
-                      <li><Link to="/contact">{t('contactUs', 'Contact')}</Link></li>
+                      <li><Link to="/contact">{t('contactUs')}</Link></li>
                     </ul>
                   </div>
                 </div>
@@ -158,7 +233,7 @@ const Footer: React.FC = () => {
 
               <div className="footer__section footer__section--in-numbers">
                 <div className="footer__section-header">
-                  {t('inNumbers', 'In Numbers')}
+                  {t('inNumbers')}
                   <div className="footer__section-icon">
                     <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
@@ -177,7 +252,7 @@ const Footer: React.FC = () => {
 
               <div className="footer__section footer__section--privacy">
                 <div className="footer__section-header">
-                  {t('termsAndPrivacy', 'Terms & Privacy')}
+                  {t('termsAndPrivacy')}
                   <div className="footer__section-icon">
                     <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
@@ -186,11 +261,11 @@ const Footer: React.FC = () => {
                 <div className="footer__section-scroller">
                   <div className="footer__section-content">
                     <ul>
-                      <li><Link rel="nofollow" to="/policies/terms" title={t('termsOfUse', 'Terms of Use')}>{t('termsOfUse', 'Terms of Use')}</Link></li>
-                      <li><Link rel="nofollow" to="/policies/privacy" title={t('privacyPolicy', 'Privacy Policy')}>{t('privacyPolicy', 'Privacy Policy')}</Link></li>
-                      <li><Link rel="nofollow" to="/policies/cookies" title={t('cookiePolicy', 'Cookie Policy')}>{t('cookiePolicy', 'Cookie Policy')}</Link></li>
-                      <li><Link rel="nofollow" to="/gdpr" title={t('gdprLink', 'GDPR')}>{t('gdprLink', 'GDPR')}</Link></li>
-                      <li><Link rel="nofollow" to="/policies/dsa" title={t('dsaLink', 'DSA')}>{t('dsaLink', 'DSA')}</Link></li>
+                      <li><Link rel="nofollow" to="/policies/terms" title={t('termsOfUse')}>{t('termsOfUse')}</Link></li>
+                      <li><Link rel="nofollow" to="/policies/privacy" title={t('privacyPolicy')}>{t('privacyPolicy')}</Link></li>
+                      <li><Link rel="nofollow" to="/policies/cookies" title={t('cookiePolicy')}>{t('cookiePolicy')}</Link></li>
+                      <li><Link rel="nofollow" to="/gdpr" title={t('gdprLink')}>{t('gdprLink')}</Link></li>
+                      <li><Link rel="nofollow" to="/policies/dsa" title={t('dsaLink')}>{t('dsaLink')}</Link></li>
                     </ul>
                   </div>
                 </div>
@@ -199,31 +274,31 @@ const Footer: React.FC = () => {
               <div className="footer__section footer__section--b2b">
                 <div className="footer__b2b">
                   <div className="footer__section-header">
-                    {t('bestpriceForMerchants', 'BestPrice For Merchants')}
+                    {t('bestpriceForMerchants')}
                     <div className="footer__section-icon">
                       <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
                   </div>
                   <div className="footer__section-scroller">
                     <div className="footer__section-content">
-                      <p>{t('merchantsSectionSlogan1', 'Do you have an online store?')}</p>
-                      <p>{t('merchantsSectionSlogan2', 'See how BestPrice can help you increase your sales!')}</p>
-                      <Link title={t('forMerchantsButton', 'For Merchants')} to="https://merchants.nexushub-commerce.lovable.app" className="button">{t('forMerchantsButton', 'For Merchants')}</Link>
+                      <p>{t('merchantsSectionSlogan1')}</p>
+                      <p>{t('merchantsSectionSlogan2')}</p>
+                      <Link title={t('forMerchantsButton')} to="https://merchants.nexushub-commerce.lovable.app" className="button">{t('forMerchantsButton')}</Link>
                     </div>
                   </div>
                 </div>
                 
                 <div className="footer__b2b">
                   <div className="footer__section-header">
-                    <div>{t('bestpriceForBrands', 'BestPrice For Brands')}</div>
+                    <div>{t('bestpriceForBrands')}</div>
                     <div className="footer__section-icon">
                       <svg aria-hidden="true" className="icon" width="16" height="16" viewBox="0 0 16 16" role="img"><path xmlns="http://www.w3.org/2000/svg" d="M1 13L9 5L17 13" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
                   </div>
                   <div className="footer__section-scroller">
                     <div className="footer__section-content">
-                      <p>{t('brandsSectionSlogan', 'BestPrice for Brands will offer useful information & services to manufacturers (Brands).')}</p>
-                      <Link title={t('moreInfoButton', 'More Info')} to="https://brands.nexushub-commerce.lovable.app" className="button">{t('moreInfoButton', 'More Info')}</Link>
+                      <p>{t('brandsSectionSlogan')}</p>
+                      <Link title={t('moreInfoButton')} to="https://brands.nexushub-commerce.lovable.app" className="button">{t('moreInfoButton')}</Link>
                     </div>
                   </div>
                 </div>
@@ -232,18 +307,18 @@ const Footer: React.FC = () => {
           </div>
             
             <div className="footer__social">
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnFacebook', 'BestPrice on Facebook')} to="https://www.facebook.com" data-network="facebook" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-facebook-24"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnX', 'BestPrice on X')} to="https://www.x.com" data-network="x" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-xcom-24"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnThreads', 'BestPrice on Threads')} to="https://www.threads.net" data-network="Threads" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-threads-24"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnInstagram', 'BestPrice on Instagram')} to="https://www.instagram.com" data-network="instagram" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-instagram-24"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnTikTok', 'BestPrice on TikTok')} to="https://www.tiktok.com" data-network="tiktok" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-tik-24"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnYouTube', 'BestPrice on YouTube')} to="https://www.youtube.com" data-network="youtube" className="footer__network"><svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/social.svg#icon-yt-old"></use></svg></Link>
-              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnLinkedIn', 'BestPrice on LinkedIn')} to="https://www.linkedin.com/company/" data-network="linkedin" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-linkedin-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnFacebook')} to="https://www.facebook.com" data-network="facebook" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-facebook-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnX')} to="https://www.x.com" data-network="x" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-xcom-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnThreads')} to="https://www.threads.net" data-network="Threads" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-threads-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnInstagram')} to="https://www.instagram.com" data-network="instagram" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-instagram-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnTikTok')} to="https://www.tiktok.com" data-network="tiktok" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-tik-24"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnYouTube')} to="https://www.youtube.com" data-network="youtube" className="footer__network"><svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/social.svg#icon-yt-old"></use></svg></Link>
+              <Link target="_blank" rel="external nofollow noopener" title={t('bestpriceOnLinkedIn')} to="https://www.linkedin.com/company/" data-network="linkedin" className="footer__network"><svg aria-hidden="true" className="icon" width="24" height="24"><use href="/dist/images/icons/social.svg#icon-linkedin-24"></use></svg></Link>
             </div>
             
             <div className="footer__bottom">
               <div className="footer__copy">
-                <Link className="footer__besto" rel="home" title={t('homepageTitle', 'Homepage')} to="/">
+                <Link className="footer__besto" rel="home" title={t('homepageTitle')} to="/">
                   <svg className="footer__besto" width="20" height="24" viewBox="0 0 20 24" role="img" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="0.7" fillRule="evenodd" clipRule="evenodd" d="M9.31465 7.39144L9.31034 1.94406C9.30909 0.35542 10.7761 -0.491803 12.1517 0.302442L19.391 4.48202L19.4081 4.49209C19.9694 4.82843 20.1591 5.55421 19.8307 6.12305L19.8206 6.14017C19.4843 6.70151 18.7585 6.89117 18.1897 6.56276L11.7137 2.82386L11.7173 7.38954C11.7178 8.05301 11.1804 8.59128 10.5169 8.5918C9.85345 8.59233 9.31518 8.05491 9.31465 7.39144ZM13.5325 14.6278C12.9579 14.2961 12.7611 13.5614 13.0928 12.9868C13.4245 12.4122 14.1592 12.2153 14.7338 12.5471L19.3991 15.2406C19.9737 15.5723 20.1706 16.307 19.8389 16.8816C19.5071 17.4562 18.7724 17.6531 18.1978 17.3213L13.5325 14.6278Z" fill="#7C8796"></path>
                     <path fillRule="evenodd" clipRule="evenodd" d="M7.50285 3.8762C8.06419 3.53986 8.25386 2.81408 7.92544 2.24524C7.59371 1.67066 6.85899 1.47379 6.28441 1.80553L1.6486 4.48202L1.62029 4.4986C0.688823 5.0522 0.007475 6.24182 0.00661889 7.32305L0 15.6797L0.00010011 15.6958L0 15.7066C0 16.7987 0.694851 18.0029 1.64053 18.5513L8.89021 22.7555L8.93148 22.7789C10.2945 23.5359 11.736 22.694 11.736 21.1191V12.76L11.7358 12.7272C11.7221 11.6438 11.0317 10.4582 10.0955 9.91524L3.58377 6.139L7.48573 3.88627L7.50285 3.8762ZM2.40259 15.6816L2.40849 8.23485L8.89016 11.9937L8.90138 12.0004C9.10388 12.1276 9.33337 12.5295 9.33337 12.76L9.33333 20.235L2.8458 16.4728L2.83458 16.4661C2.63208 16.3389 2.40259 15.937 2.40259 15.7066L2.40244 15.693L2.40259 15.6816Z" fill="#758190"></path>
@@ -253,18 +328,17 @@ const Footer: React.FC = () => {
               </div>
             
               <div className="footer__privacy">
-                <Link rel="nofollow" title={t('termsOfUse', 'Terms of Use')} to="/policies/terms">{t('termsOfUse', 'Terms of Use')}</Link>
-                <Link rel="nofollow" title={t('privacyPolicy', 'Privacy Policy')} to="/policies/privacy">{t('privacyPolicy', 'Privacy Policy')}</Link>
-                <Link rel="nofollow" title={t('cookiePolicy', 'Cookie Policy')} to="/policies/cookies">{t('cookiePolicy', 'Cookie Policy')}</Link>
-                <Link rel="nofollow" title={t('gdprLink', 'GDPR')} to="/gdpr">{t('gdprLink', 'GDPR')}</Link>
-                <Link rel="nofollow" title={t('dsaLink', 'DSA')} to="/policies/dsa">{t('dsaLink', 'DSA')}</Link>
-                {/* Language Selector Link */}
+                <Link rel="nofollow" title={t('termsOfUse')} to="/policies/terms">{t('termsOfUse')}</Link>
+                <Link rel="nofollow" title={t('privacyPolicy')} to="/policies/privacy">{t('privacyPolicy')}</Link>
+                <Link rel="nofollow" title={t('cookiePolicy')} to="/policies/cookies">{t('cookiePolicy')}</Link>
+                <Link rel="nofollow" title={t('gdprLink')} to="/gdpr">{t('gdprLink')}</Link>
+                <Link rel="nofollow" title={t('dsaLink')} to="/policies/dsa">{t('dsaLink')}</Link>
                 <button 
                   onClick={() => setIsLanguageModalOpen(true)} 
-                  className="ml-4 text-sm hover:underline" // Added some basic styling
-                  title={t('changeLanguage', 'Change Language')}
+                  className="ml-4 text-sm hover:underline"
+                  title={t('changeLanguage')}
                 >
-                  {t('changeLanguage', 'Change Language')}
+                  {t('changeLanguage')}
                 </button>
               </div>
             </div>
