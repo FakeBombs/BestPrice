@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, UserPlus, X, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -140,7 +139,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             </div>
             <Input
               type={loginShowPassword ? 'text' : 'password'}
-              value=""
+              value="{loginPassword}"
               name="password"
               onChange={(e) => setLoginPassword(e.target.value)}
               autoCapitalize="none"
