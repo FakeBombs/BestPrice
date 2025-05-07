@@ -1,6 +1,3 @@
-// src/data/mockData.ts
-// COMPLETE FILE with Product interface updated and giftAttributes added to examples.
-
 // --- Interfaces ---
 
 // Category interface for nested structure
@@ -120,7 +117,6 @@ export interface Product {
   shippingClass?: string;
   relatedProductIds?: number[];
   comparisonProductIds?: number[];
-  // <<< UPDATED: Added giftAttributes >>>
   giftAttributes?: {
     recipient?: ('men' | 'women' | 'teens' | 'kids9-11' | 'kids6-8' | 'toddlers' | 'babies')[];
     occasion?: string[];
@@ -201,9 +197,9 @@ export const categories: Category[] = [
   { id: 64, name: 'Προϊόντα Κάνναβης', slug: 'cannabis-products', parentId: 4, image: '/dist/images/cat/cannabis-products.webp' },
   { id: 65, name: 'Ορθοπεδικά', slug: 'orthopedics', parentId: 4, image: '/dist/images/cat/orthopedics.webp' },
   { id: 66, name: 'Βοηθήματα Ασθενών', slug: 'patient-aids', parentId: 4, image: '/dist/images/cat/patient-aids.webp' },
-  { id: 67, name: 'Οπτικά (Υγεία & Ομορφιά)', slug: 'optics', parentId: 4, image: '/dist/images/cat/optics.webp' }, // Using 'optics' for consistency
+  { id: 67, name: 'Οπτικά (Υγεία & Ομορφιά)', slug: 'optics', parentId: 4, image: '/dist/images/cat/optics.webp' },
   { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '/dist/images/cat/korean-cosmetics.webp' },
-  { id: 69, name: 'Παιδική, Βρεφική Μόδα (Παιδικά)', slug: 'kids-baby-fashion-main', parentId: 5, image: '/dist/images/cat/kids-baby-fashion-main.webp' }, // Differentiated slug from fashion's one
+  { id: 69, name: 'Παιδική, Βρεφική Μόδα (Παιδικά)', slug: 'kids-baby-fashion-main', parentId: 5, image: '/dist/images/cat/kids-baby-fashion-main.webp' },
   { id: 70, name: 'Παιδικά Παιχνίδια', slug: 'kids-toys', parentId: 5, image: '/dist/images/cat/kids-toys.webp' },
   { id: 71, name: 'Σχολικά Είδη', slug: 'school-supplies', parentId: 5, image: '/dist/images/cat/school-supplies.webp' },
   { id: 72, name: 'Βρεφικά Παιχνίδια', slug: 'baby-toys', parentId: 5, image: '/dist/images/cat/baby-toys.webp' },
@@ -221,7 +217,7 @@ export const categories: Category[] = [
   { id: 84, name: 'Βιβλία', slug: 'books', parentId: 6, image: '/dist/images/cat/books.webp' },
   { id: 85, name: 'Κυνήγι', slug: 'hunting', parentId: 6, image: '/dist/images/cat/hunting.webp' },
   { id: 86, name: 'Είδη Γυμναστικής', slug: 'fitness-equipment', parentId: 6, image: '/dist/images/cat/fitness-equipment.webp' },
-  { id: 87, name: 'Είδη Κατοικιδίων (Hobby)', slug: 'pet-supplies-hobby', parentId: 6, image: '/dist/images/cat/pet-supplies-hobby.webp' }, // Differentiated from home-garden
+  { id: 87, name: 'Είδη Κατοικιδίων (Hobby)', slug: 'pet-supplies-hobby', parentId: 6, image: '/dist/images/cat/pet-supplies-hobby.webp' },
   { id: 88, name: 'Drones & Αξεσουάρ', slug: 'drones-accessories', parentId: 6, image: '/dist/images/cat/drones-accessories.webp' },
   { id: 89, name: 'Ηλεκτρικά Πατίνια', slug: 'electric-scooters', parentId: 6, image: '/dist/images/cat/electric-scooters.webp' },
   { id: 90, name: 'Hoverboards', slug: 'hoverboards', parentId: 6, image: '/dist/images/cat/hoverboards.webp' },
@@ -583,8 +579,8 @@ export const categories: Category[] = [
   { id: 446, name: 'Αποθήκευση, Μεταφορά Δίσκων Πικάπ', slug: 'turntable-record-storage', parentId: 197, image: '/dist/images/cat/turntable-record-storage.webp' },
   { id: 447, name: 'Ενισχυτές Πικάπ', slug: 'turntable-amplifiers', parentId: 197, image: '/dist/images/cat/turntable-amplifiers.webp' },
   { id: 448, name: 'Σετ Home Cinema', slug: 'home-cinema-sets', parentId: 198, image: '/dist/images/cat/home-cinema-sets.webp' },
-  { id: 449, name: 'Soundbar (Home Cinema)', slug: 'soundbars', parentId: 198, image: '/dist/images/cat/soundbars.webp' }, // Using generic slug
-  { id: 450, name: 'Subwoofer (Home Cinema)', slug: 'subwoofers', parentId: 198, image: '/dist/images/cat/subwoofers.webp' }, // Using generic slug
+  { id: 449, name: 'Soundbar (Home Cinema)', slug: 'soundbars', parentId: 198, image: '/dist/images/cat/soundbars.webp' },
+  { id: 450, name: 'Subwoofer (Home Cinema)', slug: 'subwoofers', parentId: 198, image: '/dist/images/cat/subwoofers.webp' },
   { id: 451, name: 'Φορητά Ράδιο CD', slug: 'portable-radio-cd', parentId: 199, image: '/dist/images/cat/portable-radio-cd.webp' },
   { id: 452, name: 'Φορητά Ραδιόφωνα', slug: 'portable-radios', parentId: 199, image: '/dist/images/cat/portable-radios.webp' },
   { id: 453, name: 'Δημοσιογραφικά, Καταγραφικά Ήχου', slug: 'audio-recorders', parentId: 199, image: '/dist/images/cat/audio-recorders.webp' },
