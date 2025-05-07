@@ -75,11 +75,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
-  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Fallback for sorting if not loaded
-
-  if (!isOpen) return null;
-
-  // Fixed: Moved mapLanguageCode outside of component or made it properly memoized
+  // Function to map language code - moved outside of any hooks
   const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
     const baseCode = fullCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
     if (['en', 'el', 'es', 'fr', 'de'].includes(baseCode)) {
@@ -89,37 +85,37 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     return 'en'; // Default to 'en' or your app's primary default
   };
 
-  // Fixed: Made sure all dependencies are properly listed
+  // Handle language selection
   const handleLanguageSelect = (langCode: string) => {
     const mappedCode = mapLanguageCode(langCode);
     setContextLanguage(mappedCode);
     onClose();
   };
 
-  const suggestedLangsToDisplay = useMemo(() => {
-    console.log("DEBUG: LanguageSelectorModal - suggestedLangsToDisplay useMemo triggered");
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
-      ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code) // Ensure these codes exist in ALL_AVAILABLE_LANGUAGES
-    );
-  }, []); // ALL_AVAILABLE_LANGUAGES is a top-level const, so empty deps is correct.
+  // Early return if modal is not open
+  if (!isOpen) return null;
 
-  const languagesToDisplay = useMemo(() => {
-    console.log("DEBUG: LanguageSelectorModal - languagesToDisplay useMemo triggered. Region:", selectedRegion);
-    let filteredLangs: LanguageOption[];
-    
-    if (selectedRegion === "suggested") {
-      filteredLangs = suggestedLangsToDisplay;
-    } else {
-      filteredLangs = ALL_AVAILABLE_LANGUAGES.filter(lang => 
-        lang.regionKey === selectedRegion
-      );
-    }
-    
-    // Create a new array before sorting to potentially help with stability, though sort itself returns a new array if not in-place.
-    return [...filteredLangs].sort((a, b) => 
-      String(a.name || '').localeCompare(String(b.name || ''), currentContextLangForSort)
+  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Fallback for sorting if not loaded
+
+  // Define suggestedLangsToDisplay - defining inline now instead of with useMemo to avoid issues
+  const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang => 
+    ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code)
+  );
+
+  // Define languagesToDisplay - also defining inline to avoid issues
+  let languagesToDisplay: LanguageOption[] = [];
+  if (selectedRegion === "suggested") {
+    languagesToDisplay = suggestedLangsToDisplay;
+  } else {
+    languagesToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang => 
+      lang.regionKey === selectedRegion
     );
-  }, [selectedRegion, suggestedLangsToDisplay, currentContextLangForSort]);
+  }
+  
+  // Sort languages
+  languagesToDisplay = [...languagesToDisplay].sort((a, b) => 
+    String(a.name || '').localeCompare(String(b.name || ''), currentContextLangForSort)
+  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
