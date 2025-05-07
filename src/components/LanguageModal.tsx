@@ -1,17 +1,15 @@
 // src/components/LanguageModal.tsx
 import React, { useState, useCallback } from 'react';
-// import { useTranslation } from '@/hooks/useTranslation';         // COMMENTED OUT
-// import { useLanguageContext } from '@/context/LanguageContext'; // COMMENTED OUT
+import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define type for clarity, even if not fully utilized in this minimal version
-type LanguageOption = {
+// Define type for clarity, used by HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST
+type LanguageOptionForTest = {
   code: string;
   name: string;
-  // englishName: string; // Not strictly needed for this debug version
-  // regionKey: string;  // Not strictly needed for this debug version
 };
 
-// These are defined but LANGUAGE_REGIONS_FOR_MODAL is used by the sidebar which still uses a mock 't'
+// These constants are for the sidebar, which uses t()
 const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
@@ -20,10 +18,11 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-const HARDCODED_DEBUG_LANGUAGES: LanguageOption[] = [
-    { code: 'el-debug', name: 'Ελληνικά (Hardcoded)', englishName: 'Greek', regionKey: 'debug' },
-    { code: 'en-US-debug', name: 'English (US) (Hardcoded)', englishName: 'English (US)', regionKey: 'debug' },
-    { code: 'es-ES-debug', name: 'Español (Hardcoded)', englishName: 'Spanish', regionKey: 'debug' },
+// The small, hardcoded list will be used for the main display in this test
+const HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST: LanguageOptionForTest[] = [
+    { code: 'el-debug', name: 'Ελληνικά (Hooks Active Test)' },
+    { code: 'en-US-debug', name: 'English (US) (Hooks Active Test)' },
+    { code: 'es-ES-debug', name: 'Español (Hooks Active Test)'},
 ];
 
 interface LanguageModalProps {
@@ -32,26 +31,28 @@ interface LanguageModalProps {
 }
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  // --- All custom hooks commented out for this test ---
-  // const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
-  // const { setLanguage: setContextLanguage } = useLanguageContext();
-
-  // --- Use hardcoded fallbacks ---
-  const t = (key: string, fallback?: string) => fallback || key;
-  const currentContextLangFromHook = 'el'; // Hardcode for testing the checkmark
-  // const isLoaded = true; // Assume loaded for testing
-
+  // Re-introduce custom hooks
+  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
+  const { setLanguage: setContextLanguage } = useLanguageContext();
+  
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
-    console.log("DEBUG: Language selected in simplified modal (no context update):", langCode);
-    // setContextLanguage(simpleLangCode); // Actual language change is disabled
+    const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
+    if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
+        setContextLanguage(simpleLangCode); // Use the real context function
+    } else {
+        console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
+        if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
+            setContextLanguage(simpleLangCode);
+        }
+    }
     onClose();
   };
 
-  console.log("DEBUG: LanguageModal rendering with NO custom hooks for data, NO useMemo for lists. SelectedRegion:", selectedRegion);
+  console.log("DEBUG: LanguageModal rendering WITH custom hooks. List is hardcoded. isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -60,11 +61,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle', 'Select Your Language (Hardcoded)')}</h3>
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
-            aria-label={t('close', 'Close (Hardcoded)')}
+            aria-label={t('close', 'Close')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
@@ -79,15 +80,16 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {/* Using hardcoded fallback for region name as well, assuming t() from context might be an issue */}
-                {t(region.nameKey, region.key.replace('languageCategory','').charAt(0).toUpperCase() + region.key.replace('languageCategory','').slice(1) || 'Region')}
+                {/* Using t() from the re-introduced hook */}
+                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', 'Suggested') : t(region.nameKey, region.key.replace('languageCategory','')))}
               </button>
             ))}
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {HARDCODED_DEBUG_LANGUAGES.map((lang) => ( 
+              {/* Mapping over the hardcoded list */}
+              {HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -99,8 +101,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {HARDCODED_DEBUG_LANGUAGES.length === 0 && ( 
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed (Hardcoded).')}</li>
+               {HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST.length === 0 && ( 
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
           </main>
