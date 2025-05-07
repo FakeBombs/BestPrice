@@ -1,3 +1,4 @@
+
 // src/components/LanguageSelectorModal.tsx
 import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -78,20 +79,22 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
 
   if (!isOpen) return null;
 
-  const mapLanguageCode = useCallback((fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
+  // Fixed: Moved mapLanguageCode outside of component or made it properly memoized
+  const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
     const baseCode = fullCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
     if (['en', 'el', 'es', 'fr', 'de'].includes(baseCode)) {
       return baseCode;
     }
     console.warn(`mapLanguageCode received an unmappable code: ${fullCode}, defaulting to 'en'.`);
     return 'en'; // Default to 'en' or your app's primary default
-  }, []); // Empty dependency array as it's a pure function
+  };
 
-  const handleLanguageSelect = useCallback((langCode: string) => {
+  // Fixed: Made sure all dependencies are properly listed
+  const handleLanguageSelect = (langCode: string) => {
     const mappedCode = mapLanguageCode(langCode);
     setContextLanguage(mappedCode);
     onClose();
-  }, [setContextLanguage, onClose, mapLanguageCode]);
+  };
 
   const suggestedLangsToDisplay = useMemo(() => {
     console.log("DEBUG: LanguageSelectorModal - suggestedLangsToDisplay useMemo triggered");
