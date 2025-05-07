@@ -1,13 +1,21 @@
+// src/components/LanguageSelectorModal.tsx
+// FINAL VERSION incorporating expanded default variants and full language list
+
 import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
+import type { AllTranslations } from '@/locales'; // Import the type for keys
 
+// --- Types and Constants ---
 type LanguageOption = {
-  code: string;
+  code: string; // Specific code e.g., en-US, el
   name: string;
   englishName: string;
   regionKey: string;
 };
+
+// Represents the base language codes managed by the context ('en', 'el', 'zh', 'pt' etc.)
+type BaseLanguageCode = keyof AllTranslations;
 
 const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "all", nameKey: "allLanguages" },
@@ -18,6 +26,7 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "languageCategoryWesternEurope", nameKey: "languageCategoryWesternEurope" },
 ];
 
+// Your extensive ALL_AVAILABLE_LANGUAGES list
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
@@ -133,24 +142,126 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsiaPacific' },
 ];
 
-const VALID_CONTEXT_LANGUAGES: Array<'en' | 'el' | 'es' | 'fr' | 'de'> = ['en', 'el', 'es', 'fr', 'de'];
-
-const DEFAULT_VARIANT_FOR_CONTEXT_LANG: { [key in 'en' | 'el' | 'es' | 'fr' | 'de']: string } = {
+// Mapping from Base Context Language to the Specific Code to Checkmark
+// REVIEW AND ADJUST THESE DEFAULTS AS NEEDED!
+const DEFAULT_VARIANT_FOR_CONTEXT_LANG: { [key in BaseLanguageCode]: string } = {
   'el': 'el',
   'en': 'en-US',
   'es': 'es-ES',
   'fr': 'fr-FR',
   'de': 'de',
+  'af': 'af',
+  'am': 'am',
+  'ar': 'ar',
+  'as': 'as',
+  'az': 'az',
+  'be': 'be',
+  'ber': 'ber', // Default Berber variant
+  'bg': 'bg',
+  'bn': 'bn',
+  'br': 'br',
+  'bs': 'bs',
+  'ca': 'ca',
+  'ceb': 'ceb',
+  'ckb': 'ckb', // Sorani Kurdish
+  'co': 'co',
+  'cs': 'cs',
+  'cy': 'cy',
+  'da': 'da',
+  'et': 'et',
+  'eu': 'eu',
+  'fa': 'fa',
+  'ff': 'ff',
+  'fi': 'fi',
+  'fil': 'fil', // Filipino
+  'fo': 'fo',
+  'fur': 'fur',
+  'fy': 'fy',
+  'ga': 'ga',
+  'gl': 'gl',
+  'gn': 'gn',
+  'gu': 'gu',
+  'ha': 'ha',
+  'he': 'he',
+  'hi': 'hi',
+  'hr': 'hr',
+  'ht': 'ht',
+  'hu': 'hu',
+  'hy': 'hy',
+  'id': 'id',
+  'ik': 'ik', // Inupiaq
+  'is': 'is',
+  'it': 'it',
+  'iu': 'iu', // Inuktitut
+  'ja': 'ja', // Default Japanese
+  'jv': 'jv',
+  'ka': 'ka',
+  'kk': 'kk',
+  'km': 'km',
+  'kn': 'kn',
+  'ko': 'ko',
+  'ku': 'ku', // Kurmanji Kurdish
+  'ky': 'ky',
+  'lo': 'lo',
+  'lt': 'lt',
+  'lv': 'lv',
+  'mg': 'mg',
+  'mk': 'mk',
+  'ml': 'ml',
+  'mn': 'mn',
+  'mr': 'mr',
+  'ms': 'ms',
+  'mt': 'mt',
+  'my': 'my',
+  'nb': 'nb', // Norwegian Bokmål
+  'ne': 'ne',
+  'nl': 'nl', // Default Dutch
+  'nn': 'nn', // Norwegian Nynorsk
+  'or': 'or',
+  'pa': 'pa',
+  'pl': 'pl',
+  'ps': 'ps',
+  'pt': 'pt-PT', // Default Portugal Portuguese
+  'ro': 'ro',
+  'ru': 'ru',
+  'rw': 'rw',
+  'sc': 'sc',
+  'si': 'si',
+  'sk': 'sk',
+  'sl': 'sl',
+  'sn': 'sn',
+  'so': 'so',
+  'sq': 'sq',
+  'sr': 'sr',
+  'sv': 'sv',
+  'sw': 'sw',
+  'syr': 'syr',
+  'szl': 'szl',
+  'ta': 'ta',
+  'te': 'te',
+  'tg': 'tg',
+  'th': 'th',
+  'tr': 'tr',
+  'tt': 'tt',
+  'uk': 'uk',
+  'ur': 'ur',
+  'uz': 'uz',
+  'vi': 'vi',
+  'zh': 'zh-CN', // Default Simplified Chinese
+  'zza': 'zza',
 };
 
-const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
+
+// Helper function to map specific code to base code for context
+const mapLanguageCode = (fullCode: string): BaseLanguageCode => {
   const baseCode = fullCode.split('-')[0].toLowerCase();
-  if (VALID_CONTEXT_LANGUAGES.includes(baseCode as any)) {
-    return baseCode as 'en' | 'el' | 'es' | 'fr' | 'de';
+  if (Object.prototype.hasOwnProperty.call(DEFAULT_VARIANT_FOR_CONTEXT_LANG, baseCode)) {
+      return baseCode as BaseLanguageCode;
   }
   console.warn(`mapLanguageCode received an unmappable code: ${fullCode}, defaulting to 'en'.`);
   return 'en';
 };
+
 
 interface LanguageSelectorModalProps {
   isOpen: boolean;
@@ -170,16 +281,19 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
 
   if (!isOpen) return null;
 
-  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
+  const currentContextLangForSort = isLoaded && Object.prototype.hasOwnProperty.call(DEFAULT_VARIANT_FOR_CONTEXT_LANG, currentContextLangFromHook)
+    ? currentContextLangFromHook
+    : 'en';
 
-  const activeSpecificLangCode = isLoaded
+  const activeSpecificLangCode = isLoaded && Object.prototype.hasOwnProperty.call(DEFAULT_VARIANT_FOR_CONTEXT_LANG, currentContextLangFromHook)
     ? DEFAULT_VARIANT_FOR_CONTEXT_LANG[currentContextLangFromHook]
     : null;
 
+  // --- Calculate lists inline (NO useMemo) ---
   const suggestedLanguageCodes = ['el', 'en-US', 'sq', 'es', 'de', 'fr-FR'];
   const suggestedLangs = ALL_AVAILABLE_LANGUAGES
     .filter(lang => suggestedLanguageCodes.includes(lang.code))
-    .sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
+    .sort((a, b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
 
   let regionalLanguages: LanguageOption[];
   if (selectedRegionKey === "all") {
@@ -187,10 +301,11 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   } else {
     regionalLanguages = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegionKey);
   }
-  regionalLanguages = [...regionalLanguages].sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
+  regionalLanguages = [...regionalLanguages].sort((a, b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
+  // --- End list calculation ---
 
-  // Tailwind classes for internal elements are kept for now,
-  // adjust them or replace with your custom classes if needed.
+
+  // Render helper (uses Tailwind internally)
   const renderLanguageColumns = (languages: LanguageOption[], numColumns: number = 4, isSuggested: boolean = false) => {
     const columns: LanguageOption[][] = Array.from({ length: numColumns }, () => []);
     languages.forEach((lang, index) => {
@@ -198,7 +313,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     });
 
     return (
-      <div className={`grid grid-cols-2 ${isSuggested ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-x-1`}>
+      <div className={`grid grid-cols-2 ${isSuggested ? 'sm:grid-cols-4 md:grid-cols-6' : 'sm:grid-cols-3 md:grid-cols-4'} gap-x-1`}> {/* Adjusted columns */}
         {columns.map((col, colIndex) => (
           <div key={colIndex} className="flex flex-col">
             <ul className="space-y-0">
@@ -225,41 +340,27 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     );
   };
 
+  // JSX Structure using custom classes for the shell where specified
   return (
-    // popup-placeholder (You might not need this exact div if your modal system handles positioning differently)
-    // For simplicity, we'll start with popup-flex-center for the backdrop
     <div className="popup-flex-center fixed inset-0" style={{ zIndex: 2147483467 }} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
-      <div className="popup-backdrop open is-modal" style={{ zIndex: 2147483467, transitionDuration: '150ms' }} className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150"></div>
+      <div className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150" style={{ zIndex: 2147483467, transitionDuration: '150ms' }}></div>
 
-      {/* Main modal container: popup open has-close has-close--inside is-modal */}
-      <div className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483467 }} onClick={(e) => e.stopPropagation()}>
-        {/* popup-body: Main content area of the modal */}
-        <div className="popup-body flex flex-col h-full relative"> {/* Added relative for close button positioning */}
-            {/* close-button__wrapper pressable popup-close */}
-            <div
-                role="button" // Make it behave like a button for accessibility
-                tabIndex={0}  // Make it focusable
-                onClick={onClose}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClose(); }}
-                className="close-button__wrapper pressable popup-close absolute top-3 right-3 p-1 cursor-pointer" // Tailwind for positioning and basic styling
-                aria-label={t('close', 'Close')}
-            >
+      <div className="popup open has-close has-close--inside is-modal bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative" style={{ transitionDuration: '150ms', zIndex: 2147483467 }} onClick={(e) => e.stopPropagation()}>
+        <div className="popup-body flex flex-col h-full relative">
+            <div role="button" tabIndex={0} onClick={onClose} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClose(); }} className="close-button__wrapper pressable popup-close absolute top-3 right-3 p-1 cursor-pointer" aria-label={t('close', 'Close')}>
                 <div className="close-button">
-                    <svg class="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                  <svg class="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
                 </div>
             </div>
 
-            {/* collection-create__wrapper (conceptually the content wrapper) */}
-            <div className="flex flex-col h-full"> {/* Tailwind for flex layout */}
-                {/* popup-header */}
-                <div className="popup-header px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700"> {/* Tailwind for padding/border */}
-                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center"> {/* Tailwind for text */}
+            <div className="collection-create__wrapper flex flex-col h-full">
+                <div className="popup-header px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center">
                         {t('selectYourLanguageTitle', 'Select Your Language')}
                     </h1>
                 </div>
 
-                {/* This is your language selection specific content */}
-                <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto"> {/* Tailwind for padding & scroll */}
+                <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto">
                     <div className="mb-3">
                         <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 px-1.5">
                             {t('suggestedLanguages', 'Suggested Languages')}
@@ -284,7 +385,8 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                                         : 'text-gray-700 dark:text-gray-300'
                                     }`}
                                     >
-                                    {t(region.nameKey, region.key.replace('languageCategory', ''))}
+                                    {/* Added fallback for region name translation */}
+                                    {t(region.nameKey, region.key === "all" ? 'All' : region.nameKey.replace('languageCategory', ''))}
                                     </button>
                                 </li>
                                 ))}
