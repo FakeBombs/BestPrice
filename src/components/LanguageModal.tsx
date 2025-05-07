@@ -1,9 +1,27 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useCallback, useMemo } from 'react'; // useMemo not used yet for lists
-import { useTranslation } from '@/hooks/useTranslation';
-import { useLanguageContext } from '@/context/LanguageContext'; // RE-INTRODUCE THIS
+import React, { useState, useCallback } from 'react'; // useMemo is NOT active for lists
+import { useTranslation } from '@/hooks/useTranslation';         // ACTIVE
+import { useLanguageContext } from '@/context/LanguageContext'; // ACTIVE
 
-// ... (LanguageOption type, ALL_AVAILABLE_LANGUAGES, LANGUAGE_REGIONS_FOR_MODAL, HARDCODED_DEBUG_LANGUAGES constants remain the same) ...
+// Define type for clarity
+type LanguageOptionForTest = {
+  code: string;
+  name: string;
+};
+
+const LANGUAGE_REGIONS_FOR_MODAL = [
+    { key: "suggested", nameKey: "suggestedLanguages" },
+    { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+];
+
+const HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST: LanguageOptionForTest[] = [
+    { code: 'el-debug', name: 'Ελληνικά (Hooks Active Test)' },
+    { code: 'en-US-debug', name: 'English (US) (Hooks Active Test)' },
+    { code: 'es-ES-debug', name: 'Español (Hooks Active Test)'},
+];
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -12,19 +30,16 @@ interface LanguageModalProps {
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
-  // ===== STEP 2: RE-INTRODUCE useLanguageContext for setLanguage =====
-  const { setLanguage: setContextLanguage } = useLanguageContext(); 
+  const { setLanguage: setContextLanguage } = useLanguageContext(); // This was just added back
   
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
-
-  // const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Not needed yet
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
     const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
     if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
-        setContextLanguage(simpleLangCode); // Now uses the real context function
+        setContextLanguage(simpleLangCode); // Using the real context function
     } else {
         console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
         if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
@@ -34,20 +49,19 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // Still using hardcoded list for display for this step
-  const languagesToDisplayInJSX = HARDCODED_DEBUG_LANGUAGES; 
-
   console.log("DEBUG: LanguageModal (Step 2 Re-intro useLanguageContext). isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
 
+  // List is still hardcoded for display
+  const languagesToDisplayInJSX = HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST; 
+
   return (
-    // ... (JSX remains the same as Step 1) ...
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
       <div 
         className="bg-background rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3> 
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
