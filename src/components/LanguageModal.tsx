@@ -1,20 +1,27 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useLanguageContext } from '@/context/LanguageContext';
+import React, { useState, useCallback } from 'react'; // useMemo is NOT active for lists
+import { useTranslation } from '@/hooks/useTranslation';         // RE-INTRODUCED
+// import { useLanguageContext } from '@/context/LanguageContext'; // STILL COMMENTED OUT FOR THIS STEP
 
-// type LanguageOption = { ... }; // Not strictly needed for this specific minimal test
-// const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ ... ]; // Not used in this minimal test
-const LANGUAGE_REGIONS_FOR_MODAL = [ // Still used for sidebar
+// Define type for clarity, used by HARDCODED_DEBUG_LANGUAGES
+type LanguageOptionForTest = {
+  code: string;
+  name: string;
+};
+
+const LANGUAGE_REGIONS_FOR_MODAL = [ // Still needed for sidebar as it uses t()
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    // ...
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-// Minimal hardcoded list for testing the useMemo directly
-const MINIMAL_HARDCODED_FOR_MEMO: { code: string; name: string; }[] = [
-    { code: 'el-min', name: 'Ελληνικά (Minimal Memo Test)' },
-    { code: 'en-min', name: 'English (Minimal Memo Test)' },
+// The small, hardcoded list will be used for the main display in this test
+const HARDCODED_DEBUG_LANGUAGES: LanguageOptionForTest[] = [
+    { code: 'el-debug', name: 'Ελληνικά (Hardcoded, t Active)' },
+    { code: 'en-US-debug', name: 'English (US) (Hardcoded, t Active)' },
+    { code: 'es-ES-debug', name: 'Español (Hardcoded, t Active)'},
 ];
 
 interface LanguageModalProps {
@@ -23,37 +30,21 @@ interface LanguageModalProps {
 }
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
-  const { setLanguage: setContextLanguage } = useLanguageContext();
+  // ===== RE-INTRODUCE useTranslation() ONLY =====
+  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation(); 
+  // const { setLanguage: setContextLanguage } = useLanguageContext(); // Still commented for this step
+  
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
-    const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
-    if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
-        setContextLanguage(simpleLangCode);
-    } else {
-        console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
-        if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
-            setContextLanguage(simpleLangCode);
-        }
-    }
+    console.log("DEBUG: Language selected (no context language change yet):", langCode);
+    // setContextLanguage is not available in this step
     onClose();
   };
 
-  // ===== EXTREMELY MINIMAL useMemo TEST =====
-  const languagesToDisplayInJSX = useMemo(() => {
-    console.log("DEBUG: EXTREMELY MINIMAL useMemo triggered");
-    // Directly return a new instance of a hardcoded array.
-    // This is the simplest possible non-trivial use of useMemo that returns an array.
-    return [
-        { code: 'el-min-memo', name: 'Ελληνικά (Minimal Memo)' },
-        { code: 'en-min-memo', name: 'English (Minimal Memo)' },
-    ];
-  }, []); // Empty dependency array.
-
-  console.log("DEBUG: LanguageModal (Minimal useMemo Test). Displaying count:", languagesToDisplayInJSX.length);
+  console.log("DEBUG: LanguageModal (useTranslation active). isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -62,11 +53,12 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
+          {/* Use t() from the re-introduced hook */}
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3> 
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
-            aria-label={t('close', 'Close')}
+            aria-label={t('close')} // Using t from hook
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
@@ -77,31 +69,34 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
             {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
               <button
                 key={region.key}
-                onClick={() => setSelectedRegion(region.key)} // This will not affect the list in this test
+                onClick={() => setSelectedRegion(region.key)}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', 'Suggested') : t(region.nameKey, region.key.replace('languageCategory','')))}
+                {/* Using t() from the re-introduced hook */}
+                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages') : t(region.nameKey, region.key.replace('languageCategory','')))}
               </button>
             ))}
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesToDisplayInJSX.map((lang) => ( 
+              {/* Mapping over the hardcoded list */}
+              {HARDCODED_DEBUG_LANGUAGES.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                       ${currentContextLangFromHook === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
                   >
-                    {lang.name}
-                    {currentContextLangFromHook === lang.code.split('-')[0] && <span className="ml-2">✓</span>}
+                    {lang.name} {/* Still from hardcoded list */}
+                    {/* Uses currentContextLangFromHook from useTranslation */}
+                    {currentContextLangFromHook === lang.code.split('-')[0] && <span className="ml-2">✓</span>} 
                   </button>
                 </li>
               ))}
-               {languagesToDisplayInJSX.length === 0 && ( 
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
+               {HARDCODED_DEBUG_LANGUAGES.length === 0 && ( 
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion')}</li>
               )}
             </ul>
           </main>
