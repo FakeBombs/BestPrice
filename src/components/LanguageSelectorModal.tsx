@@ -1,5 +1,5 @@
 // src/components/LanguageSelectorModal.tsx
-// ADAPTING STYLING STRUCTURE FROM THE "Νέα Συλλογή" MODAL
+// USING PROVIDED CLASS NAMES FOR MODAL STRUCTURE, TAILWIND FOR INTERNALS
 
 import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -194,28 +194,27 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   }
   regionalLanguages = [...regionalLanguages].sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
 
+  // Tailwind classes for internal elements are kept for now,
+  // adjust them or replace with your custom classes if needed.
   const renderLanguageColumns = (languages: LanguageOption[], numColumns: number = 4, isSuggested: boolean = false) => {
     const columns: LanguageOption[][] = Array.from({ length: numColumns }, () => []);
     languages.forEach((lang, index) => {
       columns[index % numColumns].push(lang);
     });
 
-    // Mimicking Facebook's table structure for layout with divs and grid
     return (
-      <div className={`grid grid-cols-2 ${isSuggested ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-x-1`}> {/* `gap-x-1` for tighter columns like FB */}
+      <div className={`grid grid-cols-2 ${isSuggested ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-x-1`}>
         {columns.map((col, colIndex) => (
-          <div key={colIndex} className="flex flex-col"> {/* Mimics <td> */}
-            <ul className="space-y-0"> {/* Mimics <ul class="_4kg">, no extra space for FB style */}
+          <div key={colIndex} className="flex flex-col">
+            <ul className="space-y-0">
               {col.map((lang) => (
-                <li key={lang.code} className="py-0.5"> {/* Mimics <li> containing <div class="localeLink"> */}
+                <li key={lang.code} className="py-0.5">
                   <button
                     onClick={() => handleLanguageSelect(lang.code)}
-                    title={lang.englishName} // Or use lang.tooltipName if you re-add it
-                    // Base styles from FB: text-left, rounded. Active styles added.
-                    // Focus styles for accessibility.
+                    title={lang.englishName}
                     className={`w-full text-left px-1.5 py-0.5 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 truncate ${
-                      lang.code === activeSpecificLangCode 
-                        ? 'text-blue-600 dark:text-blue-400 font-semibold' // .selectedLocale
+                      lang.code === activeSpecificLangCode
+                        ? 'text-blue-600 dark:text-blue-400 font-semibold'
                         : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -232,73 +231,82 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   };
 
   return (
-    // popup-flex-center (applied to backdrop)
+    // popup-placeholder (You might not need this exact div if your modal system handles positioning differently)
+    // For simplicity, we'll start with popup-flex-center for the backdrop
     <div
-        className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-[2147483647] p-4 transition-opacity duration-150" // popup-backdrop open is-modal + transition
-        onClick={onClose}
+        className="popup-flex-center fixed inset-0" // Added fixed inset-0
+        // style={{ zIndex: 2147483467 }} // Apply z-index via CSS for popup-flex-center
+        onClick={onClose} // Backdrop click
         role="dialog"
         aria-modal="true"
         aria-labelledby="language-modal-title"
     >
-      {/* popup open has-close has-close--inside is-modal */}
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative transition-all duration-150"
+        className="popup-backdrop open is-modal" // Your backdrop class
+        // style={{ zIndex: 2147483467, transitionDuration: '150ms' }} // Apply styles via CSS
+        // Tailwind for opacity and transition, if not handled by popup-backdrop:
+        // className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150"
+      ></div>
+
+      {/* Main modal container: popup open has-close has-close--inside is-modal */}
+      <div
+        // Combine with Tailwind for sizing and base styling if your CSS doesn't cover everything
+        className="popup open has-close has-close--inside is-modal bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative"
+        // style={{ transitionDuration: '150ms', zIndex: 2147483467 }} // Apply styles via CSS
         onClick={(e) => e.stopPropagation()}
       >
-        {/* popup-body (overall container for content + close button) */}
-        <div className="flex flex-col h-full">
-            {/* Close button wrapper (positioned absolutely within popup-body) */}
-            {/* pressable popup-close */}
-            <button
+        {/* popup-body: Main content area of the modal */}
+        <div className="popup-body flex flex-col h-full relative"> {/* Added relative for close button positioning */}
+            {/* close-button__wrapper pressable popup-close */}
+            <div
+                role="button" // Make it behave like a button for accessibility
+                tabIndex={0}  // Make it focusable
                 onClick={onClose}
-                className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 z-10"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClose(); }}
+                className="close-button__wrapper pressable popup-close absolute top-3 right-3 p-1 cursor-pointer" // Tailwind for positioning and basic styling
                 aria-label={t('close', 'Close')}
             >
-                {/* close-button SVG (using a generic X icon) */}
-                <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+                {/* close-button */}
+                <div className="close-button">
+                    {/* Replace with your SVG logic if using xlink:href, or use a simple X */}
+                    <svg className="icon h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+            </div>
 
-            {/* Actual content starts here, matching collection-create__wrapper conceptually */}
-            <div className="flex flex-col h-full">
+            {/* collection-create__wrapper (conceptually the content wrapper) */}
+            <div className="collection-create__wrapper flex flex-col h-full"> {/* Tailwind for flex layout */}
                 {/* popup-header */}
-                <div className="px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center">
+                <div className="popup-header px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700"> {/* Tailwind for padding/border */}
+                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center"> {/* Tailwind for text */}
                         {t('selectYourLanguageTitle', 'Select Your Language')}
                     </h1>
-                    {/* Facebook's "intro" div for description - optional for language modal */}
-                    {/* <div class="intro">...</div> */}
                 </div>
 
-                {/* Main scrollable content area (equivalent to where the form/language lists would be) */}
-                {/* This will contain the suggested, divider, and region/language sections */}
-                <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto"> {/* pvs phm, pam type padding */}
-                    {/* Suggested Languages Section */}
-                    <div className="mb-3"> {/* Grouping header and grid */}
-                        <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 px-1.5"> {/* uiList mrm suggestionsHeader */}
+                {/* This is your language selection specific content */}
+                <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto"> {/* Tailwind for padding & scroll */}
+                    <div className="mb-3">
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 px-1.5">
                             {t('suggestedLanguages', 'Suggested Languages')}
                         </h3>
-                        <div> {/* suggestionsGrid */}
+                        <div>
                             {renderLanguageColumns(suggestedLangs, 4, true)}
                         </div>
                     </div>
 
-                    {/* Divider (suggestionsDivider) */}
                     <hr className="my-3 border-gray-200 dark:border-gray-700" />
 
-                    {/* Main Language Selection Area (clearfix id="language_container") */}
                     <div className="flex flex-col md:flex-row md:space-x-3">
-                        {/* Left Column: Region List (lfloat _ohe) */}
-                        <aside className="w-full md:w-48 lg:w-56 mb-3 md:mb-0 flex-shrink-0"> {/* Fixed width for sidebar */}
-                            <ul className="space-y-0.5"> {/* regionList _4kg */}
+                        <aside className="w-full md:w-48 lg:w-56 mb-3 md:mb-0 flex-shrink-0">
+                            <ul className="space-y-0.5">
                                 {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
                                 <li key={region.key}>
                                     <button
                                     onClick={() => setSelectedRegionKey(region.key)}
                                     className={`w-full text-left px-2.5 py-1.5 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                        selectedRegionKey === region.key 
-                                        ? 'bg-gray-100 dark:bg-gray-700 font-semibold text-blue-600 dark:text-blue-400' // selected-intl-region-link active
+                                        selectedRegionKey === region.key
+                                        ? 'bg-gray-100 dark:bg-gray-700 font-semibold text-blue-600 dark:text-blue-400'
                                         : 'text-gray-700 dark:text-gray-300'
                                     }`}
                                     >
@@ -309,9 +317,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                             </ul>
                         </aside>
 
-                        {/* Right Column: Languages for Selected Region (selected-intl-region1) */}
-                        <main className="flex-1 min-w-0"> {/* min-w-0 for flex child to allow shrinking */}
-                            {/* The height in FB DOM is specific, we use flex and overflow on parent */}
+                        <main className="flex-1 min-w-0">
                             {renderLanguageColumns(regionalLanguages, 3, false)}
                             {regionalLanguages.length === 0 && selectedRegionKey !== "all" && (
                                 <p className="px-1.5 py-1 text-xs text-gray-500 dark:text-gray-400">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</p>
@@ -319,8 +325,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                         </main>
                     </div>
                 </div>
-                {/* Footer area isn't explicitly in the FB language DOM for language list, but is in the collection modal */}
-                {/* If needed, you can add a footer section here, similar to how it was before */}
+                {/* No explicit footer with action button as per Facebook language modal */}
             </div>
         </div>
       </div>
