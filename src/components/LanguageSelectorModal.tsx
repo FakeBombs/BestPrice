@@ -1,5 +1,5 @@
-// src/components/LanguageSelectorModal.tsx (AI's code with one minor fallback change)
-import React, { useState } from 'react';
+// src/components/LanguageSelectorModal.tsx
+import React, { useState, useMemo, useCallback } from 'react'; // Added useMemo
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
@@ -8,8 +8,42 @@ interface LanguageSelectorModalProps {
   onClose: () => void;
 }
 
+// Define these constants outside the component
+type LanguageOption = {
+  code: string; 
+  name: string; 
+  englishName: string; // Keep for the full list logic
+  regionKey: string;  // Keep for the full list logic
+};
+
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [ // This should be your full list eventually
+  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
+  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
+  { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
+  // ... Add more languages from your full list
+];
+
+const LANGUAGE_REGIONS_FOR_MODAL = [
+    { key: "suggested", nameKey: "suggestedLanguages" },
+    { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" }
+];
+
+// This was the AI's debug list, we'll now derive suggested from ALL_AVAILABLE_LANGUAGES
+// const DEBUG_LANG_LIST = [
+//   { code: 'el', name: 'Ελληνικά' },
+//   { code: 'en-US', name: 'English (US)' },
+//   { code: 'es-ES', name: 'Español (España)' }
+// ];
+
 const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentSelectedAppLanguage } = useTranslation(); // Renamed to avoid conflict
+  const { t, language: currentSelectedAppLanguage, isLoaded } = useTranslation(); // isLoaded might be useful later
   const { setLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState("suggested");
 
@@ -17,28 +51,13 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     return null;
   }
 
-  const REGIONS = [
-    { key: "suggested", nameKey: "suggestedLanguages" },
-    { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
-    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
-    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" }
-  ];
-
-  const DEBUG_LANG_LIST = [
-    { code: 'el', name: 'Ελληνικά' },
-    { code: 'en-US', name: 'English (US)' },
-    { code: 'es-ES', name: 'Español (España)' }
-  ];
-
   const mapLanguageCode = (code: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
     const baseCode = code.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
-    // Ensure the baseCode is one of the supported types, otherwise default or handle error
     if (['en', 'el', 'es', 'fr', 'de'].includes(baseCode)) {
         return baseCode;
     }
     console.warn(`mapLanguageCode received an unmappable code: ${code}, returning 'en' as default.`);
-    return 'en'; // Default to 'en' if mapping fails
+    return 'en'; 
   };
 
   const handleLanguageSelect = (langCode: string) => {
@@ -47,18 +66,33 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     onClose();
   };
 
+  // ===== RE-INTRODUCE useMemo for suggestedLangsToDisplay =====
+  const suggestedLangsToDisplay = useMemo(() => {
+    console.log("DEBUG: LanguageSelectorModal - suggestedLangsToDisplay useMemo triggered");
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) // Example codes for suggested
+    );
+  }, []); // ALL_AVAILABLE_LANGUAGES is a top-level const, so empty deps is correct.
+
+  // For this step, the list displayed in JSX will be the memoized suggestedLangsToDisplay.
+  // The full dynamic list logic (filtering by region and sorting) is NOT YET active.
+  const languagesToDisplayInJSX = suggestedLangsToDisplay;
+
+  console.log("DEBUG: LanguageSelectorModal rendering. SelectedRegion:", selectedRegion, "Displaying count:", languagesToDisplayInJSX.length);
+
+
   return (
     <div className="fixed inset-0 bg-black/50 z-[2147483647] flex items-center justify-center p-4" onClick={onClose}>
       <div 
-        className="bg-background p-0 rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden" // Changed p-6 to p-0
+        className="bg-background p-0 rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 border-b pb-3"> {/* Moved padding here for header */}
-          <div className="flex-1"></div> {/* For centering title */}
-          <h2 className="text-xl font-semibold text-center flex-grow"> {/* Changed font-bold to font-semibold */}
+        <div className="flex items-center justify-between p-4 border-b pb-3">
+          <div className="flex-1"></div>
+          <h2 className="text-xl font-semibold text-center flex-grow">
             {t('selectYourLanguageTitle', 'Select Your Language')}
           </h2>
-          <div className="flex-1 flex justify-end"> {/* To push button to the right */}
+          <div className="flex-1 flex justify-end">
             <button 
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground"
@@ -73,15 +107,14 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
         </div>
 
         <div className="flex flex-1 overflow-hidden">
-          <aside className="w-1/3 border-r border-border overflow-y-auto bg-muted/20 p-1"> {/* Added p-1 */}
-            <ul className="space-y-1"> {/* Removed py-2 from ul, added space-y-1 */}
-              {REGIONS.map(region => (
+          <aside className="w-1/3 border-r border-border overflow-y-auto bg-muted/20 p-1">
+            <ul className="space-y-1">
+              {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
                 <li key={region.key}>
                   <button 
                     className={`w-full text-left px-3 py-2 text-sm rounded-md ${selectedRegion === region.key ? 'bg-primary text-primary-foreground font-medium' : 'hover:bg-muted text-foreground font-normal'}`}
                     onClick={() => setSelectedRegion(region.key)}
                   >
-                    {/* Simplified fallback for region name */}
                     {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', "Suggested") : region.key.replace('languageCategory', ''))}
                   </button>
                 </li>
@@ -90,8 +123,8 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
-            <ul className="space-y-1"> {/* Changed space-y-2 to space-y-1 */}
-              {DEBUG_LANG_LIST.map((lang) => { // For now, this will not change based on selectedRegion
+            <ul className="space-y-1">
+              {languagesToDisplayInJSX.map((lang) => { // This will map over suggestedLangsToDisplay
                 const mappedCode = mapLanguageCode(lang.code);
                 const isActive = currentSelectedAppLanguage === mappedCode;
                 
@@ -109,7 +142,9 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                   </li>
                 );
               })}
-              {/* Logic for "No languages in region" would be added when DEBUG_LANG_LIST is replaced by dynamic list */}
+              {languagesToDisplayInJSX.length === 0 && (
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
+              )}
             </ul>
           </main>
         </div>
