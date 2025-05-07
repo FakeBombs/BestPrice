@@ -1,27 +1,25 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useLanguageContext } from '@/context/LanguageContext';
+import React, { useState, useCallback } from 'react'; // Removed useMemo
 
-type LanguageOption = {
-  code: string; 
-  name: string; 
-  englishName: string;
-  regionKey: string; 
+// Define type for clarity, used by HARDCODED_DEBUG_LANGUAGES
+type LanguageOptionForTest = {
+  code: string;
+  name: string;
 };
 
-// These are defined but not directly used by the list in this specific test,
-// except LANGUAGE_REGIONS_FOR_MODAL for the sidebar
-const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
-  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  // ... your full list
-];
-
+// These are defined but LANGUAGE_REGIONS_FOR_MODAL is used by the sidebar which still uses a mock 't'
 const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
-    // ... your full list
+    { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
+    { key: "languageCategoryAsia", nameKey: "languageCategoryAsia" },
+    { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
+];
+
+const HARDCODED_DEBUG_LANGUAGES: LanguageOptionForTest[] = [
+    { code: 'el-debug', name: 'Ελληνικά (No Hooks Test)' },
+    { code: 'en-US-debug', name: 'English (US) (No Hooks Test)' },
+    { code: 'es-ES-debug', name: 'Español (No Hooks Test)'},
 ];
 
 interface LanguageModalProps {
@@ -30,37 +28,30 @@ interface LanguageModalProps {
 }
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
-  const { setLanguage: setContextLanguage } = useLanguageContext();
+  // --- ALL CUSTOM HOOKS COMMENTED OUT ---
+  // const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
+  // const { setLanguage: setContextLanguage } = useLanguageContext();
+
+  // --- Use hardcoded fallbacks / mock functions ---
+  const t = (key: string, fallback?: string | Record<string, any>) => {
+    if (typeof fallback === 'string') return fallback;
+    if (typeof fallback === 'object' && fallback !== null && typeof fallback.count === 'number') return `${fallback.count} ${key}`; // basic count
+    return key;
+  };
+  const currentContextLangFromHook = 'el'; // Hardcode for testing the checkmark logic
+  // const isLoaded = true; // Assume loaded for testing
+
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
-    const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
-    if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
-        setContextLanguage(simpleLangCode);
-    } else {
-        console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
-        if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
-            setContextLanguage(simpleLangCode);
-        }
-    }
+    console.log("DEBUG: Language selected in NO HOOKS modal:", langCode);
+    // setContextLanguage(simpleLangCode); // Actual language change is disabled
     onClose();
   };
 
-  // ===== STEP 2 (Revised - Extreme useMemo Test) =====
-  const suggestedLangsToDisplay = useMemo(() => {
-    console.log("DEBUG STEP 2 REVISED: suggestedLangsToDisplay useMemo (returning HARDCODED array)");
-    return [ // Directly return a hardcoded array
-      { code: 'el-memo-test', name: 'Ελληνικά (Memo Hardcoded)', englishName: 'Greek', regionKey: 'debug' },
-      { code: 'en-US-memo-test', name: 'English (US) (Memo Hardcoded)', englishName: 'English (US)', regionKey: 'debug' },
-    ];
-  }, []); // Empty dependency array, function returns a new array but content is static
-
-  const languagesToDisplayInJSX = suggestedLangsToDisplay; 
-
-  console.log("DEBUG: LanguageModal (Step 2 Revised). Displaying count:", languagesToDisplayInJSX.length, "SelectedRegion:", selectedRegion);
+  console.log("DEBUG: LanguageModal rendering with NO custom hooks, NO useMemo for lists. SelectedRegion:", selectedRegion);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -69,11 +60,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle', 'Select Language (Hardcoded)')}</h3>
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
-            aria-label={t('close', 'Close')}
+            aria-label={t('close', 'Close (Hardcoded)')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
@@ -88,14 +79,15 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', 'Suggested') : t(region.nameKey, region.key.replace('languageCategory','')))}
+                {/* Using mock t() for sidebar */}
+                {t(region.nameKey, region.key.replace('languageCategory','').charAt(0).toUpperCase() + region.key.replace('languageCategory','').slice(1))}
               </button>
             ))}
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesToDisplayInJSX.map((lang) => ( 
+              {HARDCODED_DEBUG_LANGUAGES.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
@@ -107,8 +99,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </li>
               ))}
-               {languagesToDisplayInJSX.length === 0 && ( 
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
+               {HARDCODED_DEBUG_LANGUAGES.length === 0 && ( 
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed (Hardcoded).')}</li>
               )}
             </ul>
           </main>
