@@ -5,14 +5,14 @@ import arTranslations from './ar';
 import asTranslations from './as';
 import azTranslations from './az';
 import beTranslations from './be';
-import berTranslations from './ber'; // Assuming Tamazight/Berber base code
+import berTranslations from './ber';
 import bgTranslations from './bg';
 import bnTranslations from './bn';
 import brTranslations from './br';
 import bsTranslations from './bs';
 import caTranslations from './ca';
 import cebTranslations from './ceb';
-import ckbTranslations from './ckb'; // Kurdish (Sorani)
+import ckbTranslations from './ckb';
 import coTranslations from './co';
 import csTranslations from './cs';
 import cyTranslations from './cy';
@@ -43,10 +43,10 @@ import htTranslations from './ht';
 import huTranslations from './hu';
 import hyTranslations from './hy';
 import idTranslations from './id';
-import ikTranslations from './ik'; // Inupiaq
+import ikTranslations from './ik';
 import isTranslations from './is';
 import itTranslations from './it';
-import iuTranslations from './iu'; // Inuktitut
+import iuTranslations from './iu';
 import jaTranslations from './ja';
 import jvTranslations from './jv';
 import kaTranslations from './ka';
@@ -54,7 +54,7 @@ import kkTranslations from './kk';
 import kmTranslations from './km';
 import knTranslations from './kn';
 import koTranslations from './ko';
-import kuTranslations from './ku'; // Kurdish (Kurmanji)
+import kuTranslations from './ku';
 import kyTranslations from './ky';
 import loTranslations from './lo';
 import ltTranslations from './lt';
@@ -67,17 +67,17 @@ import mrTranslations from './mr';
 import msTranslations from './ms';
 import mtTranslations from './mt';
 import myTranslations from './my';
-import nbTranslations from './nb'; // Norwegian Bokmål
+import nbTranslations from './nb';
 import neTranslations from './ne';
 // Note: Assuming 'nl' covers both nl and nl-BE (Flemish)
-import nlTranslations from './nl'; // You would need to create nl.ts
-import nnTranslations from './nn'; // Norwegian Nynorsk
+import nlTranslations from './nl';
+import nnTranslations from './nn';
 import orTranslations from './or';
 import paTranslations from './pa';
 import plTranslations from './pl';
 import psTranslations from './ps';
 // Note: Assuming 'pt' covers both pt-BR and pt-PT
-import ptTranslations from './pt'; // You would need to create pt.ts
+import ptTranslations from './pt';
 import roTranslations from './ro';
 import ruTranslations from './ru';
 import rwTranslations from './rw';
@@ -91,8 +91,8 @@ import sqTranslations from './sq';
 import srTranslations from './sr';
 import svTranslations from './sv';
 import swTranslations from './sw';
-import syrTranslations from './syr'; // Syriac
-import szlTranslations from './szl'; // Silesian
+import syrTranslations from './syr';
+import szlTranslations from './szl';
 import taTranslations from './ta';
 import teTranslations from './te';
 import tgTranslations from './tg';
@@ -105,7 +105,7 @@ import uzTranslations from './uz';
 import viTranslations from './vi';
 // Note: Assuming 'zh' covers zh-CN, zh-TW, zh-HK etc.
 import zhTranslations from './zh';
-import zzaTranslations from './zza'; // Zaza
+import zzaTranslations from './zza';
 
 // --- Define the structure for a single language ---
 // Uses 'en' as the baseline assuming it contains all keys required by the application.
