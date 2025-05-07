@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
+// Import Product type along with others
 import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product } from '@/data/mockData';
 
 // --- SVG Components remain the same ---
@@ -27,17 +28,20 @@ const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: num
 
 const formatPrice = (price?: number, locale: string = 'el-GR'): string => { /* ... default to el-GR formatting ... */
     if (typeof price !== 'number') return '';
-    return price.toLocaleString(locale, { style: 'currency', currency: 'EUR' });
+    // Ensure currency is set correctly for the locale
+    try {
+      return price.toLocaleString(locale.replace('_', '-'), { style: 'currency', currency: 'EUR' });
+    } catch (e) {
+      // Fallback to default formatting if locale is invalid
+      return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    }
 };
 
-// Recursive function to get all descendant category IDs (including self)
-const getAllCategoryAndDescendantIds = (categoryId: number, allCats: Category[]): number[] => {
-    let ids: number[] = [categoryId]; // Include the starting category ID
+const getAllCategoryAndDescendantIds = (categoryId: number, allCats: Category[]): number[] => { /* ... as before ... */
+    let ids: number[] = [categoryId];
     const children = allCats.filter(cat => cat.parentId === categoryId);
-    children.forEach(child => {
-        ids = ids.concat(getAllCategoryAndDescendantIds(child.id, allCats));
-    });
-    return Array.from(new Set(ids)); // Return unique IDs
+    children.forEach(child => { ids = ids.concat(getAllCategoryAndDescendantIds(child.id, allCats)); });
+    return Array.from(new Set(ids));
 };
 // --- End Helper Functions ---
 
@@ -49,7 +53,7 @@ interface MainLayoutProps {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const { pathname } = useLocation();
   const [isSitemapVisible, setIsSitemapVisible] = useState(false);
-  const [currentCategoryId, setCurrentCategoryId] = useState<number | null>(1); // Use 0 for Deals, 9 for Gifts
+  const [currentCategoryId, setCurrentCategoryId] = useState<number | null>(1);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const { t, language } = useTranslation();
@@ -57,7 +61,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const excludedRoutes = ['/login', '/register', '/forgot-password'];
   const shouldRenderNavAndFooter = !excludedRoutes.includes(pathname);
 
-  // Combine main and sub categories for easier lookup
   const allCategoriesList = [...mainCategories, ...categories];
 
   // --- Calculate Deals Data ---
@@ -73,68 +76,26 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   // --- End Deals Data ---
 
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
 
-  const sitemapToggle = () => { /* ... same as before ... */
-    setIsSitemapVisible((prev) => {
-      const nextState = !prev;
-      if (nextState) {
-        document.documentElement.classList.add('has-sitemap');
-      } else {
-        document.documentElement.classList.remove('has-sitemap');
-      }
-      return nextState;
-    });
-  };
+  const sitemapToggle = () => { setIsSitemapVisible((prev) => { const nextState = !prev; if (nextState) { document.documentElement.classList.add('has-sitemap'); } else { document.documentElement.classList.remove('has-sitemap'); } return nextState; }); };
   const handleMouseEnter = (id: number | null) => { setCurrentCategoryId(id); };
   const handleMouseLeave = () => {};
   const removeSitemapClass = () => { setIsSitemapVisible(false); document.documentElement.classList.remove('has-sitemap'); };
 
-  useEffect(() => { /* ... same click outside logic ... */
-    const handleClickOutside = (event: MouseEvent) => {
-      if ( isSitemapVisible && navbarRef.current && !navbarRef.current.contains(event.target as Node) && sidebarRef.current && !sidebarRef.current.contains(event.target as Node) ) { removeSitemapClass(); }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isSitemapVisible]);
+  useEffect(() => { const handleClickOutside = (event: MouseEvent) => { if ( isSitemapVisible && navbarRef.current && !navbarRef.current.contains(event.target as Node) && sidebarRef.current && !sidebarRef.current.contains(event.target as Node) ) { removeSitemapClass(); } }; document.addEventListener('mousedown', handleClickOutside); return () => document.removeEventListener('mousedown', handleClickOutside); }, [isSitemapVisible]);
 
-  // --- Data for Sitemap View ---
   const mainCategory = mainCategories.find(cat => cat.id === currentCategoryId);
-  const subCategories = currentCategoryId !== null && currentCategoryId > 0
-    ? allCategoriesList.filter(cat => cat.parentId === currentCategoryId)
-    : [];
+  const subCategories = currentCategoryId !== null && currentCategoryId > 0 ? allCategoriesList.filter(cat => cat.parentId === currentCategoryId) : [];
 
-  // Static popular searches (needs data source for dynamic version)
   const popularSearchQueries = [ /* ... same as before ... */
-    { query: 'Apple', key: 'sitemap_popular_apple' },
-    { query: 'Sony', key: 'sitemap_popular_sony' },
-    { query: 'Mac', key: 'sitemap_popular_mac' },
-    { query: 'iPad Air', key: 'sitemap_popular_ipadair' },
-    { query: 'Galaxy', key: 'sitemap_popular_galaxy' }
+    { query: 'Apple', key: 'sitemap_popular_apple' }, { query: 'Sony', key: 'sitemap_popular_sony' }, { query: 'Mac', key: 'sitemap_popular_mac' }, { query: 'iPad Air', key: 'sitemap_popular_ipadair' }, { query: 'Galaxy', key: 'sitemap_popular_galaxy' }
   ];
 
-  // --- Calculate Popular Brands for the CURRENTLY HOVERED Category ---
   let popularBrandsForCurrentView: Brand[] = [];
-  if (currentCategoryId !== null && currentCategoryId > 0 && currentCategoryId <= 7) { // Only calculate for main categories 1-7
-      const relevantCategoryIds = getAllCategoryAndDescendantIds(currentCategoryId, allCategoriesList);
-      const productsInCurrentBranch = allMockProducts.filter(p =>
-          p.categoryIds?.some(catId => relevantCategoryIds.includes(catId))
-      );
-      const uniqueBrandNamesInBranch = Array.from(new Set(productsInCurrentBranch.map(p => p.brand).filter(Boolean)));
-      popularBrandsForCurrentView = uniqueBrandNamesInBranch
-          .map(name => brands.find(b => b.name === name))
-          .filter((b): b is Brand => !!b) // Ensure brand exists in main brands list
-          .slice(0, 10); // Limit to 10
-  }
-  // --- End Popular Brands Calculation ---
+  if (currentCategoryId !== null && currentCategoryId > 0 && currentCategoryId <= 7) { const relevantCategoryIds = getAllCategoryAndDescendantIds(currentCategoryId, allCategoriesList); const productsInCurrentBranch = allMockProducts.filter(p => p.categoryIds?.some(catId => relevantCategoryIds.includes(catId))); const uniqueBrandNamesInBranch = Array.from(new Set(productsInCurrentBranch.map(p => p.brand).filter(Boolean))); popularBrandsForCurrentView = uniqueBrandNamesInBranch.map(name => brands.find(b => b.name === name)).filter((b): b is Brand => !!b).slice(0, 10); }
 
-  const translatedBrandsForAltText = brands.map(brand => ({
-      ...brand,
-      translatedName: t(`brand_${brand.id}_alt`, brand.name)
-  }));
-  // --- End Data for Sitemap View ---
+  const translatedBrandsForAltText = brands.map(brand => ({ ...brand, translatedName: t(`brand_${brand.id}_alt`, brand.name) }));
 
 
   return (
@@ -142,11 +103,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       {shouldRenderNavAndFooter && <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} onMouseEnter={handleMouseEnter} />}
       <div id="root" className="clr">
         <main className="clr">
-          {React.Children.map(children, (child) => {
-            return React.isValidElement(child) && typeof child.type !== 'string'
-              ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle })
-              : child;
-          })}
+          {React.Children.map(children, (child) => { return React.isValidElement(child) && typeof child.type !== 'string' ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle }) : child; })}
         </main>
         {isSitemapVisible && (
           <>
@@ -155,6 +112,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               <div className="root__wrapper">
                 <div className="root">
                   <div className="sitemap sitemap-desktop" onMouseLeave={handleMouseLeave}>
+                    {/* --- Sidebar --- */}
                     <div className="sitemap-desktop__sidebar">
                        <div className="sitemap-desktop__sidebar-extra">
                         <Link to="/deals" className={`sitemap-desktop__item ${currentCategoryId === 0 ? 'sitemap-desktop__item--selected' : ''}`} onMouseEnter={() => handleMouseEnter(0)} onClick={sitemapToggle}>
@@ -186,6 +144,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             <div className="sitemap-desktop__view-title">{t('popular_deals_title', 'Δημοφιλείς Προσφορές')}</div>
                              <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
                                 {dealProducts.map(product => {
+                                    // ... (price calculation logic remains the same) ...
                                     let displayPrice = product.lowestPrice;
                                     let originalPrice = null;
                                     const bestPriceInfo = product.prices.find(p => p.vendorId === product.bestPriceVendorId);
@@ -193,20 +152,34 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                     else if (bestPriceInfo) { displayPrice = bestPriceInfo.price; }
                                     const discountPercentage = calculateDiscountPercentage(originalPrice ?? undefined, displayPrice);
                                     const productTitle = t(product.slug ?? `product_${product.id}_title`, product.title);
+                                    // Use a safe slug, defaulting to 'product' if undefined
+                                    const productSlug = product.slug || 'product';
 
                                     return (
                                         <div key={product.id} className="p p--deal p--bare flex flex-col border border-gray-200 dark:border-gray-700 rounded overflow-hidden group">
-                                            <Link to={`/product/${product.slug || product.id}`} className="p__cover block relative aspect-square overflow-hidden" title={productTitle} onClick={sitemapToggle}>
+                                            {/* <<< CORRECTED LINK `to` prop >>> */}
+                                            <Link to={`/item/${product.id}/${productSlug}`} className="p__cover block relative aspect-square overflow-hidden" title={productTitle} onClick={sitemapToggle}>
                                                 <img width="220" height="220" loading="lazy" alt={productTitle} src={product.image || '//placehold.co/220x220?text=No+Image'} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"/>
                                                 {/* Badges */}
                                                 {discountPercentage !== null && (<div className="absolute top-1 right-1"><div className={`p__badge p__badge--drop drop drop--${Math.min(Math.floor(discountPercentage/10)*10, 40)} bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center`}><svg className="icon h-3 w-3 mr-0.5" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>-{discountPercentage}%</div></div>)}
                                                 {product.tags?.includes('black-friday') && (<div className="absolute top-1 left-1 p__badge--deal-black-wrapper"><div className="p__badge p__badge--deal-black bg-black text-white p-1 rounded-full"><svg className="icon h-3.5 w-3.5" aria-hidden="true" width="18" height="18"><use href="/public/dist/images/icons/static.svg#icon-thunder-18"></use></svg></div></div>)}
                                             </Link>
                                             <div className="p__main p-2 flex-grow flex flex-col">
-                                                <div className="p__meta flex-grow"><h3 className="p__title p__title--lines p__title--lines-2 text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"><Link to={`/product/${product.slug || product.id}`} title={productTitle} onClick={sitemapToggle}>{productTitle}</Link></h3></div>
+                                                <div className="p__meta flex-grow">
+                                                    <h3 className="p__title p__title--lines p__title--lines-2 text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        {/* <<< CORRECTED LINK `to` prop >>> */}
+                                                        <Link to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>{productTitle}</Link>
+                                                    </h3>
+                                                </div>
                                             </div>
                                             <div className="p__footer p-2 pt-0 mt-auto">
-                                                <div className="p__price-merchants"><Link className="p__price block text-center" to={`/product/${product.slug || product.id}`} title={productTitle} onClick={sitemapToggle}><div className="p__price--current text-sm font-bold text-gray-900 dark:text-white">{formatPrice(displayPrice, language)}</div>{originalPrice && (<del className="p__price--before text-xs text-gray-500 dark:text-gray-400">{formatPrice(originalPrice, language)}</del>)}</Link></div>
+                                                <div className="p__price-merchants">
+                                                     {/* <<< CORRECTED LINK `to` prop >>> */}
+                                                    <Link className="p__price block text-center" to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>
+                                                        <div className="p__price--current text-sm font-bold text-gray-900 dark:text-white">{formatPrice(displayPrice, language)}</div>
+                                                        {originalPrice && (<del className="p__price--before text-xs text-gray-500 dark:text-gray-400">{formatPrice(originalPrice, language)}</del>)}
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     );
@@ -220,10 +193,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         </div>
                     )}
 
-                    {/* --- Category View --- */}
+                    {/* --- Category View (including dynamic brands) --- */}
                     {currentCategoryId !== null && currentCategoryId > 0 && mainCategory && (
                         <div className="sitemap-desktop__view sitemap-desktop__view--cat">
-                            <div className="sitemap-desktop__view-title">
+                            {/* ... (Category Title, Subcategories - unchanged) ... */}
+                             <div className="sitemap-desktop__view-title">
                                 <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`} onClick={sitemapToggle}>
                                     {t(mainCategory.slug, mainCategory.name)}
                                 </Link>
@@ -231,7 +205,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             <div className="sitemap-desktop__category-subs">
                                 {subCategories.map((sub) => (
                                     <div className="sitemap-desktop__col" key={sub.id}>
-                                        {/* ... Subcategory rendering logic ... */}
                                         <div className="sitemap-desktop__sub">
                                           <Link to={`/cat/${sub.id}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
                                             <img className="sitemap-desktop__sub-image" width="96" height="96" alt={t(sub.slug, sub.name)} src={sub.image || '//placehold.co/96x96?text=No+Img'} loading="lazy"/>
@@ -248,8 +221,8 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                     </div>
                                 ))}
                             </div>
-                            {/* Popular Searches (Still Static - Needs dynamic data source) */}
-                            <div className="sitemap-desktop__queries links">
+                            {/* Popular Searches */}
+                             <div className="sitemap-desktop__queries links">
                                 {popularSearchQueries.map((search, index) => (
                                     <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`} onClick={sitemapToggle}>
                                         <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-search-16"></use></svg>
@@ -257,9 +230,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                     </Link>
                                 ))}
                             </div>
-                            {/* --- DYNAMIC POPULAR BRANDS --- */}
+                            {/* DYNAMIC POPULAR BRANDS */}
                             {popularBrandsForCurrentView.length > 0 && (
-                                <div className="sitemap-desktop__brands">
+                                <div className="sitemap-desktop__brands mt-4">
                                     {popularBrandsForCurrentView.map(brand => (
                                     <Link className="sitemap-desktop__brands-brand pressable inline-block p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" key={brand.id} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}?bpref=sitemap`} onClick={sitemapToggle} title={brand.name}>
                                         <img alt={t(`brand_${brand.id}_alt`, brand.name)} src={brand.logo} className="h-6 max-h-6 w-auto object-contain" loading="lazy"/>
@@ -267,7 +240,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                     ))}
                                 </div>
                             )}
-                             {/* --- End DYNAMIC POPULAR BRANDS --- */}
                         </div>
                     )}
                      {/* --- Gifts View Placeholder --- */}
@@ -275,7 +247,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                          <div className="sitemap-desktop__view sitemap-desktop__view--gifts p-4">
                             <div className="sitemap-desktop__view-title">{t('gifts', 'Gifts')}</div>
                             <p>{t('gifts_sitemap_placeholder', 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.')}</p>
-                            {/* Maybe add popular gift searches/brands here later? */}
                          </div>
                      )}
                     {/* ==== End Conditional View Rendering ==== */}
