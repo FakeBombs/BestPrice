@@ -133,7 +133,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }) => {
   return (
     <div className="popup-placeholder popup-placeholder--modal" style={{ width: '100vw', height: '0', maxWidth: '98vw', position: 'absolute', top: '0' }}>
       <div className="popup-flex-center" style={{ zIndex: 2147483519 }}>
-        <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{ zIndex: 2147483519, transitionDuration: '150ms' }}></div>
+        <div id="login-popup-backdrop" className="popup-backdrop open is-modal" style={{ zIndex: 2147483519, transitionDuration: '150ms' }} onClick={onClose}></div>
         <div id="login-popup" className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483519 }}>
           <div className="popup-body">
             <div role="button" className="close-button__wrapper pressable popup-close" onClick={onClose}>
