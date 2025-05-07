@@ -785,7 +785,7 @@ const enTranslations = {
   brand_13_alt: 'ΑΛΦΑ Logo',
   brand_14_alt: '3Guys Logo',
   brand_15_alt: '2K Games Logo',
-  brand_16_alt: '7Days Logo'
+  brand_16_alt: '7Days Logo',
   brand_17_alt: 'Βιοκαρπέτ Logo',
   brand_18_alt: 'Χαμόγελο του Παιδιού Logo',
   brand_19_alt: 'Χρωτέχ Logo',
