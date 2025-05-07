@@ -751,10 +751,14 @@ const elTranslations = {
   'transceivers-walkie-talkies': 'Πομποδέκτες, Walkie-Talkie',
   'walkie-talkie-accessories': 'Αξεσουάρ Ασυρμάτων',
 
-
-  // ==================== MainLayout Sitemap Specific =====================
-  // Popular Deals Title (from Deals View)
+  // ==================== MainLayout Sitemap Specific (New) =====================
   popular_deals_title: 'Δημοφιλείς Προσφορές',
+  todays_deals_link: 'Σημερινές προσφορές',
+  deals_by_store_link: 'Ανά κατάστημα',
+  deals_by_brand_link: 'Ανά brand',
+  gifts_sitemap_placeholder: 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.',
+  popular_searches: 'Δημοφιλείς Αναζητήσεις',
+  popular_brands: 'Δημοφιλείς Μάρκες',
 
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
@@ -784,14 +788,6 @@ const elTranslations = {
   brand_18_alt: 'Λογότυπο Χαμόγελο του Παιδιού',
   brand_19_alt: 'Λογότυπο Χρωτέχ',
   brand_20_alt: 'Λογότυπο Γιώτης',
-
-   // Deals View Action Links
-   todays_deals_link: 'Σημερινές προσφορές',
-   deals_by_store_link: 'Ανά κατάστημα',
-   deals_by_brand_link: 'Ανά brand',
-
-   // Gifts View Placeholder
-   gifts_sitemap_placeholder: 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.',
 };
 
 export default elTranslations;
