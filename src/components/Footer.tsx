@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
-import FooterLanguageButton from '@/components/FooterLanguageButton'; // IMPORT THE NEW BUTTON
+import FooterLanguageButton from '@/components/FooterLanguageButton'; // Import the AI-generated button
 
 // Define the getStatsData function outside the component
 const getStatsData = () => {
@@ -34,7 +34,8 @@ const Footer: React.FC = () => {
     };
     
   return (
-    // No need for React.Fragment here unless FooterLanguageButton returns multiple root elements
+    // The main return is just the div#footer-wrapper.
+    // FooterLanguageButton will render its own modal when its internal state dictates.
     <div id="footer-wrapper"> 
       <div id="back-to-top" className="pressable" onClick={handleClickToTop} style={{display: "flex"}}>{t('backToTop')}<svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg></div>
       <div id="promo-footer"></div>
@@ -45,7 +46,7 @@ const Footer: React.FC = () => {
           <div className="footer__aside">
             <Link rel="home" title={t('breadcrumbHome')} className="footer__logo pressable" to="/">
               <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/logo.svg#icon-logo"></use></svg>
-              <span>BestPrice</span>
+              <span>BestPrice</span> {/* Brand name likely stays untranslated */}
             </Link>
             <div className="footer__identity">
               <p>{t('bestpriceSloganShort')}</p>
@@ -204,6 +205,7 @@ const Footer: React.FC = () => {
               <Link rel="nofollow" title={t('cookiePolicy')} to="/policies/cookies">{t('cookiePolicy')}</Link>
               <Link rel="nofollow" title={t('gdprLink')} to="/gdpr">{t('gdprLink')}</Link>
               <Link rel="nofollow" title={t('dsaLink')} to="/policies/dsa">{t('dsaLink')}</Link>
+              {/* Render the new button component here */}
               <FooterLanguageButton /> 
             </div>
           </div>
@@ -211,7 +213,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
     </div>
-  </>
+    // No separate LanguageModal rendered here, as FooterLanguageButton handles it
   );
 };
 
