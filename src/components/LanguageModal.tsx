@@ -1,15 +1,15 @@
 // src/components/LanguageModal.tsx
 import React, { useState, useCallback } from 'react'; // useMemo is NOT active for lists
-import { useTranslation } from '@/hooks/useTranslation';         // RE-INTRODUCED
-// import { useLanguageContext } from '@/context/LanguageContext'; // STILL COMMENTED OUT FOR THIS STEP
+import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguageContext } from '@/context/LanguageContext'; // RE-INTRODUCED
 
-// Define type for clarity, used by HARDCODED_DEBUG_LANGUAGES
+// Define type for clarity
 type LanguageOptionForTest = {
   code: string;
   name: string;
 };
 
-const LANGUAGE_REGIONS_FOR_MODAL = [ // Still needed for sidebar as it uses t()
+const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
     { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
     { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
@@ -17,11 +17,10 @@ const LANGUAGE_REGIONS_FOR_MODAL = [ // Still needed for sidebar as it uses t()
     { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-// The small, hardcoded list will be used for the main display in this test
-const HARDCODED_DEBUG_LANGUAGES: LanguageOptionForTest[] = [
-    { code: 'el-debug', name: 'Ελληνικά (Hardcoded, t Active)' },
-    { code: 'en-US-debug', name: 'English (US) (Hardcoded, t Active)' },
-    { code: 'es-ES-debug', name: 'Español (Hardcoded, t Active)'},
+const HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST: LanguageOptionForTest[] = [
+    { code: 'el-debug', name: 'Ελληνικά (Hooks Active Test)' },
+    { code: 'en-US-debug', name: 'English (US) (Hooks Active Test)' },
+    { code: 'es-ES-debug', name: 'Español (Hooks Active Test)'},
 ];
 
 interface LanguageModalProps {
@@ -30,21 +29,31 @@ interface LanguageModalProps {
 }
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
-  // ===== RE-INTRODUCE useTranslation() ONLY =====
-  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation(); 
-  // const { setLanguage: setContextLanguage } = useLanguageContext(); // Still commented for this step
+  const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
+  // ===== STEP 2: RE-INTRODUCE useLanguageContext for setLanguage =====
+  const { setLanguage: setContextLanguage } = useLanguageContext(); 
   
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
-    console.log("DEBUG: Language selected (no context language change yet):", langCode);
-    // setContextLanguage is not available in this step
+    const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
+    if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
+        setContextLanguage(simpleLangCode); // Now uses the real context function
+    } else {
+        console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
+        if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
+            setContextLanguage(simpleLangCode);
+        }
+    }
     onClose();
   };
 
-  console.log("DEBUG: LanguageModal (useTranslation active). isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
+  console.log("DEBUG: LanguageModal (useTranslation & useLanguageContext active). isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
+
+  // List is still hardcoded for display for this step
+  const languagesToDisplayInJSX = HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST; 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -53,12 +62,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          {/* Use t() from the re-introduced hook */}
           <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3> 
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
-            aria-label={t('close')} // Using t from hook
+            aria-label={t('close', 'Close')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
@@ -73,30 +81,27 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                   ${selectedRegion === region.key ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted/80'}`}
               >
-                {/* Using t() from the re-introduced hook */}
-                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages') : t(region.nameKey, region.key.replace('languageCategory','')))}
+                {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', 'Suggested') : t(region.nameKey, region.key.replace('languageCategory','')))}
               </button>
             ))}
           </aside>
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {/* Mapping over the hardcoded list */}
-              {HARDCODED_DEBUG_LANGUAGES.map((lang) => ( 
+              {languagesToDisplayInJSX.map((lang) => ( 
                 <li key={lang.code}>
                   <button
                     onClick={() => handleLanguageChange(lang.code)}
                     className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted focus:outline-none focus:ring-1 focus:ring-primary
                       ${currentContextLangFromHook === lang.code.split('-')[0] ? 'font-semibold text-primary' : 'text-foreground'}`}
                   >
-                    {lang.name} {/* Still from hardcoded list */}
-                    {/* Uses currentContextLangFromHook from useTranslation */}
-                    {currentContextLangFromHook === lang.code.split('-')[0] && <span className="ml-2">✓</span>} 
+                    {lang.name}
+                    {currentContextLangFromHook === lang.code.split('-')[0] && <span className="ml-2">✓</span>}
                   </button>
                 </li>
               ))}
-               {HARDCODED_DEBUG_LANGUAGES.length === 0 && ( 
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion')}</li>
+               {languagesToDisplayInJSX.length === 0 && ( 
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
               )}
             </ul>
           </main>
