@@ -1,24 +1,24 @@
 // src/components/LanguageSelectorModal.tsx
-// BASED ON YOUR FIRST "WORKING" VERSION - ONLY LANGUAGE/REGION LISTS UPDATED
+// THIS IS YOUR ORIGINAL WORKING VERSION - STRICTLY ONLY DATA ARRAYS & "all" tab condition added.
+// ALL FUNCTIONAL LOGIC (INCLUDING HOW suggestedLangsToDisplay and languagesToDisplay are derived) IS PRESERVED.
 
-import React, { useState, useMemo } from 'react'; // Removed unused useCallback
+import React, { useState, useMemo } from 'react'; // useMemo is kept IF your original working file had it for OTHER things. If not, it would be removed too. Assuming it was present for some reason.
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define types for clarity (from your "WORKING" version)
+// Define types for clarity (FROM YOUR WORKING VERSION)
 type LanguageOption = {
   code: string;
   name: string;
   englishName: string;
   regionKey: string;
-  // tooltipName was from the "WRONG" version, removed if not in original "WORKING"
 };
 
 // Define language regions for the sidebar
-// UPDATED from your "WRONG" (but feature-rich) version
+// <<<< REPLACED WITH YOUR NEW DATA >>>>
 const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "suggested", nameKey: "suggestedLanguages" },
-  { key: "all", nameKey: "allLanguages" }, // Added for "All Languages"
+  { key: "all", nameKey: "allLanguages" },
   { key: "languageCategoryAfricaMiddleEast", nameKey: "languageCategoryAfrica" },
   { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
   { key: "languageCategoryAsiaPacific", nameKey: "languageCategoryAsia" },
@@ -27,19 +27,15 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
 ];
 
 // Define all available languages
-// UPDATED from your "WRONG" (but feature-rich) version
+// <<<< REPLACED WITH YOUR NEW DATA >>>>
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-  // Suggested (these will be filtered again later, but good to have them in the main list with a primary region)
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
   { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryWesternEurope' },
   { code: 'es', name: 'Español', englishName: 'Spanish', regionKey: 'languageCategoryAmericas' },
-  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' }, // Added to match one of your original suggested
-  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryWesternEurope' }, // Added to match one of your original suggested
-  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryWesternEurope' }, // Added to match one of your original suggested
-
-
-  // From "Όλες οι γλώσσες" section - categorizing them
+  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryWesternEurope' },
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryWesternEurope' },
   { code: 'so', name: 'Af-Soomaali', englishName: 'Somali', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'af', name: 'Afrikaans', englishName: 'Afrikaans', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'az', name: 'Azərbaycan dili', englishName: 'Azerbaijani', regionKey: 'languageCategoryAsiaPacific' },
@@ -53,15 +49,11 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'co', name: 'Corsu', englishName: 'Corsican', regionKey: 'languageCategoryWesternEurope' },
   { code: 'cy', name: 'Cymraeg', englishName: 'Welsh', regionKey: 'languageCategoryWesternEurope' },
   { code: 'da', name: 'Dansk', englishName: 'Danish', regionKey: 'languageCategoryWesternEurope' },
-  // de already listed
   { code: 'et', name: 'Eesti', englishName: 'Estonian', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryWesternEurope' },
-  // es already listed
-  // es-ES already listed
   { code: 'eu', name: 'Euskara', englishName: 'Basque', regionKey: 'languageCategoryWesternEurope' },
   { code: 'fil', name: 'Filipino', englishName: 'Filipino', regionKey: 'languageCategoryAsiaPacific' },
   { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
-  // fr-FR already listed
   { code: 'fy', name: 'Frysk', englishName: 'Western Frisian', regionKey: 'languageCategoryWesternEurope' },
   { code: 'ff', name: 'Fula', englishName: 'Fulah', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'fur', name: 'Furlan', englishName: 'Friulian', regionKey: 'languageCategoryWesternEurope' },
@@ -98,7 +90,7 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'fi', name: 'Suomi', englishName: 'Finnish', regionKey: 'languageCategoryWesternEurope' },
   { code: 'sv', name: 'Svenska', englishName: 'Swedish', regionKey: 'languageCategoryWesternEurope' },
   { code: 'vi', name: 'Tiếng Việt', englishName: 'Vietnamese', regionKey: 'languageCategoryAsiaPacific' },
-  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryWesternEurope' }, // Categorized as WE, can be Asia too
+  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryWesternEurope' },
   { code: 'nl-BE', name: 'Vlaams', englishName: 'Flemish (Dutch variant)', regionKey: 'languageCategoryWesternEurope' },
   { code: 'zza', name: 'Zaza', englishName: 'Zaza', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'is', name: 'Íslenska', englishName: 'Icelandic', regionKey: 'languageCategoryWesternEurope' },
@@ -106,10 +98,10 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'szl', name: 'ślōnskŏ gŏdka', englishName: 'Silesian', regionKey: 'languageCategoryEasternEurope' },
   { code: 'be', name: 'Беларуская', englishName: 'Belarusian', regionKey: 'languageCategoryEasternEurope' },
   { code: 'bg', name: 'Български', englishName: 'Bulgarian', regionKey: 'languageCategoryEasternEurope' },
-  { code: 'mk', name: 'Македонски', englishName: 'Macedonian', regionKey: 'languageCategoryEasternEurope' }, // Moved to EE
+  { code: 'mk', name: 'Македонски', englishName: 'Macedonian', regionKey: 'languageCategoryEasternEurope' },
   { code: 'mn', name: 'Монгол', englishName: 'Mongolian', regionKey: 'languageCategoryAsiaPacific' },
-  { code: 'ru', name: 'Русский', englishName: 'Russian', regionKey: 'languageCategoryEasternEurope' }, // Moved to EE
-  { code: 'sr', name: 'Српски', englishName: 'Serbian', regionKey: 'languageCategoryEasternEurope' }, // Moved to EE
+  { code: 'ru', name: 'Русский', englishName: 'Russian', regionKey: 'languageCategoryEasternEurope' },
+  { code: 'sr', name: 'Српски', englishName: 'Serbian', regionKey: 'languageCategoryEasternEurope' },
   { code: 'tt', name: 'Татарча', englishName: 'Tatar', regionKey: 'languageCategoryEasternEurope' },
   { code: 'tg', name: 'Тоҷикӣ', englishName: 'Tajik', regionKey: 'languageCategoryAsiaPacific' },
   { code: 'uk', name: 'Українська', englishName: 'Ukrainian', regionKey: 'languageCategoryEasternEurope' },
@@ -151,7 +143,6 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsiaPacific' },
 ];
 
-// Valid language codes for the LanguageContext
 const VALID_CONTEXT_LANGUAGES: Array<'en' | 'el' | 'es' | 'fr' | 'de'> = ['en', 'el', 'es', 'fr', 'de'];
 
 interface LanguageSelectorModalProps {
@@ -164,55 +155,54 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
-  // Function to map language code - AS PER YOUR "WORKING" VERSION
+  // Function to map language code - PRESERVED FROM YOUR WORKING VERSION
   const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
-    const baseCode = fullCode.split('-')[0].toLowerCase(); // Ensure lowercase for matching
+    const baseCode = fullCode.split('-')[0].toLowerCase();
     if (VALID_CONTEXT_LANGUAGES.includes(baseCode as any)) {
       return baseCode as 'en' | 'el' | 'es' | 'fr' | 'de';
     }
     console.warn(`mapLanguageCode received an unmappable code: ${fullCode}, defaulting to 'en'.`);
-    return 'en'; // Default to 'en' or your app's primary default
+    return 'en';
   };
 
-  // Handle language selection - AS PER YOUR "WORKING" VERSION
+  // Handle language selection - PRESERVED FROM YOUR WORKING VERSION
   const handleLanguageSelect = (langCode: string) => {
     const mappedCode = mapLanguageCode(langCode);
     setContextLanguage(mappedCode);
     onClose();
   };
 
-  // Early return if modal is not open
+  // Early return if modal is not open - PRESERVED FROM YOUR WORKING VERSION
   if (!isOpen) return null;
 
-  const currentContextLangForSort = isLoaded && VALID_CONTEXT_LANGUAGES.includes(currentContextLangFromHook)
-    ? currentContextLangFromHook
-    : 'en'; // Fallback for sorting if not loaded or lang is unexpected
+  const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
-  // Define suggestedLangsToDisplay - AS PER YOUR "WORKING" VERSION'S LOGIC
-  const suggestedLangsToDisplay = useMemo(() => ALL_AVAILABLE_LANGUAGES.filter(lang =>
-    ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code) // Keep 'sq' if it was intended for suggested
-  ), []); // ALL_AVAILABLE_LANGUAGES is stable
+  // Define suggestedLangsToDisplay - PRESERVED FROM YOUR WORKING VERSION
+  // (defining inline, no useMemo)
+  const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang =>
+    ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code)
+  );
 
-  // Define languagesToDisplay - AS PER YOUR "WORKING" VERSION'S LOGIC
-  const languagesToDisplay = useMemo(() => {
-    let filteredLanguages: LanguageOption[];
-    if (selectedRegion === "suggested") {
-      filteredLanguages = suggestedLangsToDisplay;
-    } else if (selectedRegion === "all") { // Added for "All Languages" tab
-        filteredLanguages = ALL_AVAILABLE_LANGUAGES;
-    }
-    else {
-      filteredLanguages = ALL_AVAILABLE_LANGUAGES.filter(lang =>
-        lang.regionKey === selectedRegion
-      );
-    }
-    // Ensure names are strings before sorting to prevent errors with undefined/null names
-    return [...filteredLanguages].sort((a, b) =>
-      (a.name || '').localeCompare(b.name || '', currentContextLangForSort)
+  // Define languagesToDisplay - PRESERVED FROM YOUR WORKING VERSION
+  // (defining inline with let, no useMemo), with the "all" condition added
+  let languagesToDisplay: LanguageOption[] = [];
+  if (selectedRegion === "suggested") {
+    languagesToDisplay = suggestedLangsToDisplay;
+  } else if (selectedRegion === "all") { // <<<< ONLY MINIMAL ADDITION FOR "ALL" TAB >>>>
+    languagesToDisplay = ALL_AVAILABLE_LANGUAGES;
+  }
+  else {
+    languagesToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang =>
+      lang.regionKey === selectedRegion
     );
-  }, [selectedRegion, suggestedLangsToDisplay, currentContextLangForSort]);
+  }
 
+  // Sort languages - PRESERVED FROM YOUR WORKING VERSION
+  languagesToDisplay = [...languagesToDisplay].sort((a, b) =>
+    String(a.name || '').localeCompare(String(b.name || ''), currentContextLangForSort)
+  );
 
+  // JSX REMAINS IDENTICAL TO YOUR WORKING VERSION
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
       <div
@@ -257,14 +247,14 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
               {languagesToDisplay.map((lang) => {
-                const mappedCode = mapLanguageCode(lang.code); // Uses the function from "WORKING" version
+                const mappedCode = mapLanguageCode(lang.code);
                 const isActive = currentContextLangFromHook === mappedCode;
 
                 return (
                   <li key={lang.code}>
                     <button
                       className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-md text-sm border ${isActive ? 'border-primary bg-primary/10 font-semibold text-primary' : 'hover:bg-muted border-transparent text-foreground'}`}
-                      onClick={() => handleLanguageSelect(lang.code)} // Uses the function from "WORKING" version
+                      onClick={() => handleLanguageSelect(lang.code)}
                     >
                       <span>{lang.name}</span>
                       {isActive && (
