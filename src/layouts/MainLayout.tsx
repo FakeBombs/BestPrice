@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-// Import Product type along with others
 import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product } from '@/data/mockData';
 
 // --- SVG Components remain the same ---
@@ -144,7 +143,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             <div className="sitemap-desktop__view-title">{t('popular_deals_title', 'Δημοφιλείς Προσφορές')}</div>
                              <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
                                 {dealProducts.map(product => {
-                                    // ... (price calculation logic remains the same) ...
                                     let displayPrice = product.lowestPrice;
                                     let originalPrice = null;
                                     const bestPriceInfo = product.prices.find(p => p.vendorId === product.bestPriceVendorId);
@@ -157,7 +155,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
                                     return (
                                         <div key={product.id} className="p p--deal p--bare flex flex-col border border-gray-200 dark:border-gray-700 rounded overflow-hidden group">
-                                            {/* <<< CORRECTED LINK `to` prop >>> */}
                                             <Link to={`/item/${product.id}/${productSlug}`} className="p__cover block relative aspect-square overflow-hidden" title={productTitle} onClick={sitemapToggle}>
                                                 <img width="220" height="220" loading="lazy" alt={productTitle} src={product.image || '//placehold.co/220x220?text=No+Image'} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"/>
                                                 {/* Badges */}
@@ -167,14 +164,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                             <div className="p__main p-2 flex-grow flex flex-col">
                                                 <div className="p__meta flex-grow">
                                                     <h3 className="p__title p__title--lines p__title--lines-2 text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                        {/* <<< CORRECTED LINK `to` prop >>> */}
                                                         <Link to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>{productTitle}</Link>
                                                     </h3>
                                                 </div>
                                             </div>
                                             <div className="p__footer p-2 pt-0 mt-auto">
                                                 <div className="p__price-merchants">
-                                                     {/* <<< CORRECTED LINK `to` prop >>> */}
                                                     <Link className="p__price block text-center" to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>
                                                         <div className="p__price--current text-sm font-bold text-gray-900 dark:text-white">{formatPrice(displayPrice, language)}</div>
                                                         {originalPrice && (<del className="p__price--before text-xs text-gray-500 dark:text-gray-400">{formatPrice(originalPrice, language)}</del>)}
@@ -185,10 +180,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                     );
                                 })}
                             </div>
-                            <div className="sitemap-desktop__deals--actions text-center mt-4 space-x-4">
-                                <Link className="text-sm text-blue-600 hover:underline" to="/deals?bpref=sitemap" onClick={sitemapToggle}>{t('todays_deals_link', 'Σημερινές προσφορές')}</Link>
-                                <Link className="text-sm text-blue-600 hover:underline" to="/deals/m?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_store_link', 'Ανά κατάστημα')}</Link>
-                                <Link className="text-sm text-blue-600 hover:underline" to="/deals/b?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_brand_link', 'Ανά brand')}</Link>
+                            <div className="sitemap-desktop__deals--actions">
+                                <Link to="/deals?bpref=sitemap" onClick={sitemapToggle}>{t('todays_deals_link', 'Σημερινές προσφορές')}</Link>
+                                <Link to="/deals/m?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_store_link', 'Ανά κατάστημα')}</Link>
+                                <Link to="/deals/b?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_brand_link', 'Ανά brand')}</Link>
                             </div>
                         </div>
                     )}
