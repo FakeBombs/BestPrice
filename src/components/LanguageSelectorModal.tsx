@@ -270,7 +270,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                             {t('suggestedLanguages', 'Suggested Languages')}
                         </h3>
                         <div>
-                            {renderLanguageColumns(suggestedLangs, 4, true)}
+                            {renderLanguageColumns(suggestedLangs, 6, true)}
                         </div>
                     </div>
 
@@ -297,7 +297,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                         </aside>
 
                         <main className="flex-1 min-w-0">
-                            {renderLanguageColumns(regionalLanguages, 3, false)}
+                            {renderLanguageColumns(regionalLanguages, 4, false)}
                             {regionalLanguages.length === 0 && selectedRegionKey !== "all" && (
                                 <p className="px-1.5 py-1 text-xs text-gray-500 dark:text-gray-400">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</p>
                             )}
