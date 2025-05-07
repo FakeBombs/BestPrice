@@ -1,11 +1,12 @@
 // src/components/LanguageSelectorModal.tsx
-// IMPLEMENTING STRATEGY 1: Single check mark based on a default variant for the active context language.
+// RESTRUCTURED TO MIMIC FACEBOOK DOM - useMemo REMOVED from list derivations
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // useMemo removed from import
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define types for clarity
+// --- (Keep your LanguageOption type, LANGUAGE_REGIONS_FOR_MODAL, ALL_AVAILABLE_LANGUAGES, VALID_CONTEXT_LANGUAGES, DEFAULT_VARIANT_FOR_CONTEXT_LANG, mapLanguageCode as before) ---
+
 type LanguageOption = {
   code: string;
   name: string;
@@ -13,9 +14,7 @@ type LanguageOption = {
   regionKey: string;
 };
 
-// Define language regions for the sidebar
 const LANGUAGE_REGIONS_FOR_MODAL = [
-  { key: "suggested", nameKey: "suggestedLanguages" },
   { key: "all", nameKey: "allLanguages" },
   { key: "languageCategoryAfricaMiddleEast", nameKey: "languageCategoryAfrica" },
   { key: "languageCategoryAmericas", nameKey: "languageCategoryAmericas" },
@@ -24,17 +23,15 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "languageCategoryWesternEurope", nameKey: "languageCategoryWesternEurope" },
 ];
 
-// Define all available languages
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-  // Your extensive list here...
+  // ... (Your full list as provided previously)
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
   { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryWesternEurope' },
-  { code: 'es', name: 'Español', englishName: 'Spanish', regionKey: 'languageCategoryAmericas' }, // Generic Spanish
-  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' }, // Base German
+  { code: 'es', name: 'Español', englishName: 'Spanish', regionKey: 'languageCategoryAmericas' },
+  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' },
   { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryWesternEurope' },
   { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryWesternEurope' },
-  // ... (the rest of your large ALL_AVAILABLE_LANGUAGES list) ...
   { code: 'so', name: 'Af-Soomaali', englishName: 'Somali', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'af', name: 'Afrikaans', englishName: 'Afrikaans', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'az', name: 'Azərbaycan dili', englishName: 'Azerbaijani', regionKey: 'languageCategoryAsiaPacific' },
@@ -144,15 +141,21 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
 
 const VALID_CONTEXT_LANGUAGES: Array<'en' | 'el' | 'es' | 'fr' | 'de'> = ['en', 'el', 'es', 'fr', 'de'];
 
-// <<<< NEW: Define default variants for each base context language >>>>
-// Adjust these specific codes to what you consider the "main" variant for each base language.
-// Ensure these codes exist in ALL_AVAILABLE_LANGUAGES.
 const DEFAULT_VARIANT_FOR_CONTEXT_LANG: { [key in 'en' | 'el' | 'es' | 'fr' | 'de']: string } = {
   'el': 'el',
   'en': 'en-US',
   'es': 'es-ES',
   'fr': 'fr-FR',
   'de': 'de',
+};
+
+const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
+  const baseCode = fullCode.split('-')[0].toLowerCase();
+  if (VALID_CONTEXT_LANGUAGES.includes(baseCode as any)) {
+    return baseCode as 'en' | 'el' | 'es' | 'fr' | 'de';
+  }
+  console.warn(`mapLanguageCode received an unmappable code: ${fullCode}, defaulting to 'en'.`);
+  return 'en';
 };
 
 interface LanguageSelectorModalProps {
@@ -163,16 +166,7 @@ interface LanguageSelectorModalProps {
 const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
   const { setLanguage: setContextLanguage } = useLanguageContext();
-  const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
-
-  const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
-    const baseCode = fullCode.split('-')[0].toLowerCase();
-    if (VALID_CONTEXT_LANGUAGES.includes(baseCode as any)) {
-      return baseCode as 'en' | 'el' | 'es' | 'fr' | 'de';
-    }
-    console.warn(`mapLanguageCode received an unmappable code: ${fullCode}, defaulting to 'en'.`);
-    return 'en';
-  };
+  const [selectedRegionKey, setSelectedRegionKey] = useState<string>("all");
 
   const handleLanguageSelect = (langCode: string) => {
     const mappedCode = mapLanguageCode(langCode);
@@ -184,98 +178,116 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
 
   const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
-  const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang =>
-    ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code)
-  );
-
-  let languagesToDisplay: LanguageOption[] = [];
-  if (selectedRegion === "suggested") {
-    languagesToDisplay = suggestedLangsToDisplay;
-  } else if (selectedRegion === "all") {
-    languagesToDisplay = ALL_AVAILABLE_LANGUAGES;
-  }
-  else {
-    languagesToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang =>
-      lang.regionKey === selectedRegion
-    );
-  }
-
-  languagesToDisplay = [...languagesToDisplay].sort((a, b) =>
-    String(a.name || '').localeCompare(String(b.name || ''), currentContextLangForSort)
-  );
-
-  // <<<< MODIFIED: Logic to determine the single active language item for the check mark >>>>
-  // Get the preferred specific variant code for the current base context language.
-  const preferredVariantForCurrentActiveBaseLang = isLoaded
+  const activeSpecificLangCode = isLoaded
     ? DEFAULT_VARIANT_FOR_CONTEXT_LANG[currentContextLangFromHook]
-    : null; // If context isn't loaded, no specific variant is preferred yet.
+    : null;
+
+  // Suggested languages logic - NO useMemo, calculated on each render
+  const suggestedLanguageCodes = ['el', 'en-US', 'sq', 'es', 'de', 'fr-FR'];
+  const suggestedLangs = ALL_AVAILABLE_LANGUAGES
+    .filter(lang => suggestedLanguageCodes.includes(lang.code))
+    .sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
+
+  // Languages for the main list - NO useMemo, calculated on each render
+  let regionalLanguages: LanguageOption[];
+  if (selectedRegionKey === "all") {
+    regionalLanguages = ALL_AVAILABLE_LANGUAGES;
+  } else {
+    regionalLanguages = ALL_AVAILABLE_LANGUAGES.filter(lang => lang.regionKey === selectedRegionKey);
+  }
+  regionalLanguages = [...regionalLanguages].sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
+
+
+  const renderLanguageColumns = (languages: LanguageOption[], numColumns: number = 4) => {
+    const columns: LanguageOption[][] = Array.from({ length: numColumns }, () => []);
+    languages.forEach((lang, index) => {
+      columns[index % numColumns].push(lang);
+    });
+
+    return (
+      <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-${numColumns} gap-x-2`}> {/* Adjusted responsiveness slightly */}
+        {columns.map((col, colIndex) => (
+          <ul key={colIndex} className="space-y-0.5">
+            {col.map((lang) => (
+              <li key={lang.code}>
+                <button
+                  onClick={() => handleLanguageSelect(lang.code)}
+                  title={lang.englishName}
+                  className={`w-full text-left px-2 py-1 text-sm rounded hover:bg-muted focus:outline-none focus:bg-muted focus:ring-1 focus:ring-primary truncate ${lang.code === activeSpecificLangCode ? 'text-primary font-semibold' : 'text-foreground'}`}
+                >
+                  {lang.name}
+                  {lang.code === activeSpecificLangCode && <span className="ml-1">✓</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    );
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
+    <div
+        className="fixed inset-0 bg-black/70 flex items-center justify-center z-[2147483647] p-4"
+        onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="language-modal-title"
+    >
       <div
-        className="bg-background p-0 rounded-lg shadow-xl w-full max-w-2xl h-[80vh] max-h-[600px] flex flex-col overflow-hidden"
+        className="bg-background rounded-lg shadow-xl w-full max-w-3xl flex flex-col max-h-[90vh] h-auto overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 border-b pb-3 border-border">
-          <div className="flex-1"></div>
-          <h2 className="text-xl font-semibold text-center flex-grow">
+        <div className="px-4 py-3 border-b border-border">
+          <h2 id="language-modal-title" className="text-lg font-semibold text-foreground text-center">
             {t('selectYourLanguageTitle', 'Select Your Language')}
           </h2>
-          <div className="flex-1 flex justify-end">
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground"
-              aria-label={t('close', 'Close')}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+        </div>
+
+        <div className="p-4 flex-1 overflow-y-auto">
+          <div>
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+              {t('suggestedLanguages', 'Suggested Languages')}
+            </h3>
+            <div className="mb-3">
+              {renderLanguageColumns(suggestedLangs, 4)}
+            </div>
+          </div>
+
+          <hr className="my-4 border-border" />
+
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            <aside className="w-full md:w-1/3 mb-4 md:mb-0">
+              <ul className="space-y-1">
+                {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
+                  <li key={region.key}>
+                    <button
+                      onClick={() => setSelectedRegionKey(region.key)}
+                      className={`w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted focus:outline-none focus:bg-muted focus:ring-1 focus:ring-primary ${selectedRegionKey === region.key ? 'bg-muted font-semibold text-primary' : 'text-foreground'}`}
+                    >
+                      {t(region.nameKey, region.key.replace('languageCategory', ''))}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+
+            <main className="flex-1 md:w-2/3">
+              {renderLanguageColumns(regionalLanguages, 3)}
+              {regionalLanguages.length === 0 && selectedRegionKey !== "all" && (
+                 <p className="px-2 py-1 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</p>
+              )}
+            </main>
           </div>
         </div>
 
-        <div className="flex flex-1 overflow-hidden">
-          <aside className="w-1/3 border-r border-border overflow-y-auto bg-muted/20 p-1">
-            <ul className="space-y-1">
-              {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
-                <li key={region.key}>
-                  <button
-                    className={`w-full text-left px-3 py-2 text-sm rounded-md ${selectedRegion === region.key ? 'bg-primary text-primary-foreground font-medium' : 'hover:bg-muted text-foreground font-normal'}`}
-                    onClick={() => setSelectedRegion(region.key)}
-                  >
-                    {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', "Suggested") : (region.nameKey.replace('languageCategory', '').charAt(0).toUpperCase() + region.nameKey.replace('languageCategory', '').slice(1) || "Region"))}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </aside>
-
-          <main className="w-2/3 overflow-y-auto p-4">
-            <ul className="space-y-1">
-              {languagesToDisplay.map((lang) => {
-                // <<<< MODIFIED: isActive condition for single check mark >>>>
-                const isActive = lang.code === preferredVariantForCurrentActiveBaseLang;
-
-                return (
-                  <li key={lang.code}>
-                    <button
-                      className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-md text-sm border ${isActive ? 'border-primary bg-primary/10 font-semibold text-primary' : 'hover:bg-muted border-transparent text-foreground'}`}
-                      onClick={() => handleLanguageSelect(lang.code)}
-                    >
-                      <span>{lang.name}</span>
-                      {isActive && (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-              {languagesToDisplay.length === 0 && !["suggested", "all"].includes(selectedRegion) && (
-                <li className="px-3 py-2 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</li>
-              )}
-            </ul>
-          </main>
+        <div className="px-4 py-3 border-t border-border bg-muted/30 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          >
+            {t('close', 'Close')}
+          </button>
         </div>
       </div>
     </div>
