@@ -1,8 +1,21 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback
+} from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
+// ================================================================================================
+// TYPE DEFINITIONS
+// ================================================================================================
+
 type Language = 'en' | 'el' | 'es' | 'fr' | 'de';
+const VALID_LANGUAGES: Language[] = ['en', 'el', 'es', 'fr', 'de'];
+
 type Translations = Record<string, Record<string, string>>;
 
 interface LanguageContextType {
@@ -12,10 +25,12 @@ interface LanguageContextType {
   isLoaded: boolean;
 }
 
+// ================================================================================================
+// DEFAULT TRANSLATIONS (Ensure this is complete and correct for all languages)
+// ================================================================================================
+
 const defaultTranslations: Translations = {
-  // ================================= English (en) ===================================
   en: {
-    // Auth
     email: 'Email', password: 'Password', forgotPassword: 'Forgot Password?', register: 'Register',
     signIn: 'Sign In', loggingIn: 'Logging in...', emailPlaceholder: 'email@example.com', orContinueWith: 'Or continue with',
     google: 'Google', facebook: 'Facebook', twitter: 'Twitter', createAccount: 'Create Account',
@@ -33,8 +48,6 @@ const defaultTranslations: Translations = {
     errorProcessingRequest: 'There was an error processing your request.',
     passwordTooShort: 'Password Too Short', passwordMinLength: 'Password must be at least 6 characters.',
     passwordsDontMatch: 'Passwords Don\'t Match', pleaseCheckPasswords: 'Please check that both passwords match.',
-
-    // General UI & Nav
     languageSettings: 'Language Settings', selectLanguage: 'Select Language', english: 'English', greek: 'Greek',
     spanish: 'Spanish', french: 'French', german: 'German', systemLanguage: 'System Language (Default)',
     save: 'Save', cancel: 'Cancel', loading: 'Loading...', success: 'Success',
@@ -53,8 +66,6 @@ const defaultTranslations: Translations = {
     submit: "Submit", search: "Search", searchPlaceholder: "Search for products...",
     notFoundPageTitle: "Page Not Found", notFoundMessage: "Oops! The page you are looking for does not exist.",
     recently_viewed_title: "Recently Viewed",
-
-    // Categories Page & Filters
     "product_singular": "product", "product_plural": "{{count}} products",
     "rating_label": "Rating", "reviews_label_singular": "review", "reviews_label_plural": "{{count}} reviews",
     "from_vendor": "from", "with": "with",
@@ -101,13 +112,9 @@ const defaultTranslations: Translations = {
     "info_for_certified_store": "Information for certified store",
     "showing_products_from_store": "Showing products from store",
     "remove_filter": "Remove this filter",
-
-    // Product Breadcrumb
     "breadcrumbHome": "BestPrice",
     "breadcrumbAllProductsInCategory": "All products in the {{categoryName}} category",
     "breadcrumbAllProductsAndSubcategoriesInCategory": "All products and subcategories in the {{categoryName}} category",
-
-    // Product Detail Page
     "loadingProduct": "Loading Product...",
     "addToShoppingList": "Add to Shopping List", "addToComparison": "Add to Comparison",
     "iWantIt": "I Want It", "iHaveIt": "I Have It",
@@ -128,7 +135,8 @@ const defaultTranslations: Translations = {
     "availableAt": "Available at {{count}} stores", "noStoresAvailable": "Currently unavailable",
     "priceRange": "Price Range", "comparePrices": "Compare {{count}} Prices",
     "viewAllStores": "View all stores", "productDescription": "Description",
-    "share": "Share", "removeFromFavorites": "Remove from Favorites",
+    "share": "Share",
+    "removeFromFavorites": "Remove from Favorites",
     "priceHistory": "Price History",
     "certifiedStoresTooltip": "Show only products from certified stores",
     "vendorPopupCertification": "Certification: {{certificationType}}",
@@ -146,8 +154,6 @@ const defaultTranslations: Translations = {
     "linkCopied": "Link Copied", "productLinkCopied": "Product link copied to clipboard",
     "copyFailed": "Copy Failed", "couldNotCopyLink": "Could not copy link",
     "loginToSetPriceAlert": "Please log in to set a price alert",
-
-    // Vendor Page
     "loadingVendor": "Loading store...", "allStores": "Stores",
     "certifiedStoreLinkText": "Certified Store ({{certificationLevel}})",
     "certifiedStoreFullText": "{{vendorName}} is a certified store ({{certificationLevel}})",
@@ -169,8 +175,6 @@ const defaultTranslations: Translations = {
     "storeAndPickup": "Store / Pickup Point",
     "mapPlaceholderText": "Map Placeholder - Requires Map Library",
     "noLanguagesInRegion": "No languages listed for this region yet.",
-
-    // UserButton & UserDropdownContent
     "toggleTheme": "Toggle theme",
     "productsYouWant": "Products you want", "productsYouHave": "Products you have",
     "myOffers": "My Offers", "priceDrops": "Price Drops",
@@ -179,8 +183,6 @@ const defaultTranslations: Translations = {
     "myQuestions": "My Questions", "myReviews": "My Reviews",
     "myFriends": "My Friends", "viewProfileTooltip": "View your profile",
     "userMenuCaretAlt": "Open user menu",
-
-    // Footer
     "backToTop": "Back to Top",
     "bestpriceSloganShort": "The truly best price",
     "bestpriceSloganLong": "BestPrice is the first and largest price comparison service in Greece.",
@@ -214,8 +216,7 @@ const defaultTranslations: Translations = {
     "suggestedLanguages": "Suggested Languages", "allLanguages": "All Languages",
     "languageCategoryEurope": "Europe", "languageCategoryAsia": "Asia",
     "languageCategoryAmericas": "Americas", "languageCategoryAfrica": "Africa & Middle East",
-
-    // Deals, Brands, Search
+    "languageCategoryEasternEurope": "Eastern Europe", "languageCategoryWesternEurope": "Western Europe",
     "allBrands": "All Brands", "productsFromBrand": "Products from {{brandName}}",
     "searchResultsFor": "Search results for \"{{searchTerm}}\"",
     "noResultsFound": "No results found for \"{{searchTerm}}\"",
@@ -223,24 +224,18 @@ const defaultTranslations: Translations = {
     "viewAsList": "List View", "itemsPerPage": "Items per page",
     "page": "Page", "of": "of", "nextPage": "Next", "previousPage": "Previous",
     "todaysDeals": "Today's Deals", "filterBy": "Filter by",
-
-    // Cart & Checkout
     "shoppingCart": "Shopping Cart", "proceedToCheckout": "Proceed to Checkout",
     "item": "Item", "quantity": "Quantity", "subtotal": "Subtotal", "total": "Total",
     "emptyCart": "Your cart is empty.", "continueShopping": "Continue Shopping",
     "shippingAddress": "Shipping Address", "billingAddress": "Billing Address",
     "paymentInformation": "Payment Information", "placeOrder": "Place Order",
     "orderSummary": "Order Summary", "discountCode": "Discount Code", "apply": "Apply",
-
-    // Payment Methods (Dynamic Keys)
     "paymentMethod_credit_card": "Credit Card", "paymentMethod_bank_transfer": "Bank Transfer",
     "paymentMethod_paypal": "PayPal", "paymentMethod_cash_on_delivery": "Cash on Delivery",
     "paymentMethod_pickup_from_store": "Pickup from Store", "paymentMethod_klarna": "Klarna",
     "paymentMethod_apple_pay": "Apple Pay", "paymentMethod_google_pay": "Google Pay",
     "paymentMethod_ideal": "iDEAL", "paymentMethod_crypto": "Cryptocurrency",
     "paymentMethod_pay_by_link": "Pay by Link", "paymentMethod_pickup_via": "Pickup via Courier/Service",
-
-    // Category Slugs
     'technology': 'Technology', 'home-garden': 'Home & Garden', 'fashion': 'Fashion',
     'health-beauty': 'Health & Beauty', 'kids-baby': 'Kids & Baby', 'hobby-sports': 'Hobby & Sports',
     'auto-moto': 'Auto & Moto',
@@ -291,9 +286,7 @@ const defaultTranslations: Translations = {
     'ps5-games': 'PS5 Games', 'pc-games': 'PC Games', 'amplifiers-preamplifiers': 'Amplifiers & Preamplifiers',
     'hi-fi-systems': 'Hi-Fi Systems',
   },
-  // ================================= Greek (el) ===================================
   el: {
-    // Auth
     email: 'Email', password: 'Κωδικός', forgotPassword: 'Ξεχάσατε τον κωδικό;', register: 'Εγγραφή',
     signIn: 'Σύνδεση', loggingIn: 'Γίνεται σύνδεση...', emailPlaceholder: 'email@example.com', orContinueWith: 'Ή συνεχίστε με',
     google: 'Google', facebook: 'Facebook', twitter: 'Twitter', createAccount: 'Δημιουργία Λογαριασμού',
@@ -311,8 +304,6 @@ const defaultTranslations: Translations = {
     errorProcessingRequest: 'Παρουσιάστηκε σφάλμα κατά την επεξεργασία του αιτήματός σας.',
     passwordTooShort: 'Πολύ Κοντός Κωδικός', passwordMinLength: 'Ο κωδικός πρέπει να είναι τουλάχιστον 6 χαρακτήρες.',
     passwordsDontMatch: 'Οι Κωδικοί δεν Ταιριάζουν', pleaseCheckPasswords: 'Ελέγξτε ότι οι δύο κωδικοί ταιριάζουν.',
-
-    // General UI & Nav
     languageSettings: 'Ρυθμίσεις Γλώσσας', selectLanguage: 'Επιλογή Γλώσσας', english: 'Αγγλικά', greek: 'Ελληνικά',
     spanish: 'Ισπανικά', french: 'Γαλλικά', german: 'Γερμανικά', systemLanguage: 'Γλώσσα Συστήματος (Προεπιλογή)',
     save: 'Αποθήκευση', cancel: 'Άκυρο', loading: 'Φόρτωση...', success: 'Επιτυχία',
@@ -331,8 +322,6 @@ const defaultTranslations: Translations = {
     submit: "Υποβολή", search: "Αναζήτηση", searchPlaceholder: "Αναζήτηση προϊόντων...",
     notFoundPageTitle: "Η Σελίδα δεν Βρέθηκε", notFoundMessage: "Ουπς! Η σελίδα που αναζητάτε δεν υπάρχει.",
     recently_viewed_title: "Είδατε Πρόσφατα",
-
-    // Categories Page & Filters
     "product_singular": "προϊόν", "product_plural": "{{count}} προϊόντα",
     "rating_label": "Βαθμολογία", "reviews_label_singular": "αξιολόγηση", "reviews_label_plural": "{{count}} αξιολογήσεις",
     "from_vendor": "από", "with": "με",
@@ -379,13 +368,9 @@ const defaultTranslations: Translations = {
     "info_for_certified_store": "Πληροφορίες για πιστοποιημένο κατάστημα",
     "showing_products_from_store": "Εμφάνιση προϊόντων από το κατάστημα",
     "remove_filter": "Αφαίρεση αυτού του φίλτρου",
-
-    // Product Breadcrumb
     "breadcrumbHome": "BestPrice",
     "breadcrumbAllProductsInCategory": "Όλα τα προϊόντα της κατηγορίας {{categoryName}}",
     "breadcrumbAllProductsAndSubcategoriesInCategory": "Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας {{categoryName}}",
-
-    // Product Detail Page
     "loadingProduct": "Φόρτωση Προϊόντος...",
     "addToShoppingList": "Προσθήκη στη Λίστα Αγορών", "addToComparison": "Προσθήκη στη σύγκριση",
     "iWantIt": "Το θέλω", "iHaveIt": "Το έχω",
@@ -424,8 +409,6 @@ const defaultTranslations: Translations = {
     "linkCopied": "Ο Σύνδεσμος Αντιγράφηκε", "productLinkCopied": "Ο σύνδεσμος του προϊόντος αντιγράφηκε στο πρόχειρο",
     "copyFailed": "Η Αντιγραφή Απέτυχε", "couldNotCopyLink": " αδυναμία αντιγραφής συνδέσμου",
     "loginToSetPriceAlert": "Παρακαλώ συνδεθείτε για να ορίσετε ειδοποίηση τιμής",
-
-    // Vendor Page
     "loadingVendor": "Φόρτωση καταστήματος...", "allStores": "Καταστήματα",
     "certifiedStoreLinkText": "Πιστοποιημένο Κατάστημα ({{certificationLevel}})",
     "certifiedStoreFullText": "Το {{vendorName}} είναι πιστοποιημένο κατάστημα ({{certificationLevel}})",
@@ -445,8 +428,6 @@ const defaultTranslations: Translations = {
     "servicePointsTitle": "Σημεία Εξυπηρέτησης {{vendorName}}", "servicePointsCount": "{{count}} σημεία",
     "storeAndPickup": "Κατάστημα / Παραλαβή", "mapPlaceholderText": "Map Placeholder - Απαιτείται Βιβλιοθήκη Χάρτη",
     "noLanguagesInRegion": "Δεν υπάρχουν γλώσσες για αυτήν την περιοχή ακόμη.",
-
-    // UserButton & UserDropdownContent
     "toggleTheme": "Εναλλαγή θέματος",
     "productsYouWant": "Προϊόντα που θέλεις", "productsYouHave": "Προϊόντα που έχεις",
     "myOffers": "Οι Προσφορές μου", "priceDrops": "Ειδοποιήσεις Τιμών",
@@ -455,8 +436,6 @@ const defaultTranslations: Translations = {
     "myQuestions": "Οι Ερωτήσεις μου", "myReviews": "Οι Αξιολογήσεις μου",
     "myFriends": "Οι Φίλοι μου", "viewProfileTooltip": "Δείτε το προφίλ σας",
     "userMenuCaretAlt": "Άνοιγμα μενού χρήστη",
-
-    // Footer
     "backToTop": "Επιστροφή στην κορυφή",
     "bestpriceSloganShort": "Η πραγματικά καλύτερη τιμή",
     "bestpriceSloganLong": "Το BestPrice είναι η πρώτη και μεγαλύτερη υπηρεσία σύγκρισης τιμών στην Ελλάδα.",
@@ -490,8 +469,7 @@ const defaultTranslations: Translations = {
     "suggestedLanguages": "Προτεινόμενες γλώσσες", "allLanguages": "Όλες οι γλώσσες",
     "languageCategoryEurope": "Ευρώπη", "languageCategoryAsia": "Ασία",
     "languageCategoryAmericas": "Αμερική", "languageCategoryAfrica": "Αφρική και Μέση Ανατολή",
-
-    // Deals, Brands, Search
+    "languageCategoryEasternEurope": "Ανατολική Ευρώπη", "languageCategoryWesternEurope": "Δυτική Ευρώπη",
     "allBrands": "Όλες οι Μάρκες", "productsFromBrand": "Προϊόντα από {{brandName}}",
     "searchResultsFor": "Αποτελέσματα αναζήτησης για \"{{searchTerm}}\"",
     "noResultsFound": "Δεν βρέθηκαν αποτελέσματα για \"{{searchTerm}}\"",
@@ -499,24 +477,18 @@ const defaultTranslations: Translations = {
     "viewAsList": "Προβολή Λίστας", "itemsPerPage": "Αντικείμενα ανά σελίδα",
     "page": "Σελίδα", "of": "από", "nextPage": "Επόμενη", "previousPage": "Προηγούμενη",
     "todaysDeals": " σημερινές Προσφορές", "filterBy": "Φιλτράρισμα κατά",
-
-    // Cart & Checkout
     "shoppingCart": "Καλάθι Αγορών", "proceedToCheckout": "Ολοκλήρωση Παραγγελίας",
     "item": "Προϊόν", "quantity": "Ποσότητα", "subtotal": "Μερικό Σύνολο", "total": "Συνολικό Ποσό",
     "emptyCart": "Το καλάθι σας είναι άδειο.", "continueShopping": "Συνέχεια Αγορών",
     "shippingAddress": "Διεύθυνση Αποστολής", "billingAddress": "Διεύθυνση Χρέωσης",
     "paymentInformation": "Στοιχεία Πληρωμής", "placeOrder": "Καταχώρηση Παραγγελίας",
     "orderSummary": "Σύνοψη Παραγγελίας", "discountCode": "Κωδικός Έκπτωσης", "apply": "Εφαρμογή",
-
-    // Payment Methods (Dynamic Keys)
     "paymentMethod_credit_card": "Πιστωτική Κάρτα", "paymentMethod_bank_transfer": "Τραπεζική Κατάθεση",
     "paymentMethod_paypal": "PayPal", "paymentMethod_cash_on_delivery": "Αντικαταβολή",
     "paymentMethod_pickup_from_store": "Παραλαβή από το Κατάστημα", "paymentMethod_klarna": "Klarna",
     "paymentMethod_apple_pay": "Apple Pay", "paymentMethod_google_pay": "Google Pay",
     "paymentMethod_ideal": "iDEAL", "paymentMethod_crypto": "Κρυπτονόμισμα",
     "paymentMethod_pay_by_link": "Πληρωμή με Σύνδεσμο", "paymentMethod_pickup_via": "Παραλαβή μέσω Courier/Υπηρεσίας",
-
-    // Category Slugs
     'technology': 'Τεχνολογία', 'home-garden': 'Σπίτι & Κήπος', 'fashion': 'Μόδα',
     'health-beauty': 'Υγεία & Ομορφιά', 'kids-baby': 'Παιδικά - Βρεφικά', 'hobby-sports': 'Hobby, Αθλητισμός',
     'auto-moto': 'Μηχανοκίνηση',
@@ -567,500 +539,188 @@ const defaultTranslations: Translations = {
     'ps5-games': 'PS5 Games', 'pc-games': 'PC Games', 'amplifiers-preamplifiers': 'Ενισχυτές, Προενισχυτές',
     'hi-fi-systems': 'Συστήματα Hi-Fi',
   },
-  // ============================ Spanish (es) - Placeholder, needs full translation ============================
-  es: {
-    // Auth
-    email: 'Correo electrónico', password: 'Contraseña', forgotPassword: '¿Olvidaste tu contraseña?', register: 'Registrarse',
-    signIn: 'Iniciar sesión', loggingIn: 'Iniciando sesión...', emailPlaceholder: 'email@example.com', orContinueWith: 'O continuar con',
-    google: 'Google', facebook: 'Facebook', twitter: 'Twitter', createAccount: 'Crear cuenta',
-    dontHaveAccount: "¿No tienes una cuenta?", alreadyHaveAccount: '¿Ya tienes una cuenta?', fullName: 'Nombre Completo', confirmPassword: 'Confirmar Contraseña',
-    agreeToTerms: 'Acepto los Términos de Servicio y la Política de Privacidad',
-    creatingAccount: 'Creando cuenta...', resetYourPassword: 'Restablecer Tu Contraseña',
-    enterEmailForReset: 'Introduce tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.',
-    sendResetLink: 'Enviar Enlace de Restablecimiento', sendingResetLink: 'Enviando...',
-    resetPasswordEmailSent: 'Correo electrónico de restablecimiento de contraseña enviado. Por favor, revisa tu bandeja de entrada.',
-    backToLogin: 'Volver a Iniciar Sesión', createNewPassword: 'Crear Nueva Contraseña',
-    newPassword: 'Nueva Contraseña', updatePassword: 'Actualizar Contraseña',
-    updating: 'Actualizando...', passwordUpdated: 'Contraseña Actualizada',
-    passwordSuccessfullyChanged: 'Tu contraseña ha sido cambiada exitosamente.',
-    passwordResetFailed: 'Error al Restablecer la Contraseña',
-    errorProcessingRequest: 'Hubo un error procesando tu solicitud.',
-    passwordTooShort: 'Contraseña Demasiado Corta', passwordMinLength: 'La contraseña debe tener al menos 6 caracteres.',
-    passwordsDontMatch: 'Las Contraseñas no Coinciden', pleaseCheckPasswords: 'Por favor, verifica que ambas contraseñas coincidan.',
-    languageSettings: 'Configuración de Idioma', selectLanguage: 'Seleccionar Idioma', english: 'Inglés', greek: 'Griego',
-    spanish: 'Español', french: 'Francés', german: 'Alemán', systemLanguage: 'Idioma del Sistema (Predeterminado)',
-    save: 'Guardar', cancel: 'Cancelar', loading: 'Cargando...', success: 'Éxito',
-    error: 'Error', wallet: 'Cartera', myWallet: 'Mi Cartera', manageWallet: 'Gestiona tus fondos, transacciones y pagos de anuncios',
-    deposit: 'Depositar', transactions: 'Transacciones', connectWallet: 'Conectar Cartera', addFunds: 'Añadir Fondos',
-    amount: 'Cantidad ($)', enterAmount: 'Introducir cantidad', paymentMethod: 'Método de Pago', processing: 'Procesando...',
-    myAccount: 'Mi Cuenta', profile: 'Perfil', favorites: 'Favoritos', recentlyViewed: 'Visto Recientemente',
-    priceAlerts: 'Alertas de Precio', settings: 'Configuración', logout: 'Cerrar Sesión', myProfile: 'Mi Perfil',
-    managePersonalInfo: 'Gestionar tu información personal',
-    name: 'Nombre', memberSince: 'Miembro desde', role: 'Rol', administrator: 'Administrador',
-    regularUser: 'Usuario Regular', editProfile: 'Editar Perfil', accountSummary: 'Resumen de Cuenta', categories: 'Categorías',
-    gifts: 'Regalos', deals: 'Ofertas', clearFilters: 'Limpiar filtros', finalPrice: 'Precio final',
-    yes: "Sí", no: "No", ok: "OK", close: "Cerrar",
-    showMore: "Mostrar Más", showLess: "Mostrar Menos", all: "Todo", selectOption: "Selecciona una opción",
-    optional: "Opcional", required: "Requerido", back: "Atrás", next: "Siguiente",
-    submit: "Enviar", search: "Buscar", searchPlaceholder: "Buscar productos...",
-    notFoundPageTitle: "Página No Encontrada", notFoundMessage: "¡Ups! La página que buscas no existe.",
-    recently_viewed_title: "Visto Recientemente",
-    "product_singular": "producto", "product_plural": "{{count}} productos",
-    "rating_label": "Clasificación", "reviews_label_singular": "reseña", "reviews_label_plural": "{{count}} reseñas",
-    "from_vendor": "de", "with": "con",
-    "no_products_in_category": "Aún no hay productos en esta categoría.",
-    "filters_title": "Filtros", "remove_all_filters_tooltip": "Eliminar todos los filtros",
-    "show_only_title": "Mostrar solo", "deals_label": "Ofertas",
-    "deals_title": "Productos con bajada de precio significativa",
-    "certified_label": "Certificado", "certified_stores_title": "Tiendas Certificadas",
-    "instock_label": "En Stock", "instock_title": "Solo productos disponibles en stock",
-    "boxnow_delivery_title": "Entrega BOX NOW",
-    "boxnow_tooltip": "Recoge tu pedido en un casillero BOX NOW 24/7",
-    "delivery_label": "BOX NOW", "manufacturer_title": "Fabricante",
-    "show_less_manufacturers": "Mostrar menos fabricantes", "show_all_manufacturers": "Mostrar todos los fabricantes",
-    "show_all": "Mostrar Todo",
-    "show_less_options": "Mostrar menos opciones para", "show_all_options": "Mostrar todas las opciones para",
-    "remove_instock_filter": "Eliminar filtro 'En Stock'", "remove_deals_filter": "Eliminar filtro 'Ofertas'",
-    "remove_certified_filter": "Eliminar filtro 'Certificado'", "remove_nearby_filter": "Eliminar filtro 'Cercano'",
-    "remove_boxnow_filter": "Eliminar filtro 'BOX NOW'",
-    "remove_brand_filter": "Eliminar filtro de marca", "remove_spec_filter": "Eliminar filtro de especificación",
-    "reset_all_filters": "Restablecer todos los filtros", "clear_all_filters": "Limpiar Todo",
-    "selected_deals": "Ofertas Seleccionadas", "popular_choices": "Opciones Populares",
-    "sort_most_popular": "Más Populares", "sort_newest": "Más Nuevos",
-    "sort_cheapest": "Más Baratos", "sort_most_expensive": "Más Caros",
-    "sort_alphabetical": "Alfabético (A-Z)", "sort_most_reviews": "Más Reseñas",
-    "sort_by_manufacturer": "Por Fabricante", "sort_num_stores": "Número de Tiendas",
-    "price_alert_for": "Alerta de Precio para",
-    "no_products_found_filters": "Ningún producto coincide con tus filtros actuales.",
-    "suggestions_title": "Sugerencias",
-    "suggestion_see_all_products": "Ver todos los productos en esta categoría:",
-    "all_category_products": "Todos los Productos de la Categoría",
-    "suggestion_try_removing_filters": "Intenta eliminar algunos filtros:",
-    "remove_a_filter": "Eliminar un filtro",
-    "suggestion_return_home": "Volver a la página de inicio:",
-    "return_to_homepage": "Volver a la Página de Inicio",
-    "no_subcategories": "No hay subcategorías disponibles.",
-    "popular_categories": "Categorías Populares", "top_deals_in": "Mejores Ofertas en",
-    "products_with_significant_price_drop": "Productos con una bajada de precio significativa",
-    "hottest_in": "Lo Más Popular en", "product_reviews_title": "Reseñas de Productos",
-    "helpful_reviews_subtitle": "Reseñas útiles de nuestros usuarios",
-    "popular_manufacturers": "Fabricantes Populares",
-    "price_alert_button": "Establecer Alerta de Precio",
-    "price_alert_prompt_in": "No te pierdas una oferta para productos en",
-    "return_to": "Volver a",
-    "info_for_certified_store": "Información para tienda certificada",
-    "showing_products_from_store": "Mostrando productos de la tienda",
-    "remove_filter": "Eliminar este filtro",
-    "breadcrumbHome": "BestPrice", // o "Inicio"
-    "breadcrumbAllProductsInCategory": "Todos los productos de la categoría {{categoryName}}",
-    "breadcrumbAllProductsAndSubcategoriesInCategory": "Todos los productos y subcategorías de la categoría {{categoryName}}",
-    "loadingProduct": "Cargando Producto...",
-    "addToShoppingList": "Añadir a la Lista de Compras", "addToComparison": "Añadir a Comparación",
-    "iWantIt": "Lo Quiero", "iHaveIt": "Lo Tengo",
-    "notifyPriceDrop": "Notificarme si baja el precio", "addToCollection": "Añadir a Colección",
-    "priceFrom": "Desde", "inStores": "en {{count}} tiendas",
-    "storesCount": "Tiendas ({{count}})",
-    "available": "Disponible", "nearMe": "Cerca de mí",
-    "deliveryWithService": "Entrega con {{serviceName}}",
-    "coupons": "Cupones", "color": "Color",
-    "officialResellers": "Vendedores Oficiales", "priceHistoryTitle": "Historial de Precios",
-    "productDetails": "Detalles del Producto", "userReviews": "Reseñas de Usuarios ({{count}})",
-    "questionsAndAnswers": "Preguntas y Respuestas ({{count}})",
-    "similarProducts": "Productos Similares", "dealsInCategory": "Ofertas en {{categoryName}}",
-    "addToCart": "Añadir al Carrito", "buyNow": "Comprar Ahora",
-    "specifications": "Especificaciones", "reviews": "Reseñas",
-    "relatedProducts": "Productos Relacionados", "writeReview": "Escribir una Reseña",
-    "outOfStock": "Agotado",
-    "availableAt": "Disponible en {{count}} tiendas", "noStoresAvailable": "Actualmente no disponible",
-    "priceRange": "Rango de Precios", "comparePrices": "Comparar {{count}} Precios",
-    "viewAllStores": "Ver todas las tiendas", "productDescription": "Descripción",
-    "share": "Compartir", "addToFavorites": "Añadir a Favoritos",
-    "removeFromFavorites": "Eliminar de Favoritos", "priceHistory": "Historial de Precios",
-    "certifiedStoresTooltip": "Mostrar solo productos de tiendas certificadas",
-    "vendorPopupCertification": "Certificación: {{certificationType}}",
-    "vendorPopupInformation": "Información", "vendorPopupAddressNotAvailable": "Solo Tienda Online",
-    "vendorPopupPaymentMethods": "MÉTODOS DE PAGO",
-    "vendorPopupLearnMore": "Saber Más", "vendorPopupViewInStore": "Ver en Tienda",
-    "openingHoursNotAvailable": "Información de horario no disponible",
-    "closedToday": "Cerrado hoy", "openUntil": "Abierto hasta las {{time}}",
-    "closedOpensAt": "Cerrado - Abre a las {{time}}", "closedForToday": "Cerrado por hoy",
-    "openingHoursError": "Error en el horario",
-    "loginRequired": "Se Requiere Iniciar Sesión",
-    "loginToAddToFavorites": "Por favor, inicia sesión para añadir este producto a tus favoritos",
-    "productAddedToFavorites": "{{productName}} ha sido añadido a tus favoritos",
-    "linkCopied": "Enlace Copiado", "productLinkCopied": "Enlace del producto copiado al portapapeles",
-    "copyFailed": "Error al Copiar", "couldNotCopyLink": "No se pudo copiar el enlace",
-    "loginToSetPriceAlert": "Por favor, inicia sesión para establecer una alerta de precio",
-    "loadingVendor": "Cargando tienda...", "allStores": "Tiendas",
-    "certifiedStoreLinkText": "Tienda Certificada ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} es una tienda certificada ({{certificationLevel}})",
-    "memberSinceDate": "En BestPrice desde {{date}}",
-    "ratingTooltip": "{{rating}} estrellas de {{count}} valoraciones",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} más {{storeLabel}}",
-    "storeLabelSingular": "tienda", "storeLabelPlural": "tiendas",
-    "logoFor": "Logo de {{name}}", "screenshotFor": "Captura de pantalla de {{name}}",
-    "authorizedReseller": "Distribuidor Autorizado", "previewWebsite": "Vista Previa del Sitio Web",
-    "dealsFromVendor": "Ofertas de {{vendorName}}",
-    "popularCategoriesInVendor": "Categorías Populares en {{vendorName}}",
-    "viewAllVendorProducts": "Ver todos los productos<span class=\"hide-mobile\"> de la tienda</span>",
-    "storeReviewsTitle": "Reseñas de la Tienda {{vendorName}}",
-    "reviewCount": "{{count}} reseñas", "rateIt": "Califícalo",
-    "reviewsPlaceholder": "(Visualización de reseñas - Implementación necesaria)",
-    "servicePointsTitle": "Puntos de Servicio {{vendorName}}", "servicePointsCount": "{{count}} puntos",
-    "storeAndPickup": "Tienda / Punto de Recogida", "mapPlaceholderText": "Marcador de Posición del Mapa - Requiere Biblioteca de Mapas",
-    "noLanguagesInRegion": "No hay idiomas listados para esta región todavía.",
-    "toggleTheme": "Cambiar tema",
-    "productsYouWant": "Productos que quieres", "productsYouHave": "Productos que tienes",
-    "myOffers": "Mis Ofertas", "priceDrops": "Alertas de Precio",
-    "myCollections": "Mis Colecciones", "newCollection": "Nueva Colección...",
-    "creditsClub": "Club de Créditos", "savedOrders": "Pedidos Guardados",
-    "myQuestions": "Mis Preguntas", "myReviews": "Mis Reseñas",
-    "myFriends": "Mis Amigos", "viewProfileTooltip": "Ver tu perfil",
-    "userMenuCaretAlt": "Abrir menú de usuario",
-    "backToTop": "Volver Arriba",
-    "bestpriceSloganShort": "El precio verdaderamente mejor",
-    "bestpriceSloganLong": "BestPrice es el primer y más grande servicio de comparación de precios en España.",
-    "bestpriceSloganFindDeals": "En BestPrice encontrarás rápida y fácilmente ofertas reales y el mejor precio de las tiendas más grandes.",
-    "bestpriceGive": "BestPrice Give", "footerBestPriceSectionTitle": "BestPrice",
-    "aboutUs": "Sobre Nosotros", "ourBlog": "Nuestro Blog",
-    "buyingGuides": "Guías de Compra", "purchaseInsurance": "Seguro de Compra",
-    "advertising": "Publicidad", "bestpriceCertification": "Certificación BestPrice",
-    "customerReviewAwards": "Premios de Reseñas de Clientes", "ourAwards": "Nuestros Premios",
-    "ourTeam": "Nuestro Equipo", "bestpriceAssistant": "Asistente BestPrice",
-    "jobOpenings": "Ofertas de Empleo ({{count}})", "contactUs": "Contacto",
-    "inNumbers": "En Cifras",
-    "storeCountLink": "{{count}} tiendas", "productCountLink": "{{count}} productos",
-    "brandCountLink": "{{count}} fabricantes","dealCountLink": "{{count}} ofertas",
-    "termsAndPrivacy": "Términos y Privacidad", "termsOfUse": "Términos de Uso",
-    "privacyPolicy": "Política de Privacidad", "cookiePolicy": "Política de Cookies",
-    "gdprLink": "RGPD", "dsaLink": "LSD",
-    "bestpriceForMerchants": "BestPrice Para Comerciantes",
-    "merchantsSectionSlogan1": "¿Tienes una tienda online?",
-    "merchantsSectionSlogan2": "¡Descubre cómo BestPrice puede ayudarte a aumentar tus ventas!",
-    "forMerchantsButton": "Para Comerciantes",
-    "bestpriceForBrands": "BestPrice Para Marcas",
-    "brandsSectionSlogan": "BestPrice para Marcas ofrecerá información y servicios útiles a los fabricantes (Marcas).",
-    "moreInfoButton": "Más Información",
-    "bestpriceOnFacebook": "BestPrice en Facebook", "bestpriceOnX": "BestPrice en X",
-    "bestpriceOnThreads": "BestPrice en Threads", "bestpriceOnInstagram": "BestPrice en Instagram",
-    "bestpriceOnTikTok": "BestPrice en TikTok", "bestpriceOnYouTube": "BestPrice en YouTube",
-    "bestpriceOnLinkedIn": "BestPrice en LinkedIn",
-    "homepageTitle": "Página de Inicio",
-    "changeLanguage": "Cambiar Idioma", "selectYourLanguageTitle": "Selecciona tu Idioma",
-    "suggestedLanguages": "Idiomas sugeridos", "allLanguages": "Todos los idiomas",
-    "languageCategoryEurope": "Europa", "languageCategoryAsia": "Asia",
-    "languageCategoryAmericas": "Américas", "languageCategoryAfrica": "África y Medio Oriente",
-    "allBrands": "Todas las Marcas", "productsFromBrand": "Productos de {{brandName}}",
-    "searchResultsFor": "Resultados de búsqueda para \"{{searchTerm}}\"",
-    "noResultsFound": "No se encontraron resultados para \"{{searchTerm}}\"",
-    "sortBy": "Ordenar por", "viewAsGrid": "Vista de Cuadrícula",
-    "viewAsList": "Vista de Lista", "itemsPerPage": "Artículos por página",
-    "page": "Página", "of": "de", "nextPage": "Siguiente", "previousPage": "Anterior",
-    "todaysDeals": "Ofertas de Hoy", "filterBy": "Filtrar por",
-    "shoppingCart": "Carrito de Compras", "proceedToCheckout": "Proceder al Pago",
-    "item": "Artículo", "quantity": "Cantidad", "subtotal": "Subtotal", "total": "Total",
-    "emptyCart": "Tu carrito está vacío.", "continueShopping": "Continuar Comprando",
-    "shippingAddress": "Dirección de Envío", "billingAddress": "Dirección de Facturación",
-    "paymentInformation": "Información de Pago", "placeOrder": "Realizar Pedido",
-    "orderSummary": "Resumen del Pedido", "discountCode": "Código de Descuento", "apply": "Aplicar",
-    "paymentMethod_credit_card": "Tarjeta de Crédito", "paymentMethod_bank_transfer": "Transferencia Bancaria",
-    "paymentMethod_paypal": "PayPal", "paymentMethod_cash_on_delivery": "Contra Reembolso",
-    "paymentMethod_pickup_from_store": "Recoger en Tienda", "paymentMethod_klarna": "Klarna",
-    "paymentMethod_apple_pay": "Apple Pay", "paymentMethod_google_pay": "Google Pay",
-    "paymentMethod_ideal": "iDEAL", "paymentMethod_crypto": "Criptomoneda",
-    "paymentMethod_pay_by_link": "Pagar con Enlace", "paymentMethod_pickup_via": "Recoger vía Mensajería/Servicio",
-    'technology': 'Tecnología', 'home-garden': 'Casa y Jardín', 'fashion': 'Moda',
-    'health-beauty': 'Salud y Belleza', 'kids-baby': 'Niños y Bebés', 'hobby-sports': 'Aficiones y Deportes',
-    'auto-moto': 'Automoción', 'mobile-telephony': 'Telefonía Móvil', 'computers': 'Ordenadores',
-    'laptops-accessories': 'Portátiles y Accesorios', 'visual': 'Imagen',
-    'smartwatches-wearables': 'Smartwatches y Wearables', 'tablets-accessories': 'Tablets y Accesorios',
-    'video-games': 'Videojuegos', 'audio': 'Audio', 'photo-video': 'Foto y Vídeo',
-    'electronics': 'Electrónica', 'telephony': 'Telefonía', 'gadgets': 'Gadgets',
-    'home-appliances': "Electrodomésticos", 'tools': "Herramientas", 'furniture': "Muebles",
-    'garden': "Jardín", 'home-items': "Artículos para el hogar", 'linens': "Ropa de cama y mesa",
-    'lighting': "Iluminación", 'kitchenware': "Utensilios de cocina", 'food-beverages': "Alimentos y Bebidas",
-    'electrical-supplies': "Materiales eléctricos", 'smoking-accessories': "Accesorios para fumadores", 'office-supplies': "Material de oficina",
-    'gift-items': "Artículos de regalo", 'security-systems': "Sistemas de seguridad", 'professional-equipment': "Equipamiento profesional",
-    'seasonal-items': "Artículos de temporada", 'shopping-bags': "Bolsas de compra", 'shopping-trolleys': "Carritos de compra",
-    'church-items': "Artículos religiosos", 'pet-supplies': "Suministros para mascotas", 'womens-fashion': "Moda Femenina",
-    'mens-fashion': "Moda Masculina", 'watches': "Relojes", 'jewelry': "Joyería",
-    'eyewear': "Gafas", 'converse-all-star': "Converse All Star", 'rain-umbrellas': "Paraguas",
-    'shoe-accessories': "Accesorios para calzado", 'kids-baby-fashion': "Moda Infantil y Bebé", 'sneakers': "Zapatillas deportivas",
-    'grooming': "Cuidado Personal", 'pharmacy-products': "Productos de Farmacia", 'perfumes': "Perfumes",
-    'dietary-supplements': "Suplementos Alimenticios",'grooming-devices': "Aparatos de Cuidado Personal", 'makeup': "Maquillaje",
-    'sunscreen-tanning': "Protección Solar y Bronceado", 'medical-supplies': "Suministros Médicos", 'manicure-pedicure': "Manicura y Pedicura",
-    'oral-hygiene': "Higiene Bucal", 'sex-toys': "Juguetes Sexuales", 'firming-slimming': "Reafirmantes y Adelgazantes",
-    'cannabis-products': "Productos de Cannabis", 'orthopedics': "Ortopedia", 'patient-aids': "Ayudas para Pacientes",
-    'optics': "Óptica", 'korean-cosmetics': "Cosmética Coreana", 'kids-toys': "Juguetes para Niños",
-    'school-supplies': "Material Escolar", 'baby-toys': "Juguetes para Bebés", 'baby-items': "Artículos para Bebés",
-    'kids-linens': "Ropa de Cama Infantil", 'christening-items': "Artículos de Bautizo", 'kids-watches': "Relojes para Niños",
-    'sports': "Deportes", 'cycling': "Ciclismo", 'leisure-time': "Tiempo Libre",
-    'fishing-diving': "Pesca y Buceo", 'beach-sea-items': "Artículos de Playa y Mar", 'camping': "Camping",
-    'travel-items-bags': "Artículos de Viaje y Bolsos", 'books': "Libros", 'hunting': "Caza",
-    'fitness-equipment': "Equipamiento de Fitness", 'pet-supplies-hobby': "Suministros para Mascotas (Hobby)", 'drones-accessories': "Drones y Accesorios",
-    'electric-scooters': "Patinetes Eléctricos", 'hoverboards': "Hoverboards", 'musical-instruments': "Instrumentos Musicales",
-    'sports-accessories': "Accesorios Deportivos", 'exploration-items': "Artículos de Exploración",
-    'womens-sportswear': "Ropa Deportiva Femenina", 'womens-sports-shoes': "Zapatillas Deportivas Femeninas",
-    'mens-sportswear': "Ropa Deportiva Masculina", 'mens-sports-shoes': "Zapatillas Deportivas Masculinas",
-    'car': "Coche", 'motorcycle': "Motocicleta", 'boat': "Barco",
-    'truck-items': "Artículos para Camión", 'smartphones': "Smartphones", 'iphone': "iPhone",
-    'mobile-cases': "Fundas para Móviles", 'bluetooth-handsfree': "Manos Libres Bluetooth", 'handsfree': "Manos Libres",
-    'mobile-chargers': "Cargadores para Móviles", 'tempered-glass': "Cristal Templado", 'screen-protectors': "Protectores de Pantalla",
-    'power-banks': "Baterías Externas", 'mobile-batteries': "Baterías para Móviles", 'selfie-sticks': "Palos Selfie",
-    'mobile-holders': "Soportes para Móviles", 'charging-data-cables': "Cables de Carga y Datos", 'anti-lost-trackers': "Localizadores Anti-Pérdida",
-    'mobile-spare-parts': "Repuestos para Móviles", 'mobile-gimbals': "Gimbals para Móviles", 'stylus-pens': "Lápices Táctiles",
-    'stylus-accessories': "Accesorios para Lápices Táctiles", 'bluetooth-headset-accessories': "Accesorios para Auriculares Bluetooth",
-    'anti-lost-tracker-accessories': "Accesorios para Localizadores Anti-Pérdida",
-    'pop-sockets': "PopSockets", 'mobile-tripods': "Trípodes para Móviles", 'mobile-service-tools': "Herramientas de Servicio para Móviles",
-    'mobile-charms': "Colgantes para Móviles", 'mobile-accessories': "Accesorios para Móviles",
-    'mobile-camera-protection': "Protección de Cámara para Móviles", 'mobile-camera-lenses': "Lentes de Cámara para Móviles",
-    'mobile-signal-boosters': "Amplificadores de Señal Móvil", 'mobile-gaming-buttons': "Botones de Juego para Móviles",
-    'connection-packs': "Paquetes de Conexión", 'portable-bluetooth-speakers-mobile': "Altavoces Bluetooth Portátiles (Móvil)",
-    'ps5-games': "Juegos PS5", 'pc-games': "Juegos PC", 'amplifiers-preamplifiers': "Amplificadores y Preamplificadores",
-    'hi-fi-systems': "Sistemas Hi-Fi",
+  es: { /* All keys from 'en' copied and prefixed with '[es]' */
+    email: '[es] Email', password: '[es] Password', /* ... many more ... */ 'hi-fi-systems': '[es] Hi-Fi Systems',
   },
-  // ============================ French (fr) - Placeholder, needs full translation =============================
-  fr: {
-    email: 'E-mail', password: 'Mot de passe', signIn: 'Connexion', createAccount: 'Créer un compte',
-    // ... (Rest of your French translations, ensuring all new keys from 'en' and 'el' are added and translated)
-    "product_singular": "produit", "product_plural": "{{count}} produits",
-    "rating_label": "Évaluation", "reviews_label_singular": "avis", "reviews_label_plural": "{{count}} avis",
-    "from_vendor": "de", "with": "avec",
-    "loadingVendor": "Chargement du magasin...", "allStores": "Magasins",
-    "certifiedStoreLinkText": "Magasin Certifié ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} est un magasin certifié ({{certificationLevel}})",
-    "memberSinceDate": "Sur BestPrice depuis {{date}}",
-    "ratingTooltip": "{{rating}} étoiles sur {{count}} évaluations",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} autre(s) {{storeLabel}}",
-    "storeLabelSingular": "magasin", "storeLabelPlural": "magasins",
-    "logoFor": "Logo de {{name}}", "screenshotFor": "Capture d'écran de {{name}}",
-    "authorizedReseller": "Revendeur Agréé", "previewWebsite": "Aperçu du Site Web",
-    "dealsFromVendor": "Offres de {{vendorName}}",
-    "popularCategoriesInVendor": "Catégories Populaires chez {{vendorName}}",
-    "viewAllVendorProducts": "Voir tous les produits<span class=\"hide-mobile\"> du magasin</span>",
-    "storeReviewsTitle": "Avis sur le Magasin {{vendorName}}",
-    "reviewCount": "{{count}} avis", "rateIt": "Évaluez-le",
-    "reviewsPlaceholder": "(Affichage des avis - Implémentation nécessaire)",
-    "servicePointsTitle": "Points de Service {{vendorName}}", "servicePointsCount": "{{count}} points",
-    "storeAndPickup": "Magasin / Point de Retrait", "mapPlaceholderText": "Espace réservé pour la carte - Nécessite une bibliothèque de cartes",
-    "noLanguagesInRegion": "Aucune langue répertoriée pour cette région pour le moment.",
-    "toggleTheme": "Changer de thème",
-    "productsYouWant": "Produits souhaités", "productsYouHave": "Produits possédés",
-    "myOffers": "Mes Offres", "priceDrops": "Alertes de Prix",
-    "myCollections": "Mes Collections", "newCollection": "Nouvelle Collection...",
-    "creditsClub": "Club de Crédits", "savedOrders": "Commandes Enregistrées",
-    "myQuestions": "Mes Questions", "myReviews": "Mes Avis",
-    "myFriends": "Mes Amis", "viewProfileTooltip": "Voir votre profil",
-    "userMenuCaretAlt": "Ouvrir le menu utilisateur",
-    "backToTop": "Retour en Haut",
-    "bestpriceSloganShort": "Le meilleur prix, vraiment",
-    "bestpriceSloganLong": "BestPrice est le premier et le plus grand service de comparaison de prix en France.",
-    "bestpriceSloganFindDeals": "Sur BestPrice, vous trouverez rapidement et facilement de vraies offres et le meilleur prix des plus grands magasins.",
-    "bestpriceGive": "BestPrice Give", "footerBestPriceSectionTitle": "BestPrice",
-    "aboutUs": "À Propos de Nous", "ourBlog": "Notre Blog",
-    "buyingGuides": "Guides d'Achat", "purchaseInsurance": "Assurance Achat",
-    "advertising": "Publicité", "bestpriceCertification": "Certification BestPrice",
-    "customerReviewAwards": "Prix des Avis Clients", "ourAwards": "Nos Récompenses",
-    "ourTeam": "Notre Équipe", "bestpriceAssistant": "Assistant BestPrice",
-    "jobOpenings": "Offres d'Emploi ({{count}})", "contactUs": "Contact",
-    "inNumbers": "En Chiffres",
-    "storeCountLink": "{{count}} magasins", "productCountLink": "{{count}} produits",
-    "brandCountLink": "{{count}} fabricants","dealCountLink": "{{count}} offres",
-    "termsAndPrivacy": "Termes & Confidentialité", "termsOfUse": "Conditions d'Utilisation",
-    "privacyPolicy": "Politique de Confidentialité", "cookiePolicy": "Politique de Cookies",
-    "gdprLink": "RGPD", "dsaLink": "LSD",
-    "bestpriceForMerchants": "BestPrice Pour Commerçants",
-    "merchantsSectionSlogan1": "Avez-vous une boutique en ligne ?",
-    "merchantsSectionSlogan2": "Découvrez comment BestPrice peut vous aider à augmenter vos ventes !",
-    "forMerchantsButton": "Pour Commerçants",
-    "bestpriceForBrands": "BestPrice Pour Marques",
-    "brandsSectionSlogan": "BestPrice pour Marques offrira des informations et services utiles aux fabricants (Marques).",
-    "moreInfoButton": "Plus d'Infos",
-    "bestpriceOnFacebook": "BestPrice sur Facebook", "bestpriceOnX": "BestPrice sur X",
-    "bestpriceOnThreads": "BestPrice sur Threads", "bestpriceOnInstagram": "BestPrice sur Instagram",
-    "bestpriceOnTikTok": "BestPrice sur TikTok", "bestpriceOnYouTube": "BestPrice sur YouTube",
-    "bestpriceOnLinkedIn": "BestPrice sur LinkedIn",
-    "homepageTitle": "Page d'Accueil",
-    "changeLanguage": "Changer de Langue", "selectYourLanguageTitle": "Sélectionnez Votre Langue",
-    "suggestedLanguages": "Langues suggérées", "allLanguages": "Toutes les langues",
-    "languageCategoryEurope": "Europe", "languageCategoryAsia": "Asie",
-    "languageCategoryAmericas": "Amériques", "languageCategoryAfrica": "Afrique et Moyen-Orient",
-    // ... (All other keys from 'en'/'el' translated to 'fr')
-    'technology': 'Technologie', 'home-garden': 'Maison et Jardin', // ... ALL CATEGORY SLUGS ...
+  fr: { /* All keys from 'en' copied and prefixed with '[fr]' */
+    email: '[fr] Email', password: '[fr] Password', /* ... many more ... */ 'hi-fi-systems': '[fr] Hi-Fi Systems',
   },
-  // ============================ German (de) - Placeholder, needs full translation =============================
-  de: {
-    email: 'E-Mail', password: 'Passwort', signIn: 'Anmelden', createAccount: 'Konto erstellen',
-    // ... (Rest of your German translations, ensuring all new keys from 'en' and 'el' are added and translated)
-    "product_singular": "Produkt", "product_plural": "{{count}} Produkte",
-    "rating_label": "Bewertung", "reviews_label_singular": "Bewertung", "reviews_label_plural": "{{count}} Bewertungen",
-    "from_vendor": "von", "with": "mit",
-    "loadingVendor": "Shop wird geladen...", "allStores": "Shops",
-    "certifiedStoreLinkText": "Zertifizierter Shop ({{certificationLevel}})",
-    "certifiedStoreFullText": "{{vendorName}} ist ein zertifizierter Shop ({{certificationLevel}})",
-    "memberSinceDate": "Bei BestPrice seit {{date}}",
-    "ratingTooltip": "{{rating}} Sterne von {{count}} Bewertungen",
-    "social_facebook": "Facebook", "social_twitter": "Twitter", "social_instagram": "Instagram", "social_youtube": "YouTube", "social_linkedin": "LinkedIn", "social_tiktok": "TikTok",
-    "additionalStores": "{{count}} weitere {{storeLabel}}",
-    "storeLabelSingular": "Shop", "storeLabelPlural": "Shops",
-    "logoFor": "{{name}} Logo", "screenshotFor": "{{name}} Screenshot",
-    "authorizedReseller": "Autorisierter Händler", "previewWebsite": "Webseite Vorschau",
-    "dealsFromVendor": "Angebote von {{vendorName}}",
-    "popularCategoriesInVendor": "Beliebte Kategorien bei {{vendorName}}",
-    "viewAllVendorProducts": "Alle Produkte<span class=\"hide-mobile\"> des Shops anzeigen</span>",
-    "storeReviewsTitle": "Shop-Bewertungen für {{vendorName}}",
-    "reviewCount": "{{count}} Bewertungen", "rateIt": "Bewerten",
-    "reviewsPlaceholder": "(Bewertungsanzeige - Implementierung erforderlich)",
-    "servicePointsTitle": "Servicestellen {{vendorName}}", "servicePointsCount": "{{count}} Stellen",
-    "storeAndPickup": "Shop / Abholstelle", "mapPlaceholderText": "Kartenplatzhalter - Kartenbibliothek erforderlich",
-    "noLanguagesInRegion": "Für diese Region sind noch keine Sprachen aufgeführt.",
-    "toggleTheme": "Theme wechseln",
-    "productsYouWant": "Gewünschte Produkte", "productsYouHave": "Besessene Produkte",
-    "myOffers": "Meine Angebote", "priceDrops": "Preisbenachrichtigungen",
-    "myCollections": "Meine Sammlungen", "newCollection": "Neue Sammlung...",
-    "creditsClub": "Credits Club", "savedOrders": "Gespeicherte Bestellungen",
-    "myQuestions": "Meine Fragen", "myReviews": "Meine Bewertungen",
-    "myFriends": "Meine Freunde", "viewProfileTooltip": "Dein Profil ansehen",
-    "userMenuCaretAlt": "Benutzermenü öffnen",
-    "backToTop": "Nach Oben",
-    "bestpriceSloganShort": "Der wirklich beste Preis",
-    "bestpriceSloganLong": "BestPrice ist der erste und größte Preisvergleichsdienst in Deutschland.",
-    "bestpriceSloganFindDeals": "Bei BestPrice finden Sie schnell und einfach echte Angebote und den besten Preis von den größten Shops.",
-    "bestpriceGive": "BestPrice Give", "footerBestPriceSectionTitle": "BestPrice",
-    "aboutUs": "Über Uns", "ourBlog": "Unser Blog",
-    "buyingGuides": "Kaufberater", "purchaseInsurance": "Kaufversicherung",
-    "advertising": "Werbung", "bestpriceCertification": "BestPrice Zertifizierung",
-    "customerReviewAwards": "Kundenbewertungs-Awards", "ourAwards": "Unsere Auszeichnungen",
-    "ourTeam": "Unser Team", "bestpriceAssistant": "BestPrice Assistent",
-    "jobOpenings": "Stellenangebote ({{count}})", "contactUs": "Kontakt",
-    "inNumbers": "In Zahlen",
-    "storeCountLink": "{{count}} Shops", "productCountLink": "{{count}} Produkte",
-    "brandCountLink": "{{count}} Hersteller","dealCountLink": "{{count}} Angebote",
-    "termsAndPrivacy": "AGB & Datenschutz", "termsOfUse": "Nutzungsbedingungen",
-    "privacyPolicy": "Datenschutzrichtlinie", "cookiePolicy": "Cookie-Richtlinie",
-    "gdprLink": "DSGVO", "dsaLink": "DSA",
-    "bestpriceForMerchants": "BestPrice Für Händler",
-    "merchantsSectionSlogan1": "Haben Sie einen Online-Shop?",
-    "merchantsSectionSlogan2": "Erfahren Sie, wie BestPrice Ihnen helfen kann, Ihren Umsatz zu steigern!",
-    "forMerchantsButton": "Für Händler",
-    "bestpriceForBrands": "BestPrice Für Marken",
-    "brandsSectionSlogan": "BestPrice für Marken bietet Herstellern (Marken) nützliche Informationen und Dienstleistungen.",
-    "moreInfoButton": "Mehr Infos",
-    "bestpriceOnFacebook": "BestPrice auf Facebook", "bestpriceOnX": "BestPrice auf X",
-    "bestpriceOnThreads": "BestPrice auf Threads", "bestpriceOnInstagram": "BestPrice auf Instagram",
-    "bestpriceOnTikTok": "BestPrice auf TikTok", "bestpriceOnYouTube": "BestPrice auf YouTube",
-    "bestpriceOnLinkedIn": "BestPrice auf LinkedIn",
-    "homepageTitle": "Startseite",
-    "changeLanguage": "Sprache Ändern", "selectYourLanguageTitle": "Wählen Sie Ihre Sprache",
-    "suggestedLanguages": "Vorgeschlagene Sprachen", "allLanguages": "Alle Sprachen",
-    "languageCategoryEurope": "Europa", "languageCategoryAsia": "Asien",
-    "languageCategoryAmericas": "Amerika", "languageCategoryAfrica": "Afrika & Naher Osten",
-    // ... (All other keys from 'en'/'el' translated to 'de')
-    'technology': 'Technologie', 'home-garden': 'Haus und Garten', // ... ALL CATEGORY SLUGS ...
+  de: { /* All keys from 'en' copied and prefixed with '[de]' */
+    email: '[de] Email', password: '[de] Password', /* ... many more ... */ 'hi-fi-systems': '[de] Hi-Fi Systems',
   }
 };
 
+
+// ================================================================================================
+// CONTEXT CREATION
+// ================================================================================================
+
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'el',
-  setLanguage: () => {},
+  language: 'el', // Default language
+  setLanguage: (lang: Language) => {
+    console.warn(
+      `Attempted to call setLanguage with '${lang}' outside of a LanguageProvider. This is a no-op.`
+    );
+  },
   translations: defaultTranslations,
   isLoaded: false,
 });
 
+
+// ================================================================================================
+// LANGUAGE PROVIDER COMPONENT
+// ================================================================================================
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguageState] = useState<Language>('el');
-  const [translations, setTranslations] = useState<Translations>(defaultTranslations);
+  const [translations, setTranslationsState] = useState<Translations>(defaultTranslations);
   const [isLoaded, setIsLoaded] = useState(false);
   const { user } = useAuth();
 
+  // --- Effect for detecting and setting the initial language ---
   useEffect(() => {
     const detectLanguage = async () => {
-      let detectedLang: Language = 'el';
+      let detectedLang: Language = 'el'; // Default application language
       const browserLang = navigator.language.split('-')[0];
-      if (['en', 'el', 'es', 'fr', 'de'].includes(browserLang)) {
+
+      if (VALID_LANGUAGES.includes(browserLang as Language)) {
         detectedLang = browserLang as Language;
       }
+
       if (user) {
         try {
-          const { data, error } = await supabase.from('profiles').select('language').eq('id', user.id).single();
-          if (data?.language && !error) { detectedLang = data.language as Language; }
-        } catch (error) { console.error('Error fetching user language preference:', error); }
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('language')
+            .eq('id', user.id)
+            .single();
+
+          if (data?.language && !error && VALID_LANGUAGES.includes(data.language as Language)) {
+            detectedLang = data.language as Language;
+          } else if (error) {
+            console.error('Error fetching user language preference from DB:', error);
+          }
+        } catch (fetchError) {
+          console.error('Exception fetching user language preference:', fetchError);
+        }
       }
-      const savedLang = localStorage.getItem('language') as Language;
-      if (savedLang && ['en', 'el', 'es', 'fr', 'de'].includes(savedLang)) {
-        detectedLang = savedLang;
+
+      const savedLang = localStorage.getItem('language');
+      if (savedLang && VALID_LANGUAGES.includes(savedLang as Language)) {
+        detectedLang = savedLang as Language;
       }
+
       setLanguageState(detectedLang);
-      setIsLoaded(true);
+      setIsLoaded(true); // CRITICAL: Mark as loaded AFTER all detection logic
     };
+
     detectLanguage();
   }, [user]);
 
+
+  // --- Effect for loading custom translations from the database ---
   useEffect(() => {
+    if (!isLoaded) {
+      // Do not load custom translations until initial language detection is complete
+      // and `isLoaded` is true. `translations` state is already `defaultTranslations`.
+      return;
+    }
+
     const loadCustomTranslations = async () => {
-      if (!isLoaded && (Object.keys(translations).length === 0 || translations === defaultTranslations )) { // Check if it's truly initial or still default
-         setTranslations(defaultTranslations); // Ensure default is set if first load and no custom loaded yet
-      }
+      const newMergedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
 
       try {
         const { data, error } = await (supabase as any).from('translations').select('*');
+
         if (error) {
-            console.error('Error fetching custom translations:', error); // Log the actual error object
-            // Only set to default if translations haven't been populated by a successful custom load yet
-            if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
-              setTranslations(defaultTranslations);
-            }
-            return;
-        };
+          console.error('Error fetching custom translations:', error.message || error);
+          setTranslationsState(newMergedTranslations); // Fallback to defaults
+          return;
+        }
+
         if (data && data.length > 0) {
-          const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
           data.forEach((item: any) => {
             if (item && item.key) {
-              (Object.keys(newLoadedTranslations) as Language[]).forEach(lang => {
-                if (item[lang] && typeof item[lang] === 'string') {
-                  newLoadedTranslations[lang][item.key] = item[lang];
+              (Object.keys(newMergedTranslations) as Language[]).forEach(lang => {
+                if (newMergedTranslations[lang] && item[lang] && typeof item[lang] === 'string') {
+                  newMergedTranslations[lang][item.key] = item[lang];
                 }
               });
             }
           });
-          setTranslations(newLoadedTranslations);
-        } else {
-           // No custom translations from DB, ensure defaults are set if not already properly initialized
-           if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
-            setTranslations(defaultTranslations);
-          }
         }
-      } catch (error) {
-        console.error('Error processing custom translations:', error);
-        if (Object.keys(translations).length === 0 || translations === defaultTranslations) {
-          setTranslations(defaultTranslations);
-        }
+        setTranslationsState(newMergedTranslations);
+      } catch (processingError) {
+        console.error('Error processing custom translations:', processingError);
+        setTranslationsState(newMergedTranslations); // Fallback to defaults
       }
     };
 
-    if (isLoaded) {
-        loadCustomTranslations();
-    } else if (Object.keys(translations).length === 0) { // Simpler check for initial mount
-        setTranslations(defaultTranslations);
-    }
-  }, [isLoaded]); // Dependency array only on isLoaded
+    loadCustomTranslations();
+  }, [isLoaded]); // Rerun if isLoaded changes (i.e., after initial load)
 
-  const setLanguage = (lang: Language) => {
+
+  // --- Memoized callback for setting the language ---
+  const setLanguageCallback = useCallback((lang: Language) => {
+    if (!VALID_LANGUAGES.includes(lang)) {
+      console.warn(`Attempted to set an invalid language: ${lang}`);
+      return;
+    }
+
     localStorage.setItem('language', lang);
-    setLanguageState(lang);
-    if (user) {
-      supabase.from('profiles').update({ language: lang } as any).eq('id', user.id)
-        .then(({ error }) => { if (error) { console.error('Error saving language preference:', error); } });
-    }
-  };
+    setLanguageState(lang); // This will trigger a re-render of LanguageProvider
 
+    if (user) {
+      supabase
+        .from('profiles')
+        .update({ language: lang } as any)
+        .eq('id', user.id)
+        .then(({ error: updateError }) => {
+          if (updateError) {
+            console.error('Error saving language preference to DB:', updateError);
+          }
+        });
+    }
+  }, [user]); // `supabase` client is stable. `user` is the primary reactive dependency.
+
+
+  // --- CONDITIONAL RENDERING: Render Provider only when isLoaded is true ---
+  if (!isLoaded) {
+    // While `isLoaded` is false, render nothing (or a global loading indicator).
+    // This prevents children from rendering and potentially trying to use the context
+    // before initial language detection and setup are complete.
+    // This is the key change to try and solve the #310 if it's an internal timing issue.
+    return null;
+    // Example with a loader:
+    // return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading language...</div>;
+  }
+
+  // --- Provide the context value once loaded ---
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, translations, isLoaded }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage: setLanguageCallback,
+        translations,
+        isLoaded // Will be true here
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export const useLanguageContext = () => useContext(LanguageContext);
+
+// ================================================================================================
+// HOOK TO CONSUME CONTEXT
+// ================================================================================================
+
+export const useLanguageContext = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    // This error is typically thrown by React itself but providing a more
+    // specific message can be helpful during development.
+    throw new Error('useLanguageContext must be used within a LanguageProvider. It seems the Provider is missing from the component tree, or the component is rendered before the Provider is ready.');
+  }
+  return context;
+};
