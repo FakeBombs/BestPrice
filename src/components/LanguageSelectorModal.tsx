@@ -249,12 +249,8 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                 className="close-button__wrapper pressable popup-close absolute top-3 right-3 p-1 cursor-pointer" // Tailwind for positioning and basic styling
                 aria-label={t('close', 'Close')}
             >
-                {/* close-button */}
                 <div className="close-button">
-                    {/* Replace with your SVG logic if using xlink:href, or use a simple X */}
-                    <svg className="icon h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <svg class="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
                 </div>
             </div>
 
