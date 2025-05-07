@@ -234,7 +234,6 @@ const elTranslations = {
   "paymentMethod_pickup_via": "Παραλαβή μέσω Courier/Υπηρεσίας",
 
   // ========================= Category Slugs =========================
-  // --- Main Categories ---
   'technology': 'Τεχνολογία',
   'home-garden': 'Σπίτι & Κήπος',
   'fashion': 'Μόδα',
@@ -242,7 +241,6 @@ const elTranslations = {
   'kids-baby': 'Παιδικά - Βρεφικά',
   'hobby-sports': 'Hobby, Αθλητισμός',
   'auto-moto': 'Μηχανοκίνηση',
-  // --- Subcategories of Τεχνολογία ---
   'mobile-telephony': 'Κινητή Τηλεφωνία',
   'computers': 'Υπολογιστές',
   'laptops-accessories': 'Laptops, Αξεσουάρ',
@@ -255,7 +253,6 @@ const elTranslations = {
   'electronics': 'Ηλεκτρονικά',
   'telephony': 'Τηλεφωνία',
   'gadgets': 'Gadgets',
-  // --- Subcategories of Σπίτι & Κήπος ---
   'home-appliances': 'Οικιακές Συσκευές',
   'tools': 'Εργαλεία',
   'furniture': 'Έπιπλα',
@@ -276,18 +273,16 @@ const elTranslations = {
   'shopping-trolleys': 'Καρότσια Λαϊκής',
   'church-items': 'Εκκλησιαστικά Είδη',
   'pet-supplies': 'Είδη Κατοικιδίων',
-  // --- Subcategories of Μόδα ---
   'womens-fashion': 'Γυναικεία Μόδα',
   'mens-fashion': 'Ανδρική Μόδα',
   'watches': 'Ρολόγια',
   'jewelry': 'Κοσμήματα',
-  'eyewear': 'Οπτικά', // Note: Duplicate key 'optics' also exists under Health&Beauty, check which one is correct for your data
+  'eyewear': 'Οπτικά',
   'converse-all-star': 'Converse All Star',
   'rain-umbrellas': 'Ομπρέλες Βροχής',
   'shoe-accessories': 'Αξεσουάρ Παπουτσιών',
   'kids-baby-fashion': 'Παιδική, Βρεφική Μόδα',
   'sneakers': 'Sneakers: Τα πιο trendy παπούτσια για κάθε στυλ και περίσταση!',
-  // --- Subcategories of Υγεία & Ομορφιά ---
   'grooming': 'Περιποίηση',
   'pharmacy-products': 'Είδη Φαρμακείου',
   'perfumes': 'Αρώματα',
@@ -303,10 +298,9 @@ const elTranslations = {
   'cannabis-products': 'Προϊόντα Κάνναβης',
   'orthopedics': 'Ορθοπεδικά',
   'patient-aids': 'Βοηθήματα Ασθενών',
-  'optics': 'Οπτικά (Υγεία & Ομορφιά)', // Differentiated key name from fashion's 'eyewear'
+  'optics': 'Οπτικά (Υγεία & Ομορφιά)',
   'korean-cosmetics': 'Κορεάτικα Καλλυντικά',
-  // --- Subcategories of Παιδικά - Βρεφικά ---
-  'kids-baby-fashion-main': 'Παιδική, Βρεφική Μόδα (Παιδικά)', // Differentiated slug used in mockData
+  'kids-baby-fashion-main': 'Παιδική, Βρεφική Μόδα (Παιδικά)',
   'kids-toys': 'Παιδικά Παιχνίδια',
   'school-supplies': 'Σχολικά Είδη',
   'baby-toys': 'Βρεφικά Παιχνίδια',
@@ -314,7 +308,6 @@ const elTranslations = {
   'kids-linens': 'Παιδικά Λευκά Είδη',
   'christening-items': 'Βαπτιστικά',
   'kids-watches': 'Παιδικά Ρολόγια',
-  // --- Subcategories of Hobby, Αθλητισμός ---
   'sports': 'Αθλήματα',
   'cycling': 'Ποδηλασία',
   'leisure-time': 'Ελεύθερος Χρόνος',
@@ -336,12 +329,10 @@ const elTranslations = {
   'womens-sports-shoes': 'Γυναικεία Αθλητικά Παπούτσια',
   'mens-sportswear': 'Ανδρικά Αθλητικά Ρούχα',
   'mens-sports-shoes': 'Ανδρικά Αθλητικά Παπούτσια',
-  // --- Subcategories of Μηχανοκίνηση ---
   'car': 'Αυτοκίνητο',
   'motorcycle': 'Μοτοσυκλέτα',
   'boat': 'Σκάφος',
   'truck-items': 'Είδη Φορτηγού',
-  // --- Subcategories of Κινητή Τηλεφωνία ---
   'smartphones': 'Κινητά',
   'iphone': 'iPhone',
   'mobile-cases': 'Θήκες Κινητών',
@@ -373,7 +364,6 @@ const elTranslations = {
   'mobile-gaming-buttons': 'Πλήκτρα Mobile Gaming',
   'connection-packs': 'Πακέτα Σύνδεσης',
   'portable-bluetooth-speakers-mobile': 'Φορητά Ηχεία Bluetooth (Κινητή)',
-  // --- Subcategories of Υπολογιστές ---
   'peripherals-consumables': 'Περιφερειακά, Αναλώσιμα',
   'hardware': 'Hardware',
   'networking': 'Δικτυακά',
@@ -381,7 +371,6 @@ const elTranslations = {
   'pc-monitors-accessories': 'Οθόνες PC, Αξεσουάρ',
   'software': 'Software',
   'warranty-extensions': 'Επεκτάσεις Εγγύησης',
-  // --- Subcategories of Laptops, Αξεσουάρ ---
   'laptops': 'Laptops',
   'macbook': 'MacBook',
   'laptop-bags': 'Τσάντες Laptop',
@@ -394,7 +383,6 @@ const elTranslations = {
   'laptop-spare-parts': 'Ανταλλακτικά Laptop',
   'pcmcia-cards': 'Κάρτες PCMCIA',
   'various-laptop-items': 'Διάφορα Είδη Laptop',
-  // --- Subcategories of Εικόνα ---
   'tv-accessories': 'Τηλεοράσεις, Αξεσουάρ',
   'hdmi-cables': 'Καλώδια HDMI',
   'satellite-cable-dvbt': 'Δορυφορική, Cable & DVB-T',
@@ -405,7 +393,6 @@ const elTranslations = {
   'portable-dvd-players': 'Φορητά DVD Player',
   'dvd-bluray-players-recorders': 'DVD, Blu-Ray Players & Recorders',
   'displayport-cables': 'Καλώδια DisplayPort',
-  // --- Subcategories of Smartwatches, Wearables ---
   'smartwatches': 'Smartwatches',
   'smartwatch-straps': 'Λουράκια Smartwatch',
   'smartwatch-chargers': 'Φορτιστές Smartwatch',
@@ -413,7 +400,6 @@ const elTranslations = {
   'smartwatch-cases': 'Θήκες Smartwatch',
   'heart-rate-belts': 'Ζώνες Καρδιακών Παλμών',
   'wearable-accessories': 'Αξεσουάρ Wearables',
-  // --- Subcategories of Tablets, Αξεσουάρ ---
   'tablets': 'Tablets',
   'ipad': 'iPad',
   'tablet-cases': 'Θήκες Tablet',
@@ -423,7 +409,6 @@ const elTranslations = {
   'tablet-spare-parts': 'Ανταλλακτικά Tablet',
   'various-tablet-accessories': 'Διάφορα Αξεσουάρ Tablet',
   'stylus-pens-tablets': 'Γραφίδες Αφής (Tablets)',
-  // --- Subcategories of Video Games ---
   'consoles': 'Κονσόλες',
   'electronic-games': 'Ηλεκτρονικά Παιχνίδια',
   'gaming-controllers': 'Gaming Controllers',
@@ -439,7 +424,6 @@ const elTranslations = {
   'graphics-cards-gaming': 'Κάρτες Γραφικών (Gaming)',
   'gaming-mice': 'Gaming Ποντίκια',
   'gaming-keyboards': 'Gaming Πληκτρολόγια',
-  // --- Subcategories of Ήχος ---
   'home-audio': 'Home Audio',
   'professional-sound': 'Επαγγελματικός Ήχος',
   'headphones-accessories': 'Ακουστικά, Αξεσουάρ',
@@ -450,22 +434,18 @@ const elTranslations = {
   'mp3-mp4-players-accessories': 'MP3, MP4 Players & Αξεσουάρ',
   'installation-speakers': 'Ηχεία Εγκαταστάσεων',
   'powered-speakers': 'Αυτοενισχυόμενα Ηχεία',
-  // --- Subcategories of Φωτογραφία, Video ---
   'cameras-accessories': 'Φωτογραφικές Μηχανές, Αξεσουάρ',
   'action-cameras-accessories': 'Action Cameras, Αξεσουάρ',
   'camcorders-accessories': 'Βιντεοκάμερες, Αξεσουάρ',
   'studio-equipment': 'Εξοπλισμός Studio',
   'digital-photo-frames': 'Ψηφιακές Κορνίζες',
-  // --- Subcategories of Ηλεκτρονικά ---
   'batteries-chargers': 'Μπαταρίες & Φορτιστές Μπαταριών',
   'microelectronics': 'Μικροηλεκτρονικά',
   'electronic-components': 'Ηλεκτρονικά Εξαρτήματα',
   'electronic-device-accessories': 'Αξεσουάρ Ηλεκτρονικών Συσκευών',
-  // --- Subcategories of Τηλεφωνία ---
   'landline-telephony': 'Σταθερή Τηλεφωνία',
   'voip': 'VoIP',
   'walkie-talkies-accessories': 'Ασύρματοι, Αξεσουάρ',
-  // --- Subcategories of Θήκες Κινητών ---
   'mobile-cases-samsung': 'Θήκες Κινητών Samsung',
   'mobile-cases-xiaomi': 'Θήκες Κινητών Xiaomi',
   'iphone-cases': 'Θήκες iPhone',
@@ -481,14 +461,12 @@ const elTranslations = {
   'mobile-running-armbands': 'Θήκες Κινητών για Τρέξιμο',
   'patterned-mobile-cases': 'Θήκες Κινητών με Σχέδια',
   'waterproof-mobile-cases': 'Αδιάβροχες Θήκες Κινητών',
-  // --- Subcategories of Καλώδια Φόρτισης, Μεταφοράς Δεδομένων ---
   'usb-type-c-cables': 'Καλώδια USB Type-C',
   'lightning-cables': 'Καλώδια Lightning',
   'micro-usb-cables': 'Καλώδια micro USB',
   'multi-port-cables': 'Καλώδια Multi Port',
   '30-pin-cables': 'Καλώδια 30-Pin',
   'mobile-adapters-extensions': 'Αντάπτορες, Προεκτάσεις Κινητών',
-  // --- Subcategories of Ανταλλακτικά Κινητών ---
   'mobile-screens': 'Οθόνες Κινητών',
   'mobile-vibration-motors': 'Μηχανισμοί Δόνησης Κινητών',
   'mobile-touch-mechanisms': 'Μηχανισμοί Αφής Κινητών',
@@ -507,7 +485,6 @@ const elTranslations = {
   'sd-sim-trays': 'SD/SIM Trays',
   'mobile-keypad-boards': 'Πλακέτες Πληκτρολογίου, Πληκτρολόγια',
   'various-mobile-parts': 'Διάφορα Ανταλλακτικά Κινητών',
-  // --- Subcategories of Περιφερειακά, Αναλώσιμα ---
   'printers-accessories': 'Εκτυπωτές & Αξεσουάρ',
   'input-devices': 'Συσκευές Εισόδου',
   'multimedia': 'Multimedia',
@@ -528,7 +505,6 @@ const elTranslations = {
   'serial-ps2-cables': 'Καλώδια Σειριακά, PS/2',
   'firewire-cables': 'Καλώδια FireWire',
   'hdmi-cables-pc': 'Καλώδια HDMI (PC)',
-  // --- Subcategories of Hardware ---
   'graphics-cards': 'Κάρτες Γραφικών',
   'motherboards': 'Μητρικές Κάρτες',
   'cpu': 'CPU',
@@ -546,7 +522,6 @@ const elTranslations = {
   'floppy-tape-drives': 'Floppy, Tape Drives',
   'hardware-cables': 'Καλώδια Hardware',
   'various-pc-items': 'Διάφορα Είδη Υπολογιστών',
-  // --- Subcategories of Δικτυακά ---
   'wifi-extenders': 'WiFi Extenders',
   'routers': 'Routers',
   'access-points': 'Access Points',
@@ -568,7 +543,6 @@ const elTranslations = {
   'network-jack-covers': 'Κάλυμμα για Βύσμα Δικτύου',
   'rj45-connectors': 'RJ45 Connectors',
   'various-networking-items': 'Διάφορα Δικτυακά',
-  // --- Subcategories of Desktops & Servers ---
   'desktop-pc': 'Desktop PC',
   'all-in-one-pc': 'All in One PC',
   'mini-pc': 'Mini PC',
@@ -576,18 +550,15 @@ const elTranslations = {
   'server-accessories': 'Αξεσουάρ Server',
   'desktop-stands': 'Βάσεις Desktop',
   'barebones': 'Barebones',
-  // --- Subcategories of Οθόνες PC, Αξεσουάρ ---
   'pc-monitors': 'Οθόνες Υπολογιστών',
   'monitor-accessories': 'Αξεσουάρ Οθονών',
   'public-displays': 'Public Displays',
-  // --- Subcategories of Software ---
   'antivirus-security': 'Antivirus, Security',
   'office-applications': 'Εφαρμογές Γραφείου',
   'operating-systems': 'Λειτουργικά Συστήματα',
   'software-applications': 'Εφαρμογές Software',
   'image-audio-editing': 'Επεξεργασία Εικόνας - Ήχου',
   'business-management': 'Εμπορική Διαχείριση',
-  // --- Subcategories of Ανταλλακτικά Laptop ---
   'laptop-screens': 'Οθόνες Laptop',
   'laptop-keyboards': 'Πληκτρολόγια Laptop',
   'laptop-flex-cables': 'Καλωδιοταινίες Laptop',
@@ -597,7 +568,6 @@ const elTranslations = {
   'laptop-hinges': 'Μεντεσέδες Laptop',
   'laptop-lcd-inverters': 'LCD Inverters Laptop',
   'various-laptop-parts': 'Διάφορα Ανταλλακτικά Laptop',
-  // --- Subcategories of Τηλεοράσεις, Αξεσουάρ ---
   'tvs': 'Τηλεοράσεις',
   'tv-mounts': 'Βάσεις Τηλεοράσεων',
   'tv-remotes': 'Τηλεχειριστήρια Τηλεόρασης',
@@ -605,7 +575,6 @@ const elTranslations = {
   'cables-adapters-tv': 'Καλώδια, Αντάπτορες (TV)',
   '3d-glasses': 'Γυαλιά 3D',
   'various-tv-items': 'Διάφορα Είδη Τηλεοράσεως',
-  // --- Subcategories of Δορυφορική, Cable & DVB-T ---
   'mpeg4-receivers': 'Ψηφιακοί Δέκτες Mpeg-4',
   'satellite-decoders': 'Δορυφορικοί Αποκωδικοποιητές',
   'terrestrial-antennas': 'Επίγειες Κεραίες',
@@ -617,19 +586,15 @@ const elTranslations = {
   'diseqc': 'Diseqc',
   'mixers-multiswitches-splitters': 'Μίκτες, Πολυδιακόπτες, Διακλαδωτές',
   'reception-system-accessories': 'Αξεσουάρ Συστημάτων Λήψης',
-  // --- Subcategories of Projectors, Αξεσουάρ ---
   'projectors': 'Projectors',
   'projection-screens': 'Οθόνες Προβολής',
   'projector-lamps': 'Λάμπες Projector',
   'projector-mounts': 'Βάσεις Projector',
   'projector-accessories': 'Αξεσουάρ Projectors',
-  // --- Subcategories of Ηλεκτρονικά Παιχνίδια ---
-  'ps5-games': 'PS5 Games',
   'ps4-games': 'PS4 Games',
   'ps3-games': 'PS3 Games',
   'playstation-2-games': 'Playstation 2 Games',
   'xbox-series-games': 'Xbox Series Games',
-  'pc-games': 'PC Games',
   'xbox-one-games': 'Xbox One Games',
   'nintendo-switch-games': 'Nintendo Switch Games',
   'used-games': 'Μεταχειρισμένα Παιχνίδια',
@@ -643,19 +608,15 @@ const elTranslations = {
   'gamecube-games': 'GameCube Games',
   'gameboy-games': 'GameBoy Games',
   'collectible-video-games': 'Συλλεκτικά Video Games',
-  // --- Subcategories of Home Audio ---
-  'amplifiers-preamplifiers': 'Ενισχυτές, Προενισχυτές',
-  'hi-fi-systems': 'Συστήματα Hi-Fi',
   'portable-bluetooth-speakers': 'Φορητά Ηχεία Bluetooth',
   'hi-fi-speakers': 'Ηχεία Hi-Fi',
-  'subwoofers': 'Subwoofer', // Using generic slug
+  'subwoofers': 'Subwoofer',
   'radios-receivers': 'Ραδιόφωνα, Δέκτες',
   'cd-players-recorders': 'CD Players, Recorders',
   'hi-fi-accessories': 'Παρελκόμενα Hi-Fi',
   'docking-stations': 'Docking Stations',
-  'soundbars': 'Soundbar', // Using generic slug
+  'soundbars': 'Soundbar',
   'computer-speakers': 'Ηχεία Υπολογιστή',
-  // --- Subcategories of Επαγγελματικός Ήχος ---
   'pa-speakers': 'Ηχεία PA',
   'pro-microphones-accessories': 'Επαγγελματικά Μικρόφωνα, Αξεσουάρ',
   'pro-lighting': 'Επαγγελματικός Φωτισμός',
@@ -679,29 +640,24 @@ const elTranslations = {
   'audio-adapters-extensions-pro': 'Αντάπτορες, Προεκτάσεις Ήχου',
   'various-pro-audio': 'Διάφορα Επαγγελματικού Ήχου',
   'installation-speakers-pro': 'Ηχεία Εγκαταστάσεων (Επαγγελματικός Ήχος)',
-  // --- Subcategories of Επαγγελματικά Μικρόφωνα, Αξεσουάρ ---
   'pro-microphones': 'Επαγγελματικά Μικρόφωνα',
   'microphone-receivers': 'Δέκτες (Μικροφώνων)',
   'microphone-capsules': 'Κάψες (Μικροφώνων)',
   'microphone-accessories-pro': 'Αξεσουάρ Μικροφώνων (Επαγγελματικά)',
-  // --- Subcategories of Επαγγελματικός Φωτισμός ---
   'lighting-effects': 'Φωτορυθμικά',
   'lasers-lighting': 'Laser (Φωτισμός)',
   'laser-heads-lighting': 'Κεφαλές Laser (Φωτισμός)',
   'par-cans': 'Par Cans',
   'mirror-balls': 'Μπάλες από Καθρέπτη',
   'lighting-consoles': 'Κονσόλες Φωτισμού',
-  // --- Subcategories of Εξοπλισμός DJ & Αξεσουάρ ---
   'dj-controllers': 'DJ Controllers',
   'midi-equipment-dj': 'Εξοπλισμός Midi Υπολογιστή (DJ)',
   'dj-cd-mp3-players': 'DJ CD / MP3 Players',
   'dj-accessories': 'DJ Αξεσουάρ',
-  // --- Subcategories of Μηχανήματα Καπνού & Ατμόσφαιρας ---
   'smoke-machines': 'Μηχανές Καπνού',
   'bubble-machines': 'Μηχανές για Φυσαλίδες',
   'snow-machines': 'Μηχανές Χιονιού',
   'fog-atmosphere-accessories': 'Αξεσουάρ Μηχανημάτων Καπνού & Ατμόσφαιρας',
-  // --- Subcategories of Ακουστικά, Αξεσουάρ ---
   'headphones': 'Headphones',
   'earbuds': 'Ακουστικά Ψείρες',
   'headphone-amplifiers': 'Ενισχυτές Ακουστικών',
@@ -710,7 +666,6 @@ const elTranslations = {
   'headphone-accessories-parts': 'Αξεσουάρ, Ανταλλακτικά Ακουστικών',
   'gaming-headsets-audio': 'Gaming Headsets (Ήχος)',
   'computer-headphones-audio': 'Ακουστικά Υπολογιστή (Ήχος)',
-  // --- Subcategories of Συσκευές Πικάπ, Αξεσουάρ ---
   'turntables': 'Πικάπ',
   'slipmats': 'Slipmat',
   'turntable-cartridges': 'Κεφάλες Πικάπ',
@@ -720,17 +675,13 @@ const elTranslations = {
   'turntable-parts': 'Ανταλλακτικά Πικάπ',
   'turntable-record-storage': 'Αποθήκευση, Μεταφορά Δίσκων Πικάπ',
   'turntable-amplifiers': 'Ενισχυτές Πικάπ',
-  // --- Subcategories of Home Cinema ---
   'home-cinema-sets': 'Σετ Home Cinema',
-  // --- Subcategories of Φορητές Συσκευές ---
   'portable-radio-cd': 'Φορητά Ράδιο CD',
   'portable-radios': 'Φορητά Ραδιόφωνα',
   'audio-recorders': 'Δημοσιογραφικά, Καταγραφικά Ήχου',
   'portable-cd-players': 'Φορητά CD Players',
-  // --- Subcategories of MP3, MP4 Players & Αξεσουάρ ---
   'mp3-mp4-players': 'MP3, MP4 Players',
   'mp3-mp4-accessories': 'MP3, MP4 Αξεσουάρ',
-  // --- Subcategories of Φωτογραφικές Μηχανές, Αξεσουάρ ---
   'cameras': 'Φωτογραφικές Μηχανές',
   'ring-lights': 'Ring Lights',
   'camera-bags-cases': 'Τσάντες, Θήκες Φωτογραφικών Μηχανών',
@@ -747,7 +698,6 @@ const elTranslations = {
   'camera-mounts': 'Βάσεις Φωτογραφικών Μηχανών',
   'camera-accessories': 'Αξεσουάρ Φωτογραφικών Μηχανών',
   'lens-accessories': 'Αξεσουάρ Φακών Φωτογραφικών Μηχανών',
-  // --- Subcategories of Action Cameras, Αξεσουάρ ---
   'action-cameras': 'Action Cameras',
   'action-camera-protective-cases': 'Θήκες Προστασίας Action Cameras',
   'action-camera-carrying-cases': 'Θήκες Μεταφοράς Action Cameras',
@@ -760,17 +710,14 @@ const elTranslations = {
   'action-camera-filters': 'Φίλτρα Action Cameras',
   'action-camera-accessories': 'Αξεσουάρ Action Cameras',
   'action-camera-memory-cards': 'Κάρτες Μνήμης (Action Cameras)',
-  // --- Subcategories of Βιντεοκάμερες, Αξεσουάρ ---
   'digital-camcorders': 'Ψηφιακές Βιντεοκάμερες',
   'camcorder-batteries': 'Μπαταρίες Βιντεοκαμερών',
   'lights-flashes-video': 'Προβολείς, Φλας (Video)',
   'camcorder-chargers': 'Φορτιστές Βιντεοκαμερών',
   'various-camcorder-accessories': 'Διάφορα Αξεσουάρ Βιντεοκάμερας',
-  // --- Subcategories of Μπαταρίες & Φορτιστές Μπαταριών ---
   'general-battery-chargers': 'Φορτιστές Μπαταριών (Γενικοί)',
   'general-batteries': 'Μπαταρίες (Γενικές)',
   'various-battery-items': 'Διάφορα Μπαταριών',
-  // --- Subcategories of Μικροηλεκτρονικά ---
   'microprocessors': 'Μικροεπεξεργαστές',
   'electronic-switches': 'Διακόπτες (Ηλεκτρονικοί)',
   'capacitors': 'Πυκνωτές',
@@ -785,32 +732,30 @@ const elTranslations = {
   'resistors': 'Αντιστάσεις',
   'integrated-circuits': 'Ολοκληρωμένα Κυκλώματα',
   'various-microelectronics': 'Διάφορα Μικροηλεκτρονικά',
-  // --- Subcategories of Μικροεπεξεργαστές ---
   'development-boards': 'Πλακέτες Ανάπτυξης',
   'microprocessor-components': 'Εξαρτήματα Μικροεπεξεργαστών',
   'microprocessor-accessories': 'Αξεσουάρ Μικροεπεξεργαστών',
-  // --- Subcategories of Αξεσουάρ Ηλεκτρονικών Συσκευών ---
   'cd-dvd-lens-cleaners': 'CD / DVD Καθαρισμού Φακών',
   'various-electronic-device-items': 'Διάφορα Ηλεκτρονικών Συσκευών',
-  // --- Subcategories of Σταθερή Τηλεφωνία ---
   'cordless-phones': 'Ασύρματα Τηλέφωνα',
   'corded-phones': 'Ενσύρματα Τηλέφωνα',
   'landline-accessories': 'Αξεσουάρ Σταθερής Τηλεφωνίας',
   'landline-peripherals': 'Παρελκόμενα Σταθερής Τηλεφωνίας',
   'pbx-systems': 'Τηλεφωνικά Κέντρα',
   'pbx-accessories': 'Παρελκόμενα Τηλεφωνικών Κέντρων',
-  // --- Subcategories of VoIP ---
   'ip-phones': 'Τηλεφωνικές Συσκευές IP',
   'voip-gateways': 'VoIP Gateways',
   'voip-adapters': 'VoIP Adapters',
   'voip-cards': 'Κάρτες VoIP',
   'voip-accessories': 'Αξεσουάρ VoIP',
-  // --- Subcategories of Ασύρματοι, Αξεσουάρ ---
   'transceivers-walkie-talkies': 'Πομποδέκτες, Walkie-Talkie',
   'walkie-talkie-accessories': 'Αξεσουάρ Ασυρμάτων',
 
 
   // ==================== MainLayout Sitemap Specific =====================
+  // Popular Deals Title (from Deals View)
+  popular_deals_title: 'Δημοφιλείς Προσφορές',
+
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
   sitemap_popular_sony: 'Sony',
@@ -839,6 +784,14 @@ const elTranslations = {
   brand_18_alt: 'Λογότυπο Χαμόγελο του Παιδιού',
   brand_19_alt: 'Λογότυπο Χρωτέχ',
   brand_20_alt: 'Λογότυπο Γιώτης',
+
+   // Deals View Action Links
+   todays_deals_link: 'Σημερινές προσφορές',
+   deals_by_store_link: 'Ανά κατάστημα',
+   deals_by_brand_link: 'Ανά brand',
+
+   // Gifts View Placeholder
+   gifts_sitemap_placeholder: 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.',
 };
 
 export default elTranslations;
