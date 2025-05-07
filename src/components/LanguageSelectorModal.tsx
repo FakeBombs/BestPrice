@@ -233,28 +233,11 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   return (
     // popup-placeholder (You might not need this exact div if your modal system handles positioning differently)
     // For simplicity, we'll start with popup-flex-center for the backdrop
-    <div
-        className="popup-flex-center fixed inset-0" // Added fixed inset-0
-        // style={{ zIndex: 2147483467 }} // Apply z-index via CSS for popup-flex-center
-        onClick={onClose} // Backdrop click
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="language-modal-title"
-    >
-      <div
-        className="popup-backdrop open is-modal" // Your backdrop class
-        // style={{ zIndex: 2147483467, transitionDuration: '150ms' }} // Apply styles via CSS
-        // Tailwind for opacity and transition, if not handled by popup-backdrop:
-        // className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150"
-      ></div>
+    <div className="popup-flex-center fixed inset-0" style={{ zIndex: 2147483467 }} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
+      <div className="popup-backdrop open is-modal" style={{ zIndex: 2147483467, transitionDuration: '150ms' }} className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150"></div>
 
       {/* Main modal container: popup open has-close has-close--inside is-modal */}
-      <div
-        // Combine with Tailwind for sizing and base styling if your CSS doesn't cover everything
-        className="popup open has-close has-close--inside is-modal bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative"
-        // style={{ transitionDuration: '150ms', zIndex: 2147483467 }} // Apply styles via CSS
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483467 }} onClick={(e) => e.stopPropagation()}>
         {/* popup-body: Main content area of the modal */}
         <div className="popup-body flex flex-col h-full relative"> {/* Added relative for close button positioning */}
             {/* close-button__wrapper pressable popup-close */}
@@ -325,7 +308,6 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                         </main>
                     </div>
                 </div>
-                {/* No explicit footer with action button as per Facebook language modal */}
             </div>
         </div>
       </div>
