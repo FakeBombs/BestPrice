@@ -22,13 +22,7 @@ const Gifts: React.FC = () => {
         <div className="gift-finder">
             <div className="sc-jScdur iyzBDo root__wrapper">
                 <div className="sc-dcKlJK cquxZx root">
-                    <img
-                        alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')}
-                        width="200" height="108"
-                        className="sc-guGTOK irbLXu"
-                        src="assets/gift.svg" // Main gift icon path
-                        loading="eager"
-                    />
+                    <img alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')} width="200" height="108" className="sc-guGTOK irbLXu" src="src/pages/assets/gift.svg" loading="eager"/>
                     <h1 className="sc-jPkiSJ jBXYhC">{t('gifts', 'Δώρα')}</h1>
                     <p className="sc-lixPIL cuyAJX">
                         {t('gifts_page_subtitle', 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.')}
@@ -36,19 +30,8 @@ const Gifts: React.FC = () => {
                     <div className="sc-iQQCXo ebbwJS">
                         <div className="sc-gDpztx fknxFk">
                             {giftRecipientCategories.map((cat) => (
-                                <Link
-                                    key={cat.slug}
-                                    to={`/gifts/${cat.slug}`} // Use English slug
-                                    title={t(cat.titleKey, `Gifts for ${cat.nameKey}`)}
-                                    className="sc-kpOvIu kHmeXZ"
-                                >
-                                    <img
-                                        alt={t(cat.nameKey, cat.nameKey)}
-                                        width="90" height="90"
-                                        src={`/dist/images/${cat.slug}.webp`} // Use English slug
-                                        loading="lazy"
-                                        className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"
-                                    />
+                                <Link key={cat.slug} to={`/gifts/${cat.slug}`} title={t(cat.titleKey, `Gifts for ${cat.nameKey}`)} className="sc-kpOvIu kHmeXZ">
+                                    <img alt={t(cat.nameKey, cat.nameKey)} width={90} height={90} src={`/dist/images/${cat.slug}.webp`} loading="lazy" className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"/>
                                     <h2>{t(cat.nameKey, cat.nameKey)}</h2>
                                 </Link>
                             ))}
