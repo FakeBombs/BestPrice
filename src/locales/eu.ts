@@ -1,1 +1,2 @@
-(Basque)
+const euTranslations = {};
+export default euTranslations;
