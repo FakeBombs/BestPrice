@@ -1,11 +1,7 @@
-// src/components/LanguageSelectorModal.tsx
-// USING PROVIDED CLASS NAMES FOR MODAL STRUCTURE, TAILWIND FOR INTERNALS
-
 import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// --- (Keep your LanguageOption type, LANGUAGE_REGIONS_FOR_MODAL, ALL_AVAILABLE_LANGUAGES, VALID_CONTEXT_LANGUAGES, DEFAULT_VARIANT_FOR_CONTEXT_LANG, mapLanguageCode as before) ---
 type LanguageOption = {
   code: string;
   name: string;
@@ -23,7 +19,6 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
 ];
 
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
-  // ... (Your full list as provided previously)
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
   { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryWesternEurope' },
