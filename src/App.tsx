@@ -9,6 +9,8 @@ import SearchResults from "./pages/SearchResults";
 import Categories from "./pages/Categories";
 import Brands from "./pages/Brands";
 import BrandPage from "./pages/BrandPage";
+import Gifts from './pages/Gifts';
+import GiftsFiltered from './pages/GiftsFiltered';
 import Stores from "./pages/Stores";
 import VendorPage from "./pages/VendorPage";
 import Deals from "./pages/Deals";
@@ -37,6 +39,8 @@ function App() {
           <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="brands" element={<Brands />} />
           <Route path="b/:brandId/:brandName" element={<BrandPage />} />
+          <Route path="gifts" element={<Gifts />} />
+          <Route path="gifts/:recipientSlug" element={<GiftsFiltered />} />
           <Route path="m" element={<Stores />} />
           <Route path="m/:vendorId/:vendorName" element={<VendorPage />} />
           <Route path="deals" element={<Deals />} />
