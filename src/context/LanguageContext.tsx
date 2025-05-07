@@ -12,72 +12,74 @@ interface LanguageContextType {
   isLoaded: boolean;
 }
 
-const englishTranslationsMaster: Record<string, string> = {
+const defaultTranslations: Translations = {
+  // ================================= English (en) ===================================
+  en: {
     // Auth
-    email: 'Email', password: 'Password', forgotPassword: 'Forgot Password?', register: 'Register',
-    signIn: 'Sign In', loggingIn: 'Logging in...', emailPlaceholder: 'email@example.com', orContinueWith: 'Or continue with',
-    google: 'Google', facebook: 'Facebook', twitter: 'Twitter', createAccount: 'Create Account',
-    dontHaveAccount: "Don't have an account?", alreadyHaveAccount: 'Already have an account?', fullName: 'Full Name', confirmPassword: 'Confirm Password',
+    email: 'Email',                              password: 'Password',                    forgotPassword: 'Forgot Password?',        register: 'Register',
+    signIn: 'Sign In',                           loggingIn: 'Logging in...',              emailPlaceholder: 'email@example.com',     orContinueWith: 'Or continue with',
+    google: 'Google',                            facebook: 'Facebook',                    twitter: 'Twitter',                        createAccount: 'Create Account',
+    dontHaveAccount: "Don't have an account?",   alreadyHaveAccount: 'Already have an account?', fullName: 'Full Name', confirmPassword: 'Confirm Password',
     agreeToTerms: 'I agree to the Terms of Service and Privacy Policy',
-    creatingAccount: 'Creating Account...', resetYourPassword: 'Reset Your Password',
+    creatingAccount: 'Creating Account...',      resetYourPassword: 'Reset Your Password',
     enterEmailForReset: 'Enter your email address and we will send you a link to reset your password.',
-    sendResetLink: 'Send Reset Link', sendingResetLink: 'Sending...',
+    sendResetLink: 'Send Reset Link',            sendingResetLink: 'Sending...',
     resetPasswordEmailSent: 'Password reset email sent. Please check your inbox.',
-    backToLogin: 'Back to Login', createNewPassword: 'Create New Password',
-    newPassword: 'New Password', updatePassword: 'Update Password',
-    updating: 'Updating...', passwordUpdated: 'Password Updated',
+    backToLogin: 'Back to Login',                createNewPassword: 'Create New Password',
+    newPassword: 'New Password',                 updatePassword: 'Update Password',
+    updating: 'Updating...',                     passwordUpdated: 'Password Updated',
     passwordSuccessfullyChanged: 'Your password has been successfully changed.',
     passwordResetFailed: 'Password Reset Failed',
     errorProcessingRequest: 'There was an error processing your request.',
-    passwordTooShort: 'Password Too Short', passwordMinLength: 'Password must be at least 6 characters.',
+    passwordTooShort: 'Password Too Short',      passwordMinLength: 'Password must be at least 6 characters.',
     passwordsDontMatch: 'Passwords Don\'t Match', pleaseCheckPasswords: 'Please check that both passwords match.',
 
     // General UI & Nav
-    languageSettings: 'Language Settings', selectLanguage: 'Select Language', english: 'English', greek: 'Greek',
-    spanish: 'Spanish', french: 'French', german: 'German', systemLanguage: 'System Language (Default)',
-    save: 'Save', cancel: 'Cancel', loading: 'Loading...', success: 'Success',
-    error: 'Error', wallet: 'Wallet', myWallet: 'My Wallet', manageWallet: 'Manage your funds, transactions, and ad payments',
-    deposit: 'Deposit', transactions: 'Transactions', connectWallet: 'Connect Wallet', addFunds: 'Add Funds',
-    amount: 'Amount ($)', enterAmount: 'Enter amount', paymentMethod: 'Payment Method', processing: 'Processing...',
-    myAccount: 'My Account', profile: 'Profile', favorites: 'Favorites', recentlyViewed: 'Recently Viewed',
-    priceAlerts: 'Price Alerts', settings: 'Settings', logout: 'Logout', myProfile: 'My Profile',
+    languageSettings: 'Language Settings',       selectLanguage: 'Select Language',         english: 'English',          greek: 'Greek',
+    spanish: 'Spanish',                          french: 'French',                         german: 'German',            systemLanguage: 'System Language (Default)',
+    save: 'Save',                                cancel: 'Cancel',                          loading: 'Loading...',       success: 'Success',
+    error: 'Error',                              wallet: 'Wallet',                          myWallet: 'My Wallet',       manageWallet: 'Manage your funds, transactions, and ad payments',
+    deposit: 'Deposit',                          transactions: 'Transactions',              connectWallet: 'Connect Wallet', addFunds: 'Add Funds',
+    amount: 'Amount ($)',                        enterAmount: 'Enter amount',               paymentMethod: 'Payment Method', processing: 'Processing...',
+    myAccount: 'My Account',                     profile: 'Profile',                        favorites: 'Favorites',      recentlyViewed: 'Recently Viewed',
+    priceAlerts: 'Price Alerts',                 settings: 'Settings',                      logout: 'Logout',            myProfile: 'My Profile',
     managePersonalInfo: 'Manage your personal information',
-    name: 'Name', memberSince: 'Member since', role: 'Role', administrator: 'Administrator',
-    regularUser: 'Regular User', editProfile: 'Edit Profile', accountSummary: 'Account Summary', categories: 'Categories',
-    gifts: 'Gifts', deals: 'Deals', clearFilters: 'Clear filters', finalPrice: 'Final price',
-    yes: "Yes", no: "No", ok: "OK", close: "Close",
-    showMore: "Show More", showLess: "Show Less", all: "All", selectOption: "Select an option",
-    optional: "Optional", required: "Required", back: "Back", next: "Next",
-    submit: "Submit", search: "Search", searchPlaceholder: "Search for products...",
-    notFoundPageTitle: "Page Not Found", notFoundMessage: "Oops! The page you are looking for does not exist.",
+    name: 'Name',                                memberSince: 'Member since',               role: 'Role',                administrator: 'Administrator',
+    regularUser: 'Regular User',                 editProfile: 'Edit Profile',               accountSummary: 'Account Summary', categories: 'Categories',
+    gifts: 'Gifts',                              deals: 'Deals',                            clearFilters: 'Clear filters', finalPrice: 'Final price',
+    yes: "Yes",                                  no: "No",                                  ok: "OK",                    close: "Close",
+    showMore: "Show More",                       showLess: "Show Less",                     all: "All",                  selectOption: "Select an option",
+    optional: "Optional",                        required: "Required",                      back: "Back",                next: "Next",
+    submit: "Submit",                            search: "Search",                          searchPlaceholder: "Search for products...",
+    notFoundPageTitle: "Page Not Found",         notFoundMessage: "Oops! The page you are looking for does not exist.",
     recently_viewed_title: "Recently Viewed",
 
     // Categories Page & Filters
-    "product_singular": "product", "product_plural": "{{count}} products",
-    "rating_label": "Rating", "reviews_label_singular": "review", "reviews_label_plural": "{{count}} reviews",
-    "from_vendor": "from", "with": "with",
+    "product_singular": "product",               "product_plural": "{{count}} products",
+    "rating_label": "Rating",                    "reviews_label_singular": "review",        "reviews_label_plural": "{{count}} reviews",
+    "from_vendor": "from",                       "with": "with",
     "no_products_in_category": "There are no products in this category yet.",
-    "filters_title": "Filters", "remove_all_filters_tooltip": "Remove all filters",
-    "show_only_title": "Show only", "deals_label": "Deals",
+    "filters_title": "Filters",                  "remove_all_filters_tooltip": "Remove all filters",
+    "show_only_title": "Show only",              "deals_label": "Deals",
     "deals_title": "Products with significant price drop",
-    "certified_label": "Certified", "certified_stores_title": "Certified Stores",
-    "instock_label": "In Stock", "instock_title": "Only products available in stock",
+    "certified_label": "Certified",              "certified_stores_title": "Certified Stores",
+    "instock_label": "In Stock",                 "instock_title": "Only products available in stock",
     "boxnow_delivery_title": "BOX NOW Delivery",
     "boxnow_tooltip": "Pick up your order from a BOX NOW locker 24/7",
-    "delivery_label": "BOX NOW", "manufacturer_title": "Manufacturer",
+    "delivery_label": "BOX NOW",                 "manufacturer_title": "Manufacturer",
     "show_less_manufacturers": "Show less manufacturers", "show_all_manufacturers": "Show all manufacturers",
     "show_all": "Show All",
     "show_less_options": "Show less options for", "show_all_options": "Show all options for",
-    "remove_instock_filter": "Remove 'In Stock' filter", "remove_deals_filter": "Remove 'Deals' filter",
+    "remove_instock_filter": "Remove 'In Stock' filter",    "remove_deals_filter": "Remove 'Deals' filter",
     "remove_certified_filter": "Remove 'Certified' filter", "remove_nearby_filter": "Remove 'Nearby' filter",
     "remove_boxnow_filter": "Remove 'BOX NOW' filter",
-    "remove_brand_filter": "Remove brand filter", "remove_spec_filter": "Remove spec filter",
-    "reset_all_filters": "Reset all filters", "clear_all_filters": "Clear All",
-    "selected_deals": "Selected Deals", "popular_choices": "Popular Choices",
-    "sort_most_popular": "Most Popular", "sort_newest": "Newest",
-    "sort_cheapest": "Cheapest", "sort_most_expensive": "Most Expensive",
-    "sort_alphabetical": "Alphabetical (A-Z)", "sort_most_reviews": "Most Reviews",
-    "sort_by_manufacturer": "By Manufacturer", "sort_num_stores": "Number of Stores",
+    "remove_brand_filter": "Remove brand filter",           "remove_spec_filter": "Remove spec filter",
+    "reset_all_filters": "Reset all filters",               "clear_all_filters": "Clear All",
+    "selected_deals": "Selected Deals",                     "popular_choices": "Popular Choices",
+    "sort_most_popular": "Most Popular",                    "sort_newest": "Newest",
+    "sort_cheapest": "Cheapest",                            "sort_most_expensive": "Most Expensive",
+    "sort_alphabetical": "Alphabetical (A-Z)",              "sort_most_reviews": "Most Reviews",
+    "sort_by_manufacturer": "By Manufacturer",              "sort_num_stores": "Number of Stores",
     "price_alert_for": "Price Alert for",
     "no_products_found_filters": "No products match your current filters.",
     "suggestions_title": "Suggestions",
@@ -88,9 +90,9 @@ const englishTranslationsMaster: Record<string, string> = {
     "suggestion_return_home": "Return to the homepage:",
     "return_to_homepage": "Return to Homepage",
     "no_subcategories": "No subcategories available.",
-    "popular_categories": "Popular Categories", "top_deals_in": "Top Deals in",
+    "popular_categories": "Popular Categories",             "top_deals_in": "Top Deals in",
     "products_with_significant_price_drop": "Products with a significant price drop",
-    "hottest_in": "Hottest in", "product_reviews_title": "Product Reviews",
+    "hottest_in": "Hottest in",                             "product_reviews_title": "Product Reviews",
     "helpful_reviews_subtitle": "Helpful reviews from our users",
     "popular_manufacturers": "Popular Manufacturers",
     "price_alert_button": "Set Price Alert",
@@ -108,41 +110,42 @@ const englishTranslationsMaster: Record<string, string> = {
     // Product Detail Page
     "loadingProduct": "Loading Product...",
     "addToShoppingList": "Add to Shopping List", "addToComparison": "Add to Comparison",
-    "iWantIt": "I Want It", "iHaveIt": "I Have It",
-    "notifyPriceDrop": "Notify for Price Drop", "addToCollection": "Add to Collection",
-    "priceFrom": "From", "inStores": "in {{count}} stores",
+    "iWantIt": "I Want It",                      "iHaveIt": "I Have It",
+    "notifyPriceDrop": "Notify for Price Drop",  "addToCollection": "Add to Collection",
+    "priceFrom": "From",                         "inStores": "in {{count}} stores",
     "storesCount": "Stores ({{count}})",
-    "available": "Available", "nearMe": "Near Me",
+    "available": "Available",                    "nearMe": "Near Me",
     "deliveryWithService": "Delivery with {{serviceName}}",
-    "coupons": "Coupons", "color": "Color",
-    "officialResellers": "Official Resellers", "priceHistoryTitle": "Price History",
-    "productDetails": "Product Details", "userReviews": "User Reviews ({{count}})",
+    "coupons": "Coupons",                        "color": "Color",
+    "officialResellers": "Official Resellers",   "priceHistoryTitle": "Price History",
+    "productDetails": "Product Details",         "userReviews": "User Reviews ({{count}})",
     "questionsAndAnswers": "Questions & Answers ({{count}})",
-    "similarProducts": "Similar Products", "dealsInCategory": "Deals in {{categoryName}}",
-    "addToCart": "Add to Cart", "buyNow": "Buy Now",
-    "specifications": "Specifications", "reviews": "Reviews",
-    "relatedProducts": "Related Products", "writeReview": "Write a Review",
+    "similarProducts": "Similar Products",       "dealsInCategory": "Deals in {{categoryName}}",
+    "addToCart": "Add to Cart",                  "buyNow": "Buy Now",
+    "specifications": "Specifications",          "reviews": "Reviews",
+    "relatedProducts": "Related Products",       "writeReview": "Write a Review",
     "outOfStock": "Out of Stock",
     "availableAt": "Available at {{count}} stores", "noStoresAvailable": "Currently unavailable",
-    "priceRange": "Price Range", "comparePrices": "Compare {{count}} Prices",
-    "viewAllStores": "View all stores", "productDescription": "Description",
-    "share": "Share", "removeFromFavorites": "Remove from Favorites",
+    "priceRange": "Price Range",                 "comparePrices": "Compare {{count}} Prices",
+    "viewAllStores": "View all stores",          "productDescription": "Description",
+    "share": "Share",
+    "removeFromFavorites": "Remove from Favorites",
     "priceHistory": "Price History",
     "certifiedStoresTooltip": "Show only products from certified stores",
     "vendorPopupCertification": "Certification: {{certificationType}}",
     "vendorPopupInformation": "Information",
     "vendorPopupAddressNotAvailable": "Online Only Store",
     "vendorPopupPaymentMethods": "PAYMENT METHODS",
-    "vendorPopupLearnMore": "Learn More", "vendorPopupViewInStore": "View in Store",
+    "vendorPopupLearnMore": "Learn More",        "vendorPopupViewInStore": "View in Store",
     "openingHoursNotAvailable": "Opening hours information not available",
-    "closedToday": "Closed today", "openUntil": "Open until {{time}}",
+    "closedToday": "Closed today",               "openUntil": "Open until {{time}}",
     "closedOpensAt": "Closed - Opens at {{time}}", "closedForToday": "Closed for today",
     "openingHoursError": "Error in opening hours",
     "loginRequired": "Login Required",
     "loginToAddToFavorites": "Please log in to add this product to your favorites",
     "productAddedToFavorites": "{{productName}} has been added to your favorites",
-    "linkCopied": "Link Copied", "productLinkCopied": "Product link copied to clipboard",
-    "copyFailed": "Copy Failed", "couldNotCopyLink": "Could not copy link",
+    "linkCopied": "Link Copied",                 "productLinkCopied": "Product link copied to clipboard",
+    "copyFailed": "Copy Failed",                 "couldNotCopyLink": "Could not copy link",
     "loginToSetPriceAlert": "Please log in to set a price alert",
 
     // Vendor Page
@@ -170,12 +173,12 @@ const englishTranslationsMaster: Record<string, string> = {
 
     // UserButton & UserDropdownContent
     "toggleTheme": "Toggle theme",
-    "productsYouWant": "Products you want", "productsYouHave": "Products you have",
-    "myOffers": "My Offers", "priceDrops": "Price Drops",
-    "myCollections": "My Collections", "newCollection": "New Collection...",
-    "creditsClub": "Credits Club", "savedOrders": "Saved Orders",
-    "myQuestions": "My Questions", "myReviews": "My Reviews",
-    "myFriends": "My Friends", "viewProfileTooltip": "View your profile",
+    "productsYouWant": "Products you want",      "productsYouHave": "Products you have",
+    "myOffers": "My Offers",                     "priceDrops": "Price Drops",
+    "myCollections": "My Collections",           "newCollection": "New Collection...",
+    "creditsClub": "Credits Club",               "savedOrders": "Saved Orders",
+    "myQuestions": "My Questions",               "myReviews": "My Reviews",
+    "myFriends": "My Friends",                   "viewProfileTooltip": "View your profile",
     "userMenuCaretAlt": "Open user menu",
 
     // Footer
@@ -289,9 +292,10 @@ const englishTranslationsMaster: Record<string, string> = {
     'connection-packs': 'Connection Packs', 'portable-bluetooth-speakers-mobile': 'Portable Bluetooth Speakers (Mobile)',
     'ps5-games': 'PS5 Games', 'pc-games': 'PC Games', 'amplifiers-preamplifiers': 'Amplifiers & Preamplifiers',
     'hi-fi-systems': 'Hi-Fi Systems',
-};
-
-const greekTranslations: Record<string, string> = {
+  },
+  // ================================= Greek (el) ===================================
+  el: {
+    // This should be your fully translated Greek section
     email: 'Email', password: 'Κωδικός', forgotPassword: 'Ξεχάσατε τον κωδικό;', register: 'Εγγραφή',
     signIn: 'Σύνδεση', loggingIn: 'Γίνεται σύνδεση...', emailPlaceholder: 'email@example.com', orContinueWith: 'Ή συνεχίστε με',
     google: 'Google', facebook: 'Facebook', twitter: 'Twitter', createAccount: 'Δημιουργία Λογαριασμού',
@@ -545,7 +549,8 @@ const greekTranslations: Record<string, string> = {
     'hi-fi-systems': 'Συστήματα Hi-Fi',
   },
   // ============================ Spanish (es) - Placeholder, needs full translation ============================
-  es: { /* Keys from 'en' are copied here, replace with Spanish translations */
+  es: {
+    // Auth
     email: '[es] Email', password: '[es] Password', forgotPassword: '[es] Forgot Password?', register: '[es] Register',
     signIn: '[es] Sign In', loggingIn: '[es] Logging in...', emailPlaceholder: '[es] email@example.com', orContinueWith: '[es] Or continue with',
     google: '[es] Google', facebook: '[es] Facebook', twitter: '[es] Twitter', createAccount: '[es] Create Account',
@@ -802,32 +807,221 @@ const greekTranslations: Record<string, string> = {
   },
   // ============================ French (fr) - Placeholder, needs full translation =============================
   fr: { /* All keys from 'en' copied and prefixed with '[fr]' or translated if obvious */
-    email: '[fr] Email', password: '[fr] Password', // ... and so on for ALL keys
-    languageCategoryEasternEurope: "[fr] Eastern Europe", 
-    languageCategoryWesternEurope: "[fr] Western Europe",
-    'technology': '[fr] Technology', // ... and all category slugs
+    email: '[fr] Email', password: '[fr] Password', forgotPassword: '[fr] Forgot Password?', register: '[fr] Register',
+    signIn: '[fr] Sign In', loggingIn: '[fr] Logging in...', emailPlaceholder: '[fr] email@example.com', orContinueWith: '[fr] Or continue with',
+    google: '[fr] Google', facebook: '[fr] Facebook', twitter: '[fr] Twitter', createAccount: '[fr] Create Account',
+    dontHaveAccount: "[fr] Don't have an account?", alreadyHaveAccount: '[fr] Already have an account?', fullName: '[fr] Full Name', confirmPassword: '[fr] Confirm Password',
+    agreeToTerms: '[fr] I agree to the Terms of Service and Privacy Policy',
+    creatingAccount: '[fr] Creating Account...', resetYourPassword: '[fr] Reset Your Password',
+    enterEmailForReset: '[fr] Enter your email address and we will send you a link to reset your password.',
+    sendResetLink: '[fr] Send Reset Link', sendingResetLink: '[fr] Sending...',
+    resetPasswordEmailSent: '[fr] Password reset email sent. Please check your inbox.',
+    backToLogin: '[fr] Back to Login', createNewPassword: '[fr] Create New Password',
+    newPassword: '[fr] New Password', updatePassword: '[fr] Update Password',
+    updating: '[fr] Updating...', passwordUpdated: '[fr] Password Updated',
+    passwordSuccessfullyChanged: '[fr] Your password has been successfully changed.',
+    passwordResetFailed: '[fr] Password Reset Failed',
+    errorProcessingRequest: '[fr] There was an error processing your request.',
+    passwordTooShort: '[fr] Password Too Short', passwordMinLength: '[fr] Password must be at least 6 characters.',
+    passwordsDontMatch: '[fr] Passwords Don\'t Match', pleaseCheckPasswords: '[fr] Please check that both passwords match.',
+    languageSettings: '[fr] Language Settings', selectLanguage: '[fr] Select Language', english: '[fr] English', greek: '[fr] Greek',
+    spanish: '[fr] Spanish', french: '[fr] French', german: '[fr] German', systemLanguage: '[fr] System Language (Default)',
+    save: '[fr] Save', cancel: '[fr] Cancel', loading: '[fr] Loading...', success: '[fr] Success',
+    error: '[fr] Error', wallet: '[fr] Wallet', myWallet: '[fr] My Wallet', manageWallet: '[fr] Manage your funds, transactions, and ad payments',
+    deposit: '[fr] Deposit', transactions: '[fr] Transactions', connectWallet: '[fr] Connect Wallet', addFunds: '[fr] Add Funds',
+    amount: '[fr] Amount ($)', enterAmount: '[fr] Enter amount', paymentMethod: '[fr] Payment Method', processing: '[fr] Processing...',
+    myAccount: '[fr] My Account', profile: '[fr] Profile', favorites: '[fr] Favorites', recentlyViewed: '[fr] Recently Viewed',
+    priceAlerts: '[fr] Price Alerts', settings: '[fr] Settings', logout: '[fr] Logout', myProfile: '[fr] My Profile',
+    managePersonalInfo: '[fr] Manage your personal information',
+    name: '[fr] Name', memberSince: '[fr] Member since', role: '[fr] Role', administrator: '[fr] Administrator',
+    regularUser: '[fr] Regular User', editProfile: '[fr] Edit Profile', accountSummary: '[fr] Account Summary', categories: '[fr] Categories',
+    gifts: '[fr] Gifts', deals: '[fr] Deals', clearFilters: '[fr] Clear filters', finalPrice: '[fr] Final price',
+    yes: "[fr] Yes", no: "[fr] No", ok: "[fr] OK", close: "[fr] Close",
+    showMore: "[fr] Show More", showLess: "[fr] Show Less", all: "[fr] All", selectOption: "[fr] Select an option",
+    optional: "[fr] Optional", required: "[fr] Required", back: "[fr] Back", next: "[fr] Next",
+    submit: "[fr] Submit", search: "[fr] Search", searchPlaceholder: "[fr] Search for products...",
+    notFoundPageTitle: "[fr] Page Not Found", notFoundMessage: "[fr] Oops! The page you are looking for does not exist.",
+    recently_viewed_title: "[fr] Recently Viewed",
+    "product_singular": "[fr] product", "product_plural": "{{count}} [fr] products",
+    "rating_label": "[fr] Rating", "reviews_label_singular": "[fr] review", "reviews_label_plural": "{{count}} [fr] reviews",
+    "from_vendor": "[fr] from", "with": "[fr] with",
+    "no_products_in_category": "[fr] There are no products in this category yet.",
+    "filters_title": "[fr] Filters", "remove_all_filters_tooltip": "[fr] Remove all filters",
+    "show_only_title": "[fr] Show only", "deals_label": "[fr] Deals",
+    "deals_title": "[fr] Products with significant price drop",
+    "certified_label": "[fr] Certified", "certified_stores_title": "[fr] Certified Stores",
+    "instock_label": "[fr] In Stock", "instock_title": "[fr] Only products available in stock",
+    "boxnow_delivery_title": "[fr] BOX NOW Delivery",
+    "boxnow_tooltip": "[fr] Pick up your order from a BOX NOW locker 24/7",
+    "delivery_label": "[fr] BOX NOW", "manufacturer_title": "[fr] Manufacturer",
+    "show_less_manufacturers": "[fr] Show less manufacturers", "show_all_manufacturers": "[fr] Show all manufacturers",
+    "show_all": "[fr] Show All",
+    "show_less_options": "[fr] Show less options for", "show_all_options": "[fr] Show all options for",
+    "remove_instock_filter": "[fr] Remove 'In Stock' filter", "remove_deals_filter": "[fr] Remove 'Deals' filter",
+    "remove_certified_filter": "[fr] Remove 'Certified' filter", "remove_nearby_filter": "[fr] Remove 'Nearby' filter",
+    "remove_boxnow_filter": "[fr] Remove 'BOX NOW' filter",
+    "remove_brand_filter": "[fr] Remove brand filter", "remove_spec_filter": "[fr] Remove spec filter",
+    "reset_all_filters": "[fr] Reset all filters", "clear_all_filters": "[fr] Clear All",
+    "selected_deals": "[fr] Selected Deals", "popular_choices": "[fr] Popular Choices",
+    "sort_most_popular": "[fr] Most Popular", "sort_newest": "[fr] Newest",
+    "sort_cheapest": "[fr] Cheapest", "sort_most_expensive": "[fr] Most Expensive",
+    "sort_alphabetical": "[fr] Alphabetical (A-Z)", "sort_most_reviews": "[fr] Most Reviews",
+    "sort_by_manufacturer": "[fr] By Manufacturer", "sort_num_stores": "[fr] Number of Stores",
+    "price_alert_for": "[fr] Price Alert for",
+    "no_products_found_filters": "[fr] No products match your current filters.",
+    "suggestions_title": "[fr] Suggestions",
+    "suggestion_see_all_products": "[fr] See all products in this category:",
+    "all_category_products": "[fr] All Category Products",
+    "suggestion_try_removing_filters": "[fr] Try removing some filters:",
+    "remove_a_filter": "[fr] Remove a filter",
+    "suggestion_return_home": "[fr] Return to the homepage:",
+    "return_to_homepage": "[fr] Return to Homepage",
+    "no_subcategories": "[fr] No subcategories available.",
+    "popular_categories": "[fr] Popular Categories", "top_deals_in": "[fr] Top Deals in",
+    "products_with_significant_price_drop": "[fr] Products with a significant price drop",
+    "hottest_in": "[fr] Hottest in", "product_reviews_title": "[fr] Product Reviews",
+    "helpful_reviews_subtitle": "[fr] Helpful reviews from our users",
+    "popular_manufacturers": "[fr] Popular Manufacturers",
+    "price_alert_button": "[fr] Set Price Alert",
+    "price_alert_prompt_in": "[fr] Never miss a deal for products in",
+    "return_to": "[fr] Return to",
+    "info_for_certified_store": "[fr] Information for certified store",
+    "showing_products_from_store": "[fr] Showing products from store",
+    "remove_filter": "[fr] Remove this filter",
+    "breadcrumbHome": "[fr] BestPrice",
+    "breadcrumbAllProductsInCategory": "[fr] All products in the {{categoryName}} category",
+    "breadcrumbAllProductsAndSubcategoriesInCategory": "[fr] All products and subcategories in the {{categoryName}} category",
+    "loadingProduct": "[fr] Loading Product...",
+    "addToShoppingList": "[fr] Add to Shopping List", "addToComparison": "[fr] Add to Comparison",
+    "iWantIt": "[fr] I Want It", "iHaveIt": "[fr] I Have It",
+    "notifyPriceDrop": "[fr] Notify for Price Drop", "addToCollection": "[fr] Add to Collection",
+    "priceFrom": "[fr] From", "inStores": "[fr] in {{count}} stores",
+    "storesCount": "[fr] Stores ({{count}})",
+    "available": "[fr] Available", "nearMe": "[fr] Near Me",
+    "deliveryWithService": "[fr] Delivery with {{serviceName}}",
+    "coupons": "[fr] Coupons", "color": "[fr] Color",
+    "officialResellers": "[fr] Official Resellers", "priceHistoryTitle": "[fr] Price History",
+    "productDetails": "[fr] Product Details", "userReviews": "[fr] User Reviews ({{count}})",
+    "questionsAndAnswers": "[fr] Questions & Answers ({{count}})",
+    "similarProducts": "[fr] Similar Products", "dealsInCategory": "[fr] Deals in {{categoryName}}",
+    "addToCart": "[fr] Add to Cart", "buyNow": "[fr] Buy Now",
+    "specifications": "[fr] Specifications", "reviews": "[fr] Reviews",
+    "relatedProducts": "[fr] Related Products", "writeReview": "[fr] Write a Review",
+    "outOfStock": "[fr] Out of Stock",
+    "availableAt": "[fr] Available at {{count}} stores", "noStoresAvailable": "[fr] Currently unavailable",
+    "priceRange": "[fr] Price Range", "comparePrices": "[fr] Compare {{count}} Prices",
+    "viewAllStores": "[fr] View all stores", "productDescription": "[fr] Description",
+    "share": "[fr] Share", "removeFromFavorites": "[fr] Remove from Favorites",
+    "priceHistory": "[fr] Price History",
+    "certifiedStoresTooltip": "[fr] Show only products from certified stores",
+    "vendorPopupCertification": "[fr] Certification: {{certificationType}}",
+    "vendorPopupInformation": "[fr] Information",
+    "vendorPopupAddressNotAvailable": "[fr] Online Only Store",
+    "vendorPopupPaymentMethods": "[fr] PAYMENT METHODS",
+    "vendorPopupLearnMore": "[fr] Learn More", "vendorPopupViewInStore": "[fr] View in Store",
+    "openingHoursNotAvailable": "[fr] Opening hours information not available",
+    "closedToday": "[fr] Closed today", "openUntil": "[fr] Open until {{time}}",
+    "closedOpensAt": "[fr] Closed - Opens at {{time}}", "closedForToday": "[fr] Closed for today",
+    "openingHoursError": "[fr] Error in opening hours",
+    "loginRequired": "[fr] Login Required",
+    "loginToAddToFavorites": "[fr] Please log in to add this product to your favorites",
+    "productAddedToFavorites": "{{productName}} [fr] has been added to your favorites",
+    "linkCopied": "[fr] Link Copied", "productLinkCopied": "[fr] Product link copied to clipboard",
+    "copyFailed": "[fr] Copy Failed", "couldNotCopyLink": "[fr] Could not copy link",
+    "loginToSetPriceAlert": "[fr] Please log in to set a price alert",
+    "loadingVendor": "[fr] Loading store...", "allStores": "[fr] Stores",
+    "certifiedStoreLinkText": "[fr] Certified Store ({{certificationLevel}})",
+    "certifiedStoreFullText": "{{vendorName}} [fr] is a certified store ({{certificationLevel}})",
+    "memberSinceDate": "[fr] On BestPrice since {{date}}",
+    "ratingTooltip": "{{rating}} [fr] stars from {{count}} ratings",
+    "social_facebook": "[fr] Facebook", "social_twitter": "[fr] Twitter", "social_instagram": "[fr] Instagram", "social_youtube": "[fr] YouTube", "social_linkedin": "[fr] LinkedIn", "social_tiktok": "[fr] TikTok",
+    "additionalStores": "{{count}} [fr] more {{storeLabel}}",
+    "storeLabelSingular": "[fr] store", "storeLabelPlural": "[fr] stores",
+    "logoFor": "{{name}} [fr] logo", "screenshotFor": "{{name}} [fr] Screenshot",
+    "authorizedReseller": "[fr] Authorized Reseller", "previewWebsite": "[fr] Preview Website",
+    "dealsFromVendor": "[fr] Deals from {{vendorName}}",
+    "popularCategoriesInVendor": "[fr] Popular Categories in {{vendorName}}",
+    "viewAllVendorProducts": "[fr] View all products<span class=\"hide-mobile\"> of the store</span>",
+    "storeReviewsTitle": "[fr] Store Reviews for {{vendorName}}",
+    "reviewCount": "{{count}} [fr] reviews", "rateIt": "[fr] Rate It",
+    "reviewsPlaceholder": "[fr] (Reviews display - Implementation needed)",
+    "servicePointsTitle": "[fr] Service Points for {{vendorName}}",
+    "servicePointsCount": "{{count}} [fr] points",
+    "storeAndPickup": "[fr] Store / Pickup Point",
+    "mapPlaceholderText": "[fr] Map Placeholder - Requires Map Library",
+    "noLanguagesInRegion": "[fr] No languages listed for this region yet.",
+    "toggleTheme": "[fr] Toggle theme",
+    "productsYouWant": "[fr] Products you want", "productsYouHave": "[fr] Products you have",
+    "myOffers": "[fr] My Offers", "priceDrops": "[fr] Price Drops",
+    "myCollections": "[fr] My Collections", "newCollection": "[fr] New Collection...",
+    "creditsClub": "[fr] Credits Club", "savedOrders": "[fr] Saved Orders",
+    "myQuestions": "[fr] My Questions", "myReviews": "[fr] My Reviews",
+    "myFriends": "[fr] My Friends", "viewProfileTooltip": "[fr] View your profile",
+    "userMenuCaretAlt": "[fr] Open user menu",
+    "backToTop": "[fr] Back to Top",
+    "bestpriceSloganShort": "[fr] The truly best price",
+    "bestpriceSloganLong": "[fr] BestPrice is the first and largest price comparison service in Greece.",
+    "bestpriceSloganFindDeals": "[fr] At BestPrice you will quickly and easily find real offers and the best price from the largest stores.",
+    "bestpriceGive": "[fr] BestPrice Give", "footerBestPriceSectionTitle": "[fr] BestPrice",
+    "aboutUs": "[fr] About Us", "ourBlog": "[fr] Our Blog",
+    "buyingGuides": "[fr] Buying Guides", "purchaseInsurance": "[fr] Purchase Insurance",
+    "advertising": "[fr] Advertising", "bestpriceCertification": "[fr] BestPrice Certification",
+    "customerReviewAwards": "[fr] Customer Review Awards", "ourAwards": "[fr] Our Awards",
+    "ourTeam": "[fr] Our Team", "bestpriceAssistant": "[fr] BestPrice Assistant",
+    "jobOpenings": "[fr] Job Openings ({{count}})", "contactUs": "[fr] Contact",
+    "inNumbers": "[fr] In Numbers",
+    "storeCountLink": "{{count}} [fr] stores", "productCountLink": "{{count}} [fr] products",
+    "brandCountLink": "{{count}} [fr] manufacturers","dealCountLink": "{{count}} [fr] offers",
+    "termsAndPrivacy": "[fr] Terms & Privacy", "termsOfUse": "[fr] Terms of Use",
+    "privacyPolicy": "[fr] Privacy Policy", "cookiePolicy": "[fr] Cookie Policy",
+    "gdprLink": "[fr] GDPR", "dsaLink": "[fr] DSA",
+    "bestpriceForMerchants": "[fr] BestPrice For Merchants",
+    "merchantsSectionSlogan1": "[fr] Do you have an online store?",
+    "merchantsSectionSlogan2": "[fr] See how BestPrice can help you increase your sales!",
+    "forMerchantsButton": "[fr] For Merchants",
+    "bestpriceForBrands": "[fr] BestPrice For Brands",
+    "brandsSectionSlogan": "[fr] BestPrice for Brands will offer useful information & services to manufacturers (Brands).",
+    "moreInfoButton": "[fr] More Info",
+    "bestpriceOnFacebook": "[fr] BestPrice on Facebook", "bestpriceOnX": "[fr] BestPrice on X",
+    "bestpriceOnThreads": "[fr] BestPrice on Threads", "bestpriceOnInstagram": "[fr] BestPrice on Instagram",
+    "bestpriceOnTikTok": "[fr] BestPrice on TikTok", "bestpriceOnYouTube": "[fr] BestPrice on YouTube",
+    "bestpriceOnLinkedIn": "[fr] BestPrice on LinkedIn",
+    "homepageTitle": "[fr] Homepage",
+    "changeLanguage": "[fr] Change Language", "selectYourLanguageTitle": "[fr] Select Your Language",
+    "suggestedLanguages": "[fr] Suggested Languages", "allLanguages": "[fr] All Languages",
+    "languageCategoryEurope": "[fr] Europe", "languageCategoryAsia": "[fr] Asia",
+    "languageCategoryAmericas": "[fr] Americas", "languageCategoryAfrica": "[fr] Africa & Middle East",
+    "languageCategoryEasternEurope": "[fr] Eastern Europe", "languageCategoryWesternEurope": "[fr] Western Europe",
+    "allBrands": "[fr] All Brands", "productsFromBrand": "[fr] Products from {{brandName}}",
+    "searchResultsFor": "[fr] Search results for \"{{searchTerm}}\"",
+    "noResultsFound": "[fr] No results found for \"{{searchTerm}}\"",
+    "sortBy": "[fr] Sort by", "viewAsGrid": "[fr] Grid View",
+    "viewAsList": "[fr] List View", "itemsPerPage": "[fr] Items per page",
+    "page": "[fr] Page", "of": "[fr] of", "nextPage": "[fr] Next", "previousPage": "[fr] Previous",
+    "todaysDeals": "[fr] Today's Deals", "filterBy": "[fr] Filter by",
+    "shoppingCart": "[fr] Shopping Cart", "proceedToCheckout": "[fr] Proceed to Checkout",
+    "item": "[fr] Item", "quantity": "[fr] Quantity", "subtotal": "[fr] Subtotal", "total": "[fr] Total",
+    "emptyCart": "[fr] Your cart is empty.", "continueShopping": "[fr] Continue Shopping",
+    "shippingAddress": "[fr] Shipping Address", "billingAddress": "[fr] Billing Address",
+    "paymentInformation": "[fr] Payment Information", "placeOrder": "[fr] Place Order",
+    "orderSummary": "[fr] Order Summary", "discountCode": "[fr] Discount Code", "apply": "[fr] Apply",
+    "paymentMethod_credit_card": "[fr] Credit Card", "paymentMethod_bank_transfer": "[fr] Bank Transfer",
+    "paymentMethod_paypal": "[fr] PayPal", "paymentMethod_cash_on_delivery": "[fr] Cash on Delivery",
+    "paymentMethod_pickup_from_store": "[fr] Pickup from Store", "paymentMethod_klarna": "[fr] Klarna",
+    "paymentMethod_apple_pay": "[fr] Apple Pay", "paymentMethod_google_pay": "[fr] Google Pay",
+    "paymentMethod_ideal": "[fr] iDEAL", "paymentMethod_crypto": "[fr] Cryptocurrency",
+    "paymentMethod_pay_by_link": "[fr] Pay by Link", "paymentMethod_pickup_via": "[fr] Pickup via Courier/Service",
+    'technology': '[fr] Technology', 'home-garden': '[fr] Home & Garden', 'fashion': '[fr] Fashion', 
+    /* ... and so on for all category slugs */
   },
   // ============================ German (de) - Placeholder, needs full translation =============================
   de: { /* All keys from 'en' copied and prefixed with '[de]' or translated if obvious */
     email: '[de] Email', password: '[de] Password', // ... and so on for ALL keys
-    languageCategoryEasternEurope: "[de] Eastern Europe",
+    languageCategoryEasternEurope: "[de] Eastern Europe", 
     languageCategoryWesternEurope: "[de] Western Europe",
     'technology': '[de] Technology', // ... and all category slugs
   }
 };
-
-// Automatically populate es, fr, de with keys from 'en' if they are missing, using prefixed English text as placeholder
-(['es', 'fr', 'de'] as const).forEach(langCode => {
-  if (!defaultTranslations[langCode]) {
-    defaultTranslations[langCode] = {};
-  }
-  for (const key in englishTranslationsMaster) {
-    if (!defaultTranslations[langCode][key]) {
-      defaultTranslations[langCode][key] = `[${langCode}] ${englishTranslationsMaster[key]}`;
-    }
-  }
-});
-
 
 const LanguageContext = createContext<LanguageContextType>({
   language: 'el',
@@ -867,23 +1061,25 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const loadCustomTranslations = async () => {
-      let currentEffectiveTranslations = translations;
-      if (!isLoaded && (Object.keys(translations).length === 0 || translations === defaultTranslations )) {
-         currentEffectiveTranslations = defaultTranslations;
+      let currentEffectiveTranslations = translations; // Use state as potentially already merged base
+      if (!isLoaded && (Object.keys(currentEffectiveTranslations).length === 0 || currentEffectiveTranslations === defaultTranslations )) {
+         // Only set to pure default if it's truly the initial empty/default state and not yet loaded
          setTranslations(defaultTranslations);
+         currentEffectiveTranslations = defaultTranslations; 
       }
 
       try {
         const { data, error } = await (supabase as any).from('translations').select('*');
         if (error) {
             console.error('Error fetching custom translations:', error.message || error); 
-            if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).length === 0) {
-              setTranslations(defaultTranslations);
+            // If fetch fails, ensure we're at least on the comprehensive default set.
+            if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
+               setTranslations(defaultTranslations); // Revert to full default if current is still basic or error occurred
             }
             return;
         };
         if (data && data.length > 0) {
-          const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
+          const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations; // Start with full default structure
           data.forEach((item: any) => {
             if (item && item.key) {
               (Object.keys(newLoadedTranslations) as Language[]).forEach(lang => {
@@ -895,13 +1091,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
           });
           setTranslations(newLoadedTranslations);
         } else {
-           if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).length === 0) {
-            setTranslations(defaultTranslations);
-          }
+           // No custom data from DB. Ensure 'translations' state is the comprehensive defaultTranslations.
+           if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
+             setTranslations(defaultTranslations);
+           }
         }
       } catch (error) {
         console.error('Error processing custom translations:', error);
-        if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).length === 0) {
+        if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
           setTranslations(defaultTranslations);
         }
       }
@@ -909,8 +1106,12 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
     if (isLoaded) { 
         loadCustomTranslations();
-    } else if (Object.keys(translations).length === 0) { 
-        setTranslations(defaultTranslations);
+    } else {
+        // On initial mount before isLoaded is true, ensure `translations` state has the full default set.
+        // This check helps if `translations` was somehow not initialized to `defaultTranslations` by useState.
+        if (Object.keys(translations).length === 0 || translations === defaultTranslations || Object.keys(translations.en).length < Object.keys(defaultTranslations.en).length) {
+            setTranslations(defaultTranslations);
+        }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded]); 
