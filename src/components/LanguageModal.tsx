@@ -1,13 +1,40 @@
 // src/components/LanguageModal.tsx
-import React, { useState, useCallback } from 'react'; // useMemo is NOT active for lists
-import { useTranslation } from '@/hooks/useTranslation';         // ACTIVE
-import { useLanguageContext } from '@/context/LanguageContext'; // ACTIVE
+import React, { useState, useMemo, useCallback } from 'react'; // Re-added useMemo
+import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define type for clarity
-type LanguageOptionForTest = {
+type LanguageOption = {
   code: string;
   name: string;
+  englishName: string;
+  regionKey: string;
 };
+
+// This should be your full list of languages
+const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+  { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
+  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
+  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
+  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' },
+  { code: 'en-GB', name: 'English (UK)', englishName: 'English (UK)', regionKey: 'languageCategoryEurope' },
+  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
+  { code: 'de-DE', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
+  { code: 'it-IT', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
+  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
+  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
+  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
+  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
+  { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
+  { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-CN', name: '中文(简体)', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
+  { code: 'zh-TW', name: '中文(台灣)', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
+  { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
+  { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' },
+  { code: 'he', name: 'עברית', englishName: 'Hebrew', regionKey: 'languageCategoryAfrica' },
+  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryAfrica' },
+  { code: 'sw', name: 'Kiswahili', englishName: 'Swahili', regionKey: 'languageCategoryAfrica' },
+  // Populate with your full list of languages based on Facebook's selector
+];
 
 const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "suggested", nameKey: "suggestedLanguages" },
@@ -17,12 +44,6 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
     { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-const HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST: LanguageOptionForTest[] = [
-    { code: 'el-debug', name: 'Ελληνικά (Hooks Active Test)' },
-    { code: 'en-US-debug', name: 'English (US) (Hooks Active Test)' },
-    { code: 'es-ES-debug', name: 'Español (Hooks Active Test)'},
-];
-
 interface LanguageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,16 +51,17 @@ interface LanguageModalProps {
 
 const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
   const { t, language: currentContextLangFromHook, isLoaded } = useTranslation();
-  const { setLanguage: setContextLanguage } = useLanguageContext(); // This was just added back
-  
+  const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
+
+  // const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en'; // Not needed for THIS step
 
   if (!isOpen) return null;
 
   const handleLanguageChange = (langCode: string) => {
     const simpleLangCode = langCode.split('-')[0] as 'en' | 'el' | 'es' | 'fr' | 'de';
     if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)) {
-        setContextLanguage(simpleLangCode); // Using the real context function
+        setContextLanguage(simpleLangCode);
     } else {
         console.warn(`Unsupported language code: ${langCode}. Attempting to use base code.`);
         if (['en', 'el', 'es', 'fr', 'de'].includes(simpleLangCode)){
@@ -49,10 +71,20 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  console.log("DEBUG: LanguageModal (Step 2 Re-intro useLanguageContext). isLoaded:", isLoaded, "currentLang:", currentContextLangFromHook);
+  // ===== RE-INTRODUCE useMemo for suggestedLangsToDisplay =====
+  const suggestedLangsToDisplay = useMemo(() => {
+    console.log("DEBUG: Re-introducing suggestedLangsToDisplay useMemo");
+    // Ensure ALL_AVAILABLE_LANGUAGES is stable (it is, as a top-level const)
+    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
+        ['el', 'en-US', 'sq', 'es-ES'].includes(lang.code) // Your example suggested codes
+    );
+  }, []); // Empty dependency array is correct
 
-  // List is still hardcoded for display
-  const languagesToDisplayInJSX = HARDCODED_DEBUG_LANGUAGES_FOR_HOOK_TEST; 
+  // For this step, the list displayed in JSX will be the memoized suggestedLangsToDisplay
+  const languagesToDisplayInJSX = suggestedLangsToDisplay;
+  // The more complex useMemo (for filtering by region and sorting) is still NOT active.
+
+  console.log("DEBUG: LanguageModal (useMemo for suggestedLangsToDisplay active). Displaying count:", languagesToDisplayInJSX.length);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
@@ -61,7 +93,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-border relative">
-          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3> 
+          <h3 className="text-xl font-semibold text-center">{t('selectYourLanguageTitle')}</h3>
           <button 
             onClick={onClose} 
             className="absolute top-1/2 right-4 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted"
