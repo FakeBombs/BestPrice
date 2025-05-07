@@ -1,5 +1,5 @@
 // src/components/LanguageSelectorModal.tsx
-import React, { useState, useMemo } from 'react'; // Ensure useMemo is imported
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
@@ -7,11 +7,11 @@ import { useLanguageContext } from '@/context/LanguageContext';
 type LanguageOption = { 
   code: string; 
   name: string; 
-  englishName: string; 
-  regionKey: string; 
+  englishName?: string; // Made optional as not all examples below will use it
+  regionKey?: string;  // Made optional
 };
 
-// Define language regions for the sidebar
+// Define language regions for the sidebar (still used)
 const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "suggested", nameKey: "suggestedLanguages" },
   { key: "languageCategoryEurope", nameKey: "languageCategoryEurope" },
@@ -20,32 +20,10 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "languageCategoryAfrica", nameKey: "languageCategoryAfrica" },
 ];
 
-// Define all available languages (Using the AI's provided list, or your expanded one)
+// ALL_AVAILABLE_LANGUAGES is defined but NOT used by the useMemo in this test
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryEurope' },
-  { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
-  { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryEurope' },
-  { code: 'es-MX', name: 'Español (México)', englishName: 'Spanish (Mexico)', regionKey: 'languageCategoryAmericas' },
-  { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryEurope' },
-  { code: 'fr-CA', name: 'Français (Canada)', englishName: 'French (Canada)', regionKey: 'languageCategoryAmericas' },
-  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryEurope' },
-  { code: 'it', name: 'Italiano', englishName: 'Italian', regionKey: 'languageCategoryEurope' },
-  { code: 'pt-BR', name: 'Português (Brasil)', englishName: 'Portuguese (Brazil)', regionKey: 'languageCategoryAmericas' },
-  { code: 'pt-PT', name: 'Português (Portugal)', englishName: 'Portuguese (Portugal)', regionKey: 'languageCategoryEurope' },
-  { code: 'ru', name: 'Русский', englishName: 'Russian', regionKey: 'languageCategoryEurope' },
-  { code: 'ja', name: '日本語', englishName: 'Japanese', regionKey: 'languageCategoryAsia' },
-  { code: 'zh-CN', name: '简体中文', englishName: 'Chinese (Simplified)', regionKey: 'languageCategoryAsia' },
-  { code: 'zh-TW', name: '繁體中文', englishName: 'Chinese (Traditional)', regionKey: 'languageCategoryAsia' },
-  { code: 'ko', name: '한국어', englishName: 'Korean', regionKey: 'languageCategoryAsia' },
-  { code: 'ar', name: 'العربية', englishName: 'Arabic', regionKey: 'languageCategoryAfrica' },
-  { code: 'hi', name: 'हिंदी', englishName: 'Hindi', regionKey: 'languageCategoryAsia' },
-  { code: 'tr', name: 'Türkçe', englishName: 'Turkish', regionKey: 'languageCategoryEurope' },
-  { code: 'nl', name: 'Nederlands', englishName: 'Dutch', regionKey: 'languageCategoryEurope' },
-  { code: 'pl', name: 'Polski', englishName: 'Polish', regionKey: 'languageCategoryEurope' },
-  { code: 'sv', name: 'Svenska', englishName: 'Swedish', regionKey: 'languageCategoryEurope' },
-  { code: 'da', name: 'Dansk', englishName: 'Danish', regionKey: 'languageCategoryEurope' },
-  { code: 'fi', name: 'Suomi', englishName: 'Finnish', regionKey: 'languageCategoryEurope' },
-  { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryEurope' }, // Added from your previous list
+  // ... your other languages would go here for future use
 ];
 
 interface LanguageSelectorModalProps {
@@ -69,25 +47,25 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     return 'en';
   };
 
+  // ===== MINIMAL useMemo TEST - Returning a hardcoded array =====
   const suggestedLangsToDisplay = useMemo(() => {
-    console.log("DEBUG AI Version: suggestedLangsToDisplay useMemo");
-    return ALL_AVAILABLE_LANGUAGES.filter(lang => 
-      ['el', 'en-US', 'es-ES', 'fr-FR', 'de'].includes(lang.code)
-    );
-  }, []);
+    console.log("DEBUG AI Version - MINIMAL useMemo for suggestedLangsToDisplay");
+    return [ 
+      { code: 'el-memo-test', name: 'Ελληνικά (Minimal Memo)' }, // No englishName/regionKey needed for this object shape
+      { code: 'en-US-memo-test', name: 'English (US) (Minimal Memo)' },
+    ];
+  }, []); // Empty dependency array
 
-  // ***** DEBUGGING STEP 1: Simplify this useMemo *****
-  const languagesToDisplay = useMemo(() => {
-    console.log("DEBUG AI Version - Step 1: Simplified languagesToDisplay. SelectedRegion:", selectedRegion);
-    // Temporarily, always show suggested languages to bypass region filtering and sorting
-    return suggestedLangsToDisplay;
-  }, [suggestedLangsToDisplay]); // Only depends on the already memoized suggestedLangsToDisplay
+  // languagesToDisplay will just be this minimal, hardcoded, memoized array
+  const languagesToDisplay = suggestedLangsToDisplay;
 
   const handleLanguageChange = (langCode: string) => {
     const baseCode = mapLanguageCode(langCode);
     setContextLanguage(baseCode);
     onClose();
   };
+
+  console.log("DEBUG AI Version - Rendering with minimal memoized list. Count:", languagesToDisplay.length);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-[2147483647] flex items-center justify-center p-4" onClick={onClose}>
@@ -121,7 +99,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
                 <li key={region.key}>
                   <button 
                     className={`w-full text-left px-3 py-2 text-sm rounded-md ${selectedRegion === region.key ? 'bg-primary text-primary-foreground font-medium' : 'hover:bg-muted text-foreground font-normal'}`}
-                    onClick={() => setSelectedRegion(region.key)}
+                    onClick={() => setSelectedRegion(region.key)} // This won't change the main list in this test
                   >
                     {t(region.nameKey, region.key === "suggested" ? t('suggestedLanguages', "Suggested") : region.key.replace('languageCategory', ''))}
                   </button>
@@ -132,8 +110,8 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
 
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
-              {languagesToDisplay.map((lang) => { // This will now map over suggestedLangsToDisplay
-                const mappedCode = mapLanguageCode(lang.code);
+              {languagesToDisplay.map((lang) => { // Will map over the minimal hardcoded memoized array
+                const mappedCode = mapLanguageCode(lang.code); // Ensure lang.code is valid for mapLanguageCode
                 const isActive = currentContextLangFromHook === mappedCode;
                 
                 return (
