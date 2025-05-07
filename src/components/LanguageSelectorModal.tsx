@@ -1,12 +1,11 @@
 // src/components/LanguageSelectorModal.tsx
-// RESTRUCTURED TO MIMIC FACEBOOK DOM - useMemo REMOVED from list derivations
+// ADAPTING STYLING STRUCTURE FROM THE "Νέα Συλλογή" MODAL
 
-import React, { useState } from 'react'; // useMemo removed from import
+import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
 // --- (Keep your LanguageOption type, LANGUAGE_REGIONS_FOR_MODAL, ALL_AVAILABLE_LANGUAGES, VALID_CONTEXT_LANGUAGES, DEFAULT_VARIANT_FOR_CONTEXT_LANG, mapLanguageCode as before) ---
-
 type LanguageOption = {
   code: string;
   name: string;
@@ -182,13 +181,11 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     ? DEFAULT_VARIANT_FOR_CONTEXT_LANG[currentContextLangFromHook]
     : null;
 
-  // Suggested languages logic - NO useMemo, calculated on each render
   const suggestedLanguageCodes = ['el', 'en-US', 'sq', 'es', 'de', 'fr-FR'];
   const suggestedLangs = ALL_AVAILABLE_LANGUAGES
     .filter(lang => suggestedLanguageCodes.includes(lang.code))
     .sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
 
-  // Languages for the main list - NO useMemo, calculated on each render
   let regionalLanguages: LanguageOption[];
   if (selectedRegionKey === "all") {
     regionalLanguages = ALL_AVAILABLE_LANGUAGES;
@@ -197,97 +194,134 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   }
   regionalLanguages = [...regionalLanguages].sort((a,b) => (a.name || '').localeCompare(b.name || '', currentContextLangForSort));
 
-
-  const renderLanguageColumns = (languages: LanguageOption[], numColumns: number = 4) => {
+  const renderLanguageColumns = (languages: LanguageOption[], numColumns: number = 4, isSuggested: boolean = false) => {
     const columns: LanguageOption[][] = Array.from({ length: numColumns }, () => []);
     languages.forEach((lang, index) => {
       columns[index % numColumns].push(lang);
     });
 
+    // Mimicking Facebook's table structure for layout with divs and grid
     return (
-      <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-${numColumns} gap-x-2`}> {/* Adjusted responsiveness slightly */}
+      <div className={`grid grid-cols-2 ${isSuggested ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-x-1`}> {/* `gap-x-1` for tighter columns like FB */}
         {columns.map((col, colIndex) => (
-          <ul key={colIndex} className="space-y-0.5">
-            {col.map((lang) => (
-              <li key={lang.code}>
-                <button
-                  onClick={() => handleLanguageSelect(lang.code)}
-                  title={lang.englishName}
-                  className={`w-full text-left px-2 py-1 text-sm rounded hover:bg-muted focus:outline-none focus:bg-muted focus:ring-1 focus:ring-primary truncate ${lang.code === activeSpecificLangCode ? 'text-primary font-semibold' : 'text-foreground'}`}
-                >
-                  {lang.name}
-                  {lang.code === activeSpecificLangCode && <span className="ml-1">✓</span>}
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div key={colIndex} className="flex flex-col"> {/* Mimics <td> */}
+            <ul className="space-y-0"> {/* Mimics <ul class="_4kg">, no extra space for FB style */}
+              {col.map((lang) => (
+                <li key={lang.code} className="py-0.5"> {/* Mimics <li> containing <div class="localeLink"> */}
+                  <button
+                    onClick={() => handleLanguageSelect(lang.code)}
+                    title={lang.englishName} // Or use lang.tooltipName if you re-add it
+                    // Base styles from FB: text-left, rounded. Active styles added.
+                    // Focus styles for accessibility.
+                    className={`w-full text-left px-1.5 py-0.5 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 truncate ${
+                      lang.code === activeSpecificLangCode 
+                        ? 'text-blue-600 dark:text-blue-400 font-semibold' // .selectedLocale
+                        : 'text-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {lang.name}
+                    {lang.code === activeSpecificLangCode && <span className="ml-1">✓</span>}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
       </div>
     );
   };
 
   return (
+    // popup-flex-center (applied to backdrop)
     <div
-        className="fixed inset-0 bg-black/70 flex items-center justify-center z-[2147483647] p-4"
+        className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-[2147483647] p-4 transition-opacity duration-150" // popup-backdrop open is-modal + transition
         onClick={onClose}
         role="dialog"
         aria-modal="true"
         aria-labelledby="language-modal-title"
     >
+      {/* popup open has-close has-close--inside is-modal */}
       <div
-        className="bg-background rounded-lg shadow-xl w-full max-w-3xl flex flex-col max-h-[90vh] h-auto overflow-hidden"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative transition-all duration-150"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-4 py-3 border-b border-border">
-          <h2 id="language-modal-title" className="text-lg font-semibold text-foreground text-center">
-            {t('selectYourLanguageTitle', 'Select Your Language')}
-          </h2>
-        </div>
+        {/* popup-body (overall container for content + close button) */}
+        <div className="flex flex-col h-full">
+            {/* Close button wrapper (positioned absolutely within popup-body) */}
+            {/* pressable popup-close */}
+            <button
+                onClick={onClose}
+                className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 z-10"
+                aria-label={t('close', 'Close')}
+            >
+                {/* close-button SVG (using a generic X icon) */}
+                <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
 
-        <div className="p-4 flex-1 overflow-y-auto">
-          <div>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
-              {t('suggestedLanguages', 'Suggested Languages')}
-            </h3>
-            <div className="mb-3">
-              {renderLanguageColumns(suggestedLangs, 4)}
+            {/* Actual content starts here, matching collection-create__wrapper conceptually */}
+            <div className="flex flex-col h-full">
+                {/* popup-header */}
+                <div className="px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center">
+                        {t('selectYourLanguageTitle', 'Select Your Language')}
+                    </h1>
+                    {/* Facebook's "intro" div for description - optional for language modal */}
+                    {/* <div class="intro">...</div> */}
+                </div>
+
+                {/* Main scrollable content area (equivalent to where the form/language lists would be) */}
+                {/* This will contain the suggested, divider, and region/language sections */}
+                <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto"> {/* pvs phm, pam type padding */}
+                    {/* Suggested Languages Section */}
+                    <div className="mb-3"> {/* Grouping header and grid */}
+                        <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 px-1.5"> {/* uiList mrm suggestionsHeader */}
+                            {t('suggestedLanguages', 'Suggested Languages')}
+                        </h3>
+                        <div> {/* suggestionsGrid */}
+                            {renderLanguageColumns(suggestedLangs, 4, true)}
+                        </div>
+                    </div>
+
+                    {/* Divider (suggestionsDivider) */}
+                    <hr className="my-3 border-gray-200 dark:border-gray-700" />
+
+                    {/* Main Language Selection Area (clearfix id="language_container") */}
+                    <div className="flex flex-col md:flex-row md:space-x-3">
+                        {/* Left Column: Region List (lfloat _ohe) */}
+                        <aside className="w-full md:w-48 lg:w-56 mb-3 md:mb-0 flex-shrink-0"> {/* Fixed width for sidebar */}
+                            <ul className="space-y-0.5"> {/* regionList _4kg */}
+                                {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
+                                <li key={region.key}>
+                                    <button
+                                    onClick={() => setSelectedRegionKey(region.key)}
+                                    className={`w-full text-left px-2.5 py-1.5 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                        selectedRegionKey === region.key 
+                                        ? 'bg-gray-100 dark:bg-gray-700 font-semibold text-blue-600 dark:text-blue-400' // selected-intl-region-link active
+                                        : 'text-gray-700 dark:text-gray-300'
+                                    }`}
+                                    >
+                                    {t(region.nameKey, region.key.replace('languageCategory', ''))}
+                                    </button>
+                                </li>
+                                ))}
+                            </ul>
+                        </aside>
+
+                        {/* Right Column: Languages for Selected Region (selected-intl-region1) */}
+                        <main className="flex-1 min-w-0"> {/* min-w-0 for flex child to allow shrinking */}
+                            {/* The height in FB DOM is specific, we use flex and overflow on parent */}
+                            {renderLanguageColumns(regionalLanguages, 3, false)}
+                            {regionalLanguages.length === 0 && selectedRegionKey !== "all" && (
+                                <p className="px-1.5 py-1 text-xs text-gray-500 dark:text-gray-400">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</p>
+                            )}
+                        </main>
+                    </div>
+                </div>
+                {/* Footer area isn't explicitly in the FB language DOM for language list, but is in the collection modal */}
+                {/* If needed, you can add a footer section here, similar to how it was before */}
             </div>
-          </div>
-
-          <hr className="my-4 border-border" />
-
-          <div className="flex flex-col md:flex-row md:space-x-4">
-            <aside className="w-full md:w-1/3 mb-4 md:mb-0">
-              <ul className="space-y-1">
-                {LANGUAGE_REGIONS_FOR_MODAL.map(region => (
-                  <li key={region.key}>
-                    <button
-                      onClick={() => setSelectedRegionKey(region.key)}
-                      className={`w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted focus:outline-none focus:bg-muted focus:ring-1 focus:ring-primary ${selectedRegionKey === region.key ? 'bg-muted font-semibold text-primary' : 'text-foreground'}`}
-                    >
-                      {t(region.nameKey, region.key.replace('languageCategory', ''))}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-
-            <main className="flex-1 md:w-2/3">
-              {renderLanguageColumns(regionalLanguages, 3)}
-              {regionalLanguages.length === 0 && selectedRegionKey !== "all" && (
-                 <p className="px-2 py-1 text-sm text-muted-foreground">{t('noLanguagesInRegion', 'No languages listed for this region yet.')}</p>
-              )}
-            </main>
-          </div>
-        </div>
-
-        <div className="px-4 py-3 border-t border-border bg-muted/30 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-          >
-            {t('close', 'Close')}
-          </button>
         </div>
       </div>
     </div>
