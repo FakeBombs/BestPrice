@@ -1,3 +1,8 @@
+// src/data/mockData.ts
+// COMPLETE FILE with Product interface updated and giftAttributes added to examples.
+
+// --- Interfaces ---
+
 // Category interface for nested structure
 export interface Category {
   id: number;
@@ -5,8 +10,126 @@ export interface Category {
   slug: string;
   parentId?: number | null;
   image: string | null;
-  isMain?: boolean; 
+  isMain?: boolean;
 }
+
+// Product price from vendor
+export interface ProductPrice {
+  vendorId: number;
+  price: number;
+  shippingCost?: number;
+  inStock: boolean;
+  productUrl?: string;
+  lastUpdated?: string;
+  discountPrice?: number;
+  installments?: {
+      count: number;
+      monthlyAmount?: number;
+  };
+}
+
+// Product Variant Interface
+export interface ProductVariant {
+  sku?: string;
+  gtin?: string;
+  attributes: Record<string, string>;
+  image?: string;
+  prices: ProductPrice[];
+}
+
+// Opening Hours Interface
+export interface OpeningHours {
+  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  opens: string; closes: string; notes?: string;
+}
+
+// Payment Methods Enum
+ export enum PaymentMethod {
+   COD = "Αντικαταβολή", CreditCard = "Πιστωτικές κάρτες", PayPal = "PayPal", BankTransfer = "Τραπεζική κατάθεση", VivaPayments = "Viva Payments", Paysafecard = "Paysafecard", Courier = "Ταχυμεταφορά (Courier)",
+   NetworkPickup = "Παραλαβή από δίκτυο", TransportCompany = "Μεταφορική εταιρία", PickupVia = "Παραλαβή μέσω", FreeReturn = "Δωρεάν επιστροφή", PointsCollection = "Συλλογή πόντων", GiftCards = "Δωροκάρτες",
+   ExtendedWarranty = "Επέκταση εγγύησης", WeddingList = "Λίστα γάμου/μωρού", DeviceRecycling = "Ανακύκλωση συσκευών", Klarna = "Klarna", Epistrofi = "€πιστροφή Eurobank", Installments = "Άτοκες Δόσεις", LoyaltyPoints = "Πόντοι Επιβράβευσης"
+ }
+
+// Enhanced Vendor Interface
+export interface Vendor {
+  id: number;
+  name: string;
+  slug?: string;
+  logo: string;
+  rating?: number;
+  url: string;
+  certification?: 'Gold' | 'Silver' | 'Bronze' | '';
+  telephone?: string[];
+  location?: { lat: number; lng: number }[];
+  address?: string[];
+  paymentMethods?: PaymentMethod[];
+  numberOfRatings?: number;
+  shippingPolicySummary?: string;
+  returnPolicySummary?: string;
+  isMarketplace?: boolean;
+  dateJoined?: string;
+  socialLinks?: Record<string, string>;
+  openingHours?: OpeningHours[];
+  statusMessage?: string;
+}
+
+// Brand Interface
+export interface Brand {
+  id: number;
+  name: string;
+  logo: string;
+  slug?: string;
+  officialWebsite?: string;
+  description?: string;
+  countryOfOrigin?: string;
+}
+
+// Product Interface with Gift Attributes
+export interface Product {
+  id: number;
+  title: string;
+  slug?: string;
+  brand?: string;
+  model?: string;
+  mpn?: string;
+  gtin?: string;
+  sku?: string;
+  categoryIds: number[];
+  description: string;
+  shortDescription?: string;
+  image: string;
+  images?: string[];
+  videos?: string[];
+  rating?: number;
+  reviews?: number;
+  specifications?: Record<string, string | number | boolean>;
+  prices: ProductPrice[];
+  lowestPrice?: number;
+  bestPriceVendorId?: number;
+  hasVariants?: boolean;
+  variants?: ProductVariant[];
+  variantAttributes?: string[];
+  status?: 'active' | 'inactive' | 'discontinued';
+  isFeatured?: boolean;
+  tags?: string[];
+  dateAdded?: string;
+  lastModified?: string;
+  releaseDate?: string;
+  weight?: number;
+  dimensions?: { length?: number; width?: number; height?: number; unit?: 'cm' | 'in'; };
+  shippingClass?: string;
+  relatedProductIds?: number[];
+  comparisonProductIds?: number[];
+  // <<< UPDATED: Added giftAttributes >>>
+  giftAttributes?: {
+    recipient?: ('men' | 'women' | 'teens' | 'kids9-11' | 'kids6-8' | 'toddlers' | 'babies')[];
+    occasion?: string[];
+    interest?: string[];
+  };
+}
+
+
+// --- Data Arrays ---
 
 // --- Main Categories ---
 export const mainCategories: Category[] = [
@@ -21,7 +144,6 @@ export const mainCategories: Category[] = [
 
 // --- Subcategories and nested categories ---
 export const categories: Category[] = [
-  // --- Subcategories of Τεχνολογία (parentId: 1) ---
   { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-telephony', parentId: 1, image: '/dist/images/cat/mobile-telephony.webp' },
   { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/cat/computers.webp' },
   { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/cat/laptops-accessories.webp' },
@@ -34,8 +156,6 @@ export const categories: Category[] = [
   { id: 19, name: 'Ηλεκτρονικά', slug: 'electronics', parentId: 1, image: '/dist/images/cat/electronics.webp' },
   { id: 20, name: 'Τηλεφωνία', slug: 'telephony', parentId: 1, image: '/dist/images/cat/telephony.webp' },
   { id: 21, name: 'Gadgets', slug: 'gadgets', parentId: 1, image: '/dist/images/cat/gadgets.webp' },
-
-  // --- Subcategories of Σπίτι & Κήπος (parentId: 2) ---
   { id: 22, name: 'Οικιακές Συσκευές', slug: 'home-appliances', parentId: 2, image: '/dist/images/cat/home-appliances.webp' },
   { id: 23, name: 'Εργαλεία', slug: 'tools', parentId: 2, image: '/dist/images/cat/tools.webp' },
   { id: 24, name: 'Έπιπλα', slug: 'furniture', parentId: 2, image: '/dist/images/cat/furniture.webp' },
@@ -56,8 +176,6 @@ export const categories: Category[] = [
   { id: 39, name: 'Καρότσια Λαϊκής', slug: 'shopping-trolleys', parentId: 2, image: '/dist/images/cat/shopping-trolleys.webp' },
   { id: 40, name: 'Εκκλησιαστικά Είδη', slug: 'church-items', parentId: 2, image: '/dist/images/cat/church-items.webp' },
   { id: 41, name: 'Είδη Κατοικιδίων', slug: 'pet-supplies', parentId: 2, image: '/dist/images/cat/pet-supplies.webp' },
-
-  // --- Subcategories of Μόδα (parentId: 3) ---
   { id: 42, name: 'Γυναικεία Μόδα', slug: 'womens-fashion', parentId: 3, image: '/dist/images/cat/womens-fashion.webp' },
   { id: 43, name: 'Ανδρική Μόδα', slug: 'mens-fashion', parentId: 3, image: '/dist/images/cat/mens-fashion.webp' },
   { id: 44, name: 'Ρολόγια', slug: 'watches', parentId: 3, image: '/dist/images/cat/watches.webp' },
@@ -68,8 +186,6 @@ export const categories: Category[] = [
   { id: 49, name: 'Αξεσουάρ Παπουτσιών', slug: 'shoe-accessories', parentId: 3, image: '/dist/images/cat/shoe-accessories.webp' },
   { id: 50, name: 'Παιδική, Βρεφική Μόδα', slug: 'kids-baby-fashion', parentId: 3, image: '/dist/images/cat/kids-baby-fashion.webp' },
   { id: 51, name: 'Sneakers: Τα πιο trendy παπούτσια για κάθε στυλ και περίσταση!', slug: 'sneakers', parentId: 3, image: '/dist/images/cat/sneakers.webp' },
-
-  // --- Subcategories of Υγεία & Ομορφιά (parentId: 4) ---
   { id: 52, name: 'Περιποίηση', slug: 'grooming', parentId: 4, image: '/dist/images/cat/grooming.webp' },
   { id: 53, name: 'Είδη Φαρμακείου', slug: 'pharmacy-products', parentId: 4, image: '/dist/images/cat/pharmacy-products.webp' },
   { id: 54, name: 'Αρώματα', slug: 'perfumes', parentId: 4, image: '/dist/images/cat/perfumes.webp' },
@@ -87,8 +203,6 @@ export const categories: Category[] = [
   { id: 66, name: 'Βοηθήματα Ασθενών', slug: 'patient-aids', parentId: 4, image: '/dist/images/cat/patient-aids.webp' },
   { id: 67, name: 'Οπτικά (Υγεία & Ομορφιά)', slug: 'optics', parentId: 4, image: '/dist/images/cat/optics.webp' }, // Using 'optics' for consistency
   { id: 68, name: 'Κορεάτικα Καλλυντικά', slug: 'korean-cosmetics', parentId: 4, image: '/dist/images/cat/korean-cosmetics.webp' },
-
-  // --- Subcategories of Παιδικά - Βρεφικά (parentId: 5) ---
   { id: 69, name: 'Παιδική, Βρεφική Μόδα (Παιδικά)', slug: 'kids-baby-fashion-main', parentId: 5, image: '/dist/images/cat/kids-baby-fashion-main.webp' }, // Differentiated slug from fashion's one
   { id: 70, name: 'Παιδικά Παιχνίδια', slug: 'kids-toys', parentId: 5, image: '/dist/images/cat/kids-toys.webp' },
   { id: 71, name: 'Σχολικά Είδη', slug: 'school-supplies', parentId: 5, image: '/dist/images/cat/school-supplies.webp' },
@@ -97,8 +211,6 @@ export const categories: Category[] = [
   { id: 74, name: 'Παιδικά Λευκά Είδη', slug: 'kids-linens', parentId: 5, image: '/dist/images/cat/kids-linens.webp' },
   { id: 75, name: 'Βαπτιστικά', slug: 'christening-items', parentId: 5, image: '/dist/images/cat/christening-items.webp' },
   { id: 76, name: 'Παιδικά Ρολόγια', slug: 'kids-watches', parentId: 5, image: '/dist/images/cat/kids-watches.webp' },
-
-  // --- Subcategories of Hobby, Αθλητισμός (parentId: 6) ---
   { id: 77, name: 'Αθλήματα', slug: 'sports', parentId: 6, image: '/dist/images/cat/sports.webp' },
   { id: 78, name: 'Ποδηλασία', slug: 'cycling', parentId: 6, image: '/dist/images/cat/cycling.webp' },
   { id: 79, name: 'Ελεύθερος Χρόνος', slug: 'leisure-time', parentId: 6, image: '/dist/images/cat/leisure-time.webp' },
@@ -120,14 +232,10 @@ export const categories: Category[] = [
   { id: 95, name: 'Γυναικεία Αθλητικά Παπούτσια', slug: 'womens-sports-shoes', parentId: 6, image: '/dist/images/cat/womens-sports-shoes.webp' },
   { id: 96, name: 'Ανδρικά Αθλητικά Ρούχα', slug: 'mens-sportswear', parentId: 6, image: '/dist/images/cat/mens-sportswear.webp' },
   { id: 97, name: 'Ανδρικά Αθλητικά Παπούτσια', slug: 'mens-sports-shoes', parentId: 6, image: '/dist/images/cat/mens-sports-shoes.webp' },
-
-  // --- Subcategories of Μηχανοκίνηση (parentId: 7) ---
   { id: 98, name: 'Αυτοκίνητο', slug: 'car', parentId: 7, image: '/dist/images/cat/car.webp' },
   { id: 99, name: 'Μοτοσυκλέτα', slug: 'motorcycle', parentId: 7, image: '/dist/images/cat/motorcycle.webp' },
   { id: 100, name: 'Σκάφος', slug: 'boat', parentId: 7, image: '/dist/images/cat/boat.webp' },
   { id: 101, name: 'Είδη Φορτηγού', slug: 'truck-items', parentId: 7, image: '/dist/images/cat/truck-items.webp' },
-
-  // --- Subcategories of Κινητή Τηλεφωνία (parentId: 10) ---
   { id: 102, name: 'Κινητά', slug: 'smartphones', parentId: 10, image: '/dist/images/cat/smartphones.webp' },
   { id: 103, name: 'iPhone', slug: 'iphone', parentId: 10, image: '/dist/images/cat/iphone.webp' },
   { id: 104, name: 'Θήκες Κινητών', slug: 'mobile-cases', parentId: 10, image: '/dist/images/cat/mobile-cases.webp' },
@@ -159,8 +267,6 @@ export const categories: Category[] = [
   { id: 130, name: 'Πλήκτρα Mobile Gaming', slug: 'mobile-gaming-buttons', parentId: 10, image: '/dist/images/cat/mobile-gaming-buttons.webp' },
   { id: 131, name: 'Πακέτα Σύνδεσης', slug: 'connection-packs', parentId: 10, image: '/dist/images/cat/connection-packs.webp' },
   { id: 132, name: 'Φορητά Ηχεία Bluetooth (Κινητή)', slug: 'portable-bluetooth-speakers-mobile', parentId: 10, image: '/dist/images/cat/portable-bluetooth-speakers-mobile.webp' },
-
-  // --- Subcategories of Υπολογιστές (parentId: 11) ---
   { id: 133, name: 'Περιφερειακά, Αναλώσιμα', slug: 'peripherals-consumables', parentId: 11, image: '/dist/images/cat/peripherals-consumables.webp' },
   { id: 134, name: 'Hardware', slug: 'hardware', parentId: 11, image: '/dist/images/cat/hardware.webp' },
   { id: 135, name: 'Δικτυακά', slug: 'networking', parentId: 11, image: '/dist/images/cat/networking.webp' },
@@ -168,8 +274,6 @@ export const categories: Category[] = [
   { id: 137, name: 'Οθόνες PC, Αξεσουάρ', slug: 'pc-monitors-accessories', parentId: 11, image: '/dist/images/cat/pc-monitors-accessories.webp' },
   { id: 138, name: 'Software', slug: 'software', parentId: 11, image: '/dist/images/cat/software.webp' },
   { id: 139, name: 'Επεκτάσεις Εγγύησης', slug: 'warranty-extensions', parentId: 11, image: '/dist/images/cat/warranty-extensions.webp' },
-
-  // --- Subcategories of Laptops, Αξεσουάρ (parentId: 12) ---
   { id: 140, name: 'Laptops', slug: 'laptops', parentId: 12, image: '/dist/images/cat/laptops.webp' },
   { id: 141, name: 'MacBook', slug: 'macbook', parentId: 12, image: '/dist/images/cat/macbook.webp' },
   { id: 142, name: 'Τσάντες Laptop', slug: 'laptop-bags', parentId: 12, image: '/dist/images/cat/laptop-bags.webp' },
@@ -182,8 +286,6 @@ export const categories: Category[] = [
   { id: 149, name: 'Ανταλλακτικά Laptop', slug: 'laptop-spare-parts', parentId: 12, image: '/dist/images/cat/laptop-spare-parts.webp' },
   { id: 150, name: 'Κάρτες PCMCIA', slug: 'pcmcia-cards', parentId: 12, image: '/dist/images/cat/pcmcia-cards.webp' },
   { id: 151, name: 'Διάφορα Είδη Laptop', slug: 'various-laptop-items', parentId: 12, image: '/dist/images/cat/various-laptop-items.webp' },
-
-  // --- Subcategories of Εικόνα (parentId: 13) ---
   { id: 152, name: 'Τηλεοράσεις, Αξεσουάρ', slug: 'tv-accessories', parentId: 13, image: '/dist/images/cat/tv-accessories.webp' },
   { id: 153, name: 'Καλώδια HDMI', slug: 'hdmi-cables', parentId: 13, image: '/dist/images/cat/hdmi-cables.webp' },
   { id: 154, name: 'Δορυφορική, Cable & DVB-T', slug: 'satellite-cable-dvbt', parentId: 13, image: '/dist/images/cat/satellite-cable-dvbt.webp' },
@@ -194,8 +296,6 @@ export const categories: Category[] = [
   { id: 159, name: 'Φορητά DVD Player', slug: 'portable-dvd-players', parentId: 13, image: '/dist/images/cat/portable-dvd-players.webp' },
   { id: 160, name: 'DVD, Blu-Ray Players & Recorders', slug: 'dvd-bluray-players-recorders', parentId: 13, image: '/dist/images/cat/dvd-bluray-players-recorders.webp' },
   { id: 161, name: 'Καλώδια DisplayPort', slug: 'displayport-cables', parentId: 13, image: '/dist/images/cat/displayport-cables.webp' },
-
-  // --- Subcategories of Smartwatches, Wearables (parentId: 14) ---
   { id: 162, name: 'Smartwatches', slug: 'smartwatches', parentId: 14, image: '/dist/images/cat/smartwatches.webp' },
   { id: 163, name: 'Λουράκια Smartwatch', slug: 'smartwatch-straps', parentId: 14, image: '/dist/images/cat/smartwatch-straps.webp' },
   { id: 164, name: 'Φορτιστές Smartwatch', slug: 'smartwatch-chargers', parentId: 14, image: '/dist/images/cat/smartwatch-chargers.webp' },
@@ -203,8 +303,6 @@ export const categories: Category[] = [
   { id: 166, name: 'Θήκες Smartwatch', slug: 'smartwatch-cases', parentId: 14, image: '/dist/images/cat/smartwatch-cases.webp' },
   { id: 167, name: 'Ζώνες Καρδιακών Παλμών', slug: 'heart-rate-belts', parentId: 14, image: '/dist/images/cat/heart-rate-belts.webp' },
   { id: 168, name: 'Αξεσουάρ Wearables', slug: 'wearable-accessories', parentId: 14, image: '/dist/images/cat/wearable-accessories.webp' },
-
-  // --- Subcategories of Tablets, Αξεσουάρ (parentId: 15) ---
   { id: 169, name: 'Tablets', slug: 'tablets', parentId: 15, image: '/dist/images/cat/tablets.webp' },
   { id: 170, name: 'iPad', slug: 'ipad', parentId: 15, image: '/dist/images/cat/ipad.webp' },
   { id: 171, name: 'Θήκες Tablet', slug: 'tablet-cases', parentId: 15, image: '/dist/images/cat/tablet-cases.webp' },
@@ -214,8 +312,6 @@ export const categories: Category[] = [
   { id: 175, name: 'Ανταλλακτικά Tablet', slug: 'tablet-spare-parts', parentId: 15, image: '/dist/images/cat/tablet-spare-parts.webp' },
   { id: 176, name: 'Διάφορα Αξεσουάρ Tablet', slug: 'various-tablet-accessories', parentId: 15, image: '/dist/images/cat/various-tablet-accessories.webp' },
   { id: 177, name: 'Γραφίδες Αφής (Tablets)', slug: 'stylus-pens-tablets', parentId: 15, image: '/dist/images/cat/stylus-pens-tablets.webp' },
-
-  // --- Subcategories of Video Games (parentId: 16) ---
   { id: 178, name: 'Κονσόλες', slug: 'consoles', parentId: 16, image: '/dist/images/cat/consoles.webp' },
   { id: 179, name: 'Ηλεκτρονικά Παιχνίδια', slug: 'electronic-games', parentId: 16, image: '/dist/images/cat/electronic-games.webp' },
   { id: 180, name: 'Gaming Controllers', slug: 'gaming-controllers', parentId: 16, image: '/dist/images/cat/gaming-controllers.webp' },
@@ -231,8 +327,6 @@ export const categories: Category[] = [
   { id: 190, name: 'Κάρτες Γραφικών (Gaming)', slug: 'graphics-cards-gaming', parentId: 16, image: '/dist/images/cat/graphics-cards-gaming.webp' },
   { id: 191, name: 'Gaming Ποντίκια', slug: 'gaming-mice', parentId: 16, image: '/dist/images/cat/gaming-mice.webp' },
   { id: 192, name: 'Gaming Πληκτρολόγια', slug: 'gaming-keyboards', parentId: 16, image: '/dist/images/cat/gaming-keyboards.webp' },
-
-  // --- Subcategories of Ήχος (parentId: 17) ---
   { id: 193, name: 'Home Audio', slug: 'home-audio', parentId: 17, image: '/dist/images/cat/home-audio.webp' },
   { id: 194, name: 'Επαγγελματικός Ήχος', slug: 'professional-sound', parentId: 17, image: '/dist/images/cat/professional-sound.webp' },
   { id: 195, name: 'Ακουστικά, Αξεσουάρ', slug: 'headphones-accessories', parentId: 17, image: '/dist/images/cat/headphones-accessories.webp' },
@@ -243,26 +337,18 @@ export const categories: Category[] = [
   { id: 200, name: 'MP3, MP4 Players & Αξεσουάρ', slug: 'mp3-mp4-players-accessories', parentId: 17, image: '/dist/images/cat/mp3-mp4-players-accessories.webp' },
   { id: 201, name: 'Ηχεία Εγκαταστάσεων', slug: 'installation-speakers', parentId: 17, image: '/dist/images/cat/installation-speakers.webp' },
   { id: 202, name: 'Αυτοενισχυόμενα Ηχεία', slug: 'powered-speakers', parentId: 17, image: '/dist/images/cat/powered-speakers.webp' },
-
-  // --- Subcategories of Φωτογραφία, Video (parentId: 18) ---
   { id: 203, name: 'Φωτογραφικές Μηχανές, Αξεσουάρ', slug: 'cameras-accessories', parentId: 18, image: '/dist/images/cat/cameras-accessories.webp' },
   { id: 204, name: 'Action Cameras, Αξεσουάρ', slug: 'action-cameras-accessories', parentId: 18, image: '/dist/images/cat/action-cameras-accessories.webp' },
   { id: 205, name: 'Βιντεοκάμερες, Αξεσουάρ', slug: 'camcorders-accessories', parentId: 18, image: '/dist/images/cat/camcorders-accessories.webp' },
   { id: 206, name: 'Εξοπλισμός Studio', slug: 'studio-equipment', parentId: 18, image: '/dist/images/cat/studio-equipment.webp' },
   { id: 207, name: 'Ψηφιακές Κορνίζες', slug: 'digital-photo-frames', parentId: 18, image: '/dist/images/cat/digital-photo-frames.webp' },
-
-  // --- Subcategories of Ηλεκτρονικά (parentId: 19) ---
   { id: 208, name: 'Μπαταρίες & Φορτιστές Μπαταριών', slug: 'batteries-chargers', parentId: 19, image: '/dist/images/cat/batteries-chargers.webp' },
   { id: 209, name: 'Μικροηλεκτρονικά', slug: 'microelectronics', parentId: 19, image: '/dist/images/cat/microelectronics.webp' },
   { id: 210, name: 'Ηλεκτρονικά Εξαρτήματα', slug: 'electronic-components', parentId: 19, image: '/dist/images/cat/electronic-components.webp' },
   { id: 211, name: 'Αξεσουάρ Ηλεκτρονικών Συσκευών', slug: 'electronic-device-accessories', parentId: 19, image: '/dist/images/cat/electronic-device-accessories.webp' },
-
-  // --- Subcategories of Τηλεφωνία (parentId: 20) ---
   { id: 212, name: 'Σταθερή Τηλεφωνία', slug: 'landline-telephony', parentId: 20, image: '/dist/images/cat/landline-telephony.webp' },
   { id: 213, name: 'VoIP', slug: 'voip', parentId: 20, image: '/dist/images/cat/voip.webp' },
   { id: 214, name: 'Ασύρματοι, Αξεσουάρ', slug: 'walkie-talkies-accessories', parentId: 20, image: '/dist/images/cat/walkie-talkies-accessories.webp' },
-
-  // --- Subcategories of Θήκες Κινητών (parentId: 104) ---
   { id: 215, name: 'Θήκες Κινητών Samsung', slug: 'mobile-cases-samsung', parentId: 104, image: '/dist/images/cat/mobile-cases-samsung.webp' },
   { id: 216, name: 'Θήκες Κινητών Xiaomi', slug: 'mobile-cases-xiaomi', parentId: 104, image: '/dist/images/cat/mobile-cases-xiaomi.webp' },
   { id: 217, name: 'Θήκες iPhone', slug: 'iphone-cases', parentId: 104, image: '/dist/images/cat/iphone-cases.webp' },
@@ -278,16 +364,12 @@ export const categories: Category[] = [
   { id: 227, name: 'Θήκες Κινητών για Τρέξιμο', slug: 'mobile-running-armbands', parentId: 104, image: '/dist/images/cat/mobile-running-armbands.webp' },
   { id: 228, name: 'Θήκες Κινητών με Σχέδια', slug: 'patterned-mobile-cases', parentId: 104, image: '/dist/images/cat/patterned-mobile-cases.webp' },
   { id: 229, name: 'Αδιάβροχες Θήκες Κινητών', slug: 'waterproof-mobile-cases', parentId: 104, image: '/dist/images/cat/waterproof-mobile-cases.webp' },
-
-  // --- Subcategories of Καλώδια Φόρτισης, Μεταφοράς Δεδομένων (parentId: 114) ---
   { id: 230, name: 'Καλώδια USB Type-C', slug: 'usb-type-c-cables', parentId: 114, image: '/dist/images/cat/usb-type-c-cables.webp' },
   { id: 231, name: 'Καλώδια Lightning', slug: 'lightning-cables', parentId: 114, image: '/dist/images/cat/lightning-cables.webp' },
   { id: 232, name: 'Καλώδια micro USB', slug: 'micro-usb-cables', parentId: 114, image: '/dist/images/cat/micro-usb-cables.webp' },
   { id: 233, name: 'Καλώδια Multi Port', slug: 'multi-port-cables', parentId: 114, image: '/dist/images/cat/multi-port-cables.webp' },
   { id: 234, name: 'Καλώδια 30-Pin', slug: '30-pin-cables', parentId: 114, image: '/dist/images/cat/30-pin-cables.webp' },
   { id: 235, name: 'Αντάπτορες, Προεκτάσεις Κινητών', slug: 'mobile-adapters-extensions', parentId: 114, image: '/dist/images/cat/mobile-adapters-extensions.webp' },
-
-  // --- Subcategories of Ανταλλακτικά Κινητών (parentId: 116) ---
   { id: 236, name: 'Οθόνες Κινητών', slug: 'mobile-screens', parentId: 116, image: '/dist/images/cat/mobile-screens.webp' },
   { id: 237, name: 'Μηχανισμοί Δόνησης Κινητών', slug: 'mobile-vibration-motors', parentId: 116, image: '/dist/images/cat/mobile-vibration-motors.webp' },
   { id: 238, name: 'Μηχανισμοί Αφής Κινητών', slug: 'mobile-touch-mechanisms', parentId: 116, image: '/dist/images/cat/mobile-touch-mechanisms.webp' },
@@ -306,8 +388,6 @@ export const categories: Category[] = [
   { id: 251, name: 'SD/SIM Trays', slug: 'sd-sim-trays', parentId: 116, image: '/dist/images/cat/sd-sim-trays.webp' },
   { id: 252, name: 'Πλακέτες Πληκτρολογίου, Πληκτρολόγια', slug: 'mobile-keypad-boards', parentId: 116, image: '/dist/images/cat/mobile-keypad-boards.webp' },
   { id: 253, name: 'Διάφορα Ανταλλακτικά Κινητών', slug: 'various-mobile-parts', parentId: 116, image: '/dist/images/cat/various-mobile-parts.webp' },
-
-  // --- Subcategories of Περιφερειακά, Αναλώσιμα (parentId: 133) ---
   { id: 254, name: 'Εκτυπωτές & Αξεσουάρ', slug: 'printers-accessories', parentId: 133, image: '/dist/images/cat/printers-accessories.webp' },
   { id: 255, name: 'Συσκευές Εισόδου', slug: 'input-devices', parentId: 133, image: '/dist/images/cat/input-devices.webp' },
   { id: 256, name: 'Multimedia', slug: 'multimedia', parentId: 133, image: '/dist/images/cat/multimedia.webp' },
@@ -328,8 +408,6 @@ export const categories: Category[] = [
   { id: 271, name: 'Καλώδια Σειριακά, PS/2', slug: 'serial-ps2-cables', parentId: 133, image: '/dist/images/cat/serial-ps2-cables.webp' },
   { id: 272, name: 'Καλώδια FireWire', slug: 'firewire-cables', parentId: 133, image: '/dist/images/cat/firewire-cables.webp' },
   { id: 273, name: 'Καλώδια HDMI (PC)', slug: 'hdmi-cables-pc', parentId: 133, image: '/dist/images/cat/hdmi-cables-pc.webp' },
-
-  // --- Subcategories of Hardware (parentId: 134) ---
   { id: 274, name: 'Κάρτες Γραφικών', slug: 'graphics-cards', parentId: 134, image: '/dist/images/cat/graphics-cards.webp' },
   { id: 275, name: 'Μητρικές Κάρτες', slug: 'motherboards', parentId: 134, image: '/dist/images/cat/motherboards.webp' },
   { id: 276, name: 'CPU', slug: 'cpu', parentId: 134, image: '/dist/images/cat/cpu.webp' },
@@ -347,8 +425,6 @@ export const categories: Category[] = [
   { id: 288, name: 'Floppy, Tape Drives', slug: 'floppy-tape-drives', parentId: 134, image: '/dist/images/cat/floppy-tape-drives.webp' },
   { id: 289, name: 'Καλώδια Hardware', slug: 'hardware-cables', parentId: 134, image: '/dist/images/cat/hardware-cables.webp' },
   { id: 290, name: 'Διάφορα Είδη Υπολογιστών', slug: 'various-pc-items', parentId: 134, image: '/dist/images/cat/various-pc-items.webp' },
-
-  // --- Subcategories of Δικτυακά (parentId: 135) ---
   { id: 291, name: 'WiFi Extenders', slug: 'wifi-extenders', parentId: 135, image: '/dist/images/cat/wifi-extenders.webp' },
   { id: 292, name: 'Routers', slug: 'routers', parentId: 135, image: '/dist/images/cat/routers.webp' },
   { id: 293, name: 'Access Points', slug: 'access-points', parentId: 135, image: '/dist/images/cat/access-points.webp' },
@@ -370,8 +446,6 @@ export const categories: Category[] = [
   { id: 309, name: 'Κάλυμμα για Βύσμα Δικτύου', slug: 'network-jack-covers', parentId: 135, image: '/dist/images/cat/network-jack-covers.webp' },
   { id: 310, name: 'RJ45 Connectors', slug: 'rj45-connectors', parentId: 135, image: '/dist/images/cat/rj45-connectors.webp' },
   { id: 311, name: 'Διάφορα Δικτυακά', slug: 'various-networking-items', parentId: 135, image: '/dist/images/cat/various-networking-items.webp' },
-
-  // --- Subcategories of Desktops & Servers (parentId: 136) ---
   { id: 312, name: 'Desktop PC', slug: 'desktop-pc', parentId: 136, image: '/dist/images/cat/desktop-pc.webp' },
   { id: 313, name: 'All in One PC', slug: 'all-in-one-pc', parentId: 136, image: '/dist/images/cat/all-in-one-pc.webp' },
   { id: 314, name: 'Mini PC', slug: 'mini-pc', parentId: 136, image: '/dist/images/cat/mini-pc.webp' },
@@ -379,21 +453,15 @@ export const categories: Category[] = [
   { id: 316, name: 'Αξεσουάρ Server', slug: 'server-accessories', parentId: 136, image: '/dist/images/cat/server-accessories.webp' },
   { id: 317, name: 'Βάσεις Desktop', slug: 'desktop-stands', parentId: 136, image: '/dist/images/cat/desktop-stands.webp' },
   { id: 318, name: 'Barebones', slug: 'barebones', parentId: 136, image: '/dist/images/cat/barebones.webp' },
-
-  // --- Subcategories of Οθόνες PC, Αξεσουάρ (parentId: 137) ---
   { id: 319, name: 'Οθόνες Υπολογιστών', slug: 'pc-monitors', parentId: 137, image: '/dist/images/cat/pc-monitors.webp' },
   { id: 320, name: 'Αξεσουάρ Οθονών', slug: 'monitor-accessories', parentId: 137, image: '/dist/images/cat/monitor-accessories.webp' },
   { id: 321, name: 'Public Displays', slug: 'public-displays', parentId: 137, image: '/dist/images/cat/public-displays.webp' },
-
-  // --- Subcategories of Software (parentId: 138) ---
   { id: 322, name: 'Antivirus, Security', slug: 'antivirus-security', parentId: 138, image: '/dist/images/cat/antivirus-security.webp' },
   { id: 323, name: 'Εφαρμογές Γραφείου', slug: 'office-applications', parentId: 138, image: '/dist/images/cat/office-applications.webp' },
   { id: 324, name: 'Λειτουργικά Συστήματα', slug: 'operating-systems', parentId: 138, image: '/dist/images/cat/operating-systems.webp' },
   { id: 325, name: 'Εφαρμογές Software', slug: 'software-applications', parentId: 138, image: '/dist/images/cat/software-applications.webp' },
   { id: 326, name: 'Επεξεργασία Εικόνας - Ήχου', slug: 'image-audio-editing', parentId: 138, image: '/dist/images/cat/image-audio-editing.webp' },
   { id: 327, name: 'Εμπορική Διαχείριση', slug: 'business-management', parentId: 138, image: '/dist/images/cat/business-management.webp' },
-
-  // --- Subcategories of Ανταλλακτικά Laptop (parentId: 149) ---
   { id: 328, name: 'Οθόνες Laptop', slug: 'laptop-screens', parentId: 149, image: '/dist/images/cat/laptop-screens.webp' },
   { id: 329, name: 'Πληκτρολόγια Laptop', slug: 'laptop-keyboards', parentId: 149, image: '/dist/images/cat/laptop-keyboards.webp' },
   { id: 330, name: 'Καλωδιοταινίες Laptop', slug: 'laptop-flex-cables', parentId: 149, image: '/dist/images/cat/laptop-flex-cables.webp' },
@@ -403,8 +471,6 @@ export const categories: Category[] = [
   { id: 334, name: 'Μεντεσέδες Laptop', slug: 'laptop-hinges', parentId: 149, image: '/dist/images/cat/laptop-hinges.webp' },
   { id: 335, name: 'LCD Inverters Laptop', slug: 'laptop-lcd-inverters', parentId: 149, image: '/dist/images/cat/laptop-lcd-inverters.webp' },
   { id: 336, name: 'Διάφορα Ανταλλακτικά Laptop', slug: 'various-laptop-parts', parentId: 149, image: '/dist/images/cat/various-laptop-parts.webp' },
-
-  // --- Subcategories of Τηλεοράσεις, Αξεσουάρ (parentId: 152) ---
   { id: 337, name: 'Τηλεοράσεις', slug: 'tvs', parentId: 152, image: '/dist/images/cat/tvs.webp' },
   { id: 338, name: 'Βάσεις Τηλεοράσεων', slug: 'tv-mounts', parentId: 152, image: '/dist/images/cat/tv-mounts.webp' },
   { id: 339, name: 'Τηλεχειριστήρια Τηλεόρασης', slug: 'tv-remotes', parentId: 152, image: '/dist/images/cat/tv-remotes.webp' },
@@ -412,8 +478,6 @@ export const categories: Category[] = [
   { id: 341, name: 'Καλώδια, Αντάπτορες (TV)', slug: 'cables-adapters-tv', parentId: 152, image: '/dist/images/cat/cables-adapters-tv.webp' },
   { id: 342, name: 'Γυαλιά 3D', slug: '3d-glasses', parentId: 152, image: '/dist/images/cat/3d-glasses.webp' },
   { id: 343, name: 'Διάφορα Είδη Τηλεοράσεως', slug: 'various-tv-items', parentId: 152, image: '/dist/images/cat/various-tv-items.webp' },
-
-  // --- Subcategories of Δορυφορική, Cable & DVB-T (parentId: 154) ---
   { id: 344, name: 'Ψηφιακοί Δέκτες Mpeg-4', slug: 'mpeg4-receivers', parentId: 154, image: '/dist/images/cat/mpeg4-receivers.webp' },
   { id: 345, name: 'Δορυφορικοί Αποκωδικοποιητές', slug: 'satellite-decoders', parentId: 154, image: '/dist/images/cat/satellite-decoders.webp' },
   { id: 346, name: 'Επίγειες Κεραίες', slug: 'terrestrial-antennas', parentId: 154, image: '/dist/images/cat/terrestrial-antennas.webp' },
@@ -425,15 +489,11 @@ export const categories: Category[] = [
   { id: 352, name: 'Diseqc', slug: 'diseqc', parentId: 154, image: '/dist/images/cat/diseqc.webp' },
   { id: 353, name: 'Μίκτες, Πολυδιακόπτες, Διακλαδωτές', slug: 'mixers-multiswitches-splitters', parentId: 154, image: '/dist/images/cat/mixers-multiswitches-splitters.webp' },
   { id: 354, name: 'Αξεσουάρ Συστημάτων Λήψης', slug: 'reception-system-accessories', parentId: 154, image: '/dist/images/cat/reception-system-accessories.webp' },
-
-  // --- Subcategories of Projectors, Αξεσουάρ (parentId: 155) ---
   { id: 355, name: 'Projectors', slug: 'projectors', parentId: 155, image: '/dist/images/cat/projectors.webp' },
   { id: 356, name: 'Οθόνες Προβολής', slug: 'projection-screens', parentId: 155, image: '/dist/images/cat/projection-screens.webp' },
   { id: 357, name: 'Λάμπες Projector', slug: 'projector-lamps', parentId: 155, image: '/dist/images/cat/projector-lamps.webp' },
   { id: 358, name: 'Βάσεις Projector', slug: 'projector-mounts', parentId: 155, image: '/dist/images/cat/projector-mounts.webp' },
   { id: 359, name: 'Αξεσουάρ Projectors', slug: 'projector-accessories', parentId: 155, image: '/dist/images/cat/projector-accessories.webp' },
-
-  // --- Subcategories of Ηλεκτρονικά Παιχνίδια (parentId: 179) ---
   { id: 360, name: 'PS5 Games', slug: 'ps5-games', parentId: 179, image: '/dist/images/cat/ps5-games.webp' },
   { id: 361, name: 'PS4 Games', slug: 'ps4-games', parentId: 179, image: '/dist/images/cat/ps4-games.webp' },
   { id: 362, name: 'PS3 Games', slug: 'ps3-games', parentId: 179, image: '/dist/images/cat/ps3-games.webp' },
@@ -453,8 +513,6 @@ export const categories: Category[] = [
   { id: 376, name: 'GameCube Games', slug: 'gamecube-games', parentId: 179, image: '/dist/images/cat/gamecube-games.webp' },
   { id: 377, name: 'GameBoy Games', slug: 'gameboy-games', parentId: 179, image: '/dist/images/cat/gameboy-games.webp' },
   { id: 378, name: 'Συλλεκτικά Video Games', slug: 'collectible-video-games', parentId: 179, image: '/dist/images/cat/collectible-video-games.webp' },
-
-  // --- Subcategories of Home Audio (parentId: 193) ---
   { id: 379, name: 'Ενισχυτές, Προενισχυτές', slug: 'amplifiers-preamplifiers', parentId: 193, image: '/dist/images/cat/amplifiers-preamplifiers.webp' },
   { id: 380, name: 'Συστήματα Hi-Fi', slug: 'hi-fi-systems', parentId: 193, image: '/dist/images/cat/hi-fi-systems.webp' },
   { id: 381, name: 'Φορητά Ηχεία Bluetooth', slug: 'portable-bluetooth-speakers', parentId: 193, image: '/dist/images/cat/portable-bluetooth-speakers.webp' },
@@ -464,10 +522,8 @@ export const categories: Category[] = [
   { id: 385, name: 'CD Players, Recorders', slug: 'cd-players-recorders', parentId: 193, image: '/dist/images/cat/cd-players-recorders.webp' },
   { id: 386, name: 'Παρελκόμενα Hi-Fi', slug: 'hi-fi-accessories', parentId: 193, image: '/dist/images/cat/hi-fi-accessories.webp' },
   { id: 387, name: 'Docking Stations', slug: 'docking-stations', parentId: 193, image: '/dist/images/cat/docking-stations.webp' },
-  { id: 388, name: 'Soundbar (Home Audio)', slug: 'soundbars', parentId: 193, image: '/dist/images/cat/soundbars.webp' }, // Using generic slug 'soundbars'
+  { id: 388, name: 'Soundbar (Home Audio)', slug: 'soundbars', parentId: 193, image: '/dist/images/cat/soundbars.webp' },
   { id: 389, name: 'Ηχεία Υπολογιστή', slug: 'computer-speakers', parentId: 193, image: '/dist/images/cat/computer-speakers.webp' },
-
-  // --- Subcategories of Επαγγελματικός Ήχος (parentId: 194) ---
   { id: 390, name: 'Ηχεία PA', slug: 'pa-speakers', parentId: 194, image: '/dist/images/cat/pa-speakers.webp' },
   { id: 391, name: 'Επαγγελματικά Μικρόφωνα, Αξεσουάρ', slug: 'pro-microphones-accessories', parentId: 194, image: '/dist/images/cat/pro-microphones-accessories.webp' },
   { id: 392, name: 'Επαγγελματικός Φωτισμός', slug: 'pro-lighting', parentId: 194, image: '/dist/images/cat/pro-lighting.webp' },
@@ -491,34 +547,24 @@ export const categories: Category[] = [
   { id: 410, name: 'Αντάπτορες, Προεκτάσεις Ήχου', slug: 'audio-adapters-extensions-pro', parentId: 194, image: '/dist/images/cat/audio-adapters-extensions-pro.webp' },
   { id: 411, name: 'Διάφορα Επαγγελματικού Ήχου', slug: 'various-pro-audio', parentId: 194, image: '/dist/images/cat/various-pro-audio.webp' },
   { id: 412, name: 'Ηχεία Εγκαταστάσεων (Επαγγελματικός Ήχος)', slug: 'installation-speakers-pro', parentId: 194, image: '/dist/images/cat/installation-speakers-pro.webp' },
-
-  // --- Subcategories of Επαγγελματικά Μικρόφωνα, Αξεσουάρ (parentId: 391) ---
   { id: 413, name: 'Επαγγελματικά Μικρόφωνα', slug: 'pro-microphones', parentId: 391, image: '/dist/images/cat/pro-microphones.webp' },
   { id: 414, name: 'Δέκτες (Μικροφώνων)', slug: 'microphone-receivers', parentId: 391, image: '/dist/images/cat/microphone-receivers.webp' },
   { id: 415, name: 'Κάψες (Μικροφώνων)', slug: 'microphone-capsules', parentId: 391, image: '/dist/images/cat/microphone-capsules.webp' },
   { id: 416, name: 'Αξεσουάρ Μικροφώνων (Επαγγελματικά)', slug: 'microphone-accessories-pro', parentId: 391, image: '/dist/images/cat/microphone-accessories-pro.webp' },
-
-  // --- Subcategories of Επαγγελματικός Φωτισμός (parentId: 392) ---
   { id: 417, name: 'Φωτορυθμικά', slug: 'lighting-effects', parentId: 392, image: '/dist/images/cat/lighting-effects.webp' },
   { id: 418, name: 'Laser (Φωτισμός)', slug: 'lasers-lighting', parentId: 392, image: '/dist/images/cat/lasers-lighting.webp' },
   { id: 419, name: 'Κεφαλές Laser (Φωτισμός)', slug: 'laser-heads-lighting', parentId: 392, image: '/dist/images/cat/laser-heads-lighting.webp' },
   { id: 420, name: 'Par Cans', slug: 'par-cans', parentId: 392, image: '/dist/images/cat/par-cans.webp' },
   { id: 421, name: 'Μπάλες από Καθρέπτη', slug: 'mirror-balls', parentId: 392, image: '/dist/images/cat/mirror-balls.webp' },
   { id: 422, name: 'Κονσόλες Φωτισμού', slug: 'lighting-consoles', parentId: 392, image: '/dist/images/cat/lighting-consoles.webp' },
-
-  // --- Subcategories of Εξοπλισμός DJ & Αξεσουάρ (parentId: 394) ---
   { id: 423, name: 'DJ Controllers', slug: 'dj-controllers', parentId: 394, image: '/dist/images/cat/dj-controllers.webp' },
   { id: 424, name: 'Εξοπλισμός Midi Υπολογιστή (DJ)', slug: 'midi-equipment-dj', parentId: 394, image: '/dist/images/cat/midi-equipment-dj.webp' },
   { id: 425, name: 'DJ CD / MP3 Players', slug: 'dj-cd-mp3-players', parentId: 394, image: '/dist/images/cat/dj-cd-mp3-players.webp' },
   { id: 426, name: 'DJ Αξεσουάρ', slug: 'dj-accessories', parentId: 394, image: '/dist/images/cat/dj-accessories.webp' },
-
-  // --- Subcategories of Μηχανήματα Καπνού & Ατμόσφαιρας (parentId: 398) ---
   { id: 427, name: 'Μηχανές Καπνού', slug: 'smoke-machines', parentId: 398, image: '/dist/images/cat/smoke-machines.webp' },
   { id: 428, name: 'Μηχανές για Φυσαλίδες', slug: 'bubble-machines', parentId: 398, image: '/dist/images/cat/bubble-machines.webp' },
   { id: 429, name: 'Μηχανές Χιονιού', slug: 'snow-machines', parentId: 398, image: '/dist/images/cat/snow-machines.webp' },
   { id: 430, name: 'Αξεσουάρ Μηχανημάτων Καπνού & Ατμόσφαιρας', slug: 'fog-atmosphere-accessories', parentId: 398, image: '/dist/images/cat/fog-atmosphere-accessories.webp' },
-
-  // --- Subcategories of Ακουστικά, Αξεσουάρ (parentId: 195) ---
   { id: 431, name: 'Headphones', slug: 'headphones', parentId: 195, image: '/dist/images/cat/headphones.webp' },
   { id: 432, name: 'Ακουστικά Ψείρες', slug: 'earbuds', parentId: 195, image: '/dist/images/cat/earbuds.webp' },
   { id: 433, name: 'Ενισχυτές Ακουστικών', slug: 'headphone-amplifiers', parentId: 195, image: '/dist/images/cat/headphone-amplifiers.webp' },
@@ -527,8 +573,6 @@ export const categories: Category[] = [
   { id: 436, name: 'Αξεσουάρ, Ανταλλακτικά Ακουστικών', slug: 'headphone-accessories-parts', parentId: 195, image: '/dist/images/cat/headphone-accessories-parts.webp' },
   { id: 437, name: 'Gaming Headsets (Ήχος)', slug: 'gaming-headsets-audio', parentId: 195, image: '/dist/images/cat/gaming-headsets-audio.webp' },
   { id: 438, name: 'Ακουστικά Υπολογιστή (Ήχος)', slug: 'computer-headphones-audio', parentId: 195, image: '/dist/images/cat/computer-headphones-audio.webp' },
-
-  // --- Subcategories of Συσκευές Πικάπ, Αξεσουάρ (parentId: 197) ---
   { id: 439, name: 'Πικάπ', slug: 'turntables', parentId: 197, image: '/dist/images/cat/turntables.webp' },
   { id: 440, name: 'Slipmat', slug: 'slipmats', parentId: 197, image: '/dist/images/cat/slipmats.webp' },
   { id: 441, name: 'Κεφάλες Πικάπ', slug: 'turntable-cartridges', parentId: 197, image: '/dist/images/cat/turntable-cartridges.webp' },
@@ -538,23 +582,15 @@ export const categories: Category[] = [
   { id: 445, name: 'Ανταλλακτικά Πικάπ', slug: 'turntable-parts', parentId: 197, image: '/dist/images/cat/turntable-parts.webp' },
   { id: 446, name: 'Αποθήκευση, Μεταφορά Δίσκων Πικάπ', slug: 'turntable-record-storage', parentId: 197, image: '/dist/images/cat/turntable-record-storage.webp' },
   { id: 447, name: 'Ενισχυτές Πικάπ', slug: 'turntable-amplifiers', parentId: 197, image: '/dist/images/cat/turntable-amplifiers.webp' },
-
-  // --- Subcategories of Home Cinema (parentId: 198) ---
   { id: 448, name: 'Σετ Home Cinema', slug: 'home-cinema-sets', parentId: 198, image: '/dist/images/cat/home-cinema-sets.webp' },
   { id: 449, name: 'Soundbar (Home Cinema)', slug: 'soundbars', parentId: 198, image: '/dist/images/cat/soundbars.webp' }, // Using generic slug
   { id: 450, name: 'Subwoofer (Home Cinema)', slug: 'subwoofers', parentId: 198, image: '/dist/images/cat/subwoofers.webp' }, // Using generic slug
-
-  // --- Subcategories of Φορητές Συσκευές (parentId: 199) ---
   { id: 451, name: 'Φορητά Ράδιο CD', slug: 'portable-radio-cd', parentId: 199, image: '/dist/images/cat/portable-radio-cd.webp' },
   { id: 452, name: 'Φορητά Ραδιόφωνα', slug: 'portable-radios', parentId: 199, image: '/dist/images/cat/portable-radios.webp' },
   { id: 453, name: 'Δημοσιογραφικά, Καταγραφικά Ήχου', slug: 'audio-recorders', parentId: 199, image: '/dist/images/cat/audio-recorders.webp' },
   { id: 454, name: 'Φορητά CD Players', slug: 'portable-cd-players', parentId: 199, image: '/dist/images/cat/portable-cd-players.webp' },
-
-  // --- Subcategories of MP3, MP4 Players & Αξεσουάρ (parentId: 200) ---
   { id: 455, name: 'MP3, MP4 Players', slug: 'mp3-mp4-players', parentId: 200, image: '/dist/images/cat/mp3-mp4-players.webp' },
   { id: 456, name: 'MP3, MP4 Αξεσουάρ', slug: 'mp3-mp4-accessories', parentId: 200, image: '/dist/images/cat/mp3-mp4-accessories.webp' },
-
-  // --- Subcategories of Φωτογραφικές Μηχανές, Αξεσουάρ (parentId: 203) ---
   { id: 457, name: 'Φωτογραφικές Μηχανές', slug: 'cameras', parentId: 203, image: '/dist/images/cat/cameras.webp' },
   { id: 458, name: 'Ring Lights', slug: 'ring-lights', parentId: 203, image: '/dist/images/cat/ring-lights.webp' },
   { id: 459, name: 'Τσάντες, Θήκες Φωτογραφικών Μηχανών', slug: 'camera-bags-cases', parentId: 203, image: '/dist/images/cat/camera-bags-cases.webp' },
@@ -571,8 +607,6 @@ export const categories: Category[] = [
   { id: 470, name: 'Βάσεις Φωτογραφικών Μηχανών', slug: 'camera-mounts', parentId: 203, image: '/dist/images/cat/camera-mounts.webp' },
   { id: 471, name: 'Αξεσουάρ Φωτογραφικών Μηχανών', slug: 'camera-accessories', parentId: 203, image: '/dist/images/cat/camera-accessories.webp' },
   { id: 472, name: 'Αξεσουάρ Φακών Φωτογραφικών Μηχανών', slug: 'lens-accessories', parentId: 203, image: '/dist/images/cat/lens-accessories.webp' },
-
-  // --- Subcategories of Action Cameras, Αξεσουάρ (parentId: 204) ---
   { id: 473, name: 'Action Cameras', slug: 'action-cameras', parentId: 204, image: '/dist/images/cat/action-cameras.webp' },
   { id: 474, name: 'Θήκες Προστασίας Action Cameras', slug: 'action-camera-protective-cases', parentId: 204, image: '/dist/images/cat/action-camera-protective-cases.webp' },
   { id: 475, name: 'Θήκες Μεταφοράς Action Cameras', slug: 'action-camera-carrying-cases', parentId: 204, image: '/dist/images/cat/action-camera-carrying-cases.webp' },
@@ -585,20 +619,14 @@ export const categories: Category[] = [
   { id: 482, name: 'Φίλτρα Action Cameras', slug: 'action-camera-filters', parentId: 204, image: '/dist/images/cat/action-camera-filters.webp' },
   { id: 483, name: 'Αξεσουάρ Action Cameras', slug: 'action-camera-accessories', parentId: 204, image: '/dist/images/cat/action-camera-accessories.webp' },
   { id: 484, name: 'Κάρτες Μνήμης (Action Cameras)', slug: 'action-camera-memory-cards', parentId: 204, image: '/dist/images/cat/action-camera-memory-cards.webp' },
-
-  // --- Subcategories of Βιντεοκάμερες, Αξεσουάρ (parentId: 205) ---
   { id: 485, name: 'Ψηφιακές Βιντεοκάμερες', slug: 'digital-camcorders', parentId: 205, image: '/dist/images/cat/digital-camcorders.webp' },
   { id: 486, name: 'Μπαταρίες Βιντεοκαμερών', slug: 'camcorder-batteries', parentId: 205, image: '/dist/images/cat/camcorder-batteries.webp' },
   { id: 487, name: 'Προβολείς, Φλας (Video)', slug: 'lights-flashes-video', parentId: 205, image: '/dist/images/cat/lights-flashes-video.webp' },
   { id: 488, name: 'Φορτιστές Βιντεοκαμερών', slug: 'camcorder-chargers', parentId: 205, image: '/dist/images/cat/camcorder-chargers.webp' },
   { id: 489, name: 'Διάφορα Αξεσουάρ Βιντεοκάμερας', slug: 'various-camcorder-accessories', parentId: 205, image: '/dist/images/cat/various-camcorder-accessories.webp' },
-
-  // --- Subcategories of Μπαταρίες & Φορτιστές Μπαταριών (parentId: 208) ---
   { id: 490, name: 'Φορτιστές Μπαταριών (Γενικοί)', slug: 'general-battery-chargers', parentId: 208, image: '/dist/images/cat/general-battery-chargers.webp' },
   { id: 491, name: 'Μπαταρίες (Γενικές)', slug: 'general-batteries', parentId: 208, image: '/dist/images/cat/general-batteries.webp' },
   { id: 492, name: 'Διάφορα Μπαταριών', slug: 'various-battery-items', parentId: 208, image: '/dist/images/cat/various-battery-items.webp' },
-
-  // --- Subcategories of Μικροηλεκτρονικά (parentId: 209) ---
   { id: 493, name: 'Μικροεπεξεργαστές', slug: 'microprocessors', parentId: 209, image: '/dist/images/cat/microprocessors.webp' },
   { id: 494, name: 'Διακόπτες (Ηλεκτρονικοί)', slug: 'electronic-switches', parentId: 209, image: '/dist/images/cat/electronic-switches.webp' },
   { id: 495, name: 'Πυκνωτές', slug: 'capacitors', parentId: 209, image: '/dist/images/cat/capacitors.webp' },
@@ -613,726 +641,37 @@ export const categories: Category[] = [
   { id: 504, name: 'Αντιστάσεις', slug: 'resistors', parentId: 209, image: '/dist/images/cat/resistors.webp' },
   { id: 505, name: 'Ολοκληρωμένα Κυκλώματα', slug: 'integrated-circuits', parentId: 209, image: '/dist/images/cat/integrated-circuits.webp' },
   { id: 506, name: 'Διάφορα Μικροηλεκτρονικά', slug: 'various-microelectronics', parentId: 209, image: '/dist/images/cat/various-microelectronics.webp' },
-
-  // --- Subcategories of Μικροεπεξεργαστές (parentId: 493) ---
   { id: 507, name: 'Πλακέτες Ανάπτυξης', slug: 'development-boards', parentId: 493, image: '/dist/images/cat/development-boards.webp' },
   { id: 508, name: 'Εξαρτήματα Μικροεπεξεργαστών', slug: 'microprocessor-components', parentId: 493, image: '/dist/images/cat/microprocessor-components.webp' },
   { id: 509, name: 'Αξεσουάρ Μικροεπεξεργαστών', slug: 'microprocessor-accessories', parentId: 493, image: '/dist/images/cat/microprocessor-accessories.webp' },
-
-  // --- Subcategories of Αξεσουάρ Ηλεκτρονικών Συσκευών (parentId: 211) ---
   { id: 510, name: 'CD / DVD Καθαρισμού Φακών', slug: 'cd-dvd-lens-cleaners', parentId: 211, image: '/dist/images/cat/cd-dvd-lens-cleaners.webp' },
   { id: 511, name: 'Διάφορα Ηλεκτρονικών Συσκευών', slug: 'various-electronic-device-items', parentId: 211, image: '/dist/images/cat/various-electronic-device-items.webp' },
-
-  // --- Subcategories of Σταθερή Τηλεφωνία (parentId: 212) ---
   { id: 512, name: 'Ασύρματα Τηλέφωνα', slug: 'cordless-phones', parentId: 212, image: '/dist/images/cat/cordless-phones.webp' },
   { id: 513, name: 'Ενσύρματα Τηλέφωνα', slug: 'corded-phones', parentId: 212, image: '/dist/images/cat/corded-phones.webp' },
   { id: 514, name: 'Αξεσουάρ Σταθερής Τηλεφωνίας', slug: 'landline-accessories', parentId: 212, image: '/dist/images/cat/landline-accessories.webp' },
   { id: 515, name: 'Παρελκόμενα Σταθερής Τηλεφωνίας', slug: 'landline-peripherals', parentId: 212, image: '/dist/images/cat/landline-peripherals.webp' },
   { id: 516, name: 'Τηλεφωνικά Κέντρα', slug: 'pbx-systems', parentId: 212, image: '/dist/images/cat/pbx-systems.webp' },
   { id: 517, name: 'Παρελκόμενα Τηλεφωνικών Κέντρων', slug: 'pbx-accessories', parentId: 212, image: '/dist/images/cat/pbx-accessories.webp' },
-
-  // --- Subcategories of VoIP (parentId: 213) ---
   { id: 518, name: 'Τηλεφωνικές Συσκευές IP', slug: 'ip-phones', parentId: 213, image: '/dist/images/cat/ip-phones.webp' },
   { id: 519, name: 'VoIP Gateways', slug: 'voip-gateways', parentId: 213, image: '/dist/images/cat/voip-gateways.webp' },
   { id: 520, name: 'VoIP Adapters', slug: 'voip-adapters', parentId: 213, image: '/dist/images/cat/voip-adapters.webp' },
   { id: 521, name: 'Κάρτες VoIP', slug: 'voip-cards', parentId: 213, image: '/dist/images/cat/voip-cards.webp' },
   { id: 522, name: 'Αξεσουάρ VoIP', slug: 'voip-accessories', parentId: 213, image: '/dist/images/cat/voip-accessories.webp' },
-
-  // --- Subcategories of Ασύρματοι, Αξεσουάρ (parentId: 214) ---
   { id: 523, name: 'Πομποδέκτες, Walkie-Talkie', slug: 'transceivers-walkie-talkies', parentId: 214, image: '/dist/images/cat/transceivers-walkie-talkies.webp' },
   { id: 524, name: 'Αξεσουάρ Ασυρμάτων', slug: 'walkie-talkie-accessories', parentId: 214, image: '/dist/images/cat/walkie-talkie-accessories.webp' },
 ];
 
-// Enhanced Vendor Interface
-export interface Vendor {
-  id: number;
-  name: string;
-  slug?: string; // **NEW: Optional slug for cleaner URLs if desired**
-  logo: string;
-  rating?: number;
-  url: string;
-  certification?: 'Gold' | 'Silver' | 'Bronze' | '';
-  telephone?: string[];
-  location?: { lat: number; lng: number }[];
-  address?: string[];
-  paymentMethods?: PaymentMethod[];
-  numberOfRatings?: number;
-  shippingPolicySummary?: string;
-  returnPolicySummary?: string;
-  isMarketplace?: boolean;
-  dateJoined?: string;
-  socialLinks?: Record<string, string>;
-  openingHours?: OpeningHours[];
-  statusMessage?: string;
-}
 
-// **NEW: Interface for Opening Hours**
-export interface OpeningHours {
-  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-  opens: string; closes: string; notes?: string;
-}
-
-// Payment Methods Enum
- export enum PaymentMethod {
-   COD = "Αντικαταβολή", CreditCard = "Πιστωτικές κάρτες", PayPal = "PayPal", BankTransfer = "Τραπεζική κατάθεση", VivaPayments = "Viva Payments", Paysafecard = "Paysafecard", Courier = "Ταχυμεταφορά (Courier)", 
-   NetworkPickup = "Παραλαβή από δίκτυο", TransportCompany = "Μεταφορική εταιρία", PickupVia = "Παραλαβή μέσω", FreeReturn = "Δωρεάν επιστροφή", PointsCollection = "Συλλογή πόντων", GiftCards = "Δωροκάρτες", 
-   ExtendedWarranty = "Επέκταση εγγύησης", WeddingList = "Λίστα γάμου/μωρού", DeviceRecycling = "Ανακύκλωση συσκευών", Klarna = "Klarna", Epistrofi = "€πιστροφή Eurobank", Installments = "Άτοκες Δόσεις", LoyaltyPoints = "Πόντοι Επιβράβευσης"
- }
-
-export const vendors: Vendor[] = [
-  {
-    id: 1, name: 'You', slug: 'you', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/252.svg', rating: 4.5, numberOfRatings: 1500, certification: 'Bronze', url: 'https://www.you.gr', telephone: ['211 9991900'], address: ['Αργυρουπόλεως 2Α, Καλλιθέα'], location: [{ lat: 37.9337, lng: 23.7004 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.Klarna, PaymentMethod.Installments, PaymentMethod.LoyaltyPoints], shippingPolicySummary: "Δωρεάν μεταφορικά άνω των 50€", dateJoined: "2018-05-20",
-    socialLinks: { facebook: "https://www.facebook.com/You.gr" },
-    openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '18:00' } ]
-  },
-  {
-    id: 2, name: 'Plaisio', slug: 'plaisio', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/79.svg', rating: 4.2, numberOfRatings: 2100, certification: 'Silver', url: 'https://www.plaisio.gr', telephone: ['210 2895000'], address: ['Στρατηγού Μακρυγιάννη 54, Μοσχάτο'], location: [{ lat: 37.9530, lng: 23.6845 }], paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.PickupVia, PaymentMethod.FreeReturn, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.Installments], dateJoined: "2015-11-01",
-    socialLinks: { facebook: "https://www.facebook.com/plaisio", instagram: "https://www.instagram.com/plaisioofficial/", twitter: "https://twitter.com/PlaisioOfficial" },
-    openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '20:00' } ]
-  },
-  {
-    id: 3, name: 'Public', slug: 'public', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/743.svg', rating: 4.7, numberOfRatings: 5500, certification: 'Gold', url: 'https://www.public.gr', telephone: ['210 8181333'], address: ['Θηβαϊδος 22, Κηφισιά', 'Καραγεώργη Σερβίας 1, Πλατεία Συντάγματος, 10563, Αθήνα'], location: [{ lat: 38.0747, lng: 23.7582 }], paymentMethods: [PaymentMethod.COD, PaymentMethod.CreditCard, PaymentMethod.PayPal, PaymentMethod.BankTransfer, PaymentMethod.Courier, PaymentMethod.FreeReturn, PaymentMethod.PointsCollection, PaymentMethod.GiftCards, PaymentMethod.ExtendedWarranty, PaymentMethod.DeviceRecycling, PaymentMethod.Klarna], isMarketplace: true, returnPolicySummary: "Επιστροφές εντός 30 ημερών", dateJoined: "2010-03-10",
-    socialLinks: { facebook: "https://facebook.com/public.gr", instagram: "https://instagram.com/public_stores", twitter: "https://twitter.com/publicstores", youtube: "https://www.youtube.com/user/publicstores" },
-    openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '20:00' }, { dayOfWeek: 'Sunday', opens: '11:00', closes: '19:00', notes: "Select stores only" } ]
-  },
-  {
-    id: 4, name: 'Κωτσόβολος', slug: 'kotsovolos', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/496.svg', rating: 4.0, numberOfRatings: 3200, certification: 'Gold', url: 'https://www.kotsovolos.gr', telephone: ['210 2899999'], address: ['Λεωφόρος Συγγρού 257-259, Νέα Σμύρνη'], location: [{ lat: 37.9465, lng: 23.7140 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn], dateJoined: "2012-08-01",
-    openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '20:00' } ]
-  },
-  {
-    id: 5, name: 'Funky Buddha', slug: 'funky-buddha', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/4351.svg', rating: 4.3, numberOfRatings: 800, certification: '', url: 'https://www.funky-buddha.com', telephone: ['211 1030800'], address: ['Ερμού 23-25, Αθήνα'], location: [{ lat: 37.9768, lng: 23.7283 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD, PaymentMethod.PayPal], dateJoined: "2019-01-15", socialLinks: { instagram: "https://www.instagram.com/funkybuddha_" }
-  },
-  {
-    id: 6, name: 'Germanos', slug: 'germanos', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/8697.svg', rating: 4.1, numberOfRatings: 1800, certification: '', url: 'https://www.germanos.gr', telephone: ['800 11 40000'], address: ['Λεωφόρος Κηφισίας 196, Νέο Ψυχικό'], location: [{ lat: 38.0076, lng: 23.7779 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD], dateJoined: "2011-06-30"
-  },
-  {
-    id: 7, name: 'e-shop.gr', slug: 'e-shop-gr', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/16.svg', rating: 3.2, numberOfRatings: 4500, certification: 'Gold', url: 'http://www.e-shop.gr', telephone: ['211 5000500'], address: ['Πανεπιστημίου 44, Αθήνα'], location: [{ lat: 37.9800, lng: 23.7328 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.FreeReturn, PaymentMethod.COD, PaymentMethod.PayPal], dateJoined: "2008-01-01",
-    openingHours: [ { dayOfWeek: 'Monday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Tuesday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Wednesday', opens: '09:00', closes: '18:00' }, { dayOfWeek: 'Thursday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Friday', opens: '09:00', closes: '21:00' }, { dayOfWeek: 'Saturday', opens: '09:00', closes: '17:00' } ]
-  },
-  {
-    id: 8, name: 'Χαμόγελο του Παιδιού', slug: 'hamogelo-toy-paidioy', logo: '//orig-bpcdn.pstatic.gr/bpmerchants/874.svg', rating: 4.7, numberOfRatings: 300, certification: 'Bronze', url: 'https://www.hamogelo.gr', telephone: ['11040'], address: ['Ομήρου 9, Αθήνα'], location: [{ lat: 37.9780, lng: 23.7355 }], paymentMethods: [PaymentMethod.CreditCard, PaymentMethod.BankTransfer, PaymentMethod.PayPal], dateJoined: "2014-02-10", socialLinks: { facebook: "https://www.facebook.com/HamogeloTouPaidiou" }
-  },
-];
-
-// Product price from vendor
-export interface ProductPrice {
-  vendorId: number;
-  price: number;
-  shippingCost?: number; // Optional shipping cost per vendor
-  inStock: boolean;
-  productUrl?: string; // Direct URL to product on vendor site
-  lastUpdated?: string; // ISO Date string (e.g., "2023-10-27T10:00:00Z")
-  discountPrice?: number; // Optional sale price
-  installments?: {
-      count: number; // e.g., 3, 6, 12, 24
-      monthlyAmount?: number; // Optional: pre-calculated monthly cost
-  };
-}
-
-// Product Variant Interface
-export interface ProductVariant {
-  sku?: string; // Unique SKU for this variant
-  gtin?: string; // Unique GTIN/EAN for this variant
-  attributes: Record<string, string>; // e.g., { "Color": "Μαύρο", "Μέγεθος": "L" }
-  image?: string; // Specific image for this variant
-  prices: ProductPrice[]; // Prices specific to this variant
-}
-
-// Product
-export interface Product {
-  id: number;
-  title: string;
-  slug?: string;
-  brand?: string;
-  model?: string;
-  mpn?: string;              // Manufacturer Part Number
-  gtin?: string;             // Global Trade Item Number (EAN, UPC, ISBN)
-  sku?: string;              // Base Stock Keeping Unit
-
-  categoryIds: number[];
-  description: string;
-  shortDescription?: string;
-
-  image: string;             // Main display image
-  images?: string[];          // Additional images
-  videos?: string[];         // **NEW: Array for video URLs**
-
-  rating?: number;
-  reviews?: number;          // Renamed from numReviews for clarity
-
-  specifications?: Record<string, string | number | boolean>; // Allow varied types
-
-  prices: ProductPrice[];      // Prices for the base product or if no variants
-  lowestPrice?: number;      // Pre-calculated lowest price available
-  bestPriceVendorId?: number;// ID of vendor with lowest price
-
-  hasVariants?: boolean;       // Indicates if product has variants
-  variants?: ProductVariant[]; // Array of variants
-  variantAttributes?: string[];// e.g., ["Color", "Size"] that define variants
-
-  status?: 'active' | 'inactive' | 'discontinued';
-  isFeatured?: boolean;
-  tags?: string[];           // e.g., ["new", "sale", "best-seller"]
-  dateAdded?: string;        // ISO Date string
-  lastModified?: string;     // ISO Date string
-  releaseDate?: string;      // **NEW: ISO Date string (e.g., "2023-09-15")**
-
-  weight?: number;           // In kg for shipping
-  dimensions?: { length?: number; width?: number; height?: number; unit?: 'cm' | 'in'; };
-  shippingClass?: string;
-
-  relatedProductIds?: number[];
-  comparisonProductIds?: number[];
-}
-
-// Sample products (20 random products)
-export const products: Product[] = [
-  {
-    id: 1,
-    title: 'Apple iPhone 14 Pro Max 256GB Deep Purple',
-    brand: 'Apple',
-    model: 'iPhone 14 Pro Max',
-    mpn: 'MQ9X3HX/A', // Example MPN
-    gtin: '0194253401199', // Example GTIN/EAN
-    categoryIds: [102, 103], // Mobile, iPhone
-    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Με κάμερα 48MP, Always-On οθόνη, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία, εντυπωσιακό design και ανίχνευση σύγκρουσης. Ζήσε την απόλυτη εμπειρία Apple.',
-    shortDescription: 'iPhone 14 Pro Max 256GB Deep Purple με A16 Bionic.',
-    image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
-    images: [
-      '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
-      '//bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp'
-    ],
-    videos: ['https://www.youtube.com/watch?v=exampleVideoId1'], // Example Video URL
-    rating: 4.8,
-    reviews: 245,
-    specifications: { 'Οθόνη': '6.7 inch Super Retina XDR', 'Επεξεργαστής': 'A16 Bionic', 'RAM': '6GB', 'Χωρητικότητα': '256GB', 'Camera': '48MP + 12MP + 12MP', 'Λειτουργικό Σύστημα': 'iOS 16', 'Μπαταρία': '4323 mAh', 'Διαστάσεις': '160.7 x 77.6 x 7.85 mm', 'Weight': '240g', 'Χρώμα': 'Deep Purple' },
-    prices: [
-      { vendorId: 1, price: 1299.99, shippingCost: 0, inStock: true, installments: { count: 12 }, productUrl: 'https://www.you.gr/product/1', lastUpdated: '2023-10-26T10:00:00Z' },
-      { vendorId: 2, price: 1319.99, shippingCost: 5, inStock: true, installments: { count: 24, monthlyAmount: 55 }, productUrl: 'https://www.plaisio.gr/product/1', lastUpdated: '2023-10-27T08:30:00Z' },
-      { vendorId: 3, price: 1289.99, shippingCost: 7.99, inStock: true, productUrl: 'https://www.public.gr/product/1', lastUpdated: '2023-10-27T11:15:00Z' },
-      { vendorId: 4, price: 1309.99, shippingCost: 0, inStock: false, productUrl: 'https://www.kotsovolos.gr/product/1', lastUpdated: '2023-10-25T14:00:00Z' }
-    ],
-    lowestPrice: 1289.99,
-    bestPriceVendorId: 3,
-    status: 'active',
-    isFeatured: true,
-    tags: ["new", "smartphone", "ios"],
-    dateAdded: "2022-09-16T00:00:00Z",
-    releaseDate: "2022-09-16", // Added Release Date
-    lastModified: "2023-10-27T11:15:00Z",
-    hasVariants: true, // Example: This phone might have color/storage variants elsewhere
-    variantAttributes: ["Χρώμα", "Χωρητικότητα"],
-    // variants: [...] // Could add full variant objects here if needed
-  },
-  {
-    id: 2,
-    title: 'Samsung Galaxy S23 Ultra 512GB Phantom Black',
-    brand: 'Samsung',
-    model: 'Galaxy S23 Ultra',
-    categoryIds: [99],
-    description: 'Το απόλυτο Samsung τηλέφωνο με εξαιρετικές δυνατότητες κάμερας και ενσωματωμένο S Pen.',
-    image: '//placehold.co/400x400?text=Galaxy+S23+Black',
-    images: ['//placehold.co/400x400?text=Galaxy+S23+Black', '//placehold.co/400x400?text=Galaxy+S23+Side', '//placehold.co/400x400?text=Galaxy+S23+Back'],
-    videos: [], // No videos for this example
-    rating: 4.7,
-    reviews: 189,
-    specifications: { 'Οθόνη': '6.8 inch Dynamic AMOLED 2X', 'Επεξεργαστής': 'Snapdragon 8 Gen 2 for Galaxy', 'RAM': '12GB', 'Χωρητικότητα': '512GB', 'Camera': '200MP + 12MP + 10MP + 10MP', 'Λειτουργικό Σύστημα': 'Android 13', 'Μπαταρία': '5000 mAh', 'Διαστάσεις': '163.4 x 78.1 x 8.9 mm', 'Weight': '233g', 'Χρώμα': 'Phantom Black' },
-    prices: [ { vendorId: 1, price: 1199.99, shippingCost: 0, inStock: true, lastUpdated: '2023-10-27T09:00:00Z' }, { vendorId: 3, price: 1179.99, shippingCost: 7.99, inStock: true, lastUpdated: '2023-10-27T11:00:00Z' }, { vendorId: 7, price: 1189.99, shippingCost: 3, inStock: true, discountPrice: 1159.99, lastUpdated: '2023-10-26T18:00:00Z' } ],
-    lowestPrice: 1159.99, // Reflects discount
-    bestPriceVendorId: 7,
-    status: 'active',
-    tags: ["android", "flagship", "s pen"],
-    dateAdded: "2023-02-01T00:00:00Z",
-    releaseDate: "2023-02-17",
-    lastModified: "2023-10-27T11:00:00Z",
-    hasVariants: true,
-    variantAttributes: ["Χρώμα", "Χωρητικότητα"],
-    variants: [ // Example variant structure
-        {
-            sku: "SM-S918BZGPEUB", // Variant SKU
-            gtin: "8806094732145",
-            attributes: { "Χρώμα": "Green", "Χωρητικότητα": "512GB" },
-            image: "//placehold.co/400x400?text=Galaxy+S23+Green",
-            prices: [ { vendorId: 3, price: 1185.00, shippingCost: 8, inStock: true, lastUpdated: '2023-10-27T10:00:00Z' } ]
-        },
-         {
-            sku: "SM-S918BZCPEUB",
-            gtin: "8806094732888",
-            attributes: { "Χρώμα": "Cream", "Χωρητικότητα": "512GB" },
-            prices: [ { vendorId: 1, price: 1199.99, shippingCost: 0, inStock: false, lastUpdated: '2023-10-25T10:00:00Z' } ]
-        }
-    ]
-  },
-  {
-    id: 3,
-    title: 'MacBook Pro 16-inch',
-    brand: 'Apple',
-    model: 'MacBook Pro',
-    categoryIds: [218],
-    description: 'High-performance laptop for professionals.',
-    image: '//placehold.co/400x400?text=MacBook+Pro',
-    images: ['//placehold.co/400x400?text=MacBook+Pro'],
-    rating: 4.6,
-    reviews: 200,
-    specifications: {
-      'Επεξεργαστής': 'Apple M1 Pro',
-      'RAM': '16GB',
-      'Χωρητικότητα': '512GB SSD',
-      'Διαστάσεις': '3.5 x 13.5 x 9.8 inches',
-      'Weight': '4.7 pounds'
-    },
-    prices: [
-      { vendorId: 1, price: 2499.99, shippingCost: 0, inStock: true },
-      { vendorId: 2, price: 2399.99, shippingCost: 10, inStock: true }
-    ]
-  },
-  {
-    id: 4,
-    title: 'Sony 55 Inch 4K UHD TV',
-    brand: 'Sony',
-    model: 'Bravia',
-    categoryIds: [253], // Updated categories
-    description: 'Stunning visuals and vibrant colors.',
-    image: '//placehold.co/400x400?text=Sony+TV',
-    images: ['//placehold.co/400x400?text=Sony+TV'],
-    rating: 4.8,
-    reviews: 150,
-    specifications: {
-      'Resolution': '4K UHD',
-      'Τύπος οθόνης': 'LED',
-      'Smart TV': 'Yes',
-      'Weight': '37.5 pounds'
-    },
-    prices: [
-      { vendorId: 3, price: 899.99, shippingCost: 0, inStock: true },
-      { vendorId: 4, price: 849.99, shippingCost: 20, inStock: true }
-    ]
-  },
-  {
-    id: 5,
-    title: 'Dell XPS 13 Laptop',
-    brand: 'Dell',
-    model: 'XPS 13',
-    categoryIds: [11],
-    description: 'Ultra-thin laptop with stunning 4K display.',
-    image: '//placehold.co/400x400?text=Dell+XPS+13',
-    images: ['//placehold.co/400x400?text=Dell+XPS+13'],
-    rating: 4.5,
-    reviews: 180,
-    specifications: {
-      'Επεξεργαστής': 'Intel i7',
-      'RAM': '16GB',
-      'Χωρητικότητα': '1TB SSD',
-      'Διαστάσεις': '0.58 x 11.6 x 7.8 inches',
-      'Weight': '2.7 pounds'
-    },
-    prices: [
-      { vendorId: 2, price: 1299.99, shippingCost: 0, inStock: true },
-      { vendorId: 6, price: 1249.99, shippingCost: 5, inStock: true }
-    ]
-  },
-  {
-    id: 6,
-    title: 'Fitness Tracker Watch',
-    brand: 'Fitbit',
-    model: 'Versa 3',
-    categoryIds: [20],
-    description: 'Monitor your health and fitness activities.',
-    image: '//placehold.co/400x400?text=Fitness+Tracker',
-    images: ['//placehold.co/400x400?text=Fitness+Tracker'],
-    rating: 4.4,
-    reviews: 300,
-    specifications: {
-      'Διάρκεια μπαταρίας': '6+ days',
-      'Water Resistant': 'Yes',
-      'Syncs to': 'Mobile App'
-    },
-    prices: [
-      { vendorId: 2, price: 229.99, shippingCost: 0, inStock: true },
-      { vendorId: 3, price: 199.99, shippingCost: 5, inStock: true }
-    ]
-  },
-  {
-    id: 7,
-    title: 'Nike Running Shoes',
-    brand: 'Nike',
-    model: 'Air Zoom Pegasus',
-    categoryIds: [22],
-    description: 'Comfortable running shoes for all-day wear.',
-    image: '//placehold.co/400x400?text=Nike+Shoes',
-    images: ['//placehold.co/400x400?text=Nike+Shoes'],
-    rating: 4.7,
-    reviews: 350,
-    specifications: {
-      'Material': 'Synthetic',
-      'Weight': '10.6 ounces',
-      'Style': 'Running'
-    },
-    prices: [
-      { vendorId: 1, price: 119.99, shippingCost: 0, inStock: true },
-      { vendorId: 6, price: 109.99, shippingCost: 5, inStock: true }
-    ]
-  },
-  {
-    id: 8,
-    title: 'PlayStation 5 Console Digital Edition',
-    brand: 'Sony',
-    model: 'PS5 Digital Edition',
-    gtin: '0711719395102',
-    categoryIds: [285],
-    description: 'Next-gen gaming console without a disc drive.',
-    image: '//placehold.co/400x400?text=PS5+Digital',
-    images: ['//placehold.co/400x400?text=PS5+Digital'],
-    rating: 4.9,
-    reviews: 500, // Shared reviews with disc version for example
-    specifications: { 'Χωρητικότητα': '825GB SSD', 'Resolution': 'Up to 120fps', 'Includes': 'Controller and Cable', 'Optical Drive': 'No' },
-    prices: [ { vendorId: 1, price: 449.99, shippingCost: 0, inStock: false, lastUpdated: '2023-10-20T10:00:00Z' }, { vendorId: 4, price: 439.99, shippingCost: 10, inStock: true, lastUpdated: '2023-10-27T12:00:00Z' } ],
-    lowestPrice: 439.99,
-    bestPriceVendorId: 4,
-    status: 'active',
-    tags: ["gaming", "console", "digital"],
-    dateAdded: "2020-11-12T00:00:00Z",
-    releaseDate: "2020-11-12",
-    lastModified: "2023-10-27T12:00:00Z",
-  },
-  {
-    id: 9,
-    title: 'Wireless Headphones',
-    brand: 'Bose',
-    model: 'QuietComfort 35',
-    categoryIds: [13],
-    description: 'Noise-cancelling headphones for immersive sound.',
-    image: '//placehold.co/400x400?text=Bose+Headphones',
-    images: ['//placehold.co/400x400?text=Bose+Headphones'],
-    rating: 4.8,
-    reviews: 275,
-    specifications: {
-      'Διάρκεια μπαταρίας': '20 hours',
-      'Features': 'Bluetooth, Voice Assistant'
-    },
-    prices: [
-      { vendorId: 3, price: 299.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 10,
-    title: 'Artificial Intelligence for Beginners',
-    brand: 'TechBooks',
-    model: 'AI Basics',
-    categoryIds: [11],
-    description: 'An introductory book on artificial intelligence concepts.',
-    image: '//placehold.co/400x400?text=AI+Book',
-    images: ['//placehold.co/400x400?text=AI+Book'],
-    rating: 4.5,
-    reviews: 50,
-    specifications: {
-      'Pages': '400',
-      'ISBN': '978-3-16-148410-0'
-    },
-    prices: [
-      { vendorId: 5, price: 29.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 11,
-    title: 'Camping Tent',
-    brand: 'NatureHike',
-    model: 'Camping Tent X1',
-    categoryIds: [31],
-    description: 'Spacious camping tent for outdoor adventures.',
-    image: '//placehold.co/400x400?text=Camping+Tent',
-    images: ['//placehold.co/400x400?text=Camping+Tent'],
-    rating: 4.6,
-    reviews: 100,
-    specifications: {
-      'Capacity': '4 Persons',
-      'Material': 'Waterproof'
-    },
-    prices: [
-      { vendorId: 6, price: 149.99, shippingCost: 0, inStock: true },
-      { vendorId: 2, price: 139.99, shippingCost: 10, inStock: true }
-    ]
-  },
-  {
-    id: 12,
-    title: 'Vegetable Planter Box',
-    brand: 'Gardener\'s Supply',
-    model: 'Planter Box to go',
-    categoryIds: [23],
-    description: 'Perfect for urban gardening!',
-    image: '//placehold.co/400x400?text=Vegetable+Planter',
-    images: ['//placehold.co/400x400?text=Vegetable+Planter'],
-    rating: 4.7,
-    reviews: 60,
-    specifications: {
-      'Material': 'Wood',
-      'Διαστάσεις': '40 x 20 x 15 inches'
-    },
-    prices: [
-      { vendorId: 1, price: 79.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 13,
-    title: 'Nonstick Cookware Set',
-    brand: 'T-fal',
-    model: 'Cookware Basic Set',
-    categoryIds: [17],
-    description: 'Durable cookware set for everyday cooking.',
-    image: '//placehold.co/400x400?text=Cookware+Set',
-    images: ['//placehold.co/400x400?text=Cookware+Set'],
-    rating: 4.4,
-    reviews: 150,
-    specifications: {
-      'Material': 'Nonstick',
-      'Gauge': '304 Stainless Steel'
-    },
-    prices: [
-      { vendorId: 6, price: 99.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 14,
-    title: 'Fashion Backpack',
-    brand: 'SwissGear',
-    model: 'Travel Backpack',
-    categoryIds: [25],
-    description: 'Stylish and functional backpack for travel.',
-    image: '//placehold.co/400x400?text=Backpack',
-    images: ['//placehold.co/400x400?text=Backpack'],
-    rating: 4.7,
-    reviews: 120,
-    specifications: {
-      'Material': 'Polyester',
-      'Διαστάσεις': '17.5 x 12.5 x 7 inches'
-    },
-    prices: [
-      { vendorId: 5, price: 59.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 15,
-    title: 'Electric Kettle',
-    brand: 'Hamilton Beach',
-    model: 'Electric Kettle 1.7L',
-    categoryIds: [16],
-    description: 'Quick boiling kettle for hot beverages.',
-    image: '//placehold.co/400x400?text=Electric+Kettle',
-    images: ['//placehold.co/400x400?text=Electric+Kettle'],
-    rating: 4.5,
-    reviews: 90,
-    specifications: {
-      'Material': 'Stainless Steel',
-      'Capacity': '1.7 Liters'
-    },
-    prices: [
-      { vendorId: 2, price: 39.99, shippingCost: 0, inStock: true },
-      { vendorId: 3, price: 34.99, shippingCost: 5, inStock: true }
-    ]
-  },
-  {
-    id: 16,
-    title: 'Yoga Mat',
-    brand: 'Liforme',
-    model: 'Eco-Friendly',
-    categoryIds: [22],
-    description: 'Durable and non-slip yoga mat.',
-    image: '//placehold.co/400x400?text=Yoga+Mat',
-    images: ['//placehold.co/400x400?text=Yoga+Mat'],
-    rating: 4.8,
-    reviews: 200,
-    specifications: {
-      'Material': 'Natural Rubber',
-      'Thickness': '5mm'
-    },
-    prices: [
-      { vendorId: 1, price: 49.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 17,
-    title: 'Pet Cat Tree',
-    brand: 'PawHut',
-    model: 'Pet Kitty Tower',
-    categoryIds: [29],
-    description: 'Fun play area for your cat.',
-    image: '//placehold.co/400x400?text=Cat+Tree',
-    images: ['//placehold.co/400x400?text=Cat+Tree'],
-    rating: 4.6,
-    reviews: 80,
-    specifications: {
-      'Material': 'Wood and Fabric',
-      'Height': '4 feet'
-    },
-    prices: [
-      { vendorId: 4, price: 79.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 18,
-    title: 'Children’s Educational Tablet',
-    brand: 'Amazon',
-    model: 'Fire HD 10',
-    categoryIds: [277], // Now includes the smartphone subcategory
-    description: 'Kids-friendly tablet with educational content.',
-    image: '//placehold.co/400x400?text=Kids+Tablet',
-    images: ['//placehold.co/400x400?text=Kids+Tablet'],
-    rating: 4.7,
-    reviews: 300,
-    specifications: {
-      'Διάρκεια μπαταρίας': '12 hours',
-      'Size': '10.1 inch'
-    },
-    prices: [
-      { vendorId: 1, price: 149.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 19,
-    title: 'Smart TV Stick',
-    brand: 'Amazon',
-    model: 'Fire Stick 4K',
-    categoryIds: [248],
-    description: 'Stream all your favorites in 4K resolution.',
-    image: '//placehold.co/400x400?text=Smart+TV+Stick',
-    images: ['//placehold.co/400x400?text=Smart+TV+Stick'],
-    rating: 4.9,
-    reviews: 400,
-    specifications: {
-      'Supports': '4K Ultra HD, HDR',
-      'Includes': 'Alexa Voice Remote'
-    },
-    prices: [
-      { vendorId: 5, price: 49.99, shippingCost: 0, inStock: true }
-    ]
-  },
-  {
-    id: 20,
-    title: 'Drone with Camera',
-    brand: 'DJI',
-    model: 'Mavic Air 2',
-    categoryIds: [14],
-    description: 'Capture stunning aerial footage.',
-    image: '//placehold.co/400x400?text=Drone',
-    images: ['//placehold.co/400x400?text=Drone'],
-    rating: 4.8,
-    reviews: 150,
-    specifications: {
-      'Camera': '48MP',
-      'Flight Time': '34 minutes'
-    },
-    prices: [
-      { vendorId: 2, price: 799.99, shippingCost: 0, inStock: true }
-    ]
-  }
-];
-
-// Brands
-export interface Brand {
-  id: number;
-  name: string;
-  logo: string;
-  slug?: string; // Added slug for potential brand pages
-  // --- New Optional Fields ---
-  officialWebsite?: string;
-  description?: string;
-  countryOfOrigin?: string;
-}
-
-export const brands: Brand[] = [
-  { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
-  { id: 2, name: 'Samsung', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/26.svg', slug: 'samsung', officialWebsite: 'https://www.samsung.com', countryOfOrigin: 'South Korea' },
-  { id: 3, name: 'Sony', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/5.svg', slug: 'sony' },
-  { id: 4, name: 'LG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/293.svg', slug: 'lg' },
-  { id: 5, name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg', slug: 'canon' },
-  { id: 6, name: 'Nikon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/281.svg', slug: 'nikon' },
-  { id: 7, name: 'Lenovo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/728.svg', slug: 'lenovo' },
-  { id: 8, name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg', slug: 'dell' },
-  { id: 9, name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg', slug: 'hp' },
-  { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg', slug: 'asus' },
-  { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg', slug: 'acer' },
-  { id: 12, name: 'Microsoft', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/100.svg', slug: 'microsoft' },
-  { id: 13, name: 'ΑΛΦΑ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30165.svg', slug: 'alfa' },
-  { id: 14, name: '3Guys', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16764.svg', slug: '3guys' },
-  { id: 15, name: '2K Games', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/18388.svg', slug: '2k-games' },
-  { id: 16, name: '7Days', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/39065.svg', slug: '7days' },
-  { id: 17, name: 'Βιοκαρπέτ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/30055.svg', slug: 'viokarpet' },
-  { id: 18, name: 'Χαμόγελο του Παιδιού', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/33632.svg', slug: 'hamogelo-tou-paidiou' },
-  { id: 19, name: 'Χρωτέχ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/36032.svg', slug: 'xrotex' },
-  { id: 20, name: 'Γιώτης', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/21623.svg', slug: 'giotis' },
-];
-
-// Helper functions to simulate API calls
-export const fetchFeaturedProducts = () => {
-  // Could modify to use the isFeatured flag
-  return products.filter(p => p.isFeatured).slice(0, 5);
-};
-
-export const fetchDeals = () => {
-  // Could modify to use tags or discountPrice
-  return products.filter(p => p.tags?.includes('sale') || p.prices.some(price => price.discountPrice)).slice(0, 5);
-};
-
-export const fetchNewArrivals = () => {
-  // Could modify to sort by dateAdded or releaseDate
-   return [...products]
-    .sort((a, b) => new Date(b.releaseDate || b.dateAdded || 0).getTime() - new Date(a.releaseDate || a.dateAdded || 0).getTime())
-    .slice(0, 5);
-};
-
-export const searchProducts = (query: string): Product[] => {
-  if (!query) return []; // Return empty if query is empty
-  const searchText = query.toLowerCase();
-  // Simple search - enhance as needed (e.g., check description, specs)
-  return products.filter(product =>
-    product.title.toLowerCase().includes(searchText) ||
-    product.brand?.toLowerCase().includes(searchText) ||
-    product.model?.toLowerCase().includes(searchText) ||
-    product.tags?.some(tag => tag.toLowerCase().includes(searchText))
-  );
-};
-
-export const getCategoryById = (id: number): Category | undefined => {
-    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-    return allCatsMap.get(id);
-};
-
-export const getProductById = (id: number): Product | undefined => {
-  return products.find(product => product.id === id);
-};
-
-export const getProductsByCategory = (categoryId: number): Product[] => {
-  return products.filter(product => product.categoryIds.includes(categoryId));
-};
-
-export const getSimilarProducts = (productId: number): Product[] => {
-  const product = getProductById(productId);
-  if (!product) return [];
-  // Basic similarity: same leaf category, different product
-  const leafCategoryId = product.categoryIds[product.categoryIds.length - 1];
-  return products
-    .filter(p => p.id !== productId && p.categoryIds.includes(leafCategoryId))
-    .slice(0, 5);
-};
-
-export const getVendorById = (vendorId: number): Vendor | undefined => {
-  // Use precomputed map for efficiency
-  const vendorMap = new Map(vendors.map(v => [v.id, v]));
-  return vendorMap.get(vendorId);
-};
-
-export const getBestPrice = (product: Product): ProductPrice | null => {
-  if (!product || !product.prices || product.prices.length === 0) return null;
-  const inStockPrices = product.prices.filter(price => price.inStock);
-  if (inStockPrices.length === 0) {
-      // Optional: Return lowest out-of-stock price if desired, otherwise null
-      // return product.prices.reduce((best, current) => (current.price < best.price) ? current : best, product.prices[0]);
-      return null;
-  }
-  // Find the minimum price among in-stock items
-  return inStockPrices.reduce((best, current) => (current.price < best.price) ? current : best, inStockPrices[0]);
-};
-
-// Fetch categories and brands
+// --- Helper Functions (remain the same) ---
+export const fetchFeaturedProducts = () => { return products.filter(p => p.isFeatured).slice(0, 5); };
+export const fetchDeals = () => { return products.filter(p => p.tags?.includes('sale') || p.prices.some(price => price.discountPrice)).slice(0, 5); };
+export const fetchNewArrivals = () => { return [...products].sort((a, b) => new Date(b.releaseDate || b.dateAdded || 0).getTime() - new Date(a.releaseDate || a.dateAdded || 0).getTime()).slice(0, 5); };
+export const searchProducts = (query: string): Product[] => { if (!query) return []; const searchText = query.toLowerCase(); return products.filter(product => product.title.toLowerCase().includes(searchText) || product.brand?.toLowerCase().includes(searchText) || product.model?.toLowerCase().includes(searchText) || product.tags?.some(tag => tag.toLowerCase().includes(searchText))); };
+export const getCategoryById = (id: number): Category | undefined => { const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c])); return allCatsMap.get(id); };
+export const getProductById = (id: number): Product | undefined => { return products.find(product => product.id === id); };
+export const getProductsByCategory = (categoryId: number): Product[] => { return products.filter(product => product.categoryIds.includes(categoryId)); };
+export const getSimilarProducts = (productId: number): Product[] => { const product = getProductById(productId); if (!product) return []; const leafCategoryId = product.categoryIds[product.categoryIds.length - 1]; return products.filter(p => p.id !== productId && p.categoryIds.includes(leafCategoryId)).slice(0, 5); };
+export const getVendorById = (vendorId: number): Vendor | undefined => { const vendorMap = new Map(vendors.map(v => [v.id, v])); return vendorMap.get(vendorId); };
+export const getBestPrice = (product: Product): ProductPrice | null => { if (!product || !product.prices || product.prices.length === 0) return null; const inStockPrices = product.prices.filter(price => price.inStock); if (inStockPrices.length === 0) { return null; } return inStockPrices.reduce((best, current) => (current.price < best.price) ? current : best, inStockPrices[0]); };
 export const getCategories = (): Category[] => { return categories; };
 export const getBrands = (): Brand[] => { return brands; };
