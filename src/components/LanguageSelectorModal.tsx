@@ -1,6 +1,6 @@
 
 // src/components/LanguageSelectorModal.tsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
