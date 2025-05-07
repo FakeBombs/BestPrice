@@ -3,8 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-import { mainCategories, categories, Brand, brands } from '@/data/mockData';
+// Import products directly to count deals
+import { mainCategories, categories, Brand, brands, products } from '@/data/mockData';
 
+// --- SVG Components remain the same ---
 const Technology = () => ( <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use href="/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg> );
 const HomeGarden = () => ( <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use href="/dist/images/icons/categories.svg#icon-cat-2185-24"></use></svg> );
 const Fashion = () => ( <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use href="/dist/images/icons/categories.svg#icon-cat-2068-24"></use></svg> );
@@ -14,14 +16,9 @@ const HobbySports = () => ( <svg className="icon sitemap-desktop__item-icon icon
 const AutoMoto = () => ( <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use href="/dist/images/icons/categories.svg#icon-cat-3204-24"></use></svg> );
 
 const categorySvgMap: { [key: number]: ReactNode } = {
-  1: <Technology />,
-  2: <HomeGarden />,
-  3: <Fashion />,
-  4: <HealthBeauty />,
-  5: <ChildrenBaby />,
-  6: <HobbySports />,
-  7: <AutoMoto />
+  1: <Technology />, 2: <HomeGarden />, 3: <Fashion />, 4: <HealthBeauty />, 5: <ChildrenBaby />, 6: <HobbySports />, 7: <AutoMoto />
 };
+// --- End SVG Components ---
 
 
 interface MainLayoutProps {
@@ -36,8 +33,25 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const { t, language } = useTranslation();
 
+  // --- REMOVED State for Deal Count (No longer needed for mock data) ---
+  // const [dealCount, setDealCount] = useState<number | null>(null);
+  // const [isLoadingDealCount, setIsLoadingDealCount] = useState<boolean>(true);
+  // --- End Removed State ---
+
   const excludedRoutes = ['/login', '/register', '/forgot-password'];
   const shouldRenderNavAndFooter = !excludedRoutes.includes(pathname);
+
+  // --- REMOVED Effect to Fetch Deal Count ---
+  // useEffect(() => { ... fetch logic ... }, []);
+  // --- End Removed Effect ---
+
+  // --- Calculate Deal Count directly from imported mock data ---
+  const actualDealCount = products.filter(product =>
+      product.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
+      product.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
+      // You could also add || product.tags?.includes('sale') if you want to count based on tags too
+  ).length;
+  // --- End Calculation ---
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,9 +73,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     setCurrentCategoryId(id);
   };
 
-  const handleMouseLeave = () => {
-    // No action needed
-  };
+  const handleMouseLeave = () => {};
 
   const removeSitemapClass = () => {
     setIsSitemapVisible(false);
@@ -100,18 +112,24 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       translatedName: t(`brand_${brand.id}_alt`, brand.name)
   }));
 
+  // --- Helper to format the deal count ---
+  const formatDealCount = (count: number): string => {
+    // Use locale that uses dot as thousands separator, like German or Greek
+    return `(${count.toLocaleString('de-DE')})`; // Or 'el-GR'
+  };
+  // --- End Helper ---
+
   return (
     <>
       {shouldRenderNavAndFooter && <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} onMouseEnter={handleMouseEnter} />}
       <div id="root" className="clr">
-         {/* The main content passed as children */}
-        {React.Children.map(children, (child) => {
-          return React.isValidElement(child) && typeof child.type !== 'string'
-            ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle })
-            : child;
-        })}
-
-        {/* Sitemap rendering logic remains the same */}
+        <main className="clr">
+          {React.Children.map(children, (child) => {
+            return React.isValidElement(child) && typeof child.type !== 'string'
+              ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle })
+              : child;
+          })}
+        </main>
         {isSitemapVisible && (
           <>
             <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={removeSitemapClass}></div>
@@ -123,28 +141,42 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       <div className="sitemap-desktop__sidebar-extra">
                         <Link to="/deals" className="sitemap-desktop__item" onMouseEnter={() => handleMouseEnter(0)} onClick={sitemapToggle}>
                           <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/categories.svg#icon-deals-24"></use></svg>
-                          {t('deals', 'Deals')} (8.450)
+                          {t('deals', 'Deals')}
+                          {/* Display calculated count */}
+                          {` ${formatDealCount(actualDealCount)}`}
                           <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-left-thin-16"></use></svg>
                         </Link>
                       </div>
                       <div className="sitemap-desktop__sidebar-categories">
                         {mainCategories.map((category) => (
-                          <Link to={`/cat/${category.id}/${category.slug}?bpref=sitemap`} className={`sitemap-desktop__item ${currentCategoryId === category.id ? 'sitemap-desktop__item--selected' : ''}`} key={category.id} onMouseEnter={() => handleMouseEnter(category.id)} onClick={sitemapToggle}>
+                          <Link
+                            to={`/cat/${category.id}/${category.slug}?bpref=sitemap`}
+                            className={`sitemap-desktop__item ${currentCategoryId === category.id ? 'sitemap-desktop__item--selected' : ''}`}
+                            key={category.id}
+                            onMouseEnter={() => handleMouseEnter(category.id)}
+                            onClick={sitemapToggle}
+                          >
                             {categorySvgMap[category.id]}
                             {t(category.slug, category.name)}
                             <svg className="icon sitemap-desktop__item-arrow" aria-hidden="true" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-left-thin-16"></use></svg>
                           </Link>
                         ))}
-                        <Link className="sitemap-desktop__item sitemap-desktop__item--external sitemap-desktop__item--separator" to="/gifts" onMouseEnter={() => handleMouseEnter(9)} onClick={sitemapToggle}>
-                          <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width={24} height={24}><use href="/dist/images/icons/categories.svg#icon-gifts-24"></use></svg>
-                          {t('gifts', 'Gifts')} {/* Keep fallback */}
+                        <Link
+                          className="sitemap-desktop__item sitemap-desktop__item--external sitemap-desktop__item--separator"
+                          to="/gifts"
+                          onMouseEnter={() => handleMouseEnter(9)}
+                          onClick={sitemapToggle}
+                        >
+                          <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width={24} height="24"><use href="/dist/images/icons/categories.svg#icon-gifts-24"></use></svg>
+                          {t('gifts', 'Gifts')}
                         </Link>
                       </div>
                     </div>
+                    {/* --- Rest of Sitemap View (unchanged) --- */}
                     <div className="sitemap-desktop__view sitemap-desktop__view--cat">
                       <div className="sitemap-desktop__view-title">
                         <Link to={`/cat/${mainCategory?.id}/${mainCategory?.slug}`} onClick={sitemapToggle}>
-                          {mainCategory ? t(mainCategory.slug, mainCategory.name) : t('deals', 'Deals')} {/* Use slug as key, name as fallback */}
+                          {mainCategory ? t(mainCategory.slug, mainCategory.name) : t('deals', 'Deals')}
                         </Link>
                       </div>
                       <div className="sitemap-desktop__category-subs">
@@ -152,7 +184,13 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                           <div className="sitemap-desktop__col" key={sub.id}>
                             <div className="sitemap-desktop__sub">
                               <Link to={`/cat/${sub.id}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>
-                                <img className="sitemap-desktop__sub-image" width="96" height="96" alt={t(sub.slug, sub.name)} src={sub.image}/>
+                                <img
+                                  className="sitemap-desktop__sub-image"
+                                  width="96"
+                                  height="96"
+                                  alt={t(sub.slug, sub.name)}
+                                  src={sub.image}
+                                />
                               </Link>
                               <div className="sitemap-desktop__sub-main">
                                 <div className="sitemap-desktop__sub-title">
@@ -164,7 +202,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                   {categories.filter(item => item.parentId === sub.id).slice(0, 6).map(subItem => (
                                     <li key={subItem.id}>
                                       <Link to={`/cat/${subItem.id}/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>
-                                        {t(subItem.slug, subItem.name)} {/* Use slug as key, name as fallback */}
+                                        {t(subItem.slug, subItem.name)}
                                       </Link>
                                     </li>
                                   ))}
@@ -176,7 +214,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       </div>
                       <div className="sitemap-desktop__queries links">
                         {popularSearchQueries.map((search, index) => (
-                          <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`} onClick={sitemapToggle}>
+                          <Link
+                            className="sitemap-desktop__queries-query links__link pressable"
+                            key={index}
+                            to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`}
+                            onClick={sitemapToggle}
+                          >
                             <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-search-16"></use></svg>
                             {t(search.key, search.query)}
                           </Link>
@@ -184,12 +227,18 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                       </div>
                       <div className="sitemap-desktop__brands">
                         {translatedBrands.map(brand => (
-                          <Link className="sitemap-desktop__brands-brand pressable" key={brand.id} to={`/b/${brand.id}/${brand.name.toLowerCase()}?bpref=sitemap`} onClick={sitemapToggle}>
+                          <Link
+                            className="sitemap-desktop__brands-brand pressable"
+                            key={brand.id}
+                            to={`/b/${brand.id}/${brand.name.toLowerCase()}?bpref=sitemap`}
+                            onClick={sitemapToggle}
+                          >
                             <img alt={brand.translatedName} src={brand.logo} />
                           </Link>
                         ))}
                       </div>
                     </div>
+                     {/* --- End Sitemap View --- */}
                   </div>
                 </div>
               </div>
