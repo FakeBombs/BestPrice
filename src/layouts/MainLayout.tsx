@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-// Import Product type along with others
 import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product } from '@/data/mockData';
 
 // --- SVG Components remain the same ---
@@ -131,7 +130,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }
   // --- End Popular Brands Calculation ---
 
-  const translatedBrandsForAltText = brands.map(brand => ({ // Renamed to avoid conflict
+  const translatedBrandsForAltText = brands.map(brand => ({
       ...brand,
       translatedName: t(`brand_${brand.id}_alt`, brand.name)
   }));
@@ -156,7 +155,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               <div className="root__wrapper">
                 <div className="root">
                   <div className="sitemap sitemap-desktop" onMouseLeave={handleMouseLeave}>
-                    {/* --- Sidebar (No changes here) --- */}
                     <div className="sitemap-desktop__sidebar">
                        <div className="sitemap-desktop__sidebar-extra">
                         <Link to="/deals" className={`sitemap-desktop__item ${currentCategoryId === 0 ? 'sitemap-desktop__item--selected' : ''}`} onMouseEnter={() => handleMouseEnter(0)} onClick={sitemapToggle}>
@@ -186,7 +184,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         // --- Deals View ---
                         <div className="sitemap-desktop__view sitemap-desktop__view--deals">
                             <div className="sitemap-desktop__view-title">{t('popular_deals_title', 'Δημοφιλείς Προσφορές')}</div>
-                            {/* ... (Deal product rendering logic remains the same as previous version) ... */}
                              <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
                                 {dealProducts.map(product => {
                                     let displayPrice = product.lowestPrice;
@@ -253,7 +250,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             </div>
                             {/* Popular Searches (Still Static - Needs dynamic data source) */}
                             <div className="sitemap-desktop__queries links">
-                                <h4 className="text-xs font-semibold uppercase text-gray-500 mb-1">{t('popular_searches', 'Popular Searches')}</h4> {/* Added title */}
                                 {popularSearchQueries.map((search, index) => (
                                     <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`} onClick={sitemapToggle}>
                                         <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-search-16"></use></svg>
@@ -263,16 +259,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             </div>
                             {/* --- DYNAMIC POPULAR BRANDS --- */}
                             {popularBrandsForCurrentView.length > 0 && (
-                                <div className="sitemap-desktop__brands mt-4"> {/* Added margin-top */}
-                                    <h4 className="text-xs font-semibold uppercase text-gray-500 mb-1">{t('popular_brands', 'Popular Brands')}</h4> {/* Added title */}
+                                <div className="sitemap-desktop__brands">
                                     {popularBrandsForCurrentView.map(brand => (
-                                    <Link
-                                        className="sitemap-desktop__brands-brand pressable inline-block p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" // Added basic styling
-                                        key={brand.id}
-                                        to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}?bpref=sitemap`}
-                                        onClick={sitemapToggle}
-                                        title={brand.name} // Add title attribute
-                                    >
+                                    <Link className="sitemap-desktop__brands-brand pressable inline-block p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" key={brand.id} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}?bpref=sitemap`} onClick={sitemapToggle} title={brand.name}>
                                         <img alt={t(`brand_${brand.id}_alt`, brand.name)} src={brand.logo} className="h-6 max-h-6 w-auto object-contain" loading="lazy"/>
                                     </Link>
                                     ))}
