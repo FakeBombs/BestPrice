@@ -1,12 +1,11 @@
 // src/components/LanguageSelectorModal.tsx
-// THIS IS YOUR ORIGINAL WORKING VERSION - STRICTLY ONLY DATA ARRAYS & "all" tab condition added.
-// ALL FUNCTIONAL LOGIC (INCLUDING HOW suggestedLangsToDisplay and languagesToDisplay are derived) IS PRESERVED.
+// IMPLEMENTING STRATEGY 1: Single check mark based on a default variant for the active context language.
 
-import React, { useState, useMemo } from 'react'; // useMemo is kept IF your original working file had it for OTHER things. If not, it would be removed too. Assuming it was present for some reason.
+import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
 
-// Define types for clarity (FROM YOUR WORKING VERSION)
+// Define types for clarity
 type LanguageOption = {
   code: string;
   name: string;
@@ -15,7 +14,6 @@ type LanguageOption = {
 };
 
 // Define language regions for the sidebar
-// <<<< REPLACED WITH YOUR NEW DATA >>>>
 const LANGUAGE_REGIONS_FOR_MODAL = [
   { key: "suggested", nameKey: "suggestedLanguages" },
   { key: "all", nameKey: "allLanguages" },
@@ -27,15 +25,16 @@ const LANGUAGE_REGIONS_FOR_MODAL = [
 ];
 
 // Define all available languages
-// <<<< REPLACED WITH YOUR NEW DATA >>>>
 const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
+  // Your extensive list here...
   { code: 'el', name: 'Ελληνικά', englishName: 'Greek', regionKey: 'languageCategoryWesternEurope' },
   { code: 'en-US', name: 'English (US)', englishName: 'English (US)', regionKey: 'languageCategoryAmericas' },
   { code: 'sq', name: 'Shqip', englishName: 'Albanian', regionKey: 'languageCategoryWesternEurope' },
-  { code: 'es', name: 'Español', englishName: 'Spanish', regionKey: 'languageCategoryAmericas' },
-  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' },
+  { code: 'es', name: 'Español', englishName: 'Spanish', regionKey: 'languageCategoryAmericas' }, // Generic Spanish
+  { code: 'de', name: 'Deutsch', englishName: 'German', regionKey: 'languageCategoryWesternEurope' }, // Base German
   { code: 'fr-FR', name: 'Français (France)', englishName: 'French (France)', regionKey: 'languageCategoryWesternEurope' },
   { code: 'es-ES', name: 'Español (España)', englishName: 'Spanish (Spain)', regionKey: 'languageCategoryWesternEurope' },
+  // ... (the rest of your large ALL_AVAILABLE_LANGUAGES list) ...
   { code: 'so', name: 'Af-Soomaali', englishName: 'Somali', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'af', name: 'Afrikaans', englishName: 'Afrikaans', regionKey: 'languageCategoryAfricaMiddleEast' },
   { code: 'az', name: 'Azərbaycan dili', englishName: 'Azerbaijani', regionKey: 'languageCategoryAsiaPacific' },
@@ -145,6 +144,17 @@ const ALL_AVAILABLE_LANGUAGES: LanguageOption[] = [
 
 const VALID_CONTEXT_LANGUAGES: Array<'en' | 'el' | 'es' | 'fr' | 'de'> = ['en', 'el', 'es', 'fr', 'de'];
 
+// <<<< NEW: Define default variants for each base context language >>>>
+// Adjust these specific codes to what you consider the "main" variant for each base language.
+// Ensure these codes exist in ALL_AVAILABLE_LANGUAGES.
+const DEFAULT_VARIANT_FOR_CONTEXT_LANG: { [key in 'en' | 'el' | 'es' | 'fr' | 'de']: string } = {
+  'el': 'el',
+  'en': 'en-US',
+  'es': 'es-ES',
+  'fr': 'fr-FR',
+  'de': 'de',
+};
+
 interface LanguageSelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -155,7 +165,6 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   const { setLanguage: setContextLanguage } = useLanguageContext();
   const [selectedRegion, setSelectedRegion] = useState<string>("suggested");
 
-  // Function to map language code - PRESERVED FROM YOUR WORKING VERSION
   const mapLanguageCode = (fullCode: string): 'en' | 'el' | 'es' | 'fr' | 'de' => {
     const baseCode = fullCode.split('-')[0].toLowerCase();
     if (VALID_CONTEXT_LANGUAGES.includes(baseCode as any)) {
@@ -165,30 +174,24 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     return 'en';
   };
 
-  // Handle language selection - PRESERVED FROM YOUR WORKING VERSION
   const handleLanguageSelect = (langCode: string) => {
     const mappedCode = mapLanguageCode(langCode);
     setContextLanguage(mappedCode);
     onClose();
   };
 
-  // Early return if modal is not open - PRESERVED FROM YOUR WORKING VERSION
   if (!isOpen) return null;
 
   const currentContextLangForSort = isLoaded ? currentContextLangFromHook : 'en';
 
-  // Define suggestedLangsToDisplay - PRESERVED FROM YOUR WORKING VERSION
-  // (defining inline, no useMemo)
   const suggestedLangsToDisplay = ALL_AVAILABLE_LANGUAGES.filter(lang =>
     ['el', 'en-US', 'es-ES', 'fr-FR', 'de', 'sq'].includes(lang.code)
   );
 
-  // Define languagesToDisplay - PRESERVED FROM YOUR WORKING VERSION
-  // (defining inline with let, no useMemo), with the "all" condition added
   let languagesToDisplay: LanguageOption[] = [];
   if (selectedRegion === "suggested") {
     languagesToDisplay = suggestedLangsToDisplay;
-  } else if (selectedRegion === "all") { // <<<< ONLY MINIMAL ADDITION FOR "ALL" TAB >>>>
+  } else if (selectedRegion === "all") {
     languagesToDisplay = ALL_AVAILABLE_LANGUAGES;
   }
   else {
@@ -197,12 +200,16 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
     );
   }
 
-  // Sort languages - PRESERVED FROM YOUR WORKING VERSION
   languagesToDisplay = [...languagesToDisplay].sort((a, b) =>
     String(a.name || '').localeCompare(String(b.name || ''), currentContextLangForSort)
   );
 
-  // JSX REMAINS IDENTICAL TO YOUR WORKING VERSION
+  // <<<< MODIFIED: Logic to determine the single active language item for the check mark >>>>
+  // Get the preferred specific variant code for the current base context language.
+  const preferredVariantForCurrentActiveBaseLang = isLoaded
+    ? DEFAULT_VARIANT_FOR_CONTEXT_LANG[currentContextLangFromHook]
+    : null; // If context isn't loaded, no specific variant is preferred yet.
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[2147483647] p-4" onClick={onClose}>
       <div
@@ -210,11 +217,11 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b pb-3 border-border">
-          <div className="flex-1"></div> {/* Spacer */}
+          <div className="flex-1"></div>
           <h2 className="text-xl font-semibold text-center flex-grow">
             {t('selectYourLanguageTitle', 'Select Your Language')}
           </h2>
-          <div className="flex-1 flex justify-end"> {/* Container for close button */}
+          <div className="flex-1 flex justify-end">
             <button
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground"
@@ -247,8 +254,8 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
           <main className="w-2/3 overflow-y-auto p-4">
             <ul className="space-y-1">
               {languagesToDisplay.map((lang) => {
-                const mappedCode = mapLanguageCode(lang.code);
-                const isActive = currentContextLangFromHook === mappedCode;
+                // <<<< MODIFIED: isActive condition for single check mark >>>>
+                const isActive = lang.code === preferredVariantForCurrentActiveBaseLang;
 
                 return (
                   <li key={lang.code}>
