@@ -250,7 +250,7 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
             </div>
 
             {/* collection-create__wrapper (conceptually the content wrapper) */}
-            <div className="collection-create__wrapper flex flex-col h-full"> {/* Tailwind for flex layout */}
+            <div className="flex flex-col h-full"> {/* Tailwind for flex layout */}
                 {/* popup-header */}
                 <div className="popup-header px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700"> {/* Tailwind for padding/border */}
                     <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center"> {/* Tailwind for text */}
