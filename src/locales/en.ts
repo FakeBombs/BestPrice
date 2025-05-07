@@ -754,43 +754,43 @@ const enTranslations = {
   'walkie-talkie-accessories': 'Walkie-Talkie Accessories',
 
   // ==================== MainLayout Sitemap Specific (New) =====================
-  popular_deals_title: 'Δημοφιλείς Προσφορές', // Popular Deals Title
-  popular_searches: 'Δημοφιλείς Αναζητήσεις', // Popular Searches Title
-  popular_brands: 'Δημοφιλείς Μάρκες',       // Popular Brands Title
-  todays_deals_link: 'Σημερινές προσφορές',   // Link text under deals
-  deals_by_store_link: 'Ανά κατάστημα',      // Link text under deals
-  deals_by_brand_link: 'Ανά brand',         // Link text under deals
-  gifts_sitemap_placeholder: 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.', // Placeholder
+  popular_deals_title: 'Popular Deals',
+  popular_searches: 'Popular Searches',
+  popular_brands: 'Popular Brands',
+  todays_deals_link: "Today's deals",
+  deals_by_store_link: 'By store',
+  deals_by_brand_link: 'By brand',
+  gifts_sitemap_placeholder: 'Content for gifts will appear here.',
 
-  // Popular Search Queries
+  // Popular Search Queries (Kept as is, usually not translated)
   sitemap_popular_apple: 'Apple',
   sitemap_popular_sony: 'Sony',
   sitemap_popular_mac: 'Mac',
   sitemap_popular_ipadair: 'iPad Air',
   sitemap_popular_galaxy: 'Galaxy',
 
-  // Brand Alt Texts (Generated from mockData)
-  brand_1_alt: 'Λογότυπο Apple',
-  brand_2_alt: 'Λογότυπο Samsung',
-  brand_3_alt: 'Λογότυπο Sony',
-  brand_4_alt: 'Λογότυπο LG',
-  brand_5_alt: 'Λογότυπο Canon',
-  brand_6_alt: 'Λογότυπο Nikon',
-  brand_7_alt: 'Λογότυπο Lenovo',
-  brand_8_alt: 'Λογότυπο Dell',
-  brand_9_alt: 'Λογότυπο HP',
-  brand_10_alt: 'Λογότυπο Asus',
-  brand_11_alt: 'Λογότυπο Acer',
-  brand_12_alt: 'Λογότυπο Microsoft',
-  brand_13_alt: 'Λογότυπο ΑΛΦΑ',
-  brand_14_alt: 'Λογότυπο 3Guys',
-  brand_15_alt: 'Λογότυπο 2K Games',
-  brand_16_alt: 'Λογότυπο 7Days',
-  brand_17_alt: 'Λογότυπο Βιοκαρπέτ',
-  brand_18_alt: 'Λογότυπο Χαμόγελο του Παιδιού',
-  brand_19_alt: 'Λογότυπο Χρωτέχ',
-  brand_20_alt: 'Λογότυπο Γιώτης',
+  // Brand Alt Texts (Translated pattern)
+  brand_1_alt: 'Apple Logo',
+  brand_2_alt: 'Samsung Logo',
+  brand_3_alt: 'Sony Logo',
+  brand_4_alt: 'LG Logo',
+  brand_5_alt: 'Canon Logo',
+  brand_6_alt: 'Nikon Logo',
+  brand_7_alt: 'Lenovo Logo',
+  brand_8_alt: 'Dell Logo',
+  brand_9_alt: 'HP Logo', 
+  brand_10_alt: 'Asus Logo',
+  brand_11_alt: 'Acer Logo',
+  brand_12_alt: 'Microsoft Logo',
+  brand_13_alt: 'ΑΛΦΑ Logo',
+  brand_14_alt: '3Guys Logo',
+  brand_15_alt: '2K Games Logo',
+  brand_16_alt: '7Days Logo'
+  brand_17_alt: 'Βιοκαρπέτ Logo',
+  brand_18_alt: 'Χαμόγελο του Παιδιού Logo',
+  brand_19_alt: 'Χρωτέχ Logo',
+  brand_20_alt: 'Γιώτης Logo', 
 
 };
 
-export default elTranslations;
+export default enTranslations;
