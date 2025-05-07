@@ -22,7 +22,7 @@ const Gifts: React.FC = () => {
         <div className="gift-finder">
             <div className="sc-jScdur iyzBDo root__wrapper">
                 <div className="sc-dcKlJK cquxZx root">
-                    <img alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')} width="200" height="108" className="sc-guGTOK irbLXu" src="src/pages/assets/gift.svg" loading="eager"/>
+                    <img alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')} width="200" height="108" className="sc-guGTOK irbLXu" src="pages/assets/gift.svg" loading="eager"/>
                     <h1 className="sc-jPkiSJ jBXYhC">{t('gifts', 'Δώρα')}</h1>
                     <p className="sc-lixPIL cuyAJX">
                         {t('gifts_page_subtitle', 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.')}
