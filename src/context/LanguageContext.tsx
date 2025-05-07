@@ -1,8 +1,20 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback
+} from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
+// ================================================================================================
+// TYPE DEFINITIONS
+// ================================================================================================
+
 type Language = 'en' | 'el' | 'es' | 'fr' | 'de';
+
 type Translations = Record<string, Record<string, string>>;
 
 interface LanguageContextType {
@@ -11,6 +23,10 @@ interface LanguageContextType {
   translations: Translations;
   isLoaded: boolean;
 }
+
+// ================================================================================================
+// DEFAULT TRANSLATIONS (Complete Object)
+// ================================================================================================
 
 const defaultTranslations: Translations = {
   // ================================= English (en) ===================================
@@ -550,7 +566,6 @@ const defaultTranslations: Translations = {
   },
   // ============================ Spanish (es) - Placeholder, needs full translation ============================
   es: {
-    // Auth
     email: '[es] Email', password: '[es] Password', forgotPassword: '[es] Forgot Password?', register: '[es] Register',
     signIn: '[es] Sign In', loggingIn: '[es] Logging in...', emailPlaceholder: '[es] email@example.com', orContinueWith: '[es] Or continue with',
     google: '[es] Google', facebook: '[es] Facebook', twitter: '[es] Twitter', createAccount: '[es] Create Account',
@@ -806,7 +821,7 @@ const defaultTranslations: Translations = {
     'hi-fi-systems': '[es] Hi-Fi Systems',
   },
   // ============================ French (fr) - Placeholder, needs full translation =============================
-  fr: { /* All keys from 'en' copied and prefixed with '[fr]' or translated if obvious */
+  fr: {
     email: '[fr] Email', password: '[fr] Password', forgotPassword: '[fr] Forgot Password?', register: '[fr] Register',
     signIn: '[fr] Sign In', loggingIn: '[fr] Logging in...', emailPlaceholder: '[fr] email@example.com', orContinueWith: '[fr] Or continue with',
     google: '[fr] Google', facebook: '[fr] Facebook', twitter: '[fr] Twitter', createAccount: '[fr] Create Account',
@@ -1011,125 +1026,192 @@ const defaultTranslations: Translations = {
     "paymentMethod_apple_pay": "[fr] Apple Pay", "paymentMethod_google_pay": "[fr] Google Pay",
     "paymentMethod_ideal": "[fr] iDEAL", "paymentMethod_crypto": "[fr] Cryptocurrency",
     "paymentMethod_pay_by_link": "[fr] Pay by Link", "paymentMethod_pickup_via": "[fr] Pickup via Courier/Service",
-    'technology': '[fr] Technology', 'home-garden': '[fr] Home & Garden', 'fashion': '[fr] Fashion', 
-    /* ... and so on for all category slugs */
+    'technology': '[fr] Technology', 'home-garden': '[fr] Home & Garden', 'fashion': '[fr] Fashion',
+    /* ... and so on for all category slugs for FR ... */
+    'hi-fi-systems': '[fr] Hi-Fi Systems', // Ensure all keys are present
   },
   // ============================ German (de) - Placeholder, needs full translation =============================
-  de: { /* All keys from 'en' copied and prefixed with '[de]' or translated if obvious */
-    email: '[de] Email', password: '[de] Password', // ... and so on for ALL keys
+  de: {
+    email: '[de] Email', password: '[de] Password', /* ... and so on for ALL keys for DE ... */
     languageCategoryEasternEurope: "[de] Eastern Europe", 
     languageCategoryWesternEurope: "[de] Western Europe",
-    'technology': '[de] Technology', // ... and all category slugs
+    'technology': '[de] Technology', /* ... and all category slugs for DE ... */
+    'hi-fi-systems': '[de] Hi-Fi Systems', // Ensure all keys are present
   }
 };
 
+
+// ================================================================================================
+// CONTEXT CREATION
+// ================================================================================================
+
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'el',
-  setLanguage: () => {},
-  translations: defaultTranslations,
+  language: 'el', // Default language
+  setLanguage: (lang: Language) => {
+    console.warn(
+      `Attempted to call setLanguage with '${lang}' outside of a LanguageProvider. This is a no-op.`
+    );
+  },
+  translations: defaultTranslations, // Provide the full default translations
   isLoaded: false,
 });
 
+
+// ================================================================================================
+// LANGUAGE PROVIDER COMPONENT
+// ================================================================================================
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguageState] = useState<Language>('el');
-  const [translations, setTranslations] = useState<Translations>(defaultTranslations);
+  // Initialize translations state with defaultTranslations.
+  const [translations, setTranslationsState] = useState<Translations>(defaultTranslations);
   const [isLoaded, setIsLoaded] = useState(false);
   const { user } = useAuth();
 
+  // --- Effect for detecting and setting the initial language ---
   useEffect(() => {
     const detectLanguage = async () => {
-      let detectedLang: Language = 'el';
+      let detectedLang: Language = 'el'; // Default application language
       const browserLang = navigator.language.split('-')[0];
-      if (['en', 'el', 'es', 'fr', 'de'].includes(browserLang)) {
+      const validLangs: Language[] = ['en', 'el', 'es', 'fr', 'de'];
+
+      // Check browser language
+      if (validLangs.includes(browserLang as Language)) {
         detectedLang = browserLang as Language;
       }
+
+      // Check user preference from database if user is logged in
       if (user) {
         try {
-          const { data, error } = await supabase.from('profiles').select('language').eq('id', user.id).single();
-          if (data?.language && !error) { detectedLang = data.language as Language; }
-        } catch (error) { console.error('Error fetching user language preference:', error); }
-      }
-      const savedLang = localStorage.getItem('language') as Language;
-      if (savedLang && ['en', 'el', 'es', 'fr', 'de'].includes(savedLang)) {
-        detectedLang = savedLang;
-      }
-      setLanguageState(detectedLang);
-      setIsLoaded(true);
-    };
-    detectLanguage();
-  }, [user]);
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('language')
+            .eq('id', user.id)
+            .single();
 
-  useEffect(() => {
-    const loadCustomTranslations = async () => {
-      let currentEffectiveTranslations = translations; // Use state as potentially already merged base
-      if (!isLoaded && (Object.keys(currentEffectiveTranslations).length === 0 || currentEffectiveTranslations === defaultTranslations )) {
-         // Only set to pure default if it's truly the initial empty/default state and not yet loaded
-         setTranslations(defaultTranslations);
-         currentEffectiveTranslations = defaultTranslations; 
+          if (data?.language && !error && validLangs.includes(data.language as Language)) {
+            detectedLang = data.language as Language;
+          } else if (error) {
+            console.error('Error fetching user language preference from DB:', error);
+          }
+        } catch (fetchError) {
+          console.error('Exception fetching user language preference:', fetchError);
+        }
       }
+
+      // Check localStorage (this can override browser/DB preference)
+      const savedLang = localStorage.getItem('language');
+      if (savedLang && validLangs.includes(savedLang as Language)) {
+        detectedLang = savedLang as Language;
+      }
+
+      setLanguageState(detectedLang);
+      setIsLoaded(true); // Mark as loaded *after* all language detection logic
+    };
+
+    detectLanguage();
+  }, [user]); // Re-run this effect if the user object changes (e.g., login/logout)
+
+
+  // --- Effect for loading custom translations from the database ---
+  useEffect(() => {
+    if (!isLoaded) {
+      // Only attempt to load custom translations if initial language setup is complete
+      // and default translations are already set by useState.
+      return;
+    }
+
+    const loadCustomTranslations = async () => {
+      // Start with a deep copy of defaultTranslations.
+      // This ensures all languages and keys from the default set are present.
+      const newMergedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations;
 
       try {
         const { data, error } = await (supabase as any).from('translations').select('*');
+
         if (error) {
-            console.error('Error fetching custom translations:', error.message || error); 
-            // If fetch fails, ensure we're at least on the comprehensive default set.
-            if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
-               setTranslations(defaultTranslations); // Revert to full default if current is still basic or error occurred
-            }
-            return;
-        };
+          console.error('Error fetching custom translations:', error.message || error);
+          // Fallback: use the default translations (which newMergedTranslations currently is)
+          setTranslationsState(newMergedTranslations);
+          return;
+        }
+
         if (data && data.length > 0) {
-          const newLoadedTranslations = JSON.parse(JSON.stringify(defaultTranslations)) as Translations; // Start with full default structure
           data.forEach((item: any) => {
             if (item && item.key) {
-              (Object.keys(newLoadedTranslations) as Language[]).forEach(lang => {
-                if (item[lang] && typeof item[lang] === 'string') {
-                  newLoadedTranslations[lang][item.key] = item[lang]; 
+              (Object.keys(newMergedTranslations) as Language[]).forEach(lang => {
+                if (newMergedTranslations[lang] && item[lang] && typeof item[lang] === 'string') {
+                  newMergedTranslations[lang][item.key] = item[lang];
                 }
               });
             }
           });
-          setTranslations(newLoadedTranslations);
-        } else {
-           // No custom data from DB. Ensure 'translations' state is the comprehensive defaultTranslations.
-           if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
-             setTranslations(defaultTranslations);
-           }
         }
-      } catch (error) {
-        console.error('Error processing custom translations:', error);
-        if (currentEffectiveTranslations === defaultTranslations || Object.keys(currentEffectiveTranslations).every(l => Object.keys(currentEffectiveTranslations[l as Language]).length <= Object.keys(defaultTranslations[l as Language]).length) ) {
-          setTranslations(defaultTranslations);
-        }
+        setTranslationsState(newMergedTranslations);
+      } catch (processingError) {
+        console.error('Error processing custom translations:', processingError);
+        // Fallback: use the default translations
+        setTranslationsState(newMergedTranslations);
       }
     };
 
-    if (isLoaded) { 
-        loadCustomTranslations();
-    } else {
-        // On initial mount before isLoaded is true, ensure `translations` state has the full default set.
-        // This check helps if `translations` was somehow not initialized to `defaultTranslations` by useState.
-        if (Object.keys(translations).length === 0 || translations === defaultTranslations || Object.keys(translations.en).length < Object.keys(defaultTranslations.en).length) {
-            setTranslations(defaultTranslations);
-        }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded]); 
+    loadCustomTranslations();
+  }, [isLoaded]); // Dependency: `isLoaded`. `defaultTranslations` and `supabase` are stable.
 
-  const setLanguage = useCallback((lang: Language) => {
+
+  // --- Memoized callback for setting the language ---
+  const setLanguageCallback = useCallback((lang: Language) => {
+    const validLangs: Language[] = ['en', 'el', 'es', 'fr', 'de'];
+    if (!validLangs.includes(lang)) {
+      console.warn(`Attempted to set an invalid language: ${lang}`);
+      return;
+    }
+
     localStorage.setItem('language', lang);
     setLanguageState(lang);
-    if (user) { 
-      supabase.from('profiles').update({ language: lang } as any).eq('id', user.id)
-        .then(({ error }) => { if (error) { console.error('Error saving language preference:', error); } });
-    }
-  }, [user]);
 
+    if (user) {
+      supabase
+        .from('profiles')
+        .update({ language: lang } as any) // Cast if schema types are strict
+        .eq('id', user.id)
+        .then(({ error: updateError }) => {
+          if (updateError) {
+            console.error('Error saving language preference to DB:', updateError);
+          }
+        });
+    }
+  }, [user]); // `supabase` client is generally stable.
+
+  // --- Provide the context value ---
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, translations, isLoaded }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage: setLanguageCallback,
+        translations,
+        isLoaded
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export const useLanguageContext = () => useContext(LanguageContext);
+
+// ================================================================================================
+// HOOK TO CONSUME CONTEXT
+// ================================================================================================
+
+export const useLanguageContext = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    // This error is thrown by React itself if useContext is used outside a provider.
+    // This custom message provides more specific guidance.
+    throw new Error('useLanguageContext must be used within a LanguageProvider');
+  }
+  // Additionally, you could check if it's the default context value,
+  // which also indicates a missing Provider, though React's error #310 usually catches this.
+  // Example: if (context.setLanguage === LanguageContext.Consumer._context._currentValue.setLanguage) { ... }
+  return context;
+};
