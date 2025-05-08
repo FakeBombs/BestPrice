@@ -193,9 +193,9 @@ const GiftsFiltered: React.FC = () => {
 
                     {/* Header with dynamic image and title */}
                     <div className="sc-fjUQFl bjpNBM flex items-center mt-4"> {/* Added flex for alignment */}
-                        <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
+                        <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`).toLowerCase()} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
-                            <h1 className="sc-jPkiSJ cFyVWT">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey.toLowerCase()}`)}</h1>
+                            <h1 className="sc-jPkiSJ cFyVWT">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`).toLowerCase()}</h1>
                             {/* Optional: Dropdowns from example HTML - Implementation needed if required */}
                             {/* <div className="sc-etfXYe dyQwJK">...</div> */}
                         </div>
