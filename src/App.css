@@ -61,17 +61,17 @@
   text-align: center;
   margin: 0px 0px 0.6rem
 }
-@media only screen and (min-width: 80em) {
-  .jBXYhC {font-size: 2.5rem}
-}
-@media only screen and (min-width: 64em) {
-  .jBXYhC {font-size: 2.2rem}
+@media only screen and (min-width: 25.8em) {
+  .jBXYhC {font-size: 2rem}
 }
 @media only screen and (min-width: 48em) {
   .jBXYhC {font-size: 2.1rem}
 }
-@media only screen and (min-width: 25.8em) {
-  .jBXYhC {font-size: 2rem}
+@media only screen and (min-width: 64em) {
+  .jBXYhC {font-size: 2.2rem}
+}
+@media only screen and (min-width: 80em) {
+  .jBXYhC {font-size: 2.5rem}
 }
 .cuyAJX {
   color: var(--colors-themed-body-color-lighter);
@@ -82,10 +82,10 @@
   max-width: 300px;
   -webkit-font-smoothing: antialiased
 }
-@media only screen and (min-width: 80em) {
+@media only screen and (min-width: 35.5em) {
   .cuyAJX {
-    line-height: 1.3;
-    font-size: 1.4rem
+    line-height: 1.2;
+    max-width: 340px
   }
 }
 @media only screen and (min-width: 64em) {
@@ -95,10 +95,10 @@
     max-width: 370px
   }
 }
-@media only screen and (min-width: 35.5em) {
+@media only screen and (min-width: 80em) {
   .cuyAJX {
-    line-height: 1.2;
-    max-width: 340px
+    line-height: 1.3;
+    font-size: 1.4rem
   }
 }
 .ebbwJS {
@@ -110,13 +110,13 @@
   margin-top: 32px;
   max-width: 350px
 }
-@media only screen and (min-width: 64em) {
+@media only screen and (min-width: 25.8em) {
   .ebbwJS {max-width: 100%}
 }
 @media only screen and (min-width: 35.5em) {
   .ebbwJS {max-width: 100%}
 }
-@media only screen and (min-width: 25.8em) {
+@media only screen and (min-width: 64em) {
   .ebbwJS {max-width: 100%}
 }
 .fknxFk {
@@ -126,20 +126,20 @@
   flex-wrap: wrap;
   gap: 15px
 }
-@media only screen and (min-width: 80em) {
-  .fknxFk {gap: 42px}
-}
-@media only screen and (min-width: 48em) {
-  .fknxFk {gap: 40px}
-}
-@media only screen and (min-width: 25.8em) {
-  .fknxFk {gap: 35px}
-}
 @media only screen and (min-width: 23em) {
   .fknxFk {gap: 30px}
 }
 @media only screen and (min-width: 25.8em) {
   .fknxFk {gap: 15px}
+}
+@media only screen and (min-width: 25.8em) {
+  .fknxFk {gap: 35px}
+}
+@media only screen and (min-width: 48em) {
+  .fknxFk {gap: 40px}
+}
+@media only screen and (min-width: 80em) {
+  .fknxFk {gap: 42px}
 }
 .kHmeXZ {
   color: var(--colors-themed-body-color);
@@ -154,14 +154,14 @@
   text-decoration: none !important;
   user-select: none !important
 }
-@media only screen and (min-width: 80em) {
-  .kHmeXZ {font-size: 1.1rem}
-}
 @media only screen and (min-width: 48em) {
   .kHmeXZ {
     font-weight: 500;
     font-size: 1.05rem
   }
+}
+@media only screen and (min-width: 80em) {
+  .kHmeXZ {font-size: 1.1rem}
 }
 
 
