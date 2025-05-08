@@ -1,26 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-// import { useLanguageContext } from '@/context/LanguageContext'; // Not used in this snippet
 import { products as allMockProducts, Product } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
-
-// --- Helper Functions ---
-// calculateDiscountPercentage is not directly used in THIS file's rendering logic
-// but might be used by ProductCard, so keeping it if ProductCard needs it.
-// const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: number): number | null => {
-//     if (typeof discountPrice !== 'number' || typeof originalPrice !== 'number' || originalPrice <= 0 || discountPrice >= originalPrice) { return null; }
-//     return Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
-// };
-// formatPrice is not directly used in THIS file's rendering logic
-// but might be used by ProductCard.
-// const formatPrice = (price?: number, locale: string = 'el-GR'): string => {
-//     if (typeof price !== 'number') return '';
-//     try { return price.toLocaleString(locale.replace('_', '-'), { style: 'currency', currency: 'EUR' }); }
-//     catch (e) { return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
-// };
-// --- End Helper Functions ---
-
 
 const giftRecipientCategories = [
     { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'adult-m' },
@@ -167,14 +149,7 @@ const Gifts: React.FC = () => {
                         </div>
                     </div>
                     <p className="sc-cZSric geFCaT">
-                        {/*
-                          IMPORTANT: For this to work, your translation file (e.g., el.json) MUST have:
-                          "gifts_total_count": "{{count}} επιλεγμένα δώρα για όλους"
-                          And en.json:
-                          "gifts_total_count": "{{count}} selected gifts for everyone"
-                          The '{{count}}' placeholder is KEY.
-                        */}
-                        {t('gifts_total_count', ' fallback text: {{count}} gifts', { count: filteredAndSortedProducts.length.toLocaleString(language === 'el' ? 'el-GR' : 'de-DE') })}
+                        {t('gifts_total_count', ' fallback text: {{count}} gifts', { count: filteredAndSortedProducts.length })}
                     </p>
                 </div>
             </div>
