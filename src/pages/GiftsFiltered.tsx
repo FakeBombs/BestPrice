@@ -183,9 +183,6 @@ const GiftsFiltered: React.FC = () => {
     }, [recipientSlug]);
     // --- End Interest Extraction ---
 
-    // Get the translated text for "everyone" / "όλους"
-    const everyoneText = t('recipient_everyone', 'everyone');
-
     return (
         // Using custom classes structure from Gifts.tsx and example HTML
         <div id="gift-finder" className="gift-finder">
@@ -223,7 +220,7 @@ const GiftsFiltered: React.FC = () => {
 
                     {/* Dynamic Count */}
                     <p className="sc-cZSric dQdioU">
-                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: everyoneText })}
+                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: t(recipientInfo.nameKey).toLowerCase() })}
                     </p>
                 </div>
             </div>
