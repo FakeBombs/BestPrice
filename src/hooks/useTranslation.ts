@@ -1,6 +1,5 @@
-// src/hooks/useTranslation.ts
 import { useCallback } from 'react';
-import { useLanguageContext } from '@/context/LanguageContext'; // Ensure this path is correct
+import { useLanguageContext } from '@/context/LanguageContext';
 
 type TranslationOptions = Record<string, string | number>;
 
