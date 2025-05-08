@@ -17,6 +17,9 @@ interface NavbarProps {
 const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
   ({ onSitemapToggle, onRemoveSitemap, isSitemapVisible, onMouseEnter }, ref) => {
     const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const translatedText = t('categories', 'Κατηγορίες');
+    const style = { '--translated-content': `"${translatedText}"` };
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Handle click events to close sitemap on navbar clicks (except the sitemap button)
@@ -51,7 +54,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
           </div>
 
           <div className="search__wrapper">
-            <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" id="sitemap-toggle" onClick={(e) => { e.stopPropagation(); onSitemapToggle(); }}>
+            <div className="sitemap-button sitemap-button--desktop pressable" aria-label="Sitemap button" role="button" id="sitemap-toggle" onClick={(e) => { e.stopPropagation(); onSitemapToggle(); }} style={style}>
               <div className="sitemap-button__lines">
                 <div></div>
                 <div></div>
