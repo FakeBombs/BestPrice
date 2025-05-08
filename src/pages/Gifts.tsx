@@ -83,33 +83,20 @@ const Gifts: React.FC = () => {
 
         const sorted = [...filtered];
         switch (sortBy) {
-             case 'popularity_desc':
-                sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.reviews || 0) - (a.reviews || 0));
-                break;
-            case 'price_asc':
-                 sorted.sort((a, b) => getEffectiveLowestPrice(a) - getEffectiveLowestPrice(b));
-                 break;
-            case 'price_desc':
-                 // For descending sort, products with no price (Infinity) should go last
-                 // or if using 0 from getEffectiveLowestPrice(p, true), they'd go first.
-                 // Standard getEffectiveLowestPrice returns Infinity for no price, so simple b - a works.
-                 sorted.sort((a, b) => getEffectiveLowestPrice(b) - getEffectiveLowestPrice(a));
-                 break;
-            case 'id_desc':
-            default:
-                sorted.sort((a, b) => b.id - a.id);
-                break;
+             case 'popularity_desc': sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.reviews || 0) - (a.reviews || 0)); break;
+            case 'price_asc': sorted.sort((a, b) => getEffectiveLowestPrice(a) - getEffectiveLowestPrice(b)); break;
+            case 'price_desc': sorted.sort((a, b) => getEffectiveLowestPrice(b) - getEffectiveLowestPrice(a)); break;
+            case 'id_desc': default: sorted.sort((a, b) => b.id - a.id); break;
         }
         return sorted;
     }, [showDealsOnly, selectedPriceMax, sortBy, allMockProducts]); // Added allMockProducts
 
      useEffect(() => {
-        const params = new URLSearchParams(searchParams); // Preserve existing params
+        const params = new URLSearchParams(searchParams);
         if (showDealsOnly) params.set('deals', '1'); else params.delete('deals');
         if (selectedPriceMax) params.set('price_max', selectedPriceMax); else params.delete('price_max');
         if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy); else params.delete('sort');
         
-        // Only update if params actually changed to avoid infinite loops if setSearchParams itself triggers a re-render that calls this effect.
         if (params.toString() !== searchParams.toString()) {
             setSearchParams(params, { replace: true });
         }
@@ -120,9 +107,6 @@ const Gifts: React.FC = () => {
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSortBy(event.target.value);
 
     const currentDealCount = useMemo(() => {
-        // Count deals within the *currently fully filtered and sorted* list if needed,
-        // or count from a less filtered list if "Deals (X)" should reflect deals before price filter.
-        // This counts deals within the products currently displayed:
         return filteredAndSortedProducts.filter(p =>
             p.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
             p.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
@@ -171,7 +155,7 @@ const Gifts: React.FC = () => {
                                     <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} className="mr-1"/>
                                 </label>
                                 <select value={selectedPriceMax} onChange={handlePriceChange} aria-label={t('price_filter_label', 'Price')}>
-                                    <option value="">{t('price_filter_all_label', 'All Prices')}</option>
+                                    <option value="">{t('price_filter_label', 'Τιμή')}</option>
                                     {priceRanges.map(range => (
                                         <option key={range.value} value={range.value}>
                                             {t(range.labelKey, `Up to €${range.value}`)}
@@ -190,7 +174,7 @@ const Gifts: React.FC = () => {
                                 <p className="col-span-full text-center py-10 text-gray-500">{t('no_gifts_found', 'Δεν βρέθηκαν δώρα με αυτά τα κριτήρια.')}</p>
                            )}
                         </div>
-                        <div style={{ height: '1px' }}></div> {/* Placeholder */}
+                        <div style={{ height: '1px' }}></div>
                     </div>
                 </div>
             </div>
