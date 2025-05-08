@@ -762,7 +762,8 @@ const elTranslations = {
   // ==================== Gifts Page Specific ============================
   gifts_page_alt: 'Ιδέες για Δώρα στο BestPrice',
   gifts_page_subtitle: 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.',
-  gifts_total_count: '{{count}} επιλεγμένα δώρα για όλους',
+  gifts_total_count_one: '{{count}} επιλεγμένο δώρο για όλους',
+  gifts_total_count_other: '{{count}} επιλεγμένα δώρα για όλους',
   // --- Recipient Titles ---
   giftsForMen: 'Δώρα για Άνδρες',
   giftsForWomen: 'Δώρα για Γυναίκες',
