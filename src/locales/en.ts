@@ -43,7 +43,7 @@ const enTranslations = {
   name: 'Name',                           memberSince: 'Member since',
   role: 'Role',                           administrator: 'Administrator',
   regularUser: 'Regular User',            editProfile: 'Edit Profile',
-  accountSummary: 'Account Summary',      categories: 'Categories',
+  accountSummary: 'Account Summary',      categories: 'Categories', // **** Key for Navbar/Sitemap Button ****
   gifts: 'Gifts',                         deals: 'Deals',
   clearFilters: 'Clear filters',          finalPrice: 'Final price',
   yes: "Yes",                             no: "No",
@@ -56,6 +56,9 @@ const enTranslations = {
   searchPlaceholder: "Search for products...",
   notFoundPageTitle: "Page Not Found",      notFoundMessage: "Oops! The page you are looking for does not exist.",
   recently_viewed_title: "Recently Viewed",
+  site_name: 'BestPrice', // **** ADDED for Navbar ****
+  sitemap_button_label: 'Sitemap button', // **** ADDED for Navbar ****
+  my_account_link: 'My Account', // **** ADDED for Navbar ****
 
   // ====================== Categories Page & Filters =======================
   "product_singular": "product",            "product_plural": "{{count}} products",
@@ -95,9 +98,9 @@ const enTranslations = {
   "return_to": "Return to",                 "info_for_certified_store": "Information for certified store",
   "showing_products_from_store": "Showing products from store",
   "remove_filter": "Remove this filter",
-  category_unknown: 'Uncategorized', // **** ADDED ****
-  stores_count_label_one: '{{count}} store', // **** ADDED ****
-  stores_count_label_other: '{{count}} stores', // **** ADDED ****
+  category_unknown: 'Uncategorized', // **** ADDED for ProductCard ****
+  stores_count_label_one: '{{count}} store', // **** ADDED for ProductCard ****
+  stores_count_label_other: '{{count}} stores', // **** ADDED for ProductCard ****
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
@@ -771,13 +774,14 @@ const enTranslations = {
   gifts_total_count_other: '{{count}} selected gifts for {{recipient}}', // Needs recipient
   recipient_everyone: 'everyone', // **** ADDED THIS LINE ****
   // --- Recipient Titles ---
-  giftsForMen: 'Gifts for Men',
-  giftsForWomen: 'Gifts for Women',
-  giftsForTeens: 'Gifts for Teens',
-  giftsForKids9_11: 'Gifts for Kids 9-11',
-  giftsForKids6_8: 'Gifts for Kids 6-8',
-  giftsForToddlers: 'Gifts for Toddlers',
-  giftsForBabies: 'Gifts for Babies',
+  // giftsForMen: 'Gifts for Men', // Replaced by generic below
+  // giftsForWomen: 'Gifts for Women',
+  // giftsForTeens: 'Gifts for Teens',
+  // giftsForKids9_11: 'Gifts for Kids 9-11',
+  // giftsForKids6_8: 'Gifts for Kids 6-8',
+  // giftsForToddlers: 'Gifts for Toddlers',
+  // giftsForBabies: 'Gifts for Babies',
+  giftsForRecipientTitle: 'Gifts for {{recipient}}', // **** ADDED ****
   // --- Recipient Names ---
   men: 'Men',
   women: 'Women',
@@ -799,7 +803,6 @@ const enTranslations = {
   gifts_filtered_count: '{{count}} selected gifts', // Note: This key is not currently used in the components
   price_filter_all_label: 'All Prices', // **** ADDED ****
   sort_by_label: 'Sort by', // **** ADDED ****
-  giftsForRecipientTitle: 'Gifts for {{recipient}}', // **** ADDED ****
 
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
