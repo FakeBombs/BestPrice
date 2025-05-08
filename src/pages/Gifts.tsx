@@ -133,7 +133,7 @@ const Gifts: React.FC = () => {
                         </div>
                     </div>
                     <p className="sc-cZSric geFCaT">
-                        {(() => {const currentCount = filteredAndSortedProducts.length; return t('gifts_total_count', `fallback: ${currentCount} gifts`, { count: currentCount });})()}
+                        {t('gifts_total_count', `fallback: ${filteredAndSortedProducts.length} gifts`, { count: filteredAndSortedProducts.length })}
                     </p>
                 </div>
             </div>
