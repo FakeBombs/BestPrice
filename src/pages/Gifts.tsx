@@ -134,7 +134,7 @@ const Gifts: React.FC = () => {
                     </div>
                     <p className="sc-cZSric geFCaT">
                         {t('gifts_total_count', '${filteredAndSortedProducts.length} επιλεγμένα δώρα για όλους', { count: filteredAndSortedProducts.length })}
-                        {t('gifts_total_count', `fallback: ${filteredAndSortedProducts.length} gifts`, { count: filteredAndSortedProducts.length })}
+                        {t('gifts_total_count', `fallback: ${filteredAndSortedProducts.length} επιλεγμένα δώρα για όλους`, { count: filteredAndSortedProducts.length })}
                     </p>
                 </div>
             </div>
