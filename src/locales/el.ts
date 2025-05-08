@@ -821,6 +821,9 @@ const elTranslations = {
   brand_18_alt: 'Λογότυπο Χαμόγελο του Παιδιού',
   brand_19_alt: 'Λογότυπο Χρωτέχ',
   brand_20_alt: 'Λογότυπο Γιώτης',
+
+  // ** ADDED Key **
+  recipient_everyone: 'όλους',
 };
 
 export default elTranslations;
