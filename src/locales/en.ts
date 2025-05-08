@@ -764,8 +764,8 @@ const enTranslations = {
   // ==================== Gifts Page Specific (New) ============================
   gifts_page_alt: 'Gift Ideas at BestPrice',
   gifts_page_subtitle: 'Select who you\'re looking for a gift for and see the gifts we\'ve chosen for you.',
-  gifts_total_count_one: '{{count}} selected gift for everyone',
-  gifts_total_count_other: '{{count}} selected gifts for everyone',
+  gifts_total_count_one: '{{count}} selected gift for {{recipient}}',
+  gifts_total_count_other: '{{count}} selected gifts for {{recipient}}',
   // --- Recipient Titles ---
   giftsForMen: 'Gifts for Men',
   giftsForWomen: 'Gifts for Women',
