@@ -223,7 +223,7 @@ const GiftsFiltered: React.FC = () => {
 
                     {/* Dynamic Count */}
                     <p className="sc-cZSric dQdioU">
-                        {t('gifts_total_count', {count: filteredAndSortedProducts.length, recipient: everyoneText}
+                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: everyoneText })}
                     </p>
                 </div>
             </div>
