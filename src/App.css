@@ -47,13 +47,13 @@
   justify-content: center;
   width: 100%
 }
-@media only screen and (min-width: 80em) {
-  .irbLXu {margin-bottom: 2rem}
-}
+.irbLXu {margin-bottom: 1rem}
 @media only screen and (min-width: 64em) {
   .irbLXu {margin-bottom: 1.5rem}
 }
-.irbLXu {margin-bottom: 1rem}
+@media only screen and (min-width: 80em) {
+  .irbLXu {margin-bottom: 2rem}
+}
 .jBXYhC {
   font-weight: 700;
   font-size: 1.8rem;
