@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-// Import Product type along with others
 import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product, ProductPrice } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard'; // Assuming you use ProductCard in Deals view
 
@@ -156,7 +155,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                         // --- Deals View ---
                         <div className="sitemap-desktop__view sitemap-desktop__view--deals">
                             <div className="sitemap-desktop__view-title">{t('popular_deals_title', 'Δημοφιλείς Προσφορές')}</div>
-                             <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
+                             <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2" onClick={sitemapToggle}>
                                 {dealProducts.map(product => {
                                     let displayPrice: number | undefined | null = product.lowestPrice;
                                     let originalPrice: number | undefined | null = null;
