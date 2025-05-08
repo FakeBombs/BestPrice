@@ -99,7 +99,7 @@ const enTranslations = {
   "remove_filter": "Remove this filter",
 
   // ====================== Product Breadcrumb ========================
-  "breadcrumbHome": "BestPrice", // Or potentially your site name
+  "breadcrumbHome": "BestPrice",
   "breadcrumbAllProductsInCategory": "All products in the {{categoryName}} category",
   "breadcrumbAllProductsAndSubcategoriesInCategory": "All products and subcategories in the {{categoryName}} category",
 
@@ -169,7 +169,7 @@ const enTranslations = {
   // ========================== Footer ==============================
   "backToTop": "Back to Top",
   "bestpriceSloganShort": "The truly best price",
-  "bestpriceSloganLong": "BestPrice is the first and largest price comparison service in Greece.", // Keep original slogan? Or translate?
+  "bestpriceSloganLong": "BestPrice is the first and largest price comparison service in Greece.",
   "bestpriceSloganFindDeals": "At BestPrice you will quickly and easily find real offers and the best price from the largest stores.",
   "bestpriceGive": "BestPrice Give",        "footerBestPriceSectionTitle": "BestPrice",
   "aboutUs": "About Us",                    "ourBlog": "Our Blog",
@@ -234,6 +234,7 @@ const enTranslations = {
   "paymentMethod_pickup_via": "Pickup via Courier/Service",
 
   // ========================= Category Slugs =========================
+  // (Includes all slugs from mockData.ts - Use English names)
   'technology': 'Technology',
   'home-garden': 'Home & Garden',
   'fashion': 'Fashion',
@@ -282,7 +283,7 @@ const enTranslations = {
   'rain-umbrellas': 'Rain Umbrellas',
   'shoe-accessories': 'Shoe Accessories',
   'kids-baby-fashion': "Kids & Baby Fashion",
-  'sneakers': 'Sneakers',
+  'sneakers': 'Sneakers', // Using the base name instead of the long description
   'grooming': 'Grooming',
   'pharmacy-products': 'Pharmacy Products',
   'perfumes': 'Perfumes',
@@ -298,7 +299,7 @@ const enTranslations = {
   'cannabis-products': 'Cannabis Products',
   'orthopedics': 'Orthopedics',
   'patient-aids': 'Patient Aids',
-  'optics': 'Optics (Health & Beauty)', // Differentiated from Eyewear
+  'optics': 'Optics (Health & Beauty)', // Differentiated
   'korean-cosmetics': 'Korean Cosmetics',
   'kids-baby-fashion-main': "Kids & Baby Fashion (Main)", // Differentiated
   'kids-toys': "Kids' Toys",
@@ -762,14 +763,46 @@ const enTranslations = {
   deals_by_brand_link: 'By brand',
   gifts_sitemap_placeholder: 'Content for gifts will appear here.',
 
-  // Popular Search Queries (Kept as is, usually not translated)
+  // ==================== Gifts Page Specific (New) ============================
+  gifts_page_alt: 'Gift Ideas at BestPrice',
+  gifts_page_subtitle: 'Select who you\'re looking for a gift for and see the gifts we\'ve chosen for you.',
+  gifts_total_count: '{{count}} selected gifts for everyone',
+  // --- Recipient Titles ---
+  giftsForMen: 'Gifts for Men',
+  giftsForWomen: 'Gifts for Women',
+  giftsForTeens: 'Gifts for Teens',
+  giftsForKids9_11: 'Gifts for Kids 9-11',
+  giftsForKids6_8: 'Gifts for Kids 6-8',
+  giftsForToddlers: 'Gifts for Toddlers',
+  giftsForBabies: 'Gifts for Babies',
+  // --- Recipient Names ---
+  men: 'Men',
+  women: 'Women',
+  teens: 'Teens',
+  'kids9_11': 'Kids 9-11',
+  'kids6_8': 'Kids 6-8',
+  toddlers: 'Toddlers',
+  babies: 'Babies',
+  // --- Filter/Sort Keys (May overlap with Categories page) ---
+  sort_recent: 'Recent',
+  price_filter_label: 'Price',
+  price_upto_10: 'Up to €10',
+  price_upto_20: 'Up to €20',
+  price_upto_30: 'Up to €30',
+  price_upto_50: 'Up to €50',
+  price_upto_100: 'Up to €100',
+  price_upto_250: 'Up to €250',
+  no_gifts_found: 'No gifts found matching these criteria.',
+  gifts_filtered_count: '{{count}} selected gifts',
+
+  // Popular Search Queries
   sitemap_popular_apple: 'Apple',
   sitemap_popular_sony: 'Sony',
   sitemap_popular_mac: 'Mac',
   sitemap_popular_ipadair: 'iPad Air',
   sitemap_popular_galaxy: 'Galaxy',
 
-  // Brand Alt Texts (Translated pattern)
+  // Brand Alt Texts (Generated from mockData)
   brand_1_alt: 'Apple Logo',
   brand_2_alt: 'Samsung Logo',
   brand_3_alt: 'Sony Logo',
@@ -778,19 +811,18 @@ const enTranslations = {
   brand_6_alt: 'Nikon Logo',
   brand_7_alt: 'Lenovo Logo',
   brand_8_alt: 'Dell Logo',
-  brand_9_alt: 'HP Logo', 
+  brand_9_alt: 'HP Logo',
   brand_10_alt: 'Asus Logo',
   brand_11_alt: 'Acer Logo',
   brand_12_alt: 'Microsoft Logo',
-  brand_13_alt: 'ΑΛΦΑ Logo',
+  brand_13_alt: 'ΑΛΦΑ Logo', // Note: Greek name kept as brand name likely doesn't change
   brand_14_alt: '3Guys Logo',
   brand_15_alt: '2K Games Logo',
   brand_16_alt: '7Days Logo',
   brand_17_alt: 'Βιοκαρπέτ Logo',
   brand_18_alt: 'Χαμόγελο του Παιδιού Logo',
   brand_19_alt: 'Χρωτέχ Logo',
-  brand_20_alt: 'Γιώτης Logo', 
-
+  brand_20_alt: 'Γιώτης Logo',
 };
 
 export default enTranslations;
