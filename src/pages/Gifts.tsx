@@ -113,6 +113,9 @@ const Gifts: React.FC = () => {
         ).length;
     }, [filteredAndSortedProducts]);
 
+    // Get the translated text for "everyone" / "όλους"
+    const everyoneText = t('recipient_everyone', 'everyone');
+
     return (
         <div id="gift-finder" className="gift-finder">
             <div className="sc-jScdur iyzBDo root__wrapper">
@@ -133,7 +136,7 @@ const Gifts: React.FC = () => {
                         </div>
                     </div>
                     <p className="sc-cZSric geFCaT">
-                        {t('gifts_total_count', { count: filteredAndSortedProducts.length })}
+                        {t('gifts_total_count', {count: filteredAndSortedProducts.length, recipient: everyoneText}
                     </p>
                 </div>
             </div>
