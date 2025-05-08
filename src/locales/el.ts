@@ -1,5 +1,3 @@
-// src/locales/el.ts
-
 const elTranslations = {
   // ================================= Auth ===================================
   email: 'Email',                         password: 'Κωδικός',
@@ -234,6 +232,7 @@ const elTranslations = {
   "paymentMethod_pickup_via": "Παραλαβή μέσω Courier/Υπηρεσίας",
 
   // ========================= Category Slugs =========================
+  // (Includes all slugs from mockData.ts)
   'technology': 'Τεχνολογία',
   'home-garden': 'Σπίτι & Κήπος',
   'fashion': 'Μόδα',
@@ -751,7 +750,7 @@ const elTranslations = {
   'transceivers-walkie-talkies': 'Πομποδέκτες, Walkie-Talkie',
   'walkie-talkie-accessories': 'Αξεσουάρ Ασυρμάτων',
 
-  // ==================== MainLayout Sitemap Specific (New) =====================
+  // ==================== MainLayout Sitemap Specific =====================
   popular_deals_title: 'Δημοφιλείς Προσφορές',
   todays_deals_link: 'Σημερινές προσφορές',
   deals_by_store_link: 'Ανά κατάστημα',
@@ -759,6 +758,39 @@ const elTranslations = {
   gifts_sitemap_placeholder: 'Περιεχόμενο για τα δώρα θα εμφανιστεί εδώ.',
   popular_searches: 'Δημοφιλείς Αναζητήσεις',
   popular_brands: 'Δημοφιλείς Μάρκες',
+
+  // ==================== Gifts Page Specific ============================
+  gifts_page_alt: 'Ιδέες για Δώρα στο BestPrice',
+  gifts_page_subtitle: 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.',
+  gifts_total_count: '{{count}} επιλεγμένα δώρα για όλους',
+  // --- Recipient Titles ---
+  giftsForMen: 'Δώρα για Άνδρες',
+  giftsForWomen: 'Δώρα για Γυναίκες',
+  giftsForTeens: 'Δώρα για Έφηβους',
+  giftsForKids9_11: 'Δώρα για Παιδιά 9-11',
+  giftsForKids6_8: 'Δώρα για Παιδιά 6-8',
+  giftsForToddlers: 'Δώρα για Νήπια',
+  giftsForBabies: 'Δώρα για Μωρά',
+  // --- Recipient Names ---
+  men: 'Άνδρες',
+  women: 'Γυναίκες',
+  teens: 'Έφηβοι',
+  'kids9_11': 'Παιδιά 9-11', // Using quotes as key contains hyphen
+  'kids6_8': 'Παιδιά 6-8',  // Using quotes as key contains hyphen
+  toddlers: 'Νήπια',
+  babies: 'Μωρά',
+  // --- Filter/Sort Keys (May overlap with Categories page) ---
+  sort_recent: 'Πρόσφατα', // For 'id_desc' sort option
+  price_filter_label: 'Τιμή',
+  price_upto_10: 'Μέχρι 10€',
+  price_upto_20: 'Μέχρι 20€',
+  price_upto_30: 'Μέχρι 30€',
+  price_upto_50: 'Μέχρι 50€',
+  price_upto_100: 'Μέχρι 100€',
+  price_upto_250: 'Μέχρι 250€',
+  no_gifts_found: 'Δεν βρέθηκαν δώρα με αυτά τα κριτήρια.',
+  gifts_filtered_count: '{{count}} επιλεγμένα δώρα',
+
 
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
