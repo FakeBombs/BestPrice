@@ -163,6 +163,25 @@
 @media only screen and (min-width: 80em) {
   .kHmeXZ {font-size: 1.1rem}
 }
+.geFCaT {
+  font-weight: normal;
+  margin: 1rem 0px 0px;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem;
+  text-align: center;
+  width: auto;
+  user-select: none;
+  color: var(--colors-themed-body-color-lighter)
+}
+@media only screen and (min-width: 48em) {
+  .geFCaT {
+    margin: 3rem 0px 0px;
+    font-size: 1.2rem
+  }
+}
+@media only screen and (min-width: 80em) {
+  .geFCaT {font-size: 1.25rem}
+}
 
 
 
