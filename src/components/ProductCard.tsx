@@ -1,64 +1,108 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge'; // Assuming used elsewhere or keep if needed
-import { Product, ProductPrice, getBestPrice, getVendorById, categories } from '@/data/mockData';
+// Remove unused Badge import unless needed elsewhere
+// import { Badge } from '@/components/ui/badge';
+import { useTranslation } from '@/hooks/useTranslation'; // Import useTranslation
+import { Product, ProductPrice, getBestPrice, categories as allCategories } from '@/data/mockData'; // Import categories
 
 interface ProductCardProps {
   product: Product;
   className?: string;
-  activeVendorFilterDomain?: string | null; // <-- Added prop
+  activeVendorFilterDomain?: string | null;
 }
+
+// --- Currency/Locale Formatting ---
+// Define mappings from language code to locale and currency
+// Adjust these based on the languages and currencies you support
+const localeCurrencyMap: Record<string, { locale: string; currency: string }> = {
+  el: { locale: 'el-GR', currency: 'EUR' },
+  en: { locale: 'en-GB', currency: 'GBP' }, // Example: British English, Pound
+  de: { locale: 'de-DE', currency: 'EUR' }, // Example: German, Euro
+  es: { locale: 'es-ES', currency: 'EUR' }, // Example: Spanish, Euro
+  fr: { locale: 'fr-FR', currency: 'EUR' }, // Example: French, Euro
+  // Add more mappings as needed
+};
+const defaultLocale = 'el-GR'; // Fallback locale
+const defaultCurrency = 'EUR';  // Fallback currency
+// --- End Currency/Locale Formatting ---
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   className = "p p--row p--force-ratio",
-  activeVendorFilterDomain // <-- Destructure prop
+  activeVendorFilterDomain
 }: ProductCardProps) => {
 
+  const { t, language } = useTranslation(); // Get t function and current language
+
+  // --- Determine Locale and Currency ---
+  const currentLocale = localeCurrencyMap[language]?.locale || defaultLocale;
+  const currentCurrency = localeCurrencyMap[language]?.currency || defaultCurrency;
+
+  // Helper function for formatting currency
+  const formatCurrency = (value: number) => {
+    try {
+      // Basic options, you can add minimumFractionDigits etc. if needed
+      const options: Intl.NumberFormatOptions = {
+        style: 'currency',
+        currency: currentCurrency
+      };
+      return value.toLocaleString(currentLocale, options);
+    } catch (e) {
+      console.error(`Error formatting currency for locale ${currentLocale}, currency ${currentCurrency}:`, e);
+      // Fallback to default formatting on error
+      return value.toLocaleString(defaultLocale, { style: 'currency', currency: defaultCurrency });
+    }
+  };
+  // --- End Currency Helpers ---
+
   // --- Calculations ---
-  const bestPriceInfo = getBestPrice(product);
+  const bestPriceInfo = getBestPrice(product); // Assuming getBestPrice is correct
   const productSlug = product.slug || product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
   const ratingPercentage = product.rating ? ((product.rating / 5) * 100).toFixed(2) : '0';
   const vendorCount = product.prices.filter(p => p.inStock).length;
 
-  // --- Category Lookup ---
-  const categoryLookup = useMemo(() => {
-    return categories.reduce((acc, category) => {
-      acc[category.id] = category.name;
-      return acc;
-    }, {} as Record<number, string>);
-  }, []);
+  // --- Category Lookup & Translation ---
+  // Find the category object using the first ID
   const firstCategoryId = product.categoryIds?.[0];
-  const categoryName = firstCategoryId ? categoryLookup[firstCategoryId] : 'Χωρίς Κατηγορία';
+  const categoryData = useMemo(() => {
+      if (!firstCategoryId) return null;
+      // Create a map for faster lookups if categories list is large, otherwise find is fine
+      // const categoryMap = new Map(allCategories.map(c => [c.id, c]));
+      // return categoryMap.get(firstCategoryId);
+      return allCategories.find(c => c.id === firstCategoryId);
+  }, [firstCategoryId]);
 
-  // --- Construct Target URL ---
+  // Translate the category name using its slug as the key
+  const categoryName = categoryData
+    ? t(categoryData.slug, categoryData.name) // Use slug as key, name as fallback
+    : t('category_unknown', 'Uncategorized'); // Use a generic fallback key
+
+  // --- Construct Target URL (no changes needed here) ---
   const baseProductUrl = `/item/${product.id}/${productSlug}`;
   const targetUrl = activeVendorFilterDomain
-    ? `${baseProductUrl}?filter=store:${activeVendorFilterDomain}` // Append filter
-    : baseProductUrl;                                             // Use base URL
+    ? `${baseProductUrl}?filter=store:${activeVendorFilterDomain}`
+    : baseProductUrl;
 
   return (
     <div className={className}>
-      {/* Use targetUrl for Links */}
-      <Link to={targetUrl} className="p__cover">
+      <Link to={targetUrl} className="p__cover" title={product.title}> {/* Added title here */}
         <picture>
           <img src={product.image || '/dist/images/placeholder.png'} alt={product.title} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/dist/images/placeholder.png'; }}/>
         </picture>
       </Link>
       <div className="p__main">
         <div className="p__meta">
-          <div className="p__category">{categoryName}</div>
+          <div className="p__category">{categoryName}</div> {/* Translated category */}
           <h3 className="p__title p__title--lines p__title--lines-2">
-            {/* Use targetUrl */}
             <Link to={targetUrl} title={product.title}>{product.title}</Link>
           </h3>
         </div>
       </div>
+      {/* Use 'bestPriceInfo &&' to ensure footer only renders if price info exists */}
       {bestPriceInfo && (
         <div className="p__footer">
-          {product.rating !== undefined && product.reviews !== undefined && (
+          {product.rating !== undefined && product.reviews !== undefined && product.reviews >= 0 && ( // Check reviews >= 0
             <div className="p__rating popup-anchor" data-breakdown="">
-              {/* Use targetUrl (maybe append #reviews directly if needed) */}
               <Link to={`${targetUrl}#reviews`} className="p__rating-link">
                 <div className="simple-rating">
                   <div className="simple-rating__inner">
@@ -74,17 +118,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
           <div className="p__price-merchants">
-            {/* Use targetUrl */}
-            <Link className="p__price" to={targetUrl}>
+            <Link className="p__price" to={targetUrl} title={product.title}> {/* Added title */}
               <div className="p__price--current">
-                 {bestPriceInfo.price.toLocaleString('el-GR', { style: 'currency', currency: 'EUR' })}
+                 {/* Use dynamic currency formatting */}
+                 {formatCurrency(bestPriceInfo.price)}
               </div>
-              {bestPriceInfo.discountPrice && bestPriceInfo.discountPrice < bestPriceInfo.price && (
-                 <del className="p__price--before">{bestPriceInfo.price.toLocaleString('el-GR', { style: 'currency', currency: 'EUR' })}</del>
+              {/* Check discountPrice exists AND is less than price */}
+              {bestPriceInfo.discountPrice !== undefined && bestPriceInfo.discountPrice < bestPriceInfo.price && (
+                 <del className="p__price--before">
+                    {/* Use dynamic currency formatting */}
+                    {formatCurrency(bestPriceInfo.price)}
+                 </del>
                )}
             </Link>
           </div>
-          <div className="p__merchants">{vendorCount} {vendorCount === 1 ? 'κατάστημα' : 'καταστήματα'}</div>
+          {/* Use translated store count with pluralization */}
+          <div className="p__merchants">
+            {t('stores_count_label', { count: vendorCount })}
+          </div>
         </div>
       )}
     </div>
