@@ -182,6 +182,43 @@
 @media only screen and (min-width: 80em) {
   .geFCaT {font-size: 1.25rem}
 }
+.MylkP {
+  display: flex;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  align-items: end;
+  overflow-x: auto;
+  gap: 0.5rem;
+  scrollbar-width: none
+}
+@media only screen and (min-width: 48em) {
+  .MylkP {gap: 1rem}
+}
+.MylkP select {
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.5rem
+}
+.bqWucv {
+  display: flex;
+  gap: 0.5rem;
+}
+@media only screen and (min-width: 48em) {
+  .bqWucv {gap: 1rem}
+}
+.MylkP label {
+  font-size: 1.08rem;
+  font-weight: 400;
+  white-space: nowrap;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.MylkP input[type="checkbox"] {
+  border-radius: 7px;
+  width: 2rem;
+  height: 2rem
+}
+.bhTOi9I4I2nIIKPU_JUz {margin-left: .75rem}
 
 
 
