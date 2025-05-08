@@ -195,7 +195,7 @@ const GiftsFiltered: React.FC = () => {
                     <div className="sc-fjUQFl bjpNBM flex items-center mt-4"> {/* Added flex for alignment */}
                         <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`).toLowerCase()} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
-                            <h1 className="sc-jPkiSJ cFyVWT">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`).toLowerCase()}</h1>
+                            <h1 className="sc-jPkiSJ cFyVWT">{(() => { const fT = t(recipientInfo.titleKey); const lI = fT.lastIndexOf(' '); return lI > -1 ? fT.substring(0, lI + 1) + fT.substring(lI + 1).toLowerCase() : fT; })()}</h1>
                             {/* Optional: Dropdowns from example HTML - Implementation needed if required */}
                             {/* <div className="sc-etfXYe dyQwJK">...</div> */}
                         </div>
