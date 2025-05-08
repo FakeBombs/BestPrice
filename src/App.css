@@ -54,6 +54,13 @@
   .irbLXu {margin-bottom: 1.5rem}
 }
 .irbLXu {margin-bottom: 1rem}
+.jBXYhC {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--colors-themed-body-color);
+  text-align: center;
+  margin: 0px 0px 0.6rem
+}
 @media only screen and (min-width: 80em) {
   .jBXYhC {font-size: 2.5rem}
 }
@@ -66,12 +73,14 @@
 @media only screen and (min-width: 25.8em) {
   .jBXYhC {font-size: 2rem}
 }
-.jBXYhC {
-  font-weight: 700;
-  font-size: 1.8rem;
-  color: var(--colors-themed-body-color);
+.cuyAJX {
+  color: var(--colors-themed-body-color-lighter);
+  margin: 0px;
+  font-size: 1.1rem;
   text-align: center;
-  margin: 0px 0px 0.6rem
+  line-height: 1.15;
+  max-width: 300px;
+  -webkit-font-smoothing: antialiased
 }
 @media only screen and (min-width: 80em) {
   .cuyAJX {
@@ -92,14 +101,14 @@
     max-width: 340px
   }
 }
-.cuyAJX {
-  color: var(--colors-themed-body-color-lighter);
-  margin: 0px;
-  font-size: 1.1rem;
-  text-align: center;
-  line-height: 1.15;
-  max-width: 300px;
-  -webkit-font-smoothing: antialiased
+.ebbwJS {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 32px;
+  max-width: 350px
 }
 @media only screen and (min-width: 64em) {
   .ebbwJS {max-width: 100%}
@@ -110,14 +119,12 @@
 @media only screen and (min-width: 25.8em) {
   .ebbwJS {max-width: 100%}
 }
-.ebbwJS {
+.fknxFk {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 32px;
-  max-width: 350px
+  flex-wrap: wrap;
+  gap: 15px
 }
 @media only screen and (min-width: 80em) {
   .fknxFk {gap: 42px}
@@ -134,22 +141,6 @@
 @media only screen and (min-width: 25.8em) {
   .fknxFk {gap: 15px}
 }
-.fknxFk {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px
-}
-@media only screen and (min-width: 80em) {
-  .kHmeXZ {font-size: 1.1rem}
-}
-@media only screen and (min-width: 48em) {
-  .kHmeXZ {
-    font-weight: 500;
-    font-size: 1.05rem
-  }
-}
 .kHmeXZ {
   color: var(--colors-themed-body-color);
   cursor: pointer;
@@ -162,6 +153,15 @@
   flex-direction: column;
   text-decoration: none !important;
   user-select: none !important
+}
+@media only screen and (min-width: 80em) {
+  .kHmeXZ {font-size: 1.1rem}
+}
+@media only screen and (min-width: 48em) {
+  .kHmeXZ {
+    font-weight: 500;
+    font-size: 1.05rem
+  }
 }
 
 
