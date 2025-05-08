@@ -1,5 +1,3 @@
-// src/locales/en.ts
-
 const enTranslations = {
   // ================================= Auth ===================================
   email: 'Email',                         password: 'Password',
