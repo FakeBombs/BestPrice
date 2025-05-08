@@ -161,13 +161,7 @@ const GiftsFiltered: React.FC = () => {
                                 {/* <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg> */}
                                 <span itemProp="name">{t('gifts', 'Δώρα')}</span>
                             </Link>
-                             {/* Separator for the current page */}
-                            <span> › </span>
                         </li>
-                        {/* Current page - not a link */}
-                         <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
-                            <span itemProp="name">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)}</span>
-                         </li>
                     </ol>
                 </nav>
             </div>
@@ -196,23 +190,12 @@ const GiftsFiltered: React.FC = () => {
             {/* --- Top Section (Image, Title, Recipient Links) --- */}
             <div className="sc-jScdur iyzBDo root__wrapper">
                 <div className="sc-dcKlJK cquxZx root">
-                    {renderBreadcrumbs()} {/* Add Breadcrumbs */}
+                    {renderBreadcrumbs()}
 
                     {/* Header with dynamic image and title */}
                     <div className="sc-fjUQFl bjpNBM flex items-center mt-4"> {/* Added flex for alignment */}
-                        <img
-                            alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)}
-                            width="92"
-                            height="92"
-                            // Assuming images are named like adult-m.webp, etc. in public/dist/images/gifts/
-                            src={`/dist/images/gifts/${recipientInfo.imgBase}.webp`}
-                            // You might need srcset for retina if you have @2x images
-                            // srcSet={`/dist/images/gifts/${recipientInfo.imgBase}@2x.webp 2x`}
-                            loading="eager" // Load header image eagerly
-                            className="rounded-full mr-4" // Added margin
-                        />
+                        <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)} width="92" height="92" src={`/dist/images/gifts/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
-                             {/* Dynamic H1 */}
                             <h1 className="sc-jPkiSJ cFyVWT">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)}</h1>
                             {/* Optional: Dropdowns from example HTML - Implementation needed if required */}
                             {/* <div className="sc-etfXYe dyQwJK">...</div> */}
