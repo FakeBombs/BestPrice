@@ -3,7 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product } from '@/data/mockData';
+// Import Product type along with others
+import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product, ProductPrice } from '@/data/mockData';
+import ProductCard from '@/components/ProductCard'; // Assuming you use ProductCard in Deals view
 
 // --- SVG Components remain the same ---
 const Technology = () => ( <svg className="icon sitemap-desktop__item-icon icon--outline" aria-hidden="true" width="24" height="24"><use href="/dist/images/icons/categories.svg#icon-cat-6989-24"></use></svg> );
@@ -20,26 +22,26 @@ const categorySvgMap: { [key: number]: ReactNode } = {
 // --- End SVG Components ---
 
 // --- Helper Functions ---
-const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: number): number | null => { /* ... as before ... */
+const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: number): number | null => {
   if (typeof discountPrice !== 'number' || typeof originalPrice !== 'number' || originalPrice <= 0 || discountPrice >= originalPrice) { return null; }
   return Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
 };
 
-const formatPrice = (price?: number, locale: string = 'el-GR'): string => { /* ... default to el-GR formatting ... */
+const formatPrice = (price?: number, locale: string = 'el-GR'): string => {
     if (typeof price !== 'number') return '';
-    // Ensure currency is set correctly for the locale
     try {
       return price.toLocaleString(locale.replace('_', '-'), { style: 'currency', currency: 'EUR' });
     } catch (e) {
-      // Fallback to default formatting if locale is invalid
       return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
     }
 };
 
-const getAllCategoryAndDescendantIds = (categoryId: number, allCats: Category[]): number[] => { /* ... as before ... */
+const getAllCategoryAndDescendantIds = (categoryId: number, allCats: Category[]): number[] => {
     let ids: number[] = [categoryId];
     const children = allCats.filter(cat => cat.parentId === categoryId);
-    children.forEach(child => { ids = ids.concat(getAllCategoryAndDescendantIds(child.id, allCats)); });
+    children.forEach(child => {
+        ids = ids.concat(getAllCategoryAndDescendantIds(child.id, allCats));
+    });
     return Array.from(new Set(ids));
 };
 // --- End Helper Functions ---
@@ -64,13 +66,13 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   // --- Calculate Deals Data ---
   const dealProducts = allMockProducts.filter(product =>
-      product.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
-      product.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
+      (Array.isArray(product.prices) && product.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null)) ||
+      (Array.isArray(product.variants) && product.variants.some(variant => Array.isArray(variant.prices) && variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null)))
   ).slice(0, 12);
 
   const actualDealCount = allMockProducts.filter(product =>
-      product.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
-      product.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
+      (Array.isArray(product.prices) && product.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null)) ||
+      (Array.isArray(product.variants) && product.variants.some(variant => Array.isArray(variant.prices) && variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null)))
   ).length;
   // --- End Deals Data ---
 
@@ -87,12 +89,25 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const mainCategory = mainCategories.find(cat => cat.id === currentCategoryId);
   const subCategories = currentCategoryId !== null && currentCategoryId > 0 ? allCategoriesList.filter(cat => cat.parentId === currentCategoryId) : [];
 
-  const popularSearchQueries = [ /* ... same as before ... */
+  const popularSearchQueries = [
     { query: 'Apple', key: 'sitemap_popular_apple' }, { query: 'Sony', key: 'sitemap_popular_sony' }, { query: 'Mac', key: 'sitemap_popular_mac' }, { query: 'iPad Air', key: 'sitemap_popular_ipadair' }, { query: 'Galaxy', key: 'sitemap_popular_galaxy' }
   ];
 
+  // --- Calculate Popular Brands for the CURRENTLY HOVERED Category ---
   let popularBrandsForCurrentView: Brand[] = [];
-  if (currentCategoryId !== null && currentCategoryId > 0 && currentCategoryId <= 7) { const relevantCategoryIds = getAllCategoryAndDescendantIds(currentCategoryId, allCategoriesList); const productsInCurrentBranch = allMockProducts.filter(p => p.categoryIds?.some(catId => relevantCategoryIds.includes(catId))); const uniqueBrandNamesInBranch = Array.from(new Set(productsInCurrentBranch.map(p => p.brand).filter(Boolean))); popularBrandsForCurrentView = uniqueBrandNamesInBranch.map(name => brands.find(b => b.name === name)).filter((b): b is Brand => !!b).slice(0, 10); }
+  if (currentCategoryId !== null && currentCategoryId > 0 && currentCategoryId <= 7) {
+      const relevantCategoryIds = getAllCategoryAndDescendantIds(currentCategoryId, allCategoriesList);
+      const productsInCurrentBranch = allMockProducts.filter(p =>
+          // Ensure p exists and categoryIds is an array before filtering
+          p && Array.isArray(p.categoryIds) && p.categoryIds.some(catId => relevantCategoryIds.includes(catId))
+      );
+      const uniqueBrandNamesInBranch = Array.from(new Set(productsInCurrentBranch.map(p => p.brand).filter(Boolean)));
+      popularBrandsForCurrentView = uniqueBrandNamesInBranch
+          .map(name => brands.find(b => b.name === name))
+          .filter((b): b is Brand => !!b)
+          .slice(0, 10);
+  }
+  // --- End Popular Brands Calculation ---
 
   const translatedBrandsForAltText = brands.map(brand => ({ ...brand, translatedName: t(`brand_${brand.id}_alt`, brand.name) }));
 
@@ -143,56 +158,50 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             <div className="sitemap-desktop__view-title">{t('popular_deals_title', 'Δημοφιλείς Προσφορές')}</div>
                              <div className="p__products collection__products grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2">
                                 {dealProducts.map(product => {
-                                    let displayPrice = product.lowestPrice;
-                                    let originalPrice = null;
-                                    const bestPriceInfo = product.prices.find(p => p.vendorId === product.bestPriceVendorId);
-                                    if (bestPriceInfo?.discountPrice) { displayPrice = bestPriceInfo.discountPrice; originalPrice = bestPriceInfo.price; }
-                                    else if (bestPriceInfo) { displayPrice = bestPriceInfo.price; }
-                                    const discountPercentage = calculateDiscountPercentage(originalPrice ?? undefined, displayPrice);
+                                    let displayPrice: number | undefined | null = product.lowestPrice;
+                                    let originalPrice: number | undefined | null = null;
+                                    let bestPriceInfo: ProductPrice | undefined = undefined;
+
+                                    if (product && Array.isArray(product.prices) && product.prices.length > 0) {
+                                        bestPriceInfo = product.prices.find(p => p.vendorId === product.bestPriceVendorId);
+                                        if (bestPriceInfo?.discountPrice) {
+                                            displayPrice = bestPriceInfo.discountPrice;
+                                            originalPrice = bestPriceInfo.price;
+                                        } else if (bestPriceInfo) {
+                                            displayPrice = bestPriceInfo.price;
+                                        } else if (displayPrice === undefined || displayPrice === null) {
+                                            const inStockPrices = product.prices.filter(p => p.inStock);
+                                            if (inStockPrices.length > 0) {
+                                                displayPrice = Math.min(...inStockPrices.map(p => p.discountPrice ?? p.price));
+                                            } else {
+                                                displayPrice = Math.min(...product.prices.map(p => p.discountPrice ?? p.price));
+                                            }
+                                        }
+                                    } else if (displayPrice === undefined || displayPrice === null) {
+                                        displayPrice = 0;
+                                    }
+
+                                    const discountPercentage = calculateDiscountPercentage(originalPrice ?? undefined, displayPrice ?? undefined);
                                     const productTitle = t(product.slug ?? `product_${product.id}_title`, product.title);
-                                    // Use a safe slug, defaulting to 'product' if undefined
                                     const productSlug = product.slug || 'product';
 
                                     return (
-                                        <div key={product.id} className="p p--deal p--bare flex flex-col border border-gray-200 dark:border-gray-700 rounded overflow-hidden group">
-                                            <Link to={`/item/${product.id}/${productSlug}`} className="p__cover block relative aspect-square overflow-hidden" title={productTitle} onClick={sitemapToggle}>
-                                                <img width="220" height="220" loading="lazy" alt={productTitle} src={product.image || '//placehold.co/220x220?text=No+Image'} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"/>
-                                                {/* Badges */}
-                                                {discountPercentage !== null && (<div className="absolute top-1 right-1"><div className={`p__badge p__badge--drop drop drop--${Math.min(Math.floor(discountPercentage/10)*10, 40)} bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center`}><svg className="icon h-3 w-3 mr-0.5" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg>-{discountPercentage}%</div></div>)}
-                                                {product.tags?.includes('black-friday') && (<div className="absolute top-1 left-1 p__badge--deal-black-wrapper"><div className="p__badge p__badge--deal-black bg-black text-white p-1 rounded-full"><svg className="icon h-3.5 w-3.5" aria-hidden="true" width="18" height="18"><use href="/public/dist/images/icons/static.svg#icon-thunder-18"></use></svg></div></div>)}
-                                            </Link>
-                                            <div className="p__main p-2 flex-grow flex flex-col">
-                                                <div className="p__meta flex-grow">
-                                                    <h3 className="p__title p__title--lines p__title--lines-2 text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                        <Link to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>{productTitle}</Link>
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                            <div className="p__footer p-2 pt-0 mt-auto">
-                                                <div className="p__price-merchants">
-                                                    <Link className="p__price block text-center" to={`/item/${product.id}/${productSlug}`} title={productTitle} onClick={sitemapToggle}>
-                                                        <div className="p__price--current text-sm font-bold text-gray-900 dark:text-white">{formatPrice(displayPrice, language)}</div>
-                                                        {originalPrice && (<del className="p__price--before text-xs text-gray-500 dark:text-gray-400">{formatPrice(originalPrice, language)}</del>)}
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <ProductCard key={product.id} product={product} className="p p--deal p--bare" />
                                     );
                                 })}
                             </div>
-                            <div className="sitemap-desktop__deals--actions">
-                                <Link to="/deals?bpref=sitemap" onClick={sitemapToggle}>{t('todays_deals_link', 'Σημερινές προσφορές')}</Link>
-                                <Link to="/deals/m?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_store_link', 'Ανά κατάστημα')}</Link>
-                                <Link to="/deals/b?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_brand_link', 'Ανά brand')}</Link>
+                            <div className="sitemap-desktop__deals--actions text-center mt-4 space-x-4">
+                                <Link className="text-sm text-blue-600 hover:underline" to="/deals?bpref=sitemap" onClick={sitemapToggle}>{t('todays_deals_link', 'Σημερινές προσφορές')}</Link>
+                                <Link className="text-sm text-blue-600 hover:underline" to="/deals/m?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_store_link', 'Ανά κατάστημα')}</Link>
+                                <Link className="text-sm text-blue-600 hover:underline" to="/deals/b?bpref=sitemap" onClick={sitemapToggle}>{t('deals_by_brand_link', 'Ανά brand')}</Link>
                             </div>
                         </div>
                     )}
 
-                    {/* --- Category View (including dynamic brands) --- */}
+                    {/* --- Category View --- */}
                     {currentCategoryId !== null && currentCategoryId > 0 && mainCategory && (
                         <div className="sitemap-desktop__view sitemap-desktop__view--cat">
-                            {/* ... (Category Title, Subcategories - unchanged) ... */}
-                             <div className="sitemap-desktop__view-title">
+                            <div className="sitemap-desktop__view-title">
                                 <Link to={`/cat/${mainCategory.id}/${mainCategory.slug}`} onClick={sitemapToggle}>
                                     {t(mainCategory.slug, mainCategory.name)}
                                 </Link>
@@ -207,7 +216,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                                           <div className="sitemap-desktop__sub-main">
                                             <div className="sitemap-desktop__sub-title"><Link to={`/cat/${sub.id}/${sub.slug}?bpref=sitemap`} onClick={sitemapToggle}>{t(sub.slug, sub.name)}</Link></div>
                                             <ul className="sitemap-desktop__sub-list">
-                                              {allCategoriesList.filter(item => item.parentId === sub.id).slice(0, 6).map(subItem => (
+                                              {(Array.isArray(allCategoriesList) ? allCategoriesList.filter(item => item.parentId === sub.id) : []).slice(0, 6).map(subItem => (
                                                 <li key={subItem.id}><Link to={`/cat/${subItem.id}/${subItem.slug}?bpref=sitemap`} onClick={sitemapToggle}>{t(subItem.slug, subItem.name)}</Link></li>
                                               ))}
                                             </ul>
@@ -218,6 +227,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             </div>
                             {/* Popular Searches */}
                              <div className="sitemap-desktop__queries links">
+                                {/* REMOVED TITLE: <h4 className="text-xs font-semibold uppercase text-gray-500 mb-1">{t('popular_searches', 'Popular Searches')}</h4> */}
                                 {popularSearchQueries.map((search, index) => (
                                     <Link className="sitemap-desktop__queries-query links__link pressable" key={index} to={`/search?q=${encodeURIComponent(search.query)}&bpref=sitemap`} onClick={sitemapToggle}>
                                         <svg className="icon" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-search-16"></use></svg>
@@ -228,9 +238,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                             {/* DYNAMIC POPULAR BRANDS */}
                             {popularBrandsForCurrentView.length > 0 && (
                                 <div className="sitemap-desktop__brands mt-4">
+                                    {/* REMOVED TITLE: <h4 className="text-xs font-semibold uppercase text-gray-500 mb-1">{t('popular_brands', 'Popular Brands')}</h4> */}
                                     {popularBrandsForCurrentView.map(brand => (
                                     <Link className="sitemap-desktop__brands-brand pressable inline-block p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" key={brand.id} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}?bpref=sitemap`} onClick={sitemapToggle} title={brand.name}>
-                                        <img alt={t(`brand_${brand.id}_alt`, brand.name)} src={brand.logo} className="h-6 max-h-6 w-auto object-contain" loading="lazy"/>
+                                        <img alt={t(`brand_${brand.id}_alt`, brand.name)} src={brand.logo || '//placehold.co/90x30?text=No+Logo'} className="h-6 max-h-6 w-auto object-contain" loading="lazy"/>
                                     </Link>
                                     ))}
                                 </div>
