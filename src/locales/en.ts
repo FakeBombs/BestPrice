@@ -822,6 +822,9 @@ const enTranslations = {
   brand_18_alt: 'Χαμόγελο του Παιδιού Logo',
   brand_19_alt: 'Χρωτέχ Logo',
   brand_20_alt: 'Γιώτης Logo',
+
+  // ** ADDED Key **
+  recipient_everyone: 'everyone',
 };
 
 export default enTranslations;
