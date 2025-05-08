@@ -1,24 +1,27 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useLanguageContext } from '@/context/LanguageContext';
+// import { useLanguageContext } from '@/context/LanguageContext'; // Not used in this snippet
 import { products as allMockProducts, Product } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
 
-// --- Helper Functions --- (Copied from GiftsFiltered logic)
-const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: number): number | null => {
-    if (typeof discountPrice !== 'number' || typeof originalPrice !== 'number' || originalPrice <= 0 || discountPrice >= originalPrice) { return null; }
-    return Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
-};
-const formatPrice = (price?: number, locale: string = 'el-GR'): string => {
-    if (typeof price !== 'number') return '';
-    try { return price.toLocaleString(locale.replace('_', '-'), { style: 'currency', currency: 'EUR' }); }
-    catch (e) { return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
-};
+// --- Helper Functions ---
+// calculateDiscountPercentage is not directly used in THIS file's rendering logic
+// but might be used by ProductCard, so keeping it if ProductCard needs it.
+// const calculateDiscountPercentage = (originalPrice?: number, discountPrice?: number): number | null => {
+//     if (typeof discountPrice !== 'number' || typeof originalPrice !== 'number' || originalPrice <= 0 || discountPrice >= originalPrice) { return null; }
+//     return Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
+// };
+// formatPrice is not directly used in THIS file's rendering logic
+// but might be used by ProductCard.
+// const formatPrice = (price?: number, locale: string = 'el-GR'): string => {
+//     if (typeof price !== 'number') return '';
+//     try { return price.toLocaleString(locale.replace('_', '-'), { style: 'currency', currency: 'EUR' }); }
+//     catch (e) { return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
+// };
 // --- End Helper Functions ---
 
 
-// Define the structure for recipient categories
 const giftRecipientCategories = [
     { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'adult-m' },
     { slug: 'women', titleKey: 'giftsForWomen', nameKey: 'women', imgBase: 'adult-f' },
@@ -29,7 +32,6 @@ const giftRecipientCategories = [
     { slug: 'babies', titleKey: 'giftsForBabies', nameKey: 'babies', imgBase: 'baby-both' },
 ];
 
-// Define Price Range Options
 const priceRanges = [
     { value: '10', labelKey: 'price_upto_10' },
     { value: '20', labelKey: 'price_upto_20' },
@@ -39,7 +41,6 @@ const priceRanges = [
     { value: '250', labelKey: 'price_upto_250' },
 ];
 
-// Define Sort Options
 const sortOptions = [
     { value: 'id_desc', labelKey: 'sort_recent' },
     { value: 'popularity_desc', labelKey: 'sort_most_popular' },
@@ -47,22 +48,40 @@ const sortOptions = [
     { value: 'price_desc', labelKey: 'sort_most_expensive' },
 ];
 
+// Helper to get the effective lowest price for a product
+const getEffectiveLowestPrice = (product: Product, forSortDesc: boolean = false): number => {
+    // Use pre-calculated lowestPrice if available and reliable
+    // For this example, we'll always calculate dynamically for accuracy with filters
+    // if (product.lowestPrice !== undefined && product.lowestPrice !== null) {
+    //     return product.lowestPrice;
+    // }
+
+    if (!product.prices || product.prices.length === 0) {
+        return forSortDesc ? 0 : Infinity; // Handle products with no price info
+    }
+
+    const inStockPrices = product.prices.filter(pr => pr.inStock);
+    const pricesToConsider = inStockPrices.length > 0 ? inStockPrices : product.prices;
+
+    if (pricesToConsider.length === 0) { // Should not happen if product.prices has items
+        return forSortDesc ? 0 : Infinity;
+    }
+
+    return Math.min(...pricesToConsider.map(pr => pr.discountPrice ?? pr.price));
+};
+
 
 const Gifts: React.FC = () => {
-    const { t, language } = useTranslation();
+    const { t, language } = useTranslation(); // language from useTranslation
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // --- State for Filters & Sorting ---
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
     const [sortBy, setSortBy] = useState(() => searchParams.get('sort') || 'id_desc');
 
-    // --- Filtering and Sorting Logic for ALL gifts ---
     const filteredAndSortedProducts = useMemo(() => {
-        // 1. Start with all products that have ANY gift attributes
         let filtered = allMockProducts.filter(p => p.giftAttributes);
 
-        // 2. Filter by Deals
         if (showDealsOnly) {
             filtered = filtered.filter(p =>
                 p.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
@@ -70,68 +89,69 @@ const Gifts: React.FC = () => {
             );
         }
 
-        // 3. Filter by Price
         if (selectedPriceMax) {
             const maxPrice = parseInt(selectedPriceMax, 10);
             if (!isNaN(maxPrice)) {
                 filtered = filtered.filter(p => {
-                    const lowestValidPrice = p.lowestPrice ?? Math.min(...p.prices.filter(pr => pr.inStock).map(pr => pr.discountPrice ?? pr.price), Infinity);
-                    return lowestValidPrice <= maxPrice;
+                    const effectivePrice = getEffectiveLowestPrice(p);
+                    return effectivePrice <= maxPrice;
                 });
             }
         }
 
-        // 4. Sorting
         const sorted = [...filtered];
         switch (sortBy) {
              case 'popularity_desc':
                 sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.reviews || 0) - (a.reviews || 0));
                 break;
             case 'price_asc':
-                 sorted.sort((a, b) => (a.lowestPrice ?? Infinity) - (b.lowestPrice ?? Infinity));
+                 sorted.sort((a, b) => getEffectiveLowestPrice(a) - getEffectiveLowestPrice(b));
                  break;
             case 'price_desc':
-                 sorted.sort((a, b) => (b.lowestPrice ?? 0) - (a.lowestPrice ?? 0));
+                 // For descending sort, products with no price (Infinity) should go last
+                 // or if using 0 from getEffectiveLowestPrice(p, true), they'd go first.
+                 // Standard getEffectiveLowestPrice returns Infinity for no price, so simple b - a works.
+                 sorted.sort((a, b) => getEffectiveLowestPrice(b) - getEffectiveLowestPrice(a));
                  break;
             case 'id_desc':
             default:
-                sorted.sort((a, b) => b.id - a.id); // Simple ID sort for "Recent"
+                sorted.sort((a, b) => b.id - a.id);
                 break;
         }
         return sorted;
-    }, [showDealsOnly, selectedPriceMax, sortBy]);
-    // --- End Filtering and Sorting ---
+    }, [showDealsOnly, selectedPriceMax, sortBy, allMockProducts]); // Added allMockProducts
 
-
-    // --- Update URL Params when filters change ---
      useEffect(() => {
-        const params = new URLSearchParams();
-        if (showDealsOnly) params.set('deals', '1');
-        if (selectedPriceMax) params.set('price_max', selectedPriceMax);
-        if (sortBy !== 'id_desc') params.set('sort', sortBy);
-        setSearchParams(params, { replace: true });
-    }, [showDealsOnly, selectedPriceMax, sortBy, setSearchParams]);
-    // --- End URL Sync ---
+        const params = new URLSearchParams(searchParams); // Preserve existing params
+        if (showDealsOnly) params.set('deals', '1'); else params.delete('deals');
+        if (selectedPriceMax) params.set('price_max', selectedPriceMax); else params.delete('price_max');
+        if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy); else params.delete('sort');
+        
+        // Only update if params actually changed to avoid infinite loops if setSearchParams itself triggers a re-render that calls this effect.
+        if (params.toString() !== searchParams.toString()) {
+            setSearchParams(params, { replace: true });
+        }
+    }, [showDealsOnly, selectedPriceMax, sortBy, setSearchParams, searchParams]);
 
-    // --- Event Handlers ---
     const handleDealsToggle = (event: React.ChangeEvent<HTMLInputElement>) => setShowDealsOnly(event.target.checked);
     const handlePriceChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedPriceMax(event.target.value);
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSortBy(event.target.value);
-    // --- End Event Handlers ---
 
-    // Calculate deal count within the currently displayed products
-    const currentDealCount = filteredAndSortedProducts.filter(p =>
-        p.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
-        p.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
-    ).length;
+    const currentDealCount = useMemo(() => {
+        // Count deals within the *currently fully filtered and sorted* list if needed,
+        // or count from a less filtered list if "Deals (X)" should reflect deals before price filter.
+        // This counts deals within the products currently displayed:
+        return filteredAndSortedProducts.filter(p =>
+            p.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
+            p.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
+        ).length;
+    }, [filteredAndSortedProducts]);
 
     return (
-        // Using custom classes structure
         <div id="gift-finder" className="gift-finder">
-            {/* --- Top Section (Image, Title, Recipient Links) --- */}
             <div className="sc-jScdur iyzBDo root__wrapper">
                 <div className="sc-dcKlJK cquxZx root">
-                    <img alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')} width="200" height="108" className="sc-guGTOK irbLXu" src="assets/gift.svg" loading="eager"/>
+                    <img alt={t('gifts_page_alt', 'Gift Ideas at BestPrice')} width="200" height="108" className="sc-guGTOK irbLXu" src="/assets/gift.svg" loading="eager"/>
                     <h1 className="sc-jPkiSJ jBXYhC">{t('gifts', 'Δώρα')}</h1>
                     <p className="sc-lixPIL cuyAJX">
                         {t('gifts_page_subtitle', 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.')}
@@ -140,39 +160,43 @@ const Gifts: React.FC = () => {
                         <div className="sc-gDpztx fknxFk">
                             {giftRecipientCategories.map((cat) => (
                                 <Link key={cat.slug} to={`/gifts/${cat.slug}`} title={t(cat.titleKey, `Gifts for ${cat.nameKey}`)} className="sc-kpOvIu kHmeXZ">
-                                    <img alt={t(cat.nameKey, cat.nameKey)} width={90} height={90} src={`/dist/images/${cat.slug}.webp`} loading="lazy" className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"/>
+                                    <img alt={t(cat.nameKey, cat.nameKey)} width={90} height={90} src={`/dist/images/gifts/${cat.imgBase}.webp`} loading="lazy" className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"/>
                                     <h2>{t(cat.nameKey, cat.nameKey)}</h2>
                                 </Link>
                             ))}
                         </div>
                     </div>
                     <p className="sc-cZSric geFCaT">
-                        {/* Use the dynamically calculated total gift count */}
-                        {t('gifts_total_count', '{{count}} επιλεγμένα δώρα για όλους', { count: filteredAndSortedProducts.length.toLocaleString(language === 'el' ? 'el-GR' : 'de-DE') })}
+                        {/*
+                          IMPORTANT: For this to work, your translation file (e.g., el.json) MUST have:
+                          "gifts_total_count": "{{count}} επιλεγμένα δώρα για όλους"
+                          And en.json:
+                          "gifts_total_count": "{{count}} selected gifts for everyone"
+                          The '{{count}}' placeholder is KEY.
+                        */}
+                        {t('gifts_total_count', ' fallback text: {{count}} gifts', { count: filteredAndSortedProducts.length.toLocaleString(language === 'el' ? 'el-GR' : 'de-DE') })}
                     </p>
                 </div>
             </div>
 
-            {/* --- Main Content Wrapper (Filters & Products Grid) --- */}
             <div className="root__wrapper">
                 <div className="root">
                     <div className="gift-finder__content">
-                        {/* Filter Bar */}
-                        <div className="sc-hZARmv MylkP">
-                             <select value={sortBy} onChange={handleSortChange}>
+                        <div className="sc-hZARmv MylkP"> {/* Filter Bar */}
+                             <select value={sortBy} onChange={handleSortChange} aria-label={t('sort_by_label', 'Sort by')}>
                                 {sortOptions.map(option => (
                                     <option key={option.value} value={option.value}>
-                                        {t(option.labelKey, option.labelKey.replace('_', ' '))}
+                                        {t(option.labelKey, option.labelKey.replace(/_/g, ' '))}
                                     </option>
                                 ))}
                             </select>
-                            <div className="sc-dKKIkQ bqWucv">
+                            <div className="sc-dKKIkQ bqWucv"> {/* Other filters */}
                                 <label className="bhTOi9I4I2nIIKPU_JUz">
-                                    {t('deals_label', 'Προσφορές')} ({currentDealCount})
-                                    <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} />
+                                    <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} className="mr-1"/>
+                                    {t('deals_label', 'Deals')} ({currentDealCount})
                                 </label>
-                                <select value={selectedPriceMax} onChange={handlePriceChange}>
-                                    <option value="">{t('price_filter_label', 'Τιμή')}</option>
+                                <select value={selectedPriceMax} onChange={handlePriceChange} aria-label={t('price_filter_label', 'Price')}>
+                                    <option value="">{t('price_filter_all_label', 'All Prices')}</option>
                                     {priceRanges.map(range => (
                                         <option key={range.value} value={range.value}>
                                             {t(range.labelKey, `Up to €${range.value}`)}
@@ -181,22 +205,17 @@ const Gifts: React.FC = () => {
                                 </select>
                             </div>
                         </div>
-                        {/* End Filter Bar */}
 
-                        {/* Product Grid */}
-                        {/* Using custom class + Tailwind grid */}
                         <div className="p__products p__products--full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
                            {filteredAndSortedProducts.length > 0 ? (
                                 filteredAndSortedProducts.map(product => (
-                                    <ProductCard key={product.id} product={product} className="p"/> // Use your ProductCard
+                                    <ProductCard key={product.id} product={product} className="p"/>
                                 ))
                            ) : (
                                 <p className="col-span-full text-center py-10 text-gray-500">{t('no_gifts_found', 'Δεν βρέθηκαν δώρα με αυτά τα κριτήρια.')}</p>
                            )}
                         </div>
-                        {/* End Product Grid */}
-                        {/* Placeholder div for styling or potential pagination/infinite scroll */}
-                        <div style={{ height: '1px' }}></div>
+                        <div style={{ height: '1px' }}></div> {/* Placeholder */}
                     </div>
                 </div>
             </div>
