@@ -335,7 +335,7 @@ const Categories: React.FC = () => {
                  <h1>{dynamicPageTitle}</h1>
                  <div className="page-header__count-wrapper">
                    {/* MODIFICATION POINT for Option 2 */}
-                   <div className="page-header__count">{filteredProducts.length}{' '} {filteredProducts.length === 1 ? t('product_singular') : t('product_plural', { count: filteredProducts.length })}</div>
+                   <div className="page-header__count">{filteredProducts.length === 1 ? `${filteredProducts.length} ${t('product_singular')}` : t('product_plural', { count: filteredProducts.length })}</div>
                    {filteredProducts.length > 0 && currentCategory && (
                      <div data-url={location.pathname + location.search} data-title={dynamicPageTitle} data-max-price="0" className="alerts-minimal pressable" onClick={handlePriceAlert}>
                        <svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-notification-outline-20"></use></svg>
