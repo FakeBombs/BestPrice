@@ -720,22 +720,25 @@ export const brands: Brand[] = [
 
 
 // --- Products ---
-// *** Your original 20 products are included here, plus 30 new random ones ***
+// Your original 20 products + 30 new random ones, with giftAttributes added
 export const products: Product[] = [
-  // --- Your Original 20 Products (with giftAttributes added to examples) ---
+  // --- Your Original 1-20 Products (with giftAttributes added to examples) ---
   {
     id: 1,
     title: 'Apple iPhone 14 Pro Max 256GB Deep Purple',
-    slug: 'apple-iphone-14-pro-max-256gb-deep-purple',
+    slug: 'apple-iphone-14-pro-max-256gb-deep-purple', // Added slug
     brand: 'Apple',
     model: 'iPhone 14 Pro Max',
     mpn: 'MQ9X3HX/A',
     gtin: '0194253401199',
     categoryIds: [102, 103],
-    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας...',
+    description: 'Ανακάλυψε το iPhone 14 Pro Max 256GB την κορυφή της τεχνολογίας. Με κάμερα 48MP, Always-On οθόνη, απίστευτη ταχύτητα με τον επεξεργαστή A16 Bionic. Μεγάλη αυτονομία, εντυπωσιακό design και ανίχνευση σύγκρουσης. Ζήσε την απόλυτη εμπειρία Apple.',
     shortDescription: 'iPhone 14 Pro Max 256GB Deep Purple με A16 Bionic.',
     image: '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
-    images: ['//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp','//bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp'],
+    images: [
+      '//bbpcdn.pstatic.gr/bpimg0/78TKg/1SYzV1_SX660/1728492731/apple-iphone-14-pro-max-256gb.webp',
+      '//bbpcdn.pstatic.gr/P/bpimg129/66117/apple-iphone-14-pro-max-256gb.webp'
+    ],
     videos: ['https://www.youtube.com/watch?v=exampleVideoId1'],
     rating: 4.8, reviews: 245,
     specifications: { 'Οθόνη': '6.7 inch Super Retina XDR', 'Επεξεργαστής': 'A16 Bionic', 'RAM': '6GB', 'Χωρητικότητα': '256GB', 'Camera': '48MP + 12MP + 12MP', 'Λειτουργικό Σύστημα': 'iOS 16', 'Μπαταρία': '4323 mAh', 'Διαστάσεις': '160.7 x 77.6 x 7.85 mm', 'Weight': '240g', 'Χρώμα': 'Deep Purple' },
@@ -746,8 +749,8 @@ export const products: Product[] = [
   {
     id: 2,
     title: 'Samsung Galaxy S23 Ultra 512GB Phantom Black',
-    slug: 'samsung-galaxy-s23-ultra-512gb-phantom-black',
-    brand: 'Samsung', model: 'Galaxy S23 Ultra', categoryIds: [102], // Changed from 99 to 102
+    slug: 'samsung-galaxy-s23-ultra-512gb-phantom-black', // Added slug
+    brand: 'Samsung', model: 'Galaxy S23 Ultra', categoryIds: [102], // Changed category ID to Smartphones
     description: 'Το απόλυτο Samsung τηλέφωνο με εξαιρετικές δυνατότητες κάμερας και ενσωματωμένο S Pen.',
     image: '//placehold.co/400x400?text=Galaxy+S23+Black', images: ['//placehold.co/400x400?text=Galaxy+S23+Black', '//placehold.co/400x400?text=Galaxy+S23+Side', '//placehold.co/400x400?text=Galaxy+S23+Back'], videos: [], rating: 4.7, reviews: 189,
     specifications: { 'Οθόνη': '6.8 inch Dynamic AMOLED 2X', 'Επεξεργαστής': 'Snapdragon 8 Gen 2 for Galaxy', 'RAM': '12GB', 'Χωρητικότητα': '512GB', 'Camera': '200MP + 12MP + 10MP + 10MP', 'Λειτουργικό Σύστημα': 'Android 13', 'Μπαταρία': '5000 mAh', 'Διαστάσεις': '163.4 x 78.1 x 8.9 mm', 'Weight': '233g', 'Χρώμα': 'Phantom Black' },
@@ -759,52 +762,52 @@ export const products: Product[] = [
   {
     id: 3,
     title: 'MacBook Pro 16-inch',
-    slug: 'macbook-pro-16-inch-m1',
-    brand: 'Apple', model: 'MacBook Pro', categoryIds: [141], // Changed from 218 to 141
+    slug: 'macbook-pro-16-inch-m1', // Added slug
+    brand: 'Apple', model: 'MacBook Pro', categoryIds: [141], // Corrected category
     description: 'High-performance laptop for professionals.', image: '//placehold.co/400x400?text=MacBook+Pro', images: ['//placehold.co/400x400?text=MacBook+Pro'], rating: 4.6, reviews: 200,
     specifications: { 'Επεξεργαστής': 'Apple M1 Pro', 'RAM': '16GB', 'Χωρητικότητα': '512GB SSD', 'Διαστάσεις': '3.5 x 13.5 x 9.8 inches', 'Weight': '4.7 pounds' },
     prices: [ { vendorId: 1, price: 2499.99, shippingCost: 0, inStock: true }, { vendorId: 2, price: 2399.99, shippingCost: 10, inStock: true } ],
     lowestPrice: 2399.99, bestPriceVendorId: 2, status: 'active', tags: ['laptop', 'pro', 'macos'],
-    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'work', 'design'] },
+    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'work', 'design'] }, // Added giftAttributes
   },
   {
     id: 4,
     title: 'Sony 55 Inch 4K UHD TV',
-    slug: 'sony-bravia-55-4k-uhd',
-    brand: 'Sony', model: 'Bravia', categoryIds: [337], // Changed from 253 to 337 (TVs)
+    slug: 'sony-bravia-55-4k-uhd', // Added slug
+    brand: 'Sony', model: 'Bravia', categoryIds: [337], // Corrected category
     description: 'Stunning visuals and vibrant colors.', image: '//placehold.co/400x400?text=Sony+TV', images: ['//placehold.co/400x400?text=Sony+TV'], rating: 4.8, reviews: 150,
     specifications: { 'Resolution': '4K UHD', 'Τύπος οθόνης': 'LED', 'Smart TV': 'Yes', 'Weight': '37.5 pounds' },
-    prices: [ { vendorId: 3, price: 899.99, shippingCost: 0, inStock: true }, { vendorId: 4, price: 849.99, shippingCost: 20, inStock: true, discountPrice: 829.99 } ], // Added discount example
+    prices: [ { vendorId: 3, price: 899.99, shippingCost: 0, inStock: true }, { vendorId: 4, price: 849.99, shippingCost: 20, inStock: true, discountPrice: 829.99 } ],
     lowestPrice: 829.99, bestPriceVendorId: 4, status: 'active', tags: ['tv', '4k', 'smarttv'],
-    giftAttributes: { recipient: ['men', 'women'], interest: ['home-cinema', 'tech'], occasion: ['housewarming'] },
+    giftAttributes: { recipient: ['men', 'women'], interest: ['home-cinema', 'tech'], occasion: ['housewarming'] }, // Added giftAttributes
   },
   {
     id: 5,
     title: 'Dell XPS 13 Laptop',
-    slug: 'dell-xps-13-laptop',
-    brand: 'Dell', model: 'XPS 13', categoryIds: [140], // Changed from 11 to 140 (Laptops)
+    slug: 'dell-xps-13-laptop', // Added slug
+    brand: 'Dell', model: 'XPS 13', categoryIds: [140], // Corrected category
     description: 'Ultra-thin laptop with stunning 4K display.', image: '//placehold.co/400x400?text=Dell+XPS+13', images: ['//placehold.co/400x400?text=Dell+XPS+13'], rating: 4.5, reviews: 180,
     specifications: { 'Επεξεργαστής': 'Intel i7', 'RAM': '16GB', 'Χωρητικότητα': '1TB SSD', 'Διαστάσεις': '0.58 x 11.6 x 7.8 inches', 'Weight': '2.7 pounds' },
     prices: [ { vendorId: 2, price: 1299.99, shippingCost: 0, inStock: true }, { vendorId: 6, price: 1249.99, shippingCost: 5, inStock: true } ],
     lowestPrice: 1249.99, bestPriceVendorId: 6, status: 'active', tags: ['laptop', 'ultrabook', 'windows'],
-    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'work'] },
+    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'work'] }, // Added giftAttributes
   },
   {
     id: 6,
     title: 'Fitness Tracker Watch',
-    slug: 'fitbit-versa-3',
-    brand: 'Fitbit', model: 'Versa 3', categoryIds: [162], // Changed from 20 to 162 (Smartwatches)
+    slug: 'fitbit-versa-3', // Added slug
+    brand: 'Fitbit', model: 'Versa 3', categoryIds: [162], // Corrected category
     description: 'Monitor your health and fitness activities.', image: '//placehold.co/400x400?text=Fitness+Tracker', images: ['//placehold.co/400x400?text=Fitness+Tracker'], rating: 4.4, reviews: 300,
     specifications: { 'Διάρκεια μπαταρίας': '6+ days', 'Water Resistant': 'Yes', 'Syncs to': 'Mobile App' },
     prices: [ { vendorId: 2, price: 229.99, shippingCost: 0, inStock: true }, { vendorId: 3, price: 199.99, shippingCost: 5, inStock: true } ],
     lowestPrice: 199.99, bestPriceVendorId: 3, status: 'active', tags: ['wearable', 'fitness', 'smartwatch'],
-    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['fitness', 'health', 'tech'] },
+    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['fitness', 'health', 'tech'] }, // Added giftAttributes
   },
   {
     id: 7,
     title: 'Nike Running Shoes',
-    slug: 'nike-air-zoom-pegasus',
-    brand: 'Nike', model: 'Air Zoom Pegasus', categoryIds: [97], // Changed from 22 to 97 (Mens Sports Shoes)
+    slug: 'nike-air-zoom-pegasus', // Added slug
+    brand: 'Nike', model: 'Air Zoom Pegasus', categoryIds: [97], // Corrected category
     description: 'Comfortable running shoes for all-day wear.', image: '//placehold.co/400x400?text=Nike+Shoes', images: ['//placehold.co/400x400?text=Nike+Shoes'], rating: 4.7, reviews: 350,
     specifications: { 'Material': 'Synthetic', 'Weight': '10.6 ounces', 'Style': 'Running' },
     prices: [ { vendorId: 1, price: 119.99, shippingCost: 0, inStock: true }, { vendorId: 6, price: 109.99, shippingCost: 5, inStock: true } ],
@@ -814,30 +817,30 @@ export const products: Product[] = [
   {
     id: 8,
     title: 'PlayStation 5 Console Digital Edition',
-    slug: 'playstation-5-digital-edition',
-    brand: 'Sony', model: 'PS5 Digital Edition', gtin: '0711719395102', categoryIds: [178], // Changed from 285 to 178 (Consoles)
+    slug: 'playstation-5-digital-edition', // Added slug
+    brand: 'Sony', model: 'PS5 Digital Edition', gtin: '0711719395102', categoryIds: [178], // Corrected category
     description: 'Next-gen gaming console without a disc drive.', image: '//placehold.co/400x400?text=PS5+Digital', images: ['//placehold.co/400x400?text=PS5+Digital'], rating: 4.9, reviews: 500,
     specifications: { 'Χωρητικότητα': '825GB SSD', 'Resolution': 'Up to 120fps', 'Includes': 'Controller and Cable', 'Optical Drive': 'No' },
     prices: [ { vendorId: 1, price: 449.99, shippingCost: 0, inStock: false, lastUpdated: '2023-10-20T10:00:00Z' }, { vendorId: 4, price: 439.99, shippingCost: 10, inStock: true, lastUpdated: '2023-10-27T12:00:00Z' } ],
     lowestPrice: 439.99, bestPriceVendorId: 4, status: 'active', tags: ["gaming", "console", "digital"], dateAdded: "2020-11-12T00:00:00Z", releaseDate: "2020-11-12", lastModified: "2023-10-27T12:00:00Z",
-    giftAttributes: { recipient: ['men', 'teens'], interest: ['gaming', 'tech'] },
+    giftAttributes: { recipient: ['men', 'teens'], interest: ['gaming', 'tech'] }, // Added giftAttributes
   },
   {
     id: 9,
     title: 'Wireless Headphones',
-    slug: 'bose-quietcomfort-35',
-    brand: 'Bose', model: 'QuietComfort 35', categoryIds: [431], // Changed from 13 to 431 (Headphones)
+    slug: 'bose-quietcomfort-35', // Added slug
+    brand: 'Bose', model: 'QuietComfort 35', categoryIds: [431], // Corrected category
     description: 'Noise-cancelling headphones for immersive sound.', image: '//placehold.co/400x400?text=Bose+Headphones', images: ['//placehold.co/400x400?text=Bose+Headphones'], rating: 4.8, reviews: 275,
     specifications: { 'Διάρκεια μπαταρίας': '20 hours', 'Features': 'Bluetooth, Voice Assistant' },
     prices: [ { vendorId: 3, price: 299.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 299.99, bestPriceVendorId: 3, status: 'active', tags: ['audio', 'headphones', 'wireless', 'noise-cancelling'],
-    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'music', 'travel'] },
+    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'music', 'travel'] }, // Added giftAttributes
   },
   {
     id: 10,
     title: 'Artificial Intelligence for Beginners',
-    slug: 'ai-for-beginners-book',
-    brand: 'TechBooks', model: 'AI Basics', categoryIds: [84], // Changed from 11 to 84 (Books)
+    slug: 'ai-for-beginners-book', // Added slug
+    brand: 'TechBooks', model: 'AI Basics', categoryIds: [84], // Corrected category
     description: 'An introductory book on artificial intelligence concepts.', image: '//placehold.co/400x400?text=AI+Book', images: ['//placehold.co/400x400?text=AI+Book'], rating: 4.5, reviews: 50,
     specifications: { 'Pages': '400', 'ISBN': '978-3-16-148410-0' },
     prices: [ { vendorId: 5, price: 29.99, shippingCost: 0, inStock: true } ],
@@ -847,41 +850,41 @@ export const products: Product[] = [
   {
     id: 11,
     title: 'Camping Tent',
-    slug: 'naturehike-camping-tent-x1',
-    brand: 'NatureHike', model: 'Camping Tent X1', categoryIds: [82], // Changed from 31 to 82 (Camping)
+    slug: 'naturehike-camping-tent-x1', // Added slug
+    brand: 'NatureHike', model: 'Camping Tent X1', categoryIds: [82], // Corrected category
     description: 'Spacious camping tent for outdoor adventures.', image: '//placehold.co/400x400?text=Camping+Tent', images: ['//placehold.co/400x400?text=Camping+Tent'], rating: 4.6, reviews: 100,
     specifications: { 'Capacity': '4 Persons', 'Material': 'Waterproof' },
     prices: [ { vendorId: 6, price: 149.99, shippingCost: 0, inStock: true }, { vendorId: 2, price: 139.99, shippingCost: 10, inStock: true } ],
     lowestPrice: 139.99, bestPriceVendorId: 2, status: 'active', tags: ['camping', 'outdoor', 'tent'],
-    giftAttributes: { recipient: ['men', 'women'], interest: ['camping', 'outdoors', 'hobby'] },
+    giftAttributes: { recipient: ['men', 'women'], interest: ['camping', 'outdoors', 'hobby'] }, // Added giftAttributes
   },
   {
     id: 12,
     title: 'Vegetable Planter Box',
-    slug: 'vegetable-planter-box',
-    brand: 'Gardener\'s Supply', model: 'Planter Box to go', categoryIds: [25], // Changed from 23 to 25 (Garden)
+    slug: 'vegetable-planter-box', // Added slug
+    brand: 'Gardener\'s Supply', model: 'Planter Box to go', categoryIds: [25], // Corrected category
     description: 'Perfect for urban gardening!', image: '//placehold.co/400x400?text=Vegetable+Planter', images: ['//placehold.co/400x400?text=Vegetable+Planter'], rating: 4.7, reviews: 60,
     specifications: { 'Material': 'Wood', 'Διαστάσεις': '40 x 20 x 15 inches' },
     prices: [ { vendorId: 1, price: 79.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 79.99, bestPriceVendorId: 1, status: 'active', tags: ['garden', 'planting', 'home'],
-    giftAttributes: { recipient: ['women', 'men'], interest: ['gardening', 'home'] },
+    giftAttributes: { recipient: ['women', 'men'], interest: ['gardening', 'home'] }, // Added giftAttributes
   },
   {
     id: 13,
     title: 'Nonstick Cookware Set',
-    slug: 't-fal-cookware-basic-set',
-    brand: 'T-fal', model: 'Cookware Basic Set', categoryIds: [29], // Changed from 17 to 29 (Kitchenware)
+    slug: 't-fal-cookware-basic-set', // Added slug
+    brand: 'T-fal', model: 'Cookware Basic Set', categoryIds: [29], // Corrected category
     description: 'Durable cookware set for everyday cooking.', image: '//placehold.co/400x400?text=Cookware+Set', images: ['//placehold.co/400x400?text=Cookware+Set'], rating: 4.4, reviews: 150,
     specifications: { 'Material': 'Nonstick', 'Gauge': '304 Stainless Steel' },
     prices: [ { vendorId: 6, price: 99.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 99.99, bestPriceVendorId: 6, status: 'active', tags: ['kitchen', 'cookware', 'home'],
-    giftAttributes: { recipient: ['women', 'men'], interest: ['cooking', 'home'], occasion: ['housewarming', 'wedding'] },
+    giftAttributes: { recipient: ['women', 'men'], interest: ['cooking', 'home'], occasion: ['housewarming', 'wedding'] }, // Added giftAttributes
   },
   {
     id: 14,
     title: 'Fashion Backpack',
-    slug: 'swissgear-travel-backpack',
-    brand: 'SwissGear', model: 'Travel Backpack', categoryIds: [83], // Changed from 25 to 83 (Travel Items)
+    slug: 'swissgear-travel-backpack', // Added slug
+    brand: 'SwissGear', model: 'Travel Backpack', categoryIds: [83], // Corrected category
     description: 'Stylish and functional backpack for travel.', image: '//placehold.co/400x400?text=Backpack', images: ['//placehold.co/400x400?text=Backpack'], rating: 4.7, reviews: 120,
     specifications: { 'Material': 'Polyester', 'Διαστάσεις': '17.5 x 12.5 x 7 inches' },
     prices: [ { vendorId: 5, price: 59.99, shippingCost: 0, inStock: true } ],
@@ -891,42 +894,41 @@ export const products: Product[] = [
   {
     id: 15,
     title: 'Electric Kettle',
-    slug: 'hamilton-beach-electric-kettle',
-    brand: 'Hamilton Beach', model: 'Electric Kettle 1.7L', categoryIds: [22], // Changed from 16 to 22 (Home Appliances)
+    slug: 'hamilton-beach-electric-kettle', // Added slug
+    brand: 'Hamilton Beach', model: 'Electric Kettle 1.7L', categoryIds: [22], // Corrected category
     description: 'Quick boiling kettle for hot beverages.', image: '//placehold.co/400x400?text=Electric+Kettle', images: ['//placehold.co/400x400?text=Electric+Kettle'], rating: 4.5, reviews: 90,
     specifications: { 'Material': 'Stainless Steel', 'Capacity': '1.7 Liters' },
     prices: [ { vendorId: 2, price: 39.99, shippingCost: 0, inStock: true }, { vendorId: 3, price: 34.99, shippingCost: 5, inStock: true } ],
     lowestPrice: 34.99, bestPriceVendorId: 3, status: 'active', tags: ['kitchen', 'kettle', 'appliance'],
-    giftAttributes: { recipient: ['men', 'women'], interest: ['home', 'kitchen'], occasion: ['housewarming'] },
+    giftAttributes: { recipient: ['men', 'women'], interest: ['home', 'kitchen'], occasion: ['housewarming'] }, // Added giftAttributes
   },
   {
     id: 16,
     title: 'Yoga Mat',
-    slug: 'liforme-yoga-mat',
-    brand: 'Liforme', model: 'Eco-Friendly', categoryIds: [86], // Changed from 22 to 86 (Fitness Equipment)
+    slug: 'liforme-yoga-mat', // Added slug
+    brand: 'Liforme', model: 'Eco-Friendly', categoryIds: [86], // Corrected category
     description: 'Durable and non-slip yoga mat.', image: '//placehold.co/400x400?text=Yoga+Mat', images: ['//placehold.co/400x400?text=Yoga+Mat'], rating: 4.8, reviews: 200,
     specifications: { 'Material': 'Natural Rubber', 'Thickness': '5mm' },
     prices: [ { vendorId: 1, price: 49.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 49.99, bestPriceVendorId: 1, status: 'active', tags: ['yoga', 'fitness', 'sport'],
-    giftAttributes: { recipient: ['women', 'men', 'teens'], interest: ['fitness', 'health', 'yoga'] },
+    giftAttributes: { recipient: ['women', 'men', 'teens'], interest: ['fitness', 'health', 'yoga'] }, // Added giftAttributes
   },
   {
     id: 17,
     title: 'Pet Cat Tree',
-    slug: 'pawhut-cat-tree-tower',
-    brand: 'PawHut', model: 'Pet Kitty Tower', categoryIds: [41], // Changed from 29 to 41 (Pet Supplies)
+    slug: 'pawhut-cat-tree-tower', // Added slug
+    brand: 'PawHut', model: 'Pet Kitty Tower', categoryIds: [41], // Corrected category
     description: 'Fun play area for your cat.', image: '//placehold.co/400x400?text=Cat+Tree', images: ['//placehold.co/400x400?text=Cat+Tree'], rating: 4.6, reviews: 80,
     specifications: { 'Material': 'Wood and Fabric', 'Height': '4 feet' },
     prices: [ { vendorId: 4, price: 79.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 79.99, bestPriceVendorId: 4, status: 'active', tags: ['pet', 'cat', 'home'],
-    // Not typically a gift, but example
-    // giftAttributes: { interest: ['pets', 'home'] },
+    // Not adding giftAttributes, maybe not a typical gift
   },
   {
     id: 18,
     title: 'Children’s Educational Tablet',
-    slug: 'amazon-fire-hd-10-kids',
-    brand: 'Amazon', model: 'Fire HD 10', categoryIds: [169, 73], // Tablets, Baby Items - Changed from 277
+    slug: 'amazon-fire-hd-10-kids', // Added slug
+    brand: 'Amazon', model: 'Fire HD 10', categoryIds: [169, 73], // Corrected category
     description: 'Kids-friendly tablet with educational content.', image: '//placehold.co/400x400?text=Kids+Tablet', images: ['//placehold.co/400x400?text=Kids+Tablet'], rating: 4.7, reviews: 300,
     specifications: { 'Διάρκεια μπαταρίας': '12 hours', 'Size': '10.1 inch' },
     prices: [ { vendorId: 1, price: 149.99, shippingCost: 0, inStock: true } ],
@@ -936,19 +938,19 @@ export const products: Product[] = [
   {
     id: 19,
     title: 'Smart TV Stick',
-    slug: 'amazon-fire-stick-4k',
-    brand: 'Amazon', model: 'Fire Stick 4K', categoryIds: [157], // Changed from 248 to 157 (Smart TV Stick)
+    slug: 'amazon-fire-stick-4k', // Added slug
+    brand: 'Amazon', model: 'Fire Stick 4K', categoryIds: [157], // Corrected category
     description: 'Stream all your favorites in 4K resolution.', image: '//placehold.co/400x400?text=Smart+TV+Stick', images: ['//placehold.co/400x400?text=Smart+TV+Stick'], rating: 4.9, reviews: 400,
     specifications: { 'Supports': '4K Ultra HD, HDR', 'Includes': 'Alexa Voice Remote' },
     prices: [ { vendorId: 5, price: 49.99, shippingCost: 0, inStock: true } ],
     lowestPrice: 49.99, bestPriceVendorId: 5, status: 'active', tags: ['streaming', 'tv', 'gadget', '4k'],
-    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'gadgets', 'movies'] },
+    giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['tech', 'gadgets', 'movies'] }, // Added giftAttributes
   },
   {
     id: 20,
     title: 'Drone with Camera',
-    slug: 'dji-mavic-air-2',
-    brand: 'DJI', model: 'Mavic Air 2', categoryIds: [88], // Changed from 14 to 88 (Drones & Accessories)
+    slug: 'dji-mavic-air-2', // Added slug
+    brand: 'DJI', model: 'Mavic Air 2', categoryIds: [88], // Corrected category
     description: 'Capture stunning aerial footage.', image: '//placehold.co/400x400?text=Drone', images: ['//placehold.co/400x400?text=Drone'], rating: 4.8, reviews: 150,
     specifications: { 'Camera': '48MP', 'Flight Time': '34 minutes' },
     prices: [ { vendorId: 2, price: 799.99, shippingCost: 0, inStock: true } ],
@@ -958,66 +960,65 @@ export const products: Product[] = [
 
   // --- NEW Randomly Generated Products (IDs 21-50) ---
   {
-    id: 21, title: 'Espresso Machine', slug: 'delonghi-espresso-machine', brand: 'DeLonghi', categoryIds: [22], // Home Appliances
+    id: 21, title: 'Espresso Machine', slug: 'delonghi-espresso-machine', brand: 'DeLonghi', categoryIds: [22],
     description: 'Απολαύστε αυθεντικό espresso στο σπίτι.', image: '//placehold.co/400x400?text=Espresso', rating: 4.6, reviews: 120,
     prices: [ { vendorId: 4, price: 199.50, inStock: true }, { vendorId: 7, price: 189.90, discountPrice: 179.90, inStock: true } ], lowestPrice: 179.90, bestPriceVendorId: 7,
     giftAttributes: { recipient: ['men', 'women'], interest: ['coffee', 'kitchen', 'home'], occasion: ['housewarming', 'birthday'] }
   },
   {
-    id: 22, title: 'Ασύρματο Ποντίκι Logitech MX Master 3S', slug: 'logitech-mx-master-3s', brand: 'Logitech', categoryIds: [255], // Input Devices
+    id: 22, title: 'Ασύρματο Ποντίκι Logitech MX Master 3S', slug: 'logitech-mx-master-3s', brand: 'Logitech', categoryIds: [255],
     description: 'Εργονομικό ασύρματο ποντίκι για επαγγελματίες.', image: '//placehold.co/400x400?text=MX+Master', rating: 4.9, reviews: 310,
     prices: [ { vendorId: 2, price: 99.99, inStock: true }, { vendorId: 3, price: 95.90, inStock: true } ], lowestPrice: 95.90, bestPriceVendorId: 3,
     giftAttributes: { recipient: ['men', 'women'], interest: ['tech', 'work', 'computers'] }
   },
   {
-    id: 23, title: 'Βαλίτσα Ταξιδίου Carry-on', slug: 'samsonite-carry-on', brand: 'Samsonite', categoryIds: [83], // Travel Items & Bags
+    id: 23, title: 'Βαλίτσα Ταξιδίου Carry-on', slug: 'samsonite-carry-on', brand: 'Samsonite', categoryIds: [83],
     description: 'Ανθεκτική βαλίτσα καμπίνας για τα ταξίδια σας.', image: '//placehold.co/400x400?text=Suitcase', rating: 4.7, reviews: 85,
     prices: [ { vendorId: 3, price: 120.00, inStock: true }, { vendorId: 5, price: 115.50, inStock: false } ], lowestPrice: 120.00, bestPriceVendorId: 3,
     giftAttributes: { recipient: ['men', 'women'], interest: ['travel'] }
   },
   {
-    id: 24, title: 'Lego Star Wars Millennium Falcon Set', slug: 'lego-star-wars-falcon', brand: 'Lego', categoryIds: [70], // Kids Toys
+    id: 24, title: 'Lego Star Wars Millennium Falcon Set', slug: 'lego-star-wars-falcon', brand: 'Lego', categoryIds: [70],
     description: 'Κατασκευάστε το εμβληματικό διαστημόπλοιο.', image: '//placehold.co/400x400?text=Lego+Falcon', rating: 4.9, reviews: 150,
     prices: [ { vendorId: 3, price: 159.99, inStock: true }, { vendorId: 7, price: 155.00, inStock: true } ], lowestPrice: 155.00, bestPriceVendorId: 7,
     giftAttributes: { recipient: ['teens', 'kids9-11', 'men'], interest: ['lego', 'star-wars', 'collectibles', 'gaming'], occasion: ['birthday', 'christmas'] }
   },
   {
-    id: 25, title: 'Ανδρικό Ρολόι Casio G-Shock', slug: 'casio-g-shock-men', brand: 'Casio', categoryIds: [44], // Watches
+    id: 25, title: 'Ανδρικό Ρολόι Casio G-Shock', slug: 'casio-g-shock-men', brand: 'Casio', categoryIds: [44],
     description: 'Ανθεκτικό ρολόι G-Shock με πολλές λειτουργίες.', image: '//placehold.co/400x400?text=G-Shock', rating: 4.6, reviews: 210,
     prices: [ { vendorId: 1, price: 99.00, inStock: true }, { vendorId: 6, price: 95.00, inStock: true } ], lowestPrice: 95.00, bestPriceVendorId: 6,
     giftAttributes: { recipient: ['men', 'teens'], interest: ['watches', 'gadgets', 'outdoors', 'sports'], occasion: ['birthday'] }
   },
   {
-    id: 26, title: 'Kindle Paperwhite E-reader', slug: 'kindle-paperwhite', brand: 'Amazon', categoryIds: [174], // E-book readers
+    id: 26, title: 'Kindle Paperwhite E-reader', slug: 'kindle-paperwhite', brand: 'Amazon', categoryIds: [174],
     description: 'Διαβάστε άνετα τα αγαπημένα σας βιβλία.', image: '//placehold.co/400x400?text=Kindle', rating: 4.7, reviews: 450,
     prices: [ { vendorId: 3, price: 139.99, inStock: true }, { vendorId: 7, price: 135.00, inStock: true } ], lowestPrice: 135.00, bestPriceVendorId: 7,
     giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['books', 'tech', 'reading', 'travel'] }
   },
   {
-    id: 27, title: 'Σετ Περιποίησης Γενειάδας', slug: 'beard-grooming-kit', brand: 'Gentleman\'s Choice', categoryIds: [52], // Grooming
+    id: 27, title: 'Σετ Περιποίησης Γενειάδας', slug: 'beard-grooming-kit', brand: 'Gentleman\'s Choice', categoryIds: [52],
     description: 'Ολοκληρωμένο σετ για την περιποίηση της γενειάδας.', image: '//placehold.co/400x400?text=Beard+Kit', rating: 4.5, reviews: 75,
     prices: [ { vendorId: 4, price: 34.90, inStock: true } ], lowestPrice: 34.90, bestPriceVendorId: 4,
     giftAttributes: { recipient: ['men'], interest: ['grooming', 'beauty'], occasion: ['birthday', 'christmas'] }
   },
   {
-    id: 28, title: 'Dior Sauvage Eau de Toilette 100ml', slug: 'dior-sauvage-edt', brand: 'Dior', categoryIds: [54], // Perfumes
+    id: 28, title: 'Dior Sauvage Eau de Toilette 100ml', slug: 'dior-sauvage-edt', brand: 'Dior', categoryIds: [54],
     description: 'Δυναμικό και φρέσκο ανδρικό άρωμα.', image: '//placehold.co/400x400?text=Sauvage', rating: 4.8, reviews: 550,
     prices: [ { vendorId: 1, price: 85.00, discountPrice: 79.90, inStock: true }, { vendorId: 3, price: 82.50, inStock: true } ], lowestPrice: 79.90, bestPriceVendorId: 1,
     giftAttributes: { recipient: ['men'], interest: ['perfume', 'fashion', 'beauty'], occasion: ['birthday', 'anniversary', 'christmas'] }
   },
   {
-    id: 29, title: 'Ηλεκτρική Οδοντόβουρτσα Oral-B Pro', slug: 'oral-b-pro-electric-toothbrush', brand: 'Oral-B', categoryIds: [61], // Oral Hygiene
+    id: 29, title: 'Ηλεκτρική Οδοντόβουρτσα Oral-B Pro', slug: 'oral-b-pro-electric-toothbrush', brand: 'Oral-B', categoryIds: [61],
     description: 'Για βαθύ καθαρισμό και υγιή ούλα.', image: '//placehold.co/400x400?text=Oral-B', rating: 4.7, reviews: 190,
     prices: [ { vendorId: 2, price: 45.00, inStock: true }, { vendorId: 4, price: 42.90, inStock: true } ], lowestPrice: 42.90, bestPriceVendorId: 4,
     giftAttributes: { recipient: ['men', 'women', 'teens'], interest: ['health', 'grooming'] }
   },
   {
-    id: 30, title: 'Σετ Εργαλείων Μπαρμπεκιου', slug: 'bbq-tool-set', brand: 'Weber', categoryIds: [29], // Kitchenware (or could be Garden)
+    id: 30, title: 'Σετ Εργαλείων Μπαρμπεκιου', slug: 'bbq-tool-set', brand: 'Weber', categoryIds: [29],
     description: 'Απαραίτητα εργαλεία για τον ψήστη.', image: '//placehold.co/400x400?text=BBQ+Tools', rating: 4.6, reviews: 65,
     prices: [ { vendorId: 2, price: 29.90, inStock: true } ], lowestPrice: 29.90, bestPriceVendorId: 2,
     giftAttributes: { recipient: ['men'], interest: ['bbq', 'cooking', 'outdoors', 'home'], occasion: ['fathersday', 'birthday'] }
   },
-  // Add more random products
   {
     id: 31, title: 'Ασύρματα Ακουστικά Sony WH-1000XM5', slug: 'sony-wh-1000xm5', brand: 'Sony', categoryIds: [431],
     description: 'Κορυφαία ακύρωση θορύβου και ποιότητα ήχου.', image: '//placehold.co/400x400?text=Sony+XM5', rating: 4.9, reviews: 480,
