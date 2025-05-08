@@ -142,7 +142,7 @@ const Gifts: React.FC = () => {
                         <div className="sc-gDpztx fknxFk">
                             {giftRecipientCategories.map((cat) => (
                                 <Link key={cat.slug} to={`/gifts/${cat.slug}`} title={t(cat.titleKey, `Gifts for ${cat.nameKey}`)} className="sc-kpOvIu kHmeXZ">
-                                    <img alt={t(cat.nameKey, cat.nameKey)} width={90} height={90} src={`/dist/images/gifts/${cat.imgBase}.webp`} loading="lazy" className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"/>
+                                    <img alt={t(cat.nameKey, cat.nameKey)} width={90} height={90} src={`/dist/images/${cat.slug}.webp`} loading="lazy" className="rounded-full mb-2 group-hover:opacity-80 transition-opacity"/>
                                     <h2>{t(cat.nameKey, cat.nameKey)}</h2>
                                 </Link>
                             ))}
