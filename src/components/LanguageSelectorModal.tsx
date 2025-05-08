@@ -343,10 +343,10 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
   // JSX Structure using custom classes for the shell where specified
   return (
     <div className="popup-flex-center fixed inset-0" style={{ zIndex: 2147483467 }} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
-      <div className="popup-backdrop open is-modal bg-black/50 dark:bg-black/70 transition-opacity duration-150" style={{ zIndex: 2147483467, transitionDuration: '150ms' }}></div>
+      <div className="popup-backdrop open is-modal transition-opacity duration-150" style={{ zIndex: 2147483467 }}></div>
 
-      <div className="popup open has-close has-close--inside is-modal bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl md:max-w-2xl lg:max-w-3xl flex flex-col max-h-[85vh] h-auto overflow-hidden relative" style={{ transitionDuration: '150ms', zIndex: 2147483467 }} onClick={(e) => e.stopPropagation()}>
-        <div className="popup-body flex flex-col h-full relative">
+      <div className="popup open has-close has-close--inside is-modal" style={{ transitionDuration: '150ms', zIndex: 2147483467 }} onClick={(e) => e.stopPropagation()}>
+        <div className="popup-body flex flex-col h-full relative" style={{ width: 'auto' }}>
             <div role="button" tabIndex={0} onClick={onClose} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClose(); }} className="close-button__wrapper pressable popup-close absolute top-3 right-3 p-1 cursor-pointer" aria-label={t('close', 'Close')}>
                 <div className="close-button">
                   <svg class="icon" aria-hidden="true" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
@@ -354,12 +354,6 @@ const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({ isOpen, o
             </div>
 
             <div className="collection-create__wrapper flex flex-col h-full">
-                <div className="popup-header px-4 pt-4 pb-3 md:px-6 md:pt-5 md:pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <h1 id="language-modal-title" className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center">
-                        {t('selectYourLanguageTitle', 'Select Your Language')}
-                    </h1>
-                </div>
-
                 <div className="flex-1 px-1.5 py-3 md:p-4 overflow-y-auto">
                     <div className="mb-3">
                         <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5 px-1.5">
