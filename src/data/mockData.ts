@@ -901,7 +901,7 @@ export const products: Product[] = [
   },
   {
     id: 33, title: 'Επιτραπέζιο Παιχνίδι Azul', slug: 'azul-board-game', brand: 'Next Move Games', categoryIds: [79], description: 'Πανέμορφο παιχνίδι στρατηγικής με πλακίδια.', image: '//placehold.co/400x400?text=Azul', rating: 4.8, reviews: 290,
-    prices: [{ vendorId: 3, price: 32.00, inStock: true }], lowestPrice: 32.00, bestPriceVendorId: 3,
+    specifications: {}, prices: [{ vendorId: 3, price: 32.00, inStock: true }], lowestPrice: 32.00, bestPriceVendorId: 3,
     giftAttributes: { recipient: ['teens', 'men', 'women'], interest: ['boardgames', 'strategy', 'art'], occasion: ['birthday', 'christmas'] }, images: [], videos: [], variants: [], tags: ['boardgame', 'abstract', 'strategy'], relatedProductIds: [], comparisonProductIds: []
   },
   {
@@ -926,7 +926,7 @@ export const products: Product[] = [
   },
   {
     id: 38, title: 'Παιχνίδι Κάρτες Uno', slug: 'uno-card-game', brand: 'Mattel', categoryIds: [79], description: 'Το κλασικό παιχνίδι καρτών για όλη την παρέα.', image: '//placehold.co/400x400?text=Uno+Cards', rating: 4.9, reviews: 1500,
-    prices: [{ vendorId: 3, price: 5.99, inStock: true }], lowestPrice: 5.99, bestPriceVendorId: 3,
+    specifications: {}, prices: [{ vendorId: 3, price: 5.99, inStock: true }], lowestPrice: 5.99, bestPriceVendorId: 3,
     giftAttributes: { recipient: ['kids6-8', 'kids9-11', 'teens', 'men', 'women'], interest: ['games', 'cardgames', 'family'], occasion: ['stocking-stuffer'] }, images: [], videos: [], variants: [], tags: ['cardgame', 'family', 'party'], relatedProductIds: [], comparisonProductIds: []
   },
   {
@@ -941,7 +941,7 @@ export const products: Product[] = [
   },
   {
     id: 41, title: 'Κούπα Καφέ Εμαγιέ', slug: 'enamel-coffee-mug', brand: 'Generic', categoryIds: [26, 82], description: 'Ανθεκτική κούπα για καφέ, ιδανική για camping.', image: '//placehold.co/400x400?text=Enamel+Mug', rating: 4.4, reviews: 70,
-    prices: [{ vendorId: 1, price: 8.90, inStock: true }], lowestPrice: 8.90, bestPriceVendorId: 1,
+    specifications: {}, prices: [{ vendorId: 1, price: 8.90, inStock: true }], lowestPrice: 8.90, bestPriceVendorId: 1,
     giftAttributes: { recipient: ['men', 'women'], interest: ['camping', 'outdoors', 'coffee', 'home'] }, images: [], videos: [], variants: [], tags: ['mug', 'camping', 'kitchen'], relatedProductIds: [], comparisonProductIds: []
   },
   {
@@ -961,7 +961,7 @@ export const products: Product[] = [
   },
   {
     id: 45, title: 'Lancome La Vie Est Belle EDP 75ml', slug: 'lancome-la-vie-est-belle', brand: 'Lancome', categoryIds: [54], description: 'Γλυκό και λουλουδάτο γυναικείο άρωμα.', image: '//placehold.co/400x400?text=LaVieEstBelle', rating: 4.8, reviews: 490,
-    prices: [{ vendorId: 1, price: 88.00, inStock: true }, { vendorId: 6, price: 85.50, discountPrice: 81.00, inStock: true }], lowestPrice: 81.00, bestPriceVendorId: 6,
+    specifications: {}, prices: [{ vendorId: 1, price: 88.00, inStock: true }, { vendorId: 6, price: 85.50, discountPrice: 81.00, inStock: true }], lowestPrice: 81.00, bestPriceVendorId: 6,
     giftAttributes: { recipient: ['women'], interest: ['perfume', 'beauty', 'fashion'], occasion: ['birthday', 'mothersday', 'anniversary'] }, images: [], videos: [], variants: [], tags: ['fragrance', 'women'], relatedProductIds: [], comparisonProductIds: []
   },
   {
@@ -972,7 +972,7 @@ export const products: Product[] = [
   {
     id: 47, title: 'Σετ Μαρκαδόροι Sharpie Fine Point (24 χρώματα)', slug: 'sharpie-fine-point-set', brand: 'Sharpie', categoryIds: [33], // Office Supplies
     description: 'Μαρκαδόροι ανεξίτηλοι με λεπτή μύτη.', image: '//placehold.co/400x400?text=Sharpie+Set', rating: 4.8, reviews: 310,
-    prices: [{ vendorId: 4, price: 19.90, inStock: true }], lowestPrice: 19.90, bestPriceVendorId: 4,
+    specifications: {}, prices: [{ vendorId: 4, price: 19.90, inStock: true }], lowestPrice: 19.90, bestPriceVendorId: 4,
     giftAttributes: { recipient: ['teens', 'men', 'women', 'kids9-11'], interest: ['art', 'hobby', 'office', 'creative'] }, images: [], videos: [], variants: [], tags: ['markers', 'art', 'office'], relatedProductIds: [], comparisonProductIds: []
   },
   {
