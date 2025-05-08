@@ -194,7 +194,7 @@ const GiftsFiltered: React.FC = () => {
 
                     {/* Header with dynamic image and title */}
                     <div className="sc-fjUQFl bjpNBM flex items-center mt-4"> {/* Added flex for alignment */}
-                        <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)} width="92" height="92" src={`/dist/images/gifts/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
+                        <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
                             <h1 className="sc-jPkiSJ cFyVWT">{t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`)}</h1>
                             {/* Optional: Dropdowns from example HTML - Implementation needed if required */}
@@ -220,8 +220,8 @@ const GiftsFiltered: React.FC = () => {
 
 
                     {/* Dynamic Count */}
-                    <p className="sc-cZSric dQdioU mt-4"> {/* Added margin */}
-                        {t('gifts_total_count', `Fallback: ${filteredAndSortedProducts.length} items`, { count: filteredAndSortedProducts.length })}
+                    <p className="sc-cZSric dQdioU">
+                        {t('gifts_total_count', { count: filteredAndSortedProducts.length })}
                     </p>
                 </div>
             </div>
