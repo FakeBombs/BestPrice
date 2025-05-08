@@ -56,6 +56,9 @@ const elTranslations = {
   searchPlaceholder: "Αναζήτηση προϊόντων...",
   notFoundPageTitle: "Η Σελίδα δεν Βρέθηκε", notFoundMessage: "Ουπς! Η σελίδα που αναζητάτε δεν υπάρχει.",
   recently_viewed_title: "Είδατε Πρόσφατα",
+  site_name: 'BestPrice', // **** ADDED ****
+  sitemap_button_label: 'Κουμπί Sitemap', // **** ADDED ****
+  my_account_link: 'Ο Λογαριασμός μου', // **** ADDED **** (or reuse myAccount)
 
   // ====================== Categories Page & Filters =======================
   "product_singular": "προϊόν",               "product_plural": "{{count}} προϊόντα",
@@ -95,9 +98,9 @@ const elTranslations = {
   "return_to": "Επιστροφή σε",               "info_for_certified_store": "Πληροφορίες για πιστοποιημένο κατάστημα",
   "showing_products_from_store": "Εμφάνιση προϊόντων από το κατάστημα",
   "remove_filter": "Αφαίρεση αυτού του φίλτρου",
-  category_unknown: 'Χωρίς Κατηγορία', // ADDED
-  stores_count_label_one: '{{count}} κατάστημα', // ADDED
-  stores_count_label_other: '{{count}} καταστήματα', // ADDED
+  category_unknown: 'Χωρίς Κατηγορία', // **** ADDED ****
+  stores_count_label_one: '{{count}} κατάστημα', // **** ADDED ****
+  stores_count_label_other: '{{count}} καταστήματα', // **** ADDED ****
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
@@ -235,7 +238,6 @@ const elTranslations = {
   "paymentMethod_pickup_via": "Παραλαβή μέσω Courier/Υπηρεσίας",
 
   // ========================= Category Slugs =========================
-  // (Includes all slugs from mockData.ts)
   'technology': 'Τεχνολογία',
   'home-garden': 'Σπίτι & Κήπος',
   'fashion': 'Μόδα',
@@ -284,7 +286,7 @@ const elTranslations = {
   'rain-umbrellas': 'Ομπρέλες Βροχής',
   'shoe-accessories': 'Αξεσουάρ Παπουτσιών',
   'kids-baby-fashion': 'Παιδική, Βρεφική Μόδα',
-  'sneakers': 'Sneakers: Τα πιο trendy παπούτσια για κάθε στυλ και περίσταση!',
+  'sneakers': 'Sneakers', // Kept it shorter
   'grooming': 'Περιποίηση',
   'pharmacy-products': 'Είδη Φαρμακείου',
   'perfumes': 'Αρώματα',
@@ -767,6 +769,7 @@ const elTranslations = {
   gifts_page_subtitle: 'Επίλεξε για ποιον ψάχνεις δώρο και δες τα δώρα που έχουμε διαλέξει για σένα.',
   gifts_total_count_one: '{{count}} επιλεγμένο δώρο για {{recipient}}',
   gifts_total_count_other: '{{count}} επιλεγμένα δώρα για {{recipient}}',
+  recipient_everyone: 'όλους', // **** ADDED THIS LINE ****
   // --- Recipient Titles ---
   giftsForMen: 'Δώρα για Άνδρες',
   giftsForWomen: 'Δώρα για Γυναίκες',
@@ -775,6 +778,7 @@ const elTranslations = {
   giftsForKids6_8: 'Δώρα για Παιδιά 6-8',
   giftsForToddlers: 'Δώρα για Νήπια',
   giftsForBabies: 'Δώρα για Μωρά',
+  giftsForRecipientTitle: 'Δώρα για {{recipient}}', // **** ADDED ****
   // --- Recipient Names ---
   men: 'Άνδρες',
   women: 'Γυναίκες',
@@ -783,7 +787,6 @@ const elTranslations = {
   'kids6_8': 'Παιδιά 6-8',  // Using quotes as key contains hyphen
   toddlers: 'Νήπια',
   babies: 'Μωρά',
-  recipient_everyone: 'όλους', // **** ADDED THIS LINE ****
   // --- Filter/Sort Keys (May overlap with Categories page) ---
   sort_recent: 'Πρόσφατα', // For 'id_desc' sort option
   price_filter_label: 'Τιμή',
@@ -795,8 +798,8 @@ const elTranslations = {
   price_upto_250: 'Μέχρι 250€',
   no_gifts_found: 'Δεν βρέθηκαν δώρα με αυτά τα κριτήρια.',
   gifts_filtered_count: '{{count}} επιλεγμένα δώρα',
-  price_filter_all_label: 'Όλες οι Τιμές', // ADDED for filter dropdown
-  sort_by_label: 'Ταξινόμηση κατά',       // ADDED for filter dropdown
+  price_filter_all_label: 'Όλες οι Τιμές', // **** ADDED ****
+  sort_by_label: 'Ταξινόμηση κατά',       // **** ADDED ****
 
 
   // Popular Search Queries
