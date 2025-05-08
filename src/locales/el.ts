@@ -95,6 +95,9 @@ const elTranslations = {
   "return_to": "Επιστροφή σε",               "info_for_certified_store": "Πληροφορίες για πιστοποιημένο κατάστημα",
   "showing_products_from_store": "Εμφάνιση προϊόντων από το κατάστημα",
   "remove_filter": "Αφαίρεση αυτού του φίλτρου",
+  category_unknown: 'Χωρίς Κατηγορία', // ADDED
+  stores_count_label_one: '{{count}} κατάστημα', // ADDED
+  stores_count_label_other: '{{count}} καταστήματα', // ADDED
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
@@ -780,6 +783,7 @@ const elTranslations = {
   'kids6_8': 'Παιδιά 6-8',  // Using quotes as key contains hyphen
   toddlers: 'Νήπια',
   babies: 'Μωρά',
+  recipient_everyone: 'όλους', // **** ADDED THIS LINE ****
   // --- Filter/Sort Keys (May overlap with Categories page) ---
   sort_recent: 'Πρόσφατα', // For 'id_desc' sort option
   price_filter_label: 'Τιμή',
@@ -791,6 +795,8 @@ const elTranslations = {
   price_upto_250: 'Μέχρι 250€',
   no_gifts_found: 'Δεν βρέθηκαν δώρα με αυτά τα κριτήρια.',
   gifts_filtered_count: '{{count}} επιλεγμένα δώρα',
+  price_filter_all_label: 'Όλες οι Τιμές', // ADDED for filter dropdown
+  sort_by_label: 'Ταξινόμηση κατά',       // ADDED for filter dropdown
 
 
   // Popular Search Queries
@@ -821,9 +827,6 @@ const elTranslations = {
   brand_18_alt: 'Λογότυπο Χαμόγελο του Παιδιού',
   brand_19_alt: 'Λογότυπο Χρωτέχ',
   brand_20_alt: 'Λογότυπο Γιώτης',
-
-  // ** ADDED Key **
-  recipient_everyone: 'όλους',
 };
 
 export default elTranslations;
