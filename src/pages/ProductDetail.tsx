@@ -74,6 +74,7 @@ const useOpeningStatus = () => {
 
 const ProductDetail = () => {
   const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  const numericProductId = useMemo(() => parseInt(productIdParam || '', 10), [productIdParam]);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
