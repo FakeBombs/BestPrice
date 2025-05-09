@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card'; // Assuming Card is still desired for layout
-import { Product, ProductPrice, Vendor, vendors, PaymentMethod, OpeningHours } from '@/data/mockData';
-import { useTranslation } from '@/hooks/useTranslation'; // Keep if needed by VendorPriceCard or its children
+import { Card, CardContent } from '@/components/ui/card';
+
+import { Product, ProductPrice, Vendor, PaymentMethod, OpeningHours } from '@/data/productData';
+import { vendors } from '@/data/vendorData'; 
+import { useTranslation } from '@/hooks/useTranslation'; 
 
 // Helper to clean domain name (needed for title attribute)
 const cleanDomainName = (url: string): string => {
