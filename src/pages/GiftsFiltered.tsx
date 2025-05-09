@@ -8,8 +8,8 @@ import NotFound from '@/pages/NotFound';
 // --- Reusable definitions ---
 const giftRecipientCategories = [
     { slug: 'adults', titleKey: 'giftsForAdults', nameKey: 'recipient_group_adults', imgBase: 'adult-both' },
-    { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'adult-m' },
-    { slug: 'women', titleKey: 'giftsForWomen', nameKey: 'women', imgBase: 'adult-f' },
+    { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'men' },
+    { slug: 'women', titleKey: 'giftsForWomen', nameKey: 'women', imgBase: 'women' },
     { slug: 'teens', titleKey: 'giftsForTeens', nameKey: 'teens', imgBase: 'teens' },
     { slug: 'kids-9-11', titleKey: 'giftsForKids9_11', nameKey: 'kids9_11', imgBase: 'kids-9-11' },
     { slug: 'kids-6-8', titleKey: 'giftsForKids6_8', nameKey: 'kids6_8', imgBase: 'kids-6-8' },
@@ -19,8 +19,8 @@ const giftRecipientCategories = [
 
 const genderImages: Record<string, Record<string, string>> = {
     adults: { all: 'adult-both'},
-    men:    { all: 'adult-m' },
-    women:  { all: 'adult-f' },
+    men:    { all: 'men' },
+    women:  { all: 'women' },
     teens: { boys: 'teen-m', girls: 'teen-f', all: 'teens' },
     'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids-9-11' },
     'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids-6-8' },
