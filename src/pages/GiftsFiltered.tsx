@@ -361,15 +361,12 @@ const GiftsFiltered: React.FC = () => {
                                         </button>
                                     );
                                 })}
-                                {activeInterestSlugs.length > 0 && (
-                                    <Link
-                                        to={`/gifts/${recipientSlug}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
-                                        className="sc-kThouk lmQiLZ pressable text-sm text-gray-500 ml-2 self-center"
-                                    >
-                                        {t('clear_all_interest_filters', 'Clear Interests')}
-                                    </Link>
-                                )}
                             </div>
+                            {activeInterestSlugs.length > 0 && (
+                                <Link to={`/gifts/${recipientSlug}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`} className="sc-llIIlC zAYuO pressable">
+                                    {t('clear_all_interest_filters', 'Clear Interests')}
+                                </Link>
+                            )}
                         </div>
                     )}
 
