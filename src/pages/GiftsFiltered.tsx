@@ -355,7 +355,7 @@ const GiftsFiltered: React.FC = () => {
                                         <button
                                             key={interestSlugified}
                                             onClick={() => handleInterestToggle(interestSlugified)}
-                                            className={`sc-kThouk lmQiLZ pressable border px-2 py-1 rounded text-sm ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}
+                                            className={`sc-kThouk lmQiLZ pressable ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}
                                         >
                                             {t(`interest_${interest}`, interest)}
                                         </button>
