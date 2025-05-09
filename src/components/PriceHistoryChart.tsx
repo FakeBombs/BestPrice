@@ -107,9 +107,6 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({
   if (!priceData || priceData.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>{t('price_history_title', 'Price History')}</CardTitle>
-        </CardHeader>
         <CardContent>
           <p>{t('no_price_data_available', 'No price data available for the selected range.')}</p>
         </CardContent>
@@ -130,18 +127,9 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-medium">
-          {t('price_history_title', 'Price History')}
-        </CardTitle>
         <div className="flex items-center space-x-1">
           {(['1m', '3m', '6m', '1y'] as const).map(range => (
-            <Button
-              key={range}
-              variant={timeRange === range ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimeRange(range)}
-              className="px-2 text-xs"
-            >
+            <Button key={range} variant={timeRange === range ? 'default' : 'outline'} size="sm" onClick={() => setTimeRange(range)} className="px-2 text-xs">
               {t(`time_range_${range}` as any, range.toUpperCase())}
             </Button>
           ))}
@@ -152,21 +140,8 @@ const PriceHistoryChart: React.FC<PriceHistoryChartProps> = ({
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={priceData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5} />
-              <XAxis 
-                dataKey="date" 
-                tickFormatter={formatDateForAxis} 
-                tick={{ fontSize: 10 }} 
-                axisLine={{ strokeOpacity: 0.5 }}
-                tickLine={{ strokeOpacity: 0.5 }}
-              />
-              <YAxis 
-                tickFormatter={(value) => formatCurrency(value)} 
-                domain={yAxisDomain} 
-                tick={{ fontSize: 10 }} 
-                axisLine={{ strokeOpacity: 0.5 }}
-                tickLine={{ strokeOpacity: 0.5 }}
-                allowDecimals={false}
-              />
+              <XAxis dataKey="date" tickFormatter={formatDateForAxis} tick={{ fontSize: 10 }} axisLine={{ strokeOpacity: 0.5 }}tickLine={{ strokeOpacity: 0.5 }}/>
+              <YAxis tickFormatter={(value) => formatCurrency(value)} domain={yAxisDomain} tick={{ fontSize: 10 }} axisLine={{ strokeOpacity: 0.5 }} tickLine={{ strokeOpacity: 0.5 }} allowDecimals={false}/>
               <Tooltip content={<CustomTooltipContent currentLocale={currentLocale} currentCurrency={currentCurrency} formatDate={formatDateForTooltip} formatCurrency={formatCurrency}/>} />
               <ReferenceLine y={currentPrice} label={{ value: t('current_price_label', 'Current'), position: 'insideRight', fill: '#dc2626', fontSize: 10 }} stroke="#dc2626" strokeDasharray="3 3" strokeWidth={1.5} />
               <ReferenceLine y={minPrice} label={{ value: t('minimum_price_label', 'Min'), position: 'insideRight', fill: '#16a34a', fontSize: 10 }} stroke="#16a34a" strokeDasharray="3 3" strokeWidth={1.5}/>
