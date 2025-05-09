@@ -72,6 +72,7 @@ const GiftsFiltered: React.FC = () => {
         return group ? group.slug : recipientInfo.slug;
     }, [recipientInfo]);
 
+    const [selectedGender, setSelectedGender] = useState<string>(() => searchParams.get('gender') || 'all');
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
     const [sortBy, setSortBy] = useState(() => searchParams.get('sort') || 'id_desc');
@@ -81,6 +82,7 @@ const GiftsFiltered: React.FC = () => {
         let filtered = allMockProducts.filter(p =>
             p.giftAttributes?.recipient?.includes(recipientSlug)
         );
+
         if (activeInterestSlugs.length > 0) {
             filtered = filtered.filter(p =>
                 activeInterestSlugs.every(interest =>
@@ -88,6 +90,17 @@ const GiftsFiltered: React.FC = () => {
                 )
             );
         }
+
+        if ((selectedGender === 'boys' || selectedGender === 'girls') &&
+            recipientSlug && !['men', 'women'].includes(recipientSlug)) {
+            const targetGender = selectedGender === 'boys' ? 'male' : 'female';
+            filtered = filtered.filter(p =>
+                p.giftAttributes?.genderTarget === targetGender ||
+                !p.giftAttributes?.genderTarget ||
+                p.giftAttributes?.genderTarget === 'unisex'
+            );
+        }
+
         if (showDealsOnly) {
             filtered = filtered.filter(p =>
                 p.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null) ||
@@ -108,19 +121,22 @@ const GiftsFiltered: React.FC = () => {
             case 'id_desc': default: sorted.sort((a, b) => b.id - a.id); break;
         }
         return sorted;
-    }, [recipientSlug, activeInterestSlugs, showDealsOnly, selectedPriceMax, sortBy]);
+    }, [recipientSlug, activeInterestSlugs, showDealsOnly, selectedPriceMax, sortBy, selectedGender]);
 
      useEffect(() => {
         const params = new URLSearchParams();
         if (showDealsOnly) params.set('deals', '1');
         if (selectedPriceMax) params.set('price_max', selectedPriceMax);
         if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy);
+        if (selectedGender && selectedGender !== 'all' && recipientSlug && !['men', 'women'].includes(recipientSlug)) {
+            params.set('gender', selectedGender);
+        }
         const currentParamsString = searchParams.toString();
         const newParamsString = params.toString();
         if (newParamsString !== currentParamsString) {
             setSearchParams(params, { replace: true });
         }
-    }, [showDealsOnly, selectedPriceMax, sortBy, setSearchParams, searchParams]);
+    }, [showDealsOnly, selectedPriceMax, sortBy, selectedGender, recipientSlug, setSearchParams, searchParams]);
 
     const handleDealsToggle = (event: React.ChangeEvent<HTMLInputElement>) => setShowDealsOnly(event.target.checked);
     const handlePriceChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedPriceMax(event.target.value);
@@ -130,24 +146,25 @@ const GiftsFiltered: React.FC = () => {
         const selectedGroupValue = event.target.value;
         const groupInfo = mainRecipientGroups.find(g => g.slug === selectedGroupValue);
         if (groupInfo && groupInfo.childrenSlugs.length > 0) {
-            navigate(`/gifts/${groupInfo.childrenSlugs[0]}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+            const targetSlug = groupInfo.childrenSlugs[0];
+            const existingParams = new URLSearchParams(searchParams);
+            existingParams.delete('gender');
+            navigate(`/gifts/${targetSlug}${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
         }
     };
 
-    const handleInterestToggle = (interestToToggle: string) => {
-        if (!recipientSlug) return;
-        const newInterestSlugs = new Set(activeInterestSlugs);
-        if (newInterestSlugs.has(interestToToggle)) {
-            newInterestSlugs.delete(interestToToggle);
-        } else {
-            newInterestSlugs.add(interestToToggle);
+    const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const newGenderValue = event.target.value;
+        setSelectedGender(newGenderValue);
+        if (newGenderValue === 'men' && recipientSlug !== 'men') {
+            const existingParams = new URLSearchParams(searchParams);
+            existingParams.delete('gender');
+            navigate(`/gifts/men${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
+        } else if (newGenderValue === 'women' && recipientSlug !== 'women') {
+            const existingParams = new URLSearchParams(searchParams);
+            existingParams.delete('gender');
+            navigate(`/gifts/women${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
         }
-        const sortedNewInterests = Array.from(newInterestSlugs).sort();
-        let newPath = `/gifts/${recipientSlug}`;
-        if (sortedNewInterests.length > 0) {
-            newPath += `-${sortedNewInterests.join('-')}`;
-        }
-        navigate(`${newPath}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
     };
 
     const currentDealCount = useMemo(() => {
@@ -213,6 +230,24 @@ const GiftsFiltered: React.FC = () => {
         return Array.from(interests).sort();
     }, [recipientSlug]);
 
+    const genderOptions = useMemo(() => {
+        if (!recipientInfo) return [{ value: 'all', labelKey: 'gender_all' }];
+        if (['men', 'women'].includes(recipientInfo.slug)) {
+            return [
+                { value: 'all', labelKey: 'gender_all' },
+                { value: 'men', labelKey: 'gender_men' },
+                { value: 'women', labelKey: 'gender_women' },
+            ];
+        } else if (['teens', 'kids-9-11', 'kids-6-8', 'toddlers', 'babies'].includes(recipientInfo.slug)) {
+            return [
+                { value: 'all', labelKey: 'gender_all' },
+                { value: 'boys', labelKey: 'gender_boys_target' },
+                { value: 'girls', labelKey: 'gender_girls_target' },
+            ];
+        }
+        return [{ value: 'all', labelKey: 'gender_all' }];
+    }, [recipientInfo]);
+
     const translatedRecipientName = t(recipientInfo.nameKey);
     const lowercaseRecipientName = translatedRecipientName.toLowerCase();
     let pageTitleSegments = [t('giftsForRecipientTitle', { recipient: lowercaseRecipientName })];
@@ -236,6 +271,13 @@ const GiftsFiltered: React.FC = () => {
                                         {mainRecipientGroups.map(group => (
                                             <option key={group.slug} value={group.slug}>
                                                 {t(group.nameKey)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select value={selectedGender} onChange={handleGenderChange}>
+                                        {genderOptions.map(opt => (
+                                            <option key={opt.value} value={opt.value}>
+                                                {t(opt.labelKey)}
                                             </option>
                                         ))}
                                     </select>
@@ -286,7 +328,7 @@ const GiftsFiltered: React.FC = () => {
             <div className="root__wrapper">
                 <div className="root">
                     <div className="gift-finder__content">
-                        <div className="sc-hZARmv MylkP"> {/* Filter Bar */}
+                        <div className="sc-hZARmv MylkP">
                              <select value={sortBy} onChange={handleSortChange} aria-label={t('sort_by_label', 'Sort by')}>
                                 {sortOptions.map(option => (
                                     <option key={option.value} value={option.value}>
@@ -294,7 +336,7 @@ const GiftsFiltered: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
-                            <div className="sc-dKKIkQ bqWucv"> {/* Other filters */}
+                            <div className="sc-dKKIkQ bqWucv">
                                 <label className="bhTOi9I4I2nIIKPU_JUz flex items-center">
                                     <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} className="mr-1"/>
                                     {t('deals_label', 'Deals')} ({currentDealCount})
