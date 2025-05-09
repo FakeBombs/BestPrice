@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
                     {mainCategories.map(category => ( <li key={category.id}><Link to={`/cat/${category.id}/${category.slug}`}>{t(category.slug, category.name)}</Link></li> ))}
                     <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">{t('gifts')}</Link></li>
-                    <li><Link to="/give"><svg aria-hidden="true" class="icon icon--outline" width={24} height={24}><use href="/dist/images/icons/categories.svg#icon-give-24"></use></svg> {t('bestpriceGive')}</Link></li>
+                    <li data-give><Link to="/give"><svg aria-hidden="true" class="icon icon--outline" width={24} height={24}><use href="/dist/images/icons/categories.svg#icon-give-24"></use></svg> {t('bestpriceGive')}</Link></li>
                   </ul>
                 </div>
               </div>
