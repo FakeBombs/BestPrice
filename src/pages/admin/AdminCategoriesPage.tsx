@@ -1,30 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Pencil, Trash2, Search, AlertCircle } from "lucide-react";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose} from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import AdminHeader from "@/components/admin/AdminHeader";
 import CategoryForm from "@/components/admin/CategoryForm";
-import { Category, categories } from "@/data/mockData"; // Removed rootCategories since it's no longer used
+import { Category, categories } from "@/data/categoriesData";
 
 export default function AdminCategoriesPage() {
   const navigate = useNavigate();
