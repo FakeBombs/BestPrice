@@ -176,7 +176,7 @@ export const mainCategories: Category[] = [
 
 // --- Subcategories and nested categories ---
 export const categories: Category[] = [
-  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile-telephony', parentId: 1, image: '/dist/images/cat/mobile-telephony.webp' },
+  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile', parentId: 1, image: '/dist/images/cat/mobile-telephony.webp' },
   { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/cat/computers.webp' },
   { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/cat/laptops-accessories.webp' },
   { id: 13, name: 'Εικόνα', slug: 'visual', parentId: 1, image: '/dist/images/cat/visual.webp' },
