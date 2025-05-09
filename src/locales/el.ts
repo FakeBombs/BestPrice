@@ -800,6 +800,19 @@ const elTranslations = {
   gifts_filtered_count: '{{count}} επιλεγμένα δώρα',
   price_filter_all_label: 'Όλες οι Τιμές', // **** ADDED ****
   sort_by_label: 'Ταξινόμηση κατά',       // **** ADDED ****
+  // --- Recipient Group Names (for Dropdown 1 in GiftsFiltered.tsx) ---
+  recipient_group_adults: 'Ενήλικες',
+  recipient_group_teens: 'Έφηβοι',
+  recipient_group_kids9_11: 'Παιδιά 9-11',
+  recipient_group_kids6_8: 'Παιδιά 6-8',
+  recipient_group_toddlers: 'Νήπια',
+  recipient_group_babies: 'Μωρά',
+  // --- Gender/Sub-type Names (for Dropdown 2 in GiftsFiltered.tsx) ---
+  gender_all: 'Όλοι',
+  gender_men: 'Άνδρες',      // Used if 'men' is a direct option
+  gender_women: 'Γυναίκες',   // Used if 'women' is a direct option
+  gender_boys_target: 'Αγόρια', // Specifically for 'boys' filter option
+  gender_girls_target: 'Κορίτσια',// Specifically for 'girls' filter option
 
 
   // Popular Search Queries
