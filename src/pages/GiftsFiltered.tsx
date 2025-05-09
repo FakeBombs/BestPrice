@@ -226,13 +226,13 @@ const GiftsFiltered: React.FC = () => {
             <div id="trail">
                 <nav itemType="https://schema.org/BreadcrumbList" className="breadcrumb">
                     <ol>
-                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
                             <Link itemProp="item" to="/" rel="home">
                                 <span itemProp="name">{t('breadcrumbHome', 'BestPrice.gr')}</span>
                             </Link>
                             <meta itemProp="position" content="1" />
                         </li>
-                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
                             <span className="breadcrumb_last"> › </span> {/* Separator */}
                             <Link itemProp="item" to="/gifts" className='inline-flex items-center'>
                                 <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
@@ -242,7 +242,7 @@ const GiftsFiltered: React.FC = () => {
                         </li>
                         {/* Current Recipient Page (the last part of the breadcrumb, not a link) */}
                         {recipientInfo && ( // Ensure recipientInfo exists
-                            <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                            <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
                                 <span className="breadcrumb_last"> › </span> {/* Separator */}
                                 <span itemProp="name">{t(recipientInfo.nameKey)}</span>
                                 <meta itemProp="position" content="3" />
