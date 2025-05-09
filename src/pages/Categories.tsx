@@ -133,7 +133,7 @@ const Categories: React.FC = () => {
               <header className="section__header">
                   <hgroup className="section__hgroup">
                       <h2 className="section__title">
-                          <Link to={`/deals/${currentCategory.id}/${currentCategory.slug}.html?bpref=root-cat-deals`}>
+                          <Link to={`/deals/${currentCategory.id}/${currentCategory.slug}?bpref=root-cat-deals`}>
                               🔥 {t('top_deals_in')} {t(currentCategory.slug)}
                           </Link>
                       </h2>
@@ -199,7 +199,7 @@ const Categories: React.FC = () => {
                   <div className="scroll__content" style={{ display: 'flex', gap: '15px' }}>
                       {reviewedProducts.map(prod => (
                           <div key={`review-${prod.id}`} className="pvoqQTwk95GpaP_1KTR4 scroll__child" style={{ border: '1px solid #eee', padding: '10px', minWidth: '200px' }}>
-                              <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}.html?bpref=cat-reviews`}>
+                              <Link className="tooltip__anchor FuqeL9dkK8ib04ANxnED" to={`/item/${prod.id}/${prod.slug || prod.title.toLowerCase().replace(/\s+/g, '-')}?bpref=cat-reviews`}>
                                   <div className="uk0R3KNmpKWiUxyVPdYp">{prod.title}</div>
                                   {/* MODIFICATION POINT for Option 2 */}
                                   {prod.rating && <p>{t('rating_label')}: {prod.rating}/5 ({prod.reviews}{' '} {prod.reviews === 1 ? t('reviews_label_singular') : t('reviews_label_plural', { count: prod.reviews })}</p>}
@@ -227,7 +227,7 @@ const Categories: React.FC = () => {
             </header>
             <div className="root-category__brands">
                 {popularBrandObjects.map(brand => (
-                    <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}.html?bpref=cat-brand`}>
+                    <Link key={brand.id} className="root-category__brand" title={brand.name} to={`/b/${brand.id}/${brand.slug || brand.name.toLowerCase()}?bpref=cat-brand`}>
                         <img src={brand.logo} width="90" height="30" alt={brand.name} loading="lazy"/>
                     </Link>
                 ))}
@@ -302,7 +302,7 @@ const Categories: React.FC = () => {
   const renderProducts = useCallback(() => {
     const isAnyFilterActive = Object.values(activeFilters).some(value => Array.isArray(value) ? value.length > 0 : value === true);
     if (!currentCategory) return null;
-    if (baseCategoryProducts.length === 0 && !currentCategory.isMain) { return ( <main className="page-products__main"> <header className="page-header"> <div className="page-header__title-wrapper"> <div className="page-header__title-main"> <h1>{dynamicPageTitle}</h1> </div> <div className="page-header__title-aside"> {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={displayedBrand.name} height="70" loading="lazy"/></Link> )} </div> </div> {renderAppliedFilters()} </header> <p>{t('no_products_in_category')}</p> </main> ); }
+    if (baseCategoryProducts.length === 0 && !currentCategory.isMain) { return ( <main className="page-products__main"> <header className="page-header"> <div className="page-header__title-wrapper"> <div className="page-header__title-main"> <h1>{dynamicPageTitle}</h1> </div> <div className="page-header__title-aside"> {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={displayedBrand.name} height="70" loading="lazy"/></Link> )} </div> </div> {renderAppliedFilters()} </header> <p>{t('no_products_in_category')}</p> </main> ); }
     return (
       <div className="page-products">
          {baseCategoryProducts.length > 0 && (
@@ -333,7 +333,7 @@ const Categories: React.FC = () => {
                  </div>
               </div>
               <div className="page-header__title-aside">
-                {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}.html`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={`${displayedBrand.name} logo`} height="70" loading="lazy"/></Link> )}
+                {displayedBrand && displayedBrand.logo && ( <Link to={`/b/${displayedBrand.id}/${displayedBrand.slug || displayedBrand.name.toLowerCase()}`} title={displayedBrand.name} className="page-header__brand"><img src={displayedBrand.logo} alt={`${displayedBrand.name} logo`} height="70" loading="lazy"/></Link> )}
               </div>
             </div>
             {renderAppliedFilters()}
