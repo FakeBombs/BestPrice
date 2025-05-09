@@ -427,7 +427,7 @@ const GiftsFiltered: React.FC = () => {
                                         <button
                                             key={interestSlugified}
                                             onClick={() => handleInterestToggle(interestSlugified)}
-                                            className={`sc-kThouk lmQiLZ pressable border px-2 py-1 rounded text-sm ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}
+                                            className={`sc-kThouk lmQiLZ pressable ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}
                                         >
                                             {t(`interest_${interest}`, interest)}
                                         </button>
@@ -437,7 +437,7 @@ const GiftsFiltered: React.FC = () => {
                             {activeInterestSlugs.length > 0 && (
                                 <Link 
                                     to={`/gifts/${baseRecipientSlug}${genderSlugFromPath && genderSlugFromPath !== 'all' && GENDER_SUB_SLUGS.includes(genderSlugFromPath) ? `-${genderSlugFromPath}` : (baseRecipientSlug === 'adults' && (genderSlugFromPath === 'men' || genderSlugFromPath === 'women') ? '' : '')}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
-                                    className="sc-kThouk lmQiLZ pressable text-sm text-gray-500 ml-2 self-center" // Re-used button class
+                                    className="sc-llIIlC zAYuO pressable"
                                 >
                                     {t('clear_all_interest_filters', 'Clear Interests')}
                                 </Link>
