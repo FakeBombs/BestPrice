@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product, categories, mainCategories, Category } from '@/data/mockData';
-import { useTranslation } from '@/hooks/useTranslation'; // Import useTranslation
+import { Product } from '@/data/productData';
+import { Category, mainCategories, categories } from '@/data/categoriesData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Combine main and subcategories for easier lookups
 const allCategoriesList = [...mainCategories, ...categories]; // Renamed to avoid conflict if allCategories is used elsewhere
