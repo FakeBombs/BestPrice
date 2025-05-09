@@ -91,6 +91,36 @@ const Gifts: React.FC = () => {
         return sorted;
     }, [showDealsOnly, selectedPriceMax, sortBy, allMockProducts]); // Added allMockProducts
 
+    // --- ANIMATION STATE AND EFFECT START ---
+    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length);
+
+    useEffect(() => {
+        const actualCount = filteredAndSortedProducts.length;
+        if (animatedProductCount === actualCount) {
+            return;
+        }
+        let startTimestamp: number | null = null;
+        const duration = 500; // Animation duration in milliseconds
+        const startCount = animatedProductCount;
+
+        const step = (timestamp: number) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const currentDisplayCount = Math.round(startCount + (actualCount - startCount) * progress);
+            setAnimatedProductCount(currentDisplayCount);
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                setAnimatedProductCount(actualCount);
+            }
+        };
+        requestAnimationFrame(step);
+        return () => {
+            setAnimatedProductCount(actualCount); // Ensure final count on unmount/dependency change
+        };
+    }, [filteredAndSortedProducts.length]); // Only depends on the actual count
+    // --- ANIMATION STATE AND EFFECT END ---
+
      useEffect(() => {
         const params = new URLSearchParams(searchParams);
         if (showDealsOnly) params.set('deals', '1'); else params.delete('deals');
@@ -133,7 +163,7 @@ const Gifts: React.FC = () => {
                         </div>
                     </div>
                     <p className="sc-cZSric geFCaT">
-                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: t('recipient_everyone') })}
+                        {t('gifts_total_count', { count: animatedProductCount, recipient: t('recipient_everyone') })}
                     </p>
                 </div>
             </div>
