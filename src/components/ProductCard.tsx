@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-// Remove unused Badge import unless needed elsewhere
-// import { Badge } from '@/components/ui/badge';
-import { useTranslation } from '@/hooks/useTranslation'; // Import useTranslation
-import { Product, ProductPrice, getBestPrice, categories as allCategories } from '@/data/mockData'; // Import categories
+import { useTranslation } from '@/hooks/useTranslation';
+import { Product, ProductPrice } from '@/data/productData';
+import { categories as allCategories } from '@/data/categoriesData';
+import { getBestPrice } from '@/data/helpers';
 
 interface ProductCardProps {
   product: Product;
