@@ -397,8 +397,8 @@ const ProductDetail = () => {
           </main>
         </div>
         </div>
+        <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
       </div>
-      <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
     </div>
   );
 };
