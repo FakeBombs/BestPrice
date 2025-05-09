@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import ProfileHeader from "../components/social/ProfileHeader";
 import ProfileTabs from "../components/social/ProfileTabs";
