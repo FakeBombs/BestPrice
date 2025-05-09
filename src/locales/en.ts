@@ -803,6 +803,19 @@ const enTranslations = {
   gifts_filtered_count: '{{count}} selected gifts', // Note: This key is not currently used in the components
   price_filter_all_label: 'All Prices', // **** ADDED ****
   sort_by_label: 'Sort by', // **** ADDED ****
+  // --- Recipient Group Names (for Dropdown 1 in GiftsFiltered.tsx) ---
+  recipient_group_adults: 'Adults',
+  recipient_group_teens: 'Teens',
+  recipient_group_kids9_11: 'Kids 9-11',
+  recipient_group_kids6_8: 'Kids 6-8',
+  recipient_group_toddlers: 'Toddlers',
+  recipient_group_babies: 'Babies',
+  // --- Gender/Sub-type Names (for Dropdown 2 in GiftsFiltered.tsx) ---
+  gender_all: 'All',
+  gender_men: 'Men',
+  gender_women: 'Women',
+  gender_boys_target: 'Boys',
+  gender_girls_target: 'Girls',
 
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
