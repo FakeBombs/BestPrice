@@ -205,7 +205,7 @@ const GiftsFiltered: React.FC = () => {
                     {/* Map availableInterests to clickable elements */}
                     {availableInterests.length > 0 && (
                         <div className="sc-cXawGu bBKEWZ mt-4"> {/* Added margin */}
-                            <div className="sc-cUiCeM fxEzXA flex flex-wrap gap-2"> {/* Added flex for layout */}
+                            <div className="sc-elFkmj gmqSWM">
                                 {availableInterests.map(interest => (
                                     // TODO: Implement interest filtering logic if needed
                                     // This currently just displays them. Clicking would need state/URL updates.
