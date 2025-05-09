@@ -53,13 +53,43 @@ const GiftsFiltered: React.FC = () => {
 
     const { recipientSlug, activeInterestSlugs } = useMemo(() => {
         if (!combinedSlug) return { recipientSlug: undefined, activeInterestSlugs: [] };
-        const parts = combinedSlug.split('-');
-        const rSlug = parts[0];
-        const isValidRecipient = giftRecipientCategories.some(cat => cat.slug === rSlug);
-        if (!isValidRecipient) return { recipientSlug: undefined, activeInterestSlugs: [] };
-        const interests = parts.slice(1).filter(Boolean);
-        return { recipientSlug: rSlug, activeInterestSlugs: interests };
+
+        let foundRecipientSlug: string | undefined = undefined;
+        let remainingSlugForInterests: string = combinedSlug;
+
+        const sortedRecipientSlugs = [...giftRecipientCategories]
+            .map(cat => cat.slug)
+            .sort((a, b) => b.length - a.length);
+
+        for (const potentialRecipientSlug of sortedRecipientSlugs) {
+            if (combinedSlug.startsWith(potentialRecipientSlug)) {
+                foundRecipientSlug = potentialRecipientSlug;
+                if (combinedSlug.length > potentialRecipientSlug.length && combinedSlug[potentialRecipientSlug.length] === '-') {
+                    remainingSlugForInterests = combinedSlug.substring(potentialRecipientSlug.length + 1);
+                } else if (combinedSlug.length === potentialRecipientSlug.length) {
+                    remainingSlugForInterests = '';
+                } else {
+                    // This case means combinedSlug starts with potentialRecipientSlug but isn't an exact match
+                    // nor followed by a hyphen (e.g. /gifts/kid vs /gifts/kids-9-11).
+                    // We matched the longest, so this shouldn't be an issue if 'kids-9-11' is checked before 'kids'.
+                    // If only 'kids' matched and the URL was 'kids-stuff', it would be an invalid path.
+                    // For now, if it matched via startsWith, it's the recipient.
+                    remainingSlugForInterests = ''; 
+                }
+                break;
+            }
+        }
+
+        if (!foundRecipientSlug) {
+            // This case would mean the combinedSlug doesn't start with ANY known recipient slug.
+            // It's an invalid path.
+            return { recipientSlug: undefined, activeInterestSlugs: [] };
+        }
+
+        const interests = remainingSlugForInterests ? remainingSlugForInterests.split('-').filter(Boolean) : [];
+        return { recipientSlug: foundRecipientSlug, activeInterestSlugs: interests };
     }, [combinedSlug]);
+
 
     const recipientInfo = useMemo(() => {
         if (!recipientSlug) return undefined;
@@ -92,16 +122,14 @@ const GiftsFiltered: React.FC = () => {
             } else if (recipientSlug === 'women' && selectedGender !== 'women') {
                 setSelectedGender('women');
             } else if (recipientSlug && !['men', 'women'].includes(recipientSlug) && (selectedGender === 'men' || selectedGender === 'women')) {
-                // If navigated to a non-men/women page (e.g. /teens) but gender was 'men'/'women', reset to 'all'
                 setSelectedGender('all');
             }
         } else {
-            // If URL has gender param, ensure state matches
             if (selectedGender !== genderParam) {
                 setSelectedGender(genderParam);
             }
         }
-    }, [recipientSlug, searchParams, selectedGender]); // Added selectedGender to deps
+    }, [recipientSlug, searchParams, selectedGender]);
 
     const filteredAndSortedProducts = useMemo(() => {
         if (!recipientSlug) return [];
@@ -285,11 +313,6 @@ const GiftsFiltered: React.FC = () => {
 
     const translatedRecipientName = t(recipientInfo.nameKey);
     const lowercaseRecipientName = translatedRecipientName.toLowerCase();
-    let pageTitleSegments = [t('giftsForRecipientTitle', { recipient: lowercaseRecipientName })];
-    if (activeInterestSlugs.length > 0) {
-        pageTitleSegments.push(...activeInterestSlugs.map(slug => t(`interest_${slug}`, slug)));
-    }
-    const pageTitle = pageTitleSegments.join(' - ');
     const h1PageTitle = t('giftsForRecipientTitle', { recipient: lowercaseRecipientName });
 
     return (
@@ -298,18 +321,9 @@ const GiftsFiltered: React.FC = () => {
                 <div className="sc-dcKlJK cquxZx root">
                     {renderBreadcrumbs()}
                     <div className="bjpNBM flex items-center w-full mt-4">
-                        <img alt={pageTitle} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
+                        <img alt={h1PageTitle} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
-                            <h1 className="sc-jPkiSJ cFyVWT">
-                                {(() => { 
-                                    const fullTitle = h1PageTitle;
-                                    const words = fullTitle.split(' '); 
-                                    if (words.length <= 1) return fullTitle; 
-                                    const firstWord = words[0]; 
-                                    const restOfTheTitle = words.slice(1).join(' '); 
-                                    return `${firstWord} ${restOfTheTitle.toLowerCase()}`; 
-                                })()}
-                            </h1>
+                            <h1 className="sc-jPkiSJ cFyVWT">{(() => { const w = h1PageTitle.split(' '); if (w.length <= 1) return h1PageTitle; const fW = w[0]; const lR = w.slice(1).join(' '); return `${fW} ${lR.toLowerCase()}`; })()}</h1>
                             <div className="sc-dHKmnV kIiJVY">
                                 <div className="sc-hBDmJg iJzdCa">
                                     <select value={currentRecipientGroupSlug} onChange={handleRecipientGroupChange}>
@@ -360,7 +374,10 @@ const GiftsFiltered: React.FC = () => {
                     )}
 
                     <p haspreset={h1PageTitle} className="sc-dACwDz dsWkau">
-                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: lowercaseRecipientName })}
+                        {t('gifts_total_count', {
+                            count: filteredAndSortedProducts.length,
+                            recipient: lowercaseRecipientName
+                        })}
                     </p>
                 </div>
             </div>
