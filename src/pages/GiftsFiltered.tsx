@@ -450,7 +450,16 @@ const GiftsFiltered: React.FC = () => {
                     <p haspreset={h1PageTitle} className="sc-dACwDz dsWkau">
                         {t('gifts_total_count', {
                             count: filteredAndSortedProducts.length,
-                            recipient: countRecipientName
+                            recipient: (() => {
+                                const titleParts = h1PageTitle.split(' ');
+                                if (titleParts.length > 1) {
+                                    // Join all words except the first one, then lowercase
+                                    return titleParts.slice(1).join(' ').toLowerCase();
+                                }
+                                // If h1PageTitle is just one word (shouldn't happen with "Gifts for X" structure)
+                                // or if something unexpected, fall back to a generic recipient name
+                                return countRecipientName; // countRecipientName is already lowercased
+                            })()
                         })}
                     </p>
                 </div>
