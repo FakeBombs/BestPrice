@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { products as allMockProducts, Product } from '@/data/mockData'; // Assuming Product type is here
+import { products as allMockProducts, Product } from '@/data/mockData';
 import ProductCard from '@/components/ProductCard';
-import NotFound from '@/pages/NotFound'; // Import a NotFound component if you have one
+import NotFound from '@/pages/NotFound';
 
 // --- Reusable definitions (can be moved to a shared file) ---
 const giftRecipientCategories = [
@@ -192,7 +192,7 @@ const GiftsFiltered: React.FC = () => {
                     {renderBreadcrumbs()}
 
                     {/* Header with dynamic image and title */}
-                    <div className="sc-fjUQFl bjpNBM flex items-center mt-4"> {/* Added flex for alignment */}
+                    <div className="bjpNBM flex items-center w-full"> {/* Added flex for alignment */}
                         <img alt={t(recipientInfo.titleKey, `Gifts for ${recipientInfo.nameKey}`).toLowerCase()} width="92" height="92" src={`/dist/images/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
                             <h1 className="sc-jPkiSJ cFyVWT">{(() => { const fT = t(recipientInfo.titleKey); const w = fT.split(' '); if (w.length <= 1) return fT; const fW = w[0]; const lR = w.slice(1).join(' ').toLowerCase(); return `${fW} ${lR}`; })()}</h1>
