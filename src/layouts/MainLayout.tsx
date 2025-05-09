@@ -3,7 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/hooks/useTranslation';
-import { mainCategories, categories, Category, Brand, brands, products as allMockProducts, Product, ProductPrice } from '@/data/mockData';
+import { Product, ProductPrice } from '@/data/productData';
+import { products as allMockProducts } from '@/data/productData';
+import { Category, mainCategories, categories } from '@/data/categoriesData';
+import { Brand, brands } from '@/data/brandData';
 import ProductCard from '@/components/ProductCard';
 
 // --- SVG Components (assuming they are correct and unchanged) ---
