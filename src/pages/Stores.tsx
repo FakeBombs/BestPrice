@@ -1,4 +1,4 @@
-import { vendors } from '@/data/mockData';
+import { vendors } from '@/data/vendorData';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
