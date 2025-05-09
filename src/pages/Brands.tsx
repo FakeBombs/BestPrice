@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { brands, groupedBrands } from '@/data/mockData';
+import { brands, groupedBrands } from '@/data/brandData';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Brands = () => {
