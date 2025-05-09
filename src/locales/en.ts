@@ -43,7 +43,7 @@ const enTranslations = {
   name: 'Name',                           memberSince: 'Member since',
   role: 'Role',                           administrator: 'Administrator',
   regularUser: 'Regular User',            editProfile: 'Edit Profile',
-  accountSummary: 'Account Summary',      categories: 'Categories', // **** Key for Navbar/Sitemap Button ****
+  accountSummary: 'Account Summary',      categories: 'Categories', 
   gifts: 'Gifts',                         deals: 'Deals',
   clearFilters: 'Clear filters',          finalPrice: 'Final price',
   yes: "Yes",                             no: "No",
@@ -56,9 +56,9 @@ const enTranslations = {
   searchPlaceholder: "Search for products...",
   notFoundPageTitle: "Page Not Found",      notFoundMessage: "Oops! The page you are looking for does not exist.",
   recently_viewed_title: "Recently Viewed",
-  site_name: 'BestPrice', // **** ADDED for Navbar ****
-  sitemap_button_label: 'Sitemap button', // **** ADDED for Navbar ****
-  my_account_link: 'My Account', // **** ADDED for Navbar ****
+  site_name: 'BestPrice', 
+  sitemap_button_label: 'Sitemap button', 
+  my_account_link: 'My Account', 
 
   // ====================== Categories Page & Filters =======================
   "product_singular": "product",            "product_plural": "{{count}} products",
@@ -98,14 +98,26 @@ const enTranslations = {
   "return_to": "Return to",                 "info_for_certified_store": "Information for certified store",
   "showing_products_from_store": "Showing products from store",
   "remove_filter": "Remove this filter",
-  category_unknown: 'Uncategorized', // **** ADDED for ProductCard ****
-  stores_count_label_one: '{{count}} store', // **** ADDED for ProductCard ****
-  stores_count_label_other: '{{count}} stores', // **** ADDED for ProductCard ****
+  category_unknown: 'Uncategorized', 
+  stores_count_label_one: '{{count}} store', 
+  stores_count_label_other: '{{count}} stores',
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
   "breadcrumbAllProductsInCategory": "All products in the {{categoryName}} category",
   "breadcrumbAllProductsAndSubcategoriesInCategory": "All products and subcategories in the {{categoryName}} category",
+
+  // For PriceHistoryChart.tsx
+  price_history_title: 'Price history',
+  time_range_1m: '1M',
+  time_range_3m: '3M',
+  time_range_6m: '6M',
+  time_range_1y: '1Y',
+  current_price_label: 'Current Price',
+  minimum_price_label: 'Minimum Price',
+  no_price_data_available: 'No price data available for the selected range.',
+  tooltip_date_label: 'Date',
+  tooltip_price_label: 'Price',
 
   // ===================== Product Detail Page ========================
   "loadingProduct": "Loading Product...",   "addToShoppingList": "Add to Shopping List",
@@ -116,7 +128,7 @@ const enTranslations = {
   "available": "Available",               "nearMe": "Near Me",
   "deliveryWithService": "Delivery with {{serviceName}}", "coupons": "Coupons",
   "color": "Color",                       "officialResellers": "Official Resellers",
-  "priceHistoryTitle": "Price History",     "productDetails": "Product Details",
+  "priceHistoryTitle": "Price history",     "productDetails": "Product Details",
   "userReviews": "User Reviews ({{count}})", "questionsAndAnswers": "Questions & Answers ({{count}})",
   "similarProducts": "Similar Products",    "dealsInCategory": "Deals in {{categoryName}}",
   "addToCart": "Add to Cart",               "buyNow": "Buy Now",
@@ -139,6 +151,8 @@ const enTranslations = {
   "linkCopied": "Link Copied",              "productLinkCopied": "Product link copied to clipboard",
   "copyFailed": "Copy Failed",              "couldNotCopyLink": "Could not copy link",
   "loginToSetPriceAlert": "Please log in to set a price alert",
+  price_history_unavailable_product: 'Price history is currently unavailable for this product.',
+  loading_product_data: 'Loading product data...',
 
   // ========================= Vendor Page ==========================
   "loadingVendor": "Loading store...",      "allStores": "Stores",
@@ -809,8 +823,8 @@ const enTranslations = {
   price_upto_250: 'Up to €250',
   no_gifts_found: 'No gifts found matching these criteria.',
   gifts_filtered_count: '{{count}} selected gifts', // Note: This key is not currently used in the components
-  price_filter_all_label: 'All Prices', // **** ADDED ****
-  sort_by_label: 'Sort by', // **** ADDED ****
+  price_filter_all_label: 'All Prices', 
+  sort_by_label: 'Sort by', 
   // --- Recipient Group Names (for Dropdown 1 in GiftsFiltered.tsx) ---
   recipient_group_adults: 'Adults',
   recipient_group_teens: 'Teens',
@@ -895,7 +909,7 @@ const enTranslations = {
   brand_10_alt: 'Asus Logo',
   brand_11_alt: 'Acer Logo',
   brand_12_alt: 'Microsoft Logo',
-  brand_13_alt: 'ΑΛΦΑ Logo', // Note: Greek name kept as brand name likely doesn't change
+  brand_13_alt: 'ΑΛΦΑ Logo',
   brand_14_alt: '3Guys Logo',
   brand_15_alt: '2K Games Logo',
   brand_16_alt: '7Days Logo',
