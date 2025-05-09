@@ -782,6 +782,7 @@ const enTranslations = {
   giftsForToddlers: 'Gifts for toddlers',
   giftsForBabies: 'Gifts for babies',
   giftsForRecipientTitle: 'Gifts for {{recipient}}',
+  giftsForGenderedRecipient: 'Gifts for {{gender}} {{recipientGroup}}',
   giftsForMaleTeens: 'Gifts for teen boys',
   giftsForFemaleTeens: 'Gifts for teen girls',
   giftsForMaleKids9_11: 'Gifts for boy kids 9-11',
