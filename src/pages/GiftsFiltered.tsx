@@ -448,17 +448,54 @@ const GiftsFiltered: React.FC = () => {
                     )}
 
                     <p haspreset={h1PageTitle} className="sc-dACwDz dsWkau">
-                        {t('gifts_total_count', {
+                        {t('gifts_total_count', { // Base key 'gifts_total_count'
                             count: filteredAndSortedProducts.length,
                             recipient: (() => {
-                                const titleParts = h1PageTitle.split(' ');
-                                if (titleParts.length > 1) {
-                                    // Join all words except the first one, then lowercase
-                                    return titleParts.slice(1).join(' ').toLowerCase();
+                                // Define all known prefixes. Order might matter if one is a substring of another.
+                                // It's often good to have the most specific ones first, or ensure they are distinct enough.
+                                const prefixes = [
+                                    { prefixKey: 'giftsForMaleTeens', text: t('giftsForMaleTeens', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsFemaleTeens', text: t('giftsFemaleTeens', { recipient: '' }).trim() }, // Assuming giftsFemaleTeens is the correct key
+                                    { prefixKey: 'giftsForMaleKids9_11', text: t('giftsForMaleKids9_11', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsFemaleKids9_11', text: t('giftsFemaleKids9_11', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForMaleKids6_8', text: t('giftsForMaleKids6_8', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsFemaleKids6_8', text: t('giftsFemaleKids6_8', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForMaleToddlers', text: t('giftsForMaleToddlers', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsFemaleToddlers', text: t('giftsFemaleToddlers', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForMaleBabies', text: t('giftsForMaleBabies', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsFemaleBabies', text: t('giftsFemaleBabies', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForMen', text: t('giftsForMen', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForWomen', text: t('giftsForWomen', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForAdults', text: t('giftsForAdults', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForTeens', text: t('giftsForTeens', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForKids9_11', text: t('giftsForKids9_11', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForKids6_8', text: t('giftsForKids6_8', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForToddlers', text: t('giftsForToddlers', { recipient: '' }).trim() },
+                                    { prefixKey: 'giftsForBabies', text: t('giftsForBabies', { recipient: '' }).trim() },
+                                    // Add the most generic one last as a fallback prefix
+                                    { prefixKey: 'giftsForRecipientTitle', text: t('giftsForRecipientTitle', { recipient: '' }).trim() }
+                                ];
+
+                                // Sort prefixes by length descending to match more specific ones first
+                                // This handles cases where one prefix might be a substring of another
+                                // e.g. "Gifts for" vs "Gifts for Teen"
+                                const sortedPrefixes = prefixes.filter(p => p.text.length > 0) // Only consider non-empty prefixes
+                                         .sort((a, b) => b.text.length - a.text.length);
+
+                                for (const p of sortedPrefixes) {
+                                    if (h1PageTitle.startsWith(p.text) && p.text.length < h1PageTitle.length) {
+                                        // Ensure there's actually something after the prefix
+                                        const description = h1PageTitle.substring(p.text.length).trim();
+                                        if (description) { // Make sure we extracted something meaningful
+                                            return description.toLowerCase();
+                                        }
+                                    }
                                 }
-                                // If h1PageTitle is just one word (shouldn't happen with "Gifts for X" structure)
-                                // or if something unexpected, fall back to a generic recipient name
-                                return countRecipientName; // countRecipientName is already lowercased
+            
+                                // Fallback if no known prefix matched properly or only the prefix was the title
+                                // This uses the countRecipientName which should be just the recipient part already
+                                // (e.g., "άνδρες", "έφηβοι", "αγόρια έφηβοι")
+                                return countRecipientName; 
                             })()
                         })}
                     </p>
