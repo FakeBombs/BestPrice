@@ -1,6 +1,6 @@
 import { Star, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/data/mockData';
+import { Product } from '@/data/productData';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
