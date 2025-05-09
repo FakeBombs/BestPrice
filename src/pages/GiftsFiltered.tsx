@@ -226,36 +226,28 @@ const GiftsFiltered: React.FC = () => {
             <div id="trail">
                 <nav itemType="https://schema.org/BreadcrumbList" className="breadcrumb">
                     <ol>
-                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
-                            <Link itemProp="item" to="/" rel="home"><span itemProp="name">{t('breadcrumbHome', 'BestPrice.gr')}</span></Link>
-                            <span itemProp="position" content="1"> › </span>
+                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                            <Link itemProp="item" to="/" rel="home">
+                                <span itemProp="name">{t('breadcrumbHome', 'BestPrice.gr')}</span>
+                            </Link>
+                            <meta itemProp="position" content="1" />
                         </li>
-                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
+                        <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                            <span className="breadcrumb_last"> › </span> {/* Separator */}
                             <Link itemProp="item" to="/gifts" className='inline-flex items-center'>
                                 <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                 <span itemProp="name">{t('gifts', 'Δώρα')}</span>
                             </Link>
-                            <span itemProp="position" content="2"> › </span>
-                            {activeInterestSlugs.length > 0 ? (
-                                <Link itemProp="item" to={`/gifts/${recipientSlug}`}>
-                                    <span itemProp="name">{t(recipientInfo.nameKey)}</span>
-                                </Link>
-                            ) : (
-                                <span itemProp="name">{t(recipientInfo.nameKey)}</span>
-                            )}
-                            {activeInterestSlugs.map((interest, index) => (
-                                <React.Fragment key={interest}>
-                                    <span itemProp="position" content={(3 + index).toString()}> › </span>
-                                    {index === activeInterestSlugs.length - 1 ? (
-                                        <span itemProp="name">{t(`interest_${interest}`, interest)}</span>
-                                    ) : (
-                                        <Link itemProp="item" to={`/gifts/${recipientSlug}-${activeInterestSlugs.slice(0, index + 1).join('-')}`}>
-                                            <span itemProp="name">{t(`interest_${interest}`, interest)}</span>
-                                        </Link>
-                                    )}
-                                </React.Fragment>
-                            ))}
+                            <meta itemProp="position" content="2" />
                         </li>
+                        {/* Current Recipient Page (the last part of the breadcrumb, not a link) */}
+                        {recipientInfo && ( // Ensure recipientInfo exists
+                            <li itemProp="itemListElement" itemType="https://schema.org/ListItem" style={{ display: 'inline' }}>
+                                <span className="breadcrumb_last"> › </span> {/* Separator */}
+                                <span itemProp="name">{t(recipientInfo.nameKey)}</span>
+                                <meta itemProp="position" content="3" />
+                            </li>
+                        )}
                     </ol>
                 </nav>
             </div>
