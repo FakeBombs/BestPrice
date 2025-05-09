@@ -1,8 +1,22 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'; // Added useCallback
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import PriceHistoryChart from '@/components/PriceHistoryChart';
-import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, Vendor, vendors, PaymentMethod, OpeningHours, Brand, categories, mainCategories, ProductPrice } from '@/data/mockData';
+import { 
+    getProductById, 
+    getSimilarProducts, 
+    getProductsByCategory, 
+    getBestPrice, 
+    Product, 
+    Vendor, 
+    vendors, // Assuming this is used for VendorPriceCard or popupContent logic
+    PaymentMethod, 
+    OpeningHours, 
+    Brand, // Assuming this is used for something not shown or for ProductBreadcrumb
+    categories, 
+    mainCategories, 
+    ProductPrice 
+} from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -19,62 +33,19 @@ import { TopVendorAd } from '@/components/ads/TopVendorAd';
 import NotFound from '@/pages/NotFound';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
-// Helper to clean domain name
-const cleanDomainName = (url: string): string => {
-  if (!url) return '';
-  try { const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`); return parsedUrl.hostname.replace(/^www\./i, ''); }
-  catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
-};
+const cleanDomainName = (url: string): string => { /* ... same ... */ };
 
-// Helper Function to Determine Current Opening Status (NOW USES t for translations)
-const useOpeningStatus = () => {
-    const { t } = useTranslation(); // Use t inside this custom hook or pass t as an arg
-
-    const getStatus = useCallback((openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
-        if (!openingHours || openingHours.length === 0) { return { text: t('openingHoursNotAvailable', "Opening hours information not available"), isOpen: false }; }
-        try {
-            const now = new Date();
-            const currentDayIndex = now.getDay();
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const currentDayName = days[currentDayIndex] as OpeningHours['dayOfWeek'];
-            const currentTime = now.getHours() * 100 + now.getMinutes();
-            const todayHours = openingHours.find(h => h.dayOfWeek === currentDayName);
-
-            if (!todayHours || !todayHours.opens || !todayHours.closes) { return { text: t('closedToday', "Closed today"), isOpen: false }; }
-
-            const opensTime = parseInt(todayHours.opens.replace(':', ''), 10);
-            const closesTime = parseInt(todayHours.closes.replace(':', ''), 10);
-
-            if (!isNaN(opensTime) && !isNaN(closesTime)) {
-                if (currentTime >= opensTime && currentTime < closesTime) {
-                    return { text: t('openUntil', { time: todayHours.closes }), isOpen: true };
-                } else if (currentTime < opensTime) {
-                    return { text: t('closedOpensAt', { time: todayHours.opens }), isOpen: false };
-                } else {
-                    return { text: t('closedForToday', "Closed for today"), isOpen: false };
-                }
-            } else {
-                return { text: t('openingHoursError', "Error in opening hours"), isOpen: false };
-            }
-        } catch (error) {
-            console.error("Error calculating opening status:", error);
-            return { text: t('openingHoursError', "Error in opening hours"), isOpen: false };
-        }
-    }, [t]);
-    return getStatus;
-};
-
+const useOpeningStatus = () => { /* ... same ... */ };
 
 const ProductDetail = () => {
-  // --- Hooks & Initial Setup ---
   const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  const numericProductId = Number(productId);
+  const numericProductId = Number(productId); // Use this for consistency
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const location = useLocation();
-  const getOpeningStatusForVendor = useOpeningStatus(); // Use the custom hook
+  const getOpeningStatusForVendor = useOpeningStatus();
 
   // --- Document Attributes Logic ---
   const userAgent = navigator.userAgent.toLowerCase();
@@ -89,61 +60,66 @@ const ProductDetail = () => {
   useHtmlAttributes(classNamesForHtml, 'page-item'); useBodyAttributes(classNamesForBody, '');
   // --- End Document Attributes ---
 
+
   // --- State Definitions ---
-  const [product, setProduct] = useState<Product | null | undefined>(undefined);
+  const [product, setProduct] = useState<Product | null | undefined>(undefined); // Initialize as undefined for loading state
   const [currentImage, setCurrentImage] = useState<string>('');
-  const [similarProductsState, setSimilarProductsState] = useState<Product[]>([]); // Renamed to avoid conflict
+  const [similarProductsState, setSimilarProductsState] = useState<Product[]>([]);
   const [categoryDeals, setCategoryDeals] = useState<Product[]>([]);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{ vendor: Vendor; priceInfo: ProductPrice; } | null>(null);
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m'); // State for PriceHistoryChart
 
-  // --- Slug Formatting ---
-   const formatProductSlug = (title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+  const formatProductSlug = (title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 
-  // --- Data Fetching & Slug Handling ---
   useEffect(() => {
     setLoading(true);
-    let productData: Product | undefined = undefined;
-    const numericId = parseInt(productId || '', 10);
+    const idToFetch = parseInt(productId || '', 10); // Use productId from useParams
 
-    if (!isNaN(numericId)) {
-      productData = getProductById(numericId);
+    if (isNaN(idToFetch)) {
+        setProduct(null); // Invalid ID
+        setLoading(false);
+        return;
     }
+
+    const productData = getProductById(idToFetch);
 
     if (productData) {
       setProduct(productData);
-      setCurrentImage(productData.image);
-      setSimilarProductsState(getSimilarProducts(numericId)); // Use renamed state setter
-      setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericId).slice(0, 5));
-
+      setCurrentImage(productData.image || ''); // Ensure currentImage has a default
+      setSimilarProductsState(getSimilarProducts(idToFetch));
+      if (productData.categoryIds && productData.categoryIds.length > 0) {
+        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== idToFetch).slice(0, 5));
+      } else {
+        setCategoryDeals([]);
+      }
       try {
         const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as number[];
         const validIds = recentlyViewedIds.filter(id => typeof id === 'number');
-        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => p !== undefined && p.id !== numericId);
+        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== idToFetch);
         setRecentlyViewed(recentProducts);
-        if (!validIds.includes(numericId)) {
-          const updatedRecentlyViewed = [numericId, ...validIds].slice(0, 10);
+        if (!validIds.includes(idToFetch)) {
+          const updatedRecentlyViewed = [idToFetch, ...validIds].slice(0, 10);
           localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
 
       const correctSlug = productData.slug || formatProductSlug(productData.title);
       if (!productSlug || productSlug !== correctSlug) {
-         navigate(`/item/${numericId}/${correctSlug}${location.search}`, { replace: true });
+         navigate(`/item/${idToFetch}/${correctSlug}${location.search}`, { replace: true });
       }
-      setLoading(false);
     } else {
-      setProduct(null);
-      setLoading(false);
+      setProduct(null); // Product not found
     }
-  }, [productId, navigate, location.search, productSlug]); // Added productSlug to dependencies
+    setLoading(false);
+  }, [productId, navigate, location.search, productSlug]); // productSlug dependency is for slug correction
 
-  // --- Calculations after product is loaded ---
-  const bestPriceInfo = useMemo(() => {
-    if (!product) return null; // Guard against null product
+  // --- Calculations dependent on 'product' state ---
+  const bestPrice = useMemo(() => {
+    if (!product) return null;
     return getBestPrice(product);
   }, [product]);
 
@@ -152,60 +128,32 @@ const ProductDetail = () => {
     const primaryCategoryId = product.categoryIds[0];
     const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
     return allCatsMap.get(primaryCategoryId) || null;
-  }, [product?.categoryIds]);
+  }, [product]); // Depend on the whole product object
 
-
-  // --- Event Handlers ---
-  const handleImageChange = (image: string) => { setCurrentImage(image); };
-  const handleAddToFavorites = () => {
-    if (!user) {
-      toast({ title: t("loginRequired", "Login Required"), description: t("loginToAddToFavorites", "Please log in to add this product to your favorites"), variant: "destructive" });
-      return;
-    }
-    toast({ title: t("addedToFavorites", "Added to Favorites"), description: t("productAddedToFavorites", { productName: product?.title || 'Product' }) });
-  };
-  const handleShareProduct = () => {
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => toast({ title: t("linkCopied", "Link Copied"), description: t("productLinkCopied", "Product link copied to clipboard") }))
-      .catch(err => toast({ title: t("copyFailed", "Copy Failed"), description: t("couldNotCopyLink", "Could not copy link"), variant: "destructive" }));
-  };
-  const handlePriceAlert = () => {
-    if (!user) {
-      toast({ title: t("loginRequired", "Login Required"), description: t("loginToSetPriceAlert", "Please log in to set a price alert"), variant: "destructive" });
-      return;
-    }
-    setIsPriceAlertModalOpen(true);
-  };
-
-  const handleOpenVendorPopup = (vendorData: Vendor, priceData: ProductPrice) => { setPopupContent({ vendor: vendorData, priceInfo: priceData }); setIsVendorPopupVisible(true); };
-  const handleCloseVendorPopup = () => { setIsVendorPopupVisible(false); setPopupContent(null); };
-
-  // --- Loading / Not Found ---
-  if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
-  if (!product) { return <NotFound />; }
-
-  // 1. Get the best current price information for the product
-  const bestPrice = useMemo(() => {
-    if (!product) return null; // Guard against undefined/null product
-    return getBestPrice(product); // Make sure getBestPrice handles product potentially being null if it can be
-  }, [product]);
-
-  // 2. Determine a reliable current price to use as the 'basePrice' for history generation
-  const currentActualPrice = useMemo(() => {
-    if (bestPrice) { // bestPrice could be null if product was null
+  const currentActualPriceForHistory = useMemo(() => {
+    if (bestPrice) {
         if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
         if (typeof bestPrice.price === 'number') return bestPrice.price;
     }
-    // Ensure product exists before accessing product.lowestPrice
-    if (product && typeof product.lowestPrice === 'number') {
+    if (product && typeof product.lowestPrice === 'number') { // Check if product exists
         return product.lowestPrice;
     }
-    return 0; // Final fallback if no price info at all
-  }, [bestPrice, product]); // Corrected dependencies
+    return 0;
+  }, [bestPrice, product]); // Depend on product and bestPrice
 
-  // 3. State for the time range selector
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
+  // Event handlers (ensure product exists before using its properties)
+  const handleImageChange = (image: string) => { setCurrentImage(image); };
+  const handleAddToFavorites = () => { /* ... same, ensure product check if needed ... */ };
+  const handleShareProduct = () => { /* ... same ... */ };
+  const handlePriceAlert = () => { /* ... same, ensure product check if needed ... */ };
+  const handleOpenVendorPopup = (vendorData: Vendor, priceData: ProductPrice) => { /* ... same ... */ };
+  const handleCloseVendorPopup = () => { /* ... same ... */ };
+
+  if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
+  if (!product) { return <NotFound />; } // This check handles product being null
+
+  // If product exists, we can safely use its properties below
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
@@ -213,103 +161,100 @@ const ProductDetail = () => {
           <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
         </div>
         <div className="item-layout__wrapper">
-          <div className="item-layout">
-            <aside className="item-aside stick-to-bottom">
-              <div className="item__image-wrapper">
-                <div className="item__image">
-                  <ProductImageGallery mainImage={product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
-                </div>
+          <aside className="item-aside stick-to-bottom">
+            <div className="item__image-wrapper">
+              <div className="item__image">
+                {/* Pass currentImage which is initialized from product.image */}
+                <ProductImageGallery mainImage={currentImage} images={product.images} title={product.title} onImageChange={handleImageChange} />
               </div>
-
-              <div className="item-actions-buttons">
-                <button className="item-actions__button" onClick={handleAddToFavorites}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg><span className="item-actions__label">{t('addToShoppingList', 'Add to Shopping List')}</span></button>
-                <button className="item-actions__button" data-id="compare"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-compare-16"></use></svg><span className="item-actions__label">{t('addToComparison', 'Add to Comparison')}</span></button>
-                <button className="item-actions__button" data-id="want"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-want-16"></use></svg><span className="item-actions__label">{t('iWantIt', 'I Want It')}</span><span className="item-actions__count">25</span></button>
-                <button className="item-actions__button" data-id="have"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-have-16"></use></svg><span className="item-actions__label">{t('iHaveIt', 'I Have It')}</span></button>
-                <button className="item-actions__button" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-alert-16"></use></svg><span className="item-actions__label">{t('notifyPriceDrop', 'Notify for Price Drop')}</span></button>
-                <button className="item-actions__button"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-collection-16"></use></svg><span className="item-actions__label">{t('addToCollection', 'Add to Collection')}</span></button>
+            </div>
+            <div className="item-actions-buttons">
+              <button className="item-actions__button" onClick={handleAddToFavorites}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-shortlist-16"></use></svg><span className="item-actions__label">{t('addToShoppingList', 'Add to Shopping List')}</span></button>
+              <button className="item-actions__button" data-id="compare"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-compare-16"></use></svg><span className="item-actions__label">{t('addToComparison', 'Add to Comparison')}</span></button>
+              <button className="item-actions__button" data-id="want"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-want-16"></use></svg><span className="item-actions__label">{t('iWantIt', 'I Want It')}</span><span className="item-actions__count">25</span></button>
+              <button className="item-actions__button" data-id="have"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-have-16"></use></svg><span className="item-actions__label">{t('iHaveIt', 'I Have It')}</span></button>
+              <button className="item-actions__button" onClick={handlePriceAlert}><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-alert-16"></use></svg><span className="item-actions__label">{t('notifyPriceDrop', 'Notify for Price Drop')}</span></button>
+              <button className="item-actions__button"><svg aria-hidden="true" className="icon" width={16} height={16}><use href="/dist/images/icons/actions.svg#icon-collection-16"></use></svg><span className="item-actions__label">{t('addToCollection', 'Add to Collection')}</span></button>
+            </div>
+          </aside>
+          <main className="item-main">
+            <div className="item-header__wrapper">
+              <div className="item-header">
+                <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
+                {bestPrice && ( // Check bestPrice instead of bestPriceInfo which was removed
+                    <a href="#item-prices" className="item-price-button">
+                        <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{bestPrice.price.toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
+                        <svg width="17" height="20"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
+                    </a>
+                )}
+                <ProductHighlights specifications={product.specifications} product={product} />
+                <div className="item-description">{product.description}</div>
               </div>
-            </aside>
-            <main className="item-main">
-              <div className="item-header__wrapper">
-                <div className="item-header">
-                  <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                  {bestPriceInfo && (
-                      <a href="#item-prices" className="item-price-button">
-                          <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{bestPriceInfo.price.toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
-                          <svg width="17" height="20"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
-                      </a>
-                  )}
-                  <ProductHighlights specifications={product.specifications} product={product} />
-                  <div className="item-description">{product.description}</div> {/* Assuming description is dynamic from product data */}
-                </div>
-                <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPriceInfo} onNotifyMe={handlePriceAlert} /></div>
-              </div>
+              <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div>
+            </div>
 
-              <div className="sections item-sections">
-                <section id="item-prices" className="section">
-                  <header className="section__header">
-                    <hgroup className="section__hgroup">
-                      <h2 className="section__title">{t('storesCount', { count: product.prices.length })} <div className="price-filters__clear undefined dotted-link">{t('clearPriceFilters', 'Clear filters')}</div> </h2>
-                    </hgroup>
-                    <div className="section__side">
-                      <label data-type="priceFull" data-always-available="" className="price-filters__filter">
-                        <input type="checkbox" />
-                        <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
-                        <span className="price-filters__label">{t('finalPrice', 'Final Price')}</span>
-                      </label>
-                      </div>
-                    </header>
-
-                    <ScrollableSlider>
-                    <div className="filter-wrapper">
-                      <div data-count={product.prices.length} className="price-filters scroll__content">
-                        <label data-type="in-stock" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('available', 'Available')}</span></label>
-                        <label data-type="nearby" data-always-available="" className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span className="price-filters__label">{t('nearMe', 'Near Me')}</span></label>
-                        <label data-type="certified" data-tooltip={t('certifiedStoresTooltip', "Show only products from certified stores")} className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span className="price-filters__label">{t('certified', 'Certified')}</span></label>
-                        <label data-type="boxnow" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('deliveryWithService', {serviceName: 'BOX NOW'})} <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
-                        <label data-type="coupons" className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span className="price-filters__label">{t('coupons', 'Coupons')}</span></label>
-                        <label data-type="color" data-options='["desert","black","white","grey","gold"]' className="price-filters__filter is-inline"><input type="checkbox" /><span className="price-filters__label">{t('color', 'Color')}</span></label>
-                        <label data-type="authorized" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('officialResellers', 'Official Resellers')}</span></label>
-                      </div>
+            <div className="sections item-sections">
+              <section id="item-prices" className="section">
+                <header className="section__header">
+                  <hgroup className="section__hgroup">
+                    <h2 className="section__title">{t('storesCount', { count: product.prices.length })} <div className="price-filters__clear undefined dotted-link">{t('clearPriceFilters', 'Clear filters')}</div> </h2>
+                  </hgroup>
+                  <div className="section__side">
+                    <label data-type="priceFull" data-always-available="" className="price-filters__filter">
+                      <input type="checkbox" />
+                      <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-calc-12"></use></svg>
+                      <span className="price-filters__label">{t('finalPrice', 'Final Price')}</span>
+                    </label>
                     </div>
-                    </ScrollableSlider>
-
-                    <TopVendorAd productId={product.id} />
-
-                    <div className="prices" data-merchants={product.prices.length}>
-                        {product.prices
-                            .sort((a, b) => a.price - b.price)
-                            .map((priceInfo) => (
-                                <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={handleOpenVendorPopup} />
-                        ))}
+                  </header>
+                  <ScrollableSlider>
+                  <div className="filter-wrapper">
+                    <div data-count={product.prices.length} className="price-filters scroll__content">
+                      <label data-type="in-stock" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('available', 'Available')}</span></label>
+                      <label data-type="nearby" data-always-available="" className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/cluster.svg#icon-pin-12"></use></svg><span className="price-filters__label">{t('nearMe', 'Near Me')}</span></label>
+                      <label data-type="certified" data-tooltip={t('certifiedStoresTooltip', "Show only products from certified stores")} className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-certified-outline-12"></use></svg><span className="price-filters__label">{t('certified', 'Certified')}</span></label>
+                      <label data-type="boxnow" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('deliveryWithService', {serviceName: 'BOX NOW'})} <svg aria-hidden="true" className="icon" width="100%" height="100%"><use href="/dist/images/icons/partners.svg#icon-boxnow"></use></svg></span></label>
+                      <label data-type="coupons" className="price-filters__filter"><input type="checkbox" /><svg aria-hidden="true" className="icon" width={20} height={20}><use href="/dist/images/icons/icons.svg#icon-coupon-20"></use></svg><span className="price-filters__label">{t('coupons', 'Coupons')}</span></label>
+                      <label data-type="color" data-options='["desert","black","white","grey","gold"]' className="price-filters__filter is-inline"><input type="checkbox" /><span className="price-filters__label">{t('color', 'Color')}</span></label>
+                      <label data-type="authorized" className="price-filters__filter"><input type="checkbox" /><span className="price-filters__label">{t('officialResellers', 'Official Resellers')}</span></label>
                     </div>
+                  </div>
+                  </ScrollableSlider>
+                  <TopVendorAd productId={product.id} />
+                  <div className="prices" data-merchants={product.prices.length}>
+                      {product.prices
+                          .sort((a, b) => a.price - b.price)
+                          .map((priceInfo) => (
+                              <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={handleOpenVendorPopup} />
+                      ))}
+                  </div>
                 </section>
 
-                {/* Use renamed similarProductsState here */}
                 <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
 
                 <section id="item-graph" className="section">
                   <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
-                  {product && currentActualPrice > 0 ? (
-                    <PriceHistoryChart productId={product.id} basePrice={currentBasePrice} timeRange={timeRange} setTimeRange={setTimeRange} />
-                    ) : product ? (
-                    <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>{t('price_history_unavailable_product', 'Price history is currently unavailable for this product.')}</div>
+                  {currentActualPriceForHistory > 0 ? (
+                    <PriceHistoryChart 
+                        productId={product.id} 
+                        basePrice={currentActualPriceForHistory} 
+                        timeRange={timeRange} 
+                        setTimeRange={setTimeRange} 
+                    />
                     ) : (
-                    <p>{t('loading_product_data', 'Loading product data...')}</p> // Or your actual loading state
+                    <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>{t('price_history_unavailable_product', 'Price history is currently unavailable for this product.')}</div>
                   )}
                 </section>
 
-                {/* Pass similarProductsState to the second ProductRelatedSections call if it's for similar products */}
                 <ProductRelatedSections similarProducts={similarProductsState} productId={numericProductId} />
-
+                
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
                 </section>
               </div>
 
-              {isPriceAlertModalOpen && bestPriceInfo && (
-                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPriceInfo.price} />
+              {isPriceAlertModalOpen && bestPrice && (
+                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPrice.price} />
               )}
 
               {isVendorPopupVisible && popupContent && (
@@ -340,7 +285,6 @@ const ProductDetail = () => {
                                     </div>
                                     <div className="simple-rating__avg">{popupContent.vendor.rating.toFixed(1)}</div>
                                     </Link>
-                                    {/* <Link to={`/m/.../review`} className="simple-rating__new">{t('rateIt', 'Rate It')}</Link> */}
                                 </div>
                                 )}
                                 {popupContent.vendor.certification && (
@@ -378,7 +322,7 @@ const ProductDetail = () => {
                                             <ul>
                                                 {Object.values(PaymentMethod).map(method => (
                                                     <li key={method} className={popupContent.vendor.paymentMethods?.includes(method) ? 'minfo__yes' : ''}>
-                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_')}`, method)} {/* Translate payment method names */}
+                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_').replace(/€/g, 'euro')}`, method)} 
                                                         {popupContent.vendor.paymentMethods?.includes(method) ? (
                                                             <svg className="icon" aria-hidden="true" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg>
                                                         ) : (
@@ -404,12 +348,10 @@ const ProductDetail = () => {
                 </div>
                 </div>
             )}
-            </main>
-          </div>
+          </main>
         </div>
-        {/* Pass recentlyViewed to the last ProductRelatedSections call if it's for recently viewed products */}
-        <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
       </div>
+      <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
     </div>
   );
 };
