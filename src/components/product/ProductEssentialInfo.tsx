@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Product, ProductPrice, getVendorById } from '@/data/mockData';
+import { Product, ProductPrice } from '@/data/productData';
+import { getVendorById } from '@/data/helpers';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface ProductEssentialInfoProps {
