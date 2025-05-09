@@ -209,7 +209,7 @@ const GiftsFiltered: React.FC = () => {
                                 {availableInterests.map(interest => (
                                     // TODO: Implement interest filtering logic if needed
                                     // This currently just displays them. Clicking would need state/URL updates.
-                                    <h2 key={interest} className="sc-jMsorb lngZA-D pressable border px-2 py-1 rounded text-sm cursor-pointer hover:bg-gray-100">
+                                    <h2 key={interest} className="sc-kThouk lmQiLZ pressable">
                                         {t(`interest_${interest}`, interest)} {/* Assumes keys like interest_tech */}
                                     </h2>
                                 ))}
