@@ -26,7 +26,7 @@ const genderImages: Record<string, Record<string, string>> = {
     'kids-9-11': { boys: 'kid0911-male', girls: 'kid0911-female', all: 'kids9_11' },
     'kids-6-8': { boys: 'kid0608-male', girls: 'kid0608-female', all: 'kids6_8' },
     toddlers: { boys: 'kid0305-male', girls: 'kid0305-female', all: 'toddlers' },
-    babies: { boys: 'baby-male', girls: 'baby-female', all: 'babies' },
+    babies: { boys: 'baby-m', girls: 'baby-f', all: 'babies' },
 };
 
 const mainRecipientGroups = [
