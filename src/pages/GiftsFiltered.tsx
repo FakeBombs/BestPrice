@@ -219,7 +219,7 @@ const GiftsFiltered: React.FC = () => {
 
 
                     {/* Dynamic Count */}
-                    <p className="sc-cZSric dQdioU">
+                    <p haspreset={(() => { const fT = t(recipientInfo.titleKey); const w = fT.split(' '); if (w.length <= 1) return fT; const fW = w[0]; const lR = w.slice(1).join(' ').toLowerCase(); return `${fW} ${lR}`; })()} class="sc-dACwDz dsWkau">
                         {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: t(recipientInfo.nameKey).toLowerCase() })}
                     </p>
                 </div>
