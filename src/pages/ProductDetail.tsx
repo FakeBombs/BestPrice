@@ -202,6 +202,7 @@ const ProductDetail = () => {
           <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
         </div>
         <div className="item-layout__wrapper">
+          <div class="item-layout">
           <aside className="item-aside stick-to-bottom">
             <div className="item__image-wrapper">
               <div className="item__image">
@@ -394,6 +395,7 @@ const ProductDetail = () => {
                 </div>
             )}
           </main>
+        </div>
         </div>
       </div>
       <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
