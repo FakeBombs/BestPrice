@@ -66,6 +66,7 @@ const GiftsFiltered: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length); 
     const { baseRecipientSlug, genderSlugFromPath, activeInterestSlugs } = useMemo(() => {
         if (!combinedSlug) return { baseRecipientSlug: undefined, genderSlugFromPath: undefined, activeInterestSlugs: [] };
         let tempCombinedSlug = combinedSlug;
@@ -125,7 +126,6 @@ const GiftsFiltered: React.FC = () => {
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
     const [sortBy, setSortBy] = useState(() => searchParams.get('sort') || 'id_desc');
-    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length); 
 
     useEffect(() => {
         if (!recipientInfo) {
