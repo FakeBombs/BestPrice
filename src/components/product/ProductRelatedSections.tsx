@@ -43,7 +43,7 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ similar
       )}
 
       {filteredRecentlyViewed.length > 0 && (
-        <section className="section history__products" style={{ paddingTop: '3.84rem' }}>
+        <section className="section history__products">
           <header className="section__header"> <hgroup className="section__hgroup"> <h2 className="section__title">Είδες πρόσφατα</h2> </hgroup> </header>
           <ScrollableSlider>
             <div className="p__products--scroll scroll__content"> {filteredRecentlyViewed.map(prod => (<ProductCard key={`recent-${prod.id}`} product={prod} />))} </div>
