@@ -864,7 +864,7 @@ const enTranslations = {
   interest_baby: 'Baby',
   // Add any other specific interests from your product.giftAttributes.interest arrays
 
-  clear_all_interest_filters: 'Clear Interest Filters',
+  clear_all_interest_filters: 'Clear interest filters',
   for_interest: 'for', // Used in "X gifts for [recipient] for [interest]"
 
   // Popular Search Queries
