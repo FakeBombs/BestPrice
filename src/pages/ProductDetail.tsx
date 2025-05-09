@@ -6,13 +6,13 @@ import {
     getProductById, 
     getSimilarProducts, 
     getProductsByCategory, 
-    getBestPrice, 
+    getBestPrice, // Make sure this is exported from mockData.ts
     Product, 
     Vendor, 
-    vendors, // Assuming this is used for VendorPriceCard or popupContent logic
+    vendors, 
     PaymentMethod, 
     OpeningHours, 
-    Brand, // Assuming this is used for something not shown or for ProductBreadcrumb
+    Brand, 
     categories, 
     mainCategories, 
     ProductPrice 
@@ -33,13 +33,47 @@ import { TopVendorAd } from '@/components/ads/TopVendorAd';
 import NotFound from '@/pages/NotFound';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
-const cleanDomainName = (url: string): string => { /* ... same ... */ };
+const cleanDomainName = (url: string): string => {
+  if (!url) return '';
+  try { const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`); return parsedUrl.hostname.replace(/^www\./i, ''); }
+  catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
+};
 
-const useOpeningStatus = () => { /* ... same ... */ };
+const useOpeningStatus = () => {
+    const { t } = useTranslation();
+    const getStatus = useCallback((openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
+        if (!openingHours || openingHours.length === 0) { return { text: t('openingHoursNotAvailable', "Opening hours information not available"), isOpen: false }; }
+        try {
+            const now = new Date();
+            const currentDayIndex = now.getDay();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const currentDayName = days[currentDayIndex] as OpeningHours['dayOfWeek'];
+            const currentTime = now.getHours() * 100 + now.getMinutes();
+            const todayHours = openingHours.find(h => h.dayOfWeek === currentDayName);
+            if (!todayHours || !todayHours.opens || !todayHours.closes) { return { text: t('closedToday', "Closed today"), isOpen: false }; }
+            const opensTime = parseInt(todayHours.opens.replace(':', ''), 10);
+            const closesTime = parseInt(todayHours.closes.replace(':', ''), 10);
+            if (!isNaN(opensTime) && !isNaN(closesTime)) {
+                if (currentTime >= opensTime && currentTime < closesTime) {
+                    return { text: t('openUntil', { time: todayHours.closes }), isOpen: true };
+                } else if (currentTime < opensTime) {
+                    return { text: t('closedOpensAt', { time: todayHours.opens }), isOpen: false };
+                } else {
+                    return { text: t('closedForToday', "Closed for today"), isOpen: false };
+                }
+            } else {
+                return { text: t('openingHoursError', "Error in opening hours"), isOpen: false };
+            }
+        } catch (error) {
+            console.error("Error calculating opening status:", error);
+            return { text: t('openingHoursError', "Error in opening hours"), isOpen: false };
+        }
+    }, [t]);
+    return getStatus;
+};
 
 const ProductDetail = () => {
-  const { productId, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  const numericProductId = Number(productId); // Use this for consistency
+  const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -47,22 +81,18 @@ const ProductDetail = () => {
   const location = useLocation();
   const getOpeningStatusForVendor = useOpeningStatus();
 
-  // --- Document Attributes Logic ---
   const userAgent = navigator.userAgent.toLowerCase();
   const [jsEnabled, setJsEnabled] = useState(false);
   let classNamesForBody = '';
   let classNamesForHtml = 'page';
-  const checkAdBlockers = (): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } };
-  const isAdBlocked = useMemo(checkAdBlockers, []);
+  const checkAdBlockers = useCallback((): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } }, []);
+  const isAdBlocked = useMemo(checkAdBlockers, [checkAdBlockers]);
   if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; } else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; } else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; } else { classNamesForHtml += ' unknown-device'; }
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed'; classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   useEffect(() => { setJsEnabled(true); }, []); classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
   useHtmlAttributes(classNamesForHtml, 'page-item'); useBodyAttributes(classNamesForBody, '');
-  // --- End Document Attributes ---
 
-
-  // --- State Definitions ---
-  const [product, setProduct] = useState<Product | null | undefined>(undefined); // Initialize as undefined for loading state
+  const [product, setProduct] = useState<Product | null | undefined>(undefined);
   const [currentImage, setCurrentImage] = useState<string>('');
   const [similarProductsState, setSimilarProductsState] = useState<Product[]>([]);
   const [categoryDeals, setCategoryDeals] = useState<Product[]>([]);
@@ -71,89 +101,102 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{ vendor: Vendor; priceInfo: ProductPrice; } | null>(null);
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m'); // State for PriceHistoryChart
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
-  const formatProductSlug = (title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+  const formatProductSlug = useCallback((title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'), []);
 
   useEffect(() => {
     setLoading(true);
-    const idToFetch = parseInt(productId || '', 10); // Use productId from useParams
+    const numericId = parseInt(productIdParam || '', 10);
 
-    if (isNaN(idToFetch)) {
-        setProduct(null); // Invalid ID
+    if (isNaN(numericId)) {
+        setProduct(null);
         setLoading(false);
         return;
     }
 
-    const productData = getProductById(idToFetch);
+    const productData = getProductById(numericId);
 
     if (productData) {
       setProduct(productData);
-      setCurrentImage(productData.image || ''); // Ensure currentImage has a default
-      setSimilarProductsState(getSimilarProducts(idToFetch));
+      setCurrentImage(productData.image || '');
+      setSimilarProductsState(getSimilarProducts(numericId));
       if (productData.categoryIds && productData.categoryIds.length > 0) {
-        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== idToFetch).slice(0, 5));
+        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericId).slice(0, 5));
       } else {
         setCategoryDeals([]);
       }
       try {
         const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as number[];
         const validIds = recentlyViewedIds.filter(id => typeof id === 'number');
-        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== idToFetch);
+        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== numericId);
         setRecentlyViewed(recentProducts);
-        if (!validIds.includes(idToFetch)) {
-          const updatedRecentlyViewed = [idToFetch, ...validIds].slice(0, 10);
+        if (!validIds.includes(numericId)) {
+          const updatedRecentlyViewed = [numericId, ...validIds].slice(0, 10);
           localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
 
       const correctSlug = productData.slug || formatProductSlug(productData.title);
-      if (!productSlug || productSlug !== correctSlug) {
-         navigate(`/item/${idToFetch}/${correctSlug}${location.search}`, { replace: true });
+      if (productSlug !== correctSlug) { // Only navigate if slug is actually different and productSlug is defined
+         navigate(`/item/${numericId}/${correctSlug}${location.search}`, { replace: true });
       }
     } else {
-      setProduct(null); // Product not found
+      setProduct(null);
     }
     setLoading(false);
-  }, [productId, navigate, location.search, productSlug]); // productSlug dependency is for slug correction
+  }, [productIdParam, navigate, location.search, productSlug, formatProductSlug]);
 
-  // --- Calculations dependent on 'product' state ---
+
   const bestPrice = useMemo(() => {
     if (!product) return null;
     return getBestPrice(product);
   }, [product]);
 
   const primaryCategory = useMemo(() => {
-    if (!product?.categoryIds || product.categoryIds.length === 0) return null;
+    if (!product || !product.categoryIds || product.categoryIds.length === 0) return null;
     const primaryCategoryId = product.categoryIds[0];
     const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
     return allCatsMap.get(primaryCategoryId) || null;
-  }, [product]); // Depend on the whole product object
+  }, [product]);
 
   const currentActualPriceForHistory = useMemo(() => {
     if (bestPrice) {
         if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
         if (typeof bestPrice.price === 'number') return bestPrice.price;
     }
-    if (product && typeof product.lowestPrice === 'number') { // Check if product exists
+    if (product && typeof product.lowestPrice === 'number') {
         return product.lowestPrice;
     }
     return 0;
-  }, [bestPrice, product]); // Depend on product and bestPrice
+  }, [bestPrice, product]);
 
-
-  // Event handlers (ensure product exists before using its properties)
   const handleImageChange = (image: string) => { setCurrentImage(image); };
-  const handleAddToFavorites = () => { /* ... same, ensure product check if needed ... */ };
-  const handleShareProduct = () => { /* ... same ... */ };
-  const handlePriceAlert = () => { /* ... same, ensure product check if needed ... */ };
-  const handleOpenVendorPopup = (vendorData: Vendor, priceData: ProductPrice) => { /* ... same ... */ };
-  const handleCloseVendorPopup = () => { /* ... same ... */ };
+  const handleAddToFavorites = () => {
+    if (!user) {
+      toast({ title: t("loginRequired", "Login Required"), description: t("loginToAddToFavorites", "Please log in to add this product to your favorites"), variant: "destructive" });
+      return;
+    }
+    toast({ title: t("addedToFavorites", "Added to Favorites"), description: t("productAddedToFavorites", { productName: product?.title || 'Product' }) });
+  };
+  const handleShareProduct = () => {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => toast({ title: t("linkCopied", "Link Copied"), description: t("productLinkCopied", "Product link copied to clipboard") }))
+      .catch(err => toast({ title: t("copyFailed", "Copy Failed"), description: t("couldNotCopyLink", "Could not copy link"), variant: "destructive" }));
+  };
+  const handlePriceAlert = () => {
+    if (!user) {
+      toast({ title: t("loginRequired", "Login Required"), description: t("loginToSetPriceAlert", "Please log in to set a price alert"), variant: "destructive" });
+      return;
+    }
+    setIsPriceAlertModalOpen(true);
+  };
+  const handleOpenVendorPopup = (vendorData: Vendor, priceData: ProductPrice) => { setPopupContent({ vendor: vendorData, priceInfo: priceData }); setIsVendorPopupVisible(true); };
+  const handleCloseVendorPopup = () => { setIsVendorPopupVisible(false); setPopupContent(null); };
 
   if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
-  if (!product) { return <NotFound />; } // This check handles product being null
+  if (!product) { return <NotFound />; }
 
-  // If product exists, we can safely use its properties below
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
@@ -164,8 +207,7 @@ const ProductDetail = () => {
           <aside className="item-aside stick-to-bottom">
             <div className="item__image-wrapper">
               <div className="item__image">
-                {/* Pass currentImage which is initialized from product.image */}
-                <ProductImageGallery mainImage={currentImage} images={product.images} title={product.title} onImageChange={handleImageChange} />
+                <ProductImageGallery mainImage={currentImage || product.image} images={product.images} title={product.title} onImageChange={handleImageChange} />
               </div>
             </div>
             <div className="item-actions-buttons">
@@ -181,9 +223,9 @@ const ProductDetail = () => {
             <div className="item-header__wrapper">
               <div className="item-header">
                 <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                {bestPrice && ( // Check bestPrice instead of bestPriceInfo which was removed
+                {bestPrice && (
                     <a href="#item-prices" className="item-price-button">
-                        <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{bestPrice.price.toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
+                        <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{(bestPrice.discountPrice ?? bestPrice.price).toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
                         <svg width="17" height="20"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
                     </a>
                 )}
@@ -223,7 +265,7 @@ const ProductDetail = () => {
                   <TopVendorAd productId={product.id} />
                   <div className="prices" data-merchants={product.prices.length}>
                       {product.prices
-                          .sort((a, b) => a.price - b.price)
+                          .sort((a, b) => (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price)) // Sort by effective price
                           .map((priceInfo) => (
                               <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={handleOpenVendorPopup} />
                       ))}
@@ -254,7 +296,7 @@ const ProductDetail = () => {
               </div>
 
               {isPriceAlertModalOpen && bestPrice && (
-                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPrice.price} />
+                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPrice.discountPrice ?? bestPrice.price} />
               )}
 
               {isVendorPopupVisible && popupContent && (
