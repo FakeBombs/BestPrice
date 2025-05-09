@@ -7,6 +7,7 @@ import NotFound from '@/pages/NotFound';
 
 // --- Reusable definitions ---
 const giftRecipientCategories = [
+    { slug: 'adults', titleKey: 'giftsForAdults', nameKey: 'recipient_group_adults', imgBase: 'adult-both' },
     { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'adult-m' },
     { slug: 'women', titleKey: 'giftsForWomen', nameKey: 'women', imgBase: 'adult-f' },
     { slug: 'teens', titleKey: 'giftsForTeens', nameKey: 'teens', imgBase: 'teens' },
@@ -16,12 +17,10 @@ const giftRecipientCategories = [
     { slug: 'babies', titleKey: 'giftsForBabies', nameKey: 'babies', imgBase: 'babies' },
 ];
 
-// Defines specific images for gender selections within a recipient category,
-// and the 'all' image for that category when gender is not further specified.
 const genderImages: Record<string, Record<string, string>> = {
-    adults: { all: 'adult-both'}, // For the "All" option when current group is adults
-    men:    { all: 'adult-m' },   // Default/All for men page
-    women:  { all: 'adult-f' },   // Default/All for women page
+    adults: { all: 'adult-both'},
+    men:    { all: 'adult-m' },
+    women:  { all: 'adult-f' },
     teens: { boys: 'teen-m', girls: 'teen-f', all: 'teens' },
     'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids-9-11' },
     'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids-6-8' },
@@ -30,7 +29,7 @@ const genderImages: Record<string, Record<string, string>> = {
 };
 
 const mainRecipientGroups = [
-    { slug: 'adults', nameKey: 'recipient_group_adults', childrenSlugs: ['men', 'women'], defaultChild: 'men'},
+    { slug: 'adults', nameKey: 'recipient_group_adults', childrenSlugs: ['adults', 'men', 'women'], defaultChild: 'adults'},
     { slug: 'teens', nameKey: 'recipient_group_teens', childrenSlugs: ['teens'], defaultChild: 'teens'},
     { slug: 'kids9-11', nameKey: 'recipient_group_kids9_11', childrenSlugs: ['kids-9-11'], defaultChild: 'kids-9-11'},
     { slug: 'kids6-8', nameKey: 'recipient_group_kids6_8', childrenSlugs: ['kids-6-8'], defaultChild: 'kids-6-8'},
@@ -96,6 +95,7 @@ const GiftsFiltered: React.FC = () => {
 
     const currentRecipientGroupSlug = useMemo(() => {
         if (!recipientInfo) return '';
+        if (['adults', 'men', 'women'].includes(recipientInfo.slug)) return 'adults';
         const group = mainRecipientGroups.find(g => g.childrenSlugs.includes(recipientInfo.slug));
         return group ? group.slug : recipientInfo.slug;
     }, [recipientInfo]);
@@ -103,9 +103,10 @@ const GiftsFiltered: React.FC = () => {
     const [selectedGender, setSelectedGender] = useState<string>(() => {
         const genderParam = searchParams.get('gender');
         if (genderParam) return genderParam;
-        if (recipientSlug === 'men' || recipientSlug === 'women') return recipientSlug;
+        if (recipientSlug === 'men' || recipientSlug === 'women' || recipientSlug === 'adults') return recipientSlug; // 'adults' implies 'all' genders for adults
         return 'all';
     });
+
     const [headerImage, setHeaderImage] = useState<string>('');
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
@@ -113,67 +114,80 @@ const GiftsFiltered: React.FC = () => {
 
     useEffect(() => {
         const genderParam = searchParams.get('gender');
-        let newSelectedGender = 'all'; // Default
+        let newSelectedGender = 'all';
         if (genderParam) {
             newSelectedGender = genderParam;
         } else if (recipientSlug === 'men' || recipientSlug === 'women') {
-            newSelectedGender = recipientSlug; // If on /men or /women, this is the implicit gender
+            newSelectedGender = recipientSlug;
+        } else if (recipientSlug === 'adults') {
+            newSelectedGender = 'all'; // Default for /adults is all genders
         }
-        // Only update state if it's different, to avoid potential loops if it was already correct
         if (selectedGender !== newSelectedGender) {
             setSelectedGender(newSelectedGender);
         }
-    }, [recipientSlug, searchParams]); // Removed selectedGender from deps here, rely on initialization
+    }, [recipientSlug, searchParams]);
+
 
     useEffect(() => {
         if (!recipientInfo) {
-            setHeaderImage('/dist/images/placeholder.webp');
-            return;
+            setHeaderImage('/dist/images/placeholder.webp'); return;
         }
-
-        let imageBaseToUse = recipientInfo.imgBase; // Default to the specific recipient's image
-
-        if (selectedGender && selectedGender !== 'all') {
-            if (selectedGender === 'men') imageBaseToUse = 'men'; // Specific for men page selected
-            else if (selectedGender === 'women') imageBaseToUse = 'women'; // Specific for women page selected
-            else if (genderImages[recipientInfo.slug] && genderImages[recipientInfo.slug][selectedGender]) {
-                // For "boys" or "girls" in categories like teens, kids, etc.
-                imageBaseToUse = genderImages[recipientInfo.slug][selectedGender];
+        let imageBaseToUse = recipientInfo.imgBase;
+        if (selectedGender === 'all') {
+            if (recipientSlug === 'men') imageBaseToUse = genderImages.men?.all || recipientInfo.imgBase;
+            else if (recipientSlug === 'women') imageBaseToUse = genderImages.women?.all || recipientInfo.imgBase;
+            else if (recipientSlug === 'adults') imageBaseToUse = genderImages.adults?.all || recipientInfo.imgBase;
+            else if (genderImages[recipientInfo.slug] && genderImages[recipientInfo.slug]['all']) {
+                imageBaseToUse = genderImages[recipientInfo.slug]['all'];
             }
-            // If selectedGender is 'boys'/'girls' but no specific image in genderImages, it defaults to recipientInfo.imgBase
-        } else { // selectedGender is 'all'
-            // Determine the group the current recipient belongs to for "all" image
-            const groupData = mainRecipientGroups.find(g => g.childrenSlugs.includes(recipientInfo.slug));
-            const groupSlugForImage = groupData ? groupData.slug : recipientInfo.slug;
-
-            if (genderImages[groupSlugForImage] && genderImages[groupSlugForImage]['all']) {
-                imageBaseToUse = genderImages[groupSlugForImage]['all'];
-            }
-            // If no specific 'all' image for the group, it defaults to recipientInfo.imgBase
+        } else if (selectedGender === 'men') {
+            imageBaseToUse = genderImages.men?.all || 'adult-m';
+        } else if (selectedGender === 'women') {
+            imageBaseToUse = genderImages.women?.all || 'adult-f';
+        } else if (genderImages[recipientInfo.slug] && genderImages[recipientInfo.slug][selectedGender]) {
+            imageBaseToUse = genderImages[recipientInfo.slug][selectedGender];
         }
         setHeaderImage(`/dist/images/${imageBaseToUse}.webp`);
-
     }, [recipientInfo, selectedGender]);
 
     const filteredAndSortedProducts = useMemo(() => {
         if (!recipientSlug) return [];
-        let filtered = allMockProducts.filter(p =>
-            p.giftAttributes?.recipient?.includes(recipientSlug)
-        );
+        let baseProducts = allMockProducts;
+        let filtered: Product[];
+
+        if (recipientSlug === 'adults') {
+            filtered = baseProducts.filter(p =>
+                p.giftAttributes?.recipient?.includes('men') ||
+                p.giftAttributes?.recipient?.includes('women')
+            );
+            // For /gifts/adults, selectedGender 'men' or 'women' will further filter
+            if (selectedGender === 'men') {
+                filtered = filtered.filter(p => p.giftAttributes?.recipient?.includes('men'));
+            } else if (selectedGender === 'women') {
+                filtered = filtered.filter(p => p.giftAttributes?.recipient?.includes('women'));
+            }
+            // If selectedGender is 'all', no further gender filtering needed for adults
+        } else {
+            filtered = baseProducts.filter(p =>
+                p.giftAttributes?.recipient?.includes(recipientSlug)
+            );
+            // Apply genderTarget for non-adult categories (teens, kids, etc.)
+            if ((selectedGender === 'boys' || selectedGender === 'girls') &&
+                !['men', 'women', 'adults'].includes(recipientSlug)) {
+                const targetGender = selectedGender === 'boys' ? 'male' : 'female';
+                filtered = filtered.filter(p =>
+                    p.giftAttributes?.genderTarget === targetGender ||
+                    !p.giftAttributes?.genderTarget ||
+                    p.giftAttributes?.genderTarget === 'unisex'
+                );
+            }
+        }
+
         if (activeInterestSlugs.length > 0) {
             filtered = filtered.filter(p =>
                 activeInterestSlugs.every(interest =>
                     p.giftAttributes?.interest?.includes(interest)
                 )
-            );
-        }
-        if ((selectedGender === 'boys' || selectedGender === 'girls') &&
-            recipientSlug && !['men', 'women'].includes(recipientSlug)) {
-            const targetGender = selectedGender === 'boys' ? 'male' : 'female';
-            filtered = filtered.filter(p =>
-                p.giftAttributes?.genderTarget === targetGender ||
-                !p.giftAttributes?.genderTarget ||
-                p.giftAttributes?.genderTarget === 'unisex'
             );
         }
         if (showDealsOnly) {
@@ -203,12 +217,13 @@ const GiftsFiltered: React.FC = () => {
         if (showDealsOnly) params.set('deals', '1');
         if (selectedPriceMax) params.set('price_max', selectedPriceMax);
         if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy);
-        if ((selectedGender === 'boys' || selectedGender === 'girls') && recipientSlug && !['men', 'women'].includes(recipientSlug)) {
+
+        if ((selectedGender === 'boys' || selectedGender === 'girls') &&
+            recipientSlug && !['men', 'women', 'adults'].includes(recipientSlug)) {
             params.set('gender', selectedGender);
-        } else if (selectedGender === 'all' && recipientSlug && !['men', 'women'].includes(recipientSlug)){
-            // If 'all' is selected for a sub-filterable category, remove gender param
-            // (This is implicit, as we don't set it above for 'all')
         }
+        // No gender param for 'all' on sub-filterable categories, or for men/women/adults paths
+
         const currentParamsString = searchParams.toString();
         const newParamsString = params.toString();
         if (newParamsString !== currentParamsString) {
@@ -221,34 +236,42 @@ const GiftsFiltered: React.FC = () => {
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSortBy(event.target.value);
 
     const handleRecipientGroupChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedGroupValue = event.target.value;
-        const groupInfo = mainRecipientGroups.find(g => g.slug === selectedGroupValue);
+        const selectedGroupSlug = event.target.value;
+        const groupInfo = mainRecipientGroups.find(g => g.slug === selectedGroupSlug);
         if (groupInfo) {
             const targetSlug = groupInfo.defaultChild || groupInfo.childrenSlugs[0];
             const existingParams = new URLSearchParams(searchParams);
-            existingParams.delete('gender');
-            let currentPath = `/gifts/${targetSlug}`;
-            if (activeInterestSlugs.length > 0 && combinedSlug?.startsWith(targetSlug + '-')) {
-                 currentPath += `-${activeInterestSlugs.join('-')}`;
-            }
-            navigate(`${currentPath}${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
+            existingParams.delete('gender'); // Clear gender param
+            // For interests, decide if they should persist. For now, clear them on main group change.
+            navigate(`/gifts/${targetSlug}${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
         }
     };
 
     const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const newGenderValue = event.target.value;
+        const newGenderValue = event.target.value; // 'all', 'men', 'women', 'boys', 'girls'
         const currentParams = new URLSearchParams(searchParams);
+        currentParams.delete('gender'); // Always remove old gender before deciding new action
+
+        let newPath = `/gifts/${recipientSlug}`;
+        if (activeInterestSlugs.length > 0) {
+            newPath += `-${activeInterestSlugs.join('-')}`;
+        }
 
         if (newGenderValue === 'men') {
-            currentParams.delete('gender');
-            navigate(`/gifts/men${currentParams.toString() ? `?${currentParams.toString()}` : ''}`);
+            newPath = `/gifts/men${activeInterestSlugs.length > 0 ? `-${activeInterestSlugs.join('-')}` : ''}`;
         } else if (newGenderValue === 'women') {
-            currentParams.delete('gender');
-            navigate(`/gifts/women${currentParams.toString() ? `?${currentParams.toString()}` : ''}`);
+            newPath = `/gifts/women${activeInterestSlugs.length > 0 ? `-${activeInterestSlugs.join('-')}` : ''}`;
+        } else if (newGenderValue === 'all' && currentRecipientGroupSlug === 'adults') {
+            // If "All" is selected for Adults group, navigate to /gifts/adults
+            newPath = `/gifts/adults${activeInterestSlugs.length > 0 ? `-${activeInterestSlugs.join('-')}` : ''}`;
         } else {
-             // For 'all', 'boys', 'girls' within a non-men/women category like 'teens'
-             setSelectedGender(newGenderValue); // This will trigger the useEffect for URL param update
+            // For 'boys', 'girls', or 'all' within a non-adult category like 'teens'
+            // We set the state, and useEffect will handle the URL parameter
+            setSelectedGender(newGenderValue);
+            // No immediate navigation here, URL param will be updated by useEffect
+            return; // Exit to let useEffect handle URL
         }
+        navigate(`${newPath}${currentParams.toString() ? `?${currentParams.toString()}` : ''}`);
     };
 
     const handleInterestToggle = (interestToToggle: string) => {
@@ -264,7 +287,12 @@ const GiftsFiltered: React.FC = () => {
         if (sortedNewInterests.length > 0) {
             newPath += `-${sortedNewInterests.join('-')}`;
         }
-        navigate(`${newPath}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+        const currentParams = new URLSearchParams(searchParams);
+        // Preserve gender param if it's 'boys' or 'girls'
+        if (selectedGender !== 'boys' && selectedGender !== 'girls') {
+            currentParams.delete('gender');
+        }
+        navigate(`${newPath}${currentParams.toString() ? `?${currentParams.toString()}` : ''}`);
     };
 
     const currentDealCount = useMemo(() => {
@@ -313,9 +341,12 @@ const GiftsFiltered: React.FC = () => {
 
     const availableInterests = useMemo(() => {
         const interests = new Set<string>();
-        const baseRecipientProducts = allMockProducts.filter(p =>
-            p.giftAttributes?.recipient?.includes(recipientSlug!)
-        );
+        const baseRecipientProducts = allMockProducts.filter(p => {
+            if (recipientSlug === 'adults') {
+                return p.giftAttributes?.recipient?.includes('men') || p.giftAttributes?.recipient?.includes('women');
+            }
+            return p.giftAttributes?.recipient?.includes(recipientSlug!);
+        });
         baseRecipientProducts.forEach(p => {
             p.giftAttributes?.interest?.forEach(interest => interests.add(interest));
         });
@@ -324,10 +355,9 @@ const GiftsFiltered: React.FC = () => {
 
     const genderOptions = useMemo(() => {
         if (!recipientInfo) return [{ value: 'all', labelKey: 'gender_all' }];
-        // If the current page is already specific (men/women), the "All" refers to "All Adults"
         if (currentRecipientGroupSlug === 'adults') {
             return [
-                { value: 'all', labelKey: 'gender_all' }, // Represents "All Adults"
+                { value: 'all', labelKey: 'gender_all' }, // "All" Adults
                 { value: 'men', labelKey: 'gender_men' },
                 { value: 'women', labelKey: 'gender_women' },
             ];
@@ -338,12 +368,12 @@ const GiftsFiltered: React.FC = () => {
                 { value: 'girls', labelKey: 'gender_girls_target' },
             ];
         }
-        return [{ value: 'all', labelKey: 'gender_all' }]; // Default fallback
+        return [{ value: 'all', labelKey: 'gender_all' }];
     }, [recipientInfo, currentRecipientGroupSlug]);
 
     const translatedRecipientName = t(recipientInfo.nameKey);
     const lowercaseRecipientName = translatedRecipientName.toLowerCase();
-    const h1PageTitle = t('giftsForRecipientTitle', { recipient: lowercaseRecipientName });
+    const h1PageTitle = t(recipientInfo.titleKey, { recipient: lowercaseRecipientName }); // Use titleKey for H1
 
     return (
         <div id="gift-finder" className="gift-finder">
@@ -351,7 +381,7 @@ const GiftsFiltered: React.FC = () => {
                 <div className="sc-dcKlJK cquxZx root">
                     {renderBreadcrumbs()}
                     <div className="bjpNBM flex items-center w-full mt-4">
-                        <img alt={h1PageTitle} width="92" height="92" src={headerImage || `/dist/images/${recipientInfo.imgBase}.webp`} loading="eager" className="rounded-full mr-4"/>
+                        <img alt={h1PageTitle} width="92" height="92" src={headerImage || `/dist/images/placeholder.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
                             <h1 className="sc-jPkiSJ cFyVWT">{(() => { const w = h1PageTitle.split(' '); if (w.length <= 1) return h1PageTitle; const fW = w[0]; const lR = w.slice(1).join(' '); return `${fW} ${lR.toLowerCase()}`; })()}</h1>
                             <div className="sc-dHKmnV kIiJVY">
@@ -382,11 +412,7 @@ const GiftsFiltered: React.FC = () => {
                                     const interestSlugified = interest.toLowerCase().replace(/\s+/g, '-');
                                     const isActive = activeInterestSlugs.includes(interestSlugified);
                                     return (
-                                        <button
-                                            key={interestSlugified}
-                                            onClick={() => handleInterestToggle(interestSlugified)}
-                                            className={`sc-kThouk lmQiLZ pressable ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}
-                                        >
+                                        <button key={interestSlugified} onClick={() => handleInterestToggle(interestSlugified)} className={`sc-kThouk lmQiLZ pressable ${isActive ? 'bg-blue-500 text-white font-bold' : 'hover:bg-gray-100'}`}>
                                             {t(`interest_${interest}`, interest)}
                                         </button>
                                     );
@@ -401,10 +427,7 @@ const GiftsFiltered: React.FC = () => {
                     )}
 
                     <p haspreset={h1PageTitle} className="sc-dACwDz dsWkau">
-                        {t('gifts_total_count', {
-                            count: filteredAndSortedProducts.length,
-                            recipient: lowercaseRecipientName
-                        })}
+                        {t('gifts_total_count', { count: filteredAndSortedProducts.length, recipient: lowercaseRecipientName })}
                     </p>
                 </div>
             </div>
