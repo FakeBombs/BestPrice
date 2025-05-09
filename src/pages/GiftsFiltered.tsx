@@ -204,7 +204,7 @@ const GiftsFiltered: React.FC = () => {
                     {/* Optional: Interest Filters - Implementation needed */}
                     {/* Map availableInterests to clickable elements */}
                     {availableInterests.length > 0 && (
-                        <div className="sc-cXawGu bBKEWZ mt-4"> {/* Added margin */}
+                        <div className="sc-dTdQuR jfGtLT">
                             <div className="sc-elFkmj gmqSWM">
                                 {availableInterests.map(interest => (
                                     // TODO: Implement interest filtering logic if needed
