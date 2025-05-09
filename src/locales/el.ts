@@ -814,6 +814,57 @@ const elTranslations = {
   gender_boys_target: 'Αγόρια', // Specifically for 'boys' filter option
   gender_girls_target: 'Κορίτσια',// Specifically for 'girls' filter option
 
+  // For GiftsFiltered.tsx Interest Buttons/Links & Count Phrase
+  // You will need one for each unique interest slug that can appear in the URL.
+  // Example interest keys (replace 'tech', 'books', etc. with your actual interest slugs/values):
+  interest_tech: 'Τεχνολογία',
+  interest_books: 'Βιβλία',
+  interest_gaming: 'Gaming',
+  interest_fashion: 'Μόδα',
+  interest_outdoors: 'Εξωτερικές Δραστηριότητες',
+  interest_home: 'Σπίτι',
+  interest_travel: 'Ταξίδια',
+  interest_art: 'Τέχνη',
+  interest_creative: 'Δημιουργικότητα',
+  interest_office: 'Γραφείο',
+  interest_coffee: 'Καφές',
+  interest_fitness: 'Fitness',
+  interest_eco: 'Οικολογικά',
+  interest_cars: 'Αυτοκίνητα',
+  interest_gadgets: 'Gadgets',
+  interest_photography: 'Φωτογραφία',
+  interest_music: 'Μουσική',
+  interest_movies: 'Ταινίες',
+  interest_cooking: 'Μαγειρική',
+  interest_bbq: 'BBQ',
+  interest_decor: 'Διακόσμηση',
+  interest_kitchen: 'Κουζίνα',
+  interest_smarthome: 'Έξυπνο Σπίτι',
+  interest_health: 'Υγεία',
+  interest_boardgames: 'Επιτραπέζια',
+  interest_strategy: 'Στρατηγική',
+  interest_cardgames: 'Παιχνίδια με Κάρτες',
+  interest_family: 'Οικογένεια',
+  interest_stocking_stuffer: 'Μικροδωράκια', // For "stocking-stuffer" occasion if used as interest
+  interest_learning: 'Μάθηση',
+  interest_work: 'Εργασία',
+  interest_design: 'Design',
+  interest_running: 'Τρέξιμο',
+  interest_sports: 'Αθλητισμός',
+  interest_watches: 'Ρολόγια',
+  interest_accessories: 'Αξεσουάρ',
+  interest_automatic: 'Αυτόματα', // e.g., for watches
+  interest_perfume: 'Άρωμα',
+  interest_luxury: 'Πολυτέλεια',
+  interest_beauty: 'Ομορφιά',
+  interest_oralcare: 'Στοματική Φροντίδα',
+  interest_safety: 'Ασφάλεια',
+  interest_baby: 'Βρεφικά',
+  // Add any other specific interests from your product.giftAttributes.interest arrays
+
+  clear_all_interest_filters: 'Καθαρισμός Φίλτρων Ενδιαφέροντος',
+  for_interest: 'για', // Used in "X gifts for [recipient] for [interest]"
+
 
   // Popular Search Queries
   sitemap_popular_apple: 'Apple',
