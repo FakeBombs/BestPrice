@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'; // Added useCallback
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, Vendor, vendors, PaymentMethod, OpeningHours, Brand, categories, mainCategories, ProductPrice } from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
@@ -9,7 +10,6 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import { VendorPriceCard } from '@/components/ProductVendors';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
