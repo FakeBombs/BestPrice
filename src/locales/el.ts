@@ -771,6 +771,7 @@ const elTranslations = {
   gifts_total_count_other: '{{count}} επιλεγμένα δώρα για {{recipient}}',
   recipient_everyone: 'όλους', // **** ADDED THIS LINE ****
   // --- Recipient Titles ---
+  giftsForAdults: 'Δώρα για ενήλικες'
   giftsForMen: 'Δώρα για άνδρες',
   giftsForWomen: 'Δώρα για γυναίκες',
   giftsForTeens: 'Δώρα για έφηβους',
