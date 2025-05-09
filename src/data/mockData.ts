@@ -24,17 +24,6 @@ export interface ProductVariant {
   prices: ProductPrice[];
 }
 
-// Brand Interface
-export interface Brand {
-  id: number;
-  name: string;
-  logo: string;
-  slug?: string;
-  officialWebsite?: string;
-  description?: string;
-  countryOfOrigin?: string;
-}
-
 // Product Interface with Gift Attributes
 export interface Product {
   id: number;
