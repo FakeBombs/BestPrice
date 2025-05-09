@@ -9,11 +9,11 @@ import NotFound from '@/pages/NotFound';
 const giftRecipientCategories = [
     { slug: 'men', titleKey: 'giftsForMen', nameKey: 'men', imgBase: 'adult-m' },
     { slug: 'women', titleKey: 'giftsForWomen', nameKey: 'women', imgBase: 'adult-f' },
-    { slug: 'teens', titleKey: 'giftsForTeens', nameKey: 'teens', imgBase: 'teen-both' },
-    { slug: 'kids-9-11', titleKey: 'giftsForKids9_11', nameKey: 'kids9_11', imgBase: 'kid0911-both' },
-    { slug: 'kids-6-8', titleKey: 'giftsForKids6_8', nameKey: 'kids6_8', imgBase: 'kid0608-both' },
-    { slug: 'toddlers', titleKey: 'giftsForToddlers', nameKey: 'toddlers', imgBase: 'kid0305-both' },
-    { slug: 'babies', titleKey: 'giftsForBabies', nameKey: 'babies', imgBase: 'baby-both' },
+    { slug: 'teens', titleKey: 'giftsForTeens', nameKey: 'teens', imgBase: 'teens' },
+    { slug: 'kids-9-11', titleKey: 'giftsForKids9_11', nameKey: 'kids9_11', imgBase: 'kids-9-11' },
+    { slug: 'kids-6-8', titleKey: 'giftsForKids6_8', nameKey: 'kids6_8', imgBase: 'kids-6-8' },
+    { slug: 'toddlers', titleKey: 'giftsForToddlers', nameKey: 'toddlers', imgBase: 'toddlers' },
+    { slug: 'babies', titleKey: 'giftsForBabies', nameKey: 'babies', imgBase: 'babies' },
 ];
 
 // Defines specific images for gender selections within a recipient category,
@@ -23,8 +23,8 @@ const genderImages: Record<string, Record<string, string>> = {
     men:    { all: 'adult-m' },   // Default/All for men page
     women:  { all: 'adult-f' },   // Default/All for women page
     teens: { boys: 'teen-m', girls: 'teen-f', all: 'teens' },
-    'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids9_11' },
-    'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids6_8' },
+    'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids-9-11' },
+    'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids-6-8' },
     toddlers: { boys: 'kid0305-m', girls: 'kid0305-f', all: 'toddlers' },
     babies: { boys: 'baby-m', girls: 'baby-f', all: 'babies' },
 };
