@@ -1,4 +1,4 @@
-import { Product } from '@/data/mockData';
+import { Product } from '@/data/productData';
 
 interface ProductHighlightsProps {
   specifications: Record<string, string>;
