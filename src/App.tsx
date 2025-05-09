@@ -39,8 +39,8 @@ function App() {
           <Route path="item/:productId/:productSlug" element={<ProductDetail />} />
           <Route path="brands" element={<Brands />} />
           <Route path="b/:brandId/:brandName" element={<BrandPage />} />
-          <Route path="gifts" element={<Gifts />} />
-          <Route path="gifts/:recipientSlug" element={<GiftsFiltered />} />
+          <Route path="gifts" element={<Gifts />} /> 
+          <Route path="gifts/:combinedSlug" element={<GiftsFiltered />} /> 
           <Route path="m" element={<Stores />} />
           <Route path="m/:vendorId/:vendorName" element={<VendorPage />} />
           <Route path="deals" element={<Deals />} />
