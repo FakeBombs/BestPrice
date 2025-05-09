@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProductSpecTable from '@/components/ProductSpecTable';
 import UserReviews from '@/components/UserReviews';
-import { Product } from '@/data/mockData';
+import { Product } from '@/data/productData';
 
 interface ProductTabsSectionProps {
   product: Product;
