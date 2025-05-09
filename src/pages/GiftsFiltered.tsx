@@ -72,10 +72,36 @@ const GiftsFiltered: React.FC = () => {
         return group ? group.slug : recipientInfo.slug;
     }, [recipientInfo]);
 
-    const [selectedGender, setSelectedGender] = useState<string>(() => searchParams.get('gender') || 'all');
+    const [selectedGender, setSelectedGender] = useState<string>(() => {
+        const genderParam = searchParams.get('gender');
+        if (genderParam) return genderParam;
+        if (recipientSlug === 'men') return 'men';
+        if (recipientSlug === 'women') return 'women';
+        return 'all';
+    });
+
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
     const [sortBy, setSortBy] = useState(() => searchParams.get('sort') || 'id_desc');
+
+    useEffect(() => {
+        const genderParam = searchParams.get('gender');
+        if (!genderParam) {
+            if (recipientSlug === 'men' && selectedGender !== 'men') {
+                setSelectedGender('men');
+            } else if (recipientSlug === 'women' && selectedGender !== 'women') {
+                setSelectedGender('women');
+            } else if (recipientSlug && !['men', 'women'].includes(recipientSlug) && (selectedGender === 'men' || selectedGender === 'women')) {
+                // If navigated to a non-men/women page (e.g. /teens) but gender was 'men'/'women', reset to 'all'
+                setSelectedGender('all');
+            }
+        } else {
+            // If URL has gender param, ensure state matches
+            if (selectedGender !== genderParam) {
+                setSelectedGender(genderParam);
+            }
+        }
+    }, [recipientSlug, searchParams, selectedGender]); // Added selectedGender to deps
 
     const filteredAndSortedProducts = useMemo(() => {
         if (!recipientSlug) return [];
@@ -128,7 +154,7 @@ const GiftsFiltered: React.FC = () => {
         if (showDealsOnly) params.set('deals', '1');
         if (selectedPriceMax) params.set('price_max', selectedPriceMax);
         if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy);
-        if (selectedGender && selectedGender !== 'all' && recipientSlug && !['men', 'women'].includes(recipientSlug)) {
+        if ((selectedGender === 'boys' || selectedGender === 'girls') && recipientSlug && !['men', 'women'].includes(recipientSlug)) {
             params.set('gender', selectedGender);
         }
         const currentParamsString = searchParams.toString();
@@ -155,7 +181,6 @@ const GiftsFiltered: React.FC = () => {
 
     const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newGenderValue = event.target.value;
-        setSelectedGender(newGenderValue);
         if (newGenderValue === 'men' && recipientSlug !== 'men') {
             const existingParams = new URLSearchParams(searchParams);
             existingParams.delete('gender');
@@ -164,7 +189,25 @@ const GiftsFiltered: React.FC = () => {
             const existingParams = new URLSearchParams(searchParams);
             existingParams.delete('gender');
             navigate(`/gifts/women${existingParams.toString() ? `?${existingParams.toString()}` : ''}`);
+        } else {
+             setSelectedGender(newGenderValue);
         }
+    };
+
+    const handleInterestToggle = (interestToToggle: string) => {
+        if (!recipientSlug) return;
+        const newInterestSlugs = new Set(activeInterestSlugs);
+        if (newInterestSlugs.has(interestToToggle)) {
+            newInterestSlugs.delete(interestToToggle);
+        } else {
+            newInterestSlugs.add(interestToToggle);
+        }
+        const sortedNewInterests = Array.from(newInterestSlugs).sort();
+        let newPath = `/gifts/${recipientSlug}`;
+        if (sortedNewInterests.length > 0) {
+            newPath += `-${sortedNewInterests.join('-')}`;
+        }
+        navigate(`${newPath}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
     };
 
     const currentDealCount = useMemo(() => {
