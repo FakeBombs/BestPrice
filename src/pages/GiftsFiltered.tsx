@@ -125,6 +125,7 @@ const GiftsFiltered: React.FC = () => {
     const [showDealsOnly, setShowDealsOnly] = useState(() => searchParams.get('deals') === '1');
     const [selectedPriceMax, setSelectedPriceMax] = useState(() => searchParams.get('price_max') || '');
     const [sortBy, setSortBy] = useState(() => searchParams.get('sort') || 'id_desc');
+    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length); 
 
     useEffect(() => {
         if (!recipientInfo) {
@@ -205,6 +206,45 @@ const GiftsFiltered: React.FC = () => {
         }
         return sorted;
     }, [baseRecipientSlug, genderSlugFromPath, activeInterestSlugs, showDealsOnly, selectedPriceMax, sortBy]);
+
+    useEffect(() => {
+        const actualCount = filteredAndSortedProducts.length;
+        // Only animate if the count actually changes
+        if (animatedProductCount === actualCount) {
+            return;
+        }
+
+        let startTimestamp: number | null = null;
+        const duration = 500; // Animation duration in milliseconds (e.g., 0.5 seconds)
+        const startCount = animatedProductCount; // The count we are animating from
+
+        const step = (timestamp: number) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            
+            // Calculate the current count in the animation
+            // This creates a linear interpolation. You can use easing functions for more complex effects.
+            const currentDisplayCount = Math.round(startCount + (actualCount - startCount) * progress);
+            
+            setAnimatedProductCount(currentDisplayCount);
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                setAnimatedProductCount(actualCount); // Ensure it ends on the exact final count
+            }
+        };
+
+        requestAnimationFrame(step);
+
+        // Cleanup function in case the component unmounts or dependencies change mid-animation
+        return () => {
+            // If you were using setTimeout, you'd clear it here.
+            // For requestAnimationFrame, it stops naturally when progress >= 1.
+            // But it's good practice to ensure the final count is set if unmounting.
+            setAnimatedProductCount(actualCount);
+        };
+    }, [filteredAndSortedProducts.length]);
 
      useEffect(() => {
         const params = new URLSearchParams();
@@ -448,14 +488,13 @@ const GiftsFiltered: React.FC = () => {
                     )}
 
                     <p haspreset={h1PageTitle} className="sc-dACwDz dsWkau">
-                        {t('gifts_total_count', { // Base key 'gifts_total_count'
-                            count: filteredAndSortedProducts.length,
+                        {t('gifts_total_count', {
+                            count: animatedProductCount, // Use the animated count here
                             recipient: (() => {
-                                // Define all known prefixes. Order might matter if one is a substring of another.
-                                // It's often good to have the most specific ones first, or ensure they are distinct enough.
+                                // ... (your existing logic for recipient text) ...
                                 const prefixes = [
                                     { prefixKey: 'giftsForMaleTeens', text: t('giftsForMaleTeens', { recipient: '' }).trim() },
-                                    { prefixKey: 'giftsFemaleTeens', text: t('giftsFemaleTeens', { recipient: '' }).trim() }, // Assuming giftsFemaleTeens is the correct key
+                                    { prefixKey: 'giftsFemaleTeens', text: t('giftsFemaleTeens', { recipient: '' }).trim() },
                                     { prefixKey: 'giftsForMaleKids9_11', text: t('giftsForMaleKids9_11', { recipient: '' }).trim() },
                                     { prefixKey: 'giftsFemaleKids9_11', text: t('giftsFemaleKids9_11', { recipient: '' }).trim() },
                                     { prefixKey: 'giftsForMaleKids6_8', text: t('giftsForMaleKids6_8', { recipient: '' }).trim() },
@@ -472,30 +511,19 @@ const GiftsFiltered: React.FC = () => {
                                     { prefixKey: 'giftsForKids6_8', text: t('giftsForKids6_8', { recipient: '' }).trim() },
                                     { prefixKey: 'giftsForToddlers', text: t('giftsForToddlers', { recipient: '' }).trim() },
                                     { prefixKey: 'giftsForBabies', text: t('giftsForBabies', { recipient: '' }).trim() },
-                                    // Add the most generic one last as a fallback prefix
                                     { prefixKey: 'giftsForRecipientTitle', text: t('giftsForRecipientTitle', { recipient: '' }).trim() }
                                 ];
-
-                                // Sort prefixes by length descending to match more specific ones first
-                                // This handles cases where one prefix might be a substring of another
-                                // e.g. "Gifts for" vs "Gifts for Teen"
-                                const sortedPrefixes = prefixes.filter(p => p.text.length > 0) // Only consider non-empty prefixes
-                                         .sort((a, b) => b.text.length - a.text.length);
-
+                                const sortedPrefixes = prefixes.filter(p => p.text.length > 0)
+                                                             .sort((a, b) => b.text.length - a.text.length);
                                 for (const p of sortedPrefixes) {
                                     if (h1PageTitle.startsWith(p.text) && p.text.length < h1PageTitle.length) {
-                                        // Ensure there's actually something after the prefix
                                         const description = h1PageTitle.substring(p.text.length).trim();
-                                        if (description) { // Make sure we extracted something meaningful
+                                        if (description) {
                                             return description.toLowerCase();
                                         }
                                     }
                                 }
-            
-                                // Fallback if no known prefix matched properly or only the prefix was the title
-                                // This uses the countRecipientName which should be just the recipient part already
-                                // (e.g., "άνδρες", "έφηβοι", "αγόρια έφηβοι")
-                                return countRecipientName; 
+                                return countRecipientName;
                             })()
                         })}
                     </p>
