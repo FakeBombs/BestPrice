@@ -298,6 +298,7 @@ const GiftsFiltered: React.FC = () => {
         pageTitleSegments.push(...activeInterestSlugs.map(slug => t(`interest_${slug}`, slug)));
     }
     const pageTitle = pageTitleSegments.join(' - ');
+    const h1PageTitle = t('giftsForRecipientTitle', { recipient: lowercaseRecipientName });
 
     return (
         <div id="gift-finder" className="gift-finder">
