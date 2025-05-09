@@ -23,9 +23,9 @@ const genderImages: Record<string, Record<string, string>> = {
     men:    { all: 'adult-m' },   // Default/All for men page
     women:  { all: 'adult-f' },   // Default/All for women page
     teens: { boys: 'teen-male', girls: 'teen-female', all: 'teens' },
-    'kids-9-11': { boys: 'kid0911-male', girls: 'kid0911-female', all: 'kids9_11' },
-    'kids-6-8': { boys: 'kid0608-male', girls: 'kid0608-female', all: 'kids6_8' },
-    toddlers: { boys: 'kid0305-male', girls: 'kid0305-female', all: 'toddlers' },
+    'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids9_11' },
+    'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids6_8' },
+    toddlers: { boys: 'kid0305-m', girls: 'kid0305-f', all: 'toddlers' },
     babies: { boys: 'baby-m', girls: 'baby-f', all: 'babies' },
 };
 
