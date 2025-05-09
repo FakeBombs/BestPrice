@@ -1,4 +1,3 @@
-
 import WalletPanel from "../components/wallet/WalletPanel";
 import AdManager from "../components/ads/AdManager";
 import ReferralPanel from "../components/referral/ReferralPanel";
