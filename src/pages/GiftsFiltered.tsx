@@ -29,12 +29,12 @@ const genderImages: Record<string, Record<string, string>> = {
 };
 
 const mainRecipientGroups = [
-    { slug: 'adults', nameKey: 'recipient_group_adults', childrenSlugs: ['adults', 'men', 'women'], defaultNavigationSlug: 'adults'}, // Changed defaultChild to defaultNavigationSlug
-    { slug: 'teens', nameKey: 'recipient_group_teens', childrenSlugs: ['teens'], defaultNavigationSlug: 'teens'},
-    { slug: 'kids9-11', nameKey: 'recipient_group_kids9_11', childrenSlugs: ['kids-9-11'], defaultNavigationSlug: 'kids-9-11'},
-    { slug: 'kids6-8', nameKey: 'recipient_group_kids6_8', childrenSlugs: ['kids-6-8'], defaultNavigationSlug: 'kids-6-8'},
-    { slug: 'toddlers', nameKey: 'recipient_group_toddlers', childrenSlugs: ['toddlers'], defaultNavigationSlug: 'toddlers'},
-    { slug: 'babies', nameKey: 'recipient_group_babies', childrenSlugs: ['babies'], defaultNavigationSlug: 'babies'},
+    { slug: 'adults', nameKey: 'recipient_group_adults', defaultNavigationSlug: 'adults'},
+    { slug: 'teens', nameKey: 'recipient_group_teens', defaultNavigationSlug: 'teens'},
+    { slug: 'kids9-11', nameKey: 'recipient_group_kids9_11', defaultNavigationSlug: 'kids-9-11'},
+    { slug: 'kids6-8', nameKey: 'recipient_group_kids6_8', defaultNavigationSlug: 'kids-6-8'},
+    { slug: 'toddlers', nameKey: 'recipient_group_toddlers', defaultNavigationSlug: 'toddlers'},
+    { slug: 'babies', nameKey: 'recipient_group_babies', defaultNavigationSlug: 'babies'},
 ];
 
 const GENDER_SUB_SLUGS = ['boys', 'girls'];
@@ -58,6 +58,7 @@ const getEffectiveLowestPrice = (product: Product, forSortDesc: boolean = false)
     if (pricesToConsider.length === 0) return forSortDesc ? 0 : Infinity;
     return Math.min(...pricesToConsider.map(pr => pr.discountPrice ?? pr.price));
 };
+// --- End Reusable definitions ---
 
 const GiftsFiltered: React.FC = () => {
     const { t, language } = useTranslation();
@@ -74,6 +75,7 @@ const GiftsFiltered: React.FC = () => {
         const sortedPrimarySlugs = [...primaryRecipientCategories]
             .map(cat => cat.slug)
             .sort((a, b) => b.length - a.length);
+
         for (const primarySlug of sortedPrimarySlugs) {
             if (tempCombinedSlug.startsWith(primarySlug)) {
                 foundBaseRecipientSlug = primarySlug;
@@ -84,7 +86,9 @@ const GiftsFiltered: React.FC = () => {
                 break;
             }
         }
+
         if (!foundBaseRecipientSlug) return { baseRecipientSlug: undefined, genderSlugFromPath: undefined, activeInterestSlugs: [] };
+
         if (!PRIMARY_GENDER_SLUGS.includes(foundBaseRecipientSlug) && foundBaseRecipientSlug !== 'adults') {
             const partsAfterBase = tempCombinedSlug.split('-');
             if (partsAfterBase.length > 0 && GENDER_SUB_SLUGS.includes(partsAfterBase[0])) {
@@ -96,6 +100,7 @@ const GiftsFiltered: React.FC = () => {
         } else if (foundBaseRecipientSlug === 'adults') {
             foundGenderSlug = 'all';
         }
+
         if (tempCombinedSlug) {
             interests = tempCombinedSlug.split('-').filter(Boolean);
         }
@@ -136,7 +141,7 @@ const GiftsFiltered: React.FC = () => {
             }
         } else if (genderImages[baseRecipientSlug!] && genderImages[baseRecipientSlug!][currentGenderDisplay]) {
             imageBaseToUse = genderImages[baseRecipientSlug!][currentGenderDisplay];
-        } else if (currentGenderDisplay === 'men' && genderImages.men?.all) { // Handle men/women from genderSlugFromPath
+        } else if (currentGenderDisplay === 'men' && genderImages.men?.all) {
             imageBaseToUse = genderImages.men.all;
         } else if (currentGenderDisplay === 'women' && genderImages.women?.all) {
             imageBaseToUse = genderImages.women.all;
@@ -202,11 +207,11 @@ const GiftsFiltered: React.FC = () => {
     }, [baseRecipientSlug, genderSlugFromPath, activeInterestSlugs, showDealsOnly, selectedPriceMax, sortBy]);
 
      useEffect(() => {
-        const params = new URLSearchParams(); // Only for deals, price, sort
+        const params = new URLSearchParams();
         if (showDealsOnly) params.set('deals', '1');
         if (selectedPriceMax) params.set('price_max', selectedPriceMax);
         if (sortBy && sortBy !== 'id_desc') params.set('sort', sortBy);
-
+        // Gender is now part of the path slug, so no longer a query parameter.
         const currentParamsString = searchParams.toString();
         const newParamsString = params.toString();
         if (newParamsString !== currentParamsString) {
@@ -219,53 +224,50 @@ const GiftsFiltered: React.FC = () => {
     const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSortBy(event.target.value);
 
     const handleRecipientGroupChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedGroupSlug = event.target.value; // e.g., 'adults', 'teens'
+        const selectedGroupSlug = event.target.value;
         const groupInfo = mainRecipientGroups.find(g => g.slug === selectedGroupSlug);
         if (groupInfo) {
-            let targetSlug = groupInfo.defaultNavigationSlug; // e.g., 'adults', 'teens'
-            let newPath = `/gifts/${targetSlug}`;
-
-            // If current genderSlugFromPath is 'boys' or 'girls' AND the new target group
-            // is NOT 'adults' (meaning it's teens, kids etc.), then try to carry over gender.
-            if ((genderSlugFromPath === 'boys' || genderSlugFromPath === 'girls') && targetSlug !== 'adults' && !PRIMARY_GENDER_SLUGS.includes(targetSlug)) {
-                 newPath = `/gifts/${targetSlug}-${genderSlugFromPath}`;
+            let targetSlug = groupInfo.defaultNavigationSlug;
+            // If current genderSlugFromPath is 'boys' or 'girls' and the new target group supports them
+            if ((genderSlugFromPath === 'boys' || genderSlugFromPath === 'girls') &&
+                !['adults', 'men', 'women'].includes(targetSlug) && // Target is teens, kids etc.
+                genderOptions.some(opt => opt.value === genderSlugFromPath) // Check if new group has this gender option
+            ) {
+                 targetSlug = `${targetSlug}-${genderSlugFromPath}`;
             }
-            // Preserve existing interests if any
-            if (activeInterestSlugs.length > 0) {
-                newPath += `-${activeInterestSlugs.join('-')}`;
-            }
-            navigate(`${newPath}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+            // Interests are cleared when changing main recipient group
+            navigate(`/gifts/${targetSlug}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
         }
     };
 
     const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const newGenderValue = event.target.value; // 'all', 'men', 'women', 'boys', 'girls'
-        let newCombinedSlugPart = baseRecipientSlug!; // Start with current base recipient
+        const newGenderValue = event.target.value;
+        let newCombinedSlugPart = baseRecipientSlug!;
 
         if (currentRecipientGroupSlug === 'adults') {
             if (newGenderValue === 'all') newCombinedSlugPart = 'adults';
             else if (newGenderValue === 'men') newCombinedSlugPart = 'men';
             else if (newGenderValue === 'women') newCombinedSlugPart = 'women';
-        } else { // For teens, kids, etc.
+            else newCombinedSlugPart = 'adults';
+        } else {
             if (newGenderValue === 'boys' || newGenderValue === 'girls') {
                 newCombinedSlugPart = `${baseRecipientSlug}-${newGenderValue}`;
             }
-            // If 'all', newCombinedSlugPart remains baseRecipientSlug (e.g. 'teens')
+            // If 'all', newCombinedSlugPart remains baseRecipientSlug
         }
-        
-        const currentInterestsString = activeInterestSlugs.length > 0 ? `-${activeInterestSlugs.join('-')}` : '';
-        navigate(`/gifts/${newCombinedSlugPart}${currentInterestsString}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+        // When gender changes, interests are cleared from the path.
+        navigate(`/gifts/${newCombinedSlugPart}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
     };
 
     const handleInterestToggle = (interestToToggle: string) => {
         if (!baseRecipientSlug) return;
-        let currentPathBase = baseRecipientSlug;
+        let currentPathBaseWithGender = baseRecipientSlug;
         if (genderSlugFromPath && genderSlugFromPath !== 'all' && GENDER_SUB_SLUGS.includes(genderSlugFromPath)) {
-            currentPathBase = `${baseRecipientSlug}-${genderSlugFromPath}`;
+            currentPathBaseWithGender = `${baseRecipientSlug}-${genderSlugFromPath}`;
         } else if (PRIMARY_GENDER_SLUGS.includes(baseRecipientSlug)) {
-             currentPathBase = baseRecipientSlug;
+             currentPathBaseWithGender = baseRecipientSlug;
         } else if (baseRecipientSlug === 'adults' && (genderSlugFromPath === 'all' || !genderSlugFromPath) ) {
-             currentPathBase = 'adults';
+             currentPathBaseWithGender = 'adults';
         }
 
         const newInterestSlugs = new Set(activeInterestSlugs);
@@ -275,7 +277,7 @@ const GiftsFiltered: React.FC = () => {
             newInterestSlugs.add(interestToToggle);
         }
         const sortedNewInterests = Array.from(newInterestSlugs).sort();
-        let newPath = `/gifts/${currentPathBase}`;
+        let newPath = `/gifts/${currentPathBaseWithGender}`;
         if (sortedNewInterests.length > 0) {
             newPath += `-${sortedNewInterests.join('-')}`;
         }
@@ -303,7 +305,7 @@ const GiftsFiltered: React.FC = () => {
                             <meta itemProp="position" content="1" />
                         </li>
                         <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
-                            <span itemProp="position" content="2"> › </span>
+                            <span itemProp="position" content="2"> › </span> {/* Corrected itemprop */}
                             <Link itemProp="item" to="/gifts" className='inline-flex items-center'>
                                 <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                 <span itemProp="name">{t('gifts', 'Δώρα')}</span>
@@ -312,7 +314,7 @@ const GiftsFiltered: React.FC = () => {
                         </li>
                         {recipientInfo && (
                             <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
-                                <span itemProp="position" content="3"> › </span>
+                                <span itemProp="position" content="3"> › </span> {/* Corrected itemprop */}
                                 <span itemProp="name">{t(recipientInfo.nameKey)}</span>
                                 <meta itemProp="position" content="3" />
                             </li>
@@ -366,11 +368,11 @@ const GiftsFiltered: React.FC = () => {
             else titleKey = 'giftsForAdults';
             titleOptions = { recipient: t(genderSlugFromPath && genderSlugFromPath !== 'all' && PRIMARY_GENDER_SLUGS.includes(genderSlugFromPath) ? genderSlugFromPath : 'recipient_group_adults').toLowerCase() };
         } else if (genderSlugFromPath === 'boys') {
-            titleKey = `giftsForMale${recipientInfo.nameKey.charAt(0).toUpperCase() + recipientInfo.nameKey.slice(1).replace(/-/g, '')}`;
-            return t(titleKey, `${t('gifts_label','Gifts')} ${t('for_interest','for')} ${t('gender_boys_target','Boys')} ${t(recipientInfo.nameKey)}`);
+            const specificKey = `giftsForMale${recipientInfo.nameKey.charAt(0).toUpperCase() + recipientInfo.nameKey.slice(1).replace(/-/g, '')}`;
+            return t(specificKey, `${t('gifts_label','Gifts')} ${t('for_interest','for')} ${t('gender_boys_target','Boys')} ${t(recipientInfo.nameKey)}`);
         } else if (genderSlugFromPath === 'girls') {
-            titleKey = `giftsForFemale${recipientInfo.nameKey.charAt(0).toUpperCase() + recipientInfo.nameKey.slice(1).replace(/-/g, '')}`;
-            return t(titleKey, `${t('gifts_label','Gifts')} ${t('for_interest','for')} ${t('gender_girls_target','Girls')} ${t(recipientInfo.nameKey)}`);
+            const specificKey = `giftsForFemale${recipientInfo.nameKey.charAt(0).toUpperCase() + recipientInfo.nameKey.slice(1).replace(/-/g, '')}`;
+            return t(specificKey, `${t('gifts_label','Gifts')} ${t('for_interest','for')} ${t('gender_girls_target','Girls')} ${t(recipientInfo.nameKey)}`);
         }
         return t(titleKey, titleOptions);
     }, [recipientInfo, baseRecipientSlug, genderSlugFromPath, t]);
@@ -436,7 +438,7 @@ const GiftsFiltered: React.FC = () => {
                             </div>
                             {activeInterestSlugs.length > 0 && (
                                 <Link 
-                                    to={`/gifts/${baseRecipientSlug}${genderSlugFromPath && genderSlugFromPath !== 'all' && GENDER_SUB_SLUGS.includes(genderSlugFromPath) ? `-${genderSlugFromPath}` : (baseRecipientSlug === 'adults' && (genderSlugFromPath === 'men' || genderSlugFromPath === 'women') ? '' : '')}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
+                                    to={`/gifts/${baseRecipientSlug}${genderSlugFromPath && genderSlugFromPath !== 'all' && GENDER_SUB_SLUGS.includes(genderSlugFromPath) ? `-${genderSlugFromPath}` : (PRIMARY_GENDER_SLUGS.includes(baseRecipientSlug!) ? '' : (baseRecipientSlug === 'adults' && (genderSlugFromPath === 'men' || genderSlugFromPath === 'women') ? '' : (baseRecipientSlug === 'adults' ? '' : '')))}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
                                     className="sc-llIIlC zAYuO pressable"
                                 >
                                     {t('clear_all_interest_filters', 'Clear Interests')}
