@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
+import { products } from '@/data/productData';
+import { Category, mainCategories } from '@/data/categoriesData';
+import { vendors } from '@/data/vendorData';
+import { brands } from '@/data/brandData';
 import FooterLanguageButton from '@/components/FooterLanguageButton';
 
 // Define the getStatsData function outside the component
