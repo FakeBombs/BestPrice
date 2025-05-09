@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
-import { products as allMockProducts, Product } from '@/data/mockData';
+import { products as allMockProducts, Product } from '@/data/productData';
 import ProductCard from '@/components/ProductCard';
 import NotFound from '@/pages/NotFound';
 
