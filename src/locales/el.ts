@@ -268,7 +268,7 @@ const elTranslations = {
   'video-games': 'Video Games',
   'audio': 'Ήχος',
   'photo-video': 'Φωτογραφία, Video',
-  'electronics': 'Ηλεκτρονικά',
+  'consumer-electronics': 'Ηλεκτρονικά',
   'telephony': 'Τηλεφωνία',
   'gadgets': 'Gadgets',
   'home-appliances': 'Οικιακές Συσκευές',
