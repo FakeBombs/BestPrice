@@ -152,13 +152,13 @@ const GiftsFiltered: React.FC = () => {
                                 <span itemProp="name">{t('breadcrumbHome', 'BestPrice.gr')}</span>
                             </Link>
                             {/* You might need a separator logic */}
-                            <span> › </span>
+                            <span itemprop="position" content="1"> › </span>
                         </li>
                         <li itemProp="itemListElement" itemType="https://schema.org/ListItem">
                              {/* Link back to the main Gifts page */}
                             <Link itemProp="item" to="/gifts" className='inline-flex items-center'>
                                 {/* Optional Back Arrow */}
-                                {/* <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg> */}
+                                <svg className="icon trail__arrow mr-1" aria-hidden="true" width="16" height="16"><use href="/dist/images/icons/icons.svg#icon-backwards-16"></use></svg>
                                 <span itemProp="name">{t('gifts', 'Δώρα')}</span>
                             </Link>
                         </li>
