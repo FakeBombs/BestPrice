@@ -469,8 +469,8 @@ const GiftsFiltered: React.FC = () => {
                             </select>
                             <div className="sc-dKKIkQ bqWucv">
                                 <label className="bhTOi9I4I2nIIKPU_JUz flex items-center">
-                                    <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} className="mr-1"/>
                                     {t('deals_label', 'Deals')} ({currentDealCount})
+                                    <input type="checkbox" checked={showDealsOnly} onChange={handleDealsToggle} className="mr-1"/>
                                 </label>
                                 <select value={selectedPriceMax} onChange={handlePriceChange} aria-label={t('price_filter_label', 'Price')}>
                                     <option value="">{t('price_filter_label', 'Price')}</option>
