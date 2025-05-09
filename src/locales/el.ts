@@ -779,6 +779,7 @@ const elTranslations = {
   giftsForToddlers: 'Δώρα για νήπια',
   giftsForBabies: 'Δώρα για μωρά',
   giftsForRecipientTitle: 'Δώρα για {{recipient}}',
+  giftsForGenderedRecipient: 'Δώρα για {{gender}} {{recipientGroup}}',
   giftsForMaleTeens: 'Δώρα για έφηβα αγόρια',
   giftsForFemaleTeens: 'Δώρα για έφηβα κορίτσια',
   giftsForMaleKids9_11: 'Δώρα για αγόρια 9-11 Ετών',
