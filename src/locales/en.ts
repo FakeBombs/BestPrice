@@ -252,7 +252,6 @@ const enTranslations = {
   "paymentMethod_pickup_via": "Pickup via Courier/Service",
 
   // ========================= Category Slugs =========================
-  // (Includes all slugs from mockData.ts - Use English names)
   'technology': 'Technology',
   'home-garden': 'Home & Garden',
   'fashion': 'Fashion',
