@@ -1,8 +1,22 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import PriceHistoryChart from '@/components/PriceHistoryChart';
-import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, Vendor, vendors, PaymentMethod, OpeningHours, Brand, categories, mainCategories, ProductPrice } from '@/data/mockData';
+import PriceHistoryChart from '@/components/PriceHistoryChart'; // Assuming this component is now fixed
+import { 
+    getProductById, 
+    getSimilarProducts, 
+    getProductsByCategory, 
+    getBestPrice, 
+    Product, 
+    Vendor, 
+    vendors, 
+    PaymentMethod, 
+    OpeningHours, 
+    Brand, 
+    categories, 
+    mainCategories, 
+    ProductPrice 
+} from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -60,7 +74,6 @@ const useOpeningStatus = () => {
 
 const ProductDetail = () => {
   const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  // Define numericProductId at the top level of the component
   const numericProductId = useMemo(() => parseInt(productIdParam || '', 10), [productIdParam]);
 
   const navigate = useNavigate();
@@ -96,15 +109,12 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLoading(true);
-    // Use numericProductId which is already parsed and memoized
     if (isNaN(numericProductId)) {
         setProduct(null);
         setLoading(false);
         return;
     }
-
     const productData = getProductById(numericProductId);
-
     if (productData) {
       setProduct(productData);
       setCurrentImage(productData.image || '');
@@ -124,7 +134,6 @@ const ProductDetail = () => {
           localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
-
       const correctSlug = productData.slug || formatProductSlug(productData.title);
       if (productSlug !== correctSlug) {
          navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
@@ -133,7 +142,7 @@ const ProductDetail = () => {
       setProduct(null);
     }
     setLoading(false);
-  }, [numericProductId, navigate, location.search, productSlug, formatProductSlug]); // Use numericProductId here
+  }, [numericProductId, navigate, location.search, productSlug, formatProductSlug]);
 
 
   const bestPrice = useMemo(() => {
@@ -146,18 +155,19 @@ const ProductDetail = () => {
     const primaryCategoryId = product.categoryIds[0];
     const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
     return allCatsMap.get(primaryCategoryId) || null;
-  }, [product]);
+  }, [product]); // Changed dependency to whole product
 
   const currentActualPriceForHistory = useMemo(() => {
     if (bestPrice) {
         if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
         if (typeof bestPrice.price === 'number') return bestPrice.price;
     }
+    // Ensure 'product' is not null/undefined before accessing 'product.lowestPrice'
     if (product && typeof product.lowestPrice === 'number') {
         return product.lowestPrice;
     }
     return 0;
-  }, [bestPrice, product]);
+  }, [bestPrice, product]); // Corrected: product itself is the dependency
 
   const handleImageChange = (image: string) => { setCurrentImage(image); };
   const handleAddToFavorites = () => {
@@ -262,18 +272,22 @@ const ProductDetail = () => {
 
                 <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
 
+                {/* THIS IS YOUR PROVIDED PRICE HISTORY SECTION STRUCTURE */}
                 <section id="item-graph" className="section">
-                  <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
-                  {currentActualPriceForHistory > 0 ? (
-                    <PriceHistoryChart 
-                        productId={product.id} 
-                        basePrice={currentActualPriceForHistory} 
-                        timeRange={timeRange} 
-                        setTimeRange={setTimeRange} 
-                    />
+                    <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
+                    {/* Conditionally render PriceHistoryChart or fallback */}
+                    {currentActualPriceForHistory > 0 && product ? (
+                        <PriceHistoryChart 
+                            productId={product.id} 
+                            basePrice={currentActualPriceForHistory} 
+                            timeRange={timeRange} 
+                            setTimeRange={setTimeRange} 
+                        />
                     ) : (
-                    <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>{t('price_history_unavailable_product', 'Price history is currently unavailable for this product.')}</div>
-                  )}
+                        <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>
+                            {product ? t('price_history_unavailable_product', 'Price history is currently unavailable for this product.') : t('loading_product_data', 'Loading product data...')}
+                        </div>
+                    )}
                 </section>
 
                 <ProductRelatedSections similarProducts={similarProductsState} productId={numericProductId} />
@@ -352,7 +366,7 @@ const ProductDetail = () => {
                                             <ul>
                                                 {Object.values(PaymentMethod).map(method => (
                                                     <li key={method} className={popupContent.vendor.paymentMethods?.includes(method) ? 'minfo__yes' : ''}>
-                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_').replace(/€/g, 'euro')}`, method)}
+                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_').replace(/€/g, 'euro')}`, method)} 
                                                         {popupContent.vendor.paymentMethods?.includes(method) ? (
                                                             <svg className="icon" aria-hidden="true" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg>
                                                         ) : (
