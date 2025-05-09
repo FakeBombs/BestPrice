@@ -138,9 +138,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <>
       {shouldRenderNavAndFooter && <Navbar onSitemapToggle={sitemapToggle} onRemoveSitemap={removeSitemapClass} ref={navbarRef} isSitemapVisible={isSitemapVisible} onMouseEnterCategory={handleMouseEnter} />}
       <div id="root" className="clr">
-        <main className="clr">
-          {React.Children.map(children, (child) => { return React.isValidElement(child) && typeof child.type !== 'string' ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle }) : child; })}
-        </main>
+        {React.Children.map(children, (child) => { return React.isValidElement(child) && typeof child.type !== 'string' ? React.cloneElement(child as React.ReactElement<any>, { onSitemapToggle: sitemapToggle }) : child; })}
         {isSitemapVisible && (
           <>
             <div className="sitemap-desktop__backdrop" style={{ zIndex: 2147483524 }} onClick={removeSitemapClass}></div>
