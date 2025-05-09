@@ -22,7 +22,7 @@ const genderImages: Record<string, Record<string, string>> = {
     adults: { all: 'adult-both'}, // For the "All" option when current group is adults
     men:    { all: 'adult-m' },   // Default/All for men page
     women:  { all: 'adult-f' },   // Default/All for women page
-    teens: { boys: 'teen-male', girls: 'teen-female', all: 'teens' },
+    teens: { boys: 'teen-m', girls: 'teen-f', all: 'teens' },
     'kids-9-11': { boys: 'kid0911-m', girls: 'kid0911-f', all: 'kids9_11' },
     'kids-6-8': { boys: 'kid0608-m', girls: 'kid0608-f', all: 'kids6_8' },
     toddlers: { boys: 'kid0305-m', girls: 'kid0305-f', all: 'toddlers' },
