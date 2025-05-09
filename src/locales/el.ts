@@ -58,7 +58,7 @@ const elTranslations = {
   recently_viewed_title: "Είδατε Πρόσφατα",
   site_name: 'BestPrice', 
   sitemap_button_label: 'Κουμπί Sitemap', 
-  my_account_link: 'Ο Λογαριασμός μου',  (or reuse myAccount)
+  my_account_link: 'Ο Λογαριασμός μου',
 
   // ====================== Categories Page & Filters =======================
   "product_singular": "προϊόν",               "product_plural": "{{count}} προϊόντα",
@@ -98,9 +98,9 @@ const elTranslations = {
   "return_to": "Επιστροφή σε",               "info_for_certified_store": "Πληροφορίες για πιστοποιημένο κατάστημα",
   "showing_products_from_store": "Εμφάνιση προϊόντων από το κατάστημα",
   "remove_filter": "Αφαίρεση αυτού του φίλτρου",
-  "category_unknown": 'Χωρίς Κατηγορία', 
-  "stores_count_label_one": '{{count}} κατάστημα', 
-  "stores_count_label_other": '{{count}} καταστήματα', 
+  category_unknown: 'Χωρίς Κατηγορία', 
+  stores_count_label_one: '{{count}} κατάστημα', 
+  stores_count_label_other: '{{count}} καταστήματα', 
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
@@ -108,16 +108,16 @@ const elTranslations = {
   "breadcrumbAllProductsAndSubcategoriesInCategory": "Όλα τα προϊόντα και οι υποκατηγορίες της κατηγορίας {{categoryName}}",
 
   // For PriceHistoryChart.tsx
-  "price_history_title": 'Εξέλιξη τιμής',
-  "time_range_1m": '1Μ', // Μ = Μήνας
-  "time_range_3m": '3Μ',
-  "time_range_6m": '6Μ',
-  "time_range_1y": '1Ε', // Ε = Έτος
-  "current_price_label": 'Τρέχουσα τιμή',
-  "minimum_price_label": 'Ελάχιστη τιμή',
-  "no_price_data_available": 'Δεν υπάρχουν διαθέσιμα δεδομένα τιμών για το επιλεγμένο εύρος.',
-  "tooltip_date_label": 'Ημερομηνία',
-  "tooltip_price_label": 'Τιμή',
+  price_history_title: 'Εξέλιξη τιμής',
+  time_range_1m: '1Μ', // Μ = Μήνας
+  time_range_3m: '3Μ',
+  time_range_6m: '6Μ',
+  time_range_1y: '1Ε', // Ε = Έτος
+  current_price_label: 'Τρέχουσα Τιμή',
+  minimum_price_label: 'Ελάχιστη Τιμή',
+  no_price_data_available: 'Δεν υπάρχουν διαθέσιμα δεδομένα τιμών για το επιλεγμένο εύρος.',
+  tooltip_date_label: 'Ημερομηνία',
+  tooltip_price_label: 'Τιμή',
 
   // ===================== Product Detail Page ========================
   "loadingProduct": "Φόρτωση Προϊόντος...",   "addToShoppingList": "Προσθήκη στη Λίστα Αγορών",
@@ -151,8 +151,8 @@ const elTranslations = {
   "linkCopied": "Ο Σύνδεσμος Αντιγράφηκε",   "productLinkCopied": "Ο σύνδεσμος του προϊόντος αντιγράφηκε στο πρόχειρο",
   "copyFailed": "Η Αντιγραφή Απέτυχε",      "couldNotCopyLink": " αδυναμία αντιγραφής συνδέσμου",
   "loginToSetPriceAlert": "Παρακαλώ συνδεθείτε για να ορίσετε ειδοποίηση τιμής",
-  "price_history_unavailable_product": 'Το ιστορικό τιμών δεν είναι διαθέσιμο για αυτό το προϊόν.',
-  "loading_product_data": 'Φόρτωση δεδομένων προϊόντος...',
+  price_history_unavailable_product: 'Το ιστορικό τιμών δεν είναι διαθέσιμο για αυτό το προϊόν.',
+  loading_product_data: 'Φόρτωση δεδομένων προϊόντος...',
 
   // ========================= Vendor Page ==========================
   "loadingVendor": "Φόρτωση καταστήματος...", "allStores": "Καταστήματα",
