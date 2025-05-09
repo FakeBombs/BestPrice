@@ -230,7 +230,7 @@ const GiftsFiltered: React.FC = () => {
                 <div className="sc-dcKlJK cquxZx root">
                     {renderBreadcrumbs()}
                     <div className="bjpNBM flex items-center w-full mt-4">
-                        <img alt={pageTitle} width="92" height="92" src={`/dist/images/gifts/${recipientInfo.imgBase}.webp`} loading="eager" className="rounded-full mr-4"/>
+                        <img alt={pageTitle} width="92" height="92" src={`/dist/images/gifts/${recipientInfo.slug}.webp`} loading="eager" className="rounded-full mr-4"/>
                         <div>
                             <h1 className="sc-jPkiSJ cFyVWT">{(() => { const w = pageTitle.split(' '); if (w.length <= 1) return pageTitle; const fW = w[0]; const lR = w.slice(1).join(' ').toLowerCase(); return `${fW} ${lR}`; })()}</h1>
                             <div className="sc-dHKmnV kIiJVY">
