@@ -782,6 +782,12 @@ const enTranslations = {
   giftsForToddlers: 'Gifts for toddlers',
   giftsForBabies: 'Gifts for babies',
   giftsForRecipientTitle: 'Gifts for {{recipient}}',
+  giftsForMaleTeens: 'Gifts for teen boys',
+  giftsForFemaleTeens: 'Gifts for teen girls',
+  giftsForMaleKids9_11: 'Gifts for boy kids 9-11',
+  giftsForFemaleKids9_11: 'Gifts for girl kids 9-11',
+  giftsForMaleKids6_8: 'Gifts for boy kids 6-8',
+  giftsForFemaleKids6_8: 'Gifts for girl kids 6-8',
   // --- Recipient Names ---
   recipient_group_adults: 'Adults',
   men: 'Men',
