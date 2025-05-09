@@ -304,6 +304,7 @@
 @media only screen and (min-width: 80em) {
   .eZWmzM {font-size: 2.1rem}
 }
+.zAYuO:hover {text-decoration: none !important}
 .zAYuO {
   color: var(--colors-themed-body-color-lighter);
   cursor: pointer;
