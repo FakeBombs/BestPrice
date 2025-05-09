@@ -862,7 +862,7 @@ const elTranslations = {
   interest_baby: 'Βρεφικά',
   // Add any other specific interests from your product.giftAttributes.interest arrays
 
-  clear_all_interest_filters: 'Καθαρισμός Φίλτρων Ενδιαφέροντος',
+  clear_all_interest_filters: 'Καθαρισμός επιλογών',
   for_interest: 'για', // Used in "X gifts for [recipient] for [interest]"
 
 
