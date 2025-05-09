@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchDeals, mainCategories } from '@/data/mockData'; 
+import { mainCategories } from '@/data/categoriesData';
+import { fetchDeals } from '@/data/helpers';
 import ProductCard from '@/components/ProductCard';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 import { useTranslation } from '@/hooks/useTranslation';
