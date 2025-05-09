@@ -1,9 +1,8 @@
-// src/pages/Footer.tsx
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 import { brands, products, vendors, mainCategories, Category } from '@/data/mockData';
-import FooterLanguageButton from '@/components/FooterLanguageButton'; // Import the AI-generated button
+import FooterLanguageButton from '@/components/FooterLanguageButton';
 
 // Define the getStatsData function outside the component
 const getStatsData = () => {
@@ -23,7 +22,6 @@ const getStatsData = () => {
 const Footer: React.FC = () => {
     const { t, language } = useTranslation(); 
     const stats = useMemo(() => getStatsData(), []); 
-    // Modal state is now managed inside FooterLanguageButton, so no useState here for it.
 
     const handleClickToTop = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
@@ -34,8 +32,6 @@ const Footer: React.FC = () => {
     };
     
   return (
-    // The main return is just the div#footer-wrapper.
-    // FooterLanguageButton will render its own modal when its internal state dictates.
     <div id="footer-wrapper"> 
       <div id="back-to-top" className="pressable" onClick={handleClickToTop} style={{display: "flex"}}>{t('backToTop')}<svg aria-hidden="true" className="icon" width="12" height="12"><use href="/dist/images/icons/icons.svg#icon-up-12"></use></svg></div>
       <div id="promo-footer"></div>
@@ -69,7 +65,7 @@ const Footer: React.FC = () => {
                     {mainCategories.map(category => ( <li key={category.id}><Link to={`/cat/${category.id}/${category.slug}`}>{t(category.slug, category.name)}</Link></li> ))}
                     <li><Link to="/deals">{t('deals')}</Link></li>
                     <li><Link to="/gifts">{t('gifts')}</Link></li>
-                    <li><Link to="/give">{t('bestpriceGive')}</Link></li>
+                    <li><Link to="/give"><svg aria-hidden="true" class="icon icon--outline" width={24} height={24}><use href="/dist/images/icons/categories.svg#icon-give-24"></use></svg> {t('bestpriceGive')}</Link></li>
                   </ul>
                 </div>
               </div>
@@ -116,7 +112,7 @@ const Footer: React.FC = () => {
                     <li><Link to="/m">{t('storeCountLink', { count: stats.totalVendors })}</Link></li>
                     <li><Link to="/search">{t('productCountLink', { count: stats.totalProducts })}</Link></li>
                     <li><Link to="/brands">{t('brandCountLink', { count: stats.totalBrands })}</Link></li>
-                    <li><Link to="/deals">{t('dealCountLink', { count: stats.totalDeals })}</Link></li>
+                    <li><Link to="/deals"><svg aria-hidden="true" class="icon" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-flame-16"></use></svg> {t('dealCountLink', { count: stats.totalDeals })}</Link></li>
                   </ul>
                 </div>
               </div>
