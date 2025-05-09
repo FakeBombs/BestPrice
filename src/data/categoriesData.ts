@@ -1,5 +1,3 @@
-// src/data/categoriesData.ts
-
 // Category interface for nested structure
 export interface Category {
   id: number;
