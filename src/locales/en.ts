@@ -774,13 +774,13 @@ const enTranslations = {
   gifts_total_count_other: '{{count}} selected gifts for {{recipient}}', // Needs recipient
   recipient_everyone: 'everyone', // **** ADDED THIS LINE ****
   // --- Recipient Titles ---
-  // giftsForMen: 'Gifts for Men', // Replaced by generic below
-  // giftsForWomen: 'Gifts for Women',
-  // giftsForTeens: 'Gifts for Teens',
-  // giftsForKids9_11: 'Gifts for Kids 9-11',
-  // giftsForKids6_8: 'Gifts for Kids 6-8',
-  // giftsForToddlers: 'Gifts for Toddlers',
-  // giftsForBabies: 'Gifts for Babies',
+  giftsForMen: 'Gifts for men',
+  giftsForWomen: 'Gifts for women',
+  giftsForTeens: 'Gifts for teens',
+  giftsForKids9_11: 'Gifts for kids 9-11',
+  giftsForKids6_8: 'Gifts for kids 6-8',
+  giftsForToddlers: 'Gifts for toddlers',
+  giftsForBabies: 'Gifts for babies',
   giftsForRecipientTitle: 'Gifts for {{recipient}}', // **** ADDED ****
   // --- Recipient Names ---
   men: 'Men',
