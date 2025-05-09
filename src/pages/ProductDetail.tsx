@@ -2,21 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import PriceHistoryChart from '@/components/PriceHistoryChart';
-import { 
-    getProductById, 
-    getSimilarProducts, 
-    getProductsByCategory, 
-    getBestPrice, // Make sure this is exported from mockData.ts
-    Product, 
-    Vendor, 
-    vendors, 
-    PaymentMethod, 
-    OpeningHours, 
-    Brand, 
-    categories, 
-    mainCategories, 
-    ProductPrice 
-} from '@/data/mockData';
+import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, Vendor, vendors, PaymentMethod, OpeningHours, Brand, categories, mainCategories, ProductPrice } from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -74,7 +60,9 @@ const useOpeningStatus = () => {
 
 const ProductDetail = () => {
   const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  // Define numericProductId at the top level of the component
   const numericProductId = useMemo(() => parseInt(productIdParam || '', 10), [productIdParam]);
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -108,45 +96,44 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLoading(true);
-    const numericId = parseInt(productIdParam || '', 10);
-
-    if (isNaN(numericId)) {
+    // Use numericProductId which is already parsed and memoized
+    if (isNaN(numericProductId)) {
         setProduct(null);
         setLoading(false);
         return;
     }
 
-    const productData = getProductById(numericId);
+    const productData = getProductById(numericProductId);
 
     if (productData) {
       setProduct(productData);
       setCurrentImage(productData.image || '');
-      setSimilarProductsState(getSimilarProducts(numericId));
+      setSimilarProductsState(getSimilarProducts(numericProductId));
       if (productData.categoryIds && productData.categoryIds.length > 0) {
-        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericId).slice(0, 5));
+        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericProductId).slice(0, 5));
       } else {
         setCategoryDeals([]);
       }
       try {
         const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as number[];
         const validIds = recentlyViewedIds.filter(id => typeof id === 'number');
-        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== numericId);
+        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== numericProductId);
         setRecentlyViewed(recentProducts);
-        if (!validIds.includes(numericId)) {
-          const updatedRecentlyViewed = [numericId, ...validIds].slice(0, 10);
+        if (!validIds.includes(numericProductId)) {
+          const updatedRecentlyViewed = [numericProductId, ...validIds].slice(0, 10);
           localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
 
       const correctSlug = productData.slug || formatProductSlug(productData.title);
-      if (productSlug !== correctSlug) { // Only navigate if slug is actually different and productSlug is defined
-         navigate(`/item/${numericId}/${correctSlug}${location.search}`, { replace: true });
+      if (productSlug !== correctSlug) {
+         navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
       }
     } else {
       setProduct(null);
     }
     setLoading(false);
-  }, [productIdParam, navigate, location.search, productSlug, formatProductSlug]);
+  }, [numericProductId, navigate, location.search, productSlug, formatProductSlug]); // Use numericProductId here
 
 
   const bestPrice = useMemo(() => {
@@ -266,7 +253,7 @@ const ProductDetail = () => {
                   <TopVendorAd productId={product.id} />
                   <div className="prices" data-merchants={product.prices.length}>
                       {product.prices
-                          .sort((a, b) => (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price)) // Sort by effective price
+                          .sort((a, b) => (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price))
                           .map((priceInfo) => (
                               <VendorPriceCard key={priceInfo.vendorId} priceInfo={priceInfo} product={product} openPopup={handleOpenVendorPopup} />
                       ))}
@@ -365,7 +352,7 @@ const ProductDetail = () => {
                                             <ul>
                                                 {Object.values(PaymentMethod).map(method => (
                                                     <li key={method} className={popupContent.vendor.paymentMethods?.includes(method) ? 'minfo__yes' : ''}>
-                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_').replace(/€/g, 'euro')}`, method)} 
+                                                        {t(`paymentMethod_${method.toLowerCase().replace(/\s+/g, '_').replace(/€/g, 'euro')}`, method)}
                                                         {popupContent.vendor.paymentMethods?.includes(method) ? (
                                                             <svg className="icon" aria-hidden="true" width={16} height={16}><use href="/dist/images/icons/icons.svg#icon-check-full-16"></use></svg>
                                                         ) : (
