@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import PriceHistoryChart from '@/components/PriceHistoryChart'; // Assuming this component is now fixed
+// Import PriceHistoryChart
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import { 
     getProductById, 
     getSimilarProducts, 
     getProductsByCategory, 
-    getBestPrice, 
+    getBestPrice, // Ensure this is exported from mockData.ts
     Product, 
     Vendor, 
     vendors, 
@@ -33,12 +34,14 @@ import { TopVendorAd } from '@/components/ads/TopVendorAd';
 import NotFound from '@/pages/NotFound';
 import ScrollableSlider from '@/components/ScrollableSlider';
 
+// Helper to clean domain name
 const cleanDomainName = (url: string): string => {
   if (!url) return '';
   try { const parsedUrl = new URL(url.startsWith('http') ? url : `http://${url}`); return parsedUrl.hostname.replace(/^www\./i, ''); }
   catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
 };
 
+// Helper Function to Determine Current Opening Status
 const useOpeningStatus = () => {
     const { t } = useTranslation();
     const getStatus = useCallback((openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
@@ -72,8 +75,10 @@ const useOpeningStatus = () => {
     return getStatus;
 };
 
+
 const ProductDetail = () => {
   const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
+  // DEFINE numericProductId here using useMemo to ensure it's stable and parsed once per productIdParam change
   const numericProductId = useMemo(() => parseInt(productIdParam || '', 10), [productIdParam]);
 
   const navigate = useNavigate();
@@ -88,7 +93,7 @@ const ProductDetail = () => {
   let classNamesForBody = '';
   let classNamesForHtml = 'page';
   const checkAdBlockers = useCallback((): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } }, []);
-  const isAdBlocked = useMemo(checkAdBlockers, [checkAdBlockers]);
+  const isAdBlocked = useMemo(checkAdBlockers, [checkAdBlockers]); // checkAdBlockers is stable due to useCallback
   if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; } else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; } else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; } else { classNamesForHtml += ' unknown-device'; }
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed'; classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   useEffect(() => { setJsEnabled(true); }, []); classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
@@ -103,21 +108,21 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{ vendor: Vendor; priceInfo: ProductPrice; } | null>(null);
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m'); // State for PriceHistoryChart
 
   const formatProductSlug = useCallback((title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'), []);
 
   useEffect(() => {
     setLoading(true);
-    if (isNaN(numericProductId)) {
+    if (isNaN(numericProductId)) { // Use the memoized numericProductId
         setProduct(null);
         setLoading(false);
         return;
     }
-    const productData = getProductById(numericProductId);
+    const productData = getProductById(numericProductId); // Use the memoized numericProductId
     if (productData) {
       setProduct(productData);
-      setCurrentImage(productData.image || '');
+      setCurrentImage(productData.image || ''); // Ensure currentImage has a default
       setSimilarProductsState(getSimilarProducts(numericProductId));
       if (productData.categoryIds && productData.categoryIds.length > 0) {
         setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericProductId).slice(0, 5));
@@ -135,7 +140,7 @@ const ProductDetail = () => {
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
       const correctSlug = productData.slug || formatProductSlug(productData.title);
-      if (productSlug !== correctSlug) {
+      if (productSlug !== correctSlug) { // Check productSlug from params
          navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
       }
     } else {
@@ -155,19 +160,18 @@ const ProductDetail = () => {
     const primaryCategoryId = product.categoryIds[0];
     const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
     return allCatsMap.get(primaryCategoryId) || null;
-  }, [product]); // Changed dependency to whole product
+  }, [product]); // Corrected: Depend on the whole 'product' object
 
   const currentActualPriceForHistory = useMemo(() => {
     if (bestPrice) {
         if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
         if (typeof bestPrice.price === 'number') return bestPrice.price;
     }
-    // Ensure 'product' is not null/undefined before accessing 'product.lowestPrice'
     if (product && typeof product.lowestPrice === 'number') {
         return product.lowestPrice;
     }
     return 0;
-  }, [bestPrice, product]); // Corrected: product itself is the dependency
+  }, [bestPrice, product]);
 
   const handleImageChange = (image: string) => { setCurrentImage(image); };
   const handleAddToFavorites = () => {
@@ -187,14 +191,17 @@ const ProductDetail = () => {
       toast({ title: t("loginRequired", "Login Required"), description: t("loginToSetPriceAlert", "Please log in to set a price alert"), variant: "destructive" });
       return;
     }
-    setIsPriceAlertModalOpen(true);
+    if (product) { // Ensure product exists before setting alert
+        setIsPriceAlertModalOpen(true);
+    }
   };
   const handleOpenVendorPopup = (vendorData: Vendor, priceData: ProductPrice) => { setPopupContent({ vendor: vendorData, priceInfo: priceData }); setIsVendorPopupVisible(true); };
   const handleCloseVendorPopup = () => { setIsVendorPopupVisible(false); setPopupContent(null); };
 
   if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
-  if (!product) { return <NotFound />; }
+  if (!product) { return <NotFound />; } // This check is crucial
 
+  // If product exists, it's safe to use product.id, product.title etc.
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
@@ -221,7 +228,7 @@ const ProductDetail = () => {
             <div className="item-header__wrapper">
               <div className="item-header">
                 <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                {bestPrice && (
+                {bestPrice && ( // Changed from bestPriceInfo
                     <a href="#item-prices" className="item-price-button">
                         <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{(bestPrice.discountPrice ?? bestPrice.price).toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
                         <svg width="17" height="20"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
@@ -272,11 +279,10 @@ const ProductDetail = () => {
 
                 <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
 
-                {/* THIS IS YOUR PROVIDED PRICE HISTORY SECTION STRUCTURE */}
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
                     {/* Conditionally render PriceHistoryChart or fallback */}
-                    {currentActualPriceForHistory > 0 && product ? (
+                    {currentActualPriceForHistory > 0 ? (
                         <PriceHistoryChart 
                             productId={product.id} 
                             basePrice={currentActualPriceForHistory} 
@@ -285,7 +291,7 @@ const ProductDetail = () => {
                         />
                     ) : (
                         <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>
-                            {product ? t('price_history_unavailable_product', 'Price history is currently unavailable for this product.') : t('loading_product_data', 'Loading product data...')}
+                            {t('price_history_unavailable_product', 'Price history is currently unavailable for this product.')}
                         </div>
                     )}
                 </section>
@@ -297,7 +303,7 @@ const ProductDetail = () => {
                 </section>
               </div>
 
-              {isPriceAlertModalOpen && bestPrice && (
+              {isPriceAlertModalOpen && bestPrice && ( // Changed from bestPriceInfo
                 <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPrice.discountPrice ?? bestPrice.price} />
               )}
 
