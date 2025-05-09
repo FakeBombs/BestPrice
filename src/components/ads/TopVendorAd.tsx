@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge';
 // import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-// Import Vendor type
-import { Vendor, PaymentMethod, ProductPrice } from '@/data/mockData'; // Added ProductPrice
+import { ProductPrice, Vendor, PaymentMethod } from '@/data/productData';
 
 interface TopVendorAdProps {
   productId: number | string; // Accept number or string
