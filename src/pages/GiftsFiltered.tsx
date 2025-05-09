@@ -65,8 +65,7 @@ const GiftsFiltered: React.FC = () => {
     const { combinedSlug } = useParams<{ combinedSlug: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
-
-    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length); 
+ 
     const { baseRecipientSlug, genderSlugFromPath, activeInterestSlugs } = useMemo(() => {
         if (!combinedSlug) return { baseRecipientSlug: undefined, genderSlugFromPath: undefined, activeInterestSlugs: [] };
         let tempCombinedSlug = combinedSlug;
@@ -330,6 +329,8 @@ const GiftsFiltered: React.FC = () => {
             p.variants?.some(variant => variant.prices.some(price => price.discountPrice !== undefined && price.discountPrice !== null))
         ).length;
     }, [filteredAndSortedProducts]);
+
+    const [animatedProductCount, setAnimatedProductCount] = useState(filteredAndSortedProducts.length); 
 
     if (!baseRecipientSlug || !recipientInfo) {
         return <NotFound />;
