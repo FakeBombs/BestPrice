@@ -1,23 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-// Import PriceHistoryChart
 import PriceHistoryChart from '@/components/PriceHistoryChart';
-import { 
-    getProductById, 
-    getSimilarProducts, 
-    getProductsByCategory, 
-    getBestPrice, // Ensure this is exported from mockData.ts
-    Product, 
-    Vendor, 
-    vendors, 
-    PaymentMethod, 
-    OpeningHours, 
-    Brand, 
-    categories, 
-    mainCategories, 
-    ProductPrice 
-} from '@/data/mockData';
+import { getProductById, getSimilarProducts, getProductsByCategory, getBestPrice, Product, Vendor, vendors, PaymentMethod, OpeningHours, Brand, categories, mainCategories, ProductPrice } from '@/data/mockData';
 import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductHeader from '@/components/product/ProductHeader';
 import ProductImageGallery from '@/components/ProductImageGallery';
@@ -41,9 +26,10 @@ const cleanDomainName = (url: string): string => {
   catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
 };
 
-// Helper Function to Determine Current Opening Status
+// Helper Function to Determine Current Opening Status (NOW USES t for translations)
 const useOpeningStatus = () => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(); 
+
     const getStatus = useCallback((openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
         if (!openingHours || openingHours.length === 0) { return { text: t('openingHoursNotAvailable', "Opening hours information not available"), isOpen: false }; }
         try {
@@ -53,9 +39,12 @@ const useOpeningStatus = () => {
             const currentDayName = days[currentDayIndex] as OpeningHours['dayOfWeek'];
             const currentTime = now.getHours() * 100 + now.getMinutes();
             const todayHours = openingHours.find(h => h.dayOfWeek === currentDayName);
+
             if (!todayHours || !todayHours.opens || !todayHours.closes) { return { text: t('closedToday', "Closed today"), isOpen: false }; }
+
             const opensTime = parseInt(todayHours.opens.replace(':', ''), 10);
             const closesTime = parseInt(todayHours.closes.replace(':', ''), 10);
+
             if (!isNaN(opensTime) && !isNaN(closesTime)) {
                 if (currentTime >= opensTime && currentTime < closesTime) {
                     return { text: t('openUntil', { time: todayHours.closes }), isOpen: true };
@@ -78,7 +67,6 @@ const useOpeningStatus = () => {
 
 const ProductDetail = () => {
   const { productId: productIdParam, productSlug } = useParams<{ productId: string; productSlug?: string }>();
-  // DEFINE numericProductId here using useMemo to ensure it's stable and parsed once per productIdParam change
   const numericProductId = useMemo(() => parseInt(productIdParam || '', 10), [productIdParam]);
 
   const navigate = useNavigate();
@@ -93,7 +81,7 @@ const ProductDetail = () => {
   let classNamesForBody = '';
   let classNamesForHtml = 'page';
   const checkAdBlockers = useCallback((): boolean => { try { const testAd = document.createElement('div'); testAd.innerHTML = ' '; testAd.className = 'adsbox'; testAd.style.position = 'absolute'; testAd.style.left = '-9999px'; testAd.style.height = '1px'; document.body.appendChild(testAd); const isBlocked = !testAd.offsetHeight; document.body.removeChild(testAd); return isBlocked; } catch (e) { return false; } }, []);
-  const isAdBlocked = useMemo(checkAdBlockers, [checkAdBlockers]); // checkAdBlockers is stable due to useCallback
+  const isAdBlocked = useMemo(checkAdBlockers, [checkAdBlockers]);
   if (userAgent.includes('windows')) { classNamesForHtml += ' windows no-touch'; } else if (userAgent.includes('android')) { classNamesForHtml += ' android touch'; classNamesForBody = 'mobile'; } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) { classNamesForHtml += ' ios touch'; classNamesForBody = userAgent.includes('ipad') ? 'tablet' : 'mobile'; } else if (userAgent.includes('mac os x')) { classNamesForHtml += ' macos no-touch'; } else { classNamesForHtml += ' unknown-device'; }
   classNamesForHtml += isAdBlocked ? ' adblocked' : ' adallowed'; classNamesForHtml += ' supports-webp supports-ratio supports-flex-gap supports-lazy supports-assistant is-desktop is-modern flex-in-button is-prompting-to-add-to-home';
   useEffect(() => { setJsEnabled(true); }, []); classNamesForHtml += jsEnabled ? ' js-enabled' : ' js-disabled';
@@ -108,21 +96,23 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{ vendor: Vendor; priceInfo: ProductPrice; } | null>(null);
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m'); // State for PriceHistoryChart
+  
+  // **** ADD State for PriceHistoryChart ****
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
   const formatProductSlug = useCallback((title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'), []);
 
   useEffect(() => {
     setLoading(true);
-    if (isNaN(numericProductId)) { // Use the memoized numericProductId
+    if (isNaN(numericProductId)) {
         setProduct(null);
         setLoading(false);
         return;
     }
-    const productData = getProductById(numericProductId); // Use the memoized numericProductId
+    const productData = getProductById(numericProductId);
     if (productData) {
       setProduct(productData);
-      setCurrentImage(productData.image || ''); // Ensure currentImage has a default
+      setCurrentImage(productData.image || '');
       setSimilarProductsState(getSimilarProducts(numericProductId));
       if (productData.categoryIds && productData.categoryIds.length > 0) {
         setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericProductId).slice(0, 5));
@@ -140,17 +130,17 @@ const ProductDetail = () => {
         }
       } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
       const correctSlug = productData.slug || formatProductSlug(productData.title);
-      if (productSlug !== correctSlug) { // Check productSlug from params
+      if (productSlug && productSlug !== correctSlug) { 
          navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
       }
     } else {
       setProduct(null);
     }
     setLoading(false);
-  }, [numericProductId, navigate, location.search, productSlug, formatProductSlug]);
+  }, [numericProductId, productSlug, navigate, location.search, formatProductSlug]);
 
 
-  const bestPrice = useMemo(() => {
+  const bestPriceInfo = useMemo(() => { // Kept your original variable name
     if (!product) return null;
     return getBestPrice(product);
   }, [product]);
@@ -160,18 +150,20 @@ const ProductDetail = () => {
     const primaryCategoryId = product.categoryIds[0];
     const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
     return allCatsMap.get(primaryCategoryId) || null;
-  }, [product]); // Corrected: Depend on the whole 'product' object
+  }, [product]);
 
+  // **** ADD currentActualPriceForHistory calculation ****
   const currentActualPriceForHistory = useMemo(() => {
-    if (bestPrice) {
-        if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
-        if (typeof bestPrice.price === 'number') return bestPrice.price;
+    if (bestPriceInfo) { // Use bestPriceInfo as per your original structure
+        if (typeof bestPriceInfo.discountPrice === 'number') return bestPriceInfo.discountPrice;
+        if (typeof bestPriceInfo.price === 'number') return bestPriceInfo.price;
     }
     if (product && typeof product.lowestPrice === 'number') {
         return product.lowestPrice;
     }
     return 0;
-  }, [bestPrice, product]);
+  }, [bestPriceInfo, product]);
+
 
   const handleImageChange = (image: string) => { setCurrentImage(image); };
   const handleAddToFavorites = () => {
@@ -179,7 +171,9 @@ const ProductDetail = () => {
       toast({ title: t("loginRequired", "Login Required"), description: t("loginToAddToFavorites", "Please log in to add this product to your favorites"), variant: "destructive" });
       return;
     }
-    toast({ title: t("addedToFavorites", "Added to Favorites"), description: t("productAddedToFavorites", { productName: product?.title || 'Product' }) });
+    if (product) { // Ensure product is not null
+        toast({ title: t("addedToFavorites", "Added to Favorites"), description: t("productAddedToFavorites", { productName: product.title }) });
+    }
   };
   const handleShareProduct = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -191,7 +185,7 @@ const ProductDetail = () => {
       toast({ title: t("loginRequired", "Login Required"), description: t("loginToSetPriceAlert", "Please log in to set a price alert"), variant: "destructive" });
       return;
     }
-    if (product) { // Ensure product exists before setting alert
+    if (product) { // Ensure product exists
         setIsPriceAlertModalOpen(true);
     }
   };
@@ -199,9 +193,8 @@ const ProductDetail = () => {
   const handleCloseVendorPopup = () => { setIsVendorPopupVisible(false); setPopupContent(null); };
 
   if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
-  if (!product) { return <NotFound />; } // This check is crucial
+  if (!product) { return <NotFound />; }
 
-  // If product exists, it's safe to use product.id, product.title etc.
   return (
     <div className="root__wrapper item-wrapper">
       <div className="root">
@@ -228,16 +221,16 @@ const ProductDetail = () => {
             <div className="item-header__wrapper">
               <div className="item-header">
                 <ProductHeader product={product} onAddToFavorites={handleAddToFavorites} onShareProduct={handleShareProduct} />
-                {bestPrice && ( // Changed from bestPriceInfo
+                {bestPriceInfo && (
                     <a href="#item-prices" className="item-price-button">
-                        <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{(bestPrice.discountPrice ?? bestPrice.price).toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
+                        <div className="item-price-button__label">{t('priceFrom', 'From')} <strong>{(bestPriceInfo.discountPrice ?? bestPriceInfo.price).toLocaleString(language, { style: 'currency', currency: 'EUR' })}</strong> {t('inStores', { count: product.prices.filter(p=>p.inStock).length })}</div>
                         <svg width="17" height="20"><path d="M7.75 1.5C7.75 1.08579 8.08579 0.75 8.5 0.75C8.91421 0.75 9.25 1.08579 9.25 1.5L9.25 18.5C9.25 18.9142 8.91421 19.25 8.5 19.25C8.08579 19.25 7.75 18.9142 7.75 18.5L7.75 1.5ZM8.5 17.4393L14.9697 10.9697C15.2626 10.6768 15.7374 10.6768 16.0303 10.9697C16.3232 11.2626 16.3232 11.7374 16.0303 12.0303L9.03033 19.0303C8.73744 19.3232 8.26256 19.3232 7.96967 19.0303L0.96967 12.0303C0.676776 11.7374 0.676776 11.2626 0.96967 10.9697C1.26256 10.6768 1.73744 10.6768 2.03033 10.9697L8.5 17.4393Z"></path></svg>
                     </a>
                 )}
                 <ProductHighlights specifications={product.specifications} product={product} />
                 <div className="item-description">{product.description}</div>
               </div>
-              <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPrice} onNotifyMe={handlePriceAlert} /></div>
+              <div className="product-overview product-overview--deal"><ProductEssentialInfo product={product} bestPrice={bestPriceInfo} onNotifyMe={handlePriceAlert} /></div>
             </div>
 
             <div className="sections item-sections">
@@ -279,9 +272,10 @@ const ProductDetail = () => {
 
                 <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
 
+                {/* **** START OF PRICE HISTORY SECTION (Your Original Structure) **** */}
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
-                    {/* Conditionally render PriceHistoryChart or fallback */}
+                    {/* Conditional rendering for PriceHistoryChart */}
                     {currentActualPriceForHistory > 0 ? (
                         <PriceHistoryChart 
                             productId={product.id} 
@@ -295,6 +289,7 @@ const ProductDetail = () => {
                         </div>
                     )}
                 </section>
+                {/* **** END OF PRICE HISTORY SECTION **** */}
 
                 <ProductRelatedSections similarProducts={similarProductsState} productId={numericProductId} />
                 
@@ -303,8 +298,8 @@ const ProductDetail = () => {
                 </section>
               </div>
 
-              {isPriceAlertModalOpen && bestPrice && ( // Changed from bestPriceInfo
-                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPrice.discountPrice ?? bestPrice.price} />
+              {isPriceAlertModalOpen && bestPriceInfo && (
+                <PriceAlertModal isOpen={isPriceAlertModalOpen} onClose={() => setIsPriceAlertModalOpen(false)} alertType="product" productId={product.id} productName={product.title} currentPrice={bestPriceInfo.discountPrice ?? bestPriceInfo.price} />
               )}
 
               {isVendorPopupVisible && popupContent && (
