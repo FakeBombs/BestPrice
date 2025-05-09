@@ -176,7 +176,7 @@ export const mainCategories: Category[] = [
 
 // --- Subcategories and nested categories ---
 export const categories: Category[] = [
-  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile', parentId: 1, image: '/dist/images/cat/mobile-telephony.webp' },
+  { id: 10, name: 'Κινητή Τηλεφωνία', slug: 'mobile', parentId: 1, image: '/dist/images/cat/mobile.webp' },
   { id: 11, name: 'Υπολογιστές', slug: 'computers', parentId: 1, image: '/dist/images/cat/computers.webp' },
   { id: 12, name: 'Laptops, Αξεσουάρ', slug: 'laptops-accessories', parentId: 1, image: '/dist/images/cat/laptops-accessories.webp' },
   { id: 13, name: 'Εικόνα', slug: 'visual', parentId: 1, image: '/dist/images/cat/visual.webp' },
@@ -185,7 +185,7 @@ export const categories: Category[] = [
   { id: 16, name: 'Video Games', slug: 'video-games', parentId: 1, image: '/dist/images/cat/video-games.webp' },
   { id: 17, name: 'Ήχος', slug: 'audio', parentId: 1, image: '/dist/images/cat/audio.webp' },
   { id: 18, name: 'Φωτογραφία, Video', slug: 'photo-video', parentId: 1, image: '/dist/images/cat/photo-video.webp' },
-  { id: 19, name: 'Ηλεκτρονικά', slug: 'electronics', parentId: 1, image: '/dist/images/cat/electronics.webp' },
+  { id: 19, name: 'Ηλεκτρονικά', slug: 'consumer-electronics', parentId: 1, image: '/dist/images/cat/consumer-electronics.webp' },
   { id: 20, name: 'Τηλεφωνία', slug: 'telephony', parentId: 1, image: '/dist/images/cat/telephony.webp' },
   { id: 21, name: 'Gadgets', slug: 'gadgets', parentId: 1, image: '/dist/images/cat/gadgets.webp' },
   { id: 22, name: 'Οικιακές Συσκευές', slug: 'home-appliances', parentId: 2, image: '/dist/images/cat/home-appliances.webp' },
