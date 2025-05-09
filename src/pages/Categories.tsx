@@ -153,7 +153,7 @@ const Categories: React.FC = () => {
                   </hgroup>
               </header>
               <ScrollableSlider>
-                  <div className="p__products--scroll p__products--inline scroll__content">
+                  <div className="p__products--scroll scroll__content">
                       {dealProducts.map(prod => (
                           <ProductCard key={`deal-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
                       ))}
@@ -180,7 +180,7 @@ const Categories: React.FC = () => {
                   </hgroup>
               </header>
               <ScrollableSlider>
-                  <div className="p__products--scroll p__products--inline scroll__content">
+                  <div className="p__products--scroll scroll__content">
                       {hotProducts.map(prod => (
                           <ProductCard key={`hot-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
                       ))}
@@ -258,7 +258,7 @@ const Categories: React.FC = () => {
                 <hgroup className="section__hgroup"><h2 className="section__title">{t('recently_viewed_title')}</h2></hgroup>
             </header>
             <ScrollableSlider>
-                <div className="p__products--scroll p__products--inline scroll__content">
+                <div className="p__products--scroll scroll__content">
                     {recentlyViewed.map(prod => (
                         <ProductCard key={`recent-${prod.id}`} product={prod} className="p p--card p--card-slider"/>
                     ))}
@@ -349,7 +349,7 @@ const Categories: React.FC = () => {
               </div>
             </div>
             {renderAppliedFilters()}
-            {sliderProducts.length > 0 && ( <div className="products-wrapper"> <div className="products-wrapper__header"><div className="products-wrapper__title">{activeFilters.deals ? t('selected_deals') : t('popular_choices')}</div></div> <ScrollableSlider> <div className="p__products--scroll p__products--inline scroll__content"> {sliderProducts.map(prod => ( <InlineProductItem key={`slider-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-slider-inline"/> ))} </div> </ScrollableSlider> </div> )}
+            {sliderProducts.length > 0 && ( <div className="products-wrapper"> <div className="products-wrapper__header"><div className="products-wrapper__title">{activeFilters.deals ? t('selected_deals') : t('popular_choices')}</div></div> <ScrollableSlider> <div className="p__products--scroll scroll__content"> {sliderProducts.map(prod => ( <InlineProductItem key={`slider-${prod.id}`} product={prod} activeVendorFilterDomain={activeVendorDomainForProductLink} bpref="cat-slider-inline"/> ))} </div> </ScrollableSlider> </div> )}
             {filteredProducts.length > 0 && ( <div className="page-header__sorting"> <div className="tabs"><div className="tabs-wrapper"><nav> <a href="#" data-type="rating-desc" rel="nofollow" className={sortType === 'rating-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('rating-desc'); }}><div className="tabs__content">{t('sort_most_popular')}</div></a> <a href="#" data-type="newest-desc" rel="nofollow" className={sortType === 'newest-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('newest-desc'); }}><div className="tabs__content">{t('sort_newest')}</div></a> <a href="#" data-type="price-asc" rel="nofollow" className={sortType === 'price-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-asc'); }}><div className="tabs__content">{t('sort_cheapest')}</div></a> <a href="#" data-type="price-desc" rel="nofollow" className={sortType === 'price-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('price-desc'); }}><div className="tabs__content">{t('sort_most_expensive')}</div></a> <a href="#" data-type="alpha-asc" rel="nofollow" className={sortType === 'alpha-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('alpha-asc'); }}><div className="tabs__content">{t('sort_alphabetical')}</div></a> <a href="#" data-type="reviews-desc" rel="nofollow" className={sortType === 'reviews-desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('reviews-desc'); }}><div className="tabs__content">{t('sort_most_reviews')}</div></a> {shouldShowBrandSort && ( <a href="#" data-type="brand-asc" rel="nofollow" className={sortType === 'brand-asc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('brand-asc'); }}><div className="tabs__content">{t('sort_by_manufacturer')}</div></a> )} <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}><div className="tabs__content">{t('sort_num_stores')}</div></a> </nav></div></div> </div> )}
           </header>
           <div className="page-products__main-wrapper">
