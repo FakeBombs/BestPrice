@@ -259,7 +259,7 @@ const elTranslations = {
   'kids-baby': 'Παιδικά - Βρεφικά',
   'hobby-sports': 'Hobby, Αθλητισμός',
   'auto-moto': 'Μηχανοκίνηση',
-  'mobile-telephony': 'Κινητή Τηλεφωνία',
+  'mobile': 'Κινητή Τηλεφωνία',
   'computers': 'Υπολογιστές',
   'laptops-accessories': 'Laptops, Αξεσουάρ',
   'visual': 'Εικόνα',
