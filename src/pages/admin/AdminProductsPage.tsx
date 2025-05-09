@@ -1,36 +1,17 @@
-
 import { useState } from "react";
-import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Search, AlertCircle, Image } from "lucide-react";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
-import { Product, Category, categories, getBestPrice, products } from "@/data/mockData";
+import { Product } from '@/data/productData';
+import { products } from '@/data/productData';
+import { Category, categories } from '@/data/categoriesData';
+import { getBestPrice } from "@/data/helpers";
 
 export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
