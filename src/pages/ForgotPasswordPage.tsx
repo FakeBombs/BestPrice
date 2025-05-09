@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ForgotPasswordForm from "@/components/ForgotPasswordForm";
 import { useNavigate } from "react-router-dom";
