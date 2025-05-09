@@ -9,6 +9,7 @@ import ProductEssentialInfo from '@/components/product/ProductEssentialInfo';
 import ProductHighlights from '@/components/product/ProductHighlights';
 import ProductTabsSection from '@/components/product/ProductTabsSection';
 import { VendorPriceCard } from '@/components/ProductVendors';
+import PriceHistoryChart from '@/components/PriceHistoryChart';
 import ProductRelatedSections from '@/components/product/ProductRelatedSections';
 import PriceAlertModal from '@/components/PriceAlertModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -183,6 +184,25 @@ const ProductDetail = () => {
   if (loading) { return <div className="loading-placeholder flex justify-center items-center h-96">{t('loadingProduct', 'Loading Product...')}</div>; }
   if (!product) { return <NotFound />; }
 
+  // 1. Get the best current price information for the product
+  const bestPrice = useMemo(() => {
+    if (!product) return null; // Handle product not being loaded yet
+    return getBestPrice(product);
+  }, [product]);
+
+  // 2. Determine a reliable current price to use as the 'basePrice' for history generation
+  //    This will be the most up-to-date price (considering discounts) for the chart's "today" value.
+  const currentActualPrice = useMemo(() => {
+    if (bestPrice) {
+        if (typeof bestPrice.discountPrice === 'number') return bestPrice.discountPrice;
+        if (typeof bestPrice.price === 'number') return bestPrice.price;
+    }
+    if (product && typeof product.lowestPrice === 'number') return product.lowestPrice; // Fallback to product's general lowest
+    return 0; // Final fallback if no price info at all
+  }, [bestPrice, product]);
+
+  // 3. State for the time range selector
+  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
   return (
     <div className="root__wrapper item-wrapper">
@@ -267,15 +287,17 @@ const ProductDetail = () => {
                 {/* Use renamed similarProductsState here */}
                 <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
 
-
                 <section id="item-graph" className="section">
-                    <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
-                    <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>Price History Graph Placeholder</div>
+                  <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
+                  {currentBasePrice > 0 ? (
+                    <PriceHistoryChart productId={product.id} basePrice={currentBasePrice} timeRange={timeRange} setTimeRange={setTimeRange} />
+                    ) : (
+                    <div style={{padding: '20px', border: '1px dashed #ccc', textAlign: 'center', color: '#888'}}>{t('price_history_unavailable_product', 'Price history is currently unavailable for this product.')}</div>
+                  )}
                 </section>
 
                 {/* Pass similarProductsState to the second ProductRelatedSections call if it's for similar products */}
                 <ProductRelatedSections similarProducts={similarProductsState} productId={numericProductId} />
-
 
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
