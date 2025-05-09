@@ -196,6 +196,7 @@ const ProductDetail = () => {
   if (!product) { return <NotFound />; }
 
   return (
+    <>
     <div className="root__wrapper item-wrapper">
       <div className="root">
         <div id="trail" style={{ position: "relative" }}>
@@ -397,9 +398,14 @@ const ProductDetail = () => {
           </main>
         </div>
         </div>
-        <ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} />
       </div>
     </div>
+    <div class="history__placeholder" data-intersected="">
+      <div class="root__wrapper">
+        <div class="root"><ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} /></div>
+      </div>
+    </div>
+    </>
   );
 };
 
