@@ -260,7 +260,7 @@ const enTranslations = {
   'kids-baby': 'Kids & Baby',
   'hobby-sports': 'Hobby & Sports',
   'auto-moto': 'Auto & Moto',
-  'mobile-telephony': 'Mobile Telephony',
+  'mobile': 'Mobile Telephony',
   'computers': 'Computers',
   'laptops-accessories': 'Laptops & Accessories',
   'visual': 'Visual',
