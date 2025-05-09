@@ -268,7 +268,7 @@ const enTranslations = {
   'video-games': 'Video Games',
   'audio': 'Audio',
   'photo-video': 'Photo & Video',
-  'electronics': 'Electronics',
+  'consumer-electronics': 'Electronics',
   'telephony': 'Telephony',
   'gadgets': 'Gadgets',
   'home-appliances': 'Home Appliances',
