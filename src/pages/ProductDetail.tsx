@@ -30,10 +30,9 @@ const cleanDomainName = (url: string): string => {
   catch (e) { return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]; }
 };
 
-// Helper Function to Determine Current Opening Status (NOW USES t for translations)
+// Helper Function to Determine Current Opening Status
 const useOpeningStatus = () => {
     const { t } = useTranslation(); 
-
     const getStatus = useCallback((openingHours: OpeningHours[] | undefined): { text: string, isOpen: boolean } => {
         if (!openingHours || openingHours.length === 0) { return { text: t('openingHoursNotAvailable', "Opening hours information not available"), isOpen: false }; }
         try {
@@ -43,12 +42,9 @@ const useOpeningStatus = () => {
             const currentDayName = days[currentDayIndex] as OpeningHours['dayOfWeek'];
             const currentTime = now.getHours() * 100 + now.getMinutes();
             const todayHours = openingHours.find(h => h.dayOfWeek === currentDayName);
-
             if (!todayHours || !todayHours.opens || !todayHours.closes) { return { text: t('closedToday', "Closed today"), isOpen: false }; }
-
             const opensTime = parseInt(todayHours.opens.replace(':', ''), 10);
             const closesTime = parseInt(todayHours.closes.replace(':', ''), 10);
-
             if (!isNaN(opensTime) && !isNaN(closesTime)) {
                 if (currentTime >= opensTime && currentTime < closesTime) {
                     return { text: t('openUntil', { time: todayHours.closes }), isOpen: true };
@@ -103,19 +99,24 @@ const ProductDetail = () => {
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{ vendor: Vendor; priceInfo: ProductPrice; } | null>(null);
   
-  // **** ADD State for PriceHistoryChart ****
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y'>('1m');
 
   const formatProductSlug = useCallback((title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'), []);
 
+  // --- primaryCategory is now a useMemo, dependent on 'product' ---
+  const primaryCategory = useMemo(() => {
+    if (!product || !product.categoryIds || product.categoryIds.length === 0) return null;
+    const primaryCategoryId = product.categoryIds[0];
+    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+    return allCatsMap.get(primaryCategoryId) || null;
+  }, [product]); // Depends on product state
+
   // Effect 1: Fetch main product and its direct relations
-useEffect(() => {
+  useEffect(() => {
     setLoading(true);
     setProduct(undefined); 
-    setPrimaryCategory(null); 
     setSimilarProductsState([]);
     setCategoryDeals([]);
-    // recentlyViewed updates based on localStorage
 
     if (isNaN(numericProductId)) {
         setProduct(null);
@@ -125,18 +126,15 @@ useEffect(() => {
     const productData = getProductById(numericProductId);
 
     if (productData) {
-        setProduct(productData);
+        setProduct(productData); 
         setCurrentImage(productData.image || '');
         setSimilarProductsState(getSimilarProducts(numericProductId));
 
         if (productData.categoryIds && productData.categoryIds.length > 0) {
             const primCatId = productData.categoryIds[0];
-            const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-            setPrimaryCategory(allCatsMap.get(primCatId) || null);
             setCategoryDeals(getProductsByCategory(primCatId).filter(p => p.id !== numericProductId).slice(0, 10));
         } else {
             setCategoryDeals([]);
-            setPrimaryCategory(null);
         }
 
         try {
@@ -156,14 +154,13 @@ useEffect(() => {
         }
     } else {
         setProduct(null);
-        setPrimaryCategory(null);
     }
     setLoading(false);
-}, [numericProductId, productSlug, navigate, location.search, formatProductSlug]);
+  }, [numericProductId, productSlug, navigate, location.search, formatProductSlug]);
 
 
-// Effect 2: Calculate "Popular in Category" and "Customers Also Viewed"
-useEffect(() => {
+  // Effect 2: Calculate "Popular in Category" and "Customers Also Viewed"
+  useEffect(() => {
     if (product && primaryCategory) {
         const categoryId = primaryCategory.id;
         const popular = allMockProducts
@@ -191,24 +188,16 @@ useEffect(() => {
         setPopularInCategory([]);
         setCustomersAlsoViewed([]);
     }
-}, [product, primaryCategory, similarProductsState, categoryDeals, allMockProducts]);
+  }, [product, primaryCategory, similarProductsState, categoryDeals, allMockProducts]);
 
 
-  const bestPriceInfo = useMemo(() => { // Kept your original variable name
+  const bestPriceInfo = useMemo(() => {
     if (!product) return null;
     return getBestPrice(product);
   }, [product]);
 
-  const primaryCategory = useMemo(() => {
-    if (!product || !product.categoryIds || product.categoryIds.length === 0) return null;
-    const primaryCategoryId = product.categoryIds[0];
-    const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-    return allCatsMap.get(primaryCategoryId) || null;
-  }, [product]);
-
-  // **** ADD currentActualPriceForHistory calculation ****
   const currentActualPriceForHistory = useMemo(() => {
-    if (bestPriceInfo) { // Use bestPriceInfo as per your original structure
+    if (bestPriceInfo) {
         if (typeof bestPriceInfo.discountPrice === 'number') return bestPriceInfo.discountPrice;
         if (typeof bestPriceInfo.price === 'number') return bestPriceInfo.price;
     }
@@ -225,7 +214,7 @@ useEffect(() => {
       toast({ title: t("loginRequired", "Login Required"), description: t("loginToAddToFavorites", "Please log in to add this product to your favorites"), variant: "destructive" });
       return;
     }
-    if (product) { // Ensure product is not null
+    if (product) {
         toast({ title: t("addedToFavorites", "Added to Favorites"), description: t("productAddedToFavorites", { productName: product.title }) });
     }
   };
@@ -239,7 +228,7 @@ useEffect(() => {
       toast({ title: t("loginRequired", "Login Required"), description: t("loginToSetPriceAlert", "Please log in to set a price alert"), variant: "destructive" });
       return;
     }
-    if (product) { // Ensure product exists
+    if (product) {
         setIsPriceAlertModalOpen(true);
     }
   };
@@ -257,7 +246,7 @@ useEffect(() => {
           <nav className="breadcrumb"><ProductBreadcrumb product={product} /></nav>
         </div>
         <div className="item-layout__wrapper">
-          <div class="item-layout">
+          <div className="item-layout"> {/* Corrected class from your backup */}
           <aside className="item-aside stick-to-bottom">
             <div className="item__image-wrapper">
               <div className="item__image">
@@ -334,10 +323,8 @@ useEffect(() => {
                   <ProductRelatedSections sectionId="item-category-deals" titleKey="deals_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} subtitleKey="deals_in_category_subtitle" products={categoryDeals} />
                 )}
 
-                {/* **** START OF PRICE HISTORY SECTION (Your Original Structure) **** */}
                 <section id="item-graph" className="section">
                     <header className="section__header"><hgroup className="section__hgroup"><h2 className="section__title">{t('priceHistoryTitle', 'Price History')}</h2></hgroup></header>
-                    {/* Conditional rendering for PriceHistoryChart */}
                     {currentActualPriceForHistory > 0 ? (
                         <PriceHistoryChart 
                             productId={product.id} 
@@ -351,7 +338,6 @@ useEffect(() => {
                         </div>
                     )}
                 </section>
-                {/* **** END OF PRICE HISTORY SECTION **** */}
 
                 {similarProductsState.length > 0 && (
                   <ProductRelatedSections titleKey="similar_products_title" products={similarProductsState} />
@@ -466,11 +452,14 @@ useEffect(() => {
         </div>
       </div>
     </div>
-    <div class="history__placeholder" data-intersected="">
-      <div class="root__wrapper">
-        <div class="root">
+    <div className="history__placeholder" data-intersected="">
+      <div className="root__wrapper">
+        <div className="root">
           {recentlyViewed.length > 0 && (
-            <ProductRelatedSections sectionId="recently-viewed-products" titleKey="recently_viewed_title" products={recentlyViewed.filter(p => p.id !== numericProductId)}
+            <ProductRelatedSections 
+                sectionId="recently-viewed-products" 
+                titleKey="recently_viewed_title" 
+                products={recentlyViewed} // recentlyViewed is already filtered if necessary
             />
           )}
         </div>
