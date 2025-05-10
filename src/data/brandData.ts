@@ -12,12 +12,12 @@ export interface Brand {
 // --- Brands ---
 export const brands: Brand[] = [
   // -- A --
-  { id: 26, name: 'Adidas', logo: 'brands/26.svg', slug: 'adidas' },
-  { id: 25, name: 'AEG', logo: 'brands/25.svg', slug: 'aeg' },
-  { id: 10, name: 'Asus', logo: 'brands/10.svg', slug: 'asus' },
-  { id: 11, name: 'Acer', logo: 'brands/11.svg', slug: 'acer' },
-  { id: 21, name: 'Akai', logo: 'brands/21.svg', slug: 'akai' },
-  { id: 27, name: 'Ajax', logo: 'brands/27.svg', slug: 'ajax' },
+  { id: 26, name: 'Adidas', logo: '/brands/26.svg', slug: 'adidas' },
+  { id: 25, name: 'AEG', logo: '/brands/25.svg', slug: 'aeg' },
+  { id: 10, name: 'Asus', logo: '/brands/10.svg', slug: 'asus' },
+  { id: 11, name: 'Acer', logo: '/brands/11.svg', slug: 'acer' },
+  { id: 21, name: 'Akai', logo: '/brands/21.svg', slug: 'akai' },
+  { id: 27, name: 'Ajax', logo: '/brands/27.svg', slug: 'ajax' },
   { id: 22, name: 'Alpine', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/3403.svg', slug: 'alpine' },
   { id: 1, name: 'Apple', logo: 'brands/1.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
   { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
