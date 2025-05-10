@@ -1,13 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,7 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { X, Plus, Image } from "lucide-react";
-import { Product, Category, categories, vendors, ProductPrice } from "@/data/mockData";
+import { Product, ProductPrice } from '@/data/productData';
+import { Category, categories } from '@/data/categoriesData';
+import { vendors } from '@/data/vendorData';
 
 interface ProductFormProps {
   product?: Product;
