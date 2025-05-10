@@ -824,7 +824,6 @@ const elTranslations = {
   giftsForFemaleToddlers: 'Δώρα για κορίτσια νηπίου',
   giftsForMaleToddlers: 'Δώρα για αγόρια νηπίου',
   // --- Recipient Names ---
-  recipient_group_adults: 'Ενήλικες',
   men: 'Άνδρες',
   women: 'Γυναίκες',
   teens: 'Έφηβοι',
