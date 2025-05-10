@@ -135,6 +135,26 @@ const BrandPage = () => {
             }
         });
 
+        const renderAppliedFilters = useCallback(() => {
+        const { categoryIds, vendorIds, specs, deals, certified, inStock } = activeFilters;
+        const isAnyFilterActive = categoryIds.length > 0 ||
+                                 vendorIds.length > 0 ||
+                                 Object.values(specs).some(v => v.length > 0) ||
+                                 deals || certified || inStock;
+
+        if (!isAnyFilterActive) return null;
+
+        const renderChip = (key: string, title: string, label: string, onRemove: () => void) => (
+            <h2 className="applied-filters__filter" key={key}>
+                <a className="pressable" onClick={(e) => { e.preventDefault(); onRemove(); }} title={title}>
+                    <span className="applied-filters__label">{label}</span>
+                    <svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}>
+                        <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
+                    </svg>
+                </a>
+            </h2>
+        );
+
         const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
         setAvailableCategories(
             Object.entries(categoryCounts).map(([idStr, count]) => {
