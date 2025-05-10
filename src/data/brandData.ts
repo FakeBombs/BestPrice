@@ -19,7 +19,7 @@ export const brands: Brand[] = [
   { id: 21, name: 'Akai', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/755.svg', slug: 'akai' },
   { id: 27, name: 'Ajax', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1065.svg', slug: 'ajax' },
   { id: 22, name: 'Alpine', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/3403.svg', slug: 'alpine' },
-  { id: 1, name: 'Apple', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/9.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
+  { id: 1, name: 'Apple', logo: 'brands/1.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
   { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
   { id: 24, name: 'Ariel', slug: 'ariel' },
   { id: 31, name: 'Attrattivo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/22199.svg', slug: 'attrattivo' },
