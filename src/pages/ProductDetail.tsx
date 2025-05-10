@@ -320,7 +320,7 @@ const ProductDetail = () => {
                     )}
 
                 {categoryDeals.length > 0 && primaryCategory && (
-                  <ProductRelatedSections sectionId="item-category-deals" titleKey="deals_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} subtitleKey="deals_in_category_subtitle" products={categoryDeals} />
+                  <ProductRelatedSections sectionId="item-category-deals" titleKey="deals_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name).toLowerCase() }} subtitleKey="deals_in_category_subtitle" products={categoryDeals} />
                 )}
 
                 <section id="item-graph" className="section">
@@ -348,7 +348,7 @@ const ProductDetail = () => {
                 </section>
 
                 {popularInCategory.length > 0 && primaryCategory && (
-                    <ProductRelatedSections titleKey="popular_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} products={popularInCategory} sectionId="popular-in-category" />
+                    <ProductRelatedSections titleKey="popular_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name).toLowerCase() }} products={popularInCategory} sectionId="popular-in-category" />
                 )}
               </div>
 
