@@ -23,15 +23,24 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ product
   }
 
   const sectionTitle = t(titleKey, titleOptions || {});
-  const sectionSubtitle = subtitleKey ? t(subtitleKey, subtitleOptions || {}) : null;
+  
+  let sectionSubtitle = null;
+  if (subtitleKey) {
+    const specificSubtitle = t(subtitleKey);
+    if (specificSubtitle !== subtitleKey) {
+      sectionSubtitle = specificSubtitle;
+    } else {
+      sectionSubtitle = t('popular_in_category_subtitle_default', '');
+    }
+  }
 
   return (
     <section id={sectionId} className="section">
       <header className="section__header">
         <hgroup className="section__hgroup">
           <h2 className="section__title">{sectionTitle}</h2>
-          {sectionSubtitle && (
-            <p className="section__subtitle">{sectionSubtitle}</p>
+          {sectionSubtitle && sectionSubtitle !== 'popular_in_category_subtitle_default' && (
+            <p className="section__subtitle">{sectionSubtitle}</p> 
           )}
         </hgroup>
       </header>
