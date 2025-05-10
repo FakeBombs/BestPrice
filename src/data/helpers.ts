@@ -67,6 +67,8 @@ export const getBestPrice = (product: Product): ProductPrice | null => {
   }, inStockPrices[0]);
 };
 
+export const getCategories = (): Category[] => { return categories; };
+
 export const getBrandsList = (): Brand[] => {
   return brands;
 };
