@@ -57,6 +57,7 @@ const enTranslations = {
   notFoundPageTitle: "Page Not Found",      notFoundMessage: "Oops! The page you are looking for does not exist.",
   recently_viewed_title: "Recently viewed",
   similar_products_title: 'Similar products',
+  customers_also_viewed_title: 'Customers also viewed', 
   deals_in_category_title: 'Deals in {{categoryName}}',
   deals_in_category_subtitle: 'Products with significant price drop',
   site_name: 'BestPrice', 
