@@ -35,4 +35,12 @@ export const brands: Brand[] = [
   { id: 22, name: 'Alpine', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/3403.svg', slug: 'alpine' },
   { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
   { id: 24, name: 'Ariel', slug: 'ariel' },
+  { id: 25, name: 'AEG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/895.svg', slug: 'aeg' },
+  { id: 26, name: 'Adidas', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4698.svg', slug: 'adidas' },
+  { id: 27, name: 'Ajax', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1065.svg', slug: 'ajax' },
+  { id: 28, name: 'Avon', logo: '', slug: 'avon' },
+  { id: 29, name: 'Avon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4790.svg', slug: 'avon' },
+  { id: 30, name: 'Avin', logo: '', slug: 'avin' },
+  { id: 31, name: 'Attrattivo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/22199.svg', slug: 'attrattivo' },
+  { id: 32, name: 'AXE', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/19762.svg', slug: 'axe' },
 ];
