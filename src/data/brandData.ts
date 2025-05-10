@@ -22,10 +22,11 @@ export const brands: Brand[] = [
   { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
   { id: 24, name: 'Ariel', slug: 'ariel' },
   { id: 31, name: 'Attrattivo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/22199.svg', slug: 'attrattivo' },
-  { id: 30, name: 'Avin', logo: '', slug: 'avin' },
-  { id: 28, name: 'Avon', logo: '', slug: 'avon' }, // Note: Duplicate name, keeping original order for duplicates
+  { id: 30, name: 'Avin', slug: 'avin' },
+  { id: 28, name: 'Avon', slug: 'avon' },
   { id: 29, name: 'Avon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4790.svg', slug: 'avon' },
   { id: 32, name: 'AXE', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/19762.svg', slug: 'axe' },
+  { id: 33, name: 'B&C Collection', slug: 'b-c-collection' },
   { id: 5, name: 'Canon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/10.svg', slug: 'canon' },
   { id: 8, name: 'Dell', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/292.svg', slug: 'dell' },
   { id: 9, name: 'HP', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1.svg', slug: 'hp' },
