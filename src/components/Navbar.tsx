@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { SearchBar } from '@/components/SearchBar';
 import UserButton from '@/components/UserButton';
 import NotificationButton from '@/components/NotificationButton';
-import { useTranslation } from '@/hooks/useTranslation'; // Make sure path is correct
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavbarProps {
   onSitemapToggle: () => void;
@@ -19,7 +19,7 @@ const Navbar = forwardRef<HTMLDivElement, NavbarProps>(
     const { t, language } = useTranslation();
 
     // Prepare style for the sitemap button's pseudo-element
-    const translatedCategoriesText = t('categories', 'Categories'); // Fallback added just in case
+    const translatedCategoriesText = t('categories', 'Categories');
     const sitemapButtonStyle = { '--translated-content': `"${translatedCategoriesText}"` };
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
