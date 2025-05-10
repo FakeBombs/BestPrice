@@ -23,7 +23,6 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ product
   }
 
   const sectionTitle = t(titleKey, titleOptions || {});
-  const sectionSubtitle = subtitleKey ? t(subtitleKey, subtitleOptions || {}) : null;
 
   let sectionSubtitle = null;
   if (subtitleKey) {
