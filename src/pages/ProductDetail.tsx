@@ -93,7 +93,6 @@ const ProductDetail = () => {
 
   const [product, setProduct] = useState<Product | null | undefined>(undefined);
   const [currentImage, setCurrentImage] = useState<string>('');
-  const [primaryCategory, setPrimaryCategory] = useState<Category | null>(null);
   const [similarProductsState, setSimilarProductsState] = useState<Product[]>([]);
   const [categoryDeals, setCategoryDeals] = useState<Product[]>([]);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
