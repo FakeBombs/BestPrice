@@ -537,5 +537,3 @@ export const categories: Category[] = [
   { id: 523, name: 'Πομποδέκτες, Walkie-Talkie', slug: 'transceivers-walkie-talkies', parentId: 214, image: '/dist/images/cat/transceivers-walkie-talkies.webp' },
   { id: 524, name: 'Αξεσουάρ Ασυρμάτων', slug: 'walkie-talkie-accessories', parentId: 214, image: '/dist/images/cat/walkie-talkie-accessories.webp' },
 ];
-
-export const getCategories = (): Category[] => { return categories; };
