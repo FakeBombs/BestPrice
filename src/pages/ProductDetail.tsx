@@ -190,6 +190,11 @@ const ProductDetail = () => {
     }
   }, [product, primaryCategory, similarProductsState, categoryDeals, allMockProducts]);
 
+  const getPopularSubtitleKey = (slug: string | undefined) => {
+    if (!slug) return 'popular_in_category_subtitle_default';
+    return `popular_in_category_subtitle_${slug}`;
+};
+
 
   const bestPriceInfo = useMemo(() => {
     if (!product) return null;
@@ -348,7 +353,7 @@ const ProductDetail = () => {
                 </section>
 
                 {popularInCategory.length > 0 && primaryCategory && (
-                    <ProductRelatedSections titleKey="popular_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name).toLowerCase() }} products={popularInCategory} sectionId="popular-in-category" />
+                    <ProductRelatedSections titleKey="popular_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name).toLowerCase() }} subtitleKey={`popular_in_category_subtitle_${primaryCategory.slug}`} products={popularInCategory} sectionId="popular-in-category" />
                 )}
               </div>
 
