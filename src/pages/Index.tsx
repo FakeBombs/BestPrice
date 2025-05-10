@@ -4,8 +4,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
-import { mainCategories } from '@/data/categoriesData';
-import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals, getCategories } from '@/data/helpers';
+import { mainCategories, getCategories } from '@/data/categoriesData';
+import { fetchFeaturedProducts, fetchDeals, fetchNewArrivals } from '@/data/helpers';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBodyAttributes, useHtmlAttributes } from '@/hooks/useDocumentAttributes';
 
