@@ -135,7 +135,7 @@ const elTranslations = {
   "color": "Χρώμα",                        "officialResellers": "Επίσημοι μεταπωλητές",
   "priceHistoryTitle": "Εξέλιξη τιμής",    "productDetails": "Λεπτομέρειες Προϊόντος",
   "userReviews": "Αξιολογήσεις Χρηστών ({{count}})", "questionsAndAnswers": "Ερωτήσεις & Απαντήσεις ({{count}})",
-  "similarProducts": "Παρόμοια Προϊόντα",    "dealsInCategory": "Προσφορές στην κατηγορία {{categoryName}}",
+  "similarProducts": "Παρόμοια προϊόντα",    "dealsInCategory": "Προσφορές στην κατηγορία {{categoryName}}",
   "addToCart": "Προσθήκη στο Καλάθι",       "buyNow": "Αγορά Τώρα",
   "specifications": "Χαρακτηριστικά",        "reviews": "Αξιολογήσεις",
   "relatedProducts": "Σχετικά Προϊόντα",     "writeReview": "Γράψτε Αξιολόγηση",
@@ -255,6 +255,11 @@ const elTranslations = {
   "paymentMethod_crypto": "Κρυπτονόμισμα",
   "paymentMethod_pay_by_link": "Πληρωμή με Σύνδεσμο",
   "paymentMethod_pickup_via": "Παραλαβή μέσω Courier/Υπηρεσίας",
+
+  popular_in_category_subtitle_default: 'Δημοφιλή προϊόντα που θα σας συναρπάσσουν',
+  popular_in_category_subtitle_graphics_cards: 'Βρες την κάρτα που θα απογειώσει το σύστημά σου',
+  popular_in_category_subtitle_smartphones: 'Τα πιο περιζήτητα smartphones της αγοράς',
+  popular_in_category_subtitle_laptops: 'Βρείτε τον ιδανικό φορητό υπολογιστή για τις ανάγκες σας',
 
   // ========================= Category Slugs =========================
   'technology': 'Τεχνολογία',
