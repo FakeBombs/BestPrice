@@ -60,7 +60,7 @@ const elTranslations = {
   customers_also_viewed_title: 'Οι χρήστες είδαν επίσης', 
   deals_in_category_title: 'Προσφορές σε {{categoryName}}',
   deals_in_category_subtitle: 'Προϊόντα με μεγάλη πτώση τιμής',
-  popular_in_category_title: 'Δημοφιλή στην κατηγορία {{categoryName}}',
+  popular_in_category_title: 'Δημοφιλείς {{categoryName}}',
   site_name: 'BestPrice', 
   sitemap_button_label: 'Κουμπί Sitemap', 
   my_account_link: 'Ο Λογαριασμός μου',
