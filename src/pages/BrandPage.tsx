@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, Link, useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { Brand, brands } from '@/data/brandData';
+import { Brand, brands, getBrandById } from '@/data/brandData';
 import { Category, categories, mainCategories } from '@/data/categoriesData';
 import { Product, products as allMockProducts, ProductPrice } from '@/data/productData';
 import { Vendor, vendors as allVendors, PaymentMethod } from '@/data/vendorData';
-import { getBrandById, getProductsByBrandName, getVendorById as findVendorById } from '@/data/helpers';
+import { getProductsByBrandName, getVendorById as findVendorById } from '@/data/helpers';
 import NotFound from '@/pages/NotFound';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
