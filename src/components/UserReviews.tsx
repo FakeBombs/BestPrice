@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import ReviewRatingSummary from './reviews/ReviewRatingSummary';
 import ReviewsList from './reviews/ReviewsList';
 import { Review } from './reviews/types';
-import { mockReviews } from './reviews/mockData';
+import { mockReviews } from './reviews/helpers';
 
 interface UserReviewsProps {
   productId: number;
