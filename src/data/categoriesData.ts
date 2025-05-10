@@ -537,3 +537,24 @@ export const categories: Category[] = [
   { id: 523, name: 'Πομποδέκτες, Walkie-Talkie', slug: 'transceivers-walkie-talkies', parentId: 214, image: '/dist/images/cat/transceivers-walkie-talkies.webp' },
   { id: 524, name: 'Αξεσουάρ Ασυρμάτων', slug: 'walkie-talkie-accessories', parentId: 214, image: '/dist/images/cat/walkie-talkie-accessories.webp' },
 ];
+
+// Optional helpers that ONLY use the above:
+export const getAllCategoriesList = (): Category[] => [...mainCategories, ...categories];
+
+export const findCategoryBySlugOrId = (identifier: string, allCats: Category[]): Category | undefined => {
+    return allCats.find(cat => cat.id.toString() === identifier || cat.slug === identifier);
+};
+
+export const getCategoryById = (id: number, allCats: Category[]): Category | undefined => {
+    return allCats.find(cat => cat.id === id);
+};
+
+export const getDescendantCategoryIds = (categoryId: number, allCats: Category[]): number[] => {
+    let ids: number[] = [];
+    const children = allCats.filter(cat => cat.parentId === categoryId);
+    children.forEach(child => {
+        ids.push(child.id);
+        ids = ids.concat(getDescendantCategoryIds(child.id, allCats));
+    });
+    return Array.from(new Set(ids)); // Ensure unique IDs
+};
