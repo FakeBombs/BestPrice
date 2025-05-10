@@ -277,7 +277,9 @@ const ProductDetail = () => {
                   </div>
                 </section>
 
-                <ProductRelatedSections categoryDeals={categoryDeals} similarProducts={similarProductsState} productId={numericProductId} currentCategoryName={primaryCategory ? t(primaryCategory.slug, primaryCategory.name) : undefined} />
+                {categoryDeals.length > 0 && primaryCategory && (
+                  <ProductRelatedSections sectionId="item-category-deals" titleKey="deals_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} subtitleKey="deals_in_category_subtitle" products={categoryDeals} />
+                )}
 
                 {/* **** START OF PRICE HISTORY SECTION (Your Original Structure) **** */}
                 <section id="item-graph" className="section">
@@ -298,7 +300,9 @@ const ProductDetail = () => {
                 </section>
                 {/* **** END OF PRICE HISTORY SECTION **** */}
 
-                <ProductRelatedSections similarProducts={similarProductsState} productId={numericProductId} />
+                {similarProductsState.length > 0 && (
+                  <ProductRelatedSections titleKey="similar_products_title" products={similarProductsState} />
+                )}
                 
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
@@ -407,7 +411,12 @@ const ProductDetail = () => {
     </div>
     <div class="history__placeholder" data-intersected="">
       <div class="root__wrapper">
-        <div class="root"><ProductRelatedSections recentlyViewed={recentlyViewed} productId={numericProductId} /></div>
+        <div class="root">
+          {recentlyViewed.length > 0 && (
+            <ProductRelatedSections sectionId="recently-viewed-products" titleKey="recently_viewed_title" products={recentlyViewed.filter(p => p.id !== numericProductId)}
+            />
+          )}
+        </div>
       </div>
     </div>
     </>
