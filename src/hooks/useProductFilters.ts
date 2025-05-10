@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Product } from '@/data/mockData';
+import { Product } from '@/data/productData';
 
 interface UseProductFiltersProps {
   initialProducts: Product[];
