@@ -19,23 +19,13 @@ export default function AdminHeader({ title, backLink, actionButton }: AdminHead
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-2">
         {backLink ? (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            asChild
-            className="mr-2"
-          >
+          <Button variant="ghost" size="icon" asChild className="mr-2">
             <Link to={backLink}>
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
         ) : (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate(-1)}
-            className="mr-2"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="mr-2">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         )}
