@@ -427,7 +427,12 @@ const BrandPage = () => {
                                 <div className="page-header__title-main">
                                     <h1>{currentBrand.name}</h1>
                                     <div className="page-header__count-wrapper">
-                                        <div className="page-header__count">{t('product_plural', { count: filteredProducts.length })}</div>
+                                        <div className="page-header__count">
+                                            {filteredProducts.length === 1 
+                                                ? t('product_singular', '1 product', { count: 1 }) 
+                                                : t('product_plural', `${filteredProducts.length} products`, { count: filteredProducts.length })
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                                 {currentBrand.logo && (
