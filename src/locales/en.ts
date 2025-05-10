@@ -822,7 +822,6 @@ const enTranslations = {
   giftsForMaleKids6_8: 'Gifts for boy kids 6-8',
   giftsForFemaleKids6_8: 'Gifts for girl kids 6-8',
   // --- Recipient Names ---
-  recipient_group_adults: 'Adults',
   men: 'Men',
   women: 'Women',
   teens: 'Teens',
