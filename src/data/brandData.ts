@@ -14,8 +14,8 @@ export const brands: Brand[] = [
   // -- A --
   { id: 26, name: 'Adidas', logo: 'brands/26.svg', slug: 'adidas' },
   { id: 25, name: 'AEG', logo: 'brands/25.svg', slug: 'aeg' },
-  { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg', slug: 'asus' },
-  { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg', slug: 'acer' },
+  { id: 10, name: 'Asus', logo: 'brands/10.svg', slug: 'asus' },
+  { id: 11, name: 'Acer', logo: 'brands/11.svg', slug: 'acer' },
   { id: 21, name: 'Akai', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/755.svg', slug: 'akai' },
   { id: 27, name: 'Ajax', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/1065.svg', slug: 'ajax' },
   { id: 22, name: 'Alpine', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/3403.svg', slug: 'alpine' },
