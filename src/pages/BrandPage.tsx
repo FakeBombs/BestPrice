@@ -12,10 +12,9 @@ import ScrollableSlider from '@/components/ScrollableSlider';
 import { useTranslation } from '@/hooks/useTranslation';
 import { cleanDomainName } from '@/utils/textFormatters';
 
-const MAX_DISPLAY_COUNT = 10; // For filters like categories, specs
+const MAX_DISPLAY_COUNT = 10;
 const DEFAULT_SORT_TYPE = 'rating-desc';
 
-// Helper to get effective lowest price (copied from GiftsFiltered.tsx or helpers.ts)
 const getEffectiveLowestPrice = (product: Product): number => {
     if (!product.prices || product.prices.length === 0) return Infinity;
     const inStockPrices = product.prices.filter(pr => pr.inStock);
@@ -24,15 +23,12 @@ const getEffectiveLowestPrice = (product: Product): number => {
     return Math.min(...pricesToConsider.map(pr => pr.discountPrice ?? pr.price));
 };
 
-
 interface ActiveBrandPageFilters {
     categoryIds: number[];
     vendorIds: number[];
     specs: Record<string, string[]>;
     deals: boolean;
     certified: boolean;
-    // nearby: boolean; // Not implemented here for brevity
-    // boxnow: boolean; // Not implemented here for brevity
     inStock: boolean;
 }
 
@@ -43,30 +39,28 @@ const BrandPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [currentBrand, setCurrentBrand] = useState<Brand | null | undefined>(undefined);
-    const [baseBrandProducts, setBaseBrandProducts] = useState<Product[]>([]); // Products of the current brand BEFORE other filters
+    const [baseBrandProducts, setBaseBrandProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-    // Filter-related states
     const [activeFilters, setActiveFilters] = useState<ActiveBrandPageFilters>(() => {
-        const catsFromUrl = searchParams.get('categories')?.split(',').map(Number).filter(Boolean) || [];
-        const vendorsFromUrl = searchParams.get('vendors')?.split(',').map(Number).filter(Boolean) || [];
-        // Specs from URL would be more complex to parse here, starting simple
+        const catsFromUrl = searchParams.get('categories')?.split(',').map(Number).filter(id => !isNaN(id)) || [];
+        const vendorsFromUrl = searchParams.get('vendors')?.split(',').map(Number).filter(id => !isNaN(id)) || [];
+        const specsFromUrl = JSON.parse(searchParams.get('specs') || '{}');
+
         return {
             categoryIds: catsFromUrl,
             vendorIds: vendorsFromUrl,
-            specs: {},
+            specs: specsFromUrl,
             deals: searchParams.get('deals') === '1',
             certified: searchParams.get('certified') === '1',
             inStock: searchParams.get('instock') === '1',
         };
     });
 
-    const [availableCategories, setAvailableCategories] = useState<{ id: number; name: string; slug: string; count: number; }[]>([]);
-    const [availableVendors, setAvailableVendors] = useState<{ id: number; name: string; count: number; certification?: string }[]>([]);
+    const [availableCategories, setAvailableCategories] = useState<{ id: number; name: string; slug: string; count: number; image: string | null; parentId: number | null | undefined }[]>([]);
+    const [availableVendors, setAvailableVendors] = useState<{ id: number; name: string; count: number; certification?: string | '' }[]>([]);
     const [availableSpecs, setAvailableSpecs] = useState<Record<string, { value: string; count: number }[]>>({});
-    const [certifiedVendorsForFilter, setCertifiedVendorsForFilter] = useState<Vendor[]>([]);
-
-
+    
     const [showMoreCategories, setShowMoreCategories] = useState(false);
     const [showMoreSpecs, setShowMoreSpecs] = useState<Record<string, boolean>>({});
     const [showMoreVendors, setShowMoreVendors] = useState(false);
@@ -76,55 +70,43 @@ const BrandPage = () => {
 
     const vendorIdMap = useMemo(() => new Map(allVendors.map(v => [v.id, v])), []);
 
-
-    // 1. Fetch Brand Details and its base products
     useEffect(() => {
         setLoading(true);
         setCurrentBrand(undefined);
         setBaseBrandProducts([]);
-
         const numericBrandId = brandIdParam ? parseInt(brandIdParam, 10) : NaN;
         if (isNaN(numericBrandId)) {
             setCurrentBrand(null); setLoading(false); return;
         }
-        const fetchedBrand = getBrandById(numericBrandId); // From helpers.ts
+        const fetchedBrand = getBrandById(numericBrandId);
         setCurrentBrand(fetchedBrand || null);
-
         if (fetchedBrand) {
-            // If your Product interface has brandId:
-            // const productsForBrand = allMockProducts.filter(p => p.brandId === fetchedBrand.id);
-            // Otherwise, filter by name (less robust if names aren't unique but IDs are):
             const productsForBrand = allMockProducts.filter(p => p.brand?.toLowerCase() === fetchedBrand.name.toLowerCase());
             setBaseBrandProducts(productsForBrand);
         }
         setLoading(false);
     }, [brandIdParam]);
 
-    // 2. Extract available filters whenever baseBrandProducts change
     useEffect(() => {
         if (baseBrandProducts.length === 0) {
             setAvailableCategories([]);
             setAvailableVendors([]);
             setAvailableSpecs({});
-            setCertifiedVendorsForFilter([]);
             return;
         }
-
         const categoryCounts: Record<number, number> = {};
-        const vendorCounts: Record<number, number> = {};
+        const vendorCounts: Record<number, { count: number, vendor: Vendor | undefined }> = {};
         const specCounts: Record<string, Record<string, number>> = {};
-        const tempCertifiedVendors = new Map<number, Vendor>();
 
         baseBrandProducts.forEach(product => {
             product.categoryIds.forEach(catId => {
                 categoryCounts[catId] = (categoryCounts[catId] || 0) + 1;
             });
             product.prices.forEach(price => {
-                vendorCounts[price.vendorId] = (vendorCounts[price.vendorId] || 0) + 1;
-                const vendor = vendorIdMap.get(price.vendorId);
-                if (vendor?.certification) {
-                    tempCertifiedVendors.set(vendor.id, vendor);
+                if (!vendorCounts[price.vendorId]) {
+                    vendorCounts[price.vendorId] = { count: 0, vendor: vendorIdMap.get(price.vendorId) };
                 }
+                vendorCounts[price.vendorId].count++;
             });
             if (product.specifications) {
                 Object.entries(product.specifications).forEach(([key, value]) => {
@@ -135,41 +117,18 @@ const BrandPage = () => {
             }
         });
 
-        const renderAppliedFilters = useCallback(() => {
-        const { categoryIds, vendorIds, specs, deals, certified, inStock } = activeFilters;
-        const isAnyFilterActive = categoryIds.length > 0 ||
-                                 vendorIds.length > 0 ||
-                                 Object.values(specs).some(v => v.length > 0) ||
-                                 deals || certified || inStock;
-
-        if (!isAnyFilterActive) return null;
-
-        const renderChip = (key: string, title: string, label: string, onRemove: () => void) => (
-            <h2 className="applied-filters__filter" key={key}>
-                <a className="pressable" onClick={(e) => { e.preventDefault(); onRemove(); }} title={title}>
-                    <span className="applied-filters__label">{label}</span>
-                    <svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}>
-                        <use href="/dist/images/icons/icons.svg#icon-x-12"></use>
-                    </svg>
-                </a>
-            </h2>
-        );
-
         const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
         setAvailableCategories(
             Object.entries(categoryCounts).map(([idStr, count]) => {
                 const category = allCatsMap.get(parseInt(idStr));
-                return { id: parseInt(idStr), name: category ? t(category.slug, category.name) : 'Unknown', slug: category?.slug || '', count };
+                return { id: parseInt(idStr), name: category ? t(category.slug, category.name) : 'Unknown', slug: category?.slug || '', count, image: category?.image || null, parentId: category?.parentId };
             }).filter(cat => cat.name !== 'Unknown').sort((a,b) => b.count - a.count)
         );
-
         setAvailableVendors(
-            Object.entries(vendorCounts).map(([idStr, count]) => {
-                const vendor = vendorIdMap.get(parseInt(idStr));
-                return { id: parseInt(idStr), name: vendor?.name || 'Unknown Vendor', count, certification: vendor?.certification };
-            }).filter(v => v.name !== 'Unknown Vendor').sort((a,b) => b.count - a.count)
+            Object.values(vendorCounts).map(vc => ({
+                id: vc.vendor!.id, name: vc.vendor!.name, count: vc.count, certification: vc.vendor!.certification
+            })).sort((a,b) => b.count - a.count)
         );
-
         const specsForState: Record<string, { value: string; count: number }[]> = {};
         Object.entries(specCounts).forEach(([specKey, valueCounts]) => {
             specsForState[specKey] = Object.entries(valueCounts)
@@ -178,32 +137,20 @@ const BrandPage = () => {
         });
         setAvailableSpecs(specsForState);
         setShowMoreSpecs(Object.keys(specsForState).reduce((acc, key) => { acc[key] = false; return acc; }, {} as Record<string, boolean>));
-        
-        setCertifiedVendorsForFilter(Array.from(tempCertifiedVendors.values()).sort((a, b) => {
-             const levels: Record<string, number> = { Gold: 3, Silver: 2, Bronze: 1 };
-             return (levels[b.certification!] || 0) - (levels[a.certification!] || 0);
-        }));
-
     }, [baseBrandProducts, t, vendorIdMap]);
 
-
-    // 3. Filter and Sort Products when activeFilters, sortType, or baseBrandProducts change
     useEffect(() => {
         let productsToProcess = [...baseBrandProducts];
-
-        // Apply category filters
         if (activeFilters.categoryIds.length > 0) {
             productsToProcess = productsToProcess.filter(p =>
                 activeFilters.categoryIds.some(catId => p.categoryIds.includes(catId))
             );
         }
-        // Apply vendor filters
         if (activeFilters.vendorIds.length > 0) {
             productsToProcess = productsToProcess.filter(p =>
                 p.prices.some(price => activeFilters.vendorIds.includes(price.vendorId))
             );
         }
-        // Apply spec filters
         if (Object.keys(activeFilters.specs).length > 0) {
             productsToProcess = productsToProcess.filter(p =>
                 Object.entries(activeFilters.specs).every(([filterKey, filterValues]) => {
@@ -213,7 +160,6 @@ const BrandPage = () => {
                 })
             );
         }
-        // Apply boolean filters
         if (activeFilters.inStock) {
             productsToProcess = productsToProcess.filter(p => p.prices.some(price => price.inStock));
         }
@@ -224,8 +170,7 @@ const BrandPage = () => {
             productsToProcess = productsToProcess.filter(p => p.prices.some(price => vendorIdMap.get(price.vendorId)?.certification));
         }
 
-        // Sort
-        const sorted = [...productsToProcess]; // Create a new array for sorting
+        const sorted = [...productsToProcess];
         switch (sortType) {
             case 'price-asc': sorted.sort((a, b) => getEffectiveLowestPrice(a) - getEffectiveLowestPrice(b)); break;
             case 'price-desc': sorted.sort((a, b) => getEffectiveLowestPrice(b) - getEffectiveLowestPrice(a)); break;
@@ -233,53 +178,48 @@ const BrandPage = () => {
             case 'rating-desc': default: sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.reviews || 0) - (a.reviews || 0)); break;
         }
         setFilteredProducts(sorted);
-
     }, [activeFilters, sortType, baseBrandProducts, vendorIdMap]);
 
-
-    // 4. Sync filters and sort to URL
     useEffect(() => {
         const params = new URLSearchParams();
         if (activeFilters.categoryIds.length > 0) params.set('categories', activeFilters.categoryIds.join(','));
         if (activeFilters.vendorIds.length > 0) params.set('vendors', activeFilters.vendorIds.join(','));
-        // Specs to URL is more complex, skipping for this example to keep it focused
+        if (Object.keys(activeFilters.specs).length > 0) params.set('specs', JSON.stringify(activeFilters.specs));
         if (activeFilters.deals) params.set('deals', '1');
         if (activeFilters.certified) params.set('certified', '1');
         if (activeFilters.inStock) params.set('instock', '1');
         if (sortType !== DEFAULT_SORT_TYPE) params.set('sort', sortType);
+        
+        const currentRelevantParams = new URLSearchParams(searchParams.toString());
+        currentRelevantParams.delete('brandId'); // Exclude params not managed by this page's state
 
-        // Only update if params changed
-        if (params.toString() !== searchParams.toString().split('&').filter(p => !p.startsWith('brand=')).join('&')) { // Preserve existing non-filter params
+        if (params.toString() !== currentRelevantParams.toString()) {
             setSearchParams(params, { replace: true });
         }
     }, [activeFilters, sortType, setSearchParams, searchParams]);
 
-    // Scroll to top on filter/sort change
     const isInitialLoad = React.useRef(true);
     useEffect(() => {
         if (isInitialLoad.current) {
-            isInitialLoad.current = false;
-            return;
+            isInitialLoad.current = false; return;
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [activeFilters, sortType]);
 
-
-    // --- Event Handlers for Filters ---
     const handleLinkFilterClick = (event: React.MouseEvent<HTMLAnchorElement>, handler: () => void) => { event.preventDefault(); handler(); };
-    const createToggleHandler = (filterKey: keyof Pick<ActiveBrandPageFilters, 'deals' | 'certified' | 'inStock'>) => {
+    const createBooleanToggleHandler = (filterKey: keyof Pick<ActiveBrandPageFilters, 'deals' | 'certified' | 'inStock'>) => {
         return () => setActiveFilters(prev => ({ ...prev, [filterKey]: !prev[filterKey] }));
     };
-    const handleDealsToggle = createToggleHandler('deals');
-    const handleCertifiedToggle = createToggleHandler('certified');
-    const handleInStockToggle = createToggleHandler('inStock');
-
+    const handleDealsToggle = createBooleanToggleHandler('deals');
+    const handleCertifiedToggle = createBooleanToggleHandler('certified');
+    const handleInStockToggle = createBooleanToggleHandler('inStock');
     const handleCategoryFilter = (categoryId: number) => {
         setActiveFilters(prev => ({
             ...prev,
             categoryIds: prev.categoryIds.includes(categoryId)
                 ? prev.categoryIds.filter(id => id !== categoryId)
-                : [...prev.categoryIds, categoryId]
+                : [categoryId] // Allow only one category selection for brand page simplicity
+                // : [...prev.categoryIds, categoryId] // For multi-select categories
         }));
     };
     const handleVendorFilter = (vendorId: number) => {
@@ -287,18 +227,20 @@ const BrandPage = () => {
             ...prev,
             vendorIds: prev.vendorIds.includes(vendorId)
                 ? prev.vendorIds.filter(id => id !== vendorId)
-                : [...prev.vendorIds, vendorId]
+                : [vendorId] // Allow only one vendor selection for simplicity
+                // : [...prev.vendorIds, vendorId] // For multi-select vendors
         }));
     };
     const handleSpecFilter = (specKey: string, specValue: string) => {
         setActiveFilters(prev => {
-            const currentSpecs = { ...(prev.specs[specKey] || []) };
-            const newSpecValues = currentSpecs[specKey]?.includes(specValue)
-                ? currentSpecs[specKey]?.filter((v: string) => v !== specValue)
-                : [...(currentSpecs[specKey] || []), specValue];
+            const currentValues = prev.specs[specKey] || [];
+            const newSpecValues = currentValues.includes(specValue)
+                ? currentValues.filter((v: string) => v !== specValue)
+                : [specValue]; // Allow only one spec value per key for simplicity
+                // : [...currentValues, specValue]; // For multi-select spec values
             
             const updatedSpecs = { ...prev.specs };
-            if (newSpecValues && newSpecValues.length > 0) {
+            if (newSpecValues.length > 0) {
                 updatedSpecs[specKey] = newSpecValues;
             } else {
                 delete updatedSpecs[specKey];
@@ -311,26 +253,22 @@ const BrandPage = () => {
         setSortType(DEFAULT_SORT_TYPE);
     };
     const handleSortChange = (newSortType: string) => {
-        if (newSortType !== sortType) {
-            setSortType(newSortType);
-        }
+        if (newSortType !== sortType) setSortType(newSortType);
     };
-    // --- End Filter Handlers ---
-
-    // --- renderMerchantInformation (Simplified from Categories.tsx) ---
+    
     const selectedVendorForInfo = useMemo(() => {
         if (activeFilters.vendorIds.length === 1) {
-            return findVendorById(activeFilters.vendorIds[0]); // Use your helper
+            return findVendorById(activeFilters.vendorIds[0]);
         }
         return null;
     }, [activeFilters.vendorIds]);
 
-    const renderMerchantInformation = () => {
+    const renderMerchantInformation = useCallback(() => {
         if (!selectedVendorForInfo) return null;
         const vendor = selectedVendorForInfo;
         const removeThisVendorFilter = (e: React.MouseEvent) => {
             e.preventDefault();
-            handleVendorFilter(vendor.id); // Deselect this vendor
+            handleVendorFilter(vendor.id);
         };
         const vendorUrl = `/m/${vendor.id}/${vendor.slug || vendor.name?.toLowerCase().replace(/\s+/g, '-') || vendor.id}`;
         return (
@@ -352,20 +290,61 @@ const BrandPage = () => {
                 </div>
             </div>
         );
-    };
-    // --- End renderMerchantInformation ---
+    }, [selectedVendorForInfo, t, handleVendorFilter]);
 
 
-    if (loading) return <div>{t('loading_brand_data', 'Loading Brand Data...')}</div>;
+    const renderAppliedFilters = useCallback(() => {
+        const { categoryIds, vendorIds, specs, deals, certified, inStock } = activeFilters;
+        const isAnyFilterActive = categoryIds.length > 0 || vendorIds.length > 0 || Object.values(specs).some(v => v.length > 0) || deals || certified || inStock;
+        if (!isAnyFilterActive) return null;
+        const renderChip = (key: string, title: string, label: string, onRemove: () => void) => (
+            <h2 className="applied-filters__filter" key={key}>
+                <a className="pressable" onClick={(e) => { e.preventDefault(); onRemove(); }} title={title}>
+                    <span className="applied-filters__label">{label}</span>
+                    <svg aria-hidden="true" className="icon applied-filters__x" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-x-12"></use></svg>
+                </a>
+            </h2>
+        );
+        const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+        return (
+            <div className="applied-filters">
+                {inStock && renderChip('instock', t('remove_instock_filter', 'Remove In Stock filter'), t('instock_label', 'In Stock'), handleInStockToggle)}
+                {deals && renderChip('deals', t('remove_deals_filter', 'Remove Deals filter'), t('deals_label', 'Deals'), handleDealsToggle)}
+                {certified && renderChip('certified', t('remove_certified_filter', 'Remove Certified filter'), t('certified_label', 'Certified'), handleCertifiedToggle)}
+                {categoryIds.map((catId) => {
+                    const category = allCatsMap.get(catId);
+                    const catName = category ? t(category.slug, category.name) : `ID: ${catId}`;
+                    return renderChip(`category-${catId}`, `${t('remove_category_filter', 'Remove category filter')} ${catName}`, catName, () => handleCategoryFilter(catId));
+                })}
+                {vendorIds.map((vendorId) => {
+                    const vendor = findVendorById(vendorId);
+                    const vendorName = vendor ? vendor.name : `ID: ${vendorId}`;
+                    return renderChip(`vendor-${vendorId}`, `${t('remove_vendor_filter', 'Remove store filter')} ${vendorName}`, vendorName, () => handleVendorFilter(vendorId));
+                })}
+                {Object.entries(specs).flatMap(([specKey, specValues]) =>
+                    (specValues as string[]).map((specValue) =>
+                        renderChip(
+                            `spec-${specKey}-${specValue}`,
+                            `${t('remove_spec_filter', 'Remove spec filter')} ${t(specKey.toLowerCase().replace(/\s+/g, '-'), specKey)}: ${specValue}`,
+                            `${t(specKey.toLowerCase().replace(/\s+/g, '-'), specKey)}: ${specValue}`,
+                            () => handleSpecFilter(specKey, specValue)
+                        )
+                    )
+                )}
+                <button className="applied-filters__reset pressable" onClick={handleResetFilters} title={t('reset_all_filters', 'Reset all filters')}>
+                    <svg aria-hidden="true" className="icon" width={12} height={12}><use href="/dist/images/icons/icons.svg#icon-refresh"></use></svg>
+                    <span>{t('clear_all_filters', 'Clear All')}</span>
+                </button>
+            </div>
+        );
+    }, [activeFilters, t, handleInStockToggle, handleDealsToggle, handleCertifiedToggle, handleCategoryFilter, handleVendorFilter, handleSpecFilter, handleResetFilters]);
+
+
+    if (loading) return <div className="flex justify-center items-center h-screen">{t('loading_brand_data', 'Loading Brand Data...')}</div>;
     if (!currentBrand) return <NotFound />;
 
-    const isAnyFilterActive = activeFilters.categoryIds.length > 0 ||
-                             activeFilters.vendorIds.length > 0 ||
-                             Object.values(activeFilters.specs).some(v => v.length > 0) ||
-                             activeFilters.deals || activeFilters.certified || activeFilters.inStock;
-
     return (
-        <> {/* Added Fragment because renderMerchantInformation is outside the main div */}
+        <>
         {renderMerchantInformation()}
         <div className="root__wrapper">
             <div className="root">
@@ -387,7 +366,6 @@ const BrandPage = () => {
                                 )}
                             </div>
                             
-                            {/* Show Only Filters */}
                             <div className="filter-limit default-list">
                                 <div className="filter__header"><h4>{t('show_only_title','Show only')}</h4></div>
                                 <div className="filter-container">
@@ -399,7 +377,6 @@ const BrandPage = () => {
                                 </div>
                             </div>
 
-                            {/* Categories Filter */}
                             {availableCategories.length > 0 && (
                                 <div className="filters__categories default-list" data-filter-name={t('categories', 'Categories')}>
                                     <div className="filter__header"><h4>{t('categories', 'Categories')}</h4></div>
@@ -421,7 +398,6 @@ const BrandPage = () => {
                                 </div>
                             )}
 
-                            {/* Specs Filters */}
                             {Object.entries(availableSpecs).map(([specKey, specOptions]) => {
                                 if (specOptions.length === 0) return null;
                                 const isExpanded = showMoreSpecs[specKey] || false;
@@ -448,7 +424,6 @@ const BrandPage = () => {
                                 );
                             })}
 
-                             {/* Vendors Filter (Certified Stores if applicable, or all vendors selling this brand) */}
                             {availableVendors.length > 0 && (
                                 <div className="filter-store filter-collapsed default-list" data-filter-name={t('vendors_selling_brand', 'Stores Selling This Brand')} data-type="store" data-key="store">
                                     <div className="filter__header"><h4>{t('vendors_selling_brand', 'Stores Selling This Brand')}</h4></div>
@@ -491,7 +466,6 @@ const BrandPage = () => {
                             </div>
                             {renderAppliedFilters()}
                             
-                            {/* Category Slider for this Brand */}
                             {availableCategories.length > 0 && (
                                 <section className="section">
                                     <header className="section__header">
@@ -513,7 +487,6 @@ const BrandPage = () => {
                                 </section>
                             )}
 
-
                             <div className="page-header__sorting">
                                 <div className="tabs">
                                     <div className="tabs-wrapper">
@@ -530,14 +503,15 @@ const BrandPage = () => {
                                             <a href="#" data-type="merchants_desc" rel="nofollow" className={sortType === 'merchants_desc' ? 'current' : ''} onClick={(e) => { e.preventDefault(); handleSortChange('merchants_desc'); }}>
                                                 <div className="tabs__content">{t('sort_num_stores', 'Number of Stores')}</div>
                                             </a>
-                                            {/* Add other sort options if relevant, e.g., newest, reviews, alphabetical */}
                                         </nav>
                                     </div>
                                 </div>
                             </div>
                         </header>
 
-                        {filteredProducts.length === 0 && !loading ? (
+                        {loading ? (
+                             <p>{t('loading_products', 'Loading products...')}</p>
+                        ) : filteredProducts.length === 0 ? (
                             <div id="no-results">
                                 <h3>{t('no_products_found_brand_filters', `No products from ${currentBrand.name} match your current filters.` , {brandName: currentBrand.name})}</h3>
                                 <div id="no-results-suggestions">
