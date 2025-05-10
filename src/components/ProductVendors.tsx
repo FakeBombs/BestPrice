@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { Product, ProductPrice, Vendor, PaymentMethod, OpeningHours } from '@/data/productData';
-import { vendors } from '@/data/vendorData'; 
+import { Product, ProductPrice, Vendor, OpeningHours } from '@/data/productData';
+import { vendors, PaymentMethod } from '@/data/vendorData'; 
 import { useTranslation } from '@/hooks/useTranslation'; 
 
 // Helper to clean domain name (needed for title attribute)
