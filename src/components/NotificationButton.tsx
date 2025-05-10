@@ -54,12 +54,7 @@ const NotificationButton = () => {
         <div className="p-4 border-b flex justify-between items-center">
           <h4 className="font-medium text-sm">Notifications</h4>
           {unreadCount > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-auto py-1 px-2 text-xs" 
-              onClick={() => markAllAsRead()}
-            >
+            <Button variant="ghost" size="sm" className="h-auto py-1 px-2 text-xs" onClick={() => markAllAsRead()}>
               Mark all as read
             </Button>
           )}
@@ -72,11 +67,7 @@ const NotificationButton = () => {
           ) : (
             <div className="divide-y">
               {notifications.map((notification) => (
-                <div 
-                  key={notification.id}
-                  className={`p-4 text-sm hover:bg-muted/50 ${!notification.read ? 'bg-muted/20' : ''}`}
-                  onClick={() => markAsRead(notification.id)}
-                >
+                <div key={notification.id} className={`p-4 text-sm hover:bg-muted/50 ${!notification.read ? 'bg-muted/20' : ''}`} onClick={() => markAsRead(notification.id)}>
                   <div className="flex items-center mb-1">
                     {getTypeIcon(notification.type)}
                     <span className="font-medium">{notification.title}</span>
@@ -87,11 +78,7 @@ const NotificationButton = () => {
                   </div>
                   {notification.link && (
                     <div className="ml-4 mt-2">
-                      <Link 
-                        to={notification.link}
-                        className="text-primary text-xs hover:underline"
-                        onClick={() => setOpen(false)}
-                      >
+                      <Link to={notification.link} className="text-primary text-xs hover:underline" onClick={() => setOpen(false)}>
                         View details
                       </Link>
                     </div>
@@ -102,11 +89,7 @@ const NotificationButton = () => {
           )}
         </ScrollArea>
         <div className="p-2 border-t text-center">
-          <Link 
-            to="/account/notifications" 
-            className="text-primary text-sm hover:underline inline-block p-2"
-            onClick={() => setOpen(false)}
-          >
+          <Link to="/account/notifications" className="text-primary text-sm hover:underline inline-block p-2" onClick={() => setOpen(false)}>
             View all notifications
           </Link>
         </div>
