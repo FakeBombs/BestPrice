@@ -106,6 +106,13 @@ const elTranslations = {
   category_unknown: 'Χωρίς Κατηγορία', 
   stores_count_label_one: '{{count}} κατάστημα', 
   stores_count_label_other: '{{count}} καταστήματα', 
+  loading_brand_data: 'Φόρτωση Δεδομένων Μάρκας...',
+  no_products_found_brand_filters: 'Δεν βρέθηκαν προϊόντα για την μάρκα {{brandName}} με αυτά τα φίλτρα.',
+  suggestion_try_removing_filters_brand: 'Δοκιμάστε να αφαιρέσετε μερικά φίλτρα ή ',
+  view_all_brand_products: 'δείτε όλα τα προϊόντα της μάρκας {{brandName}}',
+  categories_for_brand: 'Κατηγορίες για {{brandName}}',
+  vendors_selling_brand: 'Καταστήματα που πωλούν τη Μάρκα',
+  show_only_instock_products: 'Εμφάνιση μόνο διαθέσιμων προϊόντων',
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
