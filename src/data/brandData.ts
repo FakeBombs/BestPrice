@@ -23,7 +23,7 @@ export const brands: Brand[] = [
   { id: 31, name: 'Attrattivo', logo: '/31.svg', slug: 'attrattivo' },
   { id: 30, name: 'Avin', slug: 'avin' },
   { id: 28, name: 'Avon', slug: 'avon' },
-  { id: 29, name: 'Avon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4790.svg', slug: 'avon' },
+  { id: 29, name: 'Avon', logo: '/brands/29.svg', slug: 'avon' },
   { id: 32, name: 'AXE', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/19762.svg', slug: 'axe' },
 
   // -- B --
