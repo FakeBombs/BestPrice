@@ -12,7 +12,7 @@ export interface Brand {
 // --- Brands ---
 export const brands: Brand[] = [
   // -- A --
-  { id: 26, name: 'Adidas', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4698.svg', slug: 'adidas' },
+  { id: 26, name: 'Adidas', logo: 'brands/26.svg', slug: 'adidas' },
   { id: 25, name: 'AEG', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/895.svg', slug: 'aeg' },
   { id: 10, name: 'Asus', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/161.svg', slug: 'asus' },
   { id: 11, name: 'Acer', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/7.svg', slug: 'acer' },
