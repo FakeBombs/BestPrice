@@ -3,8 +3,9 @@ import { useSearchParams, Link, useParams, useNavigate } from 'react-router-dom'
 import { useToast } from '@/hooks/use-toast';
 import { Brand, brands } from '@/data/brandData';
 import { Category, categories, mainCategories } from '@/data/categoriesData';
-import { Product, products as allMockProducts, Vendor, vendors as allVendors, PaymentMethod, ProductPrice } from '@/data/productData'; // Assuming vendors are here for now
-import { getBrandById, getProductsByBrandName, getVendorById as findVendorById } from '@/data/helpers'; // Assuming these helpers
+import { Product, products as allMockProducts, ProductPrice } from '@/data/productData';
+import { Vendor, vendors as allVendors, PaymentMethod } from '@/data/vendorData';
+import { getBrandById, getProductsByBrandName, getVendorById as findVendorById } from '@/data/helpers';
 import NotFound from '@/pages/NotFound';
 import ProductCard from '@/components/ProductCard';
 import ScrollableSlider from '@/components/ScrollableSlider';
