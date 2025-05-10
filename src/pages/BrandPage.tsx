@@ -491,7 +491,7 @@ const BrandPage = () => {
                                     <ScrollableSlider>
                                         <div className="categories categories--scrollable scroll__content">
                                             {availableCategories.map((item) => (
-                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}?brand=${currentBrand.name}`} className="categories__category">
+                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}?brand=${currentBrand.name.toLowerCase()}`} className="categories__category">
                                                     {item.image && <img width="200" height="200" className="categories__image" src={item.image} alt={item.name} loading="lazy" />}
                                                     <h2 className="categories__title">{item.name}</h2>
                                                     <div className="categories__cnt">
