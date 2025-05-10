@@ -66,12 +66,6 @@ export interface Product {
   };
 }
 
-// Opening Hours Interface
-export interface OpeningHours {
-  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-  opens: string; closes: string; notes?: string;
-}
-
 // --- Products ---
 export const products: Product[] = [
   {
