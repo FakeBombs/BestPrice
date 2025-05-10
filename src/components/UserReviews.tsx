@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import ReviewRatingSummary from './reviews/ReviewRatingSummary';
 import ReviewsList from './reviews/ReviewsList';
 import { Review } from './reviews/types';
-import { mockReviews } from './reviews/helpers';
+import { mockReviews } from './reviews/mockData';
 
 interface UserReviewsProps {
   productId: number;
