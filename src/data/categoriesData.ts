@@ -538,23 +538,38 @@ export const categories: Category[] = [
   { id: 524, name: 'Αξεσουάρ Ασυρμάτων', slug: 'walkie-talkie-accessories', parentId: 214, image: '/dist/images/cat/walkie-talkie-accessories.webp' },
 ];
 
-// Optional helpers that ONLY use the above:
-export const getAllCategoriesList = (): Category[] => [...mainCategories, ...categories];
+const _allCategoriesList: Category[] | null = null;
+const getAllCategoriesList = (): Category[] => {
+  if (_allCategoriesList) {
+    return _allCategoriesList; // Return cached if available
+  }
+  return [...mainCategories, ...categories];
+};
 
-export const findCategoryBySlugOrId = (identifier: string, allCats: Category[]): Category | undefined => {
+export const findCategoryBySlugOrId = (identifier: string): Category | undefined => {
+    const allCats = getAllCategoriesList();
     return allCats.find(cat => cat.id.toString() === identifier || cat.slug === identifier);
 };
 
-export const getCategoryById = (id: number, allCats: Category[]): Category | undefined => {
+export const getCategoryById = (id: number): Category | undefined => {
+    const allCats = getAllCategoriesList();
     return allCats.find(cat => cat.id === id);
 };
 
-export const getDescendantCategoryIds = (categoryId: number, allCats: Category[]): number[] => {
+export const getDescendantCategoryIds = (categoryId: number): number[] => {
+    const allCats = getAllCategoriesList();
     let ids: number[] = [];
-    const children = allCats.filter(cat => cat.parentId === categoryId);
-    children.forEach(child => {
-        ids.push(child.id);
-        ids = ids.concat(getDescendantCategoryIds(child.id, allCats));
-    });
-    return Array.from(new Set(ids)); // Ensure unique IDs
+    const findChildrenRecursive = (currentParentId: number) => {
+        const children = allCats.filter(cat => cat.parentId === currentParentId);
+        children.forEach(child => {
+            if (!ids.includes(child.id)) {
+                ids.push(child.id);
+                findChildrenRecursive(child.id);
+            }
+        });
+    };
+    findChildrenRecursive(categoryId);
+    return ids; 
 };
+
+export const allCategoriesArray: Category[] = [...mainCategories, ...categories];
