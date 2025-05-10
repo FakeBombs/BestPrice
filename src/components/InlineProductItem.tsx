@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Product, ProductPrice } from '@/data/mockData';
+import { Product, ProductPrice } from '@/data/productData';
 
 interface InlineProductItemProps {
     product: Product;
