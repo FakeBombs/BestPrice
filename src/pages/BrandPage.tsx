@@ -432,7 +432,7 @@ const BrandPage = () => {
                                 </div>
                                 {currentBrand.logo && (
                                     <div className="page-header__title-aside">
-                                        <Link to={`/brand/${currentBrand.id}/${currentBrand.slug || currentBrand.name.toLowerCase().replace(/\s+/g, '-')}`} title={currentBrand.name} className="page-header__brand">
+                                        <Link to={`/b/${currentBrand.id}/${currentBrand.slug || currentBrand.name.toLowerCase().replace(/\s+/g, '-')}`} title={currentBrand.name} className="page-header__brand">
                                             <img itemProp="logo" title={`${currentBrand.name} logo`} alt={`${currentBrand.name} logo`} height="70" loading="lazy" src={currentBrand.logo} />
                                         </Link>
                                     </div>
