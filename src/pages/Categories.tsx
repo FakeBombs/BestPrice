@@ -3,10 +3,10 @@ import { useLocation, Link, useSearchParams, useNavigate } from 'react-router-do
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import NotFound from '@/pages/NotFound';
-import { Product, ProductPrice, Vendor, OpeningHours } from '@/data/productData';
+import { Product, ProductPrice } from '@/data/productData';
 import { products as allMockProducts } from '@/data/productData';
 import { Category, mainCategories, categories } from '@/data/categoriesData';
-import { vendors, PaymentMethod } from '@/data/vendorData';
+import { Vendor, vendors, PaymentMethod, OpeningHours } from '@/data/vendorData';
 import { Brand, brands } from '@/data/brandData';
 import ProductCard from '@/components/ProductCard';
 import InlineProductItem from '@/components/InlineProductItem';
