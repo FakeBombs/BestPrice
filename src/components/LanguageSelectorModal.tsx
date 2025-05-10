@@ -1,10 +1,7 @@
-// src/components/LanguageSelectorModal.tsx
-// FINAL VERSION incorporating expanded default variants and full language list
-
 import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguageContext } from '@/context/LanguageContext';
-import type { AllTranslations } from '@/locales'; // Import the type for keys
+import type { AllTranslations } from '@/locales';
 
 // --- Types and Constants ---
 type LanguageOption = {
