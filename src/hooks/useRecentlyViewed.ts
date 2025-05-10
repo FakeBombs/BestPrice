@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Product, getProductById } from '@/data/mockData';
+import { Product } from '@/data/productData';
+import { getProductById } from '@/data/helpers';
 
 const RECENTLY_VIEWED_KEY = 'recentlyViewedProducts';
 const MAX_RECENT_PRODUCTS = 50;
