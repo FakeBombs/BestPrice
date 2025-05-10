@@ -6,7 +6,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from '@/hooks/useTranslation';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import AuthDebugger from "@/components/auth/AuthDebugger";
 
 export default function LoginPage() {
   const { user } = useAuth();
@@ -73,9 +72,6 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-      
-      {/* Add auth debugger in development mode */}
-      {import.meta.env.DEV && <AuthDebugger />}
     </div>
   );
 }
