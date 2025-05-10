@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
-import { Product, ProductPrice, Vendor, PaymentMethod, OpeningHours } from '@/data/productData';
+import { Product, ProductPrice, Vendor, OpeningHours } from '@/data/productData';
 import { products as allMockProducts } from '@/data/productData';
 import { Category, mainCategories, categories as subCategories } from '@/data/categoriesData';
-import { vendors } from '@/data/vendorData';
+import { vendors, PaymentMethod } from '@/data/vendorData';
 import { Brand, brands as allBrands } from '@/data/brandData';
 import { searchProducts } from '@/data/helpers';
 import ScrollableSlider from '@/components/ScrollableSlider';
