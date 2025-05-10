@@ -47,7 +47,8 @@ const Categories: React.FC = () => {
 
   // --- Derived State ---
   const shouldShowBrandSort = useMemo(() => new Set(filteredProducts.map(p => p.brand).filter(Boolean)).size > 1, [filteredProducts]); const sortedAvailableBrandKeys = useMemo(() => Object.keys(availableBrands).sort(), [availableBrands]); const sortedAvailableSpecKeys = useMemo(() => Object.keys(availableSpecs).sort(), [availableSpecs]); const selectedVendor: Vendor | null = useMemo(() => activeFilters.vendorIds.length === 1 ? (vendorIdMap.get(activeFilters.vendorIds[0]) || null) : null, [activeFilters.vendorIds, vendorIdMap]); const activeVendorDomainForProductLink: string | null = useMemo(() => selectedVendor ? cleanDomainName(selectedVendor.url).toLowerCase() : null, [selectedVendor]); const isSingleVendorSelected = useMemo(() => activeFilters.vendorIds.length === 1, [activeFilters.vendorIds]); const singleSelectedVendorId = useMemo(() => isSingleVendorSelected ? activeFilters.vendorIds[0] : null, [isSingleVendorSelected, activeFilters.vendorIds]);
-  const activeBrandFilterId = useMemo(() => { const brandIdParam = searchParams.get('brandId'); return brandIdParam ? parseInt(brandIdParam, 10) : null; }, [searchParams]);
+  const [brandParams] = useSearchParams();
+  const activeBrandFilterId = useMemo(() => { const brandIdParam = brandParams.get('brandId'); return brandIdParam ? parseInt(brandIdParam, 10) : null; }, [brandParams]);
   const displayedBrand = useMemo(() => { if (!activeBrandFilterId) return null; return getBrandById(activeBrandFilterId); }, [activeBrandFilterId]);
 
   // --- Category & Product Data Logic ---
