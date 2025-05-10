@@ -1,22 +1,15 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import WalletBalanceCards from './WalletBalanceCards';
-import WalletDeposit from './WalletDeposit';
-import WalletTransactions from './WalletTransactions';
-import WalletConnectSection from './WalletConnectSection';
-import { useWalletData } from "./hooks/useWalletData";
+// Removed import of WalletBalanceCards, WalletDeposit, WalletTransactions, WalletConnectSection
+// Removed import of useWalletData
 
 const WalletPanel = () => {
   const { user } = useAuth();
-  // Fixed: Pass user?.id which is a string, matching the updated parameter type
-  const { walletData } = useWalletData(user?.id || null);
-  
-  const handleDepositComplete = () => {
-    // Nothing to do here as the realtime subscription will update the UI
-  };
+  // Removed usage of useWalletData
+
+  // Removed handleDepositComplete
 
   if (!user) {
     return (
@@ -30,7 +23,7 @@ const WalletPanel = () => {
       </Card>
     );
   }
-  
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -39,32 +32,38 @@ const WalletPanel = () => {
           My Wallet
         </CardTitle>
         <CardDescription>
-          Manage your funds, transactions, and ad payments
+          Manage your funds, transactions, and ad payments (Wallet features are currently disabled)
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent>
+        {/* Wallet features commented out due to Supabase removal */}
+        {/*
         <WalletBalanceCards walletData={walletData} />
-        
+
         <Tabs defaultValue="deposit">
           <TabsList className="grid grid-cols-3 mb-4">
             <TabsTrigger value="deposit">Deposit</TabsTrigger>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="connect">Connect Wallet</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="deposit">
             <WalletDeposit userId={user.id} onDepositComplete={handleDepositComplete} />
           </TabsContent>
-          
+
           <TabsContent value="transactions">
             <WalletTransactions transactions={walletData.transactions} />
           </TabsContent>
-          
+
           <TabsContent value="connect">
             <WalletConnectSection />
           </TabsContent>
         </Tabs>
+        */}
+        <div className="text-center text-muted-foreground py-8">
+          Wallet functionality is temporarily unavailable.
+        </div>
       </CardContent>
     </Card>
   );
