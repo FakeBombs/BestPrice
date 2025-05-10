@@ -1,4 +1,3 @@
-// Brand Interface
 export interface Brand {
   id: number;
   name: string;
@@ -9,7 +8,6 @@ export interface Brand {
   countryOfOrigin?: string;
 }
 
-// --- Brands ---
 export const brands: Brand[] = [
   // -- A --
   { id: 26, name: 'Adidas', logo: '/brands/26.svg', slug: 'adidas' },
@@ -20,9 +18,9 @@ export const brands: Brand[] = [
   { id: 27, name: 'Ajax', logo: '/brands/27.svg', slug: 'ajax' },
   { id: 22, name: 'Alpine', logo: '/brands/22.svg', slug: 'alpine' },
   { id: 1, name: 'Apple', logo: '/brands/1.svg', slug: 'apple', officialWebsite: 'https://www.apple.com', countryOfOrigin: 'USA' },
-  { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
+  { id: 23, name: 'Apivita', logo: '/brands/23.svg', slug: 'apivita' },
   { id: 24, name: 'Ariel', slug: 'ariel' },
-  { id: 31, name: 'Attrattivo', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/22199.svg', slug: 'attrattivo' },
+  { id: 31, name: 'Attrattivo', logo: '/31.svg', slug: 'attrattivo' },
   { id: 30, name: 'Avin', slug: 'avin' },
   { id: 28, name: 'Avon', slug: 'avon' },
   { id: 29, name: 'Avon', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/4790.svg', slug: 'avon' },
