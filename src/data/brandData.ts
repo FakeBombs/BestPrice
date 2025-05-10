@@ -2,7 +2,7 @@
 export interface Brand {
   id: number;
   name: string;
-  logo: string;
+  logo?: string;
   slug?: string;
   officialWebsite?: string;
   description?: string;
@@ -31,4 +31,8 @@ export const brands: Brand[] = [
   { id: 18, name: 'Χαμόγελο του Παιδιού', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/33632.svg', slug: 'hamogelo-tou-paidiou' },
   { id: 19, name: 'Χρωτέχ', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/36032.svg', slug: 'xrotex' },
   { id: 20, name: 'Γιώτης', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/21623.svg', slug: 'giotis' },
+  { id: 21, name: 'Akai', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/755.svg?1629715688', slug: 'akai' },
+  { id: 22, name: 'Alpine', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/3403.svg', slug: 'alpine' },
+  { id: 23, name: 'Apivita', logo: 'https://orig-bpcdn.pstatic.gr/logs/brands/16461.svg', slug: 'apivita' },
+  { id: 24, name: 'Ariel', slug: 'ariel' },
 ];
