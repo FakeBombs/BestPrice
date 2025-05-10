@@ -259,7 +259,8 @@ const elTranslations = {
   // ========================= Popular Products Subtitles based to Category Slugs =========================
   popular_in_category_subtitle_graphics_cards: 'Βρες την κάρτα που θα απογειώσει το σύστημά σου',
   popular_in_category_subtitle_smartphones: 'Βρες την καλύτερη προσφορά τώρα',
-  popular_in_category_subtitle_laptops: 'Βρείτε τον ιδανικό φορητό υπολογιστή για τις ανάγκες σας',
+  popular_in_category_subtitle_laptops: 'Φορητή υπολογιστική δύναμη για κάθε χρήση',
+  popular_in_category_subtitle_tvs: 'Βρες την ιδανική συσκευή για τον χώρο σου',
 
   // ========================= Category Slugs =========================
   'technology': 'Τεχνολογία',
