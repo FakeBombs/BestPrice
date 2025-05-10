@@ -2,8 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import PriceHistoryChart from '@/components/PriceHistoryChart';
-import { Product, ProductPrice } from '@/data/productData';
-import { products } from '@/data/productData';
+import { Product, ProductPrice, products as allMockProducts } from '@/data/productData';
 import { Category, mainCategories, categories } from '@/data/categoriesData';
 import { Vendor, vendors, PaymentMethod, OpeningHours } from '@/data/vendorData';
 import { Brand, brands } from '@/data/brandData';
@@ -94,9 +93,12 @@ const ProductDetail = () => {
 
   const [product, setProduct] = useState<Product | null | undefined>(undefined);
   const [currentImage, setCurrentImage] = useState<string>('');
+  const [primaryCategory, setPrimaryCategory] = useState<Category | null>(null);
   const [similarProductsState, setSimilarProductsState] = useState<Product[]>([]);
   const [categoryDeals, setCategoryDeals] = useState<Product[]>([]);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+  const [popularInCategory, setPopularInCategory] = useState<Product[]>([]);
+  const [customersAlsoViewed, setCustomersAlsoViewed] = useState<Product[]>([]);
   const [isPriceAlertModalOpen, setIsPriceAlertModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [isVendorPopupVisible, setIsVendorPopupVisible] = useState(false);
@@ -107,42 +109,90 @@ const ProductDetail = () => {
 
   const formatProductSlug = useCallback((title: string): string => title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'), []);
 
-  useEffect(() => {
+  // Effect 1: Fetch main product and its direct relations
+useEffect(() => {
     setLoading(true);
+    setProduct(undefined); 
+    setPrimaryCategory(null); 
+    setSimilarProductsState([]);
+    setCategoryDeals([]);
+    // recentlyViewed updates based on localStorage
+
     if (isNaN(numericProductId)) {
         setProduct(null);
         setLoading(false);
         return;
     }
     const productData = getProductById(numericProductId);
+
     if (productData) {
-      setProduct(productData);
-      setCurrentImage(productData.image || '');
-      setSimilarProductsState(getSimilarProducts(numericProductId));
-      if (productData.categoryIds && productData.categoryIds.length > 0) {
-        setCategoryDeals(getProductsByCategory(productData.categoryIds[0]).filter(p => p.id !== numericProductId).slice(0, 5));
-      } else {
-        setCategoryDeals([]);
-      }
-      try {
-        const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as number[];
-        const validIds = recentlyViewedIds.filter(id => typeof id === 'number');
-        const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== numericProductId);
-        setRecentlyViewed(recentProducts);
-        if (!validIds.includes(numericProductId)) {
-          const updatedRecentlyViewed = [numericProductId, ...validIds].slice(0, 10);
-          localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
+        setProduct(productData);
+        setCurrentImage(productData.image || '');
+        setSimilarProductsState(getSimilarProducts(numericProductId));
+
+        if (productData.categoryIds && productData.categoryIds.length > 0) {
+            const primCatId = productData.categoryIds[0];
+            const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
+            setPrimaryCategory(allCatsMap.get(primCatId) || null);
+            setCategoryDeals(getProductsByCategory(primCatId).filter(p => p.id !== numericProductId).slice(0, 10));
+        } else {
+            setCategoryDeals([]);
+            setPrimaryCategory(null);
         }
-      } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
-      const correctSlug = productData.slug || formatProductSlug(productData.title);
-      if (productSlug && productSlug !== correctSlug) { 
-         navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
-      }
+
+        try {
+            const recentlyViewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]') as number[];
+            const validIds = recentlyViewedIds.filter(id => typeof id === 'number');
+            const recentProducts = validIds.map(id => getProductById(id)).filter((p): p is Product => !!p && p.id !== numericProductId);
+            setRecentlyViewed(recentProducts);
+            if (!validIds.includes(numericProductId)) {
+                const updatedRecentlyViewed = [numericProductId, ...validIds].slice(0, 10);
+                localStorage.setItem('recentlyViewed', JSON.stringify(updatedRecentlyViewed));
+            }
+        } catch (error) { console.error("Error handling recently viewed:", error); localStorage.removeItem('recentlyViewed'); }
+
+        const correctSlug = productData.slug || formatProductSlug(productData.title);
+        if (productSlug && productSlug !== correctSlug) {
+            navigate(`/item/${numericProductId}/${correctSlug}${location.search}`, { replace: true });
+        }
     } else {
-      setProduct(null);
+        setProduct(null);
+        setPrimaryCategory(null);
     }
     setLoading(false);
-  }, [numericProductId, productSlug, navigate, location.search, formatProductSlug]);
+}, [numericProductId, productSlug, navigate, location.search, formatProductSlug]);
+
+
+// Effect 2: Calculate "Popular in Category" and "Customers Also Viewed"
+useEffect(() => {
+    if (product && primaryCategory) {
+        const categoryId = primaryCategory.id;
+        const popular = allMockProducts
+            .filter(p => p.id !== product.id && p.categoryIds.includes(categoryId))
+            .sort((a, b) => {
+                const ratingDiff = (b.rating || 0) - (a.rating || 0);
+                if (ratingDiff !== 0) return ratingDiff;
+                return (b.reviews || 0) - (a.reviews || 0);
+            })
+            .slice(0, 10);
+        setPopularInCategory(popular);
+
+        const existingIds = new Set([
+            product.id,
+            ...similarProductsState.map(p => p.id),
+            ...categoryDeals.map(p => p.id),
+            ...popular.map(p => p.id)
+        ]);
+        const alsoViewed = allMockProducts
+            .filter(p => !existingIds.has(p.id) && (p.rating || 0) >= 4.0)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 5);
+        setCustomersAlsoViewed(alsoViewed);
+    } else {
+        setPopularInCategory([]);
+        setCustomersAlsoViewed([]);
+    }
+}, [product, primaryCategory, similarProductsState, categoryDeals, allMockProducts]);
 
 
   const bestPriceInfo = useMemo(() => { // Kept your original variable name
@@ -277,6 +327,10 @@ const ProductDetail = () => {
                   </div>
                 </section>
 
+                {customersAlsoViewed.length > 0 && (
+                        <ProductRelatedSections titleKey="customers_also_viewed_title" products={customersAlsoViewed} sectionId="customers-also-viewed" />
+                    )}
+
                 {categoryDeals.length > 0 && primaryCategory && (
                   <ProductRelatedSections sectionId="item-category-deals" titleKey="deals_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} subtitleKey="deals_in_category_subtitle" products={categoryDeals} />
                 )}
@@ -307,6 +361,10 @@ const ProductDetail = () => {
                 <section id="item-content" className="section">
                   <ProductTabsSection product={product} />
                 </section>
+
+                {popularInCategory.length > 0 && primaryCategory && (
+                    <ProductRelatedSections titleKey="popular_in_category_title" titleOptions={{ categoryName: t(primaryCategory.slug, primaryCategory.name) }} products={popularInCategory} sectionId="popular-in-category" />
+                )}
               </div>
 
               {isPriceAlertModalOpen && bestPriceInfo && (
