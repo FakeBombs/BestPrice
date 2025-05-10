@@ -1,6 +1,6 @@
 import React from 'react';
 import { Product } from '@/data/productData';
-import { getCategoryById } from '@/data/helpers';
+import { getCategoryById } from '@/data/categoriesData';
 import ScrollableSlider from '@/components/ScrollableSlider';
 import ProductCard from '@/components/ProductCard';
 
