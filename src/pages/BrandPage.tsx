@@ -33,7 +33,7 @@ interface ActiveBrandPageFilters {
 }
 
 const BrandPage = () => {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
     const { brandId: brandIdParam } = useParams<{ brandId: string }>();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -69,14 +69,12 @@ const BrandPage = () => {
 
     const vendorIdMap = useMemo(() => new Map(allVendors.map(v => [v.id, v])), []);
 
-    // **** MOVED isAnyFilterActive CALCULATION HERE ****
     const isAnyFilterActive = useMemo(() => {
         return activeFilters.categoryIds.length > 0 ||
                activeFilters.vendorIds.length > 0 ||
                Object.values(activeFilters.specs).some(v => v.length > 0) ||
                activeFilters.deals || activeFilters.certified || activeFilters.inStock;
     }, [activeFilters]);
-    // **** END OF MOVE ****
 
     useEffect(() => {
         setLoading(true);
@@ -434,7 +432,7 @@ const BrandPage = () => {
                                 <div className="page-header__title-main">
                                     <h1>{currentBrand.name}</h1>
                                     <div className="page-header__count-wrapper">
-                                        <div className="page-header__count">{t('product_plural', `${filteredProducts.length} products`, { count: filteredProducts.length })}</div>
+                                        <div className="page-header__count">{t('product_plural', { count: filteredProducts.length })}</div>
                                     </div>
                                 </div>
                                 {currentBrand.logo && (
