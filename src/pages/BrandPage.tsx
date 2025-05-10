@@ -321,11 +321,6 @@ const BrandPage = () => {
         <>
         {renderMerchantInformation()}
         <div className="root__wrapper">
-            {/* ... (Rest of your JSX structure from the backup file for BrandPage.tsx) ... */}
-            {/* Ensure the renderAppliedFilters() call is correctly placed within this structure */}
-            {/* And the filter sections (categories, specs, vendors) use the available... states */}
-            {/* And the product list uses filteredProducts */}
-            {/* The header section should use currentBrand.name and currentBrand.logo */}
             <div className="root">
                 <div id="trail">
                     <nav className="breadcrumb">
@@ -404,8 +399,8 @@ const BrandPage = () => {
                             })}
 
                             {availableVendors.length > 0 && (
-                                <div className="filter-store filter-collapsed default-list" data-filter-name={t('vendors_selling_brand', 'Stores Selling This Brand')} data-type="store" data-key="store">
-                                    <div className="filter__header"><h4>{t('vendors_selling_brand', 'Stores Selling This Brand')}</h4></div>
+                                <div className="filter-store filter-collapsed default-list" data-filter-name={t('certified_stores_title')} data-type="store" data-key="store">
+                                    <div className="filter__header"><h4>{t('certified_stores_title')}</h4></div>
                                     <div className="filter-container">
                                         <ol aria-expanded={showMoreVendors}>
                                             {availableVendors.slice(0, showMoreVendors ? availableVendors.length : MAX_DISPLAY_COUNT).map(vendor => (
@@ -453,12 +448,12 @@ const BrandPage = () => {
                                         </hgroup>
                                     </header>
                                     <ScrollableSlider>
-                                        <div className="categories categories--scrollable scroll__content" style={{display: 'flex', gap: '1rem'}}>
+                                        <div className="categories categories--scrollable scroll__content">
                                             {availableCategories.map((item) => (
-                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}?brandId=${currentBrand.id}`} className="categories__category" style={{minWidth: '150px', textAlign: 'center'}}>
-                                                    {item.image && <img width="120" height="120" className="categories__image" style={{margin: '0 auto', marginBottom: '0.5rem', objectFit: 'contain'}} src={item.image} alt={item.name} />}
-                                                    <h3 className="categories__title" style={{fontSize: '0.875rem'}}>{item.name}</h3>
-                                                    <div className="categories__cnt" style={{fontSize: '0.75rem', color: '#666'}}>{item.count} {t('product_plural', 'products', {count: item.count})}</div>
+                                                <Link key={item.id} to={`/cat/${item.id}/${item.slug}?brandId=${currentBrand.id}`} className="categories__category">
+                                                    {item.image && <img width="200" height="200" className="categories__image" src={item.image} alt={item.name} loading="lazy" />}
+                                                    <h2 className="categories__title">{item.name}</h2>
+                                                    <div className="categories__cnt">{item.count} {t('product_plural', 'products', {count: item.count})}</div>
                                                 </Link>
                                             ))}
                                         </div>
