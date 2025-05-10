@@ -34,13 +34,13 @@ export const getProductsByCategory = (categoryId: number): Product[] => {
   return products.filter(product => Array.isArray(product.categoryIds) && product.categoryIds.includes(categoryId));
 };
 
+import { getCategoryById as findCategoryInAll } from './categoriesData';
 export const getSimilarProducts = (productId: number): Product[] => {
   const product = getProductById(productId);
   if (!product || !product.categoryIds || product.categoryIds.length === 0) return [];
   const leafCategoryId = product.categoryIds[product.categoryIds.length - 1];
   
-  // Use the getCategoryById from categoriesData.ts
-  const category = getCategoryFromList(leafCategoryId); // Uses the imported and renamed helper
+  const category = findCategoryInAll(leafCategoryId);
 
   if (!category) return [];
   return products.filter(p => p.id !== productId && p.categoryIds.includes(leafCategoryId)).slice(0, 5);
