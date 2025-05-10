@@ -1,17 +1,5 @@
-
 import { NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Package, 
-  LayoutGrid, 
-  Users, 
-  ShoppingBag, 
-  Settings, 
-  Store, 
-  LogOut,
-  DollarSign,
-  CreditCard 
-} from "lucide-react";
+import { LayoutDashboard, Package, LayoutGrid, Users, ShoppingBag, Settings, Store, LogOut, DollarSign, CreditCard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
