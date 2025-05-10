@@ -1,13 +1,8 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  User, Settings, Bell, Heart, Clock, 
-  CircleDollarSign, ShoppingBag, LayoutDashboard, 
-  Wallet, Store, LogOut
-} from "lucide-react";
+import { User, Settings, Bell, Heart, Clock, CircleDollarSign, ShoppingBag, LayoutDashboard, Wallet, Store, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface AccountSidebarProps {
@@ -39,43 +34,23 @@ const AccountSidebar = ({ activeTab, setActiveTab }: AccountSidebarProps) => {
         </Card>
         
         <nav className="space-y-1">
-          <Button 
-            variant="ghost" 
-            className={`w-full justify-start ${activeTab === "profile" ? "bg-primary/10" : ""}`}
-            onClick={() => setActiveTab("profile")}
-          >
+          <Button variant="ghost" className={`w-full justify-start ${activeTab === "profile" ? "bg-primary/10" : ""}`} onClick={() => setActiveTab("profile")}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            className={`w-full justify-start ${activeTab === "favorites" ? "bg-primary/10" : ""}`} 
-            onClick={() => setActiveTab("favorites")}
-          >
+          <Button variant="ghost" className={`w-full justify-start ${activeTab === "favorites" ? "bg-primary/10" : ""}`} onClick={() => setActiveTab("favorites")}>
             <Heart className="mr-2 h-4 w-4" />
             <span>Favorites</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            className={`w-full justify-start ${activeTab === "history" ? "bg-primary/10" : ""}`}
-            onClick={() => setActiveTab("history")}
-          >
+          <Button variant="ghost" className={`w-full justify-start ${activeTab === "history" ? "bg-primary/10" : ""}`} onClick={() => setActiveTab("history")}>
             <Clock className="mr-2 h-4 w-4" />
             <span>Recently Viewed</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            className={`w-full justify-start ${activeTab === "alerts" ? "bg-primary/10" : ""}`}
-            onClick={() => setActiveTab("alerts")}
-          >
+          <Button variant="ghost" className={`w-full justify-start ${activeTab === "alerts" ? "bg-primary/10" : ""}`} onClick={() => setActiveTab("alerts")}>
             <Bell className="mr-2 h-4 w-4" />
             <span>Price Alerts</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            className={`w-full justify-start ${activeTab === "settings" ? "bg-primary/10" : ""}`}
-            onClick={() => setActiveTab("settings")}
-          >
+          <Button variant="ghost" className={`w-full justify-start ${activeTab === "settings" ? "bg-primary/10" : ""}`} onClick={() => setActiveTab("settings")}>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </Button>
@@ -101,11 +76,7 @@ const AccountSidebar = ({ activeTab, setActiveTab }: AccountSidebarProps) => {
             </Link>
           )}
           
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-            onClick={logout}
-          >
+          <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={logout}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Logout</span>
           </Button>
