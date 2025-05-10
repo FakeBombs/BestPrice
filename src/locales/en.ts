@@ -60,6 +60,7 @@ const enTranslations = {
   customers_also_viewed_title: 'Customers also viewed', 
   deals_in_category_title: 'Deals in {{categoryName}}',
   deals_in_category_subtitle: 'Products with significant price drop',
+  popular_in_category_title: 'Popular in {{categoryName}}',
   site_name: 'BestPrice', 
   sitemap_button_label: 'Sitemap button', 
   my_account_link: 'My Account', 
