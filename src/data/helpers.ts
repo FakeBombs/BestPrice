@@ -1,5 +1,5 @@
 import { Product, ProductPrice, products } from './productData';
-import { Category, mainCategories, categories } from './categoriesData';
+import { Category, mainCategories, categories, getCategoryById as getCategoryFromList } from './categoriesData';
 import { Vendor, vendors } from './vendorData';
 import { Brand, brands } from './brandData';
 
@@ -26,11 +26,6 @@ export const searchProducts = (query: string): Product[] => {
   );
 };
 
-export const getCategoryById = (id: number): Category | undefined => {
-  const allCatsMap = new Map([...mainCategories, ...categories].map(c => [c.id, c]));
-  return allCatsMap.get(id);
-};
-
 export const getProductById = (id: number): Product | undefined => {
   return products.find(product => product.id === id);
 };
@@ -41,12 +36,14 @@ export const getProductsByCategory = (categoryId: number): Product[] => {
 
 export const getSimilarProducts = (productId: number): Product[] => {
   const product = getProductById(productId);
-  if (!product || !Array.isArray(product.categoryIds) || product.categoryIds.length === 0) return [];
+  if (!product || !product.categoryIds || product.categoryIds.length === 0) return [];
   const leafCategoryId = product.categoryIds[product.categoryIds.length - 1];
-  const allCats = [...mainCategories, ...categories];
-  const category = allCats.find(c => c.id === leafCategoryId);
+  
+  // Use the getCategoryById from categoriesData.ts
+  const category = getCategoryFromList(leafCategoryId); // Uses the imported and renamed helper
+
   if (!category) return [];
-  return products.filter(p => p.id !== productId && Array.isArray(p.categoryIds) && p.categoryIds.includes(leafCategoryId)).slice(0, 5);
+  return products.filter(p => p.id !== productId && p.categoryIds.includes(leafCategoryId)).slice(0, 5);
 };
 
 export const getVendorById = (vendorId: number): Vendor | undefined => {
