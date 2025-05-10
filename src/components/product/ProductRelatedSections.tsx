@@ -17,22 +17,13 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ product
   const { t, language } = useTranslation();
 
   const currentProducts = products || [];
-
+  
   if (currentProducts.length === 0) {
     return null;
   }
 
   const sectionTitle = t(titleKey, titleOptions || {});
-
-  let sectionSubtitle = null;
-  if (subtitleKey) {
-    const specificSubtitle = t(subtitleKey);
-    if (specificSubtitle !== subtitleKey) {
-      sectionSubtitle = specificSubtitle;
-    } else {
-      sectionSubtitle = t('popular_in_category_subtitle_default', '');
-    }
-  }
+  const sectionSubtitle = subtitleKey ? t(subtitleKey, subtitleOptions || {}) : null;
 
   return (
     <section id={sectionId} className="section">
@@ -47,7 +38,7 @@ const ProductRelatedSections: React.FC<ProductRelatedSectionsProps> = ({ product
       <ScrollableSlider>
         <div className="p__products--scroll scroll__content">
           {currentProducts.map(prod => (
-            <ProductCard key={`${titleKey}-${prod.id}`} product={prod} /> // Added titleKey to key for more uniqueness
+            <ProductCard key={`${titleKey}-${prod.id}`} product={prod} />
           ))}
         </div>
       </ScrollableSlider>
