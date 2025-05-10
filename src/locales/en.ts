@@ -256,6 +256,12 @@ const enTranslations = {
   "paymentMethod_pay_by_link": "Pay by Link",
   "paymentMethod_pickup_via": "Pickup via Courier/Service",
 
+  // ========================= Popular Products Subtitles based to Category Slugs =========================
+  popular_in_category_subtitle_graphics_cards: 'Find the card that will take your system off the ground',
+  popular_in_category_subtitle_smartphones: 'Find the best offer now',
+  popular_in_category_subtitle_laptops: 'Portable computing power for every use',
+  popular_in_category_subtitle_tvs: 'Find the ideal device for your space',
+
   // ========================= Category Slugs =========================
   'technology': 'Technology',
   'home-garden': 'Home & Garden',
