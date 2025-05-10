@@ -5,6 +5,12 @@
    ExtendedWarranty = "Επέκταση εγγύησης", WeddingList = "Λίστα γάμου/μωρού", DeviceRecycling = "Ανακύκλωση συσκευών", Klarna = "Klarna", Epistrofi = "€πιστροφή Eurobank", Installments = "Άτοκες Δόσεις", LoyaltyPoints = "Πόντοι Επιβράβευσης"
  }
 
+// Opening Hours Interface
+export interface OpeningHours {
+  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  opens: string; closes: string; notes?: string;
+}
+
 // Enhanced Vendor Interface
 export interface Vendor {
   id: number;
