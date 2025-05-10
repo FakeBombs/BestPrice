@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { Facebook, Twitter, AlertTriangle } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { siteURL } from '@/integrations/supabase/client';
 
 interface LoginFormProps {
   onSuccess: () => void;
