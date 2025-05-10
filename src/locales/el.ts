@@ -57,6 +57,7 @@ const elTranslations = {
   notFoundPageTitle: "Η σελίδα δεν βρέθηκε", notFoundMessage: "Ουπς! Η σελίδα που αναζητάτε δεν υπάρχει.",
   recently_viewed_title: "Είδες πρόσφατα",
   similar_products_title: 'Παρόμοια προϊόντα',
+  customers_also_viewed_title: 'Οι χρήστες είδαν επίσης', 
   deals_in_category_title: 'Προσφορές σε {{categoryName}}',
   deals_in_category_subtitle: 'Προϊόντα με μεγάλη πτώση τιμής',
   site_name: 'BestPrice', 
