@@ -106,6 +106,13 @@ const enTranslations = {
   category_unknown: 'Uncategorized', 
   stores_count_label_one: '{{count}} store', 
   stores_count_label_other: '{{count}} stores',
+  loading_brand_data: 'Loading Brand Data...',
+  no_products_found_brand_filters: 'No products found for {{brandName}} matching your filters.',
+  suggestion_try_removing_filters_brand: 'Try removing some filters or ',
+  view_all_brand_products: 'view all products from {{brandName}}',
+  categories_for_brand: 'Categories for {{brandName}}',
+  vendors_selling_brand: 'Stores Selling This Brand',
+  show_only_instock_products: 'Show only in-stock products',
 
   // ====================== Product Breadcrumb ========================
   "breadcrumbHome": "BestPrice",
