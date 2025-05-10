@@ -787,6 +787,7 @@ const enTranslations = {
   gifts_total_count_other: '{{count}} selected gifts for {{recipient}}', // Needs recipient
   recipient_everyone: 'everyone', // **** ADDED THIS LINE ****
   // --- Recipient Titles ---
+  giftsForAdults: 'Gifts for adults',
   giftsForMen: 'Gifts for men',
   giftsForWomen: 'Gifts for women',
   giftsForTeens: 'Gifts for teens',
